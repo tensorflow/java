@@ -133,12 +133,10 @@ Java_org_tensorflow_Graph_toGraphDef(JNIEnv* env, jclass clazz, jlong handle) {
   return ret;
 }
 
-JNIEXPORT jlongArray JNICALL
-Java_org_tensorflow_Graph_addGradients(JNIEnv* env, jclass clazz, jlong handle,
-    jstring prefix, jlongArray y_handles, jintArray y_indices,
-    jlongArray x_handles, jintArray x_indices,
-    jlongArray dx_handles, jintArray dx_indices) {
-
+JNIEXPORT jlongArray JNICALL Java_org_tensorflow_Graph_addGradients(
+    JNIEnv* env, jclass clazz, jlong handle, jstring prefix,
+    jlongArray y_handles, jintArray y_indices, jlongArray x_handles,
+    jintArray x_indices, jlongArray dx_handles, jintArray dx_indices) {
   TF_Graph* g = requireHandle(env, handle);
   if (g == nullptr) return nullptr;
 

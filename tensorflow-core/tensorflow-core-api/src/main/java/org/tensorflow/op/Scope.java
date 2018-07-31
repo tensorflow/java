@@ -135,8 +135,8 @@ public final class Scope {
    * }</pre>
    *
    * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that adds a
-   * set of related operations to the graph by calling other operator building code), the provided name 
-   * will act as a subscope to all underlying operators.
+   * set of related operations to the graph by calling other operator building code), the provided
+   * name will act as a subscope to all underlying operators.
    *
    * @param defaultName name for the underlying operator.
    * @return unique name for the operator.
