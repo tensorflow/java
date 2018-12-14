@@ -24,10 +24,8 @@ import org.tensorflow.Operation;
  * PrimitiveOp}. Custom operations working with only one primitive may also derive from this class.
  */
 public abstract class PrimitiveOp implements Op {
-  
-  /**
-   * Returns the underlying {@link Operation}
-   */
+
+  /** Returns the underlying {@link Operation} */
   public Operation op() {
     return operation;
   }
