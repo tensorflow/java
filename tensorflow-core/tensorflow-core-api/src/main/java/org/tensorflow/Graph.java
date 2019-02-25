@@ -237,25 +237,23 @@ public final class Graph implements AutoCloseable {
   }
 
   /**
-   * Used to instantiate an abstract class which overrides the buildSubgraph method to build
-   * a conditional or body subgraph for a while loop. After Java 8, this can alternatively be
-   * used to create a lambda for the same purpose.
+   * Used to instantiate an abstract class which overrides the buildSubgraph method to build a
+   * conditional or body subgraph for a while loop. After Java 8, this can alternatively be used to
+   * create a lambda for the same purpose.
    *
-   * To be used when calling
-   * {@link #whileLoop(Output[], org.tensorflow.Graph.WhileSubgraphBuilder, org.tensorflow.Graph.WhileSubgraphBuilder, String)}
+   * <p>To be used when calling {@link #whileLoop(Output[],
+   * org.tensorflow.Graph.WhileSubgraphBuilder, org.tensorflow.Graph.WhileSubgraphBuilder, String)}
    *
    * <p>Example usage (prior to Java 8):
-   * <p>
-   * {@code  WhileSubgraphBuilder bodyGraphBuilder = new WhileSubgraphBuilder() {
-   *         @Override
-   *         public void buildSubgraph(Graph bodyGraph, Output<?>[] bodyInputs, Output<?>[] bodyOutputs) {
-   *           // build body subgraph
-   *         }
-   *       };
-   * }
+   *
+   * <p>{@code WhileSubgraphBuilder bodyGraphBuilder = new WhileSubgraphBuilder() { @Override public
+   * void buildSubgraph(Graph bodyGraph, Output<?>[] bodyInputs, Output<?>[] bodyOutputs) { // build
+   * body subgraph } }; }
+   *
    * <p>Example usage (after Java 8):
-   * <p>
-   * {@code WhileSubgraphBuilder bodyGraphBuilder = (bodyGraph, bodyInputs, bodyOutputs) -> { // build body subgraph };}
+   *
+   * <p>{@code WhileSubgraphBuilder bodyGraphBuilder = (bodyGraph, bodyInputs, bodyOutputs) -> { //
+   * build body subgraph };}
    */
   public interface WhileSubgraphBuilder {
     /**
@@ -269,12 +267,13 @@ public final class Graph implements AutoCloseable {
   }
 
   // called by while loop code in graph_jni.cc to construct conditional/body subgraphs
-  private static long[] buildSubgraph(WhileSubgraphBuilder subgraphBuilder,
-                              long subgraphHandle,
-                              long[] inputHandles,
-                              int[] inputIndices,
-                              long[] outputHandles,
-                              int[] outputIndices) {
+  private static long[] buildSubgraph(
+      WhileSubgraphBuilder subgraphBuilder,
+      long subgraphHandle,
+      long[] inputHandles,
+      int[] inputIndices,
+      long[] outputHandles,
+      int[] outputIndices) {
     Graph subgraph = new Graph(subgraphHandle);
 
     int ninputs = inputHandles.length;
@@ -316,10 +315,11 @@ public final class Graph implements AutoCloseable {
    * @param name name for the loop
    * @return list of loop outputs, of the same length as {@code inputs}
    */
-  public Output<?>[] whileLoop(Output<?>[] inputs,
-                               WhileSubgraphBuilder cgBuilder,
-                               WhileSubgraphBuilder bgBuilder,
-                               String name) {
+  public Output<?>[] whileLoop(
+      Output<?>[] inputs,
+      WhileSubgraphBuilder cgBuilder,
+      WhileSubgraphBuilder bgBuilder,
+      String name) {
     int ninputs = inputs.length;
     long[] inputHandles = new long[ninputs];
     int[] inputIndices = new int[ninputs];
@@ -333,7 +333,8 @@ public final class Graph implements AutoCloseable {
           inputIndices[i] = inputs[i].index();
         }
 
-        long[] outputHandlesAndIndices = whileLoop(nativeHandle, inputHandles, inputIndices, name, cgBuilder, bgBuilder);
+        long[] outputHandlesAndIndices =
+            whileLoop(nativeHandle, inputHandles, inputIndices, name, cgBuilder, bgBuilder);
 
         for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
           Operation op = new Operation(this, outputHandlesAndIndices[i]);
@@ -466,12 +467,12 @@ public final class Graph implements AutoCloseable {
       int[] gradInputIndices);
 
   private static native long[] whileLoop(
-          long handle,
-          long[] inputHandles,
-          int[] inputIndices,
-          String name,
-          WhileSubgraphBuilder condGraphBuilder,
-          WhileSubgraphBuilder bodyGraphBuilder);
+      long handle,
+      long[] inputHandles,
+      int[] inputIndices,
+      String name,
+      WhileSubgraphBuilder condGraphBuilder,
+      WhileSubgraphBuilder bodyGraphBuilder);
 
   static {
     TensorFlow.init();
