@@ -150,7 +150,8 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
-  private Scope(ExecutionEnvironment env, NameScope nameScope, Iterable<Operand<?>> controlDependencies) {
+  private Scope(
+      ExecutionEnvironment env, NameScope nameScope, Iterable<Operand<?>> controlDependencies) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
@@ -159,8 +160,8 @@ public final class Scope {
   /**
    * Returns a new scope where added operations will have the provided control dependencies.
    *
-   * <p>Ops created with this scope will have a control edge from each of the provided controls.
-   *  All other properties are inherited from the current scope.
+   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
+   * other properties are inherited from the current scope.
    *
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
