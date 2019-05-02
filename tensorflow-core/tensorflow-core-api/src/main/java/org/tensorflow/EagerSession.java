@@ -247,7 +247,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     checkSession();
     return new EagerOperationBuilder(this, type, name);
   }
-  
+
   long nativeHandle() {
     checkSession();
     return nativeHandle;

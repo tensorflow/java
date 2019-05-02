@@ -18,7 +18,7 @@ package org.tensorflow;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-/** 
+/**
  * An {@link OperationBuilder} for building {@link Operation Operations} that are executed eagerly.
  */
 final class EagerOperationBuilder implements OperationBuilder {
@@ -32,7 +32,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public Operation build() {
-    // TODO (karllessard) Execute the eager operation and pass output tensor handles to new EagerOperation class
+    // TODO (karllessard) Execute the eager operation and pass output tensor handles to new
+    // EagerOperation class
     throw new UnsupportedOperationException("Eager execution is not supported yet");
   }
 
@@ -54,7 +55,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public OperationBuilder addControlInput(Operation control) {
-    throw new UnsupportedOperationException("Control inputs are not supported in an eager execution environment");
+    throw new UnsupportedOperationException(
+        "Control inputs are not supported in an eager execution environment");
   }
 
   @Override
@@ -146,7 +148,8 @@ final class EagerOperationBuilder implements OperationBuilder {
   @Override
   public OperationBuilder setAttr(String name, Tensor<?>[] values) {
     // TODO (karllessard) could be supported by adding this attribute type in the eager C API
-    throw new UnsupportedOperationException("Tensor list attributes are not supported in eager mode");
+    throw new UnsupportedOperationException(
+        "Tensor list attributes are not supported in eager mode");
   }
 
   @Override
@@ -201,7 +204,7 @@ final class EagerOperationBuilder implements OperationBuilder {
         opHandle = 0L;
       }
     }
-    
+
     private long opHandle;
   }
 
@@ -209,11 +212,11 @@ final class EagerOperationBuilder implements OperationBuilder {
   private final String type;
   private final String name;
   private final NativeReference nativeRef;
-  
+
   private static native long allocate(long ctxHandle, String type);
 
   private static native void delete(long opHandle);
-  
+
   private static native long[] execute(long opHandle);
 
   private static native void addInput(long opHandle, long tensorHandle);
@@ -246,5 +249,6 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   private static native void setAttrShape(long opHandle, String name, long[] shape, int numDims);
 
-  private static native void setAttrShapeList(long opHandle, String name, long[] shapes, int[] numDims);
+  private static native void setAttrShapeList(
+      long opHandle, String name, long[] shapes, int[] numDims);
 }

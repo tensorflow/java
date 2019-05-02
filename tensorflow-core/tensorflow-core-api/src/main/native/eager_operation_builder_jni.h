@@ -35,16 +35,16 @@ JNIEXPORT jlong JNICALL Java_org_tensorflow_EagerOperationBuilder_allocate(
  * Method:    delete
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_delete(
-    JNIEnv *, jclass, jlong);
+JNIEXPORT void JNICALL
+Java_org_tensorflow_EagerOperationBuilder_delete(JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
  * Method:    execute
  * Signature: (J)[J
  */
-JNIEXPORT jlongArray JNICALL Java_org_tensorflow_EagerOperationBuilder_execute(
-    JNIEnv *, jclass, jlong);
+JNIEXPORT jlongArray JNICALL
+Java_org_tensorflow_EagerOperationBuilder_execute(JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
@@ -84,8 +84,9 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttrString(
  * Signature: (JLjava/lang/String;[L)V
  */
 JNIEXPORT void JNICALL
-Java_org_tensorflow_EagerOperationBuilder_setAttrStringList(
-    JNIEnv *, jclass, jlong, jstring, jobjectArray);
+Java_org_tensorflow_EagerOperationBuilder_setAttrStringList(JNIEnv *, jclass,
+                                                            jlong, jstring,
+                                                            jobjectArray);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
@@ -117,8 +118,9 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttrFloat(
  * Signature: (JLjava/lang/String;[F)V
  */
 JNIEXPORT void JNICALL
-Java_org_tensorflow_EagerOperationBuilder_setAttrFloatList(
-    JNIEnv *, jclass, jlong, jstring, jfloatArray);
+Java_org_tensorflow_EagerOperationBuilder_setAttrFloatList(JNIEnv *, jclass,
+                                                           jlong, jstring,
+                                                           jfloatArray);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
@@ -134,8 +136,9 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttrBool(
  * Signature: (JLjava/lang/String;[Z)V
  */
 JNIEXPORT void JNICALL
-Java_org_tensorflow_EagerOperationBuilder_setAttrBoolList(
-    JNIEnv *, jclass, jlong, jstring, jbooleanArray);
+Java_org_tensorflow_EagerOperationBuilder_setAttrBoolList(JNIEnv *, jclass,
+                                                          jlong, jstring,
+                                                          jbooleanArray);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
@@ -151,8 +154,9 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttrType(
  * Signature: (JLjava/lang/String;[I)V
  */
 JNIEXPORT void JNICALL
-Java_org_tensorflow_EagerOperationBuilder_setAttrTypeList(
-    JNIEnv *, jclass, jlong, jstring, jintArray);
+Java_org_tensorflow_EagerOperationBuilder_setAttrTypeList(JNIEnv *, jclass,
+                                                          jlong, jstring,
+                                                          jintArray);
 
 /*
  * Class:     org_tensorflow_EagerOperationBuilder
@@ -176,8 +180,10 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttrShape(
  * Signature: (JLjava/lang/String;[J[I)V
  */
 JNIEXPORT void JNICALL
-Java_org_tensorflow_EagerOperationBuilder_setAttrShapeList(
-    JNIEnv *, jclass, jlong, jstring, jlongArray, jintArray);
+Java_org_tensorflow_EagerOperationBuilder_setAttrShapeList(JNIEnv *, jclass,
+                                                           jlong, jstring,
+                                                           jlongArray,
+                                                           jintArray);
 
 #ifdef __cplusplus
 }  // extern "C"

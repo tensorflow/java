@@ -13,12 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#include "tensorflow/java/src/main/native/eager_operation_builder_jni.h"
 
 #include <cstring>
 #include <memory>
 #include <set>
+
 #include "tensorflow/c/eager/c_api.h"
-#include "tensorflow/java/src/main/native/eager_operation_builder_jni.h"
 #include "tensorflow/java/src/main/native/exception_jni.h"
 
 namespace {
@@ -34,8 +35,7 @@ TFE_Op* requireOp(JNIEnv* env, jlong handle) {
 
 TFE_Context* requireContext(JNIEnv* env, jlong handle) {
   if (handle == 0) {
-    throwException(env, kIllegalStateException,
-                   "Context has been deleted");
+    throwException(env, kIllegalStateException, "Context has been deleted");
     return nullptr;
   }
   return reinterpret_cast<TFE_Context*>(handle);
@@ -90,8 +90,8 @@ JNIEXPORT jlongArray JNICALL Java_org_tensorflow_EagerOperationBuilder_execute(
   TFE_Op* op = requireOp(env, op_handle);
   if (op == nullptr) return 0;
   int num_retvals = 8;  // should be >= than max number of outputs in any op
-  std::unique_ptr<TFE_TensorHandle* []> retvals(
-      new TFE_TensorHandle* [num_retvals]);
+  std::unique_ptr<TFE_TensorHandle*[]> retvals(
+      new TFE_TensorHandle*[num_retvals]);
   TF_Status* status = TF_NewStatus();
   TFE_Execute(op, retvals.get(), &num_retvals, status);
   if (!throwExceptionIfNotOK(env, status)) {
@@ -140,8 +140,8 @@ JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_addInputList(
   if (op == nullptr) return;
   jlong* cinput_handles = env->GetLongArrayElements(input_handles, nullptr);
   size_t num_inputs = static_cast<size_t>(env->GetArrayLength(input_handles));
-  std::unique_ptr<TFE_TensorHandle* []> tensor_handles(
-      new TFE_TensorHandle* [num_inputs]);
+  std::unique_ptr<TFE_TensorHandle*[]> tensor_handles(
+      new TFE_TensorHandle*[num_inputs]);
   for (int i = 0; i < num_inputs; ++i) {
     tensor_handles[i] = requireTensorHandle(env, cinput_handles[i]);
     if (tensor_handles[i] == nullptr) {
@@ -181,8 +181,8 @@ Java_org_tensorflow_EagerOperationBuilder_setAttrStringList(
   static_assert(sizeof(jbyte) == 1,
                 "Require Java byte to be represented as a single byte");
   std::unique_ptr<jbyteArray[]> jarrays(new jbyteArray[num_values]);
-  std::unique_ptr<jbyte* []> jvalues(new jbyte*[num_values]);
-  std::unique_ptr<void* []> cvalues(new void*[num_values]);
+  std::unique_ptr<jbyte*[]> jvalues(new jbyte*[num_values]);
+  std::unique_ptr<void*[]> cvalues(new void*[num_values]);
   std::unique_ptr<size_t[]> lengths(new size_t[num_values]);
 
   for (int i = 0; i < num_values; ++i) {
@@ -200,41 +200,43 @@ Java_org_tensorflow_EagerOperationBuilder_setAttrStringList(
   env->ReleaseStringUTFChars(attr_name, cname);
 }
 
-#define DEFINE_SET_ATTR_SCALAR(name, jtype, ctype)                             \
-JNIEXPORT void JNICALL Java_org_tensorflow_EagerOperationBuilder_setAttr##name(\
-    JNIEnv* env, jclass clazz, jlong op_handle, jstring attr_name,             \
-    jtype value) {                                                             \
-  static_assert(sizeof(ctype) >= sizeof(jtype),                                \
-      "Information loss when converting between Java and C types");            \
-  TFE_Op* op = requireOp(env, op_handle);                                      \
-  if (op == nullptr) return;                                                   \
-  const char* cname = env->GetStringUTFChars(attr_name, nullptr);              \
-  TFE_OpSetAttr##name(op, cname, static_cast<ctype>(value));                   \
-  env->ReleaseStringUTFChars(attr_name, cname);                                \
-}
+#define DEFINE_SET_ATTR_SCALAR(name, jtype, ctype)                       \
+  JNIEXPORT void JNICALL                                                 \
+      Java_org_tensorflow_EagerOperationBuilder_setAttr##name(           \
+          JNIEnv* env, jclass clazz, jlong op_handle, jstring attr_name, \
+          jtype value) {                                                 \
+    static_assert(                                                       \
+        sizeof(ctype) >= sizeof(jtype),                                  \
+        "Information loss when converting between Java and C types");    \
+    TFE_Op* op = requireOp(env, op_handle);                              \
+    if (op == nullptr) return;                                           \
+    const char* cname = env->GetStringUTFChars(attr_name, nullptr);      \
+    TFE_OpSetAttr##name(op, cname, static_cast<ctype>(value));           \
+    env->ReleaseStringUTFChars(attr_name, cname);                        \
+  }
 
-#define DEFINE_SET_ATTR_LIST(name, jname, jtype, ctype)                        \
-  JNIEXPORT void JNICALL                                                       \
-      Java_org_tensorflow_EagerOperationBuilder_setAttr##name##List(           \
-          JNIEnv* env, jclass clazz, jlong op_handle, jstring attr_name,       \
-          jtype##Array value) {                                                \
-    TFE_Op* op = requireOp(env, op_handle);                                    \
-    if (op == nullptr) return;                                                 \
-    const char* cname = env->GetStringUTFChars(attr_name, nullptr);            \
-    /* Make a copy of the array to paper over any differences */               \
-    /* in byte representations of the jtype and ctype */                       \
-    /* For example, jint vs TF_DataType. */                                    \
-    /* If this copy turns out to be a problem in practice */                   \
-    /* can avoid it for many types. */                                         \
-    const int n = env->GetArrayLength(value);                                  \
-    std::unique_ptr<ctype[]> cvalue(new ctype[n]);                             \
-    jtype* elems = env->Get##jname##ArrayElements(value, nullptr);             \
-    for (int i = 0; i < n; ++i) {                                              \
-      cvalue[i] = static_cast<ctype>(elems[i]);                                \
-    }                                                                          \
-    TFE_OpSetAttr##name##List(op, cname, cvalue.get(), n);                     \
-    env->Release##jname##ArrayElements(value, elems, JNI_ABORT);               \
-    env->ReleaseStringUTFChars(attr_name, cname);                              \
+#define DEFINE_SET_ATTR_LIST(name, jname, jtype, ctype)                  \
+  JNIEXPORT void JNICALL                                                 \
+      Java_org_tensorflow_EagerOperationBuilder_setAttr##name##List(     \
+          JNIEnv* env, jclass clazz, jlong op_handle, jstring attr_name, \
+          jtype##Array value) {                                          \
+    TFE_Op* op = requireOp(env, op_handle);                              \
+    if (op == nullptr) return;                                           \
+    const char* cname = env->GetStringUTFChars(attr_name, nullptr);      \
+    /* Make a copy of the array to paper over any differences */         \
+    /* in byte representations of the jtype and ctype */                 \
+    /* For example, jint vs TF_DataType. */                              \
+    /* If this copy turns out to be a problem in practice */             \
+    /* can avoid it for many types. */                                   \
+    const int n = env->GetArrayLength(value);                            \
+    std::unique_ptr<ctype[]> cvalue(new ctype[n]);                       \
+    jtype* elems = env->Get##jname##ArrayElements(value, nullptr);       \
+    for (int i = 0; i < n; ++i) {                                        \
+      cvalue[i] = static_cast<ctype>(elems[i]);                          \
+    }                                                                    \
+    TFE_OpSetAttr##name##List(op, cname, cvalue.get(), n);               \
+    env->Release##jname##ArrayElements(value, elems, JNI_ABORT);         \
+    env->ReleaseStringUTFChars(attr_name, cname);                        \
   }
 
 #define DEFINE_SET_ATTR(name, jname, jtype, ctype) \
