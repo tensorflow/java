@@ -19,16 +19,21 @@ import java.util.Arrays;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
- * 
- * <p>EagerOperation instances are valid only as long as the {@link EagerSession} they are a part of is
- * valid. Thus, if {@link EagerSession#close()} has been invoked, then methods on the EagerOperation
- * instance may fail with an {@code IllegalStateException}.
+ *
+ * <p>EagerOperation instances are valid only as long as the {@link EagerSession} they are a part of
+ * is valid. Thus, if {@link EagerSession#close()} has been invoked, then methods on the
+ * EagerOperation instance may fail with an {@code IllegalStateException}.
  *
  * <p>EagerOperation instances are thread-safe.
  */
 class EagerOperation extends AbstractOperation {
-  
-  EagerOperation(EagerSession session, long opNativeHandle, long[] outputNativeHandles, String type, String name) {
+
+  EagerOperation(
+      EagerSession session,
+      long opNativeHandle,
+      long[] outputNativeHandles,
+      String type,
+      String name) {
     this.session = session;
     this.type = type;
     this.name = name;
@@ -83,7 +88,8 @@ class EagerOperation extends AbstractOperation {
 
   private static class NativeReference extends EagerSession.NativeReference {
 
-    NativeReference(EagerSession session, EagerOperation operation, long opHandle, long[] outputHandles) {
+    NativeReference(
+        EagerSession session, EagerOperation operation, long opHandle, long[] outputHandles) {
       super(session, operation);
       this.opHandle = opHandle;
       this.outputHandles = outputHandles;
@@ -102,7 +108,7 @@ class EagerOperation extends AbstractOperation {
         Arrays.fill(outputHandles, 0L);
       }
     }
-    
+
     private long opHandle;
     private final long[] outputHandles;
   }
@@ -111,11 +117,11 @@ class EagerOperation extends AbstractOperation {
   private final NativeReference nativeRef;
   private final String type;
   private final String name;
-  
+
   private static native void delete(long handle);
 
   private static native void deleteTensorHandle(long handle);
-  
+
   private static native int outputListLength(long handle, String name);
 
   private static native int inputListLength(long handle, String name);
