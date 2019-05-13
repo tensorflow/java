@@ -138,7 +138,7 @@ public final class GraphOperation extends AbstractOperation {
       r.close();
     }
   }
-  
+
   @Override
   Tensor<?> tensor(int outputIdx) {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");

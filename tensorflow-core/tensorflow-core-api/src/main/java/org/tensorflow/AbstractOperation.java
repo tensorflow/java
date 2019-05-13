@@ -77,9 +77,9 @@ abstract class AbstractOperation implements Operation {
 
   /**
    * Returns the tensor of the {@code outputIdx}th output of this operation.
-   * 
+   *
    * <p>This is only supported in an eager execution environment.
-   * 
+   *
    * @param outputIdx index of the output of this operation
    * @return output tensor
    */

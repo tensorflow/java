@@ -113,10 +113,11 @@ class EagerOperation extends AbstractOperation {
   private final String type;
   private final String name;
   private final AtomicReferenceArray<Tensor<?>> outputTensors;
-  
+
   private Tensor<?> resolveTensor(int outputIndex) {
     // Take an optimistic approach, where we attempt to resolve the output tensor without locking.
-    // If another thread has resolved it meanwhile, release our copy and reuse the existing one instead.
+    // If another thread has resolved it meanwhile, release our copy and reuse the existing one
+    // instead.
     long tensorNativeHandle = resolveTensorHandle(getUnsafeNativeHandle(outputIndex));
     Tensor<?> tensor = Tensor.fromHandle(tensorNativeHandle, session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
@@ -125,7 +126,7 @@ class EagerOperation extends AbstractOperation {
     }
     return tensor;
   }
-  
+
   private static class NativeReference extends EagerSession.NativeReference {
 
     NativeReference(
@@ -156,7 +157,7 @@ class EagerOperation extends AbstractOperation {
   private static native void delete(long handle);
 
   private static native void deleteTensorHandle(long handle);
-  
+
   private static native long resolveTensorHandle(long handle);
 
   private static native int outputListLength(long handle, String name);

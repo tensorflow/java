@@ -324,7 +324,7 @@ public final class Tensor<T> implements AutoCloseable {
   /**
    * Release resources associated with the Tensor.
    *
-   * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager 
+   * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager
    * operation or memory will be leaked.
    *
    * <p>The Tensor object is no longer usable after {@code close} returns.
@@ -624,22 +624,21 @@ public final class Tensor<T> implements AutoCloseable {
   /**
    * Reference to the underlying native tensor
    *
-   * <p>Tensors are commonly allocated in a `try-with-resources` statement, where they get automatically 
-   * released after executing the last line of the `try` block they were declared in.
-   *  
-   * <p>They can also be attached to an eager session, where in this case their lifetime ends either when
-   * this session is closed or when the Tensor instance is no longer referenced and have been garbage-collected.
-   * 
-   * <p>This helper class wraps the tensor native handle and support both situations; If an eager reference to 
-   * the tensor exists, it will take care of releasing the tensor at the end of its life. If the tensor is
-   * being explicetly closed before this happens, it will take cake of clearing its association with any eager
-   * session before cleaning up the resources.
+   * <p>Tensors are commonly allocated in a `try-with-resources` statement, where they get
+   * automatically released after executing the last line of the `try` block they were declared in.
+   *
+   * <p>They can also be attached to an eager session, where in this case their lifetime ends either
+   * when this session is closed or when the Tensor instance is no longer referenced and have been
+   * garbage-collected.
+   *
+   * <p>This helper class wraps the tensor native handle and support both situations; If an eager
+   * reference to the tensor exists, it will take care of releasing the tensor at the end of its
+   * life. If the tensor is being explicetly closed before this happens, it will take cake of
+   * clearing its association with any eager session before cleaning up the resources.
    */
   private static class NativeReference {
 
-    /**
-     * Attaches this reference to an eager session
-     */
+    /** Attaches this reference to an eager session */
     private class EagerReference extends EagerSession.NativeReference {
 
       EagerReference(EagerSession session, Tensor<?> tensor) {
@@ -653,11 +652,11 @@ public final class Tensor<T> implements AutoCloseable {
         NativeReference.this.release();
       }
     }
-    
+
     NativeReference(long tensorHandle) {
       this.tensorHandle = tensorHandle;
     }
-    
+
     void eager(EagerSession session, Tensor<?> tensor) {
       if (eagerRef != null) {
         throw new IllegalStateException("The tensor is already attached to an eager session");
@@ -676,7 +675,7 @@ public final class Tensor<T> implements AutoCloseable {
         tensorHandle = 0L;
       }
     }
-    
+
     private long tensorHandle;
     private EagerReference eagerRef;
   }
