@@ -11,7 +11,9 @@ cc_binary(
     linkopts = select({
         "@org_tensorflow//tensorflow:debug": [],  # Disable all custom linker options in debug mode
         "//conditions:default": [
-            "-z defs,-s,-Wl,--version-script,$(location {})".format(LINKER_VERSION_SCRIPT),
+            "-z defs",
+            "-s",
+            "-Wl,--version-script,$(location {})".format(LINKER_VERSION_SCRIPT),
         ],
     }),
     linkshared = 1,
