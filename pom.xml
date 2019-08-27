@@ -31,8 +31,8 @@
   <modules>
     <module>support</module>
     <module>core</module>
-    <!--module>framework</module> TODO -->
-    <!--module>tensorflow</module> FIXME enable this module only when we'll support multiple OS builds -->
+    <!--module>frameworks</module> TODO -->
+    <!--module>starters</module> FIXME enable this module only when we'll support multiple OS builds -->
   </modules>
 
   <!-- Two profiles are used:
