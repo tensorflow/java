@@ -101,10 +101,7 @@
             </goals>
             <configuration>
               <executable>bazel</executable>
-              <arguments>
-                <argument>build</argument>
-                <argument>:${native.lib}</argument>
-              </arguments>
+              <commandlineArgs>build -c opt --define=grpc_no_ares=true :${native.lib}</commandlineArgs>
             </configuration>
           </execution>
         </executions>
