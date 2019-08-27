@@ -34,7 +34,6 @@
     <module>annotation-processor</module>
     <module>libtensorflow-jni</module>
     <module>libtensorflow</module>
-    <!--module>tensorflow</module--> <!-- FIXME enable this module only when we'll support multiple OS builds -->
   </modules>
 
   <profiles>
