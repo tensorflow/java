@@ -20,7 +20,7 @@
 
   <parent>
     <groupId>org.tensorflow</groupId>
-    <artifactId>parent-core</artifactId>
+    <artifactId>parent-support</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>nio</artifactId>
