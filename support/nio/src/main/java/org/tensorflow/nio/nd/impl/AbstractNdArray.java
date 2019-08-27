@@ -16,16 +16,13 @@
  */
 package org.tensorflow.nio.nd.impl;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
-
 import org.tensorflow.nio.buffer.DataBuffer;
 import org.tensorflow.nio.buffer.DataBuffers;
 import org.tensorflow.nio.nd.NdArray;
 import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.nio.nd.iterator.Iterators;
-import org.tensorflow.nio.nd.iterator.ValueIterable;
-import org.tensorflow.nio.nd.iterator.ValueIterator;
+import org.tensorflow.nio.nd.impl.iterator.Iterators;
+import org.tensorflow.nio.nd.impl.iterator.ValueIterable;
+import org.tensorflow.nio.nd.impl.iterator.ValueIterator;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArray<T> {

@@ -23,12 +23,12 @@ import org.tensorflow.nio.buffer.DoubleDataBuffer;
 import org.tensorflow.nio.buffer.FloatDataBuffer;
 import org.tensorflow.nio.buffer.IntDataBuffer;
 import org.tensorflow.nio.buffer.LongDataBuffer;
-import org.tensorflow.nio.nd.dense.ByteDenseNdArray;
-import org.tensorflow.nio.nd.dense.DenseNdArray;
-import org.tensorflow.nio.nd.dense.DoubleDenseNdArray;
-import org.tensorflow.nio.nd.dense.FloatDenseNdArray;
-import org.tensorflow.nio.nd.dense.IntDenseNdArray;
-import org.tensorflow.nio.nd.dense.LongDenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.ByteDenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.DenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.DoubleDenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.FloatDenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.IntDenseNdArray;
+import org.tensorflow.nio.nd.impl.dense.LongDenseNdArray;
 
 public final class NdArrays {
   
