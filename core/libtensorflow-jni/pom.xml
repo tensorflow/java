@@ -116,7 +116,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/classes/org/tensorflow/native/${native.classifier}</outputDirectory>
+              <outputDirectory>${basedir}/target/classes/org/tensorflow/native/${os.adjusted.name}-x86_64</outputDirectory>
               <resources>
                 <resource>
                   <directory>${basedir}/bazel-bin</directory>
