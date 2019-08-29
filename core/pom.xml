@@ -32,8 +32,8 @@
 
   <modules>
     <module>annotation-processor</module>
-    <module>libtensorflow-jni</module>
-    <module>libtensorflow</module>
+    <module>tensorflow-native</module>
+    <module>tensorflow-core</module>
   </modules>
 
   <profiles>

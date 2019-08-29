@@ -32,7 +32,7 @@
     <module>support</module>
     <module>core</module>
     <!--module>frameworks</module> TODO -->
-    <!--module>starters</module> FIXME enable this module only when we'll support multiple OS builds -->
+    <!--module>starters</module> TODO -->
   </modules>
 
   <!-- Two profiles are used:
