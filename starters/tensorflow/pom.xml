@@ -21,19 +21,19 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>tensorflow-native</artifactId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>darwin-x86_64</classifier>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>tensorflow-native</artifactId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>linux-x86_64</classifier>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>tensorflow-native</artifactId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>windows-x86_64</classifier>
     </dependency>
@@ -50,7 +50,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>tensorflow-core-${project.version}.jar tensorflow-native-${project.version}.jar</Class-Path>
+                  <Class-Path>tensorflow-core-${project.version}.jar tensorflow-core-native-${project.version}.jar</Class-Path>
                 </manifestEntries>
               </archive>
             </configuration>

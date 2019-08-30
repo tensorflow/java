@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-native</artifactId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>${native.classifier}</classifier>
       <scope>test</scope>

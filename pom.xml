@@ -29,7 +29,7 @@
   </scm>
 
   <modules>
-    <module>support</module>
+    <module>utils</module>
     <module>core</module>
     <!--module>frameworks</module> TODO -->
     <!--module>starters</module> TODO -->

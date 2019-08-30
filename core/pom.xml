@@ -32,7 +32,7 @@
 
   <modules>
     <module>annotation-processor</module>
-    <module>tensorflow-native</module>
+    <module>tensorflow-core-native</module>
     <module>tensorflow-core</module>
   </modules>
 

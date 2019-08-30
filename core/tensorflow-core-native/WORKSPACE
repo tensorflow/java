@@ -1,4 +1,4 @@
-workspace(name = "libtensorflow_jni")
+workspace(name = "tensorflow_core_native")
 
 #local_repository(
 #    name = "tensorflow",
