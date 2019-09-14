@@ -21,7 +21,7 @@ import org.tensorflow.nio.nd.index.Index;
 public final class Dimensions {
 
   public static Dimension unknown() {
-    return UnknownDimension.INSTANCE;
+    return new UnknownDimension();
   }
 
   public static Dimension axis(long numElements, long elementSize) {
