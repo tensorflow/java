@@ -23,7 +23,7 @@ import org.tensorflow.nio.buffer.impl.single.ByteJdkDataBuffer;
 public class OddCapacityJoinedLargeDataBufferTest extends ByteDataBufferTestBase {
 
   private static final long BUFFER_MAX_CAPACITY = 3L;
-  
+
   @Override
   protected long maxCapacity() {
     return BUFFER_MAX_CAPACITY * 50; // pick any value here
@@ -34,7 +34,9 @@ public class OddCapacityJoinedLargeDataBufferTest extends ByteDataBufferTestBase
     if (capacity > maxCapacity()) {
       throw new IllegalArgumentException(); // makes the base test succeed, since we are tricking the real max capacity here
     }
-    ByteDataBuffer[] buffers = ByteLargeDataBuffer.allocateBuffers(ByteDataBuffer.class, capacity, BUFFER_MAX_CAPACITY, ByteJdkDataBuffer::allocate);
+    ByteDataBuffer[] buffers = ByteLargeDataBuffer
+        .allocateBuffers(ByteDataBuffer.class, capacity, BUFFER_MAX_CAPACITY,
+            ByteJdkDataBuffer::allocate);
     return ByteLargeDataBuffer.join(buffers);
   }
 }

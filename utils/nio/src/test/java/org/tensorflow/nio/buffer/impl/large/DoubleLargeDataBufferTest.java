@@ -20,7 +20,7 @@ import org.tensorflow.nio.buffer.DoubleDataBuffer;
 import org.tensorflow.nio.buffer.DoubleDataBufferTestBase;
 
 public class DoubleLargeDataBufferTest extends DoubleDataBufferTestBase {
-  
+
   @Override
   protected long maxCapacity() {
     return DoubleLargeDataBuffer.MAX_CAPACITY;

@@ -19,7 +19,7 @@ package org.tensorflow.nio.buffer.impl.large;
 import org.tensorflow.nio.buffer.DataBufferTestBase;
 
 public class StringLargeDataBufferTest extends DataBufferTestBase<String> {
-  
+
   @Override
   protected long maxCapacity() {
     return LargeDataBuffer.MAX_CAPACITY;
@@ -30,7 +30,8 @@ public class StringLargeDataBufferTest extends DataBufferTestBase<String> {
     return LargeDataBuffer.allocate(String.class, capacity);
   }
 
-  @Override protected String valueOf(Long val) {
+  @Override
+  protected String valueOf(Long val) {
     return val.toString();
   }
 }

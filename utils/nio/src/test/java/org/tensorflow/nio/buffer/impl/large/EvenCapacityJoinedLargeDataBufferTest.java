@@ -18,16 +18,25 @@ package org.tensorflow.nio.buffer.impl.large;
 
 import org.tensorflow.nio.buffer.ByteDataBuffer;
 import org.tensorflow.nio.buffer.ByteDataBufferTestBase;
+import org.tensorflow.nio.buffer.impl.single.ByteJdkDataBuffer;
 
-public class ByteLargeDataBufferTest extends ByteDataBufferTestBase {
+public class EvenCapacityJoinedLargeDataBufferTest extends ByteDataBufferTestBase {
+
+  private static final long BUFFER_MAX_CAPACITY = 2L;
 
   @Override
   protected long maxCapacity() {
-    return ByteLargeDataBuffer.MAX_CAPACITY;
+    return BUFFER_MAX_CAPACITY * 50; // pick any value here
   }
 
   @Override
   protected ByteDataBuffer allocate(long capacity) {
-    return ByteLargeDataBuffer.allocate(capacity);
+    if (capacity > maxCapacity()) {
+      throw new IllegalArgumentException(); // makes the base test succeed, since we are tricking the real max capacity here
+    }
+    ByteDataBuffer[] buffers = ByteLargeDataBuffer
+        .allocateBuffers(ByteDataBuffer.class, capacity, BUFFER_MAX_CAPACITY,
+            ByteJdkDataBuffer::allocate);
+    return ByteLargeDataBuffer.join(buffers);
   }
 }

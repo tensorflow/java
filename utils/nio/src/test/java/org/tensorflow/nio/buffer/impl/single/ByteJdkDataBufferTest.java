@@ -14,20 +14,20 @@
  limitations under the License.
  =======================================================================
  */
-package org.tensorflow.nio.buffer.impl.large;
+package org.tensorflow.nio.buffer.impl.single;
 
-import org.tensorflow.nio.buffer.FloatDataBuffer;
-import org.tensorflow.nio.buffer.FloatDataBufferTestBase;
+import org.tensorflow.nio.buffer.ByteDataBuffer;
+import org.tensorflow.nio.buffer.ByteDataBufferTestBase;
 
-public class FloatLargeDataBufferTest extends FloatDataBufferTestBase {
+public class ByteJdkDataBufferTest extends ByteDataBufferTestBase {
 
   @Override
   protected long maxCapacity() {
-    return FloatLargeDataBuffer.MAX_CAPACITY;
+    return ByteJdkDataBuffer.MAX_CAPACITY;
   }
 
   @Override
-  protected FloatDataBuffer allocate(long capacity) {
-    return FloatLargeDataBuffer.allocate(capacity);
+  protected ByteDataBuffer allocate(long capacity) {
+    return ByteJdkDataBuffer.allocate(capacity);
   }
 }

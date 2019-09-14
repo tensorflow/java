@@ -20,7 +20,7 @@ import org.tensorflow.nio.buffer.IntDataBuffer;
 import org.tensorflow.nio.buffer.IntDataBufferTestBase;
 
 public class IntLargeDataBufferTest extends IntDataBufferTestBase {
-  
+
   @Override
   protected long maxCapacity() {
     return IntLargeDataBuffer.MAX_CAPACITY;

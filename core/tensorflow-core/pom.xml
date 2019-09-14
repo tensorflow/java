@@ -19,6 +19,7 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>annotation-processor</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional> <!-- for compilation only -->
     </dependency>
     <dependency>
       <groupId>junit</groupId>
