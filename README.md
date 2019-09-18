@@ -1,36 +1,35 @@
 # TensorFlow for Java
 
-***!!! IMPORTANT NOTICE !!! This repository is UNDER CONSTRUCTION and does not host the code of the 
-released TensorFlow Java artifacts (yet)!***
+***!!! IMPORTANT NOTICE !!! This repository is UNDER CONSTRUCTION and does not yet host the code of the 
+offical TensorFlow Java artifacts!***
 
 ***Please refer to the [TensorFlow Java module](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/java) 
-of the main repository for the official code.***
+of the main repository for the actual code.***
 
 ## Welcome to the Java world of TensorFlow!
 
-TensorFlow can run on any JVM for building, training or running machine learning models. It comes with 
-a series of utilities and frameworks that help achieving most of the tasks common to data scientists 
+TensorFlow can run on any JVM for building, training and running machine learning models. It comes with 
+a series of utilities and frameworks that help achieve most of the tasks common to data scientists 
 and developers working in this domain. Java and other JVM languages, such as Scala or Kotlin, are 
 frequently used in small-to-large enterprises all over the world, which makes TensorFlow a strategic 
-choice for adopting machine learning on a large scale.
+choice for adopting machine learning at a large scale.
 
 ## This Repository
 
 In the early days, the Java language bindings for TensorFlow were hosted in the [main repository](https://github.com/tensorflow/tensorflow)
 and released only when a new version of the core library was ready to be distributed, which happens only
-a few times a year. Now, all Java-related code has moved to this repository so that it can evolved and 
-be released independently from official TensorFlow releases to deliver faster new features and improvements
-added to those libraries. In addition, most of the build tasks has been migrated from Bazel to Maven, which
-is more familiar for most of the Java developers.
+a few times a year. Now, all Java-related code has been moved to this repository so that it can evolve and 
+be released independently from official TensorFlow releases. In addition, most of the build tasks have been
+migrated from Bazel to Maven, which is more familiar for most Java developers.
 
 The following describes the layout of the repository and its different artifacts:
 
 * `core`
-  * All artifacts that builds up the core language bindings of TensorFlow for Java. 
-  * Those artifacts provides the minimal support required to use the TensorFlow runtime on a JVM.
+  * All artifacts that build up the core language bindings of TensorFlow for Java. 
+  * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
   
 * `utils`
-  * Utility libraries that does not depend on the TensorFlow runtime but are useful for machine learning purposes
+  * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes
   
 * `frameworks`
   * High-level APIs built on top of the core libraries for simplifying the usage of TensorFlow in Java.
@@ -47,13 +46,13 @@ the Maven command of your choice).
 
 Note that in some cases, if a version of the TensorFlow runtime library is not found for your environment,
 this process will fetch TensorFlow sources and trigger a build of all the native code (which can take
-many hours on a standard laptop!). In this case, you will also need to have a valid environment for building
+many hours on a standard laptop). In this case, you will also need to have a valid environment for building
 TensorFlow, including the [bazel](https://bazel.build/) build tool and a few python dependencies. Please
 read [TensorFlow documentation](https://www.tensorflow.org/install) for more details.
 
 ## Using Maven Artifacts
 
-To include TensorFlow in your Maven application, you need at least to add a dependency on both
+To include TensorFlow in your Maven application, you first need to add a dependency on both
 `tensorflow-core` and `tensorflow-core-native` artifacts. The later could be included multiple times
 for different targeted systems by their classifiers.
 
@@ -73,8 +72,8 @@ systems, you should add the following dependencies:
 </dependency>
 ```
 
-On the other hand, if you target to deploy your JAR on any supported platform, you need additional
-native dependencies as follow:
+On the other hand, if you plan to deploy your JAR on more platforms, you need additional
+native dependencies as follows:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
@@ -101,8 +100,8 @@ native dependencies as follow:
 </dependency>
 ```
 
-In some cases, pre-configured starter artifacts can help to include automatically all versions of
-the native library for a given configuration. For example, the `tensorflow` artifacts includes
+In some cases, pre-configured starter artifacts can help to automatically include all versions of
+the native library for a given configuration. For example, the `tensorflow` artifact includes
 transitively all the artifacts above as a single dependency:
 ```xml
 <dependency>
@@ -112,14 +111,14 @@ transitively all the artifacts above as a single dependency:
 </dependency>
 ```
 
-Be aware though that the native library are quite large and including too many version of it may result
-increase significantly the size of your JAR. So it is a good practice to limit the dependencies to
-the platforms that are actually targeted.
+Be aware though that the native library is quite large and including too many versions of it may
+significantly increase  the size of your JAR. So it is good practice to limit your dependencies to
+the platforms you are targeting.
 
 *Note: the `tensorflow` starter artifact is not available at this moment*
 
 ## How to Contribute?
 
-This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join it
+This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
 by subscribing to the [jvm@tensorflow.org](https://groups.google.com/a/tensorflow.org/forum/#!forum/jvm)
 mailing list, or you can simply send pull requests and raise issues to this repository.
