@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.tensorflow</groupId>
-  <artifactId>parent</artifactId>
+  <artifactId>tensorflow-java</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Parent Artifact</name>
+  <name>TensorFlow Java Parent</name>
   <description>Parent POM of TensorFlow artifacts</description>
 
   <url>https://www.tensorflow.org</url>
@@ -29,10 +29,10 @@
   </scm>
 
   <modules>
-    <!--module>utils</module-->
-    <module>core</module>
-    <!--module>frameworks</module> TODO -->
-    <!--module>starters</module> TODO -->
+    <module>tensorflow-core</module>
+    <!--module>tensorflow-utils</module-->
+    <!--module>tensorflow-frameworks</module> TODO -->
+    <!--module>tensorflow-starters</module> TODO -->
   </modules>
 
   <!-- Two profiles are used:

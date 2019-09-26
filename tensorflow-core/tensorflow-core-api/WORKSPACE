@@ -1,0 +1,45 @@
+workspace(name = "tensorflow_core_api")
+
+#local_repository(
+#    name = "tensorflow",
+#    path = "/Users/klessard/Documents/Projects/MachineLearning/Sources/tensorflow",
+#)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "org_tensorflow",
+    urls = [
+       "https://mirror.bazel.build/github.com/tensorflow/tensorflow/archive/v2.0.0-rc2.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/v2.0.0-rc2.tar.gz",
+    ],
+    sha256 = "43aa85a62a4cc20d19e0423e17fcc85e58e39ed68b362a53b4a90a50a6707024",
+    strip_prefix = "tensorflow-2.0.0-rc2"
+)
+
+# START: Upstream TensorFlow dependencies
+# TensorFlow build depends on these dependencies.
+# Needs to be in-sync with TensorFlow sources.
+http_archive(
+    name = "io_bazel_rules_closure",
+    sha256 = "5b00383d08dd71f28503736db0500b6fb4dda47489ff5fc6bed42557c07c6ba9",
+    strip_prefix = "rules_closure-308b05b2419edb5c8ee0471b67a40403df940149",
+    urls = [
+        "https://storage.googleapis.com/mirror.tensorflow.org/github.com/bazelbuild/rules_closure/archive/308b05b2419edb5c8ee0471b67a40403df940149.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/308b05b2419edb5c8ee0471b67a40403df940149.tar.gz",  # 2019-06-13
+    ],
+)
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
+    urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz"],
+)
+# END: Upstream TensorFlow dependencies
+load("@org_tensorflow//tensorflow:workspace.bzl", "tf_repositories")
+tf_repositories()
+
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
+closure_repositories()
+
+load("@org_tensorflow//tensorflow:workspace.bzl", "tf_bind")
+tf_bind()
