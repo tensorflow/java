@@ -35,7 +35,7 @@
     <dependency>
       <groupId>org.bytedeco</groupId>
       <artifactId>mkl-dnn-platform</artifactId>
-      <version>0.21.1-${javacpp.version}</version>
+      <version>${mkl-dnn.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

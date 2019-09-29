@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.bytedeco</groupId>
       <artifactId>mkl-dnn</artifactId>
-      <version>0.21.1-${javacpp.version}</version>
+      <version>${mkl-dnn.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -117,7 +117,7 @@
       <plugin>
         <groupId>org.bytedeco</groupId>
         <artifactId>javacpp</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>${javacpp.version}</version>
         <configuration>
           <properties>${javacpp.platform.properties}</properties>
           <propertyKeysAndValues>
