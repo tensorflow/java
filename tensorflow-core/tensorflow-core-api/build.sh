@@ -2,16 +2,23 @@
 # Script to build native TensorFlow libraries
 set -eu
 
-# Allows us to use ccache with Bazel
+# Allows us to use ccache with Bazel on Mac
 export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
-export BAZEL_VC="C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/"
-export PYTHON_BIN_PATH=$(which python.exe)
-if [[ ! -f $PYTHON_BIN_PATH ]]; then
+
+export BAZEL_VC="${VCINSTALLDIR:-}"
+if [[ -d $BAZEL_VC ]]; then
+    # Work around compiler issues on Windows documented mainly in configure.py
+    export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --copt=-DWIN32_LEAN_AND_MEAN --host_copt=-DWIN32_LEAN_AND_MEAN --copt=-DNOGDI --host_copt=-DNOGDI --define=override_eigen_strong_inline=true"
+    # https://software.intel.com/en-us/articles/intel-optimization-for-tensorflow-installation-guide#wind_B_S
+    export PATH=$PATH:$(pwd)/bazel-tensorflow-core-api/external/mkl_windows/lib/
+    export PYTHON_BIN_PATH=$(which python.exe)
+else
+    export BUILD_FLAGS="--copt=-msse4.1 --copt=-msse4.2 --copt=-mavx `#--copt=-mavx2 --copt=-mfma`"
     export PYTHON_BIN_PATH=$(which python3)
 fi
 
 # Build TensorFlow itself
-bazel build --python_path="$PYTHON_BIN_PATH" --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow @org_tensorflow//tensorflow/java:tensorflow
+bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow @org_tensorflow//tensorflow/java:tensorflow
 
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=(bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.so.?.?.?)
@@ -23,6 +30,10 @@ TENSORFLOW_DYLIB=(bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.?.?
 if [[ -f $TENSORFLOW_DYLIB ]]; then
     ln -sf $(basename $TENSORFLOW_DYLIB) bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.dylib
     ln -sf $(basename $TENSORFLOW_DYLIB) bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.2.dylib
+fi
+TENSORFLOW_LIB=(bazel-bin/external/org_tensorflow/tensorflow/tensorflow.dll.if.lib)
+if [[ -f $TENSORFLOW_LIB ]]; then
+    ln -sf $(basename $TENSORFLOW_LIB) bazel-bin/external/org_tensorflow/tensorflow/tensorflow.lib
 fi
 
 # Copy generated Java source files
