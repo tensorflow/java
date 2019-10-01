@@ -77,6 +77,17 @@ public final class SignalOps {
   }
 
   /**
+   * Builds an {@link Ifft} operation
+   *
+   * @param input A complex tensor.
+   * @return a new instance of Ifft
+   * @see org.tensorflow.op.signal.Ifft
+   */
+  public <T> Ifft<T> ifft(Operand<T> input) {
+    return Ifft.create(scope, input);
+  }
+
+  /**
    * Builds an {@link Irfft2d} operation
    *
    * @param input A complex64 tensor.
@@ -86,17 +97,6 @@ public final class SignalOps {
    */
   public Irfft2d irfft2d(Operand<?> input, Operand<Integer> fftLength) {
     return Irfft2d.create(scope, input, fftLength);
-  }
-
-  /**
-   * Builds an {@link Ifft} operation
-   *
-   * @param input A complex tensor.
-   * @return a new instance of Ifft
-   * @see org.tensorflow.op.signal.Ifft
-   */
-  public <T> Ifft<T> ifft(Operand<T> input) {
-    return Ifft.create(scope, input);
   }
 
   /**
@@ -124,17 +124,6 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link BatchIfft3d} operation
-   *
-   * @param input 
-   * @return a new instance of BatchIfft3d
-   * @see org.tensorflow.op.signal.BatchIfft3d
-   */
-  public BatchIfft3d batchIfft3d(Operand<?> input) {
-    return BatchIfft3d.create(scope, input);
-  }
-
-  /**
    * Builds an {@link Irfft3d} operation
    *
    * @param input A complex64 tensor.
@@ -144,6 +133,17 @@ public final class SignalOps {
    */
   public Irfft3d irfft3d(Operand<?> input, Operand<Integer> fftLength) {
     return Irfft3d.create(scope, input, fftLength);
+  }
+
+  /**
+   * Builds an {@link BatchIfft3d} operation
+   *
+   * @param input 
+   * @return a new instance of BatchIfft3d
+   * @see org.tensorflow.op.signal.BatchIfft3d
+   */
+  public BatchIfft3d batchIfft3d(Operand<?> input) {
+    return BatchIfft3d.create(scope, input);
   }
 
   /**
@@ -203,14 +203,14 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link BatchIfft2d} operation
+   * Builds an {@link BatchFft} operation
    *
    * @param input 
-   * @return a new instance of BatchIfft2d
-   * @see org.tensorflow.op.signal.BatchIfft2d
+   * @return a new instance of BatchFft
+   * @see org.tensorflow.op.signal.BatchFft
    */
-  public BatchIfft2d batchIfft2d(Operand<?> input) {
-    return BatchIfft2d.create(scope, input);
+  public BatchFft batchFft(Operand<?> input) {
+    return BatchFft.create(scope, input);
   }
 
   /**
@@ -226,13 +226,13 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link BatchFft} operation
+   * Builds an {@link BatchIfft2d} operation
    *
    * @param input 
-   * @return a new instance of BatchFft
-   * @see org.tensorflow.op.signal.BatchFft
+   * @return a new instance of BatchIfft2d
+   * @see org.tensorflow.op.signal.BatchIfft2d
    */
-  public BatchFft batchFft(Operand<?> input) {
-    return BatchFft.create(scope, input);
+  public BatchIfft2d batchIfft2d(Operand<?> input) {
+    return BatchIfft2d.create(scope, input);
   }
 }

@@ -26,15 +26,9 @@
       <version>${mkl-dnn.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>28.0-jre</version>
-      <optional>true</optional> <!-- for compilation only -->
-    </dependency>
-    <dependency>
-      <groupId>com.squareup</groupId>
-      <artifactId>javapoet</artifactId>
-      <version>1.11.1</version>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-generator</artifactId>
+      <version>${project.version}</version>
       <optional>true</optional> <!-- for compilation only -->
     </dependency>
     <dependency>
@@ -89,15 +83,13 @@
         <executions>
           <execution>
             <id>default-compile</id>
-<!-- Bazel currently runs this
             <configuration>
               <annotationProcessors>
-                <annotationProcessor>
-                  org.tensorflow.processor.operator.OperatorProcessor
-                </annotationProcessor>
+                <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
               </annotationProcessors>
+              <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
+              <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
             </configuration>
--->
           </execution>
           <execution>
             <id>javacpp-parser</id>
@@ -108,7 +100,6 @@
             <configuration>
               <includes>
                 <include>org/tensorflow/c_api/presets/*.java</include>
-                <include>org/tensorflow/processor/operator/OperatorProcessor.java</include>
               </includes>
             </configuration>
           </execution>

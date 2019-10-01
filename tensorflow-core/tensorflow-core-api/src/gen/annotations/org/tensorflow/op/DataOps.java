@@ -39,15 +39,15 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link DeserializeIterator} operation
+   * Builds an {@link AnonymousIterator} operation
    *
-   * @param resourceHandle A handle to an iterator resource.
-   * @param serialized A variant tensor storing the state of the iterator contained in the
-   * @return a new instance of DeserializeIterator
-   * @see org.tensorflow.op.data.DeserializeIterator
+   * @param outputTypes 
+   * @param outputShapes 
+   * @return a new instance of AnonymousIterator
+   * @see org.tensorflow.op.data.AnonymousIterator
    */
-  public DeserializeIterator deserializeIterator(Operand<?> resourceHandle, Operand<?> serialized) {
-    return DeserializeIterator.create(scope, resourceHandle, serialized);
+  public AnonymousIterator anonymousIterator(List<Class<?>> outputTypes, List<Shape> outputShapes) {
+    return AnonymousIterator.create(scope, outputTypes, outputShapes);
   }
 
   /**
@@ -79,6 +79,17 @@ public final class DataOps {
   }
 
   /**
+   * Builds an {@link OptionalFromValue} operation
+   *
+   * @param components 
+   * @return a new instance of OptionalFromValue
+   * @see org.tensorflow.op.data.OptionalFromValue
+   */
+  public OptionalFromValue optionalFromValue(Iterable<Operand<?>> components) {
+    return OptionalFromValue.create(scope, components);
+  }
+
+  /**
    * Builds an {@link IteratorGetNextAsOptional} operation
    *
    * @param iterator 
@@ -101,40 +112,6 @@ public final class DataOps {
    */
   public IteratorToStringHandle iteratorToStringHandle(Operand<?> resourceHandle) {
     return IteratorToStringHandle.create(scope, resourceHandle);
-  }
-
-  /**
-   * Builds an {@link OptionalFromValue} operation
-   *
-   * @param components 
-   * @return a new instance of OptionalFromValue
-   * @see org.tensorflow.op.data.OptionalFromValue
-   */
-  public OptionalFromValue optionalFromValue(Iterable<Operand<?>> components) {
-    return OptionalFromValue.create(scope, components);
-  }
-
-  /**
-   * Builds an {@link AnonymousIterator} operation
-   *
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of AnonymousIterator
-   * @see org.tensorflow.op.data.AnonymousIterator
-   */
-  public AnonymousIterator anonymousIterator(List<Class<?>> outputTypes, List<Shape> outputShapes) {
-    return AnonymousIterator.create(scope, outputTypes, outputShapes);
-  }
-
-  /**
-   * Builds an {@link SerializeIterator} operation
-   *
-   * @param resourceHandle A handle to an iterator resource.
-   * @return a new instance of SerializeIterator
-   * @see org.tensorflow.op.data.SerializeIterator
-   */
-  public SerializeIterator serializeIterator(Operand<?> resourceHandle) {
-    return SerializeIterator.create(scope, resourceHandle);
   }
 
   /**
@@ -172,5 +149,28 @@ public final class DataOps {
    */
   public MakeIterator makeIterator(Operand<?> dataset, Operand<?> iterator) {
     return MakeIterator.create(scope, dataset, iterator);
+  }
+
+  /**
+   * Builds an {@link DeserializeIterator} operation
+   *
+   * @param resourceHandle A handle to an iterator resource.
+   * @param serialized A variant tensor storing the state of the iterator contained in the
+   * @return a new instance of DeserializeIterator
+   * @see org.tensorflow.op.data.DeserializeIterator
+   */
+  public DeserializeIterator deserializeIterator(Operand<?> resourceHandle, Operand<?> serialized) {
+    return DeserializeIterator.create(scope, resourceHandle, serialized);
+  }
+
+  /**
+   * Builds an {@link SerializeIterator} operation
+   *
+   * @param resourceHandle A handle to an iterator resource.
+   * @return a new instance of SerializeIterator
+   * @see org.tensorflow.op.data.SerializeIterator
+   */
+  public SerializeIterator serializeIterator(Operand<?> resourceHandle) {
+    return SerializeIterator.create(scope, resourceHandle);
   }
 }

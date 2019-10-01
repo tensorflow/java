@@ -17,7 +17,7 @@ else
     export PYTHON_BIN_PATH=$(which python3)
 fi
 
-# Build TensorFlow itself
+# Build C API of TensorFlow itself including a target to generate ops for Java
 bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow @org_tensorflow//tensorflow/java:tensorflow
 
 # Normalize some paths with symbolic links
@@ -36,7 +36,6 @@ if [[ -f $TENSORFLOW_LIB ]]; then
     ln -sf $(basename $TENSORFLOW_LIB) bazel-bin/external/org_tensorflow/tensorflow/tensorflow.lib
 fi
 
-# Copy generated Java source files
+# Copy only main generated Java source files for ops
 mkdir -p src/gen/java/
 cp -r bazel-genfiles/external/org_tensorflow/tensorflow/java/ops/src/main/java/* src/gen/java/
-cp -r bazel-genfiles/external/org_tensorflow/tensorflow/java/_javac/tensorflow/libtensorflow_sourcegenfiles/* src/gen/java/
