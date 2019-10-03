@@ -13,14 +13,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package org.tensorflow.examples;
+package org.tensorflow.c_api;
 
-import org.bytedeco.javacpp.*;
-import org.tensorflow.c_api.*;
-import static org.tensorflow.c_api.global.tensorflow.*;
+import static org.junit.Assert.assertTrue;
+import static org.tensorflow.c_api.global.tensorflow.TF_Version;
 
-public class HelloWorld {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Running with TensorFlow " + TF_Version().getString());
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+@RunWith(JUnit4.class)
+public class HelloWorldTest {
+
+    @Test
+    public void getVersion() {
+        assertTrue(TF_Version().getString().length() > 0);
     }
 }
