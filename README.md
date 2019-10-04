@@ -24,20 +24,20 @@ migrated from Bazel to Maven, which is more familiar for most Java developers.
 
 The following describes the layout of the repository and its different artifacts:
 
-* `core`
+* `tensorflow-core`
   * All artifacts that build up the core language bindings of TensorFlow for Java. 
   * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
   
-* `utils`
+* `tensorflow-utils`
   * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes
   
-* `frameworks`
+* `tensorflow-frameworks`
   * High-level APIs built on top of the core libraries for simplifying the usage of TensorFlow in Java.
   
-* `starters`
+* `tensorflow-starters`
   * Artifacts aggregating others for simplifying dependency management with TensorFlow
   
-*Note: Right now, only the `core` component is present*
+*Note: Right now, only the `tensorflow-core` component is present*
   
 ## Building Sources
 
@@ -48,26 +48,27 @@ Note that in some cases, if a version of the TensorFlow runtime library is not f
 this process will fetch TensorFlow sources and trigger a build of all the native code (which can take
 many hours on a standard laptop). In this case, you will also need to have a valid environment for building
 TensorFlow, including the [bazel](https://bazel.build/) build tool and a few python dependencies. Please
-read [TensorFlow documentation](https://www.tensorflow.org/install) for more details.
+read [TensorFlow documentation](https://www.tensorflow.org/install/source) for more details.
 
 ## Using Maven Artifacts
 
-To include TensorFlow in your Maven application, you first need to add a dependency on both
-`tensorflow-core` and `tensorflow-core-native` artifacts. The later could be included multiple times
-for different targeted systems by their classifiers.
+To include TensorFlow in your Maven application, you first need to add a dependency on either the
+`tensorflow-core` or `tensorflow-core-platform` artifacts. The former could be included multiple times
+for different targeted systems by their classifiers, while the later includes them as dependencies for
+`linux-x86_64`, `macosx-x86_64`, and `windows-x86_64`, with more to come in the future.
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems, you should add the following dependencies:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-native</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
 ```
@@ -77,37 +78,37 @@ native dependencies as follows:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-native</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-native</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
-  <classifier>windows-x86_64</classifier>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <classifier>macosx-x86_64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-native</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
-  <classifier>darwin-x86_64</classifier>
+  <artifactId>tensorflow-core-api</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <classifier>windows-x86_64</classifier>
 </dependency>
 ```
 
 In some cases, pre-configured starter artifacts can help to automatically include all versions of
-the native library for a given configuration. For example, the `tensorflow` artifact includes
+the native library for a given configuration. For example, the `tensorflow-core-platform` artifact includes
 transitively all the artifacts above as a single dependency:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <artifactId>tensorflow-core-platform</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -115,7 +116,7 @@ Be aware though that the native library is quite large and including too many ve
 significantly increase  the size of your JAR. So it is good practice to limit your dependencies to
 the platforms you are targeting.
 
-*Note: the `tensorflow` starter artifact is not available at this moment*
+*Note: the `tensorflow-starters` artifact is not available at this moment*
 
 ## How to Contribute?
 
