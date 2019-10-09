@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Encode audio data using the WAV file format.
@@ -37,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * `sample_rate` is a scalar Tensor holding the rate to use (e.g. 44100).
  */
 @Operator(group = "audio")
-public final class EncodeWav extends PrimitiveOp implements Operand<String> {
+public final class EncodeWav extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new EncodeWav operation.
@@ -47,7 +50,7 @@ public final class EncodeWav extends PrimitiveOp implements Operand<String> {
    * @param sampleRate Scalar containing the sample frequency.
    * @return a new instance of EncodeWav
    */
-  public static EncodeWav create(Scope scope, Operand<Float> audio, Operand<Integer> sampleRate) {
+  public static EncodeWav create(Scope scope, Operand<TFloat> audio, Operand<TInt32> sampleRate) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeWav", scope.makeOpName("EncodeWav"));
     opBuilder.addInput(audio.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
@@ -58,16 +61,16 @@ public final class EncodeWav extends PrimitiveOp implements Operand<String> {
   /**
    * 0-D. WAV-encoded file contents.
    */
-  public Output<String> contents() {
+  public Output<TString> contents() {
     return contents;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return contents;
   }
   
-  private Output<String> contents;
+  private Output<TString> contents;
   
   private EncodeWav(Operation operation) {
     super(operation);

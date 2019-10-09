@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Number of unique elements along last dimension of input `set`.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * indices.
  */
 @Operator
-public final class SetSize extends PrimitiveOp implements Operand<Integer> {
+public final class SetSize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.SetSize}
@@ -67,7 +69,7 @@ public final class SetSize extends PrimitiveOp implements Operand<Integer> {
    * @param options carries optional attributes values
    * @return a new instance of SetSize
    */
-  public static <T> SetSize create(Scope scope, Operand<Long> setIndices, Operand<T> setValues, Operand<Long> setShape, Options... options) {
+  public static <T> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetSize", scope.makeOpName("SetSize"));
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());
@@ -95,16 +97,16 @@ public final class SetSize extends PrimitiveOp implements Operand<Integer> {
    * `n-1` dimensions as `set`. Each value is the number of unique elements in
    * the corresponding `[0...n-1]` dimension of `set`.
    */
-  public Output<Integer> size() {
+  public Output<TInt32> size() {
     return size;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return size;
   }
   
-  private Output<Integer> size;
+  private Output<TInt32> size;
   
   private SetSize(Operation operation) {
     super(operation);

@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Replaces the match of pattern in input with rewrite.
  * <p>
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
-public final class StaticRegexReplace extends PrimitiveOp implements Operand<String> {
+public final class StaticRegexReplace extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StaticRegexReplace}
@@ -61,7 +62,7 @@ public final class StaticRegexReplace extends PrimitiveOp implements Operand<Str
    * @param options carries optional attributes values
    * @return a new instance of StaticRegexReplace
    */
-  public static StaticRegexReplace create(Scope scope, Operand<String> input, String pattern, String rewrite, Options... options) {
+  public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern, String rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexReplace", scope.makeOpName("StaticRegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -88,16 +89,16 @@ public final class StaticRegexReplace extends PrimitiveOp implements Operand<Str
   /**
    * The text after applying pattern and rewrite.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private StaticRegexReplace(Operation operation) {
     super(operation);

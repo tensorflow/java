@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Returns the cardinality of `input_dataset`.
  * <p>
  * Returns the cardinality of `input_dataset`.
  */
-public final class DatasetCardinality extends PrimitiveOp implements Operand<Long> {
+public final class DatasetCardinality extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new DatasetCardinality operation.
@@ -49,16 +50,16 @@ public final class DatasetCardinality extends PrimitiveOp implements Operand<Lon
    * The cardinality of `input_dataset`. Named constants are used to represent
    * infinite and unknown cardinality.
    */
-  public Output<Long> cardinality() {
+  public Output<TInt64> cardinality() {
     return cardinality;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return cardinality;
   }
   
-  private Output<Long> cardinality;
+  private Output<TInt64> cardinality;
   
   private DatasetCardinality(Operation operation) {
     super(operation);

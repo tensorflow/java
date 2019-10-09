@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Resize quantized `images` to `size` using quantized bilinear interpolation.
@@ -76,7 +78,7 @@ public final class QuantizedResizeBilinear<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedResizeBilinear
    */
-  public static <T> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<Integer> size, Operand<Float> min, Operand<Float> max, Options... options) {
+  public static <T> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -121,19 +123,19 @@ public final class QuantizedResizeBilinear<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Float> outMin() {
+  public Output<TFloat> outMin() {
     return outMin;
   }
   
   /**
    */
-  public Output<Float> outMax() {
+  public Output<TFloat> outMax() {
     return outMax;
   }
   
   private Output<T> resizedImages;
-  private Output<Float> outMin;
-  private Output<Float> outMax;
+  private Output<TFloat> outMin;
+  private Output<TFloat> outMax;
   
   private QuantizedResizeBilinear(Operation operation) {
     super(operation);

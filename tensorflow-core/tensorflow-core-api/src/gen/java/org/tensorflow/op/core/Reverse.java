@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reverses specific dimensions of a tensor.
@@ -89,7 +90,7 @@ public final class Reverse<T> extends PrimitiveOp implements Operand<T> {
    * `[-rank(tensor), rank(tensor))`.
    * @return a new instance of Reverse
    */
-  public static <T, U extends Number> Reverse<T> create(Scope scope, Operand<T> tensor, Operand<U> axis) {
+  public static <T, U extends TNumber> Reverse<T> create(Scope scope, Operand<T> tensor, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseV2", scope.makeOpName("Reverse"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());

@@ -24,11 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  */
 @Operator
-public final class StringLower extends PrimitiveOp implements Operand<String> {
+public final class StringLower extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.StringLower}
@@ -57,7 +58,7 @@ public final class StringLower extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of StringLower
    */
-  public static StringLower create(Scope scope, Operand<String> input, Options... options) {
+  public static StringLower create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLower", scope.makeOpName("StringLower"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -80,16 +81,16 @@ public final class StringLower extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private StringLower(Operation operation) {
     super(operation);

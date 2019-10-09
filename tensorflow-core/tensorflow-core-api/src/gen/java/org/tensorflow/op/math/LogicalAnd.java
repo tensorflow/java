@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Returns the truth value of x AND y element-wise.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
  */
 @Operator(group = "math")
-public final class LogicalAnd extends PrimitiveOp implements Operand<Boolean> {
+public final class LogicalAnd extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new LogicalAnd operation.
@@ -42,7 +43,7 @@ public final class LogicalAnd extends PrimitiveOp implements Operand<Boolean> {
    * @param y 
    * @return a new instance of LogicalAnd
    */
-  public static LogicalAnd create(Scope scope, Operand<Boolean> x, Operand<Boolean> y) {
+  public static LogicalAnd create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalAnd", scope.makeOpName("LogicalAnd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -52,16 +53,16 @@ public final class LogicalAnd extends PrimitiveOp implements Operand<Boolean> {
   
   /**
    */
-  public Output<Boolean> z() {
+  public Output<TBool> z() {
     return z;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return z;
   }
   
-  private Output<Boolean> z;
+  private Output<TBool> z;
   
   private LogicalAnd(Operation operation) {
     super(operation);

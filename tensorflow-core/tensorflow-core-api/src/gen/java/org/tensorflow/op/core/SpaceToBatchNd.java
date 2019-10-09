@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * SpaceToBatch for N-D tensors of type T.
@@ -143,7 +144,7 @@ public final class SpaceToBatchNd<T> extends PrimitiveOp implements Operand<T> {
    * regular convolution.
    * @return a new instance of SpaceToBatchNd
    */
-  public static <T, U extends Number, V extends Number> SpaceToBatchNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
+  public static <T, U extends TNumber, V extends TNumber> SpaceToBatchNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatchND", scope.makeOpName("SpaceToBatchNd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());

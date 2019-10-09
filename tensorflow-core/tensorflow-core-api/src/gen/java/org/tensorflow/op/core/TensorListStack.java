@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Stacks all tensors in the list.
@@ -70,12 +71,12 @@ public final class TensorListStack<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of TensorListStack
    */
-  public static <T> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<Integer> elementShape, Class<T> elementDtype, Options... options) {
+  public static <T> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListStack", scope.makeOpName("TensorListStack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.numElements != null) {

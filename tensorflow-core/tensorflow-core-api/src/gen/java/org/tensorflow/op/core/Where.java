@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Returns locations of nonzero / true values in a tensor.
@@ -89,7 +90,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class Where extends PrimitiveOp implements Operand<Long> {
+public final class Where extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new Where operation.
@@ -107,16 +108,16 @@ public final class Where extends PrimitiveOp implements Operand<Long> {
   
   /**
    */
-  public Output<Long> index() {
+  public Output<TInt64> index() {
     return index;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return index;
   }
   
-  private Output<Long> index;
+  private Output<TInt64> index;
   
   private Where(Operation operation) {
     super(operation);

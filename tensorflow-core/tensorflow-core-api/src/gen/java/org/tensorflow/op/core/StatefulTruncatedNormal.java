@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Outputs random values from a truncated normal distribution.
@@ -46,13 +48,13 @@ public final class StatefulTruncatedNormal<U> extends PrimitiveOp implements Ope
    * @param dtype The type of the output.
    * @return a new instance of StatefulTruncatedNormal
    */
-  public static <U, T> StatefulTruncatedNormal<U> create(Scope scope, Operand<?> resource, Operand<Long> algorithm, Operand<T> shape, Class<U> dtype) {
+  public static <U, T> StatefulTruncatedNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulTruncatedNormal", scope.makeOpName("StatefulTruncatedNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new StatefulTruncatedNormal<U>(opBuilder.build());
   }
   
@@ -65,8 +67,8 @@ public final class StatefulTruncatedNormal<U> extends PrimitiveOp implements Ope
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulTruncatedNormal
    */
-  public static <T> StatefulTruncatedNormal<Float> create(Scope scope, Operand<?> resource, Operand<Long> algorithm, Operand<T> shape) {
-    return create(scope, resource, algorithm, shape, Float.class);
+  public static <T> StatefulTruncatedNormal<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+    return create(scope, resource, algorithm, shape, TFloat.DTYPE);
   }
   
   /**

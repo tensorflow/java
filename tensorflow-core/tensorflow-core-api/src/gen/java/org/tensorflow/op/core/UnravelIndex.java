@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts a flat index or array of flat indices into a tuple of
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class UnravelIndex<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class UnravelIndex<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new UnravelIndex operation.
@@ -49,7 +50,7 @@ public final class UnravelIndex<T extends Number> extends PrimitiveOp implements
    * indices.
    * @return a new instance of UnravelIndex
    */
-  public static <T extends Number> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
+  public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(dims.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Transcode the input text from a source encoding to a destination encoding.
@@ -54,7 +55,7 @@ import org.tensorflow.op.annotation.Operator;
  * but as metadata, and so is not preserved in the output.
  */
 @Operator(group = "strings")
-public final class UnicodeTranscode extends PrimitiveOp implements Operand<String> {
+public final class UnicodeTranscode extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.UnicodeTranscode}
@@ -120,7 +121,7 @@ public final class UnicodeTranscode extends PrimitiveOp implements Operand<Strin
    * @param options carries optional attributes values
    * @return a new instance of UnicodeTranscode
    */
-  public static UnicodeTranscode create(Scope scope, Operand<String> input, String inputEncoding, String outputEncoding, Options... options) {
+  public static UnicodeTranscode create(Scope scope, Operand<TString> input, String inputEncoding, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeTranscode", scope.makeOpName("UnicodeTranscode"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -181,16 +182,16 @@ public final class UnicodeTranscode extends PrimitiveOp implements Operand<Strin
   /**
    * A string tensor containing unicode text encoded using `output_encoding`.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private UnicodeTranscode(Operation operation) {
     super(operation);

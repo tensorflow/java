@@ -20,6 +20,9 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperationBuilder} class. */
 @RunWith(JUnit4.class)
@@ -44,7 +47,7 @@ public class EagerOperationBuilderTest {
       opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
     }
     try {
-      opBuilder.setAttr("dtype", DataType.FLOAT);
+      opBuilder.setAttr("dtype", TFloat.DTYPE);
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -89,9 +92,9 @@ public class EagerOperationBuilderTest {
     // types that aren't inferred from the input arguments.
     try (EagerSession session = EagerSession.create()) {
       // dtype, tensor attributes.
-      try (Tensor<Integer> t = Tensors.create(1)) {
+      try (Tensor<TInt32> t = Tensors.create(1)) {
         opBuilder(session, "Const", "DataTypeAndTensor")
-            .setAttr("dtype", DataType.INT32)
+            .setAttr("dtype", TInt32.DTYPE)
             .setAttr("value", t)
             .build();
       }
@@ -99,7 +102,7 @@ public class EagerOperationBuilderTest {
       opBuilder(session, "RandomUniform", "DataTypeAndInt")
           .addInput(TestUtil.constant(session, "RandomUniformShape", new int[] {1}))
           .setAttr("seed", 10)
-          .setAttr("dtype", DataType.FLOAT)
+          .setAttr("dtype", TFloat.DTYPE)
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")
@@ -120,7 +123,7 @@ public class EagerOperationBuilderTest {
           .build();
       // list(shape)
       opBuilder(session, "FIFOQueue", "queue")
-          .setAttr("component_types", new DataType[] {DataType.INT32, DataType.INT32})
+          .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
           .setAttr("shapes", new Shape[] {Shape.make(2, 2), Shape.make(2, 2, 2)})
           .build();
       // bool

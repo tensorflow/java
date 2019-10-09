@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Bucketizes 'input' based on 'boundaries'.
@@ -41,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  *               [1, 3]]
  */
 @Operator
-public final class Bucketize extends PrimitiveOp implements Operand<Integer> {
+public final class Bucketize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new Bucketize operation.
@@ -51,7 +53,7 @@ public final class Bucketize extends PrimitiveOp implements Operand<Integer> {
    * @param boundaries A sorted list of floats gives the boundary of the buckets.
    * @return a new instance of Bucketize
    */
-  public static <T extends Number> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
+  public static <T extends TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -70,16 +72,16 @@ public final class Bucketize extends PrimitiveOp implements Operand<Integer> {
    * Equivalent to np.digitize.
    * @end_compatibility
    */
-  public Output<Integer> output() {
+  public Output<TInt32> output() {
     return output;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return output;
   }
   
-  private Output<Integer> output;
+  private Output<TInt32> output;
   
   private Bucketize(Operation operation) {
     super(operation);

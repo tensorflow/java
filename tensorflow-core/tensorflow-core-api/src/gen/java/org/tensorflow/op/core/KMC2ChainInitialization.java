@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Returns the index of a data point that should be added to the seed set.
@@ -32,7 +34,7 @@ import org.tensorflow.op.Scope;
  * of the k-MC^2 algorithm and returns the index of one candidate point to be added
  * as an additional cluster center.
  */
-public final class KMC2ChainInitialization extends PrimitiveOp implements Operand<Long> {
+public final class KMC2ChainInitialization extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new KMC2ChainInitialization operation.
@@ -43,7 +45,7 @@ public final class KMC2ChainInitialization extends PrimitiveOp implements Operan
    * @param seed Scalar. Seed for initializing the random number generator.
    * @return a new instance of KMC2ChainInitialization
    */
-  public static KMC2ChainInitialization create(Scope scope, Operand<Float> distances, Operand<Long> seed) {
+  public static KMC2ChainInitialization create(Scope scope, Operand<TFloat> distances, Operand<TInt64> seed) {
     OperationBuilder opBuilder = scope.env().opBuilder("KMC2ChainInitialization", scope.makeOpName("KMC2ChainInitialization"));
     opBuilder.addInput(distances.asOutput());
     opBuilder.addInput(seed.asOutput());
@@ -54,16 +56,16 @@ public final class KMC2ChainInitialization extends PrimitiveOp implements Operan
   /**
    * Scalar with the index of the sampled point.
    */
-  public Output<Long> index() {
+  public Output<TInt64> index() {
     return index;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return index;
   }
   
-  private Output<Long> index;
+  private Output<TInt64> index;
   
   private KMC2ChainInitialization(Operation operation) {
     super(operation);

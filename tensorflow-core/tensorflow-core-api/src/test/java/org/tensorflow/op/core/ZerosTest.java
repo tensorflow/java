@@ -27,7 +27,13 @@ import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 @RunWith(JUnit4.class)
 public class ZerosTest {
@@ -39,9 +45,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Integer> op = Zeros.create(scope, Constant.create(scope, shape), Integer.class);
+      Zeros<TInt32> op = Zeros.create(scope, Constant.create(scope, shape), TInt32.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        int[][] actual = result.expect(Integer.class).copyTo(new int[(int)shape[0]][(int)shape[1]]);
+        int[][] actual = result.expect(TInt32.DTYPE).copyTo(new int[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0, actual[i][j]);
@@ -57,9 +63,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Float> op = Zeros.create(scope, Constant.create(scope, shape), Float.class);
+      Zeros<TFloat> op = Zeros.create(scope, Constant.create(scope, shape), TFloat.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        float[][] actual = result.expect(Float.class).copyTo(new float[(int)shape[0]][(int)shape[1]]);
+        float[][] actual = result.expect(TFloat.DTYPE).copyTo(new float[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0.0f, actual[i][j], EPSILON);
@@ -75,9 +81,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Double> op = Zeros.create(scope, Constant.create(scope, shape), Double.class);
+      Zeros<TDouble> op = Zeros.create(scope, Constant.create(scope, shape), TDouble.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        double[][] actual = result.expect(Double.class).copyTo(new double[(int)shape[0]][(int)shape[1]]);
+        double[][] actual = result.expect(TDouble.DTYPE).copyTo(new double[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0.0, actual[i][j], EPSILON);
@@ -93,9 +99,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Long> op = Zeros.create(scope, Constant.create(scope, shape), Long.class);
+      Zeros<TInt64> op = Zeros.create(scope, Constant.create(scope, shape), TInt64.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        long[][] actual = result.expect(Long.class).copyTo(new long[(int)shape[0]][(int)shape[1]]);
+        long[][] actual = result.expect(TInt64.DTYPE).copyTo(new long[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0L, actual[i][j]);
@@ -111,9 +117,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Boolean> op = Zeros.create(scope, Constant.create(scope, shape), Boolean.class);
+      Zeros<TBool> op = Zeros.create(scope, Constant.create(scope, shape), TBool.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        boolean[][] actual = result.expect(Boolean.class).copyTo(new boolean[(int)shape[0]][(int)shape[1]]);
+        boolean[][] actual = result.expect(TBool.DTYPE).copyTo(new boolean[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertFalse(actual[i][j]);
@@ -129,9 +135,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<UInt8> op = Zeros.create(scope, Constant.create(scope, shape), UInt8.class);
+      Zeros<TUInt8> op = Zeros.create(scope, Constant.create(scope, shape), TUInt8.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        byte[][] actual = result.expect(UInt8.class).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
+        byte[][] actual = result.expect(TUInt8.DTYPE).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
         result.copyTo(actual);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
@@ -148,7 +154,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros.create(scope, Constant.create(scope, shape), String.class);
+      Zeros.create(scope, Constant.create(scope, shape), TString.DTYPE);
     }
   }
   
@@ -158,7 +164,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<Float> zeros = Zeros.create(scope.withSubScope("test"), Constant.create(scope, shape), Float.class);
+      Zeros<TFloat> zeros = Zeros.create(scope.withSubScope("test"), Constant.create(scope, shape), TFloat.DTYPE);
       List<Tensor<?>> results = sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }

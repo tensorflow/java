@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Encodes a `RaggedTensor` into a `variant` Tensor.
@@ -53,7 +54,7 @@ public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<
    * @param batchedInput A `bool` denoting whether the input is a batched `RaggedTensor`.
    * @return a new instance of RaggedTensorToVariant
    */
-  public static <T extends Number, U> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
+  public static <T extends TNumber, U> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());

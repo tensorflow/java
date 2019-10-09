@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Extract `patches` from `images` and put them in the "depth" output dimension.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code patches()} output
  */
 @Operator(group = "image")
-public final class ExtractImagePatches<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ExtractImagePatches<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExtractImagePatches operation.
@@ -51,7 +52,7 @@ public final class ExtractImagePatches<T extends Number> extends PrimitiveOp imp
    * @param padding The type of padding algorithm to use.
    * @return a new instance of ExtractImagePatches
    */
-  public static <T extends Number> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
+  public static <T extends TNumber> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
     opBuilder.addInput(images.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

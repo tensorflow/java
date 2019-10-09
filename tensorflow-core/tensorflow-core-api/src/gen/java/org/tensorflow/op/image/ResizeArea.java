@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Resize `images` to `size` using area interpolation.
@@ -41,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * area that intersects the footprint.  This is the same as OpenCV's INTER_AREA.
  */
 @Operator(group = "image")
-public final class ResizeArea extends PrimitiveOp implements Operand<Float> {
+public final class ResizeArea extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeArea}
@@ -73,7 +76,7 @@ public final class ResizeArea extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of ResizeArea
    */
-  public static <T extends Number> ResizeArea create(Scope scope, Operand<T> images, Operand<Integer> size, Options... options) {
+  public static <T extends TNumber> ResizeArea create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeArea", scope.makeOpName("ResizeArea"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -100,16 +103,16 @@ public final class ResizeArea extends PrimitiveOp implements Operand<Float> {
    * 4-D with shape
    * `[batch, new_height, new_width, channels]`.
    */
-  public Output<Float> resizedImages() {
+  public Output<TFloat> resizedImages() {
     return resizedImages;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return resizedImages;
   }
   
-  private Output<Float> resizedImages;
+  private Output<TFloat> resizedImages;
   
   private ResizeArea(Operation operation) {
     super(operation);

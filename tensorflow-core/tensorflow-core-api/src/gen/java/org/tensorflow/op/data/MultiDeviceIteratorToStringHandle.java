@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Produces a string handle for the given MultiDeviceIterator.
  */
-public final class MultiDeviceIteratorToStringHandle extends PrimitiveOp implements Operand<String> {
+public final class MultiDeviceIteratorToStringHandle extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorToStringHandle operation.
@@ -46,16 +47,16 @@ public final class MultiDeviceIteratorToStringHandle extends PrimitiveOp impleme
   /**
    * A string representing the resource.
    */
-  public Output<String> stringHandle() {
+  public Output<TString> stringHandle() {
     return stringHandle;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return stringHandle;
   }
   
-  private Output<String> stringHandle;
+  private Output<TString> stringHandle;
   
   private MultiDeviceIteratorToStringHandle(Operation operation) {
     super(operation);

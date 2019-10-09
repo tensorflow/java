@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of depthwise convolution with respect to the input.
@@ -32,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthwiseConv2dNativeBackpropInput<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput}
@@ -89,7 +91,7 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends Number> extends 
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNativeBackpropInput
    */
-  public static <T extends Number> DepthwiseConv2dNativeBackpropInput<T> create(Scope scope, Operand<Integer> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> DepthwiseConv2dNativeBackpropInput<T> create(Scope scope, Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNativeBackpropInput", scope.makeOpName("DepthwiseConv2dNativeBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());

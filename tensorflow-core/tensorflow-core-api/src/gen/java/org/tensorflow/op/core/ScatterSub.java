@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Subtracts sparse updates to a variable reference.
@@ -85,7 +86,7 @@ public final class ScatterSub<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ScatterSub
    */
-  public static <T, U extends Number> ScatterSub<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T, U extends TNumber> ScatterSub<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterSub", scope.makeOpName("ScatterSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

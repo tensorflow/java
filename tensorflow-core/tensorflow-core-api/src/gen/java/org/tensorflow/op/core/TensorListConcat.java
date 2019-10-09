@@ -22,10 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Concats all tensors in the list along the 0th dimension.
@@ -70,11 +71,11 @@ public final class TensorListConcat<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorListConcat
    */
-  public static <T> TensorListConcat<T> create(Scope scope, Operand<?> inputHandle, Class<T> elementDtype, Options... options) {
+  public static <T> TensorListConcat<T> create(Scope scope, Operand<?> inputHandle, DataType<T> elementDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcat", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.elementShape != null) {
@@ -100,12 +101,12 @@ public final class TensorListConcat<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> lengths() {
+  public Output<TInt64> lengths() {
     return lengths;
   }
   
   private Output<T> tensor;
-  private Output<Long> lengths;
+  private Output<TInt64> lengths;
   
   private TensorListConcat(Operation operation) {
     super(operation);

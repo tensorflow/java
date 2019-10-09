@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the GRU cell back-propagation for 1 time step.
@@ -110,7 +111,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code dX()} output
  */
-public final class GRUBlockCellGrad<T extends Number> extends PrimitiveOp {
+public final class GRUBlockCellGrad<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new GRUBlockCellGrad operation.
@@ -128,7 +129,7 @@ public final class GRUBlockCellGrad<T extends Number> extends PrimitiveOp {
    * @param dH 
    * @return a new instance of GRUBlockCellGrad
    */
-  public static <T extends Number> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u, Operand<T> c, Operand<T> dH) {
+  public static <T extends TNumber> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u, Operand<T> c, Operand<T> dH) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCellGrad", scope.makeOpName("GRUBlockCellGrad"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(hPrev.asOutput());

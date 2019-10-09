@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Writes the given dataset to the given file using the TFRecord format.
@@ -38,7 +39,7 @@ public final class DatasetToTfRecord extends PrimitiveOp {
    * compression), (ii) "ZLIB", or (iii) "GZIP".
    * @return a new instance of DatasetToTfRecord
    */
-  public static DatasetToTfRecord create(Scope scope, Operand<?> inputDataset, Operand<String> filename, Operand<String> compressionType) {
+  public static DatasetToTfRecord create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToTFRecord", scope.makeOpName("DatasetToTfRecord"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());

@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Draws samples from a multinomial distribution.
@@ -32,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class Multinomial<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class Multinomial<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.Multinomial}
@@ -74,12 +77,12 @@ public final class Multinomial<U extends Number> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  public static <U extends Number, T extends Number> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<Integer> numSamples, Class<U> outputDtype, Options... options) {
+  public static <U extends TNumber, T extends TNumber> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, DataType<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_dtype", DataType.fromClass(outputDtype));
+    opBuilder.setAttr("output_dtype", outputDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {
@@ -103,8 +106,8 @@ public final class Multinomial<U extends Number> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  public static <T extends Number> Multinomial<Long> create(Scope scope, Operand<T> logits, Operand<Integer> numSamples, Options... options) {
-    return create(scope, logits, numSamples, Long.class, options);
+  public static <T extends TNumber> Multinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Options... options) {
+    return create(scope, logits, numSamples, TInt64.DTYPE, options);
   }
   
   /**

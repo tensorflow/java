@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Load proximal Adagrad embedding parameters with debug support.
@@ -74,7 +75,7 @@ public final class LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug exten
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug
    */
-  public static LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug create(Scope scope, Operand<Float> parameters, Operand<Float> accumulators, Operand<Float> gradientAccumulators, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> accumulators, Operand<TFloat> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());

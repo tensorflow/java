@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
@@ -44,13 +45,13 @@ public final class QuantizedRelu6<U> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedRelu6
    */
-  public static <U, T> QuantizedRelu6<U> create(Scope scope, Operand<T> features, Operand<Float> minFeatures, Operand<Float> maxFeatures, Class<U> outType) {
+  public static <U, T> QuantizedRelu6<U> create(Scope scope, Operand<T> features, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu6", scope.makeOpName("QuantizedRelu6"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new QuantizedRelu6<U>(opBuilder.build());
   }
   
@@ -64,20 +65,20 @@ public final class QuantizedRelu6<U> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized value represents.
    */
-  public Output<Float> minActivations() {
+  public Output<TFloat> minActivations() {
     return minActivations;
   }
   
   /**
    * The float value that the highest quantized value represents.
    */
-  public Output<Float> maxActivations() {
+  public Output<TFloat> maxActivations() {
     return maxActivations;
   }
   
   private Output<U> activations;
-  private Output<Float> minActivations;
-  private Output<Float> maxActivations;
+  private Output<TFloat> minActivations;
+  private Output<TFloat> maxActivations;
   
   private QuantizedRelu6(Operation operation) {
     super(operation);

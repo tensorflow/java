@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Restore a reader to a previously saved state.
@@ -42,7 +43,7 @@ public final class ReaderRestoreState extends PrimitiveOp {
    * matching reader_handle.
    * @return a new instance of ReaderRestoreState
    */
-  public static ReaderRestoreState create(Scope scope, Operand<?> readerHandle, Operand<String> state) {
+  public static ReaderRestoreState create(Scope scope, Operand<?> readerHandle, Operand<TString> state) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderRestoreStateV2", scope.makeOpName("ReaderRestoreState"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(state.asOutput());

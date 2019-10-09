@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Worker heartbeat op.
@@ -30,7 +31,7 @@ import org.tensorflow.op.Scope;
  * Heartbeats may be sent periodically to indicate the coordinator is still active,
  * to retrieve the current worker status and to expedite shutdown when necessary.
  */
-public final class WorkerHeartbeat extends PrimitiveOp implements Operand<String> {
+public final class WorkerHeartbeat extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new WorkerHeartbeat operation.
@@ -39,7 +40,7 @@ public final class WorkerHeartbeat extends PrimitiveOp implements Operand<String
    * @param request A string tensor containing a serialized WorkerHeartbeatRequest
    * @return a new instance of WorkerHeartbeat
    */
-  public static WorkerHeartbeat create(Scope scope, Operand<String> request) {
+  public static WorkerHeartbeat create(Scope scope, Operand<TString> request) {
     OperationBuilder opBuilder = scope.env().opBuilder("WorkerHeartbeat", scope.makeOpName("WorkerHeartbeat"));
     opBuilder.addInput(request.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -49,16 +50,16 @@ public final class WorkerHeartbeat extends PrimitiveOp implements Operand<String
   /**
    * A string tensor containing a serialized WorkerHeartbeatResponse
    */
-  public Output<String> response() {
+  public Output<TString> response() {
     return response;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return response;
   }
   
-  private Output<String> response;
+  private Output<TString> response;
   
   private WorkerHeartbeat(Operation operation) {
     super(operation);

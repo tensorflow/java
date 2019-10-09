@@ -24,7 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * Decode the first frame of a BMP-encoded image to a uint8 tensor.
@@ -44,7 +45,7 @@ import org.tensorflow.types.UInt8;
  * 4: output an RGBA image.
  */
 @Operator(group = "image")
-public final class DecodeBmp extends PrimitiveOp implements Operand<UInt8> {
+public final class DecodeBmp extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeBmp}
@@ -73,7 +74,7 @@ public final class DecodeBmp extends PrimitiveOp implements Operand<UInt8> {
    * @param options carries optional attributes values
    * @return a new instance of DecodeBmp
    */
-  public static DecodeBmp create(Scope scope, Operand<String> contents, Options... options) {
+  public static DecodeBmp create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBmp", scope.makeOpName("DecodeBmp"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -97,16 +98,16 @@ public final class DecodeBmp extends PrimitiveOp implements Operand<UInt8> {
   /**
    * 3-D with shape `[height, width, channels]`. RGB order
    */
-  public Output<UInt8> image() {
+  public Output<TUInt8> image() {
     return image;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return image;
   }
   
-  private Output<UInt8> image;
+  private Output<TUInt8> image;
   
   private DecodeBmp(Operation operation) {
     super(operation);

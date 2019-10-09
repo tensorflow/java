@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -43,7 +44,7 @@ public final class SetStatsAggregatorDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of SetStatsAggregatorDataset
    */
-  public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<String> tag, Operand<String> counterPrefix, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<TString> tag, Operand<TString> counterPrefix, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetStatsAggregatorDataset", scope.makeOpName("SetStatsAggregatorDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(statsAggregator.asOutput());
@@ -52,7 +53,7 @@ public final class SetStatsAggregatorDataset extends PrimitiveOp implements Oper
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Given a path to new and old vocabulary files, returns a remapping Tensor of
@@ -91,7 +94,7 @@ public final class GenerateVocabRemapping extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of GenerateVocabRemapping
    */
-  public static GenerateVocabRemapping create(Scope scope, Operand<String> newVocabFile, Operand<String> oldVocabFile, Long newVocabOffset, Long numNewVocab, Options... options) {
+  public static GenerateVocabRemapping create(Scope scope, Operand<TString> newVocabFile, Operand<TString> oldVocabFile, Long newVocabOffset, Long numNewVocab, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateVocabRemapping", scope.makeOpName("GenerateVocabRemapping"));
     opBuilder.addInput(newVocabFile.asOutput());
     opBuilder.addInput(oldVocabFile.asOutput());
@@ -121,19 +124,19 @@ public final class GenerateVocabRemapping extends PrimitiveOp {
    * is equal to the old ID that maps to the new ID i.  This element is -1 for any
    * new ID that is not found in the old vocabulary.
    */
-  public Output<Long> remapping() {
+  public Output<TInt64> remapping() {
     return remapping;
   }
   
   /**
    * Number of new vocab entries found in old vocab.
    */
-  public Output<Integer> numPresent() {
+  public Output<TInt32> numPresent() {
     return numPresent;
   }
   
-  private Output<Long> remapping;
-  private Output<Integer> numPresent;
+  private Output<TInt64> remapping;
+  private Output<TInt32> numPresent;
   
   private GenerateVocabRemapping(Operation operation) {
     super(operation);

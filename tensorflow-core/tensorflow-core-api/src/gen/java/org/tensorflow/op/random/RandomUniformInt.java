@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random integers from a uniform distribution.
@@ -39,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomUniformInt<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class RandomUniformInt<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomUniformInt}
@@ -81,7 +82,7 @@ public final class RandomUniformInt<U extends Number> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of RandomUniformInt
    */
-  public static <U extends Number, T extends Number> RandomUniformInt<U> create(Scope scope, Operand<T> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
+  public static <U extends TNumber, T extends TNumber> RandomUniformInt<U> create(Scope scope, Operand<T> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomUniformInt", scope.makeOpName("RandomUniformInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());

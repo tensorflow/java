@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Strip leading and trailing whitespaces from the Tensor.
  */
 @Operator(group = "strings")
-public final class Strip extends PrimitiveOp implements Operand<String> {
+public final class Strip extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new Strip operation.
@@ -38,7 +39,7 @@ public final class Strip extends PrimitiveOp implements Operand<String> {
    * @param input A string `Tensor` of any shape.
    * @return a new instance of Strip
    */
-  public static Strip create(Scope scope, Operand<String> input) {
+  public static Strip create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringStrip", scope.makeOpName("Strip"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -48,16 +49,16 @@ public final class Strip extends PrimitiveOp implements Operand<String> {
   /**
    * A string `Tensor` of the same shape as the input.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private Strip(Operation operation) {
     super(operation);

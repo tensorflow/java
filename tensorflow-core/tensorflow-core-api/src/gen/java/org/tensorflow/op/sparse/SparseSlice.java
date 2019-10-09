@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Slice a `SparseTensor` based on the `start` and `size`.
@@ -62,7 +63,7 @@ public final class SparseSlice<T> extends PrimitiveOp {
    * sparse tensors.
    * @return a new instance of SparseSlice
    */
-  public static <T> SparseSlice<T> create(Scope scope, Operand<Long> indices, Operand<T> values, Operand<Long> shape, Operand<Long> start, Operand<Long> size) {
+  public static <T> SparseSlice<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSlice", scope.makeOpName("SparseSlice"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -75,7 +76,7 @@ public final class SparseSlice<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -91,13 +92,13 @@ public final class SparseSlice<T> extends PrimitiveOp {
    * A list of 1-D tensors represents the shape of the output sparse
    * tensors.
    */
-  public Output<Long> outputShape() {
+  public Output<TInt64> outputShape() {
     return outputShape;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
-  private Output<Long> outputShape;
+  private Output<TInt64> outputShape;
   
   private SparseSlice(Operation operation) {
     super(operation);

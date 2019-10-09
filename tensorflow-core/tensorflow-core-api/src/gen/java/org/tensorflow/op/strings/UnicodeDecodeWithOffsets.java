@@ -24,6 +24,10 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Decodes each string in `input` into a sequence of Unicode code points.
@@ -53,7 +57,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code rowSplits()} output
  */
-public final class UnicodeDecodeWithOffsets<T extends Number> extends PrimitiveOp {
+public final class UnicodeDecodeWithOffsets<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.UnicodeDecodeWithOffsets}
@@ -114,12 +118,12 @@ public final class UnicodeDecodeWithOffsets<T extends Number> extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecodeWithOffsets
    */
-  public static <T extends Number> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<String> input, String inputEncoding, Class<T> Tsplits, Options... options) {
+  public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecodeWithOffsets", scope.makeOpName("UnicodeDecodeWithOffsets"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
-    opBuilder.setAttr("Tsplits", DataType.fromClass(Tsplits));
+    opBuilder.setAttr("Tsplits", Tsplits);
     if (options != null) {
       for (Options opts : options) {
         if (opts.errors != null) {
@@ -147,8 +151,8 @@ public final class UnicodeDecodeWithOffsets<T extends Number> extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecodeWithOffsets
    */
-  public static UnicodeDecodeWithOffsets<Long> create(Scope scope, Operand<String> input, String inputEncoding, Options... options) {
-    return create(scope, input, inputEncoding, Long.class, options);
+  public static UnicodeDecodeWithOffsets<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
+    return create(scope, input, inputEncoding, TInt64.DTYPE, options);
   }
   
   /**
@@ -192,7 +196,7 @@ public final class UnicodeDecodeWithOffsets<T extends Number> extends PrimitiveO
   /**
    * A 1D int32 Tensor containing the decoded codepoints.
    */
-  public Output<Integer> charValues() {
+  public Output<TInt32> charValues() {
     return charValues;
   }
   
@@ -200,13 +204,13 @@ public final class UnicodeDecodeWithOffsets<T extends Number> extends PrimitiveO
    * A 1D int32 Tensor containing the byte index in the input string where each
    * character in `char_values` starts.
    */
-  public Output<Long> charToByteStarts() {
+  public Output<TInt64> charToByteStarts() {
     return charToByteStarts;
   }
   
   private Output<T> rowSplits;
-  private Output<Integer> charValues;
-  private Output<Long> charToByteStarts;
+  private Output<TInt32> charValues;
+  private Output<TInt64> charToByteStarts;
   
   private UnicodeDecodeWithOffsets(Operation operation) {
     super(operation);

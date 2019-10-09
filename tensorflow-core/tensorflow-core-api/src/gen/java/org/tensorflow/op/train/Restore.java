@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Restores tensors from a V2 checkpoint.
@@ -61,7 +62,7 @@ public final class Restore extends PrimitiveOp implements Iterable<Operand<Objec
    * those stored in the checkpoint.
    * @return a new instance of Restore
    */
-  public static Restore create(Scope scope, Operand<String> prefix, Operand<String> tensorNames, Operand<String> shapeAndSlices, List<Class<?>> dtypes) {
+  public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<DataType<?>> dtypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreV2", scope.makeOpName("Restore"));
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
@@ -69,7 +70,7 @@ public final class Restore extends PrimitiveOp implements Iterable<Operand<Objec
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     return new Restore(opBuilder.build());

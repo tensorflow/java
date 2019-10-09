@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Writes contents to the file at input filename. Creates file and recursively
@@ -40,7 +41,7 @@ public final class WriteFile extends PrimitiveOp {
    * @param contents scalar. The content to be written to the output file.
    * @return a new instance of WriteFile
    */
-  public static WriteFile create(Scope scope, Operand<String> filename, Operand<String> contents) {
+  public static WriteFile create(Scope scope, Operand<TString> filename, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(contents.asOutput());

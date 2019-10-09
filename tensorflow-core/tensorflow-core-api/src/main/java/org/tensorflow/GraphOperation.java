@@ -15,6 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.nio.nd.Shape;
+
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.
  *
@@ -120,20 +122,21 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   @Override
-  long[] shape(int outputIdx) {
+  Shape shape(int outputIdx) {
     Graph.Reference r = graph.ref();
     try {
-      return shape(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx);
+      long[] shape = shape(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx);
+      return shape == null ? Shape.unknown() : Shape.make(shape);
     } finally {
       r.close();
     }
   }
 
   @Override
-  DataType dtype(int outputIdx) {
+  DataType<?> dtype(int outputIdx) {
     Graph.Reference r = graph.ref();
     try {
-      return DataType.fromC(dtype(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx));
+      return DataTypes.fromNativeCode(dtype(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx));
     } finally {
       r.close();
     }

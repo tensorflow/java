@@ -91,11 +91,11 @@ public final class Bitcast<U> extends PrimitiveOp implements Operand<U> {
    * @param type 
    * @return a new instance of Bitcast
    */
-  public static <U, T> Bitcast<U> create(Scope scope, Operand<T> input, Class<U> type) {
+  public static <U, T> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("type", DataType.fromClass(type));
+    opBuilder.setAttr("type", type);
     return new Bitcast<U>(opBuilder.build());
   }
   

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Computes the (possibly normalized) Levenshtein Edit Distance.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * The inputs are:
  */
 @Operator
-public final class EditDistance extends PrimitiveOp implements Operand<Float> {
+public final class EditDistance extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.EditDistance}
@@ -77,7 +79,7 @@ public final class EditDistance extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of EditDistance
    */
-  public static <T> EditDistance create(Scope scope, Operand<Long> hypothesisIndices, Operand<T> hypothesisValues, Operand<Long> hypothesisShape, Operand<Long> truthIndices, Operand<T> truthValues, Operand<Long> truthShape, Options... options) {
+  public static <T> EditDistance create(Scope scope, Operand<TInt64> hypothesisIndices, Operand<T> hypothesisValues, Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices, Operand<T> truthValues, Operand<TInt64> truthShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EditDistance", scope.makeOpName("EditDistance"));
     opBuilder.addInput(hypothesisIndices.asOutput());
     opBuilder.addInput(hypothesisValues.asOutput());
@@ -137,16 +139,16 @@ public final class EditDistance extends PrimitiveOp implements Operand<Float> {
    *     output = [[inf, 1.0],  // (0,0): no truth, (0,1): no hypothesis
    *               [0.5, 1.0]]  // (1,0): addition, (1,1): no hypothesis
    */
-  public Output<Float> output() {
+  public Output<TFloat> output() {
     return output;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return output;
   }
   
-  private Output<Float> output;
+  private Output<TFloat> output;
   
   private EditDistance(Operation operation) {
     super(operation);

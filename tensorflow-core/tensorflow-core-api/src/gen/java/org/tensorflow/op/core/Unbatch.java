@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Reverses the operation of Batch for a single output Tensor.
@@ -91,7 +92,7 @@ public final class Unbatch<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Unbatch
    */
-  public static <T> Unbatch<T> create(Scope scope, Operand<T> batchedTensor, Operand<Long> batchIndex, Operand<Long> id, Long timeoutMicros, Options... options) {
+  public static <T> Unbatch<T> create(Scope scope, Operand<T> batchedTensor, Operand<TInt64> batchIndex, Operand<TInt64> id, Long timeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unbatch", scope.makeOpName("Unbatch"));
     opBuilder.addInput(batchedTensor.asOutput());
     opBuilder.addInput(batchIndex.asOutput());

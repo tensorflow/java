@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Resize `images` to `size` using nearest neighbor interpolation.
@@ -31,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code resizedImages()} output
  */
 @Operator(group = "image")
-public final class ResizeNearestNeighbor<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ResizeNearestNeighbor<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeNearestNeighbor}
@@ -72,7 +74,7 @@ public final class ResizeNearestNeighbor<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of ResizeNearestNeighbor
    */
-  public static <T extends Number> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images, Operand<Integer> size, Options... options) {
+  public static <T extends TNumber> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighbor", scope.makeOpName("ResizeNearestNeighbor"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());

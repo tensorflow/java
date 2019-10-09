@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Get the current size of the TensorArray.
  */
 @Operator
-public final class TensorArraySize extends PrimitiveOp implements Operand<Integer> {
+public final class TensorArraySize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArraySize operation.
@@ -39,7 +41,7 @@ public final class TensorArraySize extends PrimitiveOp implements Operand<Intege
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySize
    */
-  public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<Float> flowIn) {
+  public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -50,16 +52,16 @@ public final class TensorArraySize extends PrimitiveOp implements Operand<Intege
   /**
    * The current size of the TensorArray.
    */
-  public Output<Integer> size() {
+  public Output<TInt32> size() {
     return size;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return size;
   }
   
-  private Output<Integer> size;
+  private Output<TInt32> size;
   
   private TensorArraySize(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Generates values in an interval.
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class LinSpace<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LinSpace<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new LinSpace operation.
@@ -52,7 +53,7 @@ public final class LinSpace<T extends Number> extends PrimitiveOp implements Ope
    * @param num 0-D tensor. Number of values to generate.
    * @return a new instance of LinSpace
    */
-  public static <T extends Number, U extends Number> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
+  public static <T extends TNumber, U extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
     OperationBuilder opBuilder = scope.env().opBuilder("LinSpace", scope.makeOpName("LinSpace"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());

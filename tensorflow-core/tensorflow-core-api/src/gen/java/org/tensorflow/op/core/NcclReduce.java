@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reduces `input` from `num_devices` using `reduction` to a single device.
@@ -39,7 +40,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code data()} output
  */
-public final class NcclReduce<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class NcclReduce<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclReduce operation.
@@ -49,7 +50,7 @@ public final class NcclReduce<T extends Number> extends PrimitiveOp implements O
    * @param reduction 
    * @return a new instance of NcclReduce
    */
-  public static <T extends Number> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
+  public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.applyControlDependencies(opBuilder);

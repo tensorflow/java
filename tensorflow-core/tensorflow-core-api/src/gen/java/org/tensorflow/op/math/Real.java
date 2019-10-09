@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the real part of a complex number.
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class Real<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class Real<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Real operation.
@@ -54,11 +56,11 @@ public final class Real<U extends Number> extends PrimitiveOp implements Operand
    * @param Tout 
    * @return a new instance of Real
    */
-  public static <U extends Number, T> Real<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
+  public static <U extends TNumber, T> Real<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Real", scope.makeOpName("Real"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tout", DataType.fromClass(Tout));
+    opBuilder.setAttr("Tout", Tout);
     return new Real<U>(opBuilder.build());
   }
   
@@ -69,8 +71,8 @@ public final class Real<U extends Number> extends PrimitiveOp implements Operand
    * @param input 
    * @return a new instance of Real
    */
-  public static <T> Real<Float> create(Scope scope, Operand<T> input) {
-    return create(scope, input, Float.class);
+  public static <T> Real<TFloat> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TFloat.DTYPE);
   }
   
   /**

@@ -23,6 +23,9 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Encode a tensor of ints into unicode strings.
@@ -43,7 +46,7 @@ import org.tensorflow.op.Scope;
  * }</pre>
  * 
  */
-public final class UnicodeEncode extends PrimitiveOp implements Operand<String> {
+public final class UnicodeEncode extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.UnicodeEncode}
@@ -95,7 +98,7 @@ public final class UnicodeEncode extends PrimitiveOp implements Operand<String> 
    * @param options carries optional attributes values
    * @return a new instance of UnicodeEncode
    */
-  public static <T extends Number> UnicodeEncode create(Scope scope, Operand<Integer> inputValues, Operand<T> inputSplits, String outputEncoding, Options... options) {
+  public static <T extends TNumber> UnicodeEncode create(Scope scope, Operand<TInt32> inputValues, Operand<T> inputSplits, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeEncode", scope.makeOpName("UnicodeEncode"));
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputSplits.asOutput());
@@ -140,16 +143,16 @@ public final class UnicodeEncode extends PrimitiveOp implements Operand<String> 
   /**
    * The 1-D Tensor of strings encoded from the provided unicode codepoints.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private UnicodeEncode(Operation operation) {
     super(operation);

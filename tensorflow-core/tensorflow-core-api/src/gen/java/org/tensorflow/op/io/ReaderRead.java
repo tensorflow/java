@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Returns the next record (key, value pair) produced by a Reader.
@@ -54,19 +55,19 @@ public final class ReaderRead extends PrimitiveOp {
   /**
    * A scalar.
    */
-  public Output<String> key() {
+  public Output<TString> key() {
     return key;
   }
   
   /**
    * A scalar.
    */
-  public Output<String> value() {
+  public Output<TString> value() {
     return value;
   }
   
-  private Output<String> key;
-  private Output<String> value;
+  private Output<TString> key;
+  private Output<TString> value;
   
   private ReaderRead(Operation operation) {
     super(operation);

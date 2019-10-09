@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the complementary error function of `x` element-wise.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Erfc<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Erfc<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Erfc operation.
@@ -40,7 +41,7 @@ public final class Erfc<T extends Number> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Erfc
    */
-  public static <T extends Number> Erfc<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Erfc<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erfc", scope.makeOpName("Erfc"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

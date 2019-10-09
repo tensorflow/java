@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
@@ -43,11 +44,11 @@ public final class ParseTensor<T> extends PrimitiveOp implements Operand<T> {
    * type of the serialized tensor and no implicit conversion will take place.
    * @return a new instance of ParseTensor
    */
-  public static <T> ParseTensor<T> create(Scope scope, Operand<String> serialized, Class<T> outType) {
+  public static <T> ParseTensor<T> create(Scope scope, Operand<TString> serialized, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseTensor", scope.makeOpName("ParseTensor"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new ParseTensor<T>(opBuilder.build());
   }
   

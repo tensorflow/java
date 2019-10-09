@@ -26,6 +26,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * The op extracts fields from a serialized protocol buffers message into tensors.
@@ -130,7 +132,7 @@ public final class DecodeProto extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DecodeProto
    */
-  public static DecodeProto create(Scope scope, Operand<String> bytes, String messageType, List<String> fieldNames, List<Class<?>> outputTypes, Options... options) {
+  public static DecodeProto create(Scope scope, Operand<TString> bytes, String messageType, List<String> fieldNames, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeProtoV2", scope.makeOpName("DecodeProto"));
     opBuilder.addInput(bytes.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -142,7 +144,7 @@ public final class DecodeProto extends PrimitiveOp {
     opBuilder.setAttr("field_names", fieldNamesArray);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     if (options != null) {
@@ -188,7 +190,7 @@ public final class DecodeProto extends PrimitiveOp {
    * Each entry is the number of values found for the corresponding field.
    * Optional fields may have 0 or 1 values.
    */
-  public Output<Integer> sizes() {
+  public Output<TInt32> sizes() {
     return sizes;
   }
   
@@ -201,7 +203,7 @@ public final class DecodeProto extends PrimitiveOp {
     return values;
   }
   
-  private Output<Integer> sizes;
+  private Output<TInt32> sizes;
   private List<Output<?>> values;
   
   private DecodeProto(Operation operation) {

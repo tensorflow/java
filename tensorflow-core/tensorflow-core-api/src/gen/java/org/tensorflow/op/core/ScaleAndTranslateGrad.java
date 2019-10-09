@@ -23,11 +23,13 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * @param <T> data type for {@code output()} output
  */
-public final class ScaleAndTranslateGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ScaleAndTranslateGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScaleAndTranslateGrad}
@@ -68,7 +70,7 @@ public final class ScaleAndTranslateGrad<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslateGrad
    */
-  public static <T extends Number> ScaleAndTranslateGrad<T> create(Scope scope, Operand<T> grads, Operand<T> originalImage, Operand<Float> scale, Operand<Float> translation, Options... options) {
+  public static <T extends TNumber> ScaleAndTranslateGrad<T> create(Scope scope, Operand<T> grads, Operand<T> originalImage, Operand<TFloat> scale, Operand<TFloat> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslateGrad", scope.makeOpName("ScaleAndTranslateGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());

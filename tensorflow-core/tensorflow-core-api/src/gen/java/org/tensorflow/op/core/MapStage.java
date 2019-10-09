@@ -26,6 +26,8 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Stage (key, values) in the underlying container which behaves like a hashtable.
@@ -93,7 +95,7 @@ public final class MapStage extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapStage
    */
-  public static MapStage create(Scope scope, Operand<Long> key, Operand<Integer> indices, Iterable<Operand<?>> values, List<Class<?>> dtypes, Options... options) {
+  public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -101,7 +103,7 @@ public final class MapStage extends PrimitiveOp {
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {

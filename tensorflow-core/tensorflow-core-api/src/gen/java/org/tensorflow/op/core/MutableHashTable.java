@@ -85,11 +85,11 @@ public final class MutableHashTable extends PrimitiveOp implements Operand<Objec
    * @param options carries optional attributes values
    * @return a new instance of MutableHashTable
    */
-  public static <T, U> MutableHashTable create(Scope scope, Class<T> keyDtype, Class<U> valueDtype, Options... options) {
+  public static <T, U> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("key_dtype", DataType.fromClass(keyDtype));
-    opBuilder.setAttr("value_dtype", DataType.fromClass(valueDtype));
+    opBuilder.setAttr("key_dtype", keyDtype);
+    opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

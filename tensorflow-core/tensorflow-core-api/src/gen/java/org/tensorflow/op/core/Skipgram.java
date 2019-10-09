@@ -23,6 +23,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Parses a text file and creates a batch of examples.
@@ -125,59 +128,59 @@ public final class Skipgram extends PrimitiveOp {
   /**
    * A vector of words in the corpus.
    */
-  public Output<String> vocabWord() {
+  public Output<TString> vocabWord() {
     return vocabWord;
   }
   
   /**
    * Frequencies of words. Sorted in the non-ascending order.
    */
-  public Output<Integer> vocabFreq() {
+  public Output<TInt32> vocabFreq() {
     return vocabFreq;
   }
   
   /**
    * Number of words per epoch in the data file.
    */
-  public Output<Long> wordsPerEpoch() {
+  public Output<TInt64> wordsPerEpoch() {
     return wordsPerEpoch;
   }
   
   /**
    * The current epoch number.
    */
-  public Output<Integer> currentEpoch() {
+  public Output<TInt32> currentEpoch() {
     return currentEpoch;
   }
   
   /**
    * The total number of words processed so far.
    */
-  public Output<Long> totalWordsProcessed() {
+  public Output<TInt64> totalWordsProcessed() {
     return totalWordsProcessed;
   }
   
   /**
    * A vector of word ids.
    */
-  public Output<Integer> examples() {
+  public Output<TInt32> examples() {
     return examples;
   }
   
   /**
    * A vector of word ids.
    */
-  public Output<Integer> labels() {
+  public Output<TInt32> labels() {
     return labels;
   }
   
-  private Output<String> vocabWord;
-  private Output<Integer> vocabFreq;
-  private Output<Long> wordsPerEpoch;
-  private Output<Integer> currentEpoch;
-  private Output<Long> totalWordsProcessed;
-  private Output<Integer> examples;
-  private Output<Integer> labels;
+  private Output<TString> vocabWord;
+  private Output<TInt32> vocabFreq;
+  private Output<TInt64> wordsPerEpoch;
+  private Output<TInt32> currentEpoch;
+  private Output<TInt64> totalWordsProcessed;
+  private Output<TInt32> examples;
+  private Output<TInt32> labels;
   
   private Skipgram(Operation operation) {
     super(operation);

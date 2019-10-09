@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes a 2-D depthwise convolution given 4-D `input` and `filter` tensors.
@@ -49,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthwiseConv2dNative<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DepthwiseConv2dNative<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthwiseConv2dNative}
@@ -99,7 +100,7 @@ public final class DepthwiseConv2dNative<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNative
    */
-  public static <T extends Number> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

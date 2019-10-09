@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Pads a tensor.
@@ -67,7 +68,7 @@ public final class Pad<T> extends PrimitiveOp implements Operand<T> {
    * @param constantValues 
    * @return a new instance of Pad
    */
-  public static <T, U extends Number> Pad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Operand<T> constantValues) {
+  public static <T, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Operand<T> constantValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("PadV2", scope.makeOpName("Pad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

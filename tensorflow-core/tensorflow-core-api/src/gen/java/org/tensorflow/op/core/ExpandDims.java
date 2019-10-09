@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Inserts a dimension of 1 into a tensor's shape.
@@ -72,7 +73,7 @@ public final class ExpandDims<T> extends PrimitiveOp implements Operand<T> {
    * `[-rank(input) - 1, rank(input)]`.
    * @return a new instance of ExpandDims
    */
-  public static <T, U extends Number> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<U> axis) {
+  public static <T, U extends TNumber> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

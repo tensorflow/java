@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
 
 /**
  * Checks whether a tree ensemble has been initialized.
  */
-public final class IsBoostedTreesEnsembleInitialized extends PrimitiveOp implements Operand<Boolean> {
+public final class IsBoostedTreesEnsembleInitialized extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsBoostedTreesEnsembleInitialized operation.
@@ -46,16 +47,16 @@ public final class IsBoostedTreesEnsembleInitialized extends PrimitiveOp impleme
   /**
    * output boolean on whether it is initialized or not.
    */
-  public Output<Boolean> isInitialized() {
+  public Output<TBool> isInitialized() {
     return isInitialized;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return isInitialized;
   }
   
-  private Output<Boolean> isInitialized;
+  private Output<TBool> isInitialized;
   
   private IsBoostedTreesEnsembleInitialized(Operation operation) {
     super(operation);

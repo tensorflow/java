@@ -28,6 +28,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Op peeks at the values at the specified key.  If the
@@ -94,14 +96,14 @@ public final class MapPeek extends PrimitiveOp implements Iterable<Operand<Objec
    * @param options carries optional attributes values
    * @return a new instance of MapPeek
    */
-  public static MapPeek create(Scope scope, Operand<Long> key, Operand<Integer> indices, List<Class<?>> dtypes, Options... options) {
+  public static MapPeek create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapPeek", scope.makeOpName("MapPeek"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {

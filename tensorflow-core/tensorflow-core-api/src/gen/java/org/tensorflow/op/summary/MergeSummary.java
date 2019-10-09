@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Merges summaries.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * in the summaries to merge use the same tag.
  */
 @Operator(group = "summary")
-public final class MergeSummary extends PrimitiveOp implements Operand<String> {
+public final class MergeSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new MergeSummary operation.
@@ -48,7 +49,7 @@ public final class MergeSummary extends PrimitiveOp implements Operand<String> {
    * buffers.
    * @return a new instance of MergeSummary
    */
-  public static MergeSummary create(Scope scope, Iterable<Operand<String>> inputs) {
+  public static MergeSummary create(Scope scope, Iterable<Operand<TString>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeSummary", scope.makeOpName("MergeSummary"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -58,16 +59,16 @@ public final class MergeSummary extends PrimitiveOp implements Operand<String> {
   /**
    * Scalar. Serialized `Summary` protocol buffer.
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private MergeSummary(Operation operation) {
     super(operation);

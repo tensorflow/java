@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell forward propagation for all the time steps.
@@ -47,7 +49,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code i()} output
  */
-public final class BlockLSTM<T extends Number> extends PrimitiveOp {
+public final class BlockLSTM<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.BlockLSTM}
@@ -103,7 +105,7 @@ public final class BlockLSTM<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BlockLSTM
    */
-  public static <T extends Number> BlockLSTM<T> create(Scope scope, Operand<Long> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  public static <T extends TNumber> BlockLSTM<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTM", scope.makeOpName("BlockLSTM"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());

@@ -22,6 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve ADAM embedding parameters with debug support.
@@ -105,35 +106,35 @@ public final class RetrieveTPUEmbeddingADAMParametersGradAccumDebug extends Prim
   /**
    * Parameter parameters updated by the ADAM optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   /**
    * Parameter momenta updated by the ADAM optimization algorithm.
    */
-  public Output<Float> momenta() {
+  public Output<TFloat> momenta() {
     return momenta;
   }
   
   /**
    * Parameter velocities updated by the ADAM optimization algorithm.
    */
-  public Output<Float> velocities() {
+  public Output<TFloat> velocities() {
     return velocities;
   }
   
   /**
    * Parameter gradient_accumulators updated by the ADAM optimization algorithm.
    */
-  public Output<Float> gradientAccumulators() {
+  public Output<TFloat> gradientAccumulators() {
     return gradientAccumulators;
   }
   
-  private Output<Float> parameters;
-  private Output<Float> momenta;
-  private Output<Float> velocities;
-  private Output<Float> gradientAccumulators;
+  private Output<TFloat> parameters;
+  private Output<TFloat> momenta;
+  private Output<TFloat> velocities;
+  private Output<TFloat> gradientAccumulators;
   
   private RetrieveTPUEmbeddingADAMParametersGradAccumDebug(Operation operation) {
     super(operation);

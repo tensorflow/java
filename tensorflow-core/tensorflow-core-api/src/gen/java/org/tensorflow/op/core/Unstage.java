@@ -92,12 +92,12 @@ public final class Unstage extends PrimitiveOp implements Iterable<Operand<Objec
    * @param options carries optional attributes values
    * @return a new instance of Unstage
    */
-  public static Unstage create(Scope scope, List<Class<?>> dtypes, Options... options) {
+  public static Unstage create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unstage", scope.makeOpName("Unstage"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {

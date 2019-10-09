@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
 
 /**
  * Checks whether a quantile stream has been initialized.
  * <p>
  * An Op that checks if quantile stream resource is initialized.
  */
-public final class IsBoostedTreesQuantileStreamResourceInitialized extends PrimitiveOp implements Operand<Boolean> {
+public final class IsBoostedTreesQuantileStreamResourceInitialized extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsBoostedTreesQuantileStreamResourceInitialized operation.
@@ -48,16 +49,16 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends Primi
   /**
    * bool; True if the resource is initialized, False otherwise.
    */
-  public Output<Boolean> isInitialized() {
+  public Output<TBool> isInitialized() {
     return isInitialized;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return isInitialized;
   }
   
-  private Output<Boolean> isInitialized;
+  private Output<TBool> isInitialized;
   
   private IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {
     super(operation);

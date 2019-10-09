@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Sets up the centralized structures for a distributed TPU system.
  */
-public final class ConfigureDistributedTPU extends PrimitiveOp implements Operand<String> {
+public final class ConfigureDistributedTPU extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ConfigureDistributedTPU}
@@ -119,16 +120,16 @@ public final class ConfigureDistributedTPU extends PrimitiveOp implements Operan
    * A serialized tensorflow.tpu.TopologyProto that describes the TPU
    * topology.
    */
-  public Output<String> topology() {
+  public Output<TString> topology() {
     return topology;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return topology;
   }
   
-  private Output<String> topology;
+  private Output<TString> topology;
   
   private ConfigureDistributedTPU(Operation operation) {
     super(operation);

@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Interleave the values from the `data` tensors into a single tensor.
@@ -97,7 +98,7 @@ public final class DynamicStitch<T> extends PrimitiveOp implements Operand<T> {
    * @param data 
    * @return a new instance of DynamicStitch
    */
-  public static <T> DynamicStitch<T> create(Scope scope, Iterable<Operand<Integer>> indices, Iterable<Operand<T>> data) {
+  public static <T> DynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicStitch", scope.makeOpName("DynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(data));

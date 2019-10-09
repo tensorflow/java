@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Returns the number of tensors in the input tensor list.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * length: the number of tensors in the list
  */
 @Operator
-public final class TensorListLength extends PrimitiveOp implements Operand<Integer> {
+public final class TensorListLength extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new TensorListLength operation.
@@ -50,16 +51,16 @@ public final class TensorListLength extends PrimitiveOp implements Operand<Integ
   
   /**
    */
-  public Output<Integer> length() {
+  public Output<TInt32> length() {
     return length;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return length;
   }
   
-  private Output<Integer> length;
+  private Output<TInt32> length;
   
   private TensorListLength(Operation operation) {
     super(operation);

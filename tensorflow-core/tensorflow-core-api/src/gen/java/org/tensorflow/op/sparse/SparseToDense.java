@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts a sparse representation into a dense tensor.
@@ -85,7 +86,7 @@ public final class SparseToDense<U> extends PrimitiveOp implements Operand<U> {
    * @param options carries optional attributes values
    * @return a new instance of SparseToDense
    */
-  public static <U, T extends Number> SparseToDense<U> create(Scope scope, Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues, Operand<U> defaultValue, Options... options) {
+  public static <U, T extends TNumber> SparseToDense<U> create(Scope scope, Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues, Operand<U> defaultValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToDense", scope.makeOpName("SparseToDense"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(outputShape.asOutput());

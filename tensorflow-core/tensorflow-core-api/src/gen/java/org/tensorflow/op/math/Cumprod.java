@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the cumulative product of the tensor `x` along `axis`.
@@ -96,7 +97,7 @@ public final class Cumprod<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Cumprod
    */
-  public static <T, U extends Number> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
+  public static <T, U extends TNumber> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumprod", scope.makeOpName("Cumprod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());

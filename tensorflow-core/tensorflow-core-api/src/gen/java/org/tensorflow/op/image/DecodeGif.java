@@ -24,7 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * Decode the frame(s) of a GIF-encoded image to a uint8 tensor.
@@ -39,7 +40,7 @@ import org.tensorflow.types.UInt8;
  * `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeGif extends PrimitiveOp implements Operand<UInt8> {
+public final class DecodeGif extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Factory method to create a class wrapping a new DecodeGif operation.
@@ -48,7 +49,7 @@ public final class DecodeGif extends PrimitiveOp implements Operand<UInt8> {
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
    */
-  public static DecodeGif create(Scope scope, Operand<String> contents) {
+  public static DecodeGif create(Scope scope, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeGif", scope.makeOpName("DecodeGif"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -58,16 +59,16 @@ public final class DecodeGif extends PrimitiveOp implements Operand<UInt8> {
   /**
    * 4-D with shape `[num_frames, height, width, 3]`. RGB channel order.
    */
-  public Output<UInt8> image() {
+  public Output<TUInt8> image() {
     return image;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return image;
   }
   
-  private Output<UInt8> image;
+  private Output<TUInt8> image;
   
   private DecodeGif(Operation operation) {
     super(operation);

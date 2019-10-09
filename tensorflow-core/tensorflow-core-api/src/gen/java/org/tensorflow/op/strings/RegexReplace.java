@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Replaces matches of the `pattern` regular expression in `input` with the
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
 @Operator(group = "strings")
-public final class RegexReplace extends PrimitiveOp implements Operand<String> {
+public final class RegexReplace extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.RegexReplace}
@@ -66,7 +67,7 @@ public final class RegexReplace extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of RegexReplace
    */
-  public static RegexReplace create(Scope scope, Operand<String> input, Operand<String> pattern, Operand<String> rewrite, Options... options) {
+  public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern, Operand<TString> rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexReplace", scope.makeOpName("RegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
@@ -94,16 +95,16 @@ public final class RegexReplace extends PrimitiveOp implements Operand<String> {
   /**
    * The text after applying pattern match and rewrite substitution.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private RegexReplace(Operation operation) {
     super(operation);

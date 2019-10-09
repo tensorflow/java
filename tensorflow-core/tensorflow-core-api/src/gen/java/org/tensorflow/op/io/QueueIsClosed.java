@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Returns true if queue is closed.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * is open.
  */
 @Operator(group = "io")
-public final class QueueIsClosed extends PrimitiveOp implements Operand<Boolean> {
+public final class QueueIsClosed extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new QueueIsClosed operation.
@@ -50,16 +51,16 @@ public final class QueueIsClosed extends PrimitiveOp implements Operand<Boolean>
   
   /**
    */
-  public Output<Boolean> isClosed() {
+  public Output<TBool> isClosed() {
     return isClosed;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return isClosed;
   }
   
-  private Output<Boolean> isClosed;
+  private Output<TBool> isClosed;
   
   private QueueIsClosed(Operation operation) {
     super(operation);

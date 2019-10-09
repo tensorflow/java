@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Perform batches of RPC requests.
@@ -73,7 +74,7 @@ import org.tensorflow.op.annotation.Operator;
  * See the `TryRpc` op if you prefer to handle RPC failures manually in the graph.
  */
 @Operator
-public final class Rpc extends PrimitiveOp implements Operand<String> {
+public final class Rpc extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Rpc}
@@ -133,7 +134,7 @@ public final class Rpc extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of Rpc
    */
-  public static Rpc create(Scope scope, Operand<String> address, Operand<String> method, Operand<String> request, Options... options) {
+  public static Rpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rpc", scope.makeOpName("Rpc"));
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(method.asOutput());
@@ -184,16 +185,16 @@ public final class Rpc extends PrimitiveOp implements Operand<String> {
   /**
    * Same shape as `request`. Serialized proto strings: the rpc responses.
    */
-  public Output<String> response() {
+  public Output<TString> response() {
     return response;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return response;
   }
   
-  private Output<String> response;
+  private Output<TString> response;
   
   private Rpc(Operation operation) {
     super(operation);

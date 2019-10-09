@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Creates a tree resource and returns a handle to it.
@@ -36,7 +37,7 @@ public final class TensorForestCreateTreeVariable extends PrimitiveOp {
    * @param treeConfig Serialized proto string of the boosted_trees.Tree.
    * @return a new instance of TensorForestCreateTreeVariable
    */
-  public static TensorForestCreateTreeVariable create(Scope scope, Operand<?> treeHandle, Operand<String> treeConfig) {
+  public static TensorForestCreateTreeVariable create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestCreateTreeVariable", scope.makeOpName("TensorForestCreateTreeVariable"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(treeConfig.asOutput());

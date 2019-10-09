@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes Psi, the derivative of Lgamma (the log of the absolute value of
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Digamma<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Digamma<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Digamma operation.
@@ -42,7 +43,7 @@ public final class Digamma<T extends Number> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Digamma
    */
-  public static <T extends Number> Digamma<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Digamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Digamma", scope.makeOpName("Digamma"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

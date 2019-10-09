@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Prints a string scalar.
@@ -68,7 +69,7 @@ public final class Print extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Print
    */
-  public static Print create(Scope scope, Operand<String> input, Options... options) {
+  public static Print create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrintV2", scope.makeOpName("Print"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

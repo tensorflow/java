@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Output a fact about factorials.
  */
 @Operator(group = "math")
-public final class Fact extends PrimitiveOp implements Operand<String> {
+public final class Fact extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new Fact operation.
@@ -45,16 +46,16 @@ public final class Fact extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> fact() {
+  public Output<TString> fact() {
     return fact;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return fact;
   }
   
-  private Output<String> fact;
+  private Output<TString> fact;
   
   private Fact(Operation operation) {
     super(operation);

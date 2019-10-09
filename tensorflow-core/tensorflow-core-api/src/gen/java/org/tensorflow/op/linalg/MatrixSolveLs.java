@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TDouble;
 
 /**
  * Solves one or more linear least-squares problems.
@@ -101,7 +102,7 @@ public final class MatrixSolveLs<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of MatrixSolveLs
    */
-  public static <T> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<Double> l2Regularizer, Options... options) {
+  public static <T> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TDouble> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolveLs", scope.makeOpName("MatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code loss()} output
  */
 @Operator(group = "nn")
-public final class SparseSoftmaxCrossEntropyWithLogits<T extends Number> extends PrimitiveOp {
+public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSoftmaxCrossEntropyWithLogits operation.
@@ -49,7 +50,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends Number> extends
    * This is the label for the given minibatch entry.
    * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
-  public static <T extends Number, U extends Number> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<U> labels) {
+  public static <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<U> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adds up a `SparseTensor` and a dense `Tensor`, producing a dense `Tensor`.
@@ -45,7 +46,7 @@ public final class SparseTensorDenseAdd<U> extends PrimitiveOp implements Operan
    * @param b `ndims`-D Tensor.  With shape `a_shape`.
    * @return a new instance of SparseTensorDenseAdd
    */
-  public static <U, T extends Number> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
+  public static <U, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

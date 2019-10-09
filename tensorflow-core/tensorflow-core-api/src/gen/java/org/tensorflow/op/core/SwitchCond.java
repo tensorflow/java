@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Forwards `data` to the output port determined by `pred`.
@@ -46,7 +47,7 @@ public final class SwitchCond<T> extends PrimitiveOp {
    * @param pred A scalar that specifies which output port will receive data.
    * @return a new instance of SwitchCond
    */
-  public static <T> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<Boolean> pred) {
+  public static <T> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("Switch", scope.makeOpName("SwitchCond"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(pred.asOutput());

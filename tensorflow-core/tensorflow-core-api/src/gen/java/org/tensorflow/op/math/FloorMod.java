@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise remainder of division. When `x < 0` xor `y < 0` is
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class FloorMod<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class FloorMod<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new FloorMod operation.
@@ -47,7 +48,7 @@ public final class FloorMod<T extends Number> extends PrimitiveOp implements Ope
    * @param y 
    * @return a new instance of FloorMod
    */
-  public static <T extends Number> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("FloorMod", scope.makeOpName("FloorMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

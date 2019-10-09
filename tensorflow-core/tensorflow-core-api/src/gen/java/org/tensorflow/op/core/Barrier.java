@@ -23,10 +23,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Defines a barrier that persists across different graph executions.
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * and may be updated using BarrierInsertMany.
  */
 @Operator
-public final class Barrier extends PrimitiveOp implements Operand<String> {
+public final class Barrier extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Barrier}
@@ -102,12 +103,12 @@ public final class Barrier extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of Barrier
    */
-  public static Barrier create(Scope scope, List<Class<?>> componentTypes, Options... options) {
+  public static Barrier create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = DataType.fromClass(componentTypes.get(i));
+      componentTypesArray[i] = componentTypes.get(i);
     }
     opBuilder.setAttr("component_types", componentTypesArray);
     if (options != null) {
@@ -169,16 +170,16 @@ public final class Barrier extends PrimitiveOp implements Operand<String> {
   /**
    * The handle to the barrier.
    */
-  public Output<String> handle() {
+  public Output<TString> handle() {
     return handle;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return handle;
   }
   
-  private Output<String> handle;
+  private Output<TString> handle;
   
   private Barrier(Operation operation) {
     super(operation);

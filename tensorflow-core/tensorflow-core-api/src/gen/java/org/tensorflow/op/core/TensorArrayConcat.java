@@ -22,10 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Concat the elements from the TensorArray into value `value`.
@@ -78,12 +80,12 @@ public final class TensorArrayConcat<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayConcat
    */
-  public static <T> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<Float> flowIn, Class<T> dtype, Options... options) {
+  public static <T> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.elementShapeExcept0 != null) {
@@ -117,12 +119,12 @@ public final class TensorArrayConcat<T> extends PrimitiveOp {
    * value output.  In the example above, this would be the values:
    * `(n1, n2, ..., n(T-1))`.
    */
-  public Output<Long> lengths() {
+  public Output<TInt64> lengths() {
     return lengths;
   }
   
   private Output<T> value;
-  private Output<Long> lengths;
+  private Output<TInt64> lengths;
   
   private TensorArrayConcat(Operation operation) {
     super(operation);

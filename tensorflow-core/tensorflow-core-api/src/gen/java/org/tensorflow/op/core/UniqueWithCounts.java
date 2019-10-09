@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Finds unique elements along an axis of a tensor.
@@ -77,7 +79,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code idx()} output
  */
 @Operator
-public final class UniqueWithCounts<T, V extends Number> extends PrimitiveOp {
+public final class UniqueWithCounts<T, V extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new UniqueWithCounts operation.
@@ -89,12 +91,12 @@ public final class UniqueWithCounts<T, V extends Number> extends PrimitiveOp {
    * @param outIdx 
    * @return a new instance of UniqueWithCounts
    */
-  public static <T, V extends Number, U extends Number> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, Class<V> outIdx) {
+  public static <T, V extends TNumber, U extends TNumber> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueWithCountsV2", scope.makeOpName("UniqueWithCounts"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_idx", DataType.fromClass(outIdx));
+    opBuilder.setAttr("out_idx", outIdx);
     return new UniqueWithCounts<T, V>(opBuilder.build());
   }
   
@@ -107,8 +109,8 @@ public final class UniqueWithCounts<T, V extends Number> extends PrimitiveOp {
    * find the unique elements.
    * @return a new instance of UniqueWithCounts
    */
-  public static <T, U extends Number> UniqueWithCounts<T, Integer> create(Scope scope, Operand<T> x, Operand<U> axis) {
-    return create(scope, x, axis, Integer.class);
+  public static <T, U extends TNumber> UniqueWithCounts<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
+    return create(scope, x, axis, TInt32.DTYPE);
   }
   
   /**

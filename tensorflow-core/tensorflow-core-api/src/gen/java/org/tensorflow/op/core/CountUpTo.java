@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Increments 'ref' until it reaches 'limit'.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class CountUpTo<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class CountUpTo<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CountUpTo operation.
@@ -42,7 +43,7 @@ public final class CountUpTo<T extends Number> extends PrimitiveOp implements Op
    * 'OutOfRange' error.
    * @return a new instance of CountUpTo
    */
-  public static <T extends Number> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
+  public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
     opBuilder.addInput(ref.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

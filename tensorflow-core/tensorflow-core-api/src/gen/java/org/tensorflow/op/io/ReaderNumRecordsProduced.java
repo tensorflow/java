@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Returns the number of records this Reader has produced.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * succeeded.
  */
 @Operator(group = "io")
-public final class ReaderNumRecordsProduced extends PrimitiveOp implements Operand<Long> {
+public final class ReaderNumRecordsProduced extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new ReaderNumRecordsProduced operation.
@@ -50,16 +51,16 @@ public final class ReaderNumRecordsProduced extends PrimitiveOp implements Opera
   
   /**
    */
-  public Output<Long> recordsProduced() {
+  public Output<TInt64> recordsProduced() {
     return recordsProduced;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return recordsProduced;
   }
   
-  private Output<Long> recordsProduced;
+  private Output<TInt64> recordsProduced;
   
   private ReaderNumRecordsProduced(Operation operation) {
     super(operation);

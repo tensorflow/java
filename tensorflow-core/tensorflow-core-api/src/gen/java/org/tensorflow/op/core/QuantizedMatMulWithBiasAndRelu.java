@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b` with bias
@@ -93,7 +94,7 @@ public final class QuantizedMatMulWithBiasAndRelu<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMulWithBiasAndRelu
    */
-  public static <V, T, U> QuantizedMatMulWithBiasAndRelu<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<Float> bias, Operand<Float> minA, Operand<Float> maxA, Operand<Float> minB, Operand<Float> maxB, Class<V> Toutput, Options... options) {
+  public static <V, T, U> QuantizedMatMulWithBiasAndRelu<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndRelu", scope.makeOpName("QuantizedMatMulWithBiasAndRelu"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -103,7 +104,7 @@ public final class QuantizedMatMulWithBiasAndRelu<V> extends PrimitiveOp {
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Toutput", DataType.fromClass(Toutput));
+    opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {
@@ -150,20 +151,20 @@ public final class QuantizedMatMulWithBiasAndRelu<V> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minOut() {
+  public Output<TFloat> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<Float> maxOut() {
+  public Output<TFloat> maxOut() {
     return maxOut;
   }
   
   private Output<V> out;
-  private Output<Float> minOut;
-  private Output<Float> maxOut;
+  private Output<TFloat> minOut;
+  private Output<TFloat> maxOut;
   
   private QuantizedMatMulWithBiasAndRelu(Operation operation) {
     super(operation);

@@ -22,10 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a dataset that batches and pads `batch_size` elements from the input.
@@ -70,7 +72,7 @@ public final class PaddedBatchDataset extends PrimitiveOp implements Operand<Obj
    * @param options carries optional attributes values
    * @return a new instance of PaddedBatchDataset
    */
-  public static PaddedBatchDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> batchSize, Iterable<Operand<Long>> paddedShapes, Iterable<Operand<?>> paddingValues, Operand<Boolean> dropRemainder, List<Shape> outputShapes, Options... options) {
+  public static PaddedBatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Iterable<Operand<TInt64>> paddedShapes, Iterable<Operand<?>> paddingValues, Operand<TBool> dropRemainder, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddedBatchDatasetV2", scope.makeOpName("PaddedBatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());

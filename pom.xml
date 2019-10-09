@@ -30,10 +30,39 @@
 
   <modules>
     <module>tensorflow-core</module>
-    <!--module>tensorflow-utils</module-->
+    <module>tensorflow-utils</module>
     <!--module>tensorflow-frameworks</module> TODO -->
     <!--module>tensorflow-starters</module> TODO -->
   </modules>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.12</junit.version>
+    <jmh.version>1.21</jmh.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+	  <dependency>
+	    <groupId>org.openjdk.jmh</groupId>
+	    <artifactId>jmh-core</artifactId>
+	    <version>${jmh.version}</version>
+  	    <scope>test</scope>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.openjdk.jmh</groupId>
+	    <artifactId>jmh-generator-annprocess</artifactId>
+	    <version>${jmh.version}</version>
+        <scope>test</scope>
+	  </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <!-- Two profiles are used:
        ossrh - deploys to ossrh/maven central
@@ -64,6 +93,7 @@
       </distributionManagement>
     </profile>
   </profiles>
+
   <!-- http://central.sonatype.org/pages/requirements.html#developer-information -->
   <developers>
     <developer>
@@ -72,6 +102,7 @@
       <organizationUrl>http://www.tensorflow.org</organizationUrl>
     </developer>
   </developers>
+
   <build>
     <plugins>
       <!-- GPG signed components: http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->

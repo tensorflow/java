@@ -23,9 +23,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TInt64;
 
 /**
  * A dataset that creates window datasets from the input dataset.
@@ -48,7 +50,7 @@ public final class WindowDataset extends PrimitiveOp implements Operand<Object> 
    * @param outputShapes 
    * @return a new instance of WindowDataset
    */
-  public static WindowDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> size, Operand<Long> shift, Operand<Long> stride, Operand<Boolean> dropRemainder, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static WindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> size, Operand<TInt64> shift, Operand<TInt64> stride, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("WindowDataset", scope.makeOpName("WindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -58,7 +60,7 @@ public final class WindowDataset extends PrimitiveOp implements Operand<Object> 
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

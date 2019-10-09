@@ -24,6 +24,10 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Decodes each string in `input` into a sequence of Unicode code points.
@@ -47,7 +51,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code rowSplits()} output
  */
-public final class UnicodeDecode<T extends Number> extends PrimitiveOp {
+public final class UnicodeDecode<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.UnicodeDecode}
@@ -108,12 +112,12 @@ public final class UnicodeDecode<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecode
    */
-  public static <T extends Number> UnicodeDecode<T> create(Scope scope, Operand<String> input, String inputEncoding, Class<T> Tsplits, Options... options) {
+  public static <T extends TNumber> UnicodeDecode<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecode", scope.makeOpName("UnicodeDecode"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
-    opBuilder.setAttr("Tsplits", DataType.fromClass(Tsplits));
+    opBuilder.setAttr("Tsplits", Tsplits);
     if (options != null) {
       for (Options opts : options) {
         if (opts.errors != null) {
@@ -141,8 +145,8 @@ public final class UnicodeDecode<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecode
    */
-  public static UnicodeDecode<Long> create(Scope scope, Operand<String> input, String inputEncoding, Options... options) {
-    return create(scope, input, inputEncoding, Long.class, options);
+  public static UnicodeDecode<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
+    return create(scope, input, inputEncoding, TInt64.DTYPE, options);
   }
   
   /**
@@ -186,12 +190,12 @@ public final class UnicodeDecode<T extends Number> extends PrimitiveOp {
   /**
    * A 1D int32 Tensor containing the decoded codepoints.
    */
-  public Output<Integer> charValues() {
+  public Output<TInt32> charValues() {
     return charValues;
   }
   
   private Output<T> rowSplits;
-  private Output<Integer> charValues;
+  private Output<TInt32> charValues;
   
   private UnicodeDecode(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Local Response Normalization.
@@ -43,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class LocalResponseNormalization<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LocalResponseNormalization<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LocalResponseNormalization}
@@ -99,7 +100,7 @@ public final class LocalResponseNormalization<T extends Number> extends Primitiv
    * @param options carries optional attributes values
    * @return a new instance of LocalResponseNormalization
    */
-  public static <T extends Number> LocalResponseNormalization<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TNumber> LocalResponseNormalization<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRN", scope.makeOpName("LocalResponseNormalization"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Converts each entry in the given tensor to strings.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * tutorial.
  */
 @Operator(group = "dtypes")
-public final class AsString extends PrimitiveOp implements Operand<String> {
+public final class AsString extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.dtypes.AsString}
@@ -173,16 +174,16 @@ public final class AsString extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private AsString(Operation operation) {
     super(operation);

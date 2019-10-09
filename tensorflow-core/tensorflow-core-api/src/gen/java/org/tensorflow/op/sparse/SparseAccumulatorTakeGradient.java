@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Extracts the average sparse gradient in a SparseConditionalAccumulator.
@@ -51,19 +54,19 @@ public final class SparseAccumulatorTakeGradient<T> extends PrimitiveOp {
    * of the accumulator.
    * @return a new instance of SparseAccumulatorTakeGradient
    */
-  public static <T> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<String> handle, Operand<Integer> numRequired, Class<T> dtype) {
+  public static <T> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new SparseAccumulatorTakeGradient<T>(opBuilder.build());
   }
   
   /**
    * Indices of the average of the accumulated sparse gradients.
    */
-  public Output<Long> indices() {
+  public Output<TInt64> indices() {
     return indices;
   }
   
@@ -77,13 +80,13 @@ public final class SparseAccumulatorTakeGradient<T> extends PrimitiveOp {
   /**
    * Shape of the average of the accumulated sparse gradients.
    */
-  public Output<Long> shape() {
+  public Output<TInt64> shape() {
     return shape;
   }
   
-  private Output<Long> indices;
+  private Output<TInt64> indices;
   private Output<T> values;
-  private Output<Long> shape;
+  private Output<TInt64> shape;
   
   private SparseAccumulatorTakeGradient(Operation operation) {
     super(operation);

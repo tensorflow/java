@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Return substrings from `Tensor` of strings.
@@ -99,7 +101,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator(group = "strings")
-public final class Substr extends PrimitiveOp implements Operand<String> {
+public final class Substr extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.Substr}
@@ -134,7 +136,7 @@ public final class Substr extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of Substr
    */
-  public static <T extends Number> Substr create(Scope scope, Operand<String> input, Operand<T> pos, Operand<T> len, Options... options) {
+  public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Substr", scope.makeOpName("Substr"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pos.asOutput());
@@ -164,16 +166,16 @@ public final class Substr extends PrimitiveOp implements Operand<String> {
   /**
    * Tensor of substrings
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private Substr(Operation operation) {
     super(operation);

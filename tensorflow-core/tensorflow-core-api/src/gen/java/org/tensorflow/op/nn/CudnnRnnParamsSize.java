@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes size of weights that can be used by a Cudnn RNN model.
@@ -54,7 +56,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code paramsSize()} output
  */
 @Operator(group = "nn")
-public final class CudnnRnnParamsSize<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class CudnnRnnParamsSize<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CudnnRnnParamsSize}
@@ -141,14 +143,14 @@ public final class CudnnRnnParamsSize<U extends Number> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnParamsSize
    */
-  public static <U extends Number, T extends Number> CudnnRnnParamsSize<U> create(Scope scope, Operand<Integer> numLayers, Operand<Integer> numUnits, Operand<Integer> inputSize, Class<T> T, Class<U> S, Options... options) {
+  public static <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T, DataType<U> S, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsSize", scope.makeOpName("CudnnRnnParamsSize"));
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("T", DataType.fromClass(T));
-    opBuilder.setAttr("S", DataType.fromClass(S));
+    opBuilder.setAttr("T", T);
+    opBuilder.setAttr("S", S);
     if (options != null) {
       for (Options opts : options) {
         if (opts.rnnMode != null) {

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Updates the accumulator with a new value for global_step.
@@ -41,7 +43,7 @@ public final class AccumulatorSetGlobalStep extends PrimitiveOp {
    * @param newGlobalStep The new global_step value to set.
    * @return a new instance of AccumulatorSetGlobalStep
    */
-  public static AccumulatorSetGlobalStep create(Scope scope, Operand<String> handle, Operand<Long> newGlobalStep) {
+  public static AccumulatorSetGlobalStep create(Scope scope, Operand<TString> handle, Operand<TInt64> newGlobalStep) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorSetGlobalStep", scope.makeOpName("AccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(newGlobalStep.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Forwards the input to the output.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * "pivot" switches of a loop.
  */
 @Operator
-public final class LoopCond extends PrimitiveOp implements Operand<Boolean> {
+public final class LoopCond extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new LoopCond operation.
@@ -41,7 +42,7 @@ public final class LoopCond extends PrimitiveOp implements Operand<Boolean> {
    * @param input A boolean scalar, representing the branch predicate of the Switch op.
    * @return a new instance of LoopCond
    */
-  public static LoopCond create(Scope scope, Operand<Boolean> input) {
+  public static LoopCond create(Scope scope, Operand<TBool> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoopCond", scope.makeOpName("LoopCond"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -51,16 +52,16 @@ public final class LoopCond extends PrimitiveOp implements Operand<Boolean> {
   /**
    * The same tensor as `input`.
    */
-  public Output<Boolean> output() {
+  public Output<TBool> output() {
     return output;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return output;
   }
   
-  private Output<Boolean> output;
+  private Output<TBool> output;
   
   private LoopCond(Operation operation) {
     super(operation);

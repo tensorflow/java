@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Decodes a `variant` Tensor into a `RaggedTensor`.
@@ -46,7 +47,7 @@ import org.tensorflow.op.Scope;
  * @param <U> data type for {@code outputNestedSplits()} output
  * @param <T> data type for {@code outputDenseValues()} output
  */
-public final class RaggedTensorFromVariant<U extends Number, T> extends PrimitiveOp {
+public final class RaggedTensorFromVariant<U extends TNumber, T> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorFromVariant operation.
@@ -61,14 +62,14 @@ public final class RaggedTensorFromVariant<U extends Number, T> extends Primitiv
    * @param Tsplits 
    * @return a new instance of RaggedTensorFromVariant
    */
-  public static <U extends Number, T> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, Class<T> Tvalues, Class<U> Tsplits) {
+  public static <U extends TNumber, T> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("input_ragged_rank", inputRaggedRank);
     opBuilder.setAttr("output_ragged_rank", outputRaggedRank);
-    opBuilder.setAttr("Tvalues", DataType.fromClass(Tvalues));
-    opBuilder.setAttr("Tsplits", DataType.fromClass(Tsplits));
+    opBuilder.setAttr("Tvalues", Tvalues);
+    opBuilder.setAttr("Tsplits", Tsplits);
     return new RaggedTensorFromVariant<U, T>(opBuilder.build());
   }
   

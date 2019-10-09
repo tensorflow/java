@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Returns the truth value of NOT x element-wise.
  */
 @Operator(group = "math")
-public final class LogicalNot extends PrimitiveOp implements Operand<Boolean> {
+public final class LogicalNot extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new LogicalNot operation.
@@ -38,7 +39,7 @@ public final class LogicalNot extends PrimitiveOp implements Operand<Boolean> {
    * @param x 
    * @return a new instance of LogicalNot
    */
-  public static LogicalNot create(Scope scope, Operand<Boolean> x) {
+  public static LogicalNot create(Scope scope, Operand<TBool> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalNot", scope.makeOpName("LogicalNot"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -47,16 +48,16 @@ public final class LogicalNot extends PrimitiveOp implements Operand<Boolean> {
   
   /**
    */
-  public Output<Boolean> y() {
+  public Output<TBool> y() {
     return y;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return y;
   }
   
-  private Output<Boolean> y;
+  private Output<TBool> y;
   
   private LogicalNot(Operation operation) {
     super(operation);

@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * A Reader that outputs the records from a LMDB file.
  */
 @Operator(group = "io")
-public final class LmdbReader extends PrimitiveOp implements Operand<String> {
+public final class LmdbReader extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.LmdbReader}
@@ -103,16 +104,16 @@ public final class LmdbReader extends PrimitiveOp implements Operand<String> {
   /**
    * The handle to reference the Reader.
    */
-  public Output<String> readerHandle() {
+  public Output<TString> readerHandle() {
     return readerHandle;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return readerHandle;
   }
   
-  private Output<String> readerHandle;
+  private Output<TString> readerHandle;
   
   private LmdbReader(Operation operation) {
     super(operation);

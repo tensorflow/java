@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Outputs random values from a normal distribution. This op is deprecated in favor of op 'StatefulStandardNormalV2'
@@ -45,12 +46,12 @@ public final class StatefulStandardNormal<U> extends PrimitiveOp implements Oper
    * @param dtype The type of the output.
    * @return a new instance of StatefulStandardNormal
    */
-  public static <U, T> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<T> shape, Class<U> dtype) {
+  public static <U, T> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormal", scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new StatefulStandardNormal<U>(opBuilder.build());
   }
   
@@ -62,8 +63,8 @@ public final class StatefulStandardNormal<U> extends PrimitiveOp implements Oper
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulStandardNormal
    */
-  public static <T> StatefulStandardNormal<Float> create(Scope scope, Operand<?> resource, Operand<T> shape) {
-    return create(scope, resource, shape, Float.class);
+  public static <T> StatefulStandardNormal<TFloat> create(Scope scope, Operand<?> resource, Operand<T> shape) {
+    return create(scope, resource, shape, TFloat.DTYPE);
   }
   
   /**

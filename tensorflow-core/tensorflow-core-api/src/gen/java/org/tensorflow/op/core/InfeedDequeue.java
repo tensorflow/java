@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 
@@ -41,10 +41,10 @@ public final class InfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
    * @param shape The shape of the tensor.
    * @return a new instance of InfeedDequeue
    */
-  public static <T> InfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape) {
+  public static <T> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("shape", shape);
     return new InfeedDequeue<T>(opBuilder.build());
   }

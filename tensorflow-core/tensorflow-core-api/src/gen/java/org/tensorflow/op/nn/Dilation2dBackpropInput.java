@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of morphological 2-D dilation with respect to the input.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code inBackprop()} output
  */
 @Operator(group = "nn")
-public final class Dilation2dBackpropInput<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Dilation2dBackpropInput<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Dilation2dBackpropInput operation.
@@ -48,7 +49,7 @@ public final class Dilation2dBackpropInput<T extends Number> extends PrimitiveOp
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2dBackpropInput
    */
-  public static <T extends Number> Dilation2dBackpropInput<T> create(Scope scope, Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates, String padding) {
+  public static <T extends TNumber> Dilation2dBackpropInput<T> create(Scope scope, Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2DBackpropInput", scope.makeOpName("Dilation2dBackpropInput"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

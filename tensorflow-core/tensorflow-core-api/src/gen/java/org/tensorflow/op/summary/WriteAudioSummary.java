@@ -22,6 +22,9 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -58,7 +61,7 @@ public final class WriteAudioSummary extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of WriteAudioSummary
    */
-  public static WriteAudioSummary create(Scope scope, Operand<?> writer, Operand<Long> step, Operand<String> tag, Operand<Float> tensor, Operand<Float> sampleRate, Options... options) {
+  public static WriteAudioSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<TFloat> tensor, Operand<TFloat> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteAudioSummary", scope.makeOpName("WriteAudioSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());

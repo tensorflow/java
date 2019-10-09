@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the minimum along segments of a tensor.
@@ -56,7 +57,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class UnsortedSegmentMin<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class UnsortedSegmentMin<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new UnsortedSegmentMin operation.
@@ -67,7 +68,7 @@ public final class UnsortedSegmentMin<T extends Number> extends PrimitiveOp impl
    * @param numSegments 
    * @return a new instance of UnsortedSegmentMin
    */
-  public static <T extends Number, U extends Number, V extends Number> UnsortedSegmentMin<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMin<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentMin", scope.makeOpName("UnsortedSegmentMin"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

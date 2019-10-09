@@ -29,6 +29,8 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns shape of tensors.
@@ -38,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ShapeN<U extends Number> extends PrimitiveOp implements Iterable<Operand<U>> {
+public final class ShapeN<U extends TNumber> extends PrimitiveOp implements Iterable<Operand<U>> {
   
   /**
    * Factory method to create a class wrapping a new ShapeN operation.
@@ -48,11 +50,11 @@ public final class ShapeN<U extends Number> extends PrimitiveOp implements Itera
    * @param outType 
    * @return a new instance of ShapeN
    */
-  public static <U extends Number, T> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, Class<U> outType) {
+  public static <U extends TNumber, T> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new ShapeN<U>(opBuilder.build());
   }
   
@@ -63,8 +65,8 @@ public final class ShapeN<U extends Number> extends PrimitiveOp implements Itera
    * @param input 
    * @return a new instance of ShapeN
    */
-  public static <T> ShapeN<Integer> create(Scope scope, Iterable<Operand<T>> input) {
-    return create(scope, input, Integer.class);
+  public static <T> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
+    return create(scope, input, TInt32.DTYPE);
   }
   
   /**

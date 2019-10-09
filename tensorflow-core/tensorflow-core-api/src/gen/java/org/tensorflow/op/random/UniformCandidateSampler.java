@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Generates labels for candidate sampling with a uniform distribution.
@@ -86,7 +88,7 @@ public final class UniformCandidateSampler extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UniformCandidateSampler
    */
-  public static UniformCandidateSampler create(Scope scope, Operand<Long> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
+  public static UniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniformCandidateSampler", scope.makeOpName("UniformCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -127,7 +129,7 @@ public final class UniformCandidateSampler extends PrimitiveOp {
    * A vector of length num_sampled, in which each element is
    * the ID of a sampled candidate.
    */
-  public Output<Long> sampledCandidates() {
+  public Output<TInt64> sampledCandidates() {
     return sampledCandidates;
   }
   
@@ -136,7 +138,7 @@ public final class UniformCandidateSampler extends PrimitiveOp {
    * the number of times each candidate is expected to occur in a batch
    * of sampled candidates. If unique=true, then this is a probability.
    */
-  public Output<Float> trueExpectedCount() {
+  public Output<TFloat> trueExpectedCount() {
     return trueExpectedCount;
   }
   
@@ -146,13 +148,13 @@ public final class UniformCandidateSampler extends PrimitiveOp {
    * to occur in a batch of sampled candidates.  If unique=true, then this is a
    * probability.
    */
-  public Output<Float> sampledExpectedCount() {
+  public Output<TFloat> sampledExpectedCount() {
     return sampledExpectedCount;
   }
   
-  private Output<Long> sampledCandidates;
-  private Output<Float> trueExpectedCount;
-  private Output<Float> sampledExpectedCount;
+  private Output<TInt64> sampledCandidates;
+  private Output<TFloat> trueExpectedCount;
+  private Output<TFloat> sampledExpectedCount;
   
   private UniformCandidateSampler(Operation operation) {
     super(operation);

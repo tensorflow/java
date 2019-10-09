@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random values from the Gamma distribution(s) described by alpha.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomGamma<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class RandomGamma<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomGamma}
@@ -78,7 +79,7 @@ public final class RandomGamma<U extends Number> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of RandomGamma
    */
-  public static <U extends Number, T extends Number> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
+  public static <U extends TNumber, T extends TNumber> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(alpha.asOutput());

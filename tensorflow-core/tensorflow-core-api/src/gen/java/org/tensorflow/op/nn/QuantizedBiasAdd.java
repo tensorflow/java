@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
@@ -49,7 +50,7 @@ public final class QuantizedBiasAdd<V> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedBiasAdd
    */
-  public static <V, T, U> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minBias, Operand<Float> maxBias, Class<V> outType) {
+  public static <V, T, U> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minBias, Operand<TFloat> maxBias, DataType<V> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBiasAdd", scope.makeOpName("QuantizedBiasAdd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(bias.asOutput());
@@ -58,7 +59,7 @@ public final class QuantizedBiasAdd<V> extends PrimitiveOp {
     opBuilder.addInput(minBias.asOutput());
     opBuilder.addInput(maxBias.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new QuantizedBiasAdd<V>(opBuilder.build());
   }
   
@@ -71,20 +72,20 @@ public final class QuantizedBiasAdd<V> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minOut() {
+  public Output<TFloat> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<Float> maxOut() {
+  public Output<TFloat> maxOut() {
     return maxOut;
   }
   
   private Output<V> output;
-  private Output<Float> minOut;
-  private Output<Float> maxOut;
+  private Output<TFloat> minOut;
+  private Output<TFloat> maxOut;
   
   private QuantizedBiasAdd(Operation operation) {
     super(operation);

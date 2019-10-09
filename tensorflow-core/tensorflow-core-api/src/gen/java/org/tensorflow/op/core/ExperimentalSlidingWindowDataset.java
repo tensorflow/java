@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a dataset that passes a sliding window over `input_dataset`.
@@ -47,7 +48,7 @@ public final class ExperimentalSlidingWindowDataset extends PrimitiveOp implemen
    * @param outputShapes 
    * @return a new instance of ExperimentalSlidingWindowDataset
    */
-  public static ExperimentalSlidingWindowDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> windowSize, Operand<Long> windowShift, Operand<Long> windowStride, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static ExperimentalSlidingWindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSlidingWindowDataset", scope.makeOpName("ExperimentalSlidingWindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(windowSize.asOutput());
@@ -56,7 +57,7 @@ public final class ExperimentalSlidingWindowDataset extends PrimitiveOp implemen
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

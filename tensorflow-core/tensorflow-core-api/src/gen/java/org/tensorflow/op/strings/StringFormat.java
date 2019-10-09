@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Formats a string template using a list of tensors.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * Formats a string template using a list of tensors, pretty-printing tensor summaries.
  */
 @Operator(group = "strings")
-public final class StringFormat extends PrimitiveOp implements Operand<String> {
+public final class StringFormat extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StringFormat}
@@ -123,16 +124,16 @@ public final class StringFormat extends PrimitiveOp implements Operand<String> {
   /**
    * = The resulting string scalar.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private StringFormat(Operation operation) {
     super(operation);

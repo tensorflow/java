@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -124,12 +124,12 @@ public final class RandomShuffleQueue extends PrimitiveOp implements Operand<Obj
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffleQueue
    */
-  public static RandomShuffleQueue create(Scope scope, List<Class<?>> componentTypes, Options... options) {
+  public static RandomShuffleQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffleQueueV2", scope.makeOpName("RandomShuffleQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = DataType.fromClass(componentTypes.get(i));
+      componentTypesArray[i] = componentTypes.get(i);
     }
     opBuilder.setAttr("component_types", componentTypesArray);
     if (options != null) {

@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Performs greedy decoding on the logits given in inputs.
@@ -69,7 +72,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcGreedyDecoder
    */
-  public static CtcGreedyDecoder create(Scope scope, Operand<Float> inputs, Operand<Integer> sequenceLength, Options... options) {
+  public static CtcGreedyDecoder create(Scope scope, Operand<TFloat> inputs, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -95,7 +98,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * Indices matrix, size `(total_decoded_outputs x 2)`,
    * of a `SparseTensor<int64, 2>`.  The rows store: [batch, time].
    */
-  public Output<Long> decodedIndices() {
+  public Output<TInt64> decodedIndices() {
     return decodedIndices;
   }
   
@@ -103,7 +106,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * Values vector, size: `(total_decoded_outputs)`,
    * of a `SparseTensor<int64, 2>`.  The vector stores the decoded classes.
    */
-  public Output<Long> decodedValues() {
+  public Output<TInt64> decodedValues() {
     return decodedValues;
   }
   
@@ -111,7 +114,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * Shape vector, size `(2)`, of the decoded SparseTensor.
    * Values are: `[batch_size, max_decoded_length]`.
    */
-  public Output<Long> decodedShape() {
+  public Output<TInt64> decodedShape() {
     return decodedShape;
   }
   
@@ -119,14 +122,14 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * Matrix, size `(batch_size x 1)`, containing sequence
    * log-probabilities.
    */
-  public Output<Float> logProbability() {
+  public Output<TFloat> logProbability() {
     return logProbability;
   }
   
-  private Output<Long> decodedIndices;
-  private Output<Long> decodedValues;
-  private Output<Long> decodedShape;
-  private Output<Float> logProbability;
+  private Output<TInt64> decodedIndices;
+  private Output<TInt64> decodedValues;
+  private Output<TInt64> decodedShape;
+  private Output<TFloat> logProbability;
   
   private CtcGreedyDecoder(Operation operation) {
     super(operation);

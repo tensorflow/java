@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * The op serializes protobuf messages provided in the input tensors.
@@ -70,7 +72,7 @@ import org.tensorflow.op.Scope;
  * - A "bytes://<bytes>", in which protocol descriptors are created from `<bytes>`,
  * which is expected to be a `FileDescriptorSet` serialized as a string.
  */
-public final class EncodeProto extends PrimitiveOp implements Operand<String> {
+public final class EncodeProto extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.EncodeProto}
@@ -102,7 +104,7 @@ public final class EncodeProto extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeProto
    */
-  public static EncodeProto create(Scope scope, Operand<Integer> sizes, Iterable<Operand<?>> values, List<String> fieldNames, String messageType, Options... options) {
+  public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values, List<String> fieldNames, String messageType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
@@ -133,16 +135,16 @@ public final class EncodeProto extends PrimitiveOp implements Operand<String> {
   /**
    * Tensor of serialized protos with shape `batch_shape`.
    */
-  public Output<String> bytes() {
+  public Output<TString> bytes() {
     return bytes;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return bytes;
   }
   
-  private Output<String> bytes;
+  private Output<TString> bytes;
   
   private EncodeProto(Operation operation) {
     super(operation);

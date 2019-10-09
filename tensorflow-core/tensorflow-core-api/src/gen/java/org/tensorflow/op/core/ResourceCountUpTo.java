@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Increments variable pointed to by 'resource' until it reaches 'limit'.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ResourceCountUpTo<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ResourceCountUpTo<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ResourceCountUpTo operation.
@@ -44,12 +45,12 @@ public final class ResourceCountUpTo<T extends Number> extends PrimitiveOp imple
    * @param T 
    * @return a new instance of ResourceCountUpTo
    */
-  public static <T extends Number> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, Class<T> T) {
+  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
     opBuilder.addInput(resource.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("limit", limit);
-    opBuilder.setAttr("T", DataType.fromClass(T));
+    opBuilder.setAttr("T", T);
     return new ResourceCountUpTo<T>(opBuilder.build());
   }
   

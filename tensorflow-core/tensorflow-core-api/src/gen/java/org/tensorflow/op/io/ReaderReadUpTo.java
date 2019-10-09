@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Returns up to `num_records` (key, value) pairs produced by a Reader.
@@ -45,7 +47,7 @@ public final class ReaderReadUpTo extends PrimitiveOp {
    * @param numRecords number of records to read from `Reader`.
    * @return a new instance of ReaderReadUpTo
    */
-  public static ReaderReadUpTo create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle, Operand<Long> numRecords) {
+  public static ReaderReadUpTo create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle, Operand<TInt64> numRecords) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadUpToV2", scope.makeOpName("ReaderReadUpTo"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
@@ -57,19 +59,19 @@ public final class ReaderReadUpTo extends PrimitiveOp {
   /**
    * A 1-D tensor.
    */
-  public Output<String> keys() {
+  public Output<TString> keys() {
     return keys;
   }
   
   /**
    * A 1-D tensor.
    */
-  public Output<String> values() {
+  public Output<TString> values() {
     return values;
   }
   
-  private Output<String> keys;
-  private Output<String> values;
+  private Output<TString> keys;
+  private Output<TString> values;
   
   private ReaderReadUpTo(Operation operation) {
     super(operation);

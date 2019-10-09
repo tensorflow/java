@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Determine the script codes of a given tensor of Unicode integer code points.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * match input shape.
  */
 @Operator(group = "strings")
-public final class UnicodeScript extends PrimitiveOp implements Operand<Integer> {
+public final class UnicodeScript extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new UnicodeScript operation.
@@ -44,7 +45,7 @@ public final class UnicodeScript extends PrimitiveOp implements Operand<Integer>
    * @param input A Tensor of int32 Unicode code points.
    * @return a new instance of UnicodeScript
    */
-  public static UnicodeScript create(Scope scope, Operand<Integer> input) {
+  public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -54,16 +55,16 @@ public final class UnicodeScript extends PrimitiveOp implements Operand<Integer>
   /**
    * A Tensor of int32 script codes corresponding to each input code point.
    */
-  public Output<Integer> output() {
+  public Output<TInt32> output() {
     return output;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return output;
   }
   
-  private Output<Integer> output;
+  private Output<TInt32> output;
   
   private UnicodeScript(Operation operation) {
     super(operation);

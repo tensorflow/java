@@ -24,13 +24,15 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Makes the summary of accumulated stats for the batch.
  * <p>
  * The summary stats contains gradients and hessians accumulated into the corresponding node and bucket for each example.
  */
-public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements Operand<Float> {
+public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesMakeStatsSummary operation.
@@ -44,7 +46,7 @@ public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements O
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesMakeStatsSummary
    */
-  public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<Integer> nodeIds, Operand<Float> gradients, Operand<Float> hessians, Iterable<Operand<Integer>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
+  public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat> gradients, Operand<TFloat> hessians, Iterable<Operand<TInt32>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeStatsSummary", scope.makeOpName("BoostedTreesMakeStatsSummary"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -59,16 +61,16 @@ public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements O
   /**
    * output Rank 4 Tensor (shape=[#features, #splits, #buckets, 2]) containing accumulated stats put into the corresponding node and bucket. The first index of 4th dimension refers to gradients, and the second to hessians.
    */
-  public Output<Float> statsSummary() {
+  public Output<TFloat> statsSummary() {
     return statsSummary;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return statsSummary;
   }
   
-  private Output<Float> statsSummary;
+  private Output<TFloat> statsSummary;
   
   private BoostedTreesMakeStatsSummary(Operation operation) {
     super(operation);

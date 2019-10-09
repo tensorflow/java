@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Applies set operation along last dimension of 2 `SparseTensor` inputs.
@@ -98,7 +99,7 @@ public final class SparseToSparseSetOperation<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SparseToSparseSetOperation
    */
-  public static <T> SparseToSparseSetOperation<T> create(Scope scope, Operand<Long> set1Indices, Operand<T> set1Values, Operand<Long> set1Shape, Operand<Long> set2Indices, Operand<T> set2Values, Operand<Long> set2Shape, String setOperation, Options... options) {
+  public static <T> SparseToSparseSetOperation<T> create(Scope scope, Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToSparseSetOperation", scope.makeOpName("SparseToSparseSetOperation"));
     opBuilder.addInput(set1Indices.asOutput());
     opBuilder.addInput(set1Values.asOutput());
@@ -128,7 +129,7 @@ public final class SparseToSparseSetOperation<T> extends PrimitiveOp {
   /**
    * 2D indices of a `SparseTensor`.
    */
-  public Output<Long> resultIndices() {
+  public Output<TInt64> resultIndices() {
     return resultIndices;
   }
   
@@ -144,13 +145,13 @@ public final class SparseToSparseSetOperation<T> extends PrimitiveOp {
    * the same as the 1st `n-1` dimensions of `set1` and `set2`, `result_shape[n]`
    * is the max result set size across all `0...n-1` dimensions.
    */
-  public Output<Long> resultShape() {
+  public Output<TInt64> resultShape() {
     return resultShape;
   }
   
-  private Output<Long> resultIndices;
+  private Output<TInt64> resultIndices;
   private Output<T> resultValues;
-  private Output<Long> resultShape;
+  private Output<TInt64> resultShape;
   
   private SparseToSparseSetOperation(Operation operation) {
     super(operation);

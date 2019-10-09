@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * V2 format specific: merges the metadata files of sharded checkpoints.  The
@@ -68,7 +69,7 @@ public final class MergeV2Checkpoints extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MergeV2Checkpoints
    */
-  public static MergeV2Checkpoints create(Scope scope, Operand<String> checkpointPrefixes, Operand<String> destinationPrefix, Options... options) {
+  public static MergeV2Checkpoints create(Scope scope, Operand<TString> checkpointPrefixes, Operand<TString> destinationPrefix, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeV2Checkpoints", scope.makeOpName("MergeV2Checkpoints"));
     opBuilder.addInput(checkpointPrefixes.asOutput());
     opBuilder.addInput(destinationPrefix.asOutput());

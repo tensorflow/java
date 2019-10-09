@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the sum along segments of a tensor.
@@ -69,7 +70,7 @@ public final class UnsortedSegmentSum<T> extends PrimitiveOp implements Operand<
    * @param numSegments 
    * @return a new instance of UnsortedSegmentSum
    */
-  public static <T, U extends Number, V extends Number> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public static <T, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentSum", scope.makeOpName("UnsortedSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the GRU cell forward propagation for 1 time step.
@@ -74,7 +75,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code r()} output
  */
-public final class GRUBlockCell<T extends Number> extends PrimitiveOp {
+public final class GRUBlockCell<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new GRUBlockCell operation.
@@ -88,7 +89,7 @@ public final class GRUBlockCell<T extends Number> extends PrimitiveOp {
    * @param bC 
    * @return a new instance of GRUBlockCell
    */
-  public static <T extends Number> GRUBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
+  public static <T extends TNumber> GRUBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCell", scope.makeOpName("GRUBlockCell"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(hPrev.asOutput());

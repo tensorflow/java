@@ -45,7 +45,7 @@ final class NativeLibrary {
   private static final String JNI_LIBNAME = "tensorflow_jni";
 
   public static void load() {
-    org.bytedeco.javacpp.Loader.load(org.tensorflow.c_api.global.tensorflow.class);
+    org.bytedeco.javacpp.Loader.load(org.tensorflow.internal.c_api.global.tensorflow.class);
 
     if (isLoaded() || tryLoadLibrary()) {
       // Either:

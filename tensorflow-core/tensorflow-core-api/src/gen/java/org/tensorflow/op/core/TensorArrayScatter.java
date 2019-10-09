@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Scatter the data from the input value into specific TensorArray elements.
@@ -31,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * `indices` must be a vector, its length must match the first dim of `value`.
  */
 @Operator
-public final class TensorArrayScatter extends PrimitiveOp implements Operand<Float> {
+public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayScatter operation.
@@ -43,7 +45,7 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<Flo
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayScatter
    */
-  public static <T> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<Integer> indices, Operand<T> value, Operand<Float> flowIn) {
+  public static <T> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -56,16 +58,16 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<Flo
   /**
    * A float scalar that enforces proper chaining of operations.
    */
-  public Output<Float> flowOut() {
+  public Output<TFloat> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return flowOut;
   }
   
-  private Output<Float> flowOut;
+  private Output<TFloat> flowOut;
   
   private TensorArrayScatter(Operation operation) {
     super(operation);

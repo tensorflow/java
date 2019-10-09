@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the shape of the variable pointed to by `resource`.
@@ -41,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class VariableShape<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class VariableShape<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new VariableShape operation.
@@ -51,11 +53,11 @@ public final class VariableShape<T extends Number> extends PrimitiveOp implement
    * @param outType 
    * @return a new instance of VariableShape
    */
-  public static <T extends Number> VariableShape<T> create(Scope scope, Operand<?> input, Class<T> outType) {
+  public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new VariableShape<T>(opBuilder.build());
   }
   
@@ -66,8 +68,8 @@ public final class VariableShape<T extends Number> extends PrimitiveOp implement
    * @param input 
    * @return a new instance of VariableShape
    */
-  public static VariableShape<Integer> create(Scope scope, Operand<?> input) {
-    return create(scope, input, Integer.class);
+  public static VariableShape<TInt32> create(Scope scope, Operand<?> input) {
+    return create(scope, input, TInt32.DTYPE);
   }
   
   /**

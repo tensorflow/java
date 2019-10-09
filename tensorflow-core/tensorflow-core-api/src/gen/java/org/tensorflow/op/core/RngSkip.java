@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Advance the counter of a counter-based RNG.
@@ -42,7 +43,7 @@ public final class RngSkip extends PrimitiveOp {
    * @param delta The amount of advancement.
    * @return a new instance of RngSkip
    */
-  public static RngSkip create(Scope scope, Operand<?> resource, Operand<Long> algorithm, Operand<Long> delta) {
+  public static RngSkip create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<TInt64> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("RngSkip", scope.makeOpName("RngSkip"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());

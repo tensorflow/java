@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -102,12 +102,12 @@ public final class PaddingFifoQueue extends PrimitiveOp implements Operand<Objec
    * @param options carries optional attributes values
    * @return a new instance of PaddingFifoQueue
    */
-  public static PaddingFifoQueue create(Scope scope, List<Class<?>> componentTypes, Options... options) {
+  public static PaddingFifoQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddingFIFOQueueV2", scope.makeOpName("PaddingFifoQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = DataType.fromClass(componentTypes.get(i));
+      componentTypesArray[i] = componentTypes.get(i);
     }
     opBuilder.setAttr("component_types", componentTypesArray);
     if (options != null) {

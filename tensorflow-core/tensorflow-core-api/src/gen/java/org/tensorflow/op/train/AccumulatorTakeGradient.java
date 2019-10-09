@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Extracts the average gradient in the given ConditionalAccumulator.
@@ -50,12 +52,12 @@ public final class AccumulatorTakeGradient<T> extends PrimitiveOp implements Ope
    * of the accumulator.
    * @return a new instance of AccumulatorTakeGradient
    */
-  public static <T> AccumulatorTakeGradient<T> create(Scope scope, Operand<String> handle, Operand<Integer> numRequired, Class<T> dtype) {
+  public static <T> AccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorTakeGradient", scope.makeOpName("AccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new AccumulatorTakeGradient<T>(opBuilder.build());
   }
   

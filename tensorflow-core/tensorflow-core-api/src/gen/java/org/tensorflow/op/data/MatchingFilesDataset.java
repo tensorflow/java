@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -35,7 +36,7 @@ public final class MatchingFilesDataset extends PrimitiveOp implements Operand<O
    * @param patterns 
    * @return a new instance of MatchingFilesDataset
    */
-  public static MatchingFilesDataset create(Scope scope, Operand<String> patterns) {
+  public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFilesDataset", scope.makeOpName("MatchingFilesDataset"));
     opBuilder.addInput(patterns.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

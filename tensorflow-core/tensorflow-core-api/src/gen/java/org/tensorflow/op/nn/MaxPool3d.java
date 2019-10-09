@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs 3D max pooling on the input.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPool3d<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class MaxPool3d<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPool3d}
@@ -70,7 +71,7 @@ public final class MaxPool3d<T extends Number> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3d
    */
-  public static <T extends Number> MaxPool3d<T> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> MaxPool3d<T> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPool3D", scope.makeOpName("MaxPool3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

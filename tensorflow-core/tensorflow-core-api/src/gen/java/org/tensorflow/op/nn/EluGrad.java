@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients for the exponential linear (Elu) operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class EluGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class EluGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new EluGrad operation.
@@ -39,7 +40,7 @@ public final class EluGrad<T extends Number> extends PrimitiveOp implements Oper
    * @param outputs The outputs of the corresponding Elu operation.
    * @return a new instance of EluGrad
    */
-  public static <T extends Number> EluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
+  public static <T extends TNumber> EluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("EluGrad", scope.makeOpName("EluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(outputs.asOutput());

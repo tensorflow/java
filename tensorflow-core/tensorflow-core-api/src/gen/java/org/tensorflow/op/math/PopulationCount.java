@@ -24,7 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes element-wise population count (a.k.a. popcount, bitsum, bitcount).
@@ -37,7 +38,7 @@ import org.tensorflow.types.UInt8;
  * 8- or 16-bit inputs and then aggregate the resulting counts.
  */
 @Operator(group = "math")
-public final class PopulationCount extends PrimitiveOp implements Operand<UInt8> {
+public final class PopulationCount extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Factory method to create a class wrapping a new PopulationCount operation.
@@ -46,7 +47,7 @@ public final class PopulationCount extends PrimitiveOp implements Operand<UInt8>
    * @param x 
    * @return a new instance of PopulationCount
    */
-  public static <T extends Number> PopulationCount create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -55,16 +56,16 @@ public final class PopulationCount extends PrimitiveOp implements Operand<UInt8>
   
   /**
    */
-  public Output<UInt8> y() {
+  public Output<TUInt8> y() {
     return y;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return y;
   }
   
-  private Output<UInt8> y;
+  private Output<TUInt8> y;
   
   private PopulationCount(Operation operation) {
     super(operation);

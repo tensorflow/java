@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Quantizes then dequantizes a tensor.
@@ -34,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class QuantizeAndDequantize<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class QuantizeAndDequantize<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.QuantizeAndDequantize}
@@ -84,7 +86,7 @@ public final class QuantizeAndDequantize<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of QuantizeAndDequantize
    */
-  public static <T extends Number> QuantizeAndDequantize<T> create(Scope scope, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax, Operand<Integer> numBits, Options... options) {
+  public static <T extends TNumber> QuantizeAndDequantize<T> create(Scope scope, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeAndDequantizeV3", scope.makeOpName("QuantizeAndDequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

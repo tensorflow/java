@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear gradients for a Relu operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class ReluGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ReluGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ReluGrad operation.
@@ -40,7 +41,7 @@ public final class ReluGrad<T extends Number> extends PrimitiveOp implements Ope
    * the outputs of that operation (both work equivalently).
    * @return a new instance of ReluGrad
    */
-  public static <T extends Number> ReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
+  public static <T extends TNumber> ReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReluGrad", scope.makeOpName("ReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());

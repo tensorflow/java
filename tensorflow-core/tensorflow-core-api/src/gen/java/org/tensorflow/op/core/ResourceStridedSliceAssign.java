@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Assign `value` to the sliced l-value reference of `ref`.
@@ -104,7 +105,7 @@ public final class ResourceStridedSliceAssign extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceStridedSliceAssign
    */
-  public static <T extends Number, U> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value, Options... options) {
+  public static <T extends TNumber, U> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceStridedSliceAssign", scope.makeOpName("ResourceStridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(begin.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Finds values and indices of the `k` largest elements for the last dimension.
@@ -42,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "nn")
-public final class TopK<T extends Number> extends PrimitiveOp {
+public final class TopK<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.TopK}
@@ -74,7 +76,7 @@ public final class TopK<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TopK
    */
-  public static <T extends Number> TopK<T> create(Scope scope, Operand<T> input, Operand<Integer> k, Options... options) {
+  public static <T extends TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKV2", scope.makeOpName("TopK"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
@@ -107,12 +109,12 @@ public final class TopK<T extends Number> extends PrimitiveOp {
   /**
    * The indices of `values` within the last dimension of `input`.
    */
-  public Output<Integer> indices() {
+  public Output<TInt32> indices() {
     return indices;
   }
   
   private Output<T> values;
-  private Output<Integer> indices;
+  private Output<TInt32> indices;
   
   private TopK(Operation operation) {
     super(operation);

@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Generate a glob pattern matching all sharded file names.
  */
 @Operator(group = "io")
-public final class ShardedFilespec extends PrimitiveOp implements Operand<String> {
+public final class ShardedFilespec extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new ShardedFilespec operation.
@@ -39,7 +41,7 @@ public final class ShardedFilespec extends PrimitiveOp implements Operand<String
    * @param numShards 
    * @return a new instance of ShardedFilespec
    */
-  public static ShardedFilespec create(Scope scope, Operand<String> basename, Operand<Integer> numShards) {
+  public static ShardedFilespec create(Scope scope, Operand<TString> basename, Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilespec", scope.makeOpName("ShardedFilespec"));
     opBuilder.addInput(basename.asOutput());
     opBuilder.addInput(numShards.asOutput());
@@ -49,16 +51,16 @@ public final class ShardedFilespec extends PrimitiveOp implements Operand<String
   
   /**
    */
-  public Output<String> filename() {
+  public Output<TString> filename() {
     return filename;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return filename;
   }
   
-  private Output<String> filename;
+  private Output<TString> filename;
   
   private ShardedFilespec(Operation operation) {
     super(operation);

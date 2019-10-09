@@ -24,11 +24,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Transforms a vector of brain.SequenceExample protos (as strings) into typed tensors.
@@ -154,7 +156,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ParseSequenceExample
    */
-  public static ParseSequenceExample create(Scope scope, Operand<String> serialized, Operand<String> debugName, Iterable<Operand<?>> contextDenseDefaults, List<String> featureListDenseMissingAssumedEmpty, List<String> contextSparseKeys, List<String> contextDenseKeys, List<String> featureListSparseKeys, List<String> featureListDenseKeys, List<Class<?>> contextSparseTypes, List<Class<?>> featureListDenseTypes, List<Class<?>> featureListSparseTypes, Options... options) {
+  public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Iterable<Operand<?>> contextDenseDefaults, List<String> featureListDenseMissingAssumedEmpty, List<String> contextSparseKeys, List<String> contextDenseKeys, List<String> featureListSparseKeys, List<String> featureListDenseKeys, List<DataType<?>> contextSparseTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExample", scope.makeOpName("ParseSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(debugName.asOutput());
@@ -187,17 +189,17 @@ public final class ParseSequenceExample extends PrimitiveOp {
     opBuilder.setAttr("feature_list_dense_keys", featureListDenseKeysArray);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {
-      contextSparseTypesArray[i] = DataType.fromClass(contextSparseTypes.get(i));
+      contextSparseTypesArray[i] = contextSparseTypes.get(i);
     }
     opBuilder.setAttr("context_sparse_types", contextSparseTypesArray);
     DataType[] featureListDenseTypesArray = new DataType[featureListDenseTypes.size()];
     for (int i = 0; i < featureListDenseTypesArray.length; ++i) {
-      featureListDenseTypesArray[i] = DataType.fromClass(featureListDenseTypes.get(i));
+      featureListDenseTypesArray[i] = featureListDenseTypes.get(i);
     }
     opBuilder.setAttr("feature_list_dense_types", featureListDenseTypesArray);
     DataType[] featureListSparseTypesArray = new DataType[featureListSparseTypes.size()];
     for (int i = 0; i < featureListSparseTypesArray.length; ++i) {
-      featureListSparseTypesArray[i] = DataType.fromClass(featureListSparseTypes.get(i));
+      featureListSparseTypesArray[i] = featureListSparseTypes.get(i);
     }
     opBuilder.setAttr("feature_list_sparse_types", featureListSparseTypesArray);
     if (options != null) {
@@ -285,7 +287,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> contextSparseIndices() {
+  public List<Output<TInt64>> contextSparseIndices() {
     return contextSparseIndices;
   }
   
@@ -297,7 +299,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> contextSparseShapes() {
+  public List<Output<TInt64>> contextSparseShapes() {
     return contextSparseShapes;
   }
   
@@ -309,7 +311,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> featureListSparseIndices() {
+  public List<Output<TInt64>> featureListSparseIndices() {
     return featureListSparseIndices;
   }
   
@@ -321,7 +323,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> featureListSparseShapes() {
+  public List<Output<TInt64>> featureListSparseShapes() {
     return featureListSparseShapes;
   }
   
@@ -333,50 +335,50 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> featureListDenseLengths() {
+  public List<Output<TInt64>> featureListDenseLengths() {
     return featureListDenseLengths;
   }
   
-  private List<Output<Long>> contextSparseIndices;
+  private List<Output<TInt64>> contextSparseIndices;
   private List<Output<?>> contextSparseValues;
-  private List<Output<Long>> contextSparseShapes;
+  private List<Output<TInt64>> contextSparseShapes;
   private List<Output<?>> contextDenseValues;
-  private List<Output<Long>> featureListSparseIndices;
+  private List<Output<TInt64>> featureListSparseIndices;
   private List<Output<?>> featureListSparseValues;
-  private List<Output<Long>> featureListSparseShapes;
+  private List<Output<TInt64>> featureListSparseShapes;
   private List<Output<?>> featureListDenseValues;
-  private List<Output<Long>> featureListDenseLengths;
+  private List<Output<TInt64>> featureListDenseLengths;
   
   @SuppressWarnings("unchecked")
   private ParseSequenceExample(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int contextSparseIndicesLength = operation.outputListLength("context_sparse_indices");
-    contextSparseIndices = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, contextSparseIndicesLength));
+    contextSparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, contextSparseIndicesLength));
     outputIdx += contextSparseIndicesLength;
     int contextSparseValuesLength = operation.outputListLength("context_sparse_values");
     contextSparseValues = Arrays.asList(operation.outputList(outputIdx, contextSparseValuesLength));
     outputIdx += contextSparseValuesLength;
     int contextSparseShapesLength = operation.outputListLength("context_sparse_shapes");
-    contextSparseShapes = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, contextSparseShapesLength));
+    contextSparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, contextSparseShapesLength));
     outputIdx += contextSparseShapesLength;
     int contextDenseValuesLength = operation.outputListLength("context_dense_values");
     contextDenseValues = Arrays.asList(operation.outputList(outputIdx, contextDenseValuesLength));
     outputIdx += contextDenseValuesLength;
     int featureListSparseIndicesLength = operation.outputListLength("feature_list_sparse_indices");
-    featureListSparseIndices = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, featureListSparseIndicesLength));
+    featureListSparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListSparseIndicesLength));
     outputIdx += featureListSparseIndicesLength;
     int featureListSparseValuesLength = operation.outputListLength("feature_list_sparse_values");
     featureListSparseValues = Arrays.asList(operation.outputList(outputIdx, featureListSparseValuesLength));
     outputIdx += featureListSparseValuesLength;
     int featureListSparseShapesLength = operation.outputListLength("feature_list_sparse_shapes");
-    featureListSparseShapes = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, featureListSparseShapesLength));
+    featureListSparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListSparseShapesLength));
     outputIdx += featureListSparseShapesLength;
     int featureListDenseValuesLength = operation.outputListLength("feature_list_dense_values");
     featureListDenseValues = Arrays.asList(operation.outputList(outputIdx, featureListDenseValuesLength));
     outputIdx += featureListDenseValuesLength;
     int featureListDenseLengthsLength = operation.outputListLength("feature_list_dense_lengths");
-    featureListDenseLengths = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, featureListDenseLengthsLength));
+    featureListDenseLengths = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListDenseLengthsLength));
     outputIdx += featureListDenseLengthsLength;
   }
 }

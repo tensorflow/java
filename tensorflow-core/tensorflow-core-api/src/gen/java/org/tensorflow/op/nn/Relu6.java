@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear 6: `min(max(features, 0), 6)`.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Relu6<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Relu6<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Relu6 operation.
@@ -40,7 +41,7 @@ public final class Relu6<T extends Number> extends PrimitiveOp implements Operan
    * @param features 
    * @return a new instance of Relu6
    */
-  public static <T extends Number> Relu6<T> create(Scope scope, Operand<T> features) {
+  public static <T extends TNumber> Relu6<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6", scope.makeOpName("Relu6"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * The gradient of SparseFillEmptyRows.
@@ -50,7 +51,7 @@ public final class SparseFillEmptyRowsGrad<T> extends PrimitiveOp {
    * @param gradValues 1-D.  The gradients from backprop.
    * @return a new instance of SparseFillEmptyRowsGrad
    */
-  public static <T> SparseFillEmptyRowsGrad<T> create(Scope scope, Operand<Long> reverseIndexMap, Operand<T> gradValues) {
+  public static <T> SparseFillEmptyRowsGrad<T> create(Scope scope, Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRowsGrad", scope.makeOpName("SparseFillEmptyRowsGrad"));
     opBuilder.addInput(reverseIndexMap.asOutput());
     opBuilder.addInput(gradValues.asOutput());

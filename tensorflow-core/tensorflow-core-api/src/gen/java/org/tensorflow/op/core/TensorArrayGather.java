@@ -22,10 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Gather specific elements from the TensorArray into output `value`.
@@ -69,13 +71,13 @@ public final class TensorArrayGather<T> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayGather
    */
-  public static <T> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<Integer> indices, Operand<Float> flowIn, Class<T> dtype, Options... options) {
+  public static <T> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.elementShape != null) {

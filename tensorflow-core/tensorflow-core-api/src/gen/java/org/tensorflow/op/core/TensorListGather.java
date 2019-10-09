@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Creates a Tensor by indexing into the TensorList.
@@ -51,13 +52,13 @@ public final class TensorListGather<T> extends PrimitiveOp implements Operand<T>
    * @param elementDtype 
    * @return a new instance of TensorListGather
    */
-  public static <T> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<Integer> indices, Operand<Integer> elementShape, Class<T> elementDtype) {
+  public static <T> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGather", scope.makeOpName("TensorListGather"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListGather<T>(opBuilder.build());
   }
   

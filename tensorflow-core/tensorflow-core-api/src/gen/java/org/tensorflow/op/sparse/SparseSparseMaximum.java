@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the element-wise max of two SparseTensors.
@@ -33,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseSparseMaximum<T extends Number> extends PrimitiveOp {
+public final class SparseSparseMaximum<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSparseMaximum operation.
@@ -48,7 +50,7 @@ public final class SparseSparseMaximum<T extends Number> extends PrimitiveOp {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMaximum
    */
-  public static <T extends Number> SparseSparseMaximum<T> create(Scope scope, Operand<Long> aIndices, Operand<T> aValues, Operand<Long> aShape, Operand<Long> bIndices, Operand<T> bValues, Operand<Long> bShape) {
+  public static <T extends TNumber> SparseSparseMaximum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMaximum", scope.makeOpName("SparseSparseMaximum"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
@@ -63,7 +65,7 @@ public final class SparseSparseMaximum<T extends Number> extends PrimitiveOp {
   /**
    * 2-D.  The indices of the output SparseTensor.
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -74,7 +76,7 @@ public final class SparseSparseMaximum<T extends Number> extends PrimitiveOp {
     return outputValues;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   
   private SparseSparseMaximum(Operation operation) {

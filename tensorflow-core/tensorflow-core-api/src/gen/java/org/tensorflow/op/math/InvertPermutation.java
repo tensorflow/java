@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the inverse permutation of a tensor.
@@ -47,7 +48,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class InvertPermutation<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class InvertPermutation<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InvertPermutation operation.
@@ -56,7 +57,7 @@ public final class InvertPermutation<T extends Number> extends PrimitiveOp imple
    * @param x 1-D.
    * @return a new instance of InvertPermutation
    */
-  public static <T extends Number> InvertPermutation<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvertPermutation", scope.makeOpName("InvertPermutation"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

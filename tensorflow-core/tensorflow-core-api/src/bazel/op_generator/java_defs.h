@@ -97,22 +97,25 @@ class Type {
   static Type IterableOf(const Type& type) {
     return Interface("Iterable").add_parameter(type);
   }
+  static Type DataTypeOf(const Type& type) {
+    return Class("DataType", "org.tensorflow").add_parameter(type);
+  }
   static Type ForDataType(DataType data_type) {
     switch (data_type) {
       case DataType::DT_BOOL:
-        return Class("Boolean");
+        return Class("TBool", "org.tensorflow.types");
       case DataType::DT_STRING:
-        return Class("String");
+        return Class("TString", "org.tensorflow.types");
       case DataType::DT_FLOAT:
-        return Class("Float");
+        return Class("TFloat", "org.tensorflow.types");
       case DataType::DT_DOUBLE:
-        return Class("Double");
+        return Class("TDouble", "org.tensorflow.types");
       case DataType::DT_UINT8:
-        return Class("UInt8", "org.tensorflow.types");
+        return Class("TUInt8", "org.tensorflow.types");
       case DataType::DT_INT32:
-        return Class("Integer");
+        return Class("TInt32", "org.tensorflow.types");
       case DataType::DT_INT64:
-        return Class("Long");
+        return Class("TInt64", "org.tensorflow.types");
       case DataType::DT_RESOURCE:
         // TODO(karllessard) create a Resource utility class that could be
         // used to store a resource and its type (passed in a second argument).

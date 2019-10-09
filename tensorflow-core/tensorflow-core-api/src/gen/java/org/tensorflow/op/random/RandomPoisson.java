@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random values from the Poisson distribution(s) described by rate.
@@ -42,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomPoisson<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class RandomPoisson<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomPoisson}
@@ -86,12 +88,12 @@ public final class RandomPoisson<V extends Number> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  public static <V extends Number, T extends Number, U extends Number> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, Class<V> dtype, Options... options) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, DataType<V> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(rate.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {
@@ -116,8 +118,8 @@ public final class RandomPoisson<V extends Number> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  public static <T extends Number, U extends Number> RandomPoisson<Long> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
-    return create(scope, shape, rate, Long.class, options);
+  public static <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
+    return create(scope, shape, rate, TInt64.DTYPE, options);
   }
   
   /**

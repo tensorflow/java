@@ -27,6 +27,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Batches all input tensors nondeterministically.
@@ -215,19 +216,19 @@ public final class Batch extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> batchIndex() {
+  public Output<TInt64> batchIndex() {
     return batchIndex;
   }
   
   /**
    */
-  public Output<Long> id() {
+  public Output<TInt64> id() {
     return id;
   }
   
   private List<Output<?>> batchedTensors;
-  private Output<Long> batchIndex;
-  private Output<Long> id;
+  private Output<TInt64> batchIndex;
+  private Output<TInt64> id;
   
   private Batch(Operation operation) {
     super(operation);

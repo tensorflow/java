@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Draw bounding boxes on a batch of images.
@@ -43,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class DrawBoundingBoxes<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DrawBoundingBoxes<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DrawBoundingBoxes operation.
@@ -54,7 +56,7 @@ public final class DrawBoundingBoxes<T extends Number> extends PrimitiveOp imple
    * boxes.
    * @return a new instance of DrawBoundingBoxes
    */
-  public static <T extends Number> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<Float> boxes) {
+  public static <T extends TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<TFloat> boxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("DrawBoundingBoxes", scope.makeOpName("DrawBoundingBoxes"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());

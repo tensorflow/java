@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Runs multiple additive regression ensemble predictors on input instances and
@@ -31,7 +33,7 @@ import org.tensorflow.op.Scope;
  * computes the logits. It is designed to be used during prediction.
  * It traverses all the trees and calculates the final score for each instance.
  */
-public final class BoostedTreesPredict extends PrimitiveOp implements Operand<Float> {
+public final class BoostedTreesPredict extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesPredict operation.
@@ -44,7 +46,7 @@ public final class BoostedTreesPredict extends PrimitiveOp implements Operand<Fl
    * shape.
    * @return a new instance of BoostedTreesPredict
    */
-  public static BoostedTreesPredict create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<Integer>> bucketizedFeatures, Long logitsDimension) {
+  public static BoostedTreesPredict create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesPredict", scope.makeOpName("BoostedTreesPredict"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
@@ -56,16 +58,16 @@ public final class BoostedTreesPredict extends PrimitiveOp implements Operand<Fl
   /**
    * Output rank 2 Tensor containing logits for each example.
    */
-  public Output<Float> logits() {
+  public Output<TFloat> logits() {
     return logits;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return logits;
   }
   
-  private Output<Float> logits;
+  private Output<TFloat> logits;
   
   private BoostedTreesPredict(Operation operation) {
     super(operation);

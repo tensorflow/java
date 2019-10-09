@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Applies a sparse gradient to a given accumulator.
@@ -49,7 +51,7 @@ public final class SparseAccumulatorApplyGradient extends PrimitiveOp {
    * case the input is ignored during validation.
    * @return a new instance of SparseAccumulatorApplyGradient
    */
-  public static <T> SparseAccumulatorApplyGradient create(Scope scope, Operand<String> handle, Operand<Long> localStep, Operand<Long> gradientIndices, Operand<T> gradientValues, Operand<Long> gradientShape, Boolean hasKnownShape) {
+  public static <T> SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices, Operand<T> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorApplyGradient", scope.makeOpName("SparseAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * An op that receives embedding activations on the TPU.
@@ -37,7 +38,7 @@ import org.tensorflow.op.Scope;
  * one Tensor of activations per table specified in the model. There can be at
  * most one RecvTPUEmbeddingActivations op in the TPU graph.
  */
-public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements Iterable<Operand<Float>> {
+public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements Iterable<Operand<TFloat>> {
   
   /**
    * Factory method to create a class wrapping a new RecvTPUEmbeddingActivations operation.
@@ -60,24 +61,24 @@ public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements It
    * A TensorList of embedding activations containing one Tensor per
    * embedding table in the model.
    */
-  public List<Output<Float>> outputs() {
+  public List<Output<TFloat>> outputs() {
     return outputs;
   }
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Float>> iterator() {
+  public Iterator<Operand<TFloat>> iterator() {
     return (Iterator) outputs.iterator();
   }
   
-  private List<Output<Float>> outputs;
+  private List<Output<TFloat>> outputs;
   
   @SuppressWarnings("unchecked")
   private RecvTPUEmbeddingActivations(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, outputsLength));
+    outputs = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, outputsLength));
     outputIdx += outputsLength;
   }
 }

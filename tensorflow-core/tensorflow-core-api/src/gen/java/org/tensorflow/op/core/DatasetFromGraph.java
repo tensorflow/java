@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Creates a dataset from the given `graph_def`.
@@ -38,7 +39,7 @@ public final class DatasetFromGraph extends PrimitiveOp implements Operand<Objec
    * @param graphDef The graph representation of the dataset (as serialized GraphDef).
    * @return a new instance of DatasetFromGraph
    */
-  public static DatasetFromGraph create(Scope scope, Operand<String> graphDef) {
+  public static DatasetFromGraph create(Scope scope, Operand<TString> graphDef) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetFromGraph", scope.makeOpName("DatasetFromGraph"));
     opBuilder.addInput(graphDef.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

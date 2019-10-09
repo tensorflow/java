@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Decompress strings.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * element in `bytes`.
  */
 @Operator(group = "io")
-public final class DecodeCompressed extends PrimitiveOp implements Operand<String> {
+public final class DecodeCompressed extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.DecodeCompressed}
@@ -66,7 +67,7 @@ public final class DecodeCompressed extends PrimitiveOp implements Operand<Strin
    * @param options carries optional attributes values
    * @return a new instance of DecodeCompressed
    */
-  public static DecodeCompressed create(Scope scope, Operand<String> bytes, Options... options) {
+  public static DecodeCompressed create(Scope scope, Operand<TString> bytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCompressed", scope.makeOpName("DecodeCompressed"));
     opBuilder.addInput(bytes.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -92,16 +93,16 @@ public final class DecodeCompressed extends PrimitiveOp implements Operand<Strin
    * A Tensor with the same shape as input `bytes`, uncompressed
    * from bytes.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private DecodeCompressed(Operation operation) {
     super(operation);

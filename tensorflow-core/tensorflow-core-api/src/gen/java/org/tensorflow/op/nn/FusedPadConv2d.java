@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs a padding as a preprocess during a convolution.
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class FusedPadConv2d<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class FusedPadConv2d<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new FusedPadConv2d operation.
@@ -61,7 +63,7 @@ public final class FusedPadConv2d<T extends Number> extends PrimitiveOp implemen
    * @param padding The type of padding algorithm to use.
    * @return a new instance of FusedPadConv2d
    */
-  public static <T extends Number> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<Integer> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
+  public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

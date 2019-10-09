@@ -18,6 +18,8 @@ package org.tensorflow;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /** Static utility functions. */
 public class TestUtil {
@@ -56,15 +58,15 @@ public class TestUtil {
           .setAttr("dtype", t.dataType())
           .setAttr("value", t)
           .build()
-          .<T>output(0);
+          .output(0);
     }
   }
 
-  public static <T> Output<T> placeholder(Graph g, String name, Class<T> type) {
+  public static <T extends TType> Output<T> placeholder(Graph g, String name, DataType<T> type) {
     return g.opBuilder("Placeholder", name)
-        .setAttr("dtype", DataType.fromClass(type))
+        .setAttr("dtype", type)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
   public static <T> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
@@ -79,7 +81,7 @@ public class TestUtil {
         .setAttr("transpose_a", transposeA)
         .setAttr("transpose_b", transposeB)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
   public static Operation split(Graph g, String name, int[] values, int numSplit) {
@@ -94,12 +96,12 @@ public class TestUtil {
     return g.opBuilder("Square", name)
         .addInput(value)
         .build()
-        .<T>output(0);
+        .output(0);
   }
 
   public static void transpose_A_times_X(Graph g, int[][] a) {
-    Output<Integer> aa = constant(g, "A", a);
-    matmul(g, "Y", aa, placeholder(g, "X", Integer.class), true, false);
+    Output<TInt32> aa = constant(g, "A", a);
+    matmul(g, "Y", aa, placeholder(g, "X", TInt32.DTYPE), true, false);
   }
 
   /**

@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Push an element onto the tensor_array.
  */
 @Operator
-public final class TensorArrayWrite extends PrimitiveOp implements Operand<Float> {
+public final class TensorArrayWrite extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayWrite operation.
@@ -41,7 +43,7 @@ public final class TensorArrayWrite extends PrimitiveOp implements Operand<Float
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayWrite
    */
-  public static <T> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<Integer> index, Operand<T> value, Operand<Float> flowIn) {
+  public static <T> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<T> value, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayWriteV3", scope.makeOpName("TensorArrayWrite"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -54,16 +56,16 @@ public final class TensorArrayWrite extends PrimitiveOp implements Operand<Float
   /**
    * A float scalar that enforces proper chaining of operations.
    */
-  public Output<Float> flowOut() {
+  public Output<TFloat> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return flowOut;
   }
   
-  private Output<Float> flowOut;
+  private Output<TFloat> flowOut;
   
   private TensorArrayWrite(Operation operation) {
     super(operation);

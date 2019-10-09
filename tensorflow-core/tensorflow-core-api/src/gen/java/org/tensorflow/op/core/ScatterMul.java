@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Multiplies sparse updates into a variable reference.
@@ -82,7 +83,7 @@ public final class ScatterMul<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ScatterMul
    */
-  public static <T, U extends Number> ScatterMul<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T, U extends TNumber> ScatterMul<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMul", scope.makeOpName("ScatterMul"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

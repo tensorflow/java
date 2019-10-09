@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -38,7 +40,7 @@ public final class CreateSummaryFileWriter extends PrimitiveOp {
    * @param filenameSuffix 
    * @return a new instance of CreateSummaryFileWriter
    */
-  public static CreateSummaryFileWriter create(Scope scope, Operand<?> writer, Operand<String> logdir, Operand<Integer> maxQueue, Operand<Integer> flushMillis, Operand<String> filenameSuffix) {
+  public static CreateSummaryFileWriter create(Scope scope, Operand<?> writer, Operand<TString> logdir, Operand<TInt32> maxQueue, Operand<TInt32> flushMillis, Operand<TString> filenameSuffix) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryFileWriter", scope.makeOpName("CreateSummaryFileWriter"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(logdir.asOutput());

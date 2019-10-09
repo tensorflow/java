@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Deserializes a serialized tree ensemble config and replaces current tree
@@ -39,7 +41,7 @@ public final class BoostedTreesDeserializeEnsemble extends PrimitiveOp {
    * @param treeEnsembleSerialized Serialized proto of the ensemble.
    * @return a new instance of BoostedTreesDeserializeEnsemble
    */
-  public static BoostedTreesDeserializeEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<Long> stampToken, Operand<String> treeEnsembleSerialized) {
+  public static BoostedTreesDeserializeEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt64> stampToken, Operand<TString> treeEnsembleSerialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesDeserializeEnsemble", scope.makeOpName("BoostedTreesDeserializeEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(stampToken.asOutput());

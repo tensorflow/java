@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Inverse real-valued fast Fourier transform.
@@ -43,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * larger, the dimension is padded with zeros.
  */
 @Operator(group = "signal")
-public final class Irfft extends PrimitiveOp implements Operand<Float> {
+public final class Irfft extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new Irfft operation.
@@ -53,7 +55,7 @@ public final class Irfft extends PrimitiveOp implements Operand<Float> {
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @return a new instance of Irfft
    */
-  public static Irfft create(Scope scope, Operand<?> input, Operand<Integer> fftLength) {
+  public static Irfft create(Scope scope, Operand<?> input, Operand<TInt32> fftLength) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT", scope.makeOpName("Irfft"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
@@ -70,16 +72,16 @@ public final class Irfft extends PrimitiveOp implements Operand<Float> {
    * Equivalent to np.fft.irfft
    * @end_compatibility
    */
-  public Output<Float> output() {
+  public Output<TFloat> output() {
     return output;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return output;
   }
   
-  private Output<Float> output;
+  private Output<TFloat> output;
   
   private Irfft(Operation operation) {
     super(operation);

@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Applies lower_bound(sorted_search_values, values) along each row.
@@ -48,7 +50,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class LowerBound<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class LowerBound<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new LowerBound operation.
@@ -60,12 +62,12 @@ public final class LowerBound<U extends Number> extends PrimitiveOp implements O
    * @param outType 
    * @return a new instance of LowerBound
    */
-  public static <U extends Number, T> LowerBound<U> create(Scope scope, Operand<T> sortedInputs, Operand<T> values, Class<U> outType) {
+  public static <U extends TNumber, T> LowerBound<U> create(Scope scope, Operand<T> sortedInputs, Operand<T> values, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("LowerBound", scope.makeOpName("LowerBound"));
     opBuilder.addInput(sortedInputs.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new LowerBound<U>(opBuilder.build());
   }
   
@@ -78,8 +80,8 @@ public final class LowerBound<U extends Number> extends PrimitiveOp implements O
    * the values that will be searched for in `sorted_search_values`.
    * @return a new instance of LowerBound
    */
-  public static <T> LowerBound<Integer> create(Scope scope, Operand<T> sortedInputs, Operand<T> values) {
-    return create(scope, sortedInputs, values, Integer.class);
+  public static <T> LowerBound<TInt32> create(Scope scope, Operand<T> sortedInputs, Operand<T> values) {
+    return create(scope, sortedInputs, values, TInt32.DTYPE);
   }
   
   /**

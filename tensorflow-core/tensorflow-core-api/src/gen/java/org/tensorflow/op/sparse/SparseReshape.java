@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Reshapes a SparseTensor to represent values in a new dense shape.
@@ -57,7 +58,7 @@ public final class SparseReshape extends PrimitiveOp {
    * @param newShape 1-D.  `R_out` vector with the requested new dense shape.
    * @return a new instance of SparseReshape
    */
-  public static SparseReshape create(Scope scope, Operand<Long> inputIndices, Operand<Long> inputShape, Operand<Long> newShape) {
+  public static SparseReshape create(Scope scope, Operand<TInt64> inputIndices, Operand<TInt64> inputShape, Operand<TInt64> newShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReshape", scope.makeOpName("SparseReshape"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputShape.asOutput());
@@ -70,7 +71,7 @@ public final class SparseReshape extends PrimitiveOp {
    * 2-D.  `N x R_out` matrix with the updated indices of non-empty
    * values in the output SparseTensor.
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -79,12 +80,12 @@ public final class SparseReshape extends PrimitiveOp {
    * SparseTensor.  This is the same as `new_shape` but with any -1 dimensions
    * filled in.
    */
-  public Output<Long> outputShape() {
+  public Output<TInt64> outputShape() {
     return outputShape;
   }
   
-  private Output<Long> outputIndices;
-  private Output<Long> outputShape;
+  private Output<TInt64> outputIndices;
+  private Output<TInt64> outputShape;
   
   private SparseReshape(Operation operation) {
     super(operation);

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Backprop step of CudnnRNN.
@@ -72,7 +73,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code inputBackprop()} output
  */
-public final class CudnnRnnBackprop<T extends Number> extends PrimitiveOp {
+public final class CudnnRnnBackprop<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CudnnRnnBackprop}
@@ -157,7 +158,7 @@ public final class CudnnRnnBackprop<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnBackprop
    */
-  public static <T extends Number> CudnnRnnBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
+  public static <T extends TNumber> CudnnRnnBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNBackpropV2", scope.makeOpName("CudnnRnnBackprop"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());

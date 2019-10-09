@@ -25,7 +25,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 
@@ -67,12 +67,12 @@ public final class OutfeedDequeueTuple extends PrimitiveOp implements Iterable<O
    * @param options carries optional attributes values
    * @return a new instance of OutfeedDequeueTuple
    */
-  public static OutfeedDequeueTuple create(Scope scope, List<Class<?>> dtypes, List<Shape> shapes, Options... options) {
+  public static OutfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeueTuple", scope.makeOpName("OutfeedDequeueTuple"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     Shape[] shapesArray = new Shape[shapes.size()];

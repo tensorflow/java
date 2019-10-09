@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Creates a dataset that emits the lines of one or more text files.
@@ -40,7 +42,7 @@ public final class TextLineDataset extends PrimitiveOp implements Operand<Object
    * @param bufferSize A scalar containing the number of bytes to buffer.
    * @return a new instance of TextLineDataset
    */
-  public static TextLineDataset create(Scope scope, Operand<String> filenames, Operand<String> compressionType, Operand<Long> bufferSize) {
+  public static TextLineDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TextLineDataset", scope.makeOpName("TextLineDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Aggregates the summary of accumulated stats for the batch.
@@ -51,7 +53,7 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
    * @param numBuckets int; equals to the maximum possible value of bucketized feature + 1.
    * @return a new instance of BoostedTreesSparseAggregateStats
    */
-  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<Integer> nodeIds, Operand<Float> gradients, Operand<Float> hessians, Operand<Integer> featureIndices, Operand<Integer> featureValues, Operand<Integer> featureShape, Long maxSplits, Long numBuckets) {
+  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat> gradients, Operand<TFloat> hessians, Operand<TInt32> featureIndices, Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseAggregateStats", scope.makeOpName("BoostedTreesSparseAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -70,14 +72,14 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
    * The second axis can only be 4 including node id, feature dimension, bucket id, and statistics_dimension.
    * statistics_dimension = logits_dimension + hessian_dimension.
    */
-  public Output<Integer> statsSummaryIndices() {
+  public Output<TInt32> statsSummaryIndices() {
     return statsSummaryIndices;
   }
   
   /**
    * output Rank 1 Tensor (shape=[number of non zero statistics])
    */
-  public Output<Float> statsSummaryValues() {
+  public Output<TFloat> statsSummaryValues() {
     return statsSummaryValues;
   }
   
@@ -89,13 +91,13 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
    * as logits dimension when diagonal hessian is used, or label_dimension^2 when full
    * hessian is used.
    */
-  public Output<Integer> statsSummaryShape() {
+  public Output<TInt32> statsSummaryShape() {
     return statsSummaryShape;
   }
   
-  private Output<Integer> statsSummaryIndices;
-  private Output<Float> statsSummaryValues;
-  private Output<Integer> statsSummaryShape;
+  private Output<TInt32> statsSummaryIndices;
+  private Output<TFloat> statsSummaryValues;
+  private Output<TInt32> statsSummaryShape;
   
   private BoostedTreesSparseAggregateStats(Operation operation) {
     super(operation);

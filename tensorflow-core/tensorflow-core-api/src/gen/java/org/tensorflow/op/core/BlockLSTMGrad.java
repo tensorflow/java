@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell backward propagation for the entire time sequence.
@@ -31,7 +33,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code xGrad()} output
  */
-public final class BlockLSTMGrad<T extends Number> extends PrimitiveOp {
+public final class BlockLSTMGrad<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new BlockLSTMGrad operation.
@@ -59,7 +61,7 @@ public final class BlockLSTMGrad<T extends Number> extends PrimitiveOp {
    * @param usePeephole Whether to use peephole weights.
    * @return a new instance of BlockLSTMGrad
    */
-  public static <T extends Number> BlockLSTMGrad<T> create(Scope scope, Operand<Long> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+  public static <T extends TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMGrad", scope.makeOpName("BlockLSTMGrad"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());

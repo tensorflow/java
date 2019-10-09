@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Selects num_to_sample rows of input using the KMeans++ criterion.
@@ -32,7 +34,7 @@ import org.tensorflow.op.Scope;
  * distance from the nearest row selected thus far till num_to_sample rows have
  * been sampled.
  */
-public final class KmeansPlusPlusInitialization extends PrimitiveOp implements Operand<Float> {
+public final class KmeansPlusPlusInitialization extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new KmeansPlusPlusInitialization operation.
@@ -47,7 +49,7 @@ public final class KmeansPlusPlusInitialization extends PrimitiveOp implements O
    * heuristic is used to sample O(log(num_to_sample)) additional points.
    * @return a new instance of KmeansPlusPlusInitialization
    */
-  public static KmeansPlusPlusInitialization create(Scope scope, Operand<Float> points, Operand<Long> numToSample, Operand<Long> seed, Operand<Long> numRetriesPerSample) {
+  public static KmeansPlusPlusInitialization create(Scope scope, Operand<TFloat> points, Operand<TInt64> numToSample, Operand<TInt64> seed, Operand<TInt64> numRetriesPerSample) {
     OperationBuilder opBuilder = scope.env().opBuilder("KmeansPlusPlusInitialization", scope.makeOpName("KmeansPlusPlusInitialization"));
     opBuilder.addInput(points.asOutput());
     opBuilder.addInput(numToSample.asOutput());
@@ -60,16 +62,16 @@ public final class KmeansPlusPlusInitialization extends PrimitiveOp implements O
   /**
    * Matrix of shape (num_to_sample, d). The sampled rows.
    */
-  public Output<Float> samples() {
+  public Output<TFloat> samples() {
     return samples;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return samples;
   }
   
-  private Output<Float> samples;
+  private Output<TFloat> samples;
   
   private KmeansPlusPlusInitialization(Operation operation) {
     super(operation);

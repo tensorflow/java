@@ -26,6 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Split a `SparseTensor` into `num_split` tensors along one dimension.
@@ -67,7 +68,7 @@ public final class SparseSplit<T> extends PrimitiveOp {
    * @param numSplit The number of ways to split.
    * @return a new instance of SparseSplit
    */
-  public static <T> SparseSplit<T> create(Scope scope, Operand<Long> splitDim, Operand<Long> indices, Operand<T> values, Operand<Long> shape, Long numSplit) {
+  public static <T> SparseSplit<T> create(Scope scope, Operand<TInt64> splitDim, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSplit", scope.makeOpName("SparseSplit"));
     opBuilder.addInput(splitDim.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -80,7 +81,7 @@ public final class SparseSplit<T> extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> outputIndices() {
+  public List<Output<TInt64>> outputIndices() {
     return outputIndices;
   }
   
@@ -96,26 +97,26 @@ public final class SparseSplit<T> extends PrimitiveOp {
    * A list of 1-D tensors represents the shape of the output sparse
    * tensors.
    */
-  public List<Output<Long>> outputShape() {
+  public List<Output<TInt64>> outputShape() {
     return outputShape;
   }
   
-  private List<Output<Long>> outputIndices;
+  private List<Output<TInt64>> outputIndices;
   private List<Output<T>> outputValues;
-  private List<Output<Long>> outputShape;
+  private List<Output<TInt64>> outputShape;
   
   @SuppressWarnings("unchecked")
   private SparseSplit(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputIndicesLength = operation.outputListLength("output_indices");
-    outputIndices = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, outputIndicesLength));
+    outputIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, outputIndicesLength));
     outputIdx += outputIndicesLength;
     int outputValuesLength = operation.outputListLength("output_values");
     outputValues = Arrays.asList((Output<T>[])operation.outputList(outputIdx, outputValuesLength));
     outputIdx += outputValuesLength;
     int outputShapeLength = operation.outputListLength("output_shape");
-    outputShape = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, outputShapeLength));
+    outputShape = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, outputShapeLength));
     outputIdx += outputShapeLength;
   }
 }

@@ -28,6 +28,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Convert CSV records to tensors. Each column maps to one tensor.
@@ -99,7 +100,7 @@ public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<Obj
    * @param options carries optional attributes values
    * @return a new instance of DecodeCsv
    */
-  public static DecodeCsv create(Scope scope, Operand<String> records, Iterable<Operand<?>> recordDefaults, Options... options) {
+  public static DecodeCsv create(Scope scope, Operand<TString> records, Iterable<Operand<?>> recordDefaults, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));

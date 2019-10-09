@@ -24,6 +24,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Asserts that the given condition is true.
@@ -62,7 +63,7 @@ public final class AssertThat extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of AssertThat
    */
-  public static AssertThat create(Scope scope, Operand<Boolean> condition, Iterable<Operand<?>> data, Options... options) {
+  public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Assert", scope.makeOpName("AssertThat"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInputList(Operands.asOutputs(data));

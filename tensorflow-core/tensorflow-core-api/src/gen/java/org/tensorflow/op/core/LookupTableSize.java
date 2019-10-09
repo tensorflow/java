@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Computes the number of elements in the given table.
  */
 @Operator
-public final class LookupTableSize extends PrimitiveOp implements Operand<Long> {
+public final class LookupTableSize extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new LookupTableSize operation.
@@ -48,16 +49,16 @@ public final class LookupTableSize extends PrimitiveOp implements Operand<Long> 
   /**
    * Scalar that contains number of elements in the table.
    */
-  public Output<Long> size() {
+  public Output<TInt64> size() {
     return size;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return size;
   }
   
-  private Output<Long> size;
+  private Output<TInt64> size;
   
   private LookupTableSize(Operation operation) {
     super(operation);

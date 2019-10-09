@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Gradient op for `MirrorPad` op. This op folds a mirror-padded tensor.
@@ -60,7 +61,7 @@ public final class MirrorPadGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param mode The mode used in the `MirrorPad` op.
    * @return a new instance of MirrorPadGrad
    */
-  public static <T, U extends Number> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T, U extends TNumber> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPadGrad", scope.makeOpName("MirrorPadGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

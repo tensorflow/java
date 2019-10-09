@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Joins a string Tensor across the given dimensions.
@@ -53,7 +55,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator(group = "strings")
-public final class ReduceJoin extends PrimitiveOp implements Operand<String> {
+public final class ReduceJoin extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.ReduceJoin}
@@ -94,7 +96,7 @@ public final class ReduceJoin extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceJoin
    */
-  public static ReduceJoin create(Scope scope, Operand<String> inputs, Operand<Integer> reductionIndices, Options... options) {
+  public static ReduceJoin create(Scope scope, Operand<TString> inputs, Operand<TInt32> reductionIndices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReduceJoin", scope.makeOpName("ReduceJoin"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(reductionIndices.asOutput());
@@ -130,16 +132,16 @@ public final class ReduceJoin extends PrimitiveOp implements Operand<String> {
    * Has shape equal to that of the input with reduced dimensions removed or
    * set to `1` depending on `keep_dims`.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private ReduceJoin(Operation operation) {
     super(operation);

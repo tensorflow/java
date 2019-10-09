@@ -27,6 +27,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Takes the given number of completed elements from a barrier.
@@ -93,14 +96,14 @@ public final class BarrierTakeMany extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BarrierTakeMany
    */
-  public static BarrierTakeMany create(Scope scope, Operand<String> handle, Operand<Integer> numElements, List<Class<?>> componentTypes, Options... options) {
+  public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numElements.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = DataType.fromClass(componentTypes.get(i));
+      componentTypesArray[i] = componentTypes.get(i);
     }
     opBuilder.setAttr("component_types", componentTypesArray);
     if (options != null) {
@@ -148,14 +151,14 @@ public final class BarrierTakeMany extends PrimitiveOp {
    * These indices refer to the batch in which the values were placed into the
    * barrier (starting with MIN_LONG and increasing with each BarrierInsertMany).
    */
-  public Output<Long> indices() {
+  public Output<TInt64> indices() {
     return indices;
   }
   
   /**
    * A one-dimensional tensor of keys, with length num_elements.
    */
-  public Output<String> keys() {
+  public Output<TString> keys() {
     return keys;
   }
   
@@ -167,8 +170,8 @@ public final class BarrierTakeMany extends PrimitiveOp {
     return values;
   }
   
-  private Output<Long> indices;
-  private Output<String> keys;
+  private Output<TInt64> indices;
+  private Output<TString> keys;
   private List<Output<?>> values;
   
   private BarrierTakeMany(Operation operation) {

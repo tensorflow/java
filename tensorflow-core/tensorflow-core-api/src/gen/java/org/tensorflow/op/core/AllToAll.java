@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
 
 /**
  * An Op to exchange data across TPU replicas.
@@ -62,7 +63,7 @@ public final class AllToAll<T> extends PrimitiveOp implements Operand<T> {
    * size(group_assignment.get_shape()[1])
    * @return a new instance of AllToAll
    */
-  public static <T> AllToAll<T> create(Scope scope, Operand<T> input, Operand<Integer> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
+  public static <T> AllToAll<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
     OperationBuilder opBuilder = scope.env().opBuilder("AllToAll", scope.makeOpName("AllToAll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());

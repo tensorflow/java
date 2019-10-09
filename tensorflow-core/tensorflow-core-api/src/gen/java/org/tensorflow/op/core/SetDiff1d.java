@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the difference between two lists of numbers or strings.
@@ -53,7 +55,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code idx()} output
  */
 @Operator
-public final class SetDiff1d<T, U extends Number> extends PrimitiveOp {
+public final class SetDiff1d<T, U extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SetDiff1d operation.
@@ -64,12 +66,12 @@ public final class SetDiff1d<T, U extends Number> extends PrimitiveOp {
    * @param outIdx 
    * @return a new instance of SetDiff1d
    */
-  public static <T, U extends Number> SetDiff1d<T, U> create(Scope scope, Operand<T> x, Operand<T> y, Class<U> outIdx) {
+  public static <T, U extends TNumber> SetDiff1d<T, U> create(Scope scope, Operand<T> x, Operand<T> y, DataType<U> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("ListDiff", scope.makeOpName("SetDiff1d"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_idx", DataType.fromClass(outIdx));
+    opBuilder.setAttr("out_idx", outIdx);
     return new SetDiff1d<T, U>(opBuilder.build());
   }
   
@@ -81,8 +83,8 @@ public final class SetDiff1d<T, U extends Number> extends PrimitiveOp {
    * @param y 1-D. Values to remove.
    * @return a new instance of SetDiff1d
    */
-  public static <T> SetDiff1d<T, Integer> create(Scope scope, Operand<T> x, Operand<T> y) {
-    return create(scope, x, y, Integer.class);
+  public static <T> SetDiff1d<T, TInt32> create(Scope scope, Operand<T> x, Operand<T> y) {
+    return create(scope, x, y, TInt32.DTYPE);
   }
   
   /**

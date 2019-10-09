@@ -23,13 +23,15 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of nearest neighbor interpolation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class ResizeNearestNeighborGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ResizeNearestNeighborGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeNearestNeighborGrad}
@@ -70,7 +72,7 @@ public final class ResizeNearestNeighborGrad<T extends Number> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of ResizeNearestNeighborGrad
    */
-  public static <T extends Number> ResizeNearestNeighborGrad<T> create(Scope scope, Operand<T> grads, Operand<Integer> size, Options... options) {
+  public static <T extends TNumber> ResizeNearestNeighborGrad<T> create(Scope scope, Operand<T> grads, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighborGrad", scope.makeOpName("ResizeNearestNeighborGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(size.asOutput());

@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
@@ -32,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class DecodePaddedRaw<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DecodePaddedRaw<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.DecodePaddedRaw}
@@ -65,12 +68,12 @@ public final class DecodePaddedRaw<T extends Number> extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of DecodePaddedRaw
    */
-  public static <T extends Number> DecodePaddedRaw<T> create(Scope scope, Operand<String> inputBytes, Operand<Integer> fixedLength, Class<T> outType, Options... options) {
+  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());
     opBuilder.addInput(fixedLength.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     if (options != null) {
       for (Options opts : options) {
         if (opts.littleEndian != null) {

@@ -23,11 +23,13 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat;
 
 /**
  * Calculates the prior from the training data (the bias) and fills in the first node with the logits' prior. Returns a boolean indicating whether to continue centering.
  */
-public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand<Boolean> {
+public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesCenterBias operation.
@@ -40,7 +42,7 @@ public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand
    * @param l2 l2 regularization factor on leaf weights, per instance based.
    * @return a new instance of BoostedTreesCenterBias
    */
-  public static BoostedTreesCenterBias create(Scope scope, Operand<?> treeEnsembleHandle, Operand<Float> meanGradients, Operand<Float> meanHessians, Operand<Float> l1, Operand<Float> l2) {
+  public static BoostedTreesCenterBias create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TFloat> meanGradients, Operand<TFloat> meanHessians, Operand<TFloat> l1, Operand<TFloat> l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCenterBias", scope.makeOpName("BoostedTreesCenterBias"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(meanGradients.asOutput());
@@ -54,16 +56,16 @@ public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand
   /**
    * Bool, whether to continue bias centering.
    */
-  public Output<Boolean> continueCentering() {
+  public Output<TBool> continueCentering() {
     return continueCentering;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return continueCentering;
   }
   
-  private Output<Boolean> continueCentering;
+  private Output<TBool> continueCentering;
   
   private BoostedTreesCenterBias(Operation operation) {
     super(operation);

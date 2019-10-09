@@ -85,11 +85,11 @@ public final class HashTable extends PrimitiveOp implements Operand<Object> {
    * @param options carries optional attributes values
    * @return a new instance of HashTable
    */
-  public static <T, U> HashTable create(Scope scope, Class<T> keyDtype, Class<U> valueDtype, Options... options) {
+  public static <T, U> HashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("HashTableV2", scope.makeOpName("HashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("key_dtype", DataType.fromClass(keyDtype));
-    opBuilder.setAttr("value_dtype", DataType.fromClass(valueDtype));
+    opBuilder.setAttr("key_dtype", keyDtype);
+    opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

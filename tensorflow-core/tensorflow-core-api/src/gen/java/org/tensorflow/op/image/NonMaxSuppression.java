@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Greedily selects a subset of bounding boxes in descending order of score,
@@ -85,7 +87,7 @@ public final class NonMaxSuppression extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of NonMaxSuppression
    */
-  public static <T extends Number, U extends Number> NonMaxSuppression create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<Integer> maxOutputSize, Operand<U> iouThreshold, Operand<U> scoreThreshold, Options... options) {
+  public static <T extends TNumber, U extends TNumber> NonMaxSuppression create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<U> iouThreshold, Operand<U> scoreThreshold, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionV4", scope.makeOpName("NonMaxSuppression"));
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(scores.asOutput());
@@ -115,7 +117,7 @@ public final class NonMaxSuppression extends PrimitiveOp {
    * A 1-D integer tensor of shape `[M]` representing the selected
    * indices from the boxes tensor, where `M <= max_output_size`.
    */
-  public Output<Integer> selectedIndices() {
+  public Output<TInt32> selectedIndices() {
     return selectedIndices;
   }
   
@@ -123,12 +125,12 @@ public final class NonMaxSuppression extends PrimitiveOp {
    * A 0-D integer tensor representing the number of valid elements in
    * `selected_indices`, with the valid elements appearing first.
    */
-  public Output<Integer> validOutputs() {
+  public Output<TInt32> validOutputs() {
     return validOutputs;
   }
   
-  private Output<Integer> selectedIndices;
-  private Output<Integer> validOutputs;
+  private Output<TInt32> selectedIndices;
+  private Output<TInt32> validOutputs;
   
   private NonMaxSuppression(Operation operation) {
     super(operation);

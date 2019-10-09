@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Returns the last element of the input list as well as a list with all but that element.
@@ -50,12 +51,12 @@ public final class TensorListPopBack<T> extends PrimitiveOp {
    * @param elementDtype 
    * @return a new instance of TensorListPopBack
    */
-  public static <T> TensorListPopBack<T> create(Scope scope, Operand<?> inputHandle, Operand<Integer> elementShape, Class<T> elementDtype) {
+  public static <T> TensorListPopBack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPopBack", scope.makeOpName("TensorListPopBack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListPopBack<T>(opBuilder.build());
   }
   

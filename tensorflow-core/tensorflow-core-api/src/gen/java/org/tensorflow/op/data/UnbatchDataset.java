@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 
@@ -41,13 +41,13 @@ public final class UnbatchDataset extends PrimitiveOp implements Operand<Object>
    * @param outputShapes 
    * @return a new instance of UnbatchDataset
    */
-  public static UnbatchDataset create(Scope scope, Operand<?> inputDataset, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static UnbatchDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnbatchDataset", scope.makeOpName("UnbatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a `Dataset` that includes only 1/`num_shards` of this dataset.
@@ -63,7 +64,7 @@ public final class ShardDataset extends PrimitiveOp implements Operand<Object> {
    * @param options carries optional attributes values
    * @return a new instance of ShardDataset
    */
-  public static ShardDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> numShards, Operand<Long> index, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+  public static ShardDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numShards, Operand<TInt64> index, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardDataset", scope.makeOpName("ShardDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numShards.asOutput());
@@ -71,7 +72,7 @@ public final class ShardDataset extends PrimitiveOp implements Operand<Object> {
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

@@ -85,12 +85,12 @@ public final class StageClear extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of StageClear
    */
-  public static StageClear create(Scope scope, List<Class<?>> dtypes, Options... options) {
+  public static StageClear create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StageClear", scope.makeOpName("StageClear"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {

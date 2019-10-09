@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * CompilationResultProto indicating the status of the TPU compilation.
  */
-public final class TPUCompilationResult extends PrimitiveOp implements Operand<String> {
+public final class TPUCompilationResult extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new TPUCompilationResult operation.
@@ -43,16 +44,16 @@ public final class TPUCompilationResult extends PrimitiveOp implements Operand<S
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private TPUCompilationResult(Operation operation) {
     super(operation);

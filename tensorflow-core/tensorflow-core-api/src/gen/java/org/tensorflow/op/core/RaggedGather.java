@@ -26,6 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Gather ragged slices from `params` axis `0` according to `indices`.
@@ -61,7 +62,7 @@ import org.tensorflow.op.Scope;
  * @param <T> data type for {@code outputNestedSplits()} output
  * @param <U> data type for {@code outputDenseValues()} output
  */
-public final class RaggedGather<T extends Number, U> extends PrimitiveOp {
+public final class RaggedGather<T extends TNumber, U> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedGather operation.
@@ -79,7 +80,7 @@ public final class RaggedGather<T extends Number, U> extends PrimitiveOp {
    * `indices.shape.ndims + params.ragged_rank - 1`.
    * @return a new instance of RaggedGather
    */
-  public static <T extends Number, U, V extends Number> RaggedGather<T, U> create(Scope scope, Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues, Operand<V> indices, Long OUTPUTRAGGEDRANK) {
+  public static <T extends TNumber, U, V extends TNumber> RaggedGather<T, U> create(Scope scope, Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues, Operand<V> indices, Long OUTPUTRAGGEDRANK) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedGather", scope.makeOpName("RaggedGather"));
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));
     opBuilder.addInput(paramsDenseValues.asOutput());

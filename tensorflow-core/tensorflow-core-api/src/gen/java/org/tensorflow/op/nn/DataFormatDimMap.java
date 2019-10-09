@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the dimension index in the destination data format given the one in
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class DataFormatDimMap<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DataFormatDimMap<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DataFormatDimMap}
@@ -72,7 +73,7 @@ public final class DataFormatDimMap<T extends Number> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of DataFormatDimMap
    */
-  public static <T extends Number> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
+  public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatDimMap", scope.makeOpName("DataFormatDimMap"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

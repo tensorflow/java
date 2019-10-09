@@ -23,6 +23,9 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Calculates gains for each feature and returns the best possible split information for the feature.
@@ -71,7 +74,7 @@ public final class BoostedTreesCalculateBestFeatureSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesCalculateBestFeatureSplit
    */
-  public static BoostedTreesCalculateBestFeatureSplit create(Scope scope, Operand<Integer> nodeIdRange, Operand<Float> statsSummary, Operand<Float> l1, Operand<Float> l2, Operand<Float> treeComplexity, Operand<Float> minNodeWeight, Long logitsDimension, Options... options) {
+  public static BoostedTreesCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TFloat> statsSummary, Operand<TFloat> l1, Operand<TFloat> l2, Operand<TFloat> treeComplexity, Operand<TFloat> minNodeWeight, Long logitsDimension, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestFeatureSplit", scope.makeOpName("BoostedTreesCalculateBestFeatureSplit"));
     opBuilder.addInput(nodeIdRange.asOutput());
     opBuilder.addInput(statsSummary.asOutput());
@@ -101,59 +104,59 @@ public final class BoostedTreesCalculateBestFeatureSplit extends PrimitiveOp {
   /**
    * A Rank 1 tensors indicating possible split node ids for each feature. The length of the list is num_features, but each tensor has different size as each feature provides different possible nodes. See above for details like shapes and sizes.
    */
-  public Output<Integer> nodeIds() {
+  public Output<TInt32> nodeIds() {
     return nodeIds;
   }
   
   /**
    * A Rank 1 tensors indicating the best gains for each feature to split for certain nodes. See above for details like shapes and sizes.
    */
-  public Output<Float> gains() {
+  public Output<TFloat> gains() {
     return gains;
   }
   
   /**
    * A Rank 1 tensors indicating the best feature dimension for each feature to split for certain nodes if the feature is multi-dimension. See above for details like shapes and sizes.
    */
-  public Output<Integer> featureDimensions() {
+  public Output<TInt32> featureDimensions() {
     return featureDimensions;
   }
   
   /**
    * A Rank 1 tensors indicating the bucket id to compare with (as a threshold) for split in each node. See above for details like shapes and sizes.
    */
-  public Output<Integer> thresholds() {
+  public Output<TInt32> thresholds() {
     return thresholds;
   }
   
   /**
    * A Rank 2 tensors indicating the contribution of the left nodes when branching from parent nodes (given by the tensor element in the output node_ids_list) to the left direction by the given threshold for each feature. This value will be used to make the left node value by adding to the parent node value. Second dimension size is 1 for 1-dimensional logits, but would be larger for multi-class problems. See above for details like shapes and sizes.
    */
-  public Output<Float> leftNodeContribs() {
+  public Output<TFloat> leftNodeContribs() {
     return leftNodeContribs;
   }
   
   /**
    * A Rank 2 tensors, with the same shape/conditions as left_node_contribs_list, but just that the value is for the right node.
    */
-  public Output<Float> rightNodeContribs() {
+  public Output<TFloat> rightNodeContribs() {
     return rightNodeContribs;
   }
   
   /**
    * A Rank 1 tensors indicating the which direction to go if data is missing. See above for details like shapes and sizes.
    */
-  public Output<String> splitWithDefaultDirections() {
+  public Output<TString> splitWithDefaultDirections() {
     return splitWithDefaultDirections;
   }
   
-  private Output<Integer> nodeIds;
-  private Output<Float> gains;
-  private Output<Integer> featureDimensions;
-  private Output<Integer> thresholds;
-  private Output<Float> leftNodeContribs;
-  private Output<Float> rightNodeContribs;
-  private Output<String> splitWithDefaultDirections;
+  private Output<TInt32> nodeIds;
+  private Output<TFloat> gains;
+  private Output<TInt32> featureDimensions;
+  private Output<TInt32> thresholds;
+  private Output<TFloat> leftNodeContribs;
+  private Output<TFloat> rightNodeContribs;
+  private Output<TString> splitWithDefaultDirections;
   
   private BoostedTreesCalculateBestFeatureSplit(Operation operation) {
     super(operation);

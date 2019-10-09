@@ -21,16 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Broadcasts a tensor value to one or more other devices.
  * 
  * @param <T> data type for {@code data()} output
  */
-public final class BroadcastSend<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BroadcastSend<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BroadcastSend operation.
@@ -43,7 +44,7 @@ public final class BroadcastSend<T extends Number> extends PrimitiveOp implement
    * @param shape 
    * @return a new instance of BroadcastSend
    */
-  public static <T extends Number> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
+  public static <T extends TNumber> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSend", scope.makeOpName("BroadcastSend"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

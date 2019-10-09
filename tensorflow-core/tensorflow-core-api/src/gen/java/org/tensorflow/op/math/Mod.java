@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise remainder of division. This emulates C semantics in that
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Mod<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Mod<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Mod operation.
@@ -47,7 +48,7 @@ public final class Mod<T extends Number> extends PrimitiveOp implements Operand<
    * @param y 
    * @return a new instance of Mod
    */
-  public static <T extends Number> Mod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> Mod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mod", scope.makeOpName("Mod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

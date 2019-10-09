@@ -72,13 +72,13 @@ public final class QueueDequeue extends PrimitiveOp implements Iterable<Operand<
    * @param options carries optional attributes values
    * @return a new instance of QueueDequeue
    */
-  public static QueueDequeue create(Scope scope, Operand<?> handle, List<Class<?>> componentTypes, Options... options) {
+  public static QueueDequeue create(Scope scope, Operand<?> handle, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueV2", scope.makeOpName("QueueDequeue"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = DataType.fromClass(componentTypes.get(i));
+      componentTypesArray[i] = componentTypes.get(i);
     }
     opBuilder.setAttr("component_types", componentTypesArray);
     if (options != null) {

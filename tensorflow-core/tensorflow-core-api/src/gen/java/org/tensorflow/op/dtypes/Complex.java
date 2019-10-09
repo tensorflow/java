@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts two real numbers to a complex number.
@@ -58,12 +59,12 @@ public final class Complex<U> extends PrimitiveOp implements Operand<U> {
    * @param Tout 
    * @return a new instance of Complex
    */
-  public static <U, T extends Number> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, Class<U> Tout) {
+  public static <U, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput());
     opBuilder.addInput(imag.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tout", DataType.fromClass(Tout));
+    opBuilder.setAttr("Tout", Tout);
     return new Complex<U>(opBuilder.build());
   }
   

@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Computes the ids of the positions in sampled_candidates that match true_labels.
@@ -76,7 +79,7 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ComputeAccidentalHits
    */
-  public static ComputeAccidentalHits create(Scope scope, Operand<Long> trueClasses, Operand<Long> sampledCandidates, Long numTrue, Options... options) {
+  public static ComputeAccidentalHits create(Scope scope, Operand<TInt64> trueClasses, Operand<TInt64> sampledCandidates, Long numTrue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComputeAccidentalHits", scope.makeOpName("ComputeAccidentalHits"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder.addInput(sampledCandidates.asOutput());
@@ -114,7 +117,7 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
   /**
    * A vector of indices corresponding to rows of true_candidates.
    */
-  public Output<Integer> indices() {
+  public Output<TInt32> indices() {
     return indices;
   }
   
@@ -122,7 +125,7 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * A vector of IDs of positions in sampled_candidates that match a true_label
    * for the row with the corresponding index in indices.
    */
-  public Output<Long> ids() {
+  public Output<TInt64> ids() {
     return ids;
   }
   
@@ -130,13 +133,13 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * A vector of the same length as indices and ids, in which each element
    * is -FLOAT_MAX.
    */
-  public Output<Float> weights() {
+  public Output<TFloat> weights() {
     return weights;
   }
   
-  private Output<Integer> indices;
-  private Output<Long> ids;
-  private Output<Float> weights;
+  private Output<TInt32> indices;
+  private Output<TInt64> ids;
+  private Output<TFloat> weights;
   
   private ComputeAccidentalHits(Operation operation) {
     super(operation);

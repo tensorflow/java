@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Checks a tensor for NaN and Inf values.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class CheckNumerics<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class CheckNumerics<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CheckNumerics operation.
@@ -44,7 +45,7 @@ public final class CheckNumerics<T extends Number> extends PrimitiveOp implement
    * @param message Prefix of the error message.
    * @return a new instance of CheckNumerics
    */
-  public static <T extends Number> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
+  public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
     OperationBuilder opBuilder = scope.env().opBuilder("CheckNumerics", scope.makeOpName("CheckNumerics"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

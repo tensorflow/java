@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns which elements of x are finite.
@@ -33,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @end_compatibility
  */
 @Operator(group = "math")
-public final class IsFinite extends PrimitiveOp implements Operand<Boolean> {
+public final class IsFinite extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsFinite operation.
@@ -42,7 +44,7 @@ public final class IsFinite extends PrimitiveOp implements Operand<Boolean> {
    * @param x 
    * @return a new instance of IsFinite
    */
-  public static <T extends Number> IsFinite create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> IsFinite create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsFinite", scope.makeOpName("IsFinite"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -51,16 +53,16 @@ public final class IsFinite extends PrimitiveOp implements Operand<Boolean> {
   
   /**
    */
-  public Output<Boolean> y() {
+  public Output<TBool> y() {
     return y;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return y;
   }
   
-  private Output<Boolean> y;
+  private Output<TBool> y;
   
   private IsFinite(Operation operation) {
     super(operation);

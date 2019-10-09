@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.nio.charset.Charset;
+import org.tensorflow.nio.nd.Shape;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
@@ -188,7 +189,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, DataType value) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrType(unsafeNativeHandle, name, value.c());
+      setAttrType(unsafeNativeHandle, name, value.nativeCode());
     } finally {
       r.close();
     }
@@ -199,7 +200,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, DataType[] value) {
     int[] ctypes = new int[value.length];
     for (int i = 0; i < value.length; ++i) {
-      ctypes[i] = value[i].c();
+      ctypes[i] = value[i].nativeCode();
     }
     Graph.Reference r = graph.ref();
     try {

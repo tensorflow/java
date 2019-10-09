@@ -26,6 +26,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Performs beam search decoding on the logits given in input.
@@ -69,7 +72,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcBeamSearchDecoder
    */
-  public static CtcBeamSearchDecoder create(Scope scope, Operand<Float> inputs, Operand<Integer> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
+  public static CtcBeamSearchDecoder create(Scope scope, Operand<TFloat> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -98,7 +101,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * size `(total_decoded_outputs[j] x 2)`, has indices of a
    * `SparseTensor<int64, 2>`.  The rows store: [batch, time].
    */
-  public List<Output<Long>> decodedIndices() {
+  public List<Output<TInt64>> decodedIndices() {
     return decodedIndices;
   }
   
@@ -107,7 +110,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * size `(length total_decoded_outputs[j])`, has the values of a
    * `SparseTensor<int64, 2>`.  The vector stores the decoded classes for beam j.
    */
-  public List<Output<Long>> decodedValues() {
+  public List<Output<TInt64>> decodedValues() {
     return decodedValues;
   }
   
@@ -116,7 +119,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * size `(2)`, stores the shape of the decoded `SparseTensor[j]`.
    * Its values are: `[batch_size, max_decoded_length[j]]`.
    */
-  public List<Output<Long>> decodedShape() {
+  public List<Output<TInt64>> decodedShape() {
     return decodedShape;
   }
   
@@ -124,27 +127,27 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * A matrix, shaped: `(batch_size x top_paths)`.  The
    * sequence log-probabilities.
    */
-  public Output<Float> logProbability() {
+  public Output<TFloat> logProbability() {
     return logProbability;
   }
   
-  private List<Output<Long>> decodedIndices;
-  private List<Output<Long>> decodedValues;
-  private List<Output<Long>> decodedShape;
-  private Output<Float> logProbability;
+  private List<Output<TInt64>> decodedIndices;
+  private List<Output<TInt64>> decodedValues;
+  private List<Output<TInt64>> decodedShape;
+  private Output<TFloat> logProbability;
   
   @SuppressWarnings("unchecked")
   private CtcBeamSearchDecoder(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int decodedIndicesLength = operation.outputListLength("decoded_indices");
-    decodedIndices = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, decodedIndicesLength));
+    decodedIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedIndicesLength));
     outputIdx += decodedIndicesLength;
     int decodedValuesLength = operation.outputListLength("decoded_values");
-    decodedValues = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, decodedValuesLength));
+    decodedValues = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedValuesLength));
     outputIdx += decodedValuesLength;
     int decodedShapeLength = operation.outputListLength("decoded_shape");
-    decodedShape = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, decodedShapeLength));
+    decodedShape = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedShapeLength));
     outputIdx += decodedShapeLength;
     logProbability = operation.output(outputIdx++);
   }

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the polygamma function \\(\psi^{(n)}(x)\\).
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Polygamma<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Polygamma<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Polygamma operation.
@@ -48,7 +49,7 @@ public final class Polygamma<T extends Number> extends PrimitiveOp implements Op
    * @param x 
    * @return a new instance of Polygamma
    */
-  public static <T extends Number> Polygamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
+  public static <T extends TNumber> Polygamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());

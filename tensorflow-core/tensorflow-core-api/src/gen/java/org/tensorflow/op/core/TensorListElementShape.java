@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * The shape of the elements of the given list, as a tensor.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code elementShape()} output
  */
 @Operator
-public final class TensorListElementShape<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class TensorListElementShape<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorListElementShape operation.
@@ -45,11 +46,11 @@ public final class TensorListElementShape<T extends Number> extends PrimitiveOp 
    * @param shapeType 
    * @return a new instance of TensorListElementShape
    */
-  public static <T extends Number> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, Class<T> shapeType) {
+  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("shape_type", DataType.fromClass(shapeType));
+    opBuilder.setAttr("shape_type", shapeType);
     return new TensorListElementShape<T>(opBuilder.build());
   }
   

@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Computes quantized depthwise Conv2D with Bias, Relu and Requantize.
@@ -71,7 +72,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> exten
    * @param options carries optional attributes values
    * @return a new instance of QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize
    */
-  public static <W, T, U, V> QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minFilter, Operand<Float> maxFilter, Operand<Float> minFreezedOutput, Operand<Float> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding, Options... options) {
+  public static <W, T, U, V> QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, DataType<W> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -83,7 +84,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> exten
     opBuilder.addInput(minFreezedOutput.asOutput());
     opBuilder.addInput(maxFreezedOutput.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);
@@ -121,20 +122,20 @@ public final class QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> exten
   /**
    * The float value that the minimum quantized output value represents.
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    * The float value that the maximum quantized output value represents.
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<W> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize(Operation operation) {
     super(operation);

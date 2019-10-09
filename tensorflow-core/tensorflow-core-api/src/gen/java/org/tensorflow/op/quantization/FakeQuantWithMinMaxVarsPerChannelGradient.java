@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxVarsPerChannel operation.
@@ -73,7 +74,7 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannelGradient
    */
-  public static FakeQuantWithMinMaxVarsPerChannelGradient create(Scope scope, Operand<Float> gradients, Operand<Float> inputs, Operand<Float> min, Operand<Float> max, Options... options) {
+  public static FakeQuantWithMinMaxVarsPerChannelGradient create(Scope scope, Operand<TFloat> gradients, Operand<TFloat> inputs, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannelGradient", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannelGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -112,7 +113,7 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends PrimitiveOp
    * `inputs`:
    *   `gradients * (inputs >= min && inputs <= max)`.
    */
-  public Output<Float> backpropsWrtInput() {
+  public Output<TFloat> backpropsWrtInput() {
     return backpropsWrtInput;
   }
   
@@ -120,7 +121,7 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends PrimitiveOp
    * Backpropagated gradients w.r.t. min parameter, shape `[d]`:
    * `sum_per_d(gradients * (inputs < min))`.
    */
-  public Output<Float> backpropWrtMin() {
+  public Output<TFloat> backpropWrtMin() {
     return backpropWrtMin;
   }
   
@@ -128,13 +129,13 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends PrimitiveOp
    * Backpropagated gradients w.r.t. max parameter, shape `[d]`:
    * `sum_per_d(gradients * (inputs > max))`.
    */
-  public Output<Float> backpropWrtMax() {
+  public Output<TFloat> backpropWrtMax() {
     return backpropWrtMax;
   }
   
-  private Output<Float> backpropsWrtInput;
-  private Output<Float> backpropWrtMin;
-  private Output<Float> backpropWrtMax;
+  private Output<TFloat> backpropsWrtInput;
+  private Output<TFloat> backpropWrtMin;
+  private Output<TFloat> backpropWrtMax;
   
   private FakeQuantWithMinMaxVarsPerChannelGradient(Operation operation) {
     super(operation);

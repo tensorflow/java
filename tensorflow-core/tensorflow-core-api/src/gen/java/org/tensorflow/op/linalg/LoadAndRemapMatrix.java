@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Loads a 2-D (matrix) `Tensor` with name `old_tensor_name` from the checkpoint
@@ -70,7 +73,7 @@ import org.tensorflow.op.annotation.Operator;
  *  [0.25,    -0.25,      42]]
  */
 @Operator(group = "linalg")
-public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<Float> {
+public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.LoadAndRemapMatrix}
@@ -115,7 +118,7 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<Flo
    * @param options carries optional attributes values
    * @return a new instance of LoadAndRemapMatrix
    */
-  public static LoadAndRemapMatrix create(Scope scope, Operand<String> ckptPath, Operand<String> oldTensorName, Operand<Long> rowRemapping, Operand<Long> colRemapping, Operand<Float> initializingValues, Long numRows, Long numCols, Options... options) {
+  public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat> initializingValues, Long numRows, Long numCols, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
     opBuilder.addInput(ckptPath.asOutput());
     opBuilder.addInput(oldTensorName.asOutput());
@@ -148,16 +151,16 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<Flo
    * Output matrix containing existing values loaded from the
    * checkpoint, and with any missing values filled in from initializing_values.
    */
-  public Output<Float> outputMatrix() {
+  public Output<TFloat> outputMatrix() {
     return outputMatrix;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return outputMatrix;
   }
   
-  private Output<Float> outputMatrix;
+  private Output<TFloat> outputMatrix;
   
   private LoadAndRemapMatrix(Operation operation) {
     super(operation);

@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.Session}. */
 @RunWith(JUnit4.class)
@@ -33,9 +34,9 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
-      try (Tensor<Integer> x = Tensors.create(new int[][] {{5}, {7}});
+      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}});
           TestUtil.AutoCloseableList<Tensor<?>> outputs =
-              new TestUtil.AutoCloseableList<Tensor<?>>(s.runner().feed("X", x).fetch("Y").run())) {
+              new TestUtil.AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
         assertEquals(1, outputs.size());
         final int[][] expected = {{31}};
         assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
@@ -48,11 +49,11 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
-      Output<Integer> feed = g.operation("X").output(0);
-      Output<Integer> fetch = g.operation("Y").output(0);
-      try (Tensor<Integer> x = Tensors.create(new int[][] {{5}, {7}});
+      Output<TInt32> feed = g.operation("X").output(0);
+      Output<TInt32> fetch = g.operation("Y").output(0);
+      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}});
           TestUtil.AutoCloseableList<Tensor<?>> outputs =
-              new TestUtil.AutoCloseableList<Tensor<?>>(s.runner().feed(feed, x).fetch(fetch).run())) {
+              new TestUtil.AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
         assertEquals(1, outputs.size());
         final int[][] expected = {{31}};
         assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
@@ -76,21 +77,21 @@ public class SessionTest {
           .build()
           .output(0);
       // Fetch using colon separated names.
-      try (Tensor<Integer> fetched =
-          s.runner().fetch("Split:1").run().get(0).expect(Integer.class)) {
+      try (Tensor<TInt32> fetched =
+          s.runner().fetch("Split:1").run().get(0).expect(TInt32.DTYPE)) {
         final int[] expected = {3, 4};
         assertArrayEquals(expected, fetched.copyTo(new int[2]));
       }
       // Feed using colon separated names.
-      try (Tensor<Integer> fed = Tensors.create(new int[] {4, 3, 2, 1});
-          Tensor<Integer> fetched =
+      try (Tensor<TInt32> fed = Tensors.create(new int[] {4, 3, 2, 1});
+          Tensor<TInt32> fetched =
               s.runner()
                   .feed("Split:0", fed)
                   .feed("Split:1", fed)
                   .fetch("Add")
                   .run()
                   .get(0)
-                  .expect(Integer.class)) {
+                  .expect(TInt32.DTYPE)) {
         final int[] expected = {8, 6, 4, 2};
         assertArrayEquals(expected, fetched.copyTo(new int[4]));
       }
@@ -102,7 +103,7 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
-      try (Tensor<Integer> x = Tensors.create(new int[][] {{5}, {7}})) {
+      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}})) {
         Session.Run result =
             s.runner()
                 .feed("X", x)
@@ -110,7 +111,7 @@ public class SessionTest {
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        TestUtil.AutoCloseableList<Tensor<?>> outputs = new TestUtil.AutoCloseableList<Tensor<?>>(result.outputs);
+        TestUtil.AutoCloseableList<Tensor<?>> outputs = new TestUtil.AutoCloseableList<>(result.outputs);
         assertEquals(1, outputs.size());
         final int[][] expected = {{31}};
         assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
@@ -134,7 +135,7 @@ public class SessionTest {
       TestUtil.constant(g, "c1", 2718);
       TestUtil.constant(g, "c2", 31415);
       TestUtil.AutoCloseableList<Tensor<?>> outputs =
-          new TestUtil.AutoCloseableList<Tensor<?>>(s.runner().fetch("c2").fetch("c1").run());
+          new TestUtil.AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
       assertEquals(2, outputs.size());
       assertEquals(31415, outputs.get(0).intValue());
       assertEquals(2718, outputs.get(1).intValue());

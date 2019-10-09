@@ -24,7 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * JPEG encode input image with provided compression quality.
@@ -34,7 +36,7 @@ import org.tensorflow.types.UInt8;
  * 
  */
 @Operator(group = "image")
-public final class EncodeJpegVariableQuality extends PrimitiveOp implements Operand<String> {
+public final class EncodeJpegVariableQuality extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new EncodeJpegVariableQuality operation.
@@ -44,7 +46,7 @@ public final class EncodeJpegVariableQuality extends PrimitiveOp implements Oper
    * @param quality An int quality to encode to.
    * @return a new instance of EncodeJpegVariableQuality
    */
-  public static EncodeJpegVariableQuality create(Scope scope, Operand<UInt8> images, Operand<Integer> quality) {
+  public static EncodeJpegVariableQuality create(Scope scope, Operand<TUInt8> images, Operand<TInt32> quality) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpegVariableQuality", scope.makeOpName("EncodeJpegVariableQuality"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(quality.asOutput());
@@ -55,16 +57,16 @@ public final class EncodeJpegVariableQuality extends PrimitiveOp implements Oper
   /**
    * 0-D. JPEG-encoded image.
    */
-  public Output<String> contents() {
+  public Output<TString> contents() {
     return contents;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return contents;
   }
   
-  private Output<String> contents;
+  private Output<TString> contents;
   
   private EncodeJpegVariableQuality(Operation operation) {
     super(operation);

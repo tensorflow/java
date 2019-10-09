@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Computes the number of complete elements in the given barrier.
  */
 @Operator
-public final class BarrierReadySize extends PrimitiveOp implements Operand<Integer> {
+public final class BarrierReadySize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new BarrierReadySize operation.
@@ -38,7 +40,7 @@ public final class BarrierReadySize extends PrimitiveOp implements Operand<Integ
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierReadySize
    */
-  public static BarrierReadySize create(Scope scope, Operand<String> handle) {
+  public static BarrierReadySize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierReadySize", scope.makeOpName("BarrierReadySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -49,16 +51,16 @@ public final class BarrierReadySize extends PrimitiveOp implements Operand<Integ
    * The number of complete elements (i.e. those with all of their value
    * components set) in the barrier.
    */
-  public Output<Integer> size() {
+  public Output<TInt32> size() {
     return size;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return size;
   }
   
-  private Output<Integer> size;
+  private Output<TInt32> size;
   
   private BarrierReadySize(Operation operation) {
     super(operation);

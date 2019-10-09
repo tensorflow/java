@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
@@ -45,13 +47,13 @@ public final class SerializeSparse<U> extends PrimitiveOp implements Operand<U> 
    * (default) and `variant`.
    * @return a new instance of SerializeSparse
    */
-  public static <U, T> SerializeSparse<U> create(Scope scope, Operand<Long> sparseIndices, Operand<T> sparseValues, Operand<Long> sparseShape, Class<U> outType) {
+  public static <U, T> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeSparse", scope.makeOpName("SerializeSparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new SerializeSparse<U>(opBuilder.build());
   }
   
@@ -64,8 +66,8 @@ public final class SerializeSparse<U> extends PrimitiveOp implements Operand<U> 
    * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
    * @return a new instance of SerializeSparse
    */
-  public static <T> SerializeSparse<String> create(Scope scope, Operand<Long> sparseIndices, Operand<T> sparseValues, Operand<Long> sparseShape) {
-    return create(scope, sparseIndices, sparseValues, sparseShape, String.class);
+  public static <T> SerializeSparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
   }
   
   /**

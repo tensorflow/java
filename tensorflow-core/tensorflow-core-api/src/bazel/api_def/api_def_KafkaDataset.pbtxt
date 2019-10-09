@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "KafkaDataset"
+  endpoint {
+    name: "data.KafkaDataset"
+  }
+}

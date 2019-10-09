@@ -27,6 +27,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Op removes and returns a random (key, value)
@@ -92,13 +94,13 @@ public final class MapUnstageNoKey extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapUnstageNoKey
    */
-  public static MapUnstageNoKey create(Scope scope, Operand<Integer> indices, List<Class<?>> dtypes, Options... options) {
+  public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {
@@ -150,7 +152,7 @@ public final class MapUnstageNoKey extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> key() {
+  public Output<TInt64> key() {
     return key;
   }
   
@@ -160,7 +162,7 @@ public final class MapUnstageNoKey extends PrimitiveOp {
     return values;
   }
   
-  private Output<Long> key;
+  private Output<TInt64> key;
   private List<Output<?>> values;
   
   private MapUnstageNoKey(Operation operation) {

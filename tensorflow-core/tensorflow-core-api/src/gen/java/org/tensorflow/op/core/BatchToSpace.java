@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * BatchToSpace for 4-D tensors of type T.
@@ -57,7 +58,7 @@ public final class BatchToSpace<T> extends PrimitiveOp implements Operand<T> {
    * @param blockSize 
    * @return a new instance of BatchToSpace
    */
-  public static <T, U extends Number> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
+  public static <T, U extends TNumber> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpace", scope.makeOpName("BatchToSpace"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(crops.asOutput());

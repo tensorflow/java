@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Extract `patches` from `input` and put them in the "depth" output dimension. 3D extension of `extract_image_patches`.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code patches()} output
  */
 @Operator
-public final class ExtractVolumePatches<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ExtractVolumePatches<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExtractVolumePatches operation.
@@ -52,7 +53,7 @@ public final class ExtractVolumePatches<T extends Number> extends PrimitiveOp im
    * 
    * @return a new instance of ExtractVolumePatches
    */
-  public static <T extends Number> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
+  public static <T extends TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractVolumePatches", scope.makeOpName("ExtractVolumePatches"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

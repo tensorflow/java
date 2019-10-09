@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a dataset with a range of values. Corresponds to python's xrange.
@@ -43,7 +44,7 @@ public final class RangeDataset extends PrimitiveOp implements Operand<Object> {
    * @param outputShapes 
    * @return a new instance of RangeDataset
    */
-  public static RangeDataset create(Scope scope, Operand<Long> start, Operand<Long> stop, Operand<Long> step, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static RangeDataset create(Scope scope, Operand<TInt64> start, Operand<TInt64> stop, Operand<TInt64> step, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RangeDataset", scope.makeOpName("RangeDataset"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
@@ -51,7 +52,7 @@ public final class RangeDataset extends PrimitiveOp implements Operand<Object> {
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

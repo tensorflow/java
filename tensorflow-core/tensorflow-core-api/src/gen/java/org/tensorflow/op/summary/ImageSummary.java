@@ -25,6 +25,8 @@ import org.tensorflow.Tensor;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs a `Summary` protocol buffer with images.
@@ -77,7 +79,7 @@ import org.tensorflow.op.annotation.Operator;
  * red.
  */
 @Operator(group = "summary")
-public final class ImageSummary extends PrimitiveOp implements Operand<String> {
+public final class ImageSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.summary.ImageSummary}
@@ -117,7 +119,7 @@ public final class ImageSummary extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of ImageSummary
    */
-  public static <T extends Number> ImageSummary create(Scope scope, Operand<String> tag, Operand<T> tensor, Options... options) {
+  public static <T extends TNumber> ImageSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImageSummary", scope.makeOpName("ImageSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -152,16 +154,16 @@ public final class ImageSummary extends PrimitiveOp implements Operand<String> {
   /**
    * Scalar. Serialized `Summary` protocol buffer.
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private ImageSummary(Operation operation) {
     super(operation);

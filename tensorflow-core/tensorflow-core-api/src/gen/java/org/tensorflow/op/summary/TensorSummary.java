@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Outputs a `Summary` protocol buffer with a tensor and per-plugin data.
  */
 @Operator(group = "summary")
-public final class TensorSummary extends PrimitiveOp implements Operand<String> {
+public final class TensorSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new TensorSummary operation.
@@ -41,7 +42,7 @@ public final class TensorSummary extends PrimitiveOp implements Operand<String> 
    * data.
    * @return a new instance of TensorSummary
    */
-  public static <T> TensorSummary create(Scope scope, Operand<String> tag, Operand<T> tensor, Operand<String> serializedSummaryMetadata) {
+  public static <T> TensorSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Operand<TString> serializedSummaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSummaryV2", scope.makeOpName("TensorSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -52,16 +53,16 @@ public final class TensorSummary extends PrimitiveOp implements Operand<String> 
   
   /**
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private TensorSummary(Operation operation) {
     super(operation);

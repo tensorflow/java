@@ -124,24 +124,16 @@ void WriteSetAttrDirective(const AttributeSpec& attr, bool optional,
         .EndLine()
         .BeginBlock("for (int i = 0; i < " + array_name + ".length; ++i)")
         .Append(array_name + "[i] = ");
-    if (attr.type().kind() == Type::GENERIC) {
-      writer->Append("DataType.fromClass(" + var_name + ".get(i));");
-    } else {
-      writer->Append(var_name + ".get(i);");
-    }
+    writer->Append(var_name + ".get(i);");
     writer->EndLine()
         .EndBlock()
         .Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
         .Append(array_name + ");")
         .EndLine();
   } else {
-    writer->Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ");
-    if (attr.var().type().name() == "Class") {
-      writer->Append("DataType.fromClass(" + var_name + "));");
-    } else {
-      writer->Append(var_name + ");");
-    }
-    writer->EndLine();
+    writer->Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
+        .Append(var_name + ");")
+        .EndLine();
   }
 }
 
@@ -179,7 +171,7 @@ void RenderSecondaryFactoryMethod(const OpSpec& op, const Type& op_class,
     if (attr.type().kind() == Type::GENERIC &&
         default_types.find(attr.type().name()) != default_types.end()) {
       factory_statement << default_types.at(attr.type().name()).name()
-                        << ".class";
+                        << ".DTYPE";
     } else {
       AddArgument(attr.var(), attr.description(), &factory, &factory_doc);
       factory_statement << attr.var().name();

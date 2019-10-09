@@ -24,7 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * Decode a JPEG-encoded image to a uint8 tensor.
@@ -55,7 +56,7 @@ import org.tensorflow.types.UInt8;
  * the same, though it is cleaner to use `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeJpeg extends PrimitiveOp implements Operand<UInt8> {
+public final class DecodeJpeg extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeJpeg}
@@ -136,7 +137,7 @@ public final class DecodeJpeg extends PrimitiveOp implements Operand<UInt8> {
    * @param options carries optional attributes values
    * @return a new instance of DecodeJpeg
    */
-  public static DecodeJpeg create(Scope scope, Operand<String> contents, Options... options) {
+  public static DecodeJpeg create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJpeg", scope.makeOpName("DecodeJpeg"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -217,16 +218,16 @@ public final class DecodeJpeg extends PrimitiveOp implements Operand<UInt8> {
   /**
    * 3-D with shape `[height, width, channels]`..
    */
-  public Output<UInt8> image() {
+  public Output<TUInt8> image() {
     return image;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return image;
   }
   
-  private Output<UInt8> image;
+  private Output<TUInt8> image;
   
   private DecodeJpeg(Operation operation) {
     super(operation);

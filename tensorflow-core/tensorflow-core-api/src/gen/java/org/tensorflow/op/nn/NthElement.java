@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Finds values of the `n`-th order statistic for the last dimension.
@@ -39,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "nn")
-public final class NthElement<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class NthElement<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.NthElement}
@@ -71,7 +73,7 @@ public final class NthElement<T extends Number> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of NthElement
    */
-  public static <T extends Number> NthElement<T> create(Scope scope, Operand<T> input, Operand<Integer> n, Options... options) {
+  public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input, Operand<TInt32> n, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NthElement", scope.makeOpName("NthElement"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(n.asOutput());

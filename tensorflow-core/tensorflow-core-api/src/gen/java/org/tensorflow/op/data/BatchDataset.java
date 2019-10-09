@@ -23,9 +23,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a dataset that batches `batch_size` elements from `input_dataset`.
@@ -64,7 +66,7 @@ public final class BatchDataset extends PrimitiveOp implements Operand<Object> {
    * @param options carries optional attributes values
    * @return a new instance of BatchDataset
    */
-  public static BatchDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> batchSize, Operand<Boolean> dropRemainder, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+  public static BatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchDatasetV2", scope.makeOpName("BatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
@@ -72,7 +74,7 @@ public final class BatchDataset extends PrimitiveOp implements Operand<Object> {
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

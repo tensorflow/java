@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Serializes the tree handle to a proto
  */
-public final class TensorForestTreeSerialize extends PrimitiveOp implements Operand<String> {
+public final class TensorForestTreeSerialize extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new TensorForestTreeSerialize operation.
@@ -46,16 +47,16 @@ public final class TensorForestTreeSerialize extends PrimitiveOp implements Oper
   /**
    * Serialied proto string of the tree resource.
    */
-  public Output<String> treeConfig() {
+  public Output<TString> treeConfig() {
     return treeConfig;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return treeConfig;
   }
   
-  private Output<String> treeConfig;
+  private Output<TString> treeConfig;
   
   private TensorForestTreeSerialize(Operation operation) {
     super(operation);

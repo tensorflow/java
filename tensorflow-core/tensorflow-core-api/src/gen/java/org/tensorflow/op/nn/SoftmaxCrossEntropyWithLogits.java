@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code loss()} output
  */
 @Operator(group = "nn")
-public final class SoftmaxCrossEntropyWithLogits<T extends Number> extends PrimitiveOp {
+public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SoftmaxCrossEntropyWithLogits operation.
@@ -45,7 +46,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends Number> extends Primi
    * probability distribution.
    * @return a new instance of SoftmaxCrossEntropyWithLogits
    */
-  public static <T extends Number> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
+  public static <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());

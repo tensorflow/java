@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of 3-D convolution with respect to the filter.
@@ -32,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class Conv3dBackpropFilter<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Conv3dBackpropFilter<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.Conv3dBackpropFilter}
@@ -87,7 +89,7 @@ public final class Conv3dBackpropFilter<T extends Number> extends PrimitiveOp im
    * @param options carries optional attributes values
    * @return a new instance of Conv3dBackpropFilter
    */
-  public static <T extends Number> Conv3dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<Integer> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> Conv3dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3DBackpropFilterV2", scope.makeOpName("Conv3dBackpropFilter"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filterSizes.asOutput());

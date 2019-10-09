@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input image tensor.
@@ -32,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class CropAndResizeGradImage<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class CropAndResizeGradImage<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.CropAndResizeGradImage}
@@ -78,14 +81,14 @@ public final class CropAndResizeGradImage<T extends Number> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradImage
    */
-  public static <T extends Number> CropAndResizeGradImage<T> create(Scope scope, Operand<Float> grads, Operand<Float> boxes, Operand<Integer> boxInd, Operand<Integer> imageSize, Class<T> T, Options... options) {
+  public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat> grads, Operand<TFloat> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradImage", scope.makeOpName("CropAndResizeGradImage"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
     opBuilder.addInput(imageSize.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("T", DataType.fromClass(T));
+    opBuilder.setAttr("T", T);
     if (options != null) {
       for (Options opts : options) {
         if (opts.method != null) {

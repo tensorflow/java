@@ -24,13 +24,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Mutually reduces multiple tensors of identical type and shape.
  * 
  * @param <T> data type for {@code data()} output
  */
-public final class AllReduce<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class AllReduce<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.collective.AllReduce}
@@ -65,7 +66,7 @@ public final class AllReduce<T extends Number> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of AllReduce
    */
-  public static <T extends Number> AllReduce<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, String mergeOp, String finalOp, List<Long> subdivOffsets, Options... options) {
+  public static <T extends TNumber> AllReduce<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, String mergeOp, String finalOp, List<Long> subdivOffsets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveReduce", scope.makeOpName("AllReduce"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

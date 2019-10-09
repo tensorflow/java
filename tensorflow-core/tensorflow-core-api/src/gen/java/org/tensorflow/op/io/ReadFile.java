@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Reads and outputs the entire contents of the input filename.
  */
 @Operator(group = "io")
-public final class ReadFile extends PrimitiveOp implements Operand<String> {
+public final class ReadFile extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new ReadFile operation.
@@ -38,7 +39,7 @@ public final class ReadFile extends PrimitiveOp implements Operand<String> {
    * @param filename 
    * @return a new instance of ReadFile
    */
-  public static ReadFile create(Scope scope, Operand<String> filename) {
+  public static ReadFile create(Scope scope, Operand<TString> filename) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadFile", scope.makeOpName("ReadFile"));
     opBuilder.addInput(filename.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -47,16 +48,16 @@ public final class ReadFile extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> contents() {
+  public Output<TString> contents() {
     return contents;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return contents;
   }
   
-  private Output<String> contents;
+  private Output<TString> contents;
   
   private ReadFile(Operation operation) {
     super(operation);

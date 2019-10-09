@@ -15,11 +15,10 @@ limitations under the License.
 
 package org.tensorflow.op;
 
+import java.util.ArrayList;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
 import org.tensorflow.OperationBuilder;
-
-import java.util.ArrayList;
 
 /**
  * Manages groups of related properties when creating Tensorflow Operations, such as a common name

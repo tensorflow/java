@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * @param <V> data type for {@code output()} output
@@ -75,7 +76,7 @@ public final class QuantizedConv2DAndRelu<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DAndRelu
    */
-  public static <V, T, U> QuantizedConv2DAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minFilter, Operand<Float> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V, T, U> QuantizedConv2DAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DAndRelu", scope.makeOpName("QuantizedConv2DAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -84,7 +85,7 @@ public final class QuantizedConv2DAndRelu<V> extends PrimitiveOp {
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);
@@ -134,19 +135,19 @@ public final class QuantizedConv2DAndRelu<V> extends PrimitiveOp {
   
   /**
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<V> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedConv2DAndRelu(Operation operation) {
     super(operation);

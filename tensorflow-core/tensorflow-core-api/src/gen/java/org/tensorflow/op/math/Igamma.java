@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the lower regularized incomplete Gamma function `P(a, x)`.
@@ -44,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Igamma<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Igamma<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Igamma operation.
@@ -54,7 +55,7 @@ public final class Igamma<T extends Number> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Igamma
    */
-  public static <T extends Number> Igamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
+  public static <T extends TNumber> Igamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Igamma", scope.makeOpName("Igamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());

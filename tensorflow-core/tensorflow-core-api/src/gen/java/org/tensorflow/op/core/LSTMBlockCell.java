@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell forward propagation for 1 time step.
@@ -54,7 +55,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code i()} output
  */
-public final class LSTMBlockCell<T extends Number> extends PrimitiveOp {
+public final class LSTMBlockCell<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.LSTMBlockCell}
@@ -108,7 +109,7 @@ public final class LSTMBlockCell<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LSTMBlockCell
    */
-  public static <T extends Number> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());

@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
@@ -85,17 +87,17 @@ public final class DeserializeManySparse<T> extends PrimitiveOp {
    * @param dtype The `dtype` of the serialized `SparseTensor` objects.
    * @return a new instance of DeserializeManySparse
    */
-  public static <T> DeserializeManySparse<T> create(Scope scope, Operand<String> serializedSparse, Class<T> dtype) {
+  public static <T> DeserializeManySparse<T> create(Scope scope, Operand<TString> serializedSparse, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeManySparse", scope.makeOpName("DeserializeManySparse"));
     opBuilder.addInput(serializedSparse.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new DeserializeManySparse<T>(opBuilder.build());
   }
   
   /**
    */
-  public Output<Long> sparseIndices() {
+  public Output<TInt64> sparseIndices() {
     return sparseIndices;
   }
   
@@ -107,13 +109,13 @@ public final class DeserializeManySparse<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> sparseShape() {
+  public Output<TInt64> sparseShape() {
     return sparseShape;
   }
   
-  private Output<Long> sparseIndices;
+  private Output<TInt64> sparseIndices;
   private Output<T> sparseValues;
-  private Output<Long> sparseShape;
+  private Output<TInt64> sparseShape;
   
   private DeserializeManySparse(Operation operation) {
     super(operation);

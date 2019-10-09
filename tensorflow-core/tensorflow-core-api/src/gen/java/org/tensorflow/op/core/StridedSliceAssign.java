@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Assign `value` to the sliced l-value reference of `ref`.
@@ -107,7 +108,7 @@ public final class StridedSliceAssign<T> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of StridedSliceAssign
    */
-  public static <T, U extends Number> StridedSliceAssign<T> create(Scope scope, Operand<T> ref, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value, Options... options) {
+  public static <T, U extends TNumber> StridedSliceAssign<T> create(Scope scope, Operand<T> ref, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StridedSliceAssign", scope.makeOpName("StridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(begin.asOutput());

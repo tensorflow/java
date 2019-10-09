@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Elementwise computes the bitwise OR of `x` and `y`.
@@ -51,7 +52,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "bitwise")
-public final class BitwiseOr<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BitwiseOr<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BitwiseOr operation.
@@ -61,7 +62,7 @@ public final class BitwiseOr<T extends Number> extends PrimitiveOp implements Op
    * @param y 
    * @return a new instance of BitwiseOr
    */
-  public static <T extends Number> BitwiseOr<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> BitwiseOr<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseOr", scope.makeOpName("BitwiseOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

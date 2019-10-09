@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Fake-quantize the 'inputs' tensor of type float and one of the shapes: `[d]`,
@@ -50,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * values.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp implements Operand<Float> {
+public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel}
@@ -90,7 +91,7 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
    */
-  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<Float> inputs, Operand<Float> min, Operand<Float> max, Options... options) {
+  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat> inputs, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannel", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
@@ -125,16 +126,16 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp impleme
   
   /**
    */
-  public Output<Float> outputs() {
+  public Output<TFloat> outputs() {
     return outputs;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return outputs;
   }
   
-  private Output<Float> outputs;
+  private Output<TFloat> outputs;
   
   private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
     super(operation);

@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Extracts crops from the input image tensor and resizes them.
@@ -45,7 +48,7 @@ import org.tensorflow.op.annotation.Operator;
  * `align_corners=True`.
  */
 @Operator(group = "image")
-public final class CropAndResize extends PrimitiveOp implements Operand<Float> {
+public final class CropAndResize extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.CropAndResize}
@@ -102,7 +105,7 @@ public final class CropAndResize extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResize
    */
-  public static <T extends Number> CropAndResize create(Scope scope, Operand<T> image, Operand<Float> boxes, Operand<Integer> boxInd, Operand<Integer> cropSize, Options... options) {
+  public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResize", scope.makeOpName("CropAndResize"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(boxes.asOutput());
@@ -141,16 +144,16 @@ public final class CropAndResize extends PrimitiveOp implements Operand<Float> {
   /**
    * A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
    */
-  public Output<Float> crops() {
+  public Output<TFloat> crops() {
     return crops;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return crops;
   }
   
-  private Output<Float> crops;
+  private Output<TFloat> crops;
   
   private CropAndResize(Operation operation) {
     super(operation);

@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Produces the average pool of the input tensor for quantized types.
@@ -48,7 +49,7 @@ public final class QuantizedAvgPool<T> extends PrimitiveOp {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedAvgPool
    */
-  public static <T> QuantizedAvgPool<T> create(Scope scope, Operand<T> input, Operand<Float> minInput, Operand<Float> maxInput, List<Long> ksize, List<Long> strides, String padding) {
+  public static <T> QuantizedAvgPool<T> create(Scope scope, Operand<T> input, Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAvgPool", scope.makeOpName("QuantizedAvgPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
@@ -77,20 +78,20 @@ public final class QuantizedAvgPool<T> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<T> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedAvgPool(Operation operation) {
     super(operation);

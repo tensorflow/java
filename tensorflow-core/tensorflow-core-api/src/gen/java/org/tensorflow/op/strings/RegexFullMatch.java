@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TString;
 
 /**
  * Check if the input matches the regex pattern.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
 @Operator(group = "strings")
-public final class RegexFullMatch extends PrimitiveOp implements Operand<Boolean> {
+public final class RegexFullMatch extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new RegexFullMatch operation.
@@ -46,7 +48,7 @@ public final class RegexFullMatch extends PrimitiveOp implements Operand<Boolean
    * @param pattern A scalar string tensor containing the regular expression to match the input.
    * @return a new instance of RegexFullMatch
    */
-  public static RegexFullMatch create(Scope scope, Operand<String> input, Operand<String> pattern) {
+  public static RegexFullMatch create(Scope scope, Operand<TString> input, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexFullMatch", scope.makeOpName("RegexFullMatch"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
@@ -57,16 +59,16 @@ public final class RegexFullMatch extends PrimitiveOp implements Operand<Boolean
   /**
    * A bool tensor with the same shape as `input`.
    */
-  public Output<Boolean> output() {
+  public Output<TBool> output() {
     return output;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return output;
   }
   
-  private Output<Boolean> output;
+  private Output<TBool> output;
   
   private RegexFullMatch(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the absolute value of a tensor.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Abs<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Abs<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Abs operation.
@@ -44,7 +45,7 @@ public final class Abs<T extends Number> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Abs
    */
-  public static <T extends Number> Abs<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Abs<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abs", scope.makeOpName("Abs"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

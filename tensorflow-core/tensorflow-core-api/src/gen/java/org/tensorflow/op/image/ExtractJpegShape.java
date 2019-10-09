@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Extract the shape information of a JPEG-encoded image.
@@ -34,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code imageShape()} output
  */
 @Operator(group = "image")
-public final class ExtractJpegShape<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ExtractJpegShape<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExtractJpegShape operation.
@@ -45,11 +48,11 @@ public final class ExtractJpegShape<T extends Number> extends PrimitiveOp implem
    * Defaults to int32.
    * @return a new instance of ExtractJpegShape
    */
-  public static <T extends Number> ExtractJpegShape<T> create(Scope scope, Operand<String> contents, Class<T> outputType) {
+  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_type", DataType.fromClass(outputType));
+    opBuilder.setAttr("output_type", outputType);
     return new ExtractJpegShape<T>(opBuilder.build());
   }
   
@@ -60,8 +63,8 @@ public final class ExtractJpegShape<T extends Number> extends PrimitiveOp implem
    * @param contents 0-D. The JPEG-encoded image.
    * @return a new instance of ExtractJpegShape
    */
-  public static ExtractJpegShape<Integer> create(Scope scope, Operand<String> contents) {
-    return create(scope, contents, Integer.class);
+  public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
+    return create(scope, contents, TInt32.DTYPE);
   }
   
   /**

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Perform batches of RPC requests.
@@ -135,7 +137,7 @@ public final class TryRpc extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TryRpc
    */
-  public static TryRpc create(Scope scope, Operand<String> address, Operand<String> method, Operand<String> request, Options... options) {
+  public static TryRpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TryRpc", scope.makeOpName("TryRpc"));
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(method.asOutput());
@@ -186,14 +188,14 @@ public final class TryRpc extends PrimitiveOp {
   /**
    * Same shape as `request`. Serialized proto strings: the rpc responses.
    */
-  public Output<String> response() {
+  public Output<TString> response() {
     return response;
   }
   
   /**
    * Same shape as `request`.  Values correspond to tensorflow Status enum codes.
    */
-  public Output<Integer> statusCode() {
+  public Output<TInt32> statusCode() {
     return statusCode;
   }
   
@@ -201,13 +203,13 @@ public final class TryRpc extends PrimitiveOp {
    * Same shape as `request`.  Values correspond to Status messages
    * returned from the RPC calls.
    */
-  public Output<String> statusMessage() {
+  public Output<TString> statusMessage() {
     return statusMessage;
   }
   
-  private Output<String> response;
-  private Output<Integer> statusCode;
-  private Output<String> statusMessage;
+  private Output<TString> response;
+  private Output<TInt32> statusCode;
+  private Output<TString> statusMessage;
   
   private TryRpc(Operation operation) {
     super(operation);

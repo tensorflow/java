@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs a tensor containing the reduction across all input tensors.
@@ -42,7 +43,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code data()} output
  */
-public final class NcclAllReduce<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class NcclAllReduce<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclAllReduce operation.
@@ -54,7 +55,7 @@ public final class NcclAllReduce<T extends Number> extends PrimitiveOp implement
    * @param sharedName 
    * @return a new instance of NcclAllReduce
    */
-  public static <T extends Number> NcclAllReduce<T> create(Scope scope, Operand<T> input, String reduction, Long numDevices, String sharedName) {
+  public static <T extends TNumber> NcclAllReduce<T> create(Scope scope, Operand<T> input, String reduction, Long numDevices, String sharedName) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclAllReduce", scope.makeOpName("NcclAllReduce"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
