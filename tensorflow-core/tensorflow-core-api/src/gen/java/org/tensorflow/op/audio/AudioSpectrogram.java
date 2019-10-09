@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Produces a visualization of audio data over time.
@@ -55,7 +56,7 @@ import org.tensorflow.op.annotation.Operator;
  * resulting spectrogram as a PNG image.
  */
 @Operator(group = "audio")
-public final class AudioSpectrogram extends PrimitiveOp implements Operand<Float> {
+public final class AudioSpectrogram extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.audio.AudioSpectrogram}
@@ -88,7 +89,7 @@ public final class AudioSpectrogram extends PrimitiveOp implements Operand<Float
    * @param options carries optional attributes values
    * @return a new instance of AudioSpectrogram
    */
-  public static AudioSpectrogram create(Scope scope, Operand<Float> input, Long windowSize, Long stride, Options... options) {
+  public static AudioSpectrogram create(Scope scope, Operand<TFloat> input, Long windowSize, Long stride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AudioSpectrogram", scope.makeOpName("AudioSpectrogram"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -115,16 +116,16 @@ public final class AudioSpectrogram extends PrimitiveOp implements Operand<Float
   /**
    * 3D representation of the audio frequencies as an image.
    */
-  public Output<Float> spectrogram() {
+  public Output<TFloat> spectrogram() {
     return spectrogram;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return spectrogram;
   }
   
-  private Output<Float> spectrogram;
+  private Output<TFloat> spectrogram;
   
   private AudioSpectrogram(Operation operation) {
     super(operation);

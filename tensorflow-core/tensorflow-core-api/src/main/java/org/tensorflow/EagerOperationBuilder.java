@@ -17,6 +17,7 @@ package org.tensorflow;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.tensorflow.nio.nd.Shape;
 
 /**
  * An {@link OperationBuilder} for building {@link Operation Operations} that are executed eagerly.
@@ -129,7 +130,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder setAttr(String name, DataType value) {
-    setAttrType(nativeRef.opHandle, name, value.c());
+    setAttrType(nativeRef.opHandle, name, value.nativeCode());
     return this;
   }
 
@@ -137,7 +138,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   public EagerOperationBuilder setAttr(String name, DataType[] values) {
     int[] c = new int[values.length];
     for (int i = 0; i < values.length; ++i) {
-      c[i] = values[i].c();
+      c[i] = values[i].nativeCode();
     }
     setAttrTypeList(nativeRef.opHandle, name, c);
     return this;

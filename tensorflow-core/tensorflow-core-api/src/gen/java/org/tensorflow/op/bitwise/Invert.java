@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Invert (flip) each bit of supported types; for example, type `uint8` value 01010101 becomes 10101010.
@@ -72,7 +73,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "bitwise")
-public final class Invert<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Invert<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Invert operation.
@@ -81,7 +82,7 @@ public final class Invert<T extends Number> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Invert
    */
-  public static <T extends Number> Invert<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

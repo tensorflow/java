@@ -24,11 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  */
 @Operator
-public final class StringUpper extends PrimitiveOp implements Operand<String> {
+public final class StringUpper extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.StringUpper}
@@ -57,7 +58,7 @@ public final class StringUpper extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of StringUpper
    */
-  public static StringUpper create(Scope scope, Operand<String> input, Options... options) {
+  public static StringUpper create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringUpper", scope.makeOpName("StringUpper"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -80,16 +81,16 @@ public final class StringUpper extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private StringUpper(Operation operation) {
     super(operation);

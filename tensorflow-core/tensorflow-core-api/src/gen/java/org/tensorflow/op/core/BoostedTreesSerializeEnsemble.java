@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Serializes the tree ensemble to a proto.
@@ -46,19 +48,19 @@ public final class BoostedTreesSerializeEnsemble extends PrimitiveOp {
   /**
    * Stamp token of the tree ensemble resource.
    */
-  public Output<Long> stampToken() {
+  public Output<TInt64> stampToken() {
     return stampToken;
   }
   
   /**
    * Serialized proto of the ensemble.
    */
-  public Output<String> treeEnsembleSerialized() {
+  public Output<TString> treeEnsembleSerialized() {
     return treeEnsembleSerialized;
   }
   
-  private Output<Long> stampToken;
-  private Output<String> treeEnsembleSerialized;
+  private Output<TInt64> stampToken;
+  private Output<TString> treeEnsembleSerialized;
   
   private BoostedTreesSerializeEnsemble(Operation operation) {
     super(operation);

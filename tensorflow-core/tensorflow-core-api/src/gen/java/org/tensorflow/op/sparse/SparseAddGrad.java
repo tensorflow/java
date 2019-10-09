@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * The gradient operator for the SparseAdd op.
@@ -50,7 +51,7 @@ public final class SparseAddGrad<T> extends PrimitiveOp {
    * `[nnz(sum), ndims]`.
    * @return a new instance of SparseAddGrad
    */
-  public static <T> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<Long> aIndices, Operand<Long> bIndices, Operand<Long> sumIndices) {
+  public static <T> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAddGrad", scope.makeOpName("SparseAddGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(aIndices.asOutput());

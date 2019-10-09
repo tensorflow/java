@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
@@ -45,14 +46,14 @@ public final class QuantizedReluX<U> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedReluX
    */
-  public static <U, T> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<Float> maxValue, Operand<Float> minFeatures, Operand<Float> maxFeatures, Class<U> outType) {
+  public static <U, T> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat> maxValue, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReluX", scope.makeOpName("QuantizedReluX"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(maxValue.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new QuantizedReluX<U>(opBuilder.build());
   }
   
@@ -66,20 +67,20 @@ public final class QuantizedReluX<U> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized value represents.
    */
-  public Output<Float> minActivations() {
+  public Output<TFloat> minActivations() {
     return minActivations;
   }
   
   /**
    * The float value that the highest quantized value represents.
    */
-  public Output<Float> maxActivations() {
+  public Output<TFloat> maxActivations() {
     return maxActivations;
   }
   
   private Output<U> activations;
-  private Output<Float> minActivations;
-  private Output<Float> maxActivations;
+  private Output<TFloat> minActivations;
+  private Output<TFloat> maxActivations;
   
   private QuantizedReluX(Operation operation) {
     super(operation);

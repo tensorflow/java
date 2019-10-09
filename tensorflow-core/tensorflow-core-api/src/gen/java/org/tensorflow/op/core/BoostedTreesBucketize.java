@@ -27,6 +27,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Bucketize each feature based on bucket boundaries.
@@ -34,7 +36,7 @@ import org.tensorflow.op.Scope;
  * An op that returns a list of float tensors, where each tensor represents the
  * bucketized values for a single feature.
  */
-public final class BoostedTreesBucketize extends PrimitiveOp implements Iterable<Operand<Integer>> {
+public final class BoostedTreesBucketize extends PrimitiveOp implements Iterable<Operand<TInt32>> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesBucketize operation.
@@ -45,7 +47,7 @@ public final class BoostedTreesBucketize extends PrimitiveOp implements Iterable
    * feature.
    * @return a new instance of BoostedTreesBucketize
    */
-  public static BoostedTreesBucketize create(Scope scope, Iterable<Operand<Float>> floatValues, Iterable<Operand<Float>> bucketBoundaries) {
+  public static BoostedTreesBucketize create(Scope scope, Iterable<Operand<TFloat>> floatValues, Iterable<Operand<TFloat>> bucketBoundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesBucketize", scope.makeOpName("BoostedTreesBucketize"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));
@@ -56,24 +58,24 @@ public final class BoostedTreesBucketize extends PrimitiveOp implements Iterable
   /**
    * int; List of Rank 1 Tensors each containing the bucketized values for a single feature.
    */
-  public List<Output<Integer>> buckets() {
+  public List<Output<TInt32>> buckets() {
     return buckets;
   }
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Integer>> iterator() {
+  public Iterator<Operand<TInt32>> iterator() {
     return (Iterator) buckets.iterator();
   }
   
-  private List<Output<Integer>> buckets;
+  private List<Output<TInt32>> buckets;
   
   @SuppressWarnings("unchecked")
   private BoostedTreesBucketize(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int bucketsLength = operation.outputListLength("buckets");
-    buckets = Arrays.asList((Output<Integer>[])operation.outputList(outputIdx, bucketsLength));
+    buckets = Arrays.asList((Output<TInt32>[])operation.outputList(outputIdx, bucketsLength));
     outputIdx += bucketsLength;
   }
 }

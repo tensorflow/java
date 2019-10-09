@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Initializes the multi device iterator with the given dataset.
  */
-public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operand<Long> {
+public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorInit operation.
@@ -38,7 +39,7 @@ public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operan
    * @param maxBufferSize The maximum size of the host side per device buffer to keep.
    * @return a new instance of MultiDeviceIteratorInit
    */
-  public static MultiDeviceIteratorInit create(Scope scope, Operand<?> dataset, Operand<?> multiDeviceIterator, Operand<Long> maxBufferSize) {
+  public static MultiDeviceIteratorInit create(Scope scope, Operand<?> dataset, Operand<?> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorInit", scope.makeOpName("MultiDeviceIteratorInit"));
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(multiDeviceIterator.asOutput());
@@ -51,16 +52,16 @@ public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operan
    * An int64 indicating which incarnation of the MultiDeviceIterator
    * is running.
    */
-  public Output<Long> incarnationId() {
+  public Output<TInt64> incarnationId() {
     return incarnationId;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return incarnationId;
   }
   
-  private Output<Long> incarnationId;
+  private Output<TInt64> incarnationId;
   
   private MultiDeviceIteratorInit(Operation operation) {
     super(operation);

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
 
 /**
  * A TPU core selector Op.
@@ -31,7 +32,7 @@ import org.tensorflow.op.Scope;
  * (for regular inference) to execute the TPU program on. The output is
  * consumed by TPUPartitionedCall.
  */
-public final class TPUOrdinalSelector extends PrimitiveOp implements Operand<Integer> {
+public final class TPUOrdinalSelector extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new TPUOrdinalSelector operation.
@@ -48,16 +49,16 @@ public final class TPUOrdinalSelector extends PrimitiveOp implements Operand<Int
   /**
    * A vector 1 or more TPU cores.
    */
-  public Output<Integer> deviceOrdinals() {
+  public Output<TInt32> deviceOrdinals() {
     return deviceOrdinals;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return deviceOrdinals;
   }
   
-  private Output<Integer> deviceOrdinals;
+  private Output<TInt32> deviceOrdinals;
   
   private TPUOrdinalSelector(Operation operation) {
     super(operation);

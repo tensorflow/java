@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softsign: `features / (abs(features) + 1)`.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Softsign<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Softsign<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Softsign operation.
@@ -40,7 +41,7 @@ public final class Softsign<T extends Number> extends PrimitiveOp implements Ope
    * @param features 
    * @return a new instance of Softsign
    */
-  public static <T extends Number> Softsign<T> create(Scope scope, Operand<T> features) {
+  public static <T extends TNumber> Softsign<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softsign", scope.makeOpName("Softsign"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -21,6 +21,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperation} class. */
 @RunWith(JUnit4.class)
@@ -41,15 +43,15 @@ public class EagerOperationTest {
   @Test
   public void outputDataTypeAndShape() {
     try (EagerSession session = EagerSession.create();
-        Tensor<Integer> t = Tensors.create(new int[2][3])) {
+        Tensor<TInt32> t = Tensors.create(new int[2][3])) {
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
-              .setAttr("dtype", DataType.INT32)
+              .setAttr("dtype", TInt32.DTYPE)
               .setAttr("value", t)
               .build();
-      assertEquals(DataType.INT32, op.dtype(0));
-      assertEquals(2, op.shape(0)[0]);
-      assertEquals(3, op.shape(0)[1]);
+      assertEquals(TInt32.DTYPE, op.dtype(0));
+      assertEquals(2, op.shape(0).size(0));
+      assertEquals(3, op.shape(0).size(1));
     }
   }
 
@@ -65,16 +67,16 @@ public class EagerOperationTest {
 
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved
-      assertEquals(0, add.shape(0).length);
-      assertEquals(DataType.INT32, add.dtype(0));
+      assertEquals(0, add.shape(0).numDimensions());
+      assertEquals(TInt32.DTYPE, add.dtype(0));
     }
   }
 
   @Test
   public void inputAndOutputListLengths() {
     try (EagerSession session = EagerSession.create()) {
-      Output<Float> c1 = TestUtil.constant(session, "Const1", new float[] {1f, 2f});
-      Output<Float> c2 = TestUtil.constant(session, "Const2", new float[] {3f, 4f});
+      Output<TFloat> c1 = TestUtil.constant(session, "Const1", new float[] {1f, 2f});
+      Output<TFloat> c2 = TestUtil.constant(session, "Const2", new float[] {3f, 4f});
 
       EagerOperation acc =
           opBuilder(session, "AddN", "InputListLength")
@@ -115,7 +117,7 @@ public class EagerOperationTest {
           opBuilder(session, "UniqueWithCountsV2", "unq")
               .addInput(TestUtil.constant(session, "Const1", new int[] {1, 2, 1}))
               .addInput(TestUtil.constant(session, "Axis", new int[] {0}))
-              .setAttr("out_idx", DataType.INT32)
+              .setAttr("out_idx", TInt32.DTYPE)
               .build();
       assertEquals(3, op.numOutputs());
     }

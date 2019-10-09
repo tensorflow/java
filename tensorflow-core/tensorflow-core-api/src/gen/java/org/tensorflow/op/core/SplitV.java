@@ -27,6 +27,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Splits a tensor into `num_split` tensors along one dimension.
@@ -49,7 +51,7 @@ public final class SplitV<T> extends PrimitiveOp implements Iterable<Operand<T>>
    * @param numSplit 
    * @return a new instance of SplitV
    */
-  public static <T, U extends Number> SplitV<T> create(Scope scope, Operand<T> value, Operand<U> sizeSplits, Operand<Integer> axis, Long numSplit) {
+  public static <T, U extends TNumber> SplitV<T> create(Scope scope, Operand<T> value, Operand<U> sizeSplits, Operand<TInt32> axis, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SplitV", scope.makeOpName("SplitV"));
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(sizeSplits.asOutput());

@@ -25,6 +25,8 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts CudnnRNN params from canonical form to usable form. It supports the projection in LSTM.
@@ -63,7 +65,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code params()} output
  */
 @Operator
-public final class CudnnRNNCanonicalToParamsV2<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class CudnnRNNCanonicalToParamsV2<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.CudnnRNNCanonicalToParamsV2}
@@ -150,7 +152,7 @@ public final class CudnnRNNCanonicalToParamsV2<T extends Number> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNCanonicalToParamsV2
    */
-  public static <T extends Number> CudnnRNNCanonicalToParamsV2<T> create(Scope scope, Operand<Integer> numLayers, Operand<Integer> numUnits, Operand<Integer> inputSize, Iterable<Operand<T>> weights, Iterable<Operand<T>> biases, Options... options) {
+  public static <T extends TNumber> CudnnRNNCanonicalToParamsV2<T> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Iterable<Operand<T>> weights, Iterable<Operand<T>> biases, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNCanonicalToParamsV2", scope.makeOpName("CudnnRNNCanonicalToParamsV2"));
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());

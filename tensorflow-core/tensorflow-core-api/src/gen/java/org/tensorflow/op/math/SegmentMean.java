@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the mean along segments of a tensor.
@@ -66,7 +67,7 @@ public final class SegmentMean<T> extends PrimitiveOp implements Operand<T> {
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMean
    */
-  public static <T, U extends Number> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T, U extends TNumber> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

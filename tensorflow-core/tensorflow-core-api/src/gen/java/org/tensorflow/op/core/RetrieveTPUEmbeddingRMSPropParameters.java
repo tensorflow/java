@@ -22,6 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve RMSProp embedding parameters.
@@ -105,27 +106,27 @@ public final class RetrieveTPUEmbeddingRMSPropParameters extends PrimitiveOp {
   /**
    * Parameter parameters updated by the RMSProp optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   /**
    * Parameter ms updated by the RMSProp optimization algorithm.
    */
-  public Output<Float> ms() {
+  public Output<TFloat> ms() {
     return ms;
   }
   
   /**
    * Parameter mom updated by the RMSProp optimization algorithm.
    */
-  public Output<Float> mom() {
+  public Output<TFloat> mom() {
     return mom;
   }
   
-  private Output<Float> parameters;
-  private Output<Float> ms;
-  private Output<Float> mom;
+  private Output<TFloat> parameters;
+  private Output<TFloat> ms;
+  private Output<TFloat> mom;
   
   private RetrieveTPUEmbeddingRMSPropParameters(Operation operation) {
     super(operation);

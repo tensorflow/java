@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
@@ -31,7 +32,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code r0()} output
  */
-public final class BroadcastGradientArgs<T extends Number> extends PrimitiveOp {
+public final class BroadcastGradientArgs<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new BroadcastGradientArgs operation.
@@ -41,7 +42,7 @@ public final class BroadcastGradientArgs<T extends Number> extends PrimitiveOp {
    * @param s1 
    * @return a new instance of BroadcastGradientArgs
    */
-  public static <T extends Number> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
+  public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());

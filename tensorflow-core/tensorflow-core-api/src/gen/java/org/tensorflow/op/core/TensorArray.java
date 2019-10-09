@@ -22,10 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * An array of Tensors of given size.
@@ -111,11 +113,11 @@ public final class TensorArray extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArray
    */
-  public static <T> TensorArray create(Scope scope, Operand<Integer> size, Class<T> dtype, Options... options) {
+  public static <T> TensorArray create(Scope scope, Operand<TInt32> size, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayV3", scope.makeOpName("TensorArray"));
     opBuilder.addInput(size.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.elementShape != null) {
@@ -195,12 +197,12 @@ public final class TensorArray extends PrimitiveOp {
   /**
    * A scalar used to control gradient flow.
    */
-  public Output<Float> flow() {
+  public Output<TFloat> flow() {
     return flow;
   }
   
   private Output<?> handle;
-  private Output<Float> flow;
+  private Output<TFloat> flow;
   
   private TensorArray(Operation operation) {
     super(operation);

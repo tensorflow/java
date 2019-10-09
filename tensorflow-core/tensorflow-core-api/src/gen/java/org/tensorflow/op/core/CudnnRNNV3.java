@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * A RNN backed by cuDNN.
@@ -67,7 +69,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CudnnRNNV3<T extends Number> extends PrimitiveOp {
+public final class CudnnRNNV3<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.CudnnRNNV3}
@@ -172,7 +174,7 @@ public final class CudnnRNNV3<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNV3
    */
-  public static <T extends Number> CudnnRNNV3<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<Integer> sequenceLengths, Options... options) {
+  public static <T extends TNumber> CudnnRNNV3<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNV3", scope.makeOpName("CudnnRNNV3"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());

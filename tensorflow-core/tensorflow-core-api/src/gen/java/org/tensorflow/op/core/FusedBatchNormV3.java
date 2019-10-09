@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Batch normalization.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code batchMean()} output
  */
 @Operator
-public final class FusedBatchNormV3<T extends Number, U extends Number> extends PrimitiveOp {
+public final class FusedBatchNormV3<T extends TNumber, U extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.FusedBatchNormV3}
@@ -89,7 +90,7 @@ public final class FusedBatchNormV3<T extends Number, U extends Number> extends 
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNormV3
    */
-  public static <T extends Number, U extends Number> FusedBatchNormV3<T, U> create(Scope scope, Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance, Options... options) {
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormV3<T, U> create(Scope scope, Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormV3", scope.makeOpName("FusedBatchNormV3"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());

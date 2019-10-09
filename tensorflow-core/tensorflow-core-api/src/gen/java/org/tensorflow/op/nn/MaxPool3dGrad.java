@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of max pooling function.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPool3dGrad<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class MaxPool3dGrad<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPool3dGrad}
@@ -72,7 +73,7 @@ public final class MaxPool3dGrad<U extends Number> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3dGrad
    */
-  public static <U extends Number, T extends Number> MaxPool3dGrad<U> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <U extends TNumber, T extends TNumber> MaxPool3dGrad<U> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPool3DGrad", scope.makeOpName("MaxPool3dGrad"));
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());

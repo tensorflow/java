@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Return histogram of values.
@@ -48,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code out()} output
  */
 @Operator
-public final class HistogramFixedWidth<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class HistogramFixedWidth<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new HistogramFixedWidth operation.
@@ -62,13 +64,13 @@ public final class HistogramFixedWidth<U extends Number> extends PrimitiveOp imp
    * @param dtype 
    * @return a new instance of HistogramFixedWidth
    */
-  public static <U extends Number, T extends Number> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<Integer> nbins, Class<U> dtype) {
+  public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramFixedWidth", scope.makeOpName("HistogramFixedWidth"));
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(valueRange.asOutput());
     opBuilder.addInput(nbins.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new HistogramFixedWidth<U>(opBuilder.build());
   }
   
@@ -83,8 +85,8 @@ public final class HistogramFixedWidth<U extends Number> extends PrimitiveOp imp
    * @param nbins Scalar `int32 Tensor`.  Number of histogram bins.
    * @return a new instance of HistogramFixedWidth
    */
-  public static <T extends Number> HistogramFixedWidth<Integer> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<Integer> nbins) {
-    return create(scope, values, valueRange, nbins, Integer.class);
+  public static <T extends TNumber> HistogramFixedWidth<TInt32> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins) {
+    return create(scope, values, valueRange, nbins, TInt32.DTYPE);
   }
   
   /**

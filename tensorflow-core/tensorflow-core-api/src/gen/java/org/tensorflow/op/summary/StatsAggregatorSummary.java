@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Produces a summary of any statistics recorded by the given statistics manager.
  */
-public final class StatsAggregatorSummary extends PrimitiveOp implements Operand<String> {
+public final class StatsAggregatorSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new StatsAggregatorSummary operation.
@@ -45,16 +46,16 @@ public final class StatsAggregatorSummary extends PrimitiveOp implements Operand
   
   /**
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private StatsAggregatorSummary(Operation operation) {
     super(operation);

@@ -25,9 +25,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Gets next element for the provided shard number.
@@ -45,7 +47,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp imple
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIteratorGetNextFromShard
    */
-  public static MultiDeviceIteratorGetNextFromShard create(Scope scope, Operand<?> multiDeviceIterator, Operand<Integer> shardNum, Operand<Long> incarnationId, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static MultiDeviceIteratorGetNextFromShard create(Scope scope, Operand<?> multiDeviceIterator, Operand<TInt32> shardNum, Operand<TInt64> incarnationId, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorGetNextFromShard", scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(shardNum.asOutput());
@@ -53,7 +55,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp imple
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

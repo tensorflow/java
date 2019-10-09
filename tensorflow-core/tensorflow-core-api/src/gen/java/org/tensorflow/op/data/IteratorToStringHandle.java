@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Converts the given `resource_handle` representing an iterator to a string.
  */
 @Operator(group = "data")
-public final class IteratorToStringHandle extends PrimitiveOp implements Operand<String> {
+public final class IteratorToStringHandle extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new IteratorToStringHandle operation.
@@ -48,16 +49,16 @@ public final class IteratorToStringHandle extends PrimitiveOp implements Operand
   /**
    * A string representation of the given handle.
    */
-  public Output<String> stringHandle() {
+  public Output<TString> stringHandle() {
     return stringHandle;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return stringHandle;
   }
   
-  private Output<String> stringHandle;
+  private Output<TString> stringHandle;
   
   private IteratorToStringHandle(Operation operation) {
     super(operation);

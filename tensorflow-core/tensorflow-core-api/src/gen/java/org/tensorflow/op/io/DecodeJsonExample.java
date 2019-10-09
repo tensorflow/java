@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Convert JSON-encoded Example records to binary protocol buffer strings.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * Example-parsing ops.
  */
 @Operator(group = "io")
-public final class DecodeJsonExample extends PrimitiveOp implements Operand<String> {
+public final class DecodeJsonExample extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new DecodeJsonExample operation.
@@ -46,7 +47,7 @@ public final class DecodeJsonExample extends PrimitiveOp implements Operand<Stri
    * mapping of the Example proto.
    * @return a new instance of DecodeJsonExample
    */
-  public static DecodeJsonExample create(Scope scope, Operand<String> jsonExamples) {
+  public static DecodeJsonExample create(Scope scope, Operand<TString> jsonExamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJSONExample", scope.makeOpName("DecodeJsonExample"));
     opBuilder.addInput(jsonExamples.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -57,16 +58,16 @@ public final class DecodeJsonExample extends PrimitiveOp implements Operand<Stri
    * Each string is a binary Example protocol buffer corresponding
    * to the respective element of `json_examples`.
    */
-  public Output<String> binaryExamples() {
+  public Output<TString> binaryExamples() {
     return binaryExamples;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return binaryExamples;
   }
   
-  private Output<String> binaryExamples;
+  private Output<TString> binaryExamples;
   
   private DecodeJsonExample(Operation operation) {
     super(operation);

@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -67,10 +67,10 @@ public final class Placeholder<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Placeholder
    */
-  public static <T> Placeholder<T> create(Scope scope, Class<T> dtype, Options... options) {
+  public static <T> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.shape != null) {

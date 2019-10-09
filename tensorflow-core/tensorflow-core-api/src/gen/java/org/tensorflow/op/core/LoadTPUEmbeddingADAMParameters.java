@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Load ADAM embedding parameters.
@@ -74,7 +75,7 @@ public final class LoadTPUEmbeddingADAMParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingADAMParameters
    */
-  public static LoadTPUEmbeddingADAMParameters create(Scope scope, Operand<Float> parameters, Operand<Float> momenta, Operand<Float> velocities, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingADAMParameters create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> momenta, Operand<TFloat> velocities, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingADAMParameters", scope.makeOpName("LoadTPUEmbeddingADAMParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());

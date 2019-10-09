@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Restores a tensor from checkpoint files.
@@ -75,13 +76,13 @@ public final class RestoreSlice<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of RestoreSlice
    */
-  public static <T> RestoreSlice<T> create(Scope scope, Operand<String> filePattern, Operand<String> tensorName, Operand<String> shapeAndSlice, Class<T> dt, Options... options) {
+  public static <T> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());
     opBuilder.addInput(shapeAndSlice.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dt", DataType.fromClass(dt));
+    opBuilder.setAttr("dt", dt);
     if (options != null) {
       for (Options opts : options) {
         if (opts.preferredShard != null) {

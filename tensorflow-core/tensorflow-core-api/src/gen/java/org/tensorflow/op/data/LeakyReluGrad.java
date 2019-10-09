@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear gradients for a LeakyRelu operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class LeakyReluGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LeakyReluGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.LeakyReluGrad}
@@ -60,7 +61,7 @@ public final class LeakyReluGrad<T extends Number> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of LeakyReluGrad
    */
-  public static <T extends Number> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features, Options... options) {
+  public static <T extends TNumber> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyReluGrad", scope.makeOpName("LeakyReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());

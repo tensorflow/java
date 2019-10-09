@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * String lengths of `input`.
@@ -31,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * Computes the length of each string given in the input tensor.
  */
 @Operator(group = "strings")
-public final class StringLength extends PrimitiveOp implements Operand<Integer> {
+public final class StringLength extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StringLength}
@@ -64,7 +66,7 @@ public final class StringLength extends PrimitiveOp implements Operand<Integer> 
    * @param options carries optional attributes values
    * @return a new instance of StringLength
    */
-  public static StringLength create(Scope scope, Operand<String> input, Options... options) {
+  public static StringLength create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLength", scope.makeOpName("StringLength"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -93,16 +95,16 @@ public final class StringLength extends PrimitiveOp implements Operand<Integer> 
    * Integer tensor that has the same shape as `input`. The output contains the
    * element-wise string lengths of `input`.
    */
-  public Output<Integer> output() {
+  public Output<TInt32> output() {
     return output;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return output;
   }
   
-  private Output<Integer> output;
+  private Output<TInt32> output;
   
   private StringLength(Operation operation) {
     super(operation);

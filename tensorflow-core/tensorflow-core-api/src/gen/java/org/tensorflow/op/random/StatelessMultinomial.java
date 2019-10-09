@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Draws samples from a multinomial distribution.
@@ -32,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessMultinomial<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class StatelessMultinomial<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessMultinomial operation.
@@ -45,13 +48,13 @@ public final class StatelessMultinomial<V extends Number> extends PrimitiveOp im
    * @param outputDtype 
    * @return a new instance of StatelessMultinomial
    */
-  public static <V extends Number, T extends Number, U extends Number> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<Integer> numSamples, Operand<U> seed, Class<V> outputDtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_dtype", DataType.fromClass(outputDtype));
+    opBuilder.setAttr("output_dtype", outputDtype);
     return new StatelessMultinomial<V>(opBuilder.build());
   }
   
@@ -65,8 +68,8 @@ public final class StatelessMultinomial<V extends Number> extends PrimitiveOp im
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessMultinomial
    */
-  public static <T extends Number, U extends Number> StatelessMultinomial<Long> create(Scope scope, Operand<T> logits, Operand<Integer> numSamples, Operand<U> seed) {
-    return create(scope, logits, numSamples, seed, Long.class);
+  public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
+    return create(scope, logits, numSamples, seed, TInt64.DTYPE);
   }
   
   /**

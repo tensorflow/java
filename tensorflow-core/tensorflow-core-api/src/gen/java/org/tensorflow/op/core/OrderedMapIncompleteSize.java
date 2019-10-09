@@ -26,12 +26,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Op returns the number of incomplete elements in the underlying container.
  */
 @Operator
-public final class OrderedMapIncompleteSize extends PrimitiveOp implements Operand<Integer> {
+public final class OrderedMapIncompleteSize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.OrderedMapIncompleteSize}
@@ -87,12 +88,12 @@ public final class OrderedMapIncompleteSize extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapIncompleteSize
    */
-  public static OrderedMapIncompleteSize create(Scope scope, List<Class<?>> dtypes, Options... options) {
+  public static OrderedMapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapIncompleteSize", scope.makeOpName("OrderedMapIncompleteSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {
@@ -144,16 +145,16 @@ public final class OrderedMapIncompleteSize extends PrimitiveOp implements Opera
   
   /**
    */
-  public Output<Integer> size() {
+  public Output<TInt32> size() {
     return size;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return size;
   }
   
-  private Output<Integer> size;
+  private Output<TInt32> size;
   
   private OrderedMapIncompleteSize(Operation operation) {
     super(operation);

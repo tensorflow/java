@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom random values from a uniform distribution.
@@ -37,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessRandomUniform<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class StatelessRandomUniform<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomUniform operation.
@@ -48,12 +50,12 @@ public final class StatelessRandomUniform<V extends Number> extends PrimitiveOp 
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomUniform
    */
-  public static <V extends Number, T extends Number, U extends Number> StatelessRandomUniform<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomUniform<V>(opBuilder.build());
   }
   
@@ -65,8 +67,8 @@ public final class StatelessRandomUniform<V extends Number> extends PrimitiveOp 
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomUniform
    */
-  public static <T extends Number, U extends Number> StatelessRandomUniform<Float> create(Scope scope, Operand<T> shape, Operand<U> seed) {
-    return create(scope, shape, seed, Float.class);
+  public static <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+    return create(scope, shape, seed, TFloat.DTYPE);
   }
   
   /**

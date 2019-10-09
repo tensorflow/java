@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TString;
 
 /**
  * Outputs a `Summary` protocol buffer with audio.
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  *    generated sequentially as '<i>tag</i>/audio/0', '<i>tag</i>/audio/1', etc.
  */
 @Operator(group = "summary")
-public final class AudioSummary extends PrimitiveOp implements Operand<String> {
+public final class AudioSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.summary.AudioSummary}
@@ -75,7 +77,7 @@ public final class AudioSummary extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of AudioSummary
    */
-  public static AudioSummary create(Scope scope, Operand<String> tag, Operand<Float> tensor, Operand<Float> sampleRate, Options... options) {
+  public static AudioSummary create(Scope scope, Operand<TString> tag, Operand<TFloat> tensor, Operand<TFloat> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AudioSummaryV2", scope.makeOpName("AudioSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -101,16 +103,16 @@ public final class AudioSummary extends PrimitiveOp implements Operand<String> {
   /**
    * Scalar. Serialized `Summary` protocol buffer.
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private AudioSummary(Operation operation) {
     super(operation);

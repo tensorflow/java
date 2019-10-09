@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -59,13 +60,13 @@ public final class IteratorFromStringHandle extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of IteratorFromStringHandle
    */
-  public static IteratorFromStringHandle create(Scope scope, Operand<String> stringHandle, List<Class<?>> outputTypes, Options... options) {
+  public static IteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorFromStringHandleV2", scope.makeOpName("IteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     if (options != null) {

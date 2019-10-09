@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Applies softmax to a batched N-D `SparseTensor`.
@@ -47,7 +49,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSoftmax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class SparseSoftmax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSoftmax operation.
@@ -59,7 +61,7 @@ public final class SparseSoftmax<T extends Number> extends PrimitiveOp implement
    * @param spShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseSoftmax
    */
-  public static <T extends Number> SparseSoftmax<T> create(Scope scope, Operand<Long> spIndices, Operand<T> spValues, Operand<Long> spShape) {
+  public static <T extends TNumber> SparseSoftmax<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmax", scope.makeOpName("SparseSoftmax"));
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());

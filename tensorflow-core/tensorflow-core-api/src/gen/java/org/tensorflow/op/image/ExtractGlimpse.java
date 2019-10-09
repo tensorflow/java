@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Extracts a glimpse from the input tensor.
@@ -56,7 +58,7 @@ import org.tensorflow.op.annotation.Operator;
  *   numbers of pixels.
  */
 @Operator(group = "image")
-public final class ExtractGlimpse extends PrimitiveOp implements Operand<Float> {
+public final class ExtractGlimpse extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ExtractGlimpse}
@@ -123,7 +125,7 @@ public final class ExtractGlimpse extends PrimitiveOp implements Operand<Float> 
    * @param options carries optional attributes values
    * @return a new instance of ExtractGlimpse
    */
-  public static ExtractGlimpse create(Scope scope, Operand<Float> input, Operand<Integer> size, Operand<Float> offsets, Options... options) {
+  public static ExtractGlimpse create(Scope scope, Operand<TFloat> input, Operand<TInt32> size, Operand<TFloat> offsets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpse", scope.makeOpName("ExtractGlimpse"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -186,16 +188,16 @@ public final class ExtractGlimpse extends PrimitiveOp implements Operand<Float> 
    * A tensor representing the glimpses `[batch_size,
    * glimpse_height, glimpse_width, channels]`.
    */
-  public Output<Float> glimpse() {
+  public Output<TFloat> glimpse() {
     return glimpse;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return glimpse;
   }
   
-  private Output<Float> glimpse;
+  private Output<TFloat> glimpse;
   
   private ExtractGlimpse(Operation operation) {
     super(operation);

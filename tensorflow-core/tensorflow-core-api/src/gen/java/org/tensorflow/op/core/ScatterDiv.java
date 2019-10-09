@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Divides a variable reference by sparse updates.
@@ -82,7 +83,7 @@ public final class ScatterDiv<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ScatterDiv
    */
-  public static <T, U extends Number> ScatterDiv<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T, U extends TNumber> ScatterDiv<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterDiv", scope.makeOpName("ScatterDiv"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reshapes a quantized tensor as per the Reshape op.
@@ -45,7 +47,7 @@ public final class QuantizedReshape<T> extends PrimitiveOp {
    * @param inputMax The maximum value of the input.
    * @return a new instance of QuantizedReshape
    */
-  public static <T, U extends Number> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<Float> inputMin, Operand<Float> inputMax) {
+  public static <T, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());
@@ -64,20 +66,20 @@ public final class QuantizedReshape<T> extends PrimitiveOp {
   /**
    * This value is copied from input_min.
    */
-  public Output<Float> outputMin() {
+  public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
    * This value is copied from input_max.
    */
-  public Output<Float> outputMax() {
+  public Output<TFloat> outputMax() {
     return outputMax;
   }
   
   private Output<T> output;
-  private Output<Float> outputMin;
-  private Output<Float> outputMax;
+  private Output<TFloat> outputMin;
+  private Output<TFloat> outputMax;
   
   private QuantizedReshape(Operation operation) {
     super(operation);

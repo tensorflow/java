@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Return the shape of s0 op s1 with broadcast.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code r0()} output
  */
 @Operator
-public final class BroadcastDynamicShape<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BroadcastDynamicShape<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BroadcastDynamicShape operation.
@@ -44,7 +45,7 @@ public final class BroadcastDynamicShape<T extends Number> extends PrimitiveOp i
    * @param s1 
    * @return a new instance of BroadcastDynamicShape
    */
-  public static <T extends Number> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
+  public static <T extends TNumber> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastArgs", scope.makeOpName("BroadcastDynamicShape"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());

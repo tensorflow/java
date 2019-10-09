@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Resizes the list.
@@ -44,7 +45,7 @@ public final class TensorListResize extends PrimitiveOp implements Operand<Objec
    * @param size 
    * @return a new instance of TensorListResize
    */
-  public static TensorListResize create(Scope scope, Operand<?> inputHandle, Operand<Integer> size) {
+  public static TensorListResize create(Scope scope, Operand<?> inputHandle, Operand<TInt32> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListResize", scope.makeOpName("TensorListResize"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(size.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Creates a TensorArray for storing multiple gradients of values in the given handle.
@@ -49,7 +51,7 @@ public final class TensorArrayGradWithShape extends PrimitiveOp {
    * to return.
    * @return a new instance of TensorArrayGradWithShape
    */
-  public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<Float> flowIn, Operand<Integer> shapeToPrepend, String source) {
+  public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn, Operand<TInt32> shapeToPrepend, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradWithShape", scope.makeOpName("TensorArrayGradWithShape"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -67,12 +69,12 @@ public final class TensorArrayGradWithShape extends PrimitiveOp {
   
   /**
    */
-  public Output<Float> flowOut() {
+  public Output<TFloat> flowOut() {
     return flowOut;
   }
   
   private Output<?> gradHandle;
-  private Output<Float> flowOut;
+  private Output<TFloat> flowOut;
   
   private TensorArrayGradWithShape(Operation operation) {
     super(operation);

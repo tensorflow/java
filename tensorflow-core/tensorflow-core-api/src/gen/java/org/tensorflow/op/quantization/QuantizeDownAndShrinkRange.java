@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Convert the quantized 'input' tensor into a lower-precision 'output', using the
@@ -67,13 +68,13 @@ public final class QuantizeDownAndShrinkRange<U> extends PrimitiveOp {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of QuantizeDownAndShrinkRange
    */
-  public static <U, T> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<Float> inputMin, Operand<Float> inputMax, Class<U> outType) {
+  public static <U, T> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new QuantizeDownAndShrinkRange<U>(opBuilder.build());
   }
   
@@ -86,20 +87,20 @@ public final class QuantizeDownAndShrinkRange<U> extends PrimitiveOp {
   /**
    * The float value that the minimum quantized output value represents.
    */
-  public Output<Float> outputMin() {
+  public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
    * The float value that the maximum quantized output value represents.
    */
-  public Output<Float> outputMax() {
+  public Output<TFloat> outputMax() {
     return outputMax;
   }
   
   private Output<U> output;
-  private Output<Float> outputMin;
-  private Output<Float> outputMax;
+  private Output<TFloat> outputMin;
+  private Output<TFloat> outputMax;
   
   private QuantizeDownAndShrinkRange(Operation operation) {
     super(operation);

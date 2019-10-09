@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Concatenates a list of `SparseTensor` along the specified dimension.
@@ -87,7 +88,7 @@ public final class SparseConcat<T> extends PrimitiveOp {
    * where rank is the number of dimensions in each input `SparseTensor`.
    * @return a new instance of SparseConcat
    */
-  public static <T> SparseConcat<T> create(Scope scope, Iterable<Operand<Long>> indices, Iterable<Operand<T>> values, Iterable<Operand<Long>> shapes, Long concatDim) {
+  public static <T> SparseConcat<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
@@ -100,7 +101,7 @@ public final class SparseConcat<T> extends PrimitiveOp {
   /**
    * 2-D.  Indices of the concatenated `SparseTensor`.
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -114,13 +115,13 @@ public final class SparseConcat<T> extends PrimitiveOp {
   /**
    * 1-D.  Shape of the concatenated `SparseTensor`.
    */
-  public Output<Long> outputShape() {
+  public Output<TInt64> outputShape() {
     return outputShape;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
-  private Output<Long> outputShape;
+  private Output<TInt64> outputShape;
   
   private SparseConcat(Operation operation) {
     super(operation);

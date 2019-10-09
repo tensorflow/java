@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -38,7 +39,7 @@ public final class CreateSummaryDbWriter extends PrimitiveOp {
    * @param userName 
    * @return a new instance of CreateSummaryDbWriter
    */
-  public static CreateSummaryDbWriter create(Scope scope, Operand<?> writer, Operand<String> dbUri, Operand<String> experimentName, Operand<String> runName, Operand<String> userName) {
+  public static CreateSummaryDbWriter create(Scope scope, Operand<?> writer, Operand<TString> dbUri, Operand<TString> experimentName, Operand<TString> runName, Operand<TString> userName) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryDbWriter", scope.makeOpName("CreateSummaryDbWriter"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(dbUri.asOutput());

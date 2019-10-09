@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Joins the elements of `inputs` based on `segment_ids`.
@@ -56,7 +58,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<String> {
+public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.UnsortedSegmentJoin}
@@ -88,7 +90,7 @@ public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<St
    * @param options carries optional attributes values
    * @return a new instance of UnsortedSegmentJoin
    */
-  public static <T extends Number, U extends Number> UnsortedSegmentJoin create(Scope scope, Operand<String> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
+  public static <T extends TNumber, U extends TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
@@ -113,16 +115,16 @@ public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<St
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private UnsortedSegmentJoin(Operation operation) {
     super(operation);

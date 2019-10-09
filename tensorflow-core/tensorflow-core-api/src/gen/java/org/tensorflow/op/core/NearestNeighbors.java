@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Selects the k nearest centers for each point.
@@ -43,7 +45,7 @@ public final class NearestNeighbors extends PrimitiveOp {
    * only m centers are returned.
    * @return a new instance of NearestNeighbors
    */
-  public static NearestNeighbors create(Scope scope, Operand<Float> points, Operand<Float> centers, Operand<Long> k) {
+  public static NearestNeighbors create(Scope scope, Operand<TFloat> points, Operand<TFloat> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
     opBuilder.addInput(points.asOutput());
     opBuilder.addInput(centers.asOutput());
@@ -56,7 +58,7 @@ public final class NearestNeighbors extends PrimitiveOp {
    * Matrix of shape (n, min(m, k)). Each row contains the indices of the centers
    * closest to the corresponding point, ordered by increasing distance.
    */
-  public Output<Long> nearestCenterIndices() {
+  public Output<TInt64> nearestCenterIndices() {
     return nearestCenterIndices;
   }
   
@@ -64,12 +66,12 @@ public final class NearestNeighbors extends PrimitiveOp {
    * Matrix of shape (n, min(m, k)). Each row contains the squared L2 distance to the
    * corresponding center in nearest_center_indices.
    */
-  public Output<Float> nearestCenterDistances() {
+  public Output<TFloat> nearestCenterDistances() {
     return nearestCenterDistances;
   }
   
-  private Output<Long> nearestCenterIndices;
-  private Output<Float> nearestCenterDistances;
+  private Output<TInt64> nearestCenterIndices;
+  private Output<TFloat> nearestCenterDistances;
   
   private NearestNeighbors(Operation operation) {
     super(operation);

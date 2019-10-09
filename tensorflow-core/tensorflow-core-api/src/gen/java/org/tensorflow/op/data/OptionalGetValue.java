@@ -25,7 +25,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -45,13 +45,13 @@ public final class OptionalGetValue extends PrimitiveOp implements Iterable<Oper
    * @param outputShapes 
    * @return a new instance of OptionalGetValue
    */
-  public static OptionalGetValue create(Scope scope, Operand<?> optional, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static OptionalGetValue create(Scope scope, Operand<?> optional, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
     opBuilder.addInput(optional.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

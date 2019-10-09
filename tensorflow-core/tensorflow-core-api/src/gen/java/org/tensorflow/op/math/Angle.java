@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the argument of a complex number.
@@ -48,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class Angle<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class Angle<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Angle operation.
@@ -58,11 +60,11 @@ public final class Angle<U extends Number> extends PrimitiveOp implements Operan
    * @param Tout 
    * @return a new instance of Angle
    */
-  public static <U extends Number, T> Angle<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
+  public static <U extends TNumber, T> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tout", DataType.fromClass(Tout));
+    opBuilder.setAttr("Tout", Tout);
     return new Angle<U>(opBuilder.build());
   }
   
@@ -73,8 +75,8 @@ public final class Angle<U extends Number> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Angle
    */
-  public static <T> Angle<Float> create(Scope scope, Operand<T> input) {
-    return create(scope, input, Float.class);
+  public static <T> Angle<TFloat> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TFloat.DTYPE);
   }
   
   /**

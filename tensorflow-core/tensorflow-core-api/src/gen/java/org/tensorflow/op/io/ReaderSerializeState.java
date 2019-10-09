@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Produce a string tensor that encodes the state of a Reader.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * Unimplemented error.
  */
 @Operator(group = "io")
-public final class ReaderSerializeState extends PrimitiveOp implements Operand<String> {
+public final class ReaderSerializeState extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new ReaderSerializeState operation.
@@ -50,16 +51,16 @@ public final class ReaderSerializeState extends PrimitiveOp implements Operand<S
   
   /**
    */
-  public Output<String> state() {
+  public Output<TString> state() {
     return state;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return state;
   }
   
-  private Output<String> state;
+  private Output<TString> state;
   
   private ReaderSerializeState(Operation operation) {
     super(operation);

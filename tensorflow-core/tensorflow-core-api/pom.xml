@@ -27,6 +27,11 @@
       <optional>true</optional> <!-- for compilation only -->
     </dependency>
     <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>nio-utils</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -71,10 +76,6 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
         <executions>
           <execution>
             <id>default-compile</id>
@@ -94,7 +95,7 @@
             </goals>
             <configuration>
               <includes>
-                <include>org/tensorflow/c_api/presets/*.java</include>
+                <include>org/tensorflow/internal/c_api/presets/*.java</include>
               </includes>
             </configuration>
           </execution>
@@ -145,6 +146,7 @@
             <compilerOption>${project.basedir}/src/main/native/server_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/session_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/tensorflow_jni.cc</compilerOption>
+            <compilerOption>${project.basedir}/src/main/native/tensor_buffers_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/tensor_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/utils_jni.cc</compilerOption>
           </compilerOptions>
@@ -199,7 +201,7 @@
             <configuration>
               <skip>${javacpp.parser.skip}</skip>
               <outputDirectory>${project.basedir}/src/gen/java</outputDirectory>
-              <classOrPackageName>org.tensorflow.c_api.presets.*</classOrPackageName>
+              <classOrPackageName>org.tensorflow.internal.c_api.presets.*</classOrPackageName>
             </configuration>
           </execution>
           <execution>
@@ -209,9 +211,9 @@
               <goal>build</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/native/org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/</outputDirectory>
+              <outputDirectory>${project.build.directory}/native/org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/</outputDirectory>
               <skip>${javacpp.compiler.skip}</skip>
-              <classOrPackageName>org.tensorflow.c_api.**</classOrPackageName>
+              <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
               <copyLibs>true</copyLibs>
               <copyResources>true</copyResources>
             </configuration>
@@ -222,6 +224,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
         <configuration>
+          <argLine>
+            -Djava.library.path=${project.build.directory}/native/org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}
+          </argLine>
           <additionalClasspathElements>${project.build.directory}/native/</additionalClasspathElements>
         </configuration>
       </plugin>
@@ -254,16 +259,16 @@
                 <!-- In case of successive builds for multiple platforms
                      without cleaning, ensures we only include files for
                      this platform. -->
-                <include>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/</include>
+                <include>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/</include>
               </includes>
               <classesDirectory>${project.build.directory}/native</classesDirectory>
               <excludes>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*.exp</exclude>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*.lib</exclude>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*.obj</exclude>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*mklml*</exclude>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*iomp5*</exclude>
-                <exclude>org/tensorflow/c_api/${javacpp.platform}${javacpp.platform.extension}/*msvcr120*</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*.exp</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*.lib</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*.obj</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*mklml*</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*iomp5*</exclude>
+                <exclude>org/tensorflow/internal/c_api/${javacpp.platform}${javacpp.platform.extension}/*msvcr120*</exclude>
               </excludes>
             </configuration>
           </execution>

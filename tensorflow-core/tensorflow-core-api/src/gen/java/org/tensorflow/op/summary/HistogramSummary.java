@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs a `Summary` protocol buffer with a histogram.
@@ -35,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * This op reports an `InvalidArgument` error if any value is not finite.
  */
 @Operator(group = "summary")
-public final class HistogramSummary extends PrimitiveOp implements Operand<String> {
+public final class HistogramSummary extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new HistogramSummary operation.
@@ -45,7 +47,7 @@ public final class HistogramSummary extends PrimitiveOp implements Operand<Strin
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
-  public static <T extends Number> HistogramSummary create(Scope scope, Operand<String> tag, Operand<T> values) {
+  public static <T extends TNumber> HistogramSummary create(Scope scope, Operand<TString> tag, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramSummary", scope.makeOpName("HistogramSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -56,16 +58,16 @@ public final class HistogramSummary extends PrimitiveOp implements Operand<Strin
   /**
    * Scalar. Serialized `Summary` protocol buffer.
    */
-  public Output<String> summary() {
+  public Output<TString> summary() {
     return summary;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return summary;
   }
   
-  private Output<String> summary;
+  private Output<TString> summary;
   
   private HistogramSummary(Operation operation) {
     super(operation);

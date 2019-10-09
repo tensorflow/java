@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Resize `images` to `size` using bicubic interpolation.
@@ -31,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * Input images can be of different types but output images are always float.
  */
 @Operator(group = "image")
-public final class ResizeBicubic extends PrimitiveOp implements Operand<Float> {
+public final class ResizeBicubic extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeBicubic}
@@ -72,7 +75,7 @@ public final class ResizeBicubic extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of ResizeBicubic
    */
-  public static <T extends Number> ResizeBicubic create(Scope scope, Operand<T> images, Operand<Integer> size, Options... options) {
+  public static <T extends TNumber> ResizeBicubic create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubic", scope.makeOpName("ResizeBicubic"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -109,16 +112,16 @@ public final class ResizeBicubic extends PrimitiveOp implements Operand<Float> {
    * 4-D with shape
    * `[batch, new_height, new_width, channels]`.
    */
-  public Output<Float> resizedImages() {
+  public Output<TFloat> resizedImages() {
     return resizedImages;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return resizedImages;
   }
   
-  private Output<Float> resizedImages;
+  private Output<TFloat> resizedImages;
   
   private ResizeBicubic(Operation operation) {
     super(operation);

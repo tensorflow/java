@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the cumulative sum of the tensor `x` along `axis`.
@@ -96,7 +97,7 @@ public final class Cumsum<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Cumsum
    */
-  public static <T, U extends Number> Cumsum<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
+  public static <T, U extends TNumber> Cumsum<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumsum", scope.makeOpName("Cumsum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());

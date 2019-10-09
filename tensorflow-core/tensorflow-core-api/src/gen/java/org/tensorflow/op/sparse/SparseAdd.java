@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adds two `SparseTensor` objects to produce another `SparseTensor`.
@@ -61,7 +63,7 @@ public final class SparseAdd<T> extends PrimitiveOp {
    * pair takes space.
    * @return a new instance of SparseAdd
    */
-  public static <T, U extends Number> SparseAdd<T> create(Scope scope, Operand<Long> aIndices, Operand<T> aValues, Operand<Long> aShape, Operand<Long> bIndices, Operand<T> bValues, Operand<Long> bShape, Operand<U> thresh) {
+  public static <T, U extends TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAdd", scope.makeOpName("SparseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
@@ -76,7 +78,7 @@ public final class SparseAdd<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> sumIndices() {
+  public Output<TInt64> sumIndices() {
     return sumIndices;
   }
   
@@ -88,13 +90,13 @@ public final class SparseAdd<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> sumShape() {
+  public Output<TInt64> sumShape() {
     return sumShape;
   }
   
-  private Output<Long> sumIndices;
+  private Output<TInt64> sumIndices;
   private Output<T> sumValues;
-  private Output<Long> sumShape;
+  private Output<TInt64> sumShape;
   
   private SparseAdd(Operation operation) {
     super(operation);

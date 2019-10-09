@@ -24,7 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * Decode and Crop a JPEG-encoded image to a uint8 tensor.
@@ -55,7 +57,7 @@ import org.tensorflow.types.UInt8;
  * decoding partial jpeg image.
  */
 @Operator(group = "image")
-public final class DecodeAndCropJpeg extends PrimitiveOp implements Operand<UInt8> {
+public final class DecodeAndCropJpeg extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeAndCropJpeg}
@@ -137,7 +139,7 @@ public final class DecodeAndCropJpeg extends PrimitiveOp implements Operand<UInt
    * @param options carries optional attributes values
    * @return a new instance of DecodeAndCropJpeg
    */
-  public static DecodeAndCropJpeg create(Scope scope, Operand<String> contents, Operand<Integer> cropWindow, Options... options) {
+  public static DecodeAndCropJpeg create(Scope scope, Operand<TString> contents, Operand<TInt32> cropWindow, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeAndCropJpeg", scope.makeOpName("DecodeAndCropJpeg"));
     opBuilder.addInput(contents.asOutput());
     opBuilder.addInput(cropWindow.asOutput());
@@ -219,16 +221,16 @@ public final class DecodeAndCropJpeg extends PrimitiveOp implements Operand<UInt
   /**
    * 3-D with shape `[height, width, channels]`..
    */
-  public Output<UInt8> image() {
+  public Output<TUInt8> image() {
     return image;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return image;
   }
   
-  private Output<UInt8> image;
+  private Output<TUInt8> image;
   
   private DecodeAndCropJpeg(Operation operation) {
     super(operation);

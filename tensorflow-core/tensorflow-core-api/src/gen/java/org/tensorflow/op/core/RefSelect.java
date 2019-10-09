@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Forwards the `index`th element of `inputs` to `output`.
@@ -42,7 +43,7 @@ public final class RefSelect<T> extends PrimitiveOp implements Operand<T> {
    * @param inputs A list of ref tensors, one of which will be forwarded to `output`.
    * @return a new instance of RefSelect
    */
-  public static <T> RefSelect<T> create(Scope scope, Operand<Integer> index, Iterable<Operand<T>> inputs) {
+  public static <T> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
     opBuilder.addInput(index.asOutput());
     opBuilder.addInputList(Operands.asOutputs(inputs));

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the pairwise cross product.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code product()} output
  */
 @Operator(group = "linalg")
-public final class Cross<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Cross<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Cross operation.
@@ -45,7 +46,7 @@ public final class Cross<T extends Number> extends PrimitiveOp implements Operan
    * @param b Another tensor, of same type and shape as `a`.
    * @return a new instance of Cross
    */
-  public static <T extends Number> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
+  public static <T extends TNumber> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cross", scope.makeOpName("Cross"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

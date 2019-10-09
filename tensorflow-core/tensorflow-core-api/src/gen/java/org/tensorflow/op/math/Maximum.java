@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the max of x and y (i.e. x > y ? x : y) element-wise.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Maximum<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Maximum<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Maximum operation.
@@ -44,7 +45,7 @@ public final class Maximum<T extends Number> extends PrimitiveOp implements Oper
    * @param y 
    * @return a new instance of Maximum
    */
-  public static <T extends Number> Maximum<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> Maximum<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Maximum", scope.makeOpName("Maximum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

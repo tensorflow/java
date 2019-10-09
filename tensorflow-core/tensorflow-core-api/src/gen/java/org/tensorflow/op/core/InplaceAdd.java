@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  *     Adds v into specified rows of x.
@@ -44,7 +45,7 @@ public final class InplaceAdd<T> extends PrimitiveOp implements Operand<T> {
    * @param v A `Tensor` of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
    * @return a new instance of InplaceAdd
    */
-  public static <T> InplaceAdd<T> create(Scope scope, Operand<T> x, Operand<Integer> i, Operand<T> v) {
+  public static <T> InplaceAdd<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceAdd", scope.makeOpName("InplaceAdd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());

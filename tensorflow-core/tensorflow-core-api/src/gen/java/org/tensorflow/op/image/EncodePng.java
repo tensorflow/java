@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * PNG-encode an image.
@@ -49,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * the smallest output, but is slower.
  */
 @Operator(group = "image")
-public final class EncodePng extends PrimitiveOp implements Operand<String> {
+public final class EncodePng extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.EncodePng}
@@ -78,7 +80,7 @@ public final class EncodePng extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of EncodePng
    */
-  public static <T extends Number> EncodePng create(Scope scope, Operand<T> image, Options... options) {
+  public static <T extends TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
     opBuilder.addInput(image.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -102,16 +104,16 @@ public final class EncodePng extends PrimitiveOp implements Operand<String> {
   /**
    * 0-D. PNG-encoded image.
    */
-  public Output<String> contents() {
+  public Output<TString> contents() {
     return contents;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return contents;
   }
   
-  private Output<String> contents;
+  private Output<TString> contents;
   
   private EncodePng(Operation operation) {
     super(operation);

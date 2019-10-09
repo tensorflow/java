@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs fractional average pooling on the input.
@@ -37,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class FractionalAvgPool<T extends Number> extends PrimitiveOp {
+public final class FractionalAvgPool<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FractionalAvgPool}
@@ -123,7 +125,7 @@ public final class FractionalAvgPool<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FractionalAvgPool
    */
-  public static <T extends Number> FractionalAvgPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
+  public static <T extends TNumber> FractionalAvgPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPool", scope.makeOpName("FractionalAvgPool"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -214,20 +216,20 @@ public final class FractionalAvgPool<T extends Number> extends PrimitiveOp {
   /**
    * row pooling sequence, needed to calculate gradient.
    */
-  public Output<Long> rowPoolingSequence() {
+  public Output<TInt64> rowPoolingSequence() {
     return rowPoolingSequence;
   }
   
   /**
    * column pooling sequence, needed to calculate gradient.
    */
-  public Output<Long> colPoolingSequence() {
+  public Output<TInt64> colPoolingSequence() {
     return colPoolingSequence;
   }
   
   private Output<T> output;
-  private Output<Long> rowPoolingSequence;
-  private Output<Long> colPoolingSequence;
+  private Output<TInt64> rowPoolingSequence;
+  private Output<TInt64> colPoolingSequence;
   
   private FractionalAvgPool(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the product along segments of a tensor.
@@ -65,7 +66,7 @@ public final class SegmentProd<T> extends PrimitiveOp implements Operand<T> {
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentProd
    */
-  public static <T, U extends Number> SegmentProd<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T, U extends TNumber> SegmentProd<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentProd", scope.makeOpName("SegmentProd"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

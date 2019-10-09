@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Applies sparse subtraction to individual values or slices in a Variable.
@@ -93,7 +94,7 @@ public final class ResourceScatterNdSub extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdSub
    */
-  public static <T extends Number, U> ResourceScatterNdSub create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
+  public static <T extends TNumber, U> ResourceScatterNdSub create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdSub", scope.makeOpName("ResourceScatterNdSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

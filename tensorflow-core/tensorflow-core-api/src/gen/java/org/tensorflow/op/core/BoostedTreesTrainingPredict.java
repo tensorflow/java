@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Runs multiple additive regression ensemble predictors on input instances and
@@ -49,7 +51,7 @@ public final class BoostedTreesTrainingPredict extends PrimitiveOp {
    * shape.
    * @return a new instance of BoostedTreesTrainingPredict
    */
-  public static BoostedTreesTrainingPredict create(Scope scope, Operand<?> treeEnsembleHandle, Operand<Integer> cachedTreeIds, Operand<Integer> cachedNodeIds, Iterable<Operand<Integer>> bucketizedFeatures, Long logitsDimension) {
+  public static BoostedTreesTrainingPredict create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> cachedTreeIds, Operand<TInt32> cachedNodeIds, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesTrainingPredict", scope.makeOpName("BoostedTreesTrainingPredict"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(cachedTreeIds.asOutput());
@@ -64,27 +66,27 @@ public final class BoostedTreesTrainingPredict extends PrimitiveOp {
    * Rank 2 Tensor containing logits update (with respect to cached
    * values stored) for each example.
    */
-  public Output<Float> partialLogits() {
+  public Output<TFloat> partialLogits() {
     return partialLogits;
   }
   
   /**
    * Rank 1 Tensor containing new tree ids for each example.
    */
-  public Output<Integer> treeIds() {
+  public Output<TInt32> treeIds() {
     return treeIds;
   }
   
   /**
    * Rank 1 Tensor containing new node ids in the new tree_ids.
    */
-  public Output<Integer> nodeIds() {
+  public Output<TInt32> nodeIds() {
     return nodeIds;
   }
   
-  private Output<Float> partialLogits;
-  private Output<Integer> treeIds;
-  private Output<Integer> nodeIds;
+  private Output<TFloat> partialLogits;
+  private Output<TInt32> treeIds;
+  private Output<TInt32> nodeIds;
   
   private BoostedTreesTrainingPredict(Operation operation) {
     super(operation);

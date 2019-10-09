@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Returns the rank of a tensor.
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * of the tensor. Rank is also known as "order", "degree", or "ndims."
  */
 @Operator
-public final class Rank extends PrimitiveOp implements Operand<Integer> {
+public final class Rank extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new Rank operation.
@@ -59,16 +60,16 @@ public final class Rank extends PrimitiveOp implements Operand<Integer> {
   
   /**
    */
-  public Output<Integer> output() {
+  public Output<TInt32> output() {
     return output;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return output;
   }
   
-  private Output<Integer> output;
+  private Output<TInt32> output;
   
   private Rank(Operation operation) {
     super(operation);

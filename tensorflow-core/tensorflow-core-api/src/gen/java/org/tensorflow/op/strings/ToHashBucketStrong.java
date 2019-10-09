@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Converts each string in the input Tensor to its hash mod by a number of buckets.
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * time than `tf.string_to_hash_bucket_fast`.
  */
 @Operator(group = "strings")
-public final class ToHashBucketStrong extends PrimitiveOp implements Operand<Long> {
+public final class ToHashBucketStrong extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new ToHashBucketStrong operation.
@@ -56,7 +58,7 @@ public final class ToHashBucketStrong extends PrimitiveOp implements Operand<Lon
    * elements.
    * @return a new instance of ToHashBucketStrong
    */
-  public static ToHashBucketStrong create(Scope scope, Operand<String> input, Long numBuckets, List<Long> key) {
+  public static ToHashBucketStrong create(Scope scope, Operand<TString> input, Long numBuckets, List<Long> key) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketStrong", scope.makeOpName("ToHashBucketStrong"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -72,16 +74,16 @@ public final class ToHashBucketStrong extends PrimitiveOp implements Operand<Lon
   /**
    * A Tensor of the same shape as the input `string_tensor`.
    */
-  public Output<Long> output() {
+  public Output<TInt64> output() {
     return output;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return output;
   }
   
-  private Output<Long> output;
+  private Output<TInt64> output;
   
   private ToHashBucketStrong(Operation operation) {
     super(operation);

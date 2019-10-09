@@ -26,6 +26,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Generates sparse cross from a list of sparse and dense tensors.
@@ -90,7 +91,7 @@ public final class SparseCross<T> extends PrimitiveOp {
    * @param internalType 
    * @return a new instance of SparseCross
    */
-  public static <T, U> SparseCross<T> create(Scope scope, Iterable<Operand<Long>> indices, Iterable<Operand<?>> values, Iterable<Operand<Long>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, Class<T> outType, Class<U> internalType) {
+  public static <T, U> SparseCross<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCross", scope.makeOpName("SparseCross"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
@@ -100,15 +101,15 @@ public final class SparseCross<T> extends PrimitiveOp {
     opBuilder.setAttr("hashed_output", hashedOutput);
     opBuilder.setAttr("num_buckets", numBuckets);
     opBuilder.setAttr("hash_key", hashKey);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
-    opBuilder.setAttr("internal_type", DataType.fromClass(internalType));
+    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("internal_type", internalType);
     return new SparseCross<T>(opBuilder.build());
   }
   
   /**
    * 2-D.  Indices of the concatenated `SparseTensor`.
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -123,13 +124,13 @@ public final class SparseCross<T> extends PrimitiveOp {
   /**
    * 1-D.  Shape of the concatenated `SparseTensor`.
    */
-  public Output<Long> outputShape() {
+  public Output<TInt64> outputShape() {
     return outputShape;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
-  private Output<Long> outputShape;
+  private Output<TInt64> outputShape;
   
   private SparseCross(Operation operation) {
     super(operation);

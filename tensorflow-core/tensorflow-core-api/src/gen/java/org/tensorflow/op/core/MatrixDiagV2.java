@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Returns a batched diagonal tensor with given batched diagonal values.
@@ -137,7 +138,7 @@ public final class MatrixDiagV2<T> extends PrimitiveOp implements Operand<T> {
    * Default is 0.
    * @return a new instance of MatrixDiagV2
    */
-  public static <T> MatrixDiagV2<T> create(Scope scope, Operand<T> diagonal, Operand<Integer> k, Operand<Integer> numRows, Operand<Integer> numCols, Operand<T> paddingValue) {
+  public static <T> MatrixDiagV2<T> create(Scope scope, Operand<T> diagonal, Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagV2", scope.makeOpName("MatrixDiagV2"));
     opBuilder.addInput(diagonal.asOutput());
     opBuilder.addInput(k.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Dequantize the 'input' tensor into a float Tensor.
@@ -97,7 +98,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator(group = "quantization")
-public final class Dequantize extends PrimitiveOp implements Operand<Float> {
+public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
@@ -128,7 +129,7 @@ public final class Dequantize extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public static <T> Dequantize create(Scope scope, Operand<T> input, Operand<Float> minRange, Operand<Float> maxRange, Options... options) {
+  public static <T> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
@@ -153,16 +154,16 @@ public final class Dequantize extends PrimitiveOp implements Operand<Float> {
   
   /**
    */
-  public Output<Float> output() {
+  public Output<TFloat> output() {
     return output;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return output;
   }
   
-  private Output<Float> output;
+  private Output<TFloat> output;
   
   private Dequantize(Operation operation) {
     super(operation);

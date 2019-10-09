@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * @param <U> data type for {@code output()} output
@@ -41,12 +42,12 @@ public final class ResourceGatherNd<U> extends PrimitiveOp implements Operand<U>
    * @param dtype 
    * @return a new instance of ResourceGatherNd
    */
-  public static <U, T extends Number> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, Class<U> dtype) {
+  public static <U, T extends TNumber> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGatherNd", scope.makeOpName("ResourceGatherNd"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new ResourceGatherNd<U>(opBuilder.build());
   }
   

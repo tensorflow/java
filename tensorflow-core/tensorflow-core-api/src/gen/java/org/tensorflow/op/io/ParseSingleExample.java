@@ -24,11 +24,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Transforms a tf.Example proto (as a string) into typed tensors.
@@ -72,7 +74,7 @@ public final class ParseSingleExample extends PrimitiveOp {
    * D1 * .... * DN, in the input.
    * @return a new instance of ParseSingleExample
    */
-  public static ParseSingleExample create(Scope scope, Operand<String> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<Class<?>> sparseTypes, List<Shape> denseShapes) {
+  public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleExample", scope.makeOpName("ParseSingleExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
@@ -90,7 +92,7 @@ public final class ParseSingleExample extends PrimitiveOp {
     opBuilder.setAttr("dense_keys", denseKeysArray);
     DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
-      sparseTypesArray[i] = DataType.fromClass(sparseTypes.get(i));
+      sparseTypesArray[i] = sparseTypes.get(i);
     }
     opBuilder.setAttr("sparse_types", sparseTypesArray);
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
@@ -103,7 +105,7 @@ public final class ParseSingleExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> sparseIndices() {
+  public List<Output<TInt64>> sparseIndices() {
     return sparseIndices;
   }
   
@@ -115,7 +117,7 @@ public final class ParseSingleExample extends PrimitiveOp {
   
   /**
    */
-  public List<Output<Long>> sparseShapes() {
+  public List<Output<TInt64>> sparseShapes() {
     return sparseShapes;
   }
   
@@ -125,9 +127,9 @@ public final class ParseSingleExample extends PrimitiveOp {
     return denseValues;
   }
   
-  private List<Output<Long>> sparseIndices;
+  private List<Output<TInt64>> sparseIndices;
   private List<Output<?>> sparseValues;
-  private List<Output<Long>> sparseShapes;
+  private List<Output<TInt64>> sparseShapes;
   private List<Output<?>> denseValues;
   
   @SuppressWarnings("unchecked")
@@ -135,13 +137,13 @@ public final class ParseSingleExample extends PrimitiveOp {
     super(operation);
     int outputIdx = 0;
     int sparseIndicesLength = operation.outputListLength("sparse_indices");
-    sparseIndices = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, sparseIndicesLength));
+    sparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, sparseIndicesLength));
     outputIdx += sparseIndicesLength;
     int sparseValuesLength = operation.outputListLength("sparse_values");
     sparseValues = Arrays.asList(operation.outputList(outputIdx, sparseValuesLength));
     outputIdx += sparseValuesLength;
     int sparseShapesLength = operation.outputListLength("sparse_shapes");
-    sparseShapes = Arrays.asList((Output<Long>[])operation.outputList(outputIdx, sparseShapesLength));
+    sparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, sparseShapesLength));
     outputIdx += sparseShapesLength;
     int denseValuesLength = operation.outputListLength("dense_values");
     denseValues = Arrays.asList(operation.outputList(outputIdx, denseValuesLength));

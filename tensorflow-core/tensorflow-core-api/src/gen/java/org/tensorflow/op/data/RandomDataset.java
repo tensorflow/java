@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a Dataset that returns pseudorandom numbers.
@@ -44,14 +45,14 @@ public final class RandomDataset extends PrimitiveOp implements Operand<Object> 
    * @param outputShapes 
    * @return a new instance of RandomDataset
    */
-  public static RandomDataset create(Scope scope, Operand<Long> seed, Operand<Long> seed2, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomDataset", scope.makeOpName("RandomDataset"));
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

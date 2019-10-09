@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adds sparse updates to the variable referenced by `resource`.
@@ -59,7 +60,7 @@ public final class ResourceScatterAdd extends PrimitiveOp {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterAdd
    */
-  public static <T extends Number, U> ResourceScatterAdd create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public static <T extends TNumber, U> ResourceScatterAdd create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterAdd", scope.makeOpName("ResourceScatterAdd"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());

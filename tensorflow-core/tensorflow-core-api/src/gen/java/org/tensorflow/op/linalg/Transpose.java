@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Shuffle dimensions of x according to a permutation.
@@ -44,7 +45,7 @@ public final class Transpose<T> extends PrimitiveOp implements Operand<T> {
    * @param perm 
    * @return a new instance of Transpose
    */
-  public static <T, U extends Number> Transpose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
+  public static <T, U extends TNumber> Transpose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());

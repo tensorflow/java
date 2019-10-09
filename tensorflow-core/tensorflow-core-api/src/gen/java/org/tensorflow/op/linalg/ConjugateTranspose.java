@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Shuffle dimensions of x according to a permutation and conjugate the result.
@@ -45,7 +46,7 @@ public final class ConjugateTranspose<T> extends PrimitiveOp implements Operand<
    * @param perm 
    * @return a new instance of ConjugateTranspose
    */
-  public static <T, U extends Number> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
+  public static <T, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());

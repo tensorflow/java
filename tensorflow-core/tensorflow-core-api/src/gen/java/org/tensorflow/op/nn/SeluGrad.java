@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients for the scaled exponential linear (Selu) operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class SeluGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class SeluGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SeluGrad operation.
@@ -39,7 +40,7 @@ public final class SeluGrad<T extends Number> extends PrimitiveOp implements Ope
    * @param outputs The outputs of the corresponding Selu operation.
    * @return a new instance of SeluGrad
    */
-  public static <T extends Number> SeluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
+  public static <T extends TNumber> SeluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("SeluGrad", scope.makeOpName("SeluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(outputs.asOutput());

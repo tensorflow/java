@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Creates a dataset that will write to / read from a snapshot.
@@ -139,14 +140,14 @@ public final class SnapshotDataset extends PrimitiveOp implements Operand<Object
    * @param options carries optional attributes values
    * @return a new instance of SnapshotDataset
    */
-  public static SnapshotDataset create(Scope scope, Operand<?> inputDataset, Operand<String> path, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+  public static SnapshotDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> path, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SnapshotDataset", scope.makeOpName("SnapshotDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(path.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

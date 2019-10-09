@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.Objects;
+import org.tensorflow.nio.nd.Shape;
 
 /**
  * A symbolic handle to a tensor produced by an {@link Operation}.
@@ -40,7 +41,7 @@ public final class Output<T> implements Operand<T> {
 
   /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
   public Shape shape() {
-    return new Shape(operation.shape(index));
+    return operation.shape(index);
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
@@ -54,6 +55,9 @@ public final class Output<T> implements Operand<T> {
    * <p>This operation is only supported on the outputs of an operation executed eagerly. For graph
    * environments, output tensors must be fetched by running a session, using {@link
    * Session.Runner#fetch(Output)}.
+   *
+   * <p>It is recommended to close explicitly the returned tensor as soon as possible, since the
+   * garbage collector is not aware of the amount of memory it consumes, which can be significant.
    *
    * @return tensor
    * @throws IllegalStateException if this output results from a graph

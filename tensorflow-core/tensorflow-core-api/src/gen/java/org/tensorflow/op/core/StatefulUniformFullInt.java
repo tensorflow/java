@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Outputs random integers from a uniform distribution.
@@ -44,13 +45,13 @@ public final class StatefulUniformFullInt<U> extends PrimitiveOp implements Oper
    * @param dtype The type of the output.
    * @return a new instance of StatefulUniformFullInt
    */
-  public static <U, T> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<Long> algorithm, Operand<T> shape, Class<U> dtype) {
+  public static <U, T> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformFullInt", scope.makeOpName("StatefulUniformFullInt"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new StatefulUniformFullInt<U>(opBuilder.build());
   }
   

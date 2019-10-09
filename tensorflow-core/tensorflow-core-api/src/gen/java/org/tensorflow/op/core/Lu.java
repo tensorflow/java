@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LU decomposition of one or more square matrices.
@@ -51,7 +53,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code p()} output
  */
 @Operator
-public final class Lu<T, U extends Number> extends PrimitiveOp {
+public final class Lu<T, U extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new Lu operation.
@@ -62,11 +64,11 @@ public final class Lu<T, U extends Number> extends PrimitiveOp {
    * @param outputIdxType 
    * @return a new instance of Lu
    */
-  public static <T, U extends Number> Lu<T, U> create(Scope scope, Operand<T> input, Class<U> outputIdxType) {
+  public static <T, U extends TNumber> Lu<T, U> create(Scope scope, Operand<T> input, DataType<U> outputIdxType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lu", scope.makeOpName("Lu"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_idx_type", DataType.fromClass(outputIdxType));
+    opBuilder.setAttr("output_idx_type", outputIdxType);
     return new Lu<T, U>(opBuilder.build());
   }
   
@@ -78,8 +80,8 @@ public final class Lu<T, U extends Number> extends PrimitiveOp {
    * size `[M, M]`.
    * @return a new instance of Lu
    */
-  public static <T> Lu<T, Integer> create(Scope scope, Operand<T> input) {
-    return create(scope, input, Integer.class);
+  public static <T> Lu<T, TInt32> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TInt32.DTYPE);
   }
   
   /**

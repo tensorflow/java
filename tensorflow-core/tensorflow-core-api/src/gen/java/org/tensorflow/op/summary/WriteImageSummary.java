@@ -22,7 +22,10 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.family.TNumber;
 
 /**
  */
@@ -59,7 +62,7 @@ public final class WriteImageSummary extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of WriteImageSummary
    */
-  public static <T extends Number> WriteImageSummary create(Scope scope, Operand<?> writer, Operand<Long> step, Operand<String> tag, Operand<T> tensor, Operand<UInt8> badColor, Options... options) {
+  public static <T extends TNumber> WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> tensor, Operand<TUInt8> badColor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteImageSummary", scope.makeOpName("WriteImageSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());

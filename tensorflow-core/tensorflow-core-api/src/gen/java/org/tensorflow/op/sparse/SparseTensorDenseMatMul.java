@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Multiply SparseTensor (of rank 2) "A" by dense matrix "B".
@@ -84,7 +86,7 @@ public final class SparseTensorDenseMatMul<U> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of SparseTensorDenseMatMul
    */
-  public static <U, T extends Number> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<Long> aShape, Operand<U> b, Options... options) {
+  public static <U, T extends TNumber> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseMatMul", scope.makeOpName("SparseTensorDenseMatMul"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

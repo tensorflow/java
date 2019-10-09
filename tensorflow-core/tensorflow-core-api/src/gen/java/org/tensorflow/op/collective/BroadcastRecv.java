@@ -22,16 +22,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Receives a tensor value broadcast from another device.
  * 
  * @param <T> data type for {@code data()} output
  */
-public final class BroadcastRecv<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BroadcastRecv operation.
@@ -44,10 +45,10 @@ public final class BroadcastRecv<T extends Number> extends PrimitiveOp implement
    * @param shape 
    * @return a new instance of BroadcastRecv
    */
-  public static <T extends Number> BroadcastRecv<T> create(Scope scope, Class<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
+  public static <T extends TNumber> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("T", DataType.fromClass(T));
+    opBuilder.setAttr("T", T);
     opBuilder.setAttr("group_size", groupSize);
     opBuilder.setAttr("group_key", groupKey);
     opBuilder.setAttr("instance_key", instanceKey);

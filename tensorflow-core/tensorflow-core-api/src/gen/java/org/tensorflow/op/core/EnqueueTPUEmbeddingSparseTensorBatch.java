@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Eases the porting of code that uses tf.nn.embedding_lookup_sparse().
@@ -106,7 +108,7 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of EnqueueTPUEmbeddingSparseTensorBatch
    */
-  public static <T extends Number, U extends Number, V extends Number> EnqueueTPUEmbeddingSparseTensorBatch create(Scope scope, Iterable<Operand<T>> sampleIndices, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<String> modeOverride, List<Long> tableIds, Options... options) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> EnqueueTPUEmbeddingSparseTensorBatch create(Scope scope, Iterable<Operand<T>> sampleIndices, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<TString> modeOverride, List<Long> tableIds, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingSparseTensorBatch", scope.makeOpName("EnqueueTPUEmbeddingSparseTensorBatch"));
     opBuilder.addInputList(Operands.asOutputs(sampleIndices));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));

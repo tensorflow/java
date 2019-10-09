@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts a `RaggedTensor` into a `SparseTensor` with the same values.
@@ -44,7 +46,7 @@ public final class RaggedTensorToSparse<U> extends PrimitiveOp {
    * @param rtDenseValues The `flat_values` for the `RaggedTensor`.
    * @return a new instance of RaggedTensorToSparse
    */
-  public static <U, T extends Number> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
+  public static <U, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());
@@ -55,7 +57,7 @@ public final class RaggedTensorToSparse<U> extends PrimitiveOp {
   /**
    * The indices for the `SparseTensor`.
    */
-  public Output<Long> sparseIndices() {
+  public Output<TInt64> sparseIndices() {
     return sparseIndices;
   }
   
@@ -69,13 +71,13 @@ public final class RaggedTensorToSparse<U> extends PrimitiveOp {
   /**
    * `sparse_dense_shape` is a tight bounding box of the input `RaggedTensor`.
    */
-  public Output<Long> sparseDenseShape() {
+  public Output<TInt64> sparseDenseShape() {
     return sparseDenseShape;
   }
   
-  private Output<Long> sparseIndices;
+  private Output<TInt64> sparseIndices;
   private Output<U> sparseValues;
-  private Output<Long> sparseDenseShape;
+  private Output<TInt64> sparseDenseShape;
   
   private RaggedTensorToSparse(Operation operation) {
     super(operation);

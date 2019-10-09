@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Quantized Batch normalization.
@@ -69,7 +70,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U> extends Primitiv
    * needs to be multiplied with gamma.
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
-  public static <U, T> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<Float> tMin, Operand<Float> tMax, Operand<T> m, Operand<Float> mMin, Operand<Float> mMax, Operand<T> v, Operand<Float> vMin, Operand<Float> vMax, Operand<T> beta, Operand<Float> betaMin, Operand<Float> betaMax, Operand<T> gamma, Operand<Float> gammaMin, Operand<Float> gammaMax, Class<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <U, T> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin, Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax, Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma, Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBatchNormWithGlobalNormalization", scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());
@@ -87,7 +88,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U> extends Primitiv
     opBuilder.addInput(gammaMin.asOutput());
     opBuilder.addInput(gammaMax.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);
     return new QuantizedBatchNormWithGlobalNormalization<U>(opBuilder.build());
@@ -101,19 +102,19 @@ public final class QuantizedBatchNormWithGlobalNormalization<U> extends Primitiv
   
   /**
    */
-  public Output<Float> resultMin() {
+  public Output<TFloat> resultMin() {
     return resultMin;
   }
   
   /**
    */
-  public Output<Float> resultMax() {
+  public Output<TFloat> resultMax() {
     return resultMax;
   }
   
   private Output<U> result;
-  private Output<Float> resultMin;
-  private Output<Float> resultMax;
+  private Output<TFloat> resultMin;
+  private Output<TFloat> resultMax;
   
   private QuantizedBatchNormWithGlobalNormalization(Operation operation) {
     super(operation);

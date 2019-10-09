@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * An op enabling differentiation of TPU Embeddings.
@@ -33,7 +34,7 @@ import org.tensorflow.op.Scope;
  * differentiation of graphs containing embeddings via the TPU Embedding Python
  * libraries.
  */
-public final class TPUEmbeddingActivations extends PrimitiveOp implements Operand<Float> {
+public final class TPUEmbeddingActivations extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new TPUEmbeddingActivations operation.
@@ -47,7 +48,7 @@ public final class TPUEmbeddingActivations extends PrimitiveOp implements Operan
    * activations.
    * @return a new instance of TPUEmbeddingActivations
    */
-  public static TPUEmbeddingActivations create(Scope scope, Operand<Float> embeddingVariable, Operand<Float> slicedActivations, Long tableId, Long lookupId) {
+  public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat> embeddingVariable, Operand<TFloat> slicedActivations, Long tableId, Long lookupId) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUEmbeddingActivations", scope.makeOpName("TPUEmbeddingActivations"));
     opBuilder.addInput(embeddingVariable.asOutput());
     opBuilder.addInput(slicedActivations.asOutput());
@@ -59,16 +60,16 @@ public final class TPUEmbeddingActivations extends PrimitiveOp implements Operan
   
   /**
    */
-  public Output<Float> output() {
+  public Output<TFloat> output() {
     return output;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return output;
   }
   
-  private Output<Float> output;
+  private Output<TFloat> output;
   
   private TPUEmbeddingActivations(Operation operation) {
     super(operation);

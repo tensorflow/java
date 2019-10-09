@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
@@ -79,7 +80,7 @@ public final class SparseApplyAdagrad<T> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyAdagrad
    */
-  public static <T, U extends Number> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T, U extends TNumber> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagrad", scope.makeOpName("SparseApplyAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

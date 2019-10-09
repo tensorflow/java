@@ -62,11 +62,11 @@ public final class Cast<U> extends PrimitiveOp implements Operand<U> {
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  public static <U, T> Cast<U> create(Scope scope, Operand<T> x, Class<U> DstT, Options... options) {
+  public static <U, T> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("DstT", DataType.fromClass(DstT));
+    opBuilder.setAttr("DstT", DstT);
     if (options != null) {
       for (Options opts : options) {
         if (opts.Truncate != null) {

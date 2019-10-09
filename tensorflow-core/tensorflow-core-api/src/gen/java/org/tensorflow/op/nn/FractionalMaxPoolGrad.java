@@ -23,13 +23,15 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradient of the FractionalMaxPool function.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class FractionalMaxPoolGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class FractionalMaxPoolGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FractionalMaxPoolGrad}
@@ -73,7 +75,7 @@ public final class FractionalMaxPoolGrad<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of FractionalMaxPoolGrad
    */
-  public static <T extends Number> FractionalMaxPoolGrad<T> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<T> outBackprop, Operand<Long> rowPoolingSequence, Operand<Long> colPoolingSequence, Options... options) {
+  public static <T extends TNumber> FractionalMaxPoolGrad<T> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPoolGrad", scope.makeOpName("FractionalMaxPoolGrad"));
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());

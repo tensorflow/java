@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Says whether the targets are in the top `K` predictions.
@@ -44,7 +47,7 @@ import org.tensorflow.op.annotation.Operator;
  * $$out_i = predictions_{i, targets_i} \in TopKIncludingTies(predictions_i)$$
  */
 @Operator(group = "nn")
-public final class InTopK extends PrimitiveOp implements Operand<Boolean> {
+public final class InTopK extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new InTopK operation.
@@ -55,7 +58,7 @@ public final class InTopK extends PrimitiveOp implements Operand<Boolean> {
    * @param k Number of top elements to look at for computing precision.
    * @return a new instance of InTopK
    */
-  public static <T extends Number> InTopK create(Scope scope, Operand<Float> predictions, Operand<T> targets, Operand<T> k) {
+  public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat> predictions, Operand<T> targets, Operand<T> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("InTopKV2", scope.makeOpName("InTopK"));
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());
@@ -67,16 +70,16 @@ public final class InTopK extends PrimitiveOp implements Operand<Boolean> {
   /**
    * Computed precision at `k` as a `bool Tensor`.
    */
-  public Output<Boolean> precision() {
+  public Output<TBool> precision() {
     return precision;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return precision;
   }
   
-  private Output<Boolean> precision;
+  private Output<TBool> precision;
   
   private InTopK(Operation operation) {
     super(operation);

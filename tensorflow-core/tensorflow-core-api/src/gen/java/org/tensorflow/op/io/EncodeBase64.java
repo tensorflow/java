@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Encode strings into web-safe base64 format.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * Web-safe means that the encoder uses - and _ instead of + and /.
  */
 @Operator(group = "io")
-public final class EncodeBase64 extends PrimitiveOp implements Operand<String> {
+public final class EncodeBase64 extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.EncodeBase64}
@@ -65,7 +66,7 @@ public final class EncodeBase64 extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeBase64
    */
-  public static EncodeBase64 create(Scope scope, Operand<String> input, Options... options) {
+  public static EncodeBase64 create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeBase64", scope.makeOpName("EncodeBase64"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -89,16 +90,16 @@ public final class EncodeBase64 extends PrimitiveOp implements Operand<String> {
   /**
    * Input strings encoded in base64.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private EncodeBase64(Operation operation) {
     super(operation);

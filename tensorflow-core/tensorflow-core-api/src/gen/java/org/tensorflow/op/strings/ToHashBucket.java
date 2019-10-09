@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Converts each string in the input Tensor to its hash mod by a number of buckets.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * `tf.string_to_hash_bucket_fast()` or `tf.string_to_hash_bucket_strong()`.
  */
 @Operator(group = "strings")
-public final class ToHashBucket extends PrimitiveOp implements Operand<Long> {
+public final class ToHashBucket extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new ToHashBucket operation.
@@ -46,7 +48,7 @@ public final class ToHashBucket extends PrimitiveOp implements Operand<Long> {
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucket
    */
-  public static ToHashBucket create(Scope scope, Operand<String> stringTensor, Long numBuckets) {
+  public static ToHashBucket create(Scope scope, Operand<TString> stringTensor, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucket", scope.makeOpName("ToHashBucket"));
     opBuilder.addInput(stringTensor.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -57,16 +59,16 @@ public final class ToHashBucket extends PrimitiveOp implements Operand<Long> {
   /**
    * A Tensor of the same shape as the input `string_tensor`.
    */
-  public Output<Long> output() {
+  public Output<TInt64> output() {
     return output;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return output;
   }
   
-  private Output<Long> output;
+  private Output<TInt64> output;
   
   private ToHashBucket(Operation operation) {
     super(operation);

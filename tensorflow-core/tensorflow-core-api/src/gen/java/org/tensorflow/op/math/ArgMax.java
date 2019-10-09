@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the index with the largest value across dimensions of a tensor.
@@ -45,7 +47,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class ArgMax<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class ArgMax<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new ArgMax operation.
@@ -58,12 +60,12 @@ public final class ArgMax<V extends Number> extends PrimitiveOp implements Opera
    * @param outputType 
    * @return a new instance of ArgMax
    */
-  public static <V extends Number, T, U extends Number> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, Class<V> outputType) {
+  public static <V extends TNumber, T, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_type", DataType.fromClass(outputType));
+    opBuilder.setAttr("output_type", outputType);
     return new ArgMax<V>(opBuilder.build());
   }
   
@@ -77,8 +79,8 @@ public final class ArgMax<V extends Number> extends PrimitiveOp implements Opera
    * use dimension = 0.
    * @return a new instance of ArgMax
    */
-  public static <T, U extends Number> ArgMax<Long> create(Scope scope, Operand<T> input, Operand<U> dimension) {
-    return create(scope, input, dimension, Long.class);
+  public static <T, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
+    return create(scope, input, dimension, TInt64.DTYPE);
   }
   
   /**

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the maximum along segments of a tensor.
@@ -54,7 +55,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class SegmentMax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class SegmentMax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SegmentMax operation.
@@ -65,7 +66,7 @@ public final class SegmentMax<T extends Number> extends PrimitiveOp implements O
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMax
    */
-  public static <T extends Number, U extends Number> SegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TNumber, U extends TNumber> SegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMax", scope.makeOpName("SegmentMax"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

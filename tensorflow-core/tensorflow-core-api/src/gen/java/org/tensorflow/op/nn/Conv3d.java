@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes a 3-D convolution given 5-D `input` and `filter` tensors.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class Conv3d<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Conv3d<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.Conv3d}
@@ -89,7 +90,7 @@ public final class Conv3d<T extends Number> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of Conv3d
    */
-  public static <T extends Number> Conv3d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> Conv3d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3D", scope.makeOpName("Conv3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

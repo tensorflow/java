@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -35,7 +36,7 @@ public final class ImportEvent extends PrimitiveOp {
    * @param event 
    * @return a new instance of ImportEvent
    */
-  public static ImportEvent create(Scope scope, Operand<?> writer, Operand<String> event) {
+  public static ImportEvent create(Scope scope, Operand<?> writer, Operand<TString> event) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImportEvent", scope.makeOpName("ImportEvent"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(event.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TInt64;
 
 /**
  * Fills empty rows in the input 2-D `SparseTensor` with a default value.
@@ -82,7 +84,7 @@ public final class SparseFillEmptyRows<T> extends PrimitiveOp {
    * output indices: 2-D. the indices of the filled sparse tensor.
    * @return a new instance of SparseFillEmptyRows
    */
-  public static <T> SparseFillEmptyRows<T> create(Scope scope, Operand<Long> indices, Operand<T> values, Operand<Long> denseShape, Operand<T> defaultValue) {
+  public static <T> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRows", scope.makeOpName("SparseFillEmptyRows"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -94,7 +96,7 @@ public final class SparseFillEmptyRows<T> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -109,21 +111,21 @@ public final class SparseFillEmptyRows<T> extends PrimitiveOp {
    * 1-D. whether the dense row was missing in the
    * input sparse tensor.
    */
-  public Output<Boolean> emptyRowIndicator() {
+  public Output<TBool> emptyRowIndicator() {
     return emptyRowIndicator;
   }
   
   /**
    * 1-D. a map from the input indices to the output indices.
    */
-  public Output<Long> reverseIndexMap() {
+  public Output<TInt64> reverseIndexMap() {
     return reverseIndexMap;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
-  private Output<Boolean> emptyRowIndicator;
-  private Output<Long> reverseIndexMap;
+  private Output<TBool> emptyRowIndicator;
+  private Output<TInt64> reverseIndexMap;
   
   private SparseFillEmptyRows(Operation operation) {
     super(operation);

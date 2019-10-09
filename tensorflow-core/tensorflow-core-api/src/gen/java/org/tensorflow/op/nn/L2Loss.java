@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * L2 Loss.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class L2Loss<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class L2Loss<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new L2Loss operation.
@@ -44,7 +45,7 @@ public final class L2Loss<T extends Number> extends PrimitiveOp implements Opera
    * @param t Typically 2-D, but may have any dimensions.
    * @return a new instance of L2Loss
    */
-  public static <T extends Number> L2Loss<T> create(Scope scope, Operand<T> t) {
+  public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
     OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
     opBuilder.addInput(t.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

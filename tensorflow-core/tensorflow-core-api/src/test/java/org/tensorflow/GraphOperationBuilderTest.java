@@ -23,6 +23,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
 @RunWith(JUnit4.class)
@@ -48,7 +52,7 @@ public class GraphOperationBuilderTest {
   @Test
   public void failOnUseAfterBuild() {
     try (Graph g = new Graph();
-        Tensor<Integer> t = Tensors.create(1)) {
+        Tensor<TInt32> t = Tensors.create(1)) {
       OperationBuilder b =
           g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
       b.build();
@@ -64,7 +68,7 @@ public class GraphOperationBuilderTest {
   public void failOnUseAfterGraphClose() {
     OperationBuilder b = null;
     try (Graph g = new Graph();
-        Tensor<Integer> t = Tensors.create(1)) {
+        Tensor<TInt32> t = Tensors.create(1)) {
       b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
     }
     try {
@@ -85,9 +89,9 @@ public class GraphOperationBuilderTest {
     // types that aren't inferred from the input arguments.
     try (Graph g = new Graph()) {
       // dtype, tensor attributes.
-      try (Tensor<Integer> t = Tensors.create(1)) {
+      try (Tensor<TInt32> t = Tensors.create(1)) {
         g.opBuilder("Const", "DataTypeAndTensor")
-            .setAttr("dtype", DataType.INT32)
+            .setAttr("dtype", TInt32.DTYPE)
             .setAttr("value", t)
             .build()
             .output(0);
@@ -103,7 +107,7 @@ public class GraphOperationBuilderTest {
       g.opBuilder("RandomUniform", "Int")
           .addInput(TestUtil.constant(g, "RandomUniformShape", new int[] {1}))
           .setAttr("seed", 10)
-          .setAttr("dtype", DataType.FLOAT)
+          .setAttr("dtype", TFloat.DTYPE)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
@@ -129,23 +133,23 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Output<?> n =
           g.opBuilder("Placeholder", "unknown")
-              .setAttr("dtype", DataType.FLOAT)
+              .setAttr("dtype", TFloat.DTYPE)
               .setAttr("shape", Shape.unknown())
               .build()
               .output(0);
       assertEquals(-1, n.shape().numDimensions());
-      assertEquals(DataType.FLOAT, n.dataType());
+      assertEquals(TFloat.DTYPE, n.dataType());
 
       n =
           g.opBuilder("Placeholder", "batch_of_vectors")
-              .setAttr("dtype", DataType.FLOAT)
+              .setAttr("dtype", TFloat.DTYPE)
               .setAttr("shape", Shape.make(-1, 784))
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
       assertEquals(-1, n.shape().size(0));
       assertEquals(784, n.shape().size(1));
-      assertEquals(DataType.FLOAT, n.dataType());
+      assertEquals(TFloat.DTYPE, n.dataType());
     }
   }
 
@@ -166,9 +170,9 @@ public class GraphOperationBuilderTest {
   public void addControlInput() {
     try (Graph g = new Graph();
         Session s = new Session(g);
-        Tensor<Boolean> yes = Tensors.create(true);
-        Tensor<Boolean> no = Tensors.create(false)) {
-      Output<Boolean> placeholder = TestUtil.placeholder(g, "boolean", Boolean.class);
+        Tensor<TBool> yes = Tensors.create(true);
+        Tensor<TBool> no = Tensors.create(false)) {
+      Output<TBool> placeholder = TestUtil.placeholder(g, "boolean", TBool.DTYPE);
       GraphOperation check =
           g.opBuilder("Assert", "assert")
               .addInput(placeholder)
@@ -195,7 +199,7 @@ public class GraphOperationBuilderTest {
       int[][] matrix = new int[][] {{0, 0}, {0, 0}};
       Output<?> queue =
           g.opBuilder("FIFOQueue", "queue")
-              .setAttr("component_types", new DataType[] {DataType.INT32, DataType.INT32})
+              .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
               .setAttr("shapes", shapes)
               .build()
               .output(0);

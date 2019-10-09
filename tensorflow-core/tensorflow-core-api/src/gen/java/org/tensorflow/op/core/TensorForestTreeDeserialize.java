@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Deserializes a proto into the tree handle
@@ -36,7 +37,7 @@ public final class TensorForestTreeDeserialize extends PrimitiveOp {
    * @param treeConfig Serialied proto string of the boosted_trees.Tree proto.
    * @return a new instance of TensorForestTreeDeserialize
    */
-  public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<String> treeConfig) {
+  public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(treeConfig.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Returns the set of files matching one or more glob patterns.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * Note also that the order of filenames returned is deterministic.
  */
 @Operator(group = "io")
-public final class MatchingFiles extends PrimitiveOp implements Operand<String> {
+public final class MatchingFiles extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new MatchingFiles operation.
@@ -42,7 +43,7 @@ public final class MatchingFiles extends PrimitiveOp implements Operand<String> 
    * @param pattern Shell wildcard pattern(s). Scalar or vector of type string.
    * @return a new instance of MatchingFiles
    */
-  public static MatchingFiles create(Scope scope, Operand<String> pattern) {
+  public static MatchingFiles create(Scope scope, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFiles", scope.makeOpName("MatchingFiles"));
     opBuilder.addInput(pattern.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -52,16 +53,16 @@ public final class MatchingFiles extends PrimitiveOp implements Operand<String> 
   /**
    * A vector of matching filenames.
    */
-  public Output<String> filenames() {
+  public Output<TString> filenames() {
     return filenames;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return filenames;
   }
   
-  private Output<String> filenames;
+  private Output<TString> filenames;
   
   private MatchingFiles(Operation operation) {
     super(operation);

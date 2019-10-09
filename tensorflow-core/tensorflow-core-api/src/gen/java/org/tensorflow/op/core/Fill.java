@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates a tensor filled with a scalar value.
@@ -68,7 +69,7 @@ public final class Fill<U> extends PrimitiveOp implements Operand<U> {
    * @end_compatibility
    * @return a new instance of Fill
    */
-  public static <U, T extends Number> Fill<U> create(Scope scope, Operand<T> dims, Operand<U> value) {
+  public static <U, T extends TNumber> Fill<U> create(Scope scope, Operand<T> dims, Operand<U> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fill", scope.makeOpName("Fill"));
     opBuilder.addInput(dims.asOutput());
     opBuilder.addInput(value.asOutput());

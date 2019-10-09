@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs average pooling on the input.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class AvgPool<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class AvgPool<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.AvgPool}
@@ -71,7 +72,7 @@ public final class AvgPool<T extends Number> extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of AvgPool
    */
-  public static <T extends Number> AvgPool<T> create(Scope scope, Operand<T> value, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> AvgPool<T> create(Scope scope, Operand<T> value, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPool", scope.makeOpName("AvgPool"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

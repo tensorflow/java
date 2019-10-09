@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softsign gradients for a softsign operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class SoftsignGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class SoftsignGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SoftsignGrad operation.
@@ -39,7 +40,7 @@ public final class SoftsignGrad<T extends Number> extends PrimitiveOp implements
    * @param features The features passed as input to the corresponding softsign operation.
    * @return a new instance of SoftsignGrad
    */
-  public static <T extends Number> SoftsignGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
+  public static <T extends TNumber> SoftsignGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftsignGrad", scope.makeOpName("SoftsignGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());

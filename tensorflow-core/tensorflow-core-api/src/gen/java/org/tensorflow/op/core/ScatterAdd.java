@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adds sparse updates to a variable reference.
@@ -86,7 +87,7 @@ public final class ScatterAdd<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ScatterAdd
    */
-  public static <T, U extends Number> ScatterAdd<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T, U extends TNumber> ScatterAdd<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterAdd", scope.makeOpName("ScatterAdd"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

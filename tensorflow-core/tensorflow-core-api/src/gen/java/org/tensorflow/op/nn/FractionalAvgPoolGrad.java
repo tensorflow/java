@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradient of the FractionalAvgPool function.
@@ -35,7 +37,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class FractionalAvgPoolGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class FractionalAvgPoolGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FractionalAvgPoolGrad}
@@ -78,7 +80,7 @@ public final class FractionalAvgPoolGrad<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of FractionalAvgPoolGrad
    */
-  public static <T extends Number> FractionalAvgPoolGrad<T> create(Scope scope, Operand<Long> origInputTensorShape, Operand<T> outBackprop, Operand<Long> rowPoolingSequence, Operand<Long> colPoolingSequence, Options... options) {
+  public static <T extends TNumber> FractionalAvgPoolGrad<T> create(Scope scope, Operand<TInt64> origInputTensorShape, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPoolGrad", scope.makeOpName("FractionalAvgPoolGrad"));
     opBuilder.addInput(origInputTensorShape.asOutput());
     opBuilder.addInput(outBackprop.asOutput());

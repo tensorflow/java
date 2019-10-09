@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Assign `value` to the sliced l-value reference of `input`.
@@ -107,7 +108,7 @@ public final class TensorStridedSliceUpdate<T> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of TensorStridedSliceUpdate
    */
-  public static <T, U extends Number> TensorStridedSliceUpdate<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value, Options... options) {
+  public static <T, U extends TNumber> TensorStridedSliceUpdate<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorStridedSliceUpdate", scope.makeOpName("TensorStridedSliceUpdate"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());

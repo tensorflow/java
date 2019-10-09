@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Calculates gains for each feature and returns the best possible split information for the feature.
@@ -54,7 +56,7 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends PrimitiveOp 
    * @param maxSplits the number of nodes that can be split in the whole tree. Used as a dimension of output tensors.
    * @return a new instance of BoostedTreesCalculateBestGainsPerFeature
    */
-  public static BoostedTreesCalculateBestGainsPerFeature create(Scope scope, Operand<Integer> nodeIdRange, Iterable<Operand<Float>> statsSummaryList, Operand<Float> l1, Operand<Float> l2, Operand<Float> treeComplexity, Operand<Float> minNodeWeight, Long maxSplits) {
+  public static BoostedTreesCalculateBestGainsPerFeature create(Scope scope, Operand<TInt32> nodeIdRange, Iterable<Operand<TFloat>> statsSummaryList, Operand<TFloat> l1, Operand<TFloat> l2, Operand<TFloat> treeComplexity, Operand<TFloat> minNodeWeight, Long maxSplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestGainsPerFeature", scope.makeOpName("BoostedTreesCalculateBestGainsPerFeature"));
     opBuilder.addInput(nodeIdRange.asOutput());
     opBuilder.addInputList(Operands.asOutputs(statsSummaryList));
@@ -70,62 +72,62 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends PrimitiveOp 
   /**
    * An output list of Rank 1 tensors indicating possible split node ids for each feature. The length of the list is num_features, but each tensor has different size as each feature provides different possible nodes. See above for details like shapes and sizes.
    */
-  public List<Output<Integer>> nodeIdsList() {
+  public List<Output<TInt32>> nodeIdsList() {
     return nodeIdsList;
   }
   
   /**
    * An output list of Rank 1 tensors indicating the best gains for each feature to split for certain nodes. See above for details like shapes and sizes.
    */
-  public List<Output<Float>> gainsList() {
+  public List<Output<TFloat>> gainsList() {
     return gainsList;
   }
   
   /**
    * An output list of Rank 1 tensors indicating the bucket id to compare with (as a threshold) for split in each node. See above for details like shapes and sizes.
    */
-  public List<Output<Integer>> thresholdsList() {
+  public List<Output<TInt32>> thresholdsList() {
     return thresholdsList;
   }
   
   /**
    * A list of Rank 2 tensors indicating the contribution of the left nodes when branching from parent nodes (given by the tensor element in the output node_ids_list) to the left direction by the given threshold for each feature. This value will be used to make the left node value by adding to the parent node value. Second dimension size is 1 for 1-dimensional logits, but would be larger for multi-class problems. See above for details like shapes and sizes.
    */
-  public List<Output<Float>> leftNodeContribsList() {
+  public List<Output<TFloat>> leftNodeContribsList() {
     return leftNodeContribsList;
   }
   
   /**
    * A list of Rank 2 tensors, with the same shape/conditions as left_node_contribs_list, but just that the value is for the right node.
    */
-  public List<Output<Float>> rightNodeContribsList() {
+  public List<Output<TFloat>> rightNodeContribsList() {
     return rightNodeContribsList;
   }
   
-  private List<Output<Integer>> nodeIdsList;
-  private List<Output<Float>> gainsList;
-  private List<Output<Integer>> thresholdsList;
-  private List<Output<Float>> leftNodeContribsList;
-  private List<Output<Float>> rightNodeContribsList;
+  private List<Output<TInt32>> nodeIdsList;
+  private List<Output<TFloat>> gainsList;
+  private List<Output<TInt32>> thresholdsList;
+  private List<Output<TFloat>> leftNodeContribsList;
+  private List<Output<TFloat>> rightNodeContribsList;
   
   @SuppressWarnings("unchecked")
   private BoostedTreesCalculateBestGainsPerFeature(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int nodeIdsListLength = operation.outputListLength("node_ids_list");
-    nodeIdsList = Arrays.asList((Output<Integer>[])operation.outputList(outputIdx, nodeIdsListLength));
+    nodeIdsList = Arrays.asList((Output<TInt32>[])operation.outputList(outputIdx, nodeIdsListLength));
     outputIdx += nodeIdsListLength;
     int gainsListLength = operation.outputListLength("gains_list");
-    gainsList = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, gainsListLength));
+    gainsList = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, gainsListLength));
     outputIdx += gainsListLength;
     int thresholdsListLength = operation.outputListLength("thresholds_list");
-    thresholdsList = Arrays.asList((Output<Integer>[])operation.outputList(outputIdx, thresholdsListLength));
+    thresholdsList = Arrays.asList((Output<TInt32>[])operation.outputList(outputIdx, thresholdsListLength));
     outputIdx += thresholdsListLength;
     int leftNodeContribsListLength = operation.outputListLength("left_node_contribs_list");
-    leftNodeContribsList = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, leftNodeContribsListLength));
+    leftNodeContribsList = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, leftNodeContribsListLength));
     outputIdx += leftNodeContribsListLength;
     int rightNodeContribsListLength = operation.outputListLength("right_node_contribs_list");
-    rightNodeContribsList = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, rightNodeContribsListLength));
+    rightNodeContribsList = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, rightNodeContribsListLength));
     outputIdx += rightNodeContribsListLength;
   }
 }

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Elementwise computes the bitwise left-shift of `x` and `y`.
@@ -62,7 +63,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "bitwise")
-public final class LeftShift<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LeftShift<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new LeftShift operation.
@@ -72,7 +73,7 @@ public final class LeftShift<T extends Number> extends PrimitiveOp implements Op
    * @param y 
    * @return a new instance of LeftShift
    */
-  public static <T extends Number> LeftShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> LeftShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeftShift", scope.makeOpName("LeftShift"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

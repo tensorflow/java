@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Returns true if and only if the given Optional variant has a value.
  */
 @Operator(group = "data")
-public final class OptionalHasValue extends PrimitiveOp implements Operand<Boolean> {
+public final class OptionalHasValue extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new OptionalHasValue operation.
@@ -47,16 +48,16 @@ public final class OptionalHasValue extends PrimitiveOp implements Operand<Boole
   
   /**
    */
-  public Output<Boolean> hasValue() {
+  public Output<TBool> hasValue() {
     return hasValue;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return hasValue;
   }
   
-  private Output<Boolean> hasValue;
+  private Output<TBool> hasValue;
   
   private OptionalHasValue(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes arctangent of `y/x` element-wise, respecting signs of the arguments.
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Atan2<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Atan2<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Atan2 operation.
@@ -47,7 +48,7 @@ public final class Atan2<T extends Number> extends PrimitiveOp implements Operan
    * @param x 
    * @return a new instance of Atan2
    */
-  public static <T extends Number> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
+  public static <T extends TNumber> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(x.asOutput());

@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Emits randomized records.
  */
 @Operator(group = "random")
-public final class RecordInput extends PrimitiveOp implements Operand<String> {
+public final class RecordInput extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RecordInput}
@@ -181,16 +182,16 @@ public final class RecordInput extends PrimitiveOp implements Operand<String> {
   /**
    * A tensor of shape [batch_size].
    */
-  public Output<String> records() {
+  public Output<TString> records() {
     return records;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return records;
   }
   
-  private Output<String> records;
+  private Output<TString> records;
   
   private RecordInput(Operation operation) {
     super(operation);

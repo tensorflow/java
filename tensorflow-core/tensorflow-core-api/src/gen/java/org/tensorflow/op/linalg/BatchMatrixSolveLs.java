@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TDouble;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixSolveLs<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BatchMatrixSolveLs<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolveLs}
@@ -60,7 +62,7 @@ public final class BatchMatrixSolveLs<T extends Number> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixSolveLs
    */
-  public static <T extends Number> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<Double> l2Regularizer, Options... options) {
+  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TDouble> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolveLs", scope.makeOpName("BatchMatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

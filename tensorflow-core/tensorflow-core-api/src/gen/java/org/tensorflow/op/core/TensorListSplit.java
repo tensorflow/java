@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Splits a tensor into a list.
@@ -48,7 +50,7 @@ public final class TensorListSplit extends PrimitiveOp implements Operand<Object
    * @param lengths 
    * @return a new instance of TensorListSplit
    */
-  public static <T, U extends Number> TensorListSplit create(Scope scope, Operand<T> tensor, Operand<U> elementShape, Operand<Long> lengths) {
+  public static <T, U extends TNumber> TensorListSplit create(Scope scope, Operand<T> tensor, Operand<U> elementShape, Operand<TInt64> lengths) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSplit", scope.makeOpName("TensorListSplit"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());

@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the size of a tensor.
@@ -42,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class Size<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class Size<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Size operation.
@@ -52,11 +54,11 @@ public final class Size<U extends Number> extends PrimitiveOp implements Operand
    * @param outType 
    * @return a new instance of Size
    */
-  public static <U extends Number, T> Size<U> create(Scope scope, Operand<T> input, Class<U> outType) {
+  public static <U extends TNumber, T> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new Size<U>(opBuilder.build());
   }
   
@@ -67,8 +69,8 @@ public final class Size<U extends Number> extends PrimitiveOp implements Operand
    * @param input 
    * @return a new instance of Size
    */
-  public static <T> Size<Integer> create(Scope scope, Operand<T> input) {
-    return create(scope, input, Integer.class);
+  public static <T> Size<TInt32> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TInt32.DTYPE);
   }
   
   /**

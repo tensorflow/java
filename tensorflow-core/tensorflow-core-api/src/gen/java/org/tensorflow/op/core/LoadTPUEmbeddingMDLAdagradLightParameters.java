@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Load MDL Adagrad Light embedding parameters.
@@ -75,7 +76,7 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingMDLAdagradLightParameters
    */
-  public static LoadTPUEmbeddingMDLAdagradLightParameters create(Scope scope, Operand<Float> parameters, Operand<Float> accumulators, Operand<Float> weights, Operand<Float> benefits, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingMDLAdagradLightParameters create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> accumulators, Operand<TFloat> weights, Operand<TFloat> benefits, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMDLAdagradLightParameters", scope.makeOpName("LoadTPUEmbeddingMDLAdagradLightParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());

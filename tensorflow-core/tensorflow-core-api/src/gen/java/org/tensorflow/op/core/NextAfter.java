@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the next representable value of `x1` in the direction of `x2`, element-wise.
@@ -39,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class NextAfter<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class NextAfter<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NextAfter operation.
@@ -49,7 +50,7 @@ public final class NextAfter<T extends Number> extends PrimitiveOp implements Op
    * @param x2 
    * @return a new instance of NextAfter
    */
-  public static <T extends Number> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
+  public static <T extends TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
     opBuilder.addInput(x1.asOutput());
     opBuilder.addInput(x2.asOutput());

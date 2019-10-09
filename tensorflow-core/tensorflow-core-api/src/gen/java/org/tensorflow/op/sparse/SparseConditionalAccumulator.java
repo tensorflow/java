@@ -22,10 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * A conditional accumulator for aggregating sparse gradients.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * the accumulator.
  */
 @Operator(group = "sparse")
-public final class SparseConditionalAccumulator extends PrimitiveOp implements Operand<String> {
+public final class SparseConditionalAccumulator extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseConditionalAccumulator}
@@ -88,10 +89,10 @@ public final class SparseConditionalAccumulator extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of SparseConditionalAccumulator
    */
-  public static <T> SparseConditionalAccumulator create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
+  public static <T> SparseConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConditionalAccumulator", scope.makeOpName("SparseConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("shape", shape);
     if (options != null) {
       for (Options opts : options) {
@@ -135,16 +136,16 @@ public final class SparseConditionalAccumulator extends PrimitiveOp implements O
   /**
    * The handle to the accumulator.
    */
-  public Output<String> handle() {
+  public Output<TString> handle() {
     return handle;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return handle;
   }
   
-  private Output<String> handle;
+  private Output<TString> handle;
   
   private SparseConditionalAccumulator(Operation operation) {
     super(operation);

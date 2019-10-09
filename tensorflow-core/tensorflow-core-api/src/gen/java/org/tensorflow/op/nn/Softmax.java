@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softmax activations.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code softmax()} output
  */
 @Operator(group = "nn")
-public final class Softmax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Softmax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Softmax operation.
@@ -44,7 +45,7 @@ public final class Softmax<T extends Number> extends PrimitiveOp implements Oper
    * @param logits 2-D with shape `[batch_size, num_classes]`.
    * @return a new instance of Softmax
    */
-  public static <T extends Number> Softmax<T> create(Scope scope, Operand<T> logits) {
+  public static <T extends TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softmax", scope.makeOpName("Softmax"));
     opBuilder.addInput(logits.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

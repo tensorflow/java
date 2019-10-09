@@ -23,9 +23,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Creates a dataset that executes a SQL query and emits rows of the result set.
@@ -43,7 +44,7 @@ public final class ExperimentalSqlDataset extends PrimitiveOp implements Operand
    * @param outputShapes 
    * @return a new instance of ExperimentalSqlDataset
    */
-  public static ExperimentalSqlDataset create(Scope scope, Operand<String> driverName, Operand<String> dataSourceName, Operand<String> query, List<Class<?>> outputTypes, List<Shape> outputShapes) {
+  public static ExperimentalSqlDataset create(Scope scope, Operand<TString> driverName, Operand<TString> dataSourceName, Operand<TString> query, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSqlDataset", scope.makeOpName("ExperimentalSqlDataset"));
     opBuilder.addInput(driverName.asOutput());
     opBuilder.addInput(dataSourceName.asOutput());
@@ -51,7 +52,7 @@ public final class ExperimentalSqlDataset extends PrimitiveOp implements Operand
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

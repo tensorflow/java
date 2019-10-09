@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
@@ -85,7 +86,7 @@ public final class SparseApplyMomentum<T> extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyMomentum
    */
-  public static <T, U extends Number> SparseApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
+  public static <T, U extends TNumber> SparseApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyMomentum", scope.makeOpName("SparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

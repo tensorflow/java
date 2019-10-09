@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Checks whether a tensor has been initialized.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * Outputs boolean scalar indicating whether the tensor has been initialized.
  */
 @Operator
-public final class IsVariableInitialized extends PrimitiveOp implements Operand<Boolean> {
+public final class IsVariableInitialized extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsVariableInitialized operation.
@@ -49,16 +50,16 @@ public final class IsVariableInitialized extends PrimitiveOp implements Operand<
   
   /**
    */
-  public Output<Boolean> isInitialized() {
+  public Output<TBool> isInitialized() {
     return isInitialized;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return isInitialized;
   }
   
-  private Output<Boolean> isInitialized;
+  private Output<TBool> isInitialized;
   
   private IsVariableInitialized(Operation operation) {
     super(operation);

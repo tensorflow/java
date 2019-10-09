@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Returns the number of work units this Reader has finished processing.
  */
 @Operator(group = "io")
-public final class ReaderNumWorkUnitsCompleted extends PrimitiveOp implements Operand<Long> {
+public final class ReaderNumWorkUnitsCompleted extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new ReaderNumWorkUnitsCompleted operation.
@@ -47,16 +48,16 @@ public final class ReaderNumWorkUnitsCompleted extends PrimitiveOp implements Op
   
   /**
    */
-  public Output<Long> unitsCompleted() {
+  public Output<TInt64> unitsCompleted() {
     return unitsCompleted;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return unitsCompleted;
   }
   
-  private Output<Long> unitsCompleted;
+  private Output<TInt64> unitsCompleted;
   
   private ReaderNumWorkUnitsCompleted(Operation operation) {
     super(operation);

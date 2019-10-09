@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of `igamma(a, x)` wrt `a`.
  * 
  * @param <T> data type for {@code z()} output
  */
-public final class IgammaGradA<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class IgammaGradA<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new IgammaGradA operation.
@@ -39,7 +40,7 @@ public final class IgammaGradA<T extends Number> extends PrimitiveOp implements 
    * @param x 
    * @return a new instance of IgammaGradA
    */
-  public static <T extends Number> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
+  public static <T extends TNumber> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());

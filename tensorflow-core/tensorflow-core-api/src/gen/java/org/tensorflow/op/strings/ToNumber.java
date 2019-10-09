@@ -25,6 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts each string in the input Tensor to the specified numeric type.
@@ -35,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "strings")
-public final class ToNumber<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ToNumber<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ToNumber operation.
@@ -45,11 +48,11 @@ public final class ToNumber<T extends Number> extends PrimitiveOp implements Ope
    * @param outType The numeric type to interpret each string in `string_tensor` as.
    * @return a new instance of ToNumber
    */
-  public static <T extends Number> ToNumber<T> create(Scope scope, Operand<String> stringTensor, Class<T> outType) {
+  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToNumber", scope.makeOpName("ToNumber"));
     opBuilder.addInput(stringTensor.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new ToNumber<T>(opBuilder.build());
   }
   
@@ -60,8 +63,8 @@ public final class ToNumber<T extends Number> extends PrimitiveOp implements Ope
    * @param stringTensor 
    * @return a new instance of ToNumber
    */
-  public static ToNumber<Float> create(Scope scope, Operand<String> stringTensor) {
-    return create(scope, stringTensor, Float.class);
+  public static ToNumber<TFloat> create(Scope scope, Operand<TString> stringTensor) {
+    return create(scope, stringTensor, TFloat.DTYPE);
   }
   
   /**

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * An Op to sum inputs across replicated TPU instances.
@@ -36,7 +38,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CrossReplicaSum<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class CrossReplicaSum<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CrossReplicaSum operation.
@@ -48,7 +50,7 @@ public final class CrossReplicaSum<T extends Number> extends PrimitiveOp impleme
    * replica ids in the ith subgroup.
    * @return a new instance of CrossReplicaSum
    */
-  public static <T extends Number> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<Integer> groupAssignment) {
+  public static <T extends TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());

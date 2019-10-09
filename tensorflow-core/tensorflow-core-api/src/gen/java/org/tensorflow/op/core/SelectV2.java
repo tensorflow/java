@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * @param <T> data type for {@code output()} output
@@ -40,7 +41,7 @@ public final class SelectV2<T> extends PrimitiveOp implements Operand<T> {
    * @param e 
    * @return a new instance of SelectV2
    */
-  public static <T> SelectV2<T> create(Scope scope, Operand<Boolean> condition, Operand<T> t, Operand<T> e) {
+  public static <T> SelectV2<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("SelectV2"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(t.asOutput());

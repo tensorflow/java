@@ -22,6 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve Momentum embedding parameters with debug support.
@@ -105,27 +106,27 @@ public final class RetrieveTPUEmbeddingMomentumParametersGradAccumDebug extends 
   /**
    * Parameter parameters updated by the Momentum optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   /**
    * Parameter momenta updated by the Momentum optimization algorithm.
    */
-  public Output<Float> momenta() {
+  public Output<TFloat> momenta() {
     return momenta;
   }
   
   /**
    * Parameter gradient_accumulators updated by the Momentum optimization algorithm.
    */
-  public Output<Float> gradientAccumulators() {
+  public Output<TFloat> gradientAccumulators() {
     return gradientAccumulators;
   }
   
-  private Output<Float> parameters;
-  private Output<Float> momenta;
-  private Output<Float> gradientAccumulators;
+  private Output<TFloat> parameters;
+  private Output<TFloat> momenta;
+  private Output<TFloat> gradientAccumulators;
   
   private RetrieveTPUEmbeddingMomentumParametersGradAccumDebug(Operation operation) {
     super(operation);

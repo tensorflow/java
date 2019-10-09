@@ -15,49 +15,35 @@ limitations under the License.
 
 package org.tensorflow;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.nio.nd.Shape;
 
-import org.tensorflow.types.UInt8;
+/** Represents a type of elements in a {@link Tensor} */
+public final class DataType<T> {
 
-/** Represents the type of elements in a {@link Tensor} as an enum. */
-public enum DataType {
-  /** 32-bit single precision floating point. */
-  FLOAT(1, 4),
+  @FunctionalInterface
+  public interface TensorMapper<T> {
 
-  /** 64-bit double precision floating point. */
-  DOUBLE(2, 8),
-
-  /** 32-bit signed integer. */
-  INT32(3, 4),
-
-  /** 8-bit unsigned integer. */
-  UINT8(4, 1),
+    /**
+     * Maps tensor memory to a data structure for manipulating elements of this type.
+     *
+     * @param nativeTensor pointer to the native tensor
+     * @param shape the shape of the tensor
+     * @return data structure of elements of this type
+     */
+    T apply(TF_Tensor nativeTensor, Shape shape);
+  }
 
   /**
-   * A sequence of bytes.
+   * Creates a new datatype
    *
-   * <p>TensorFlow uses the STRING type for an arbitrary sequence of bytes.
-   */
-  STRING(7, -1),
-
-  /** 64-bit signed integer. */
-  INT64(9, 8),
-
-  /** Boolean. */
-  BOOL(10, 1);
-
-  private final int value;
-  
-  private final int byteSize;
-
-  /**
+   * @param name readable-name for this type
    * @param value must match the corresponding TF_* value in the TensorFlow C API.
    * @param byteSize size of an element of this type, in bytes, -1 if unknown
+   * @param tensorMapper method for mapping tensor memory to elements of this type
    */
-  DataType(int value, int byteSize) {
-    this.value = value;
-    this.byteSize = byteSize;
+  public static <T> DataType<T> create(String name, int value, int byteSize, TensorMapper<T> tensorMapper) {
+    return new DataType<>(name, value, byteSize, tensorMapper);
   }
 
   /**
@@ -67,50 +53,39 @@ public enum DataType {
     return byteSize;
   }
 
-  /** Corresponding value of the TF_DataType enum in the TensorFlow C API. */
-  int c() {
-    return value;
-  }
-
-  // Cached to avoid copying it
-  private static final DataType[] values = values();
-
-  static DataType fromC(int c) {
-    for (DataType t : values) {
-      if (t.value == c) {
-        return t;
-      }
-    }
-    throw new IllegalArgumentException(
-        "DataType " + c + " is not recognized in Java (version " + TensorFlow.version() + ")");
+  /**
+   * Returns a readable name for this type
+   */
+  public String name() {
+    return name;
   }
 
   /**
-   * Returns the DataType of a Tensor whose elements have the type specified by class {@code c}.
-   *
-   * @param c The class describing the TensorFlow type of interest.
-   * @return The {@code DataType} enum corresponding to {@code c}.
-   * @throws IllegalArgumentException if objects of {@code c} do not correspond to a TensorFlow
-   *     datatype.
+   * Returns the numeric code for this datatype, as recognized by the native library (C API)
    */
-  public static DataType fromClass(Class<?> c) {
-    DataType dtype = typeCodes.get(c);
-    if (dtype == null) {
-      throw new IllegalArgumentException(
-          c.getName() + " objects cannot be used as elements in a TensorFlow Tensor");
-    }
-    return dtype;
+  int nativeCode() {
+    return nativeCode;
   }
 
-  private static final Map<Class<?>, DataType> typeCodes = new HashMap<>();
+  /**
+   * Maps a tensor to a data structure for manipulating elements of this type.
+   *
+   * @param tensor tensor to map
+   * @return data structure of elements of this type
+   */
+  T map(Tensor tensor) {
+    return tensorMapper.apply(tensor.getNative(), tensor.shape());
+  }
 
-  static {
-    typeCodes.put(Float.class, DataType.FLOAT);
-    typeCodes.put(Double.class, DataType.DOUBLE);
-    typeCodes.put(Integer.class, DataType.INT32);
-    typeCodes.put(UInt8.class, DataType.UINT8);
-    typeCodes.put(Long.class, DataType.INT64);
-    typeCodes.put(Boolean.class, DataType.BOOL);
-    typeCodes.put(String.class, DataType.STRING);
+  private final int nativeCode;
+  private final int byteSize;
+  private final String name;
+  private final TensorMapper<T> tensorMapper;
+
+  private DataType(String name, int nativeCode, int byteSize, TensorMapper<T> tensorMapper) {
+    this.name = name;
+    this.nativeCode = nativeCode;
+    this.byteSize = byteSize;
+    this.tensorMapper = tensorMapper;
   }
 }

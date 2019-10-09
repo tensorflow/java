@@ -23,10 +23,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Transforms `input_dataset` containing `Example` protos as vectors of DT_STRING into a dataset of `Tensor` or `SparseTensor` objects representing the parsed features.
@@ -81,7 +82,7 @@ public final class ParseExampleDataset extends PrimitiveOp implements Operand<Ob
    * @param options carries optional attributes values
    * @return a new instance of ParseExampleDataset
    */
-  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<Long> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<Class<?>> sparseTypes, List<Shape> denseShapes, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleDataset", scope.makeOpName("ParseExampleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
@@ -99,7 +100,7 @@ public final class ParseExampleDataset extends PrimitiveOp implements Operand<Ob
     opBuilder.setAttr("dense_keys", denseKeysArray);
     DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
-      sparseTypesArray[i] = DataType.fromClass(sparseTypes.get(i));
+      sparseTypesArray[i] = sparseTypes.get(i);
     }
     opBuilder.setAttr("sparse_types", sparseTypesArray);
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
@@ -109,7 +110,7 @@ public final class ParseExampleDataset extends PrimitiveOp implements Operand<Ob
     opBuilder.setAttr("dense_shapes", denseShapesArray);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = DataType.fromClass(outputTypes.get(i));
+      outputTypesArray[i] = outputTypes.get(i);
     }
     opBuilder.setAttr("output_types", outputTypesArray);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

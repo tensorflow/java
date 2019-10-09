@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reshapes a tensor.
@@ -98,7 +99,7 @@ public final class Reshape<T> extends PrimitiveOp implements Operand<T> {
    * @param shape Defines the shape of the output tensor.
    * @return a new instance of Reshape
    */
-  public static <T, U extends Number> Reshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape) {
+  public static <T, U extends TNumber> Reshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("Reshape", scope.makeOpName("Reshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());

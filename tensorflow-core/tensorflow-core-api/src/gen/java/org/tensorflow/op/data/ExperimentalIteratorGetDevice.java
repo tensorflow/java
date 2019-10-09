@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Returns the name of the device on which `resource` has been placed.
  */
-public final class ExperimentalIteratorGetDevice extends PrimitiveOp implements Operand<String> {
+public final class ExperimentalIteratorGetDevice extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new ExperimentalIteratorGetDevice operation.
@@ -45,16 +46,16 @@ public final class ExperimentalIteratorGetDevice extends PrimitiveOp implements 
   
   /**
    */
-  public Output<String> device() {
+  public Output<TString> device() {
     return device;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return device;
   }
   
-  private Output<String> device;
+  private Output<TString> device;
   
   private ExperimentalIteratorGetDevice(Operation operation) {
     super(operation);

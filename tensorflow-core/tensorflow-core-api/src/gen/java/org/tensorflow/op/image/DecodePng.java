@@ -25,7 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Decode a PNG-encoded image to a uint8 or uint16 tensor.
@@ -57,7 +59,7 @@ import org.tensorflow.types.UInt8;
  * @param <T> data type for {@code image()} output
  */
 @Operator(group = "image")
-public final class DecodePng<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DecodePng<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodePng}
@@ -87,11 +89,11 @@ public final class DecodePng<T extends Number> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  public static <T extends Number> DecodePng<T> create(Scope scope, Operand<String> contents, Class<T> dtype, Options... options) {
+  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.channels != null) {
@@ -110,8 +112,8 @@ public final class DecodePng<T extends Number> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  public static DecodePng<UInt8> create(Scope scope, Operand<String> contents, Options... options) {
-    return create(scope, contents, UInt8.class, options);
+  public static DecodePng<TUInt8> create(Scope scope, Operand<TString> contents, Options... options) {
+    return create(scope, contents, TUInt8.DTYPE, options);
   }
   
   /**

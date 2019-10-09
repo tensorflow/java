@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Constructs a tensor by tiling a given tensor.
@@ -47,7 +48,7 @@ public final class Tile<T> extends PrimitiveOp implements Operand<T> {
    * @param multiples 1-D. Length must be the same as the number of dimensions in `input`
    * @return a new instance of Tile
    */
-  public static <T, U extends Number> Tile<T> create(Scope scope, Operand<T> input, Operand<U> multiples) {
+  public static <T, U extends TNumber> Tile<T> create(Scope scope, Operand<T> input, Operand<U> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("Tile", scope.makeOpName("Tile"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(multiples.asOutput());

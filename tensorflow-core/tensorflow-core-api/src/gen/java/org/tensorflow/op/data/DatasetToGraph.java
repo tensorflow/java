@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TString;
 
 /**
  * Returns a serialized GraphDef representing `input_dataset`.
  * <p>
  * Returns a graph representation for `input_dataset`.
  */
-public final class DatasetToGraph extends PrimitiveOp implements Operand<String> {
+public final class DatasetToGraph extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new DatasetToGraph operation.
@@ -48,16 +49,16 @@ public final class DatasetToGraph extends PrimitiveOp implements Operand<String>
   /**
    * The graph representation of the dataset (as serialized GraphDef).
    */
-  public Output<String> graph() {
+  public Output<TString> graph() {
     return graph;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return graph;
   }
   
-  private Output<String> graph;
+  private Output<TString> graph;
   
   private DatasetToGraph(Operation operation) {
     super(operation);

@@ -24,12 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Returns the number of gradients aggregated in the given accumulators.
  */
 @Operator(group = "train")
-public final class AccumulatorNumAccumulated extends PrimitiveOp implements Operand<Integer> {
+public final class AccumulatorNumAccumulated extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new AccumulatorNumAccumulated operation.
@@ -38,7 +40,7 @@ public final class AccumulatorNumAccumulated extends PrimitiveOp implements Oper
    * @param handle The handle to an accumulator.
    * @return a new instance of AccumulatorNumAccumulated
    */
-  public static AccumulatorNumAccumulated create(Scope scope, Operand<String> handle) {
+  public static AccumulatorNumAccumulated create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorNumAccumulated", scope.makeOpName("AccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -48,16 +50,16 @@ public final class AccumulatorNumAccumulated extends PrimitiveOp implements Oper
   /**
    * The number of gradients aggregated in the given accumulator.
    */
-  public Output<Integer> numAccumulated() {
+  public Output<TInt32> numAccumulated() {
     return numAccumulated;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return numAccumulated;
   }
   
-  private Output<Integer> numAccumulated;
+  private Output<TInt32> numAccumulated;
   
   private AccumulatorNumAccumulated(Operation operation) {
     super(operation);

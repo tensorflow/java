@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes second-order gradients of the maxpooling function.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPoolGradGradWithArgmax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class MaxPoolGradGradWithArgmax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGradGradWithArgmax}
@@ -68,7 +69,7 @@ public final class MaxPoolGradGradWithArgmax<T extends Number> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradGradWithArgmax
    */
-  public static <T extends Number, U extends Number> MaxPoolGradGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber, U extends TNumber> MaxPoolGradGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradGradWithArgmax", scope.makeOpName("MaxPoolGradGradWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());

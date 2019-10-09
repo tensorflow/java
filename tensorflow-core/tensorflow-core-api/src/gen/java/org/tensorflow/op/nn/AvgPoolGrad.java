@@ -24,13 +24,15 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of the average pooling function.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class AvgPoolGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class AvgPoolGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.AvgPoolGrad}
@@ -68,7 +70,7 @@ public final class AvgPoolGrad<T extends Number> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of AvgPoolGrad
    */
-  public static <T extends Number> AvgPoolGrad<T> create(Scope scope, Operand<Integer> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> AvgPoolGrad<T> create(Scope scope, Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPoolGrad", scope.makeOpName("AvgPoolGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());

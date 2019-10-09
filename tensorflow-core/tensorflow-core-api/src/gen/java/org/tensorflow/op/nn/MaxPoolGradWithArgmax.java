@@ -24,13 +24,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of the maxpooling function.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class MaxPoolGradWithArgmax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class MaxPoolGradWithArgmax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGradWithArgmax}
@@ -66,7 +67,7 @@ public final class MaxPoolGradWithArgmax<T extends Number> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradWithArgmax
    */
-  public static <T extends Number, U extends Number> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber, U extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradWithArgmax", scope.makeOpName("MaxPoolGradWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());

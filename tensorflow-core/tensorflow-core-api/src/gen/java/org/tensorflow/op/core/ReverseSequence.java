@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reverses variable length slices.
@@ -116,7 +117,7 @@ public final class ReverseSequence<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of ReverseSequence
    */
-  public static <T, U extends Number> ReverseSequence<T> create(Scope scope, Operand<T> input, Operand<U> seqLengths, Long seqDim, Options... options) {
+  public static <T, U extends TNumber> ReverseSequence<T> create(Scope scope, Operand<T> input, Operand<U> seqLengths, Long seqDim, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseSequence", scope.makeOpName("ReverseSequence"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(seqLengths.asOutput());

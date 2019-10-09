@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  */
@@ -39,7 +40,7 @@ public final class TensorListSetItem extends PrimitiveOp implements Operand<Obje
    * @param item 
    * @return a new instance of TensorListSetItem
    */
-  public static <T> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<Integer> index, Operand<T> item) {
+  public static <T> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSetItem", scope.makeOpName("TensorListSetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());

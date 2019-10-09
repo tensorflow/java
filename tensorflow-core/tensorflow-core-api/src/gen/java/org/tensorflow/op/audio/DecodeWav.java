@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Decode a 16-bit PCM WAV file to a float tensor.
@@ -82,7 +85,7 @@ public final class DecodeWav extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DecodeWav
    */
-  public static DecodeWav create(Scope scope, Operand<String> contents, Options... options) {
+  public static DecodeWav create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeWav", scope.makeOpName("DecodeWav"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -116,19 +119,19 @@ public final class DecodeWav extends PrimitiveOp {
   /**
    * 2-D with shape `[length, channels]`.
    */
-  public Output<Float> audio() {
+  public Output<TFloat> audio() {
     return audio;
   }
   
   /**
    * Scalar holding the sample rate found in the WAV header.
    */
-  public Output<Integer> sampleRate() {
+  public Output<TInt32> sampleRate() {
     return sampleRate;
   }
   
-  private Output<Float> audio;
-  private Output<Integer> sampleRate;
+  private Output<TFloat> audio;
+  private Output<TInt32> sampleRate;
   
   private DecodeWav(Operation operation) {
     super(operation);

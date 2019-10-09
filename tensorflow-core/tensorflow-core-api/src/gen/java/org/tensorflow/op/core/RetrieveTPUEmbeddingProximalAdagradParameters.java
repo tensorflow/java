@@ -22,6 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve proximal Adagrad embedding parameters.
@@ -105,19 +106,19 @@ public final class RetrieveTPUEmbeddingProximalAdagradParameters extends Primiti
   /**
    * Parameter parameters updated by the proximal Adagrad optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   /**
    * Parameter accumulators updated by the proximal Adagrad optimization algorithm.
    */
-  public Output<Float> accumulators() {
+  public Output<TFloat> accumulators() {
     return accumulators;
   }
   
-  private Output<Float> parameters;
-  private Output<Float> accumulators;
+  private Output<TFloat> parameters;
+  private Output<TFloat> accumulators;
   
   private RetrieveTPUEmbeddingProximalAdagradParameters(Operation operation) {
     super(operation);

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * An op that enqueues a list of input batch tensors to TPUEmbedding.
@@ -62,7 +64,7 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of EnqueueTPUEmbeddingIntegerBatch
    */
-  public static EnqueueTPUEmbeddingIntegerBatch create(Scope scope, Iterable<Operand<Integer>> batch, Operand<String> modeOverride, Options... options) {
+  public static EnqueueTPUEmbeddingIntegerBatch create(Scope scope, Iterable<Operand<TInt32>> batch, Operand<TString> modeOverride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingIntegerBatch", scope.makeOpName("EnqueueTPUEmbeddingIntegerBatch"));
     opBuilder.addInputList(Operands.asOutputs(batch));
     opBuilder.addInput(modeOverride.asOutput());

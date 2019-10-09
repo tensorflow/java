@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs max pooling on the input and outputs both max values and indices.
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code argmax()} output
  */
 @Operator(group = "nn")
-public final class MaxPoolWithArgmax<T extends Number, U extends Number> extends PrimitiveOp {
+public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolWithArgmax}
@@ -78,7 +80,7 @@ public final class MaxPoolWithArgmax<T extends Number, U extends Number> extends
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolWithArgmax
    */
-  public static <T extends Number, U extends Number> MaxPoolWithArgmax<T, U> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding, Options... options) {
+  public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, DataType<U> Targmax, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolWithArgmax", scope.makeOpName("MaxPoolWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -92,7 +94,7 @@ public final class MaxPoolWithArgmax<T extends Number, U extends Number> extends
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
-    opBuilder.setAttr("Targmax", DataType.fromClass(Targmax));
+    opBuilder.setAttr("Targmax", Targmax);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {
@@ -116,8 +118,8 @@ public final class MaxPoolWithArgmax<T extends Number, U extends Number> extends
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolWithArgmax
    */
-  public static <T extends Number> MaxPoolWithArgmax<T, Long> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
-    return create(scope, input, ksize, strides, Long.class, padding, options);
+  public static <T extends TNumber> MaxPoolWithArgmax<T, TInt64> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+    return create(scope, input, ksize, strides, TInt64.DTYPE, padding, options);
   }
   
   /**

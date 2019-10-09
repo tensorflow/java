@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the Hurwitz zeta function \\(\zeta(x, q)\\).
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Zeta<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Zeta<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Zeta operation.
@@ -45,7 +46,7 @@ public final class Zeta<T extends Number> extends PrimitiveOp implements Operand
    * @param q 
    * @return a new instance of Zeta
    */
-  public static <T extends Number> Zeta<T> create(Scope scope, Operand<T> x, Operand<T> q) {
+  public static <T extends TNumber> Zeta<T> create(Scope scope, Operand<T> x, Operand<T> q) {
     OperationBuilder opBuilder = scope.env().opBuilder("Zeta", scope.makeOpName("Zeta"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(q.asOutput());

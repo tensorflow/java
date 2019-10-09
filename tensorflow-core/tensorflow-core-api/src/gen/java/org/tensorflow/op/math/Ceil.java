@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise smallest integer not less than x.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Ceil<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Ceil<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Ceil operation.
@@ -40,7 +41,7 @@ public final class Ceil<T extends Number> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Ceil
    */
-  public static <T extends Number> Ceil<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Ceil<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Ceil", scope.makeOpName("Ceil"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

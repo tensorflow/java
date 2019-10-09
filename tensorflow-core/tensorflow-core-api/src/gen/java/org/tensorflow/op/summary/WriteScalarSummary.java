@@ -22,6 +22,9 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  */
@@ -37,7 +40,7 @@ public final class WriteScalarSummary extends PrimitiveOp {
    * @param value 
    * @return a new instance of WriteScalarSummary
    */
-  public static <T extends Number> WriteScalarSummary create(Scope scope, Operand<?> writer, Operand<Long> step, Operand<String> tag, Operand<T> value) {
+  public static <T extends TNumber> WriteScalarSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteScalarSummary", scope.makeOpName("WriteScalarSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());

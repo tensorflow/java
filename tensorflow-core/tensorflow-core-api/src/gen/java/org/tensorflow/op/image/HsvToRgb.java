@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Convert one or more images from HSV to RGB.
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class HsvToRgb<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class HsvToRgb<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new HsvToRgb operation.
@@ -46,7 +47,7 @@ public final class HsvToRgb<T extends Number> extends PrimitiveOp implements Ope
    * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
    * @return a new instance of HsvToRgb
    */
-  public static <T extends Number> HsvToRgb<T> create(Scope scope, Operand<T> images) {
+  public static <T extends TNumber> HsvToRgb<T> create(Scope scope, Operand<T> images) {
     OperationBuilder opBuilder = scope.env().opBuilder("HSVToRGB", scope.makeOpName("HsvToRgb"));
     opBuilder.addInput(images.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

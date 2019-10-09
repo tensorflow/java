@@ -37,7 +37,7 @@ package org.tensorflow;
 public interface Operand<T> {
 
   /**
-   * Returns the symbolic handle of a tensor.
+   * Returns the symbolic handle of the tensor.
    *
    * <p>Inputs to TensorFlow operations are outputs of another TensorFlow operation. This method is
    * used to obtain a symbolic handle that represents the computation of the input.
@@ -45,4 +45,15 @@ public interface Operand<T> {
    * @see OperationBuilder#addInput(Output)
    */
   Output<T> asOutput();
+
+  /**
+   * Returns the data of the tensor.
+   *
+   * <i>This only works when running in an eager execution</i>
+   *
+   * @throws IllegalStateException if this is an operand of a graph
+   */
+  default T tensorData() {
+    return asOutput().tensor().data();
+  }
 }

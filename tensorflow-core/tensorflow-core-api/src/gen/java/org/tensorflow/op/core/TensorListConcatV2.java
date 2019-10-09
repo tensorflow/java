@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Concats all tensors in the list along the 0th dimension.
@@ -57,13 +59,13 @@ public final class TensorListConcatV2<U> extends PrimitiveOp {
    * @param elementDtype 
    * @return a new instance of TensorListConcatV2
    */
-  public static <U, T extends Number> TensorListConcatV2<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<Long> leadingDims, Class<U> elementDtype) {
+  public static <U, T extends TNumber> TensorListConcatV2<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcatV2"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(leadingDims.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcatV2<U>(opBuilder.build());
   }
   
@@ -75,12 +77,12 @@ public final class TensorListConcatV2<U> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> lengths() {
+  public Output<TInt64> lengths() {
     return lengths;
   }
   
   private Output<U> tensor;
-  private Output<Long> lengths;
+  private Output<TInt64> lengths;
   
   private TensorListConcatV2(Operation operation) {
     super(operation);

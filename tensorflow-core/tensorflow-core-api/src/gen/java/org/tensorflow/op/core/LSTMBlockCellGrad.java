@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell backward propagation for 1 timestep.
@@ -31,7 +32,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code csPrevGrad()} output
  */
-public final class LSTMBlockCellGrad<T extends Number> extends PrimitiveOp {
+public final class LSTMBlockCellGrad<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new LSTMBlockCellGrad operation.
@@ -56,7 +57,7 @@ public final class LSTMBlockCellGrad<T extends Number> extends PrimitiveOp {
    * @param usePeephole Whether the cell uses peephole connections.
    * @return a new instance of LSTMBlockCellGrad
    */
-  public static <T extends Number> LSTMBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+  public static <T extends TNumber> LSTMBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCellGrad", scope.makeOpName("LSTMBlockCellGrad"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());

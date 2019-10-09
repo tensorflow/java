@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Closes the given barrier.
@@ -66,7 +67,7 @@ public final class BarrierClose extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BarrierClose
    */
-  public static BarrierClose create(Scope scope, Operand<String> handle, Options... options) {
+  public static BarrierClose create(Scope scope, Operand<TString> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierClose", scope.makeOpName("BarrierClose"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

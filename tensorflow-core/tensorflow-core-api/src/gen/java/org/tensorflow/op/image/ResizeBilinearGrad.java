@@ -23,13 +23,15 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of bilinear interpolation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class ResizeBilinearGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ResizeBilinearGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeBilinearGrad}
@@ -70,7 +72,7 @@ public final class ResizeBilinearGrad<T extends Number> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinearGrad
    */
-  public static <T extends Number> ResizeBilinearGrad<T> create(Scope scope, Operand<Float> grads, Operand<T> originalImage, Options... options) {
+  public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope, Operand<TFloat> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinearGrad", scope.makeOpName("ResizeBilinearGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());

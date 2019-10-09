@@ -24,6 +24,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Saves tensors in V2 checkpoint format.
@@ -47,7 +48,7 @@ public final class Save extends PrimitiveOp {
    * @param tensors `N` tensors to save.
    * @return a new instance of Save
    */
-  public static Save create(Scope scope, Operand<String> prefix, Operand<String> tensorNames, Operand<String> shapeAndSlices, Iterable<Operand<?>> tensors) {
+  public static Save create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
     OperationBuilder opBuilder = scope.env().opBuilder("SaveV2", scope.makeOpName("Save"));
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());

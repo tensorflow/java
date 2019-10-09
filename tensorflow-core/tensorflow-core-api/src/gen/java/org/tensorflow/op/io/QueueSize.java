@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Computes the number of elements in the given queue.
  */
 @Operator(group = "io")
-public final class QueueSize extends PrimitiveOp implements Operand<Integer> {
+public final class QueueSize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new QueueSize operation.
@@ -48,16 +49,16 @@ public final class QueueSize extends PrimitiveOp implements Operand<Integer> {
   /**
    * The number of elements in the given queue.
    */
-  public Output<Integer> size() {
+  public Output<TInt32> size() {
     return size;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return size;
   }
   
-  private Output<Integer> size;
+  private Output<TInt32> size;
   
   private QueueSize(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Scatter `updates` into a new tensor according to `indices`.
@@ -121,7 +122,7 @@ public final class ScatterNd<U> extends PrimitiveOp implements Operand<U> {
    * @param shape 1-D. The shape of the resulting tensor.
    * @return a new instance of ScatterNd
    */
-  public static <U, T extends Number> ScatterNd<U> create(Scope scope, Operand<T> indices, Operand<U> updates, Operand<T> shape) {
+  public static <U, T extends TNumber> ScatterNd<U> create(Scope scope, Operand<T> indices, Operand<U> updates, Operand<T> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNd", scope.makeOpName("ScatterNd"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

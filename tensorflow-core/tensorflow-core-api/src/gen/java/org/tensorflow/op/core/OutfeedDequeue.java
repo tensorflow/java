@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 
@@ -65,10 +65,10 @@ public final class OutfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of OutfeedDequeue
    */
-  public static <T> OutfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
+  public static <T> OutfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeue", scope.makeOpName("OutfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("shape", shape);
     if (options != null) {
       for (Options opts : options) {

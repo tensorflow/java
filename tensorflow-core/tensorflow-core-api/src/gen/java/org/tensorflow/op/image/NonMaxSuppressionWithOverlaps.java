@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Greedily selects a subset of bounding boxes in descending order of score,
@@ -44,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  *   selected_boxes = tf.gather(boxes, selected_indices)
  */
 @Operator(group = "image")
-public final class NonMaxSuppressionWithOverlaps extends PrimitiveOp implements Operand<Integer> {
+public final class NonMaxSuppressionWithOverlaps extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new NonMaxSuppressionWithOverlaps operation.
@@ -62,7 +64,7 @@ public final class NonMaxSuppressionWithOverlaps extends PrimitiveOp implements 
    * boxes based on score.
    * @return a new instance of NonMaxSuppressionWithOverlaps
    */
-  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<Float> overlaps, Operand<Float> scores, Operand<Integer> maxOutputSize, Operand<Float> overlapThreshold, Operand<Float> scoreThreshold) {
+  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat> overlaps, Operand<TFloat> scores, Operand<TInt32> maxOutputSize, Operand<TFloat> overlapThreshold, Operand<TFloat> scoreThreshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionWithOverlaps", scope.makeOpName("NonMaxSuppressionWithOverlaps"));
     opBuilder.addInput(overlaps.asOutput());
     opBuilder.addInput(scores.asOutput());
@@ -77,16 +79,16 @@ public final class NonMaxSuppressionWithOverlaps extends PrimitiveOp implements 
    * A 1-D integer tensor of shape `[M]` representing the selected
    * indices from the boxes tensor, where `M <= max_output_size`.
    */
-  public Output<Integer> selectedIndices() {
+  public Output<TInt32> selectedIndices() {
     return selectedIndices;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return selectedIndices;
   }
   
-  private Output<Integer> selectedIndices;
+  private Output<TInt32> selectedIndices;
   
   private NonMaxSuppressionWithOverlaps(Operation operation) {
     super(operation);

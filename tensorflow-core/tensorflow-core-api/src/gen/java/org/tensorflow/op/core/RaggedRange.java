@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns a `RaggedTensor` containing the specified sequences of numbers.
@@ -48,7 +50,7 @@ import org.tensorflow.op.Scope;
  * @param <U> data type for {@code rtNestedSplits()} output
  * @param <T> data type for {@code rtDenseValues()} output
  */
-public final class RaggedRange<U extends Number, T extends Number> extends PrimitiveOp {
+public final class RaggedRange<U extends TNumber, T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedRange operation.
@@ -60,13 +62,13 @@ public final class RaggedRange<U extends Number, T extends Number> extends Primi
    * @param Tsplits 
    * @return a new instance of RaggedRange
    */
-  public static <U extends Number, T extends Number> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, Class<U> Tsplits) {
+  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput());
     opBuilder.addInput(limits.asOutput());
     opBuilder.addInput(deltas.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tsplits", DataType.fromClass(Tsplits));
+    opBuilder.setAttr("Tsplits", Tsplits);
     return new RaggedRange<U, T>(opBuilder.build());
   }
   
@@ -79,8 +81,8 @@ public final class RaggedRange<U extends Number, T extends Number> extends Primi
    * @param deltas The deltas of each range.
    * @return a new instance of RaggedRange
    */
-  public static <T extends Number> RaggedRange<Long, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
-    return create(scope, starts, limits, deltas, Long.class);
+  public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
+    return create(scope, starts, limits, deltas, TInt64.DTYPE);
   }
   
   /**

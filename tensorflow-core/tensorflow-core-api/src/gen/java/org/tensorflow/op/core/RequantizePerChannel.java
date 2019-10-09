@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Requantizes input with min and max values known per channel.
@@ -44,7 +45,7 @@ public final class RequantizePerChannel<U> extends PrimitiveOp {
    * @param outType The quantized type of output tensor that needs to be converted.
    * @return a new instance of RequantizePerChannel
    */
-  public static <U, T> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<Float> inputMin, Operand<Float> inputMax, Operand<Float> requestedOutputMin, Operand<Float> requestedOutputMax, Class<U> outType) {
+  public static <U, T> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Operand<TFloat> requestedOutputMin, Operand<TFloat> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -52,7 +53,7 @@ public final class RequantizePerChannel<U> extends PrimitiveOp {
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new RequantizePerChannel<U>(opBuilder.build());
   }
   
@@ -66,20 +67,20 @@ public final class RequantizePerChannel<U> extends PrimitiveOp {
   /**
    * The minimum value of the final output tensor
    */
-  public Output<Float> outputMin() {
+  public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
    * The maximum value of the final output tensor.
    */
-  public Output<Float> outputMax() {
+  public Output<TFloat> outputMax() {
     return outputMax;
   }
   
   private Output<U> output;
-  private Output<Float> outputMin;
-  private Output<Float> outputMax;
+  private Output<TFloat> outputMin;
+  private Output<TFloat> outputMax;
   
   private RequantizePerChannel(Operation operation) {
     super(operation);

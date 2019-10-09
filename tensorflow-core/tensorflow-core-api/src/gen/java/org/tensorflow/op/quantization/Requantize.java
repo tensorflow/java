@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Converts the quantized `input` tensor into a lower-precision `output`.
@@ -54,7 +55,7 @@ public final class Requantize<U> extends PrimitiveOp {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of Requantize
    */
-  public static <U, T> Requantize<U> create(Scope scope, Operand<T> input, Operand<Float> inputMin, Operand<Float> inputMax, Operand<Float> requestedOutputMin, Operand<Float> requestedOutputMax, Class<U> outType) {
+  public static <U, T> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Operand<TFloat> requestedOutputMin, Operand<TFloat> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Requantize", scope.makeOpName("Requantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -62,7 +63,7 @@ public final class Requantize<U> extends PrimitiveOp {
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new Requantize<U>(opBuilder.build());
   }
   
@@ -75,20 +76,20 @@ public final class Requantize<U> extends PrimitiveOp {
   /**
    * The requested_output_min value is copied into this output.
    */
-  public Output<Float> outputMin() {
+  public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
    * The requested_output_max value is copied into this output.
    */
-  public Output<Float> outputMax() {
+  public Output<TFloat> outputMax() {
     return outputMax;
   }
   
   private Output<U> output;
-  private Output<Float> outputMin;
-  private Output<Float> outputMax;
+  private Output<TFloat> outputMin;
+  private Output<TFloat> outputMax;
   
   private Requantize(Operation operation) {
     super(operation);

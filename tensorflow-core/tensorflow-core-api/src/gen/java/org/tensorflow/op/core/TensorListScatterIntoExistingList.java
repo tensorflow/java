@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Scatters tensor at indices in an input list.
@@ -48,7 +49,7 @@ public final class TensorListScatterIntoExistingList extends PrimitiveOp impleme
    * @param indices 
    * @return a new instance of TensorListScatterIntoExistingList
    */
-  public static <T> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<Integer> indices) {
+  public static <T> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());

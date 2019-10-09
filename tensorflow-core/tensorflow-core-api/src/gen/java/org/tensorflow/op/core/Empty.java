@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Creates a tensor with the given shape.
@@ -64,11 +65,11 @@ public final class Empty<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Empty
    */
-  public static <T> Empty<T> create(Scope scope, Operand<Integer> shape, Class<T> dtype, Options... options) {
+  public static <T> Empty<T> create(Scope scope, Operand<TInt32> shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Empty", scope.makeOpName("Empty"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.init != null) {

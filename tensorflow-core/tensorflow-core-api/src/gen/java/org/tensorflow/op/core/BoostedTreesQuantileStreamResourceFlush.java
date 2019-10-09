@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Flush the summaries for a quantile stream resource.
@@ -63,7 +64,7 @@ public final class BoostedTreesQuantileStreamResourceFlush extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesQuantileStreamResourceFlush
    */
-  public static BoostedTreesQuantileStreamResourceFlush create(Scope scope, Operand<?> quantileStreamResourceHandle, Operand<Long> numBuckets, Options... options) {
+  public static BoostedTreesQuantileStreamResourceFlush create(Scope scope, Operand<?> quantileStreamResourceHandle, Operand<TInt64> numBuckets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceFlush", scope.makeOpName("BoostedTreesQuantileStreamResourceFlush"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInput(numBuckets.asOutput());

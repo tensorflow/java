@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -119,12 +119,12 @@ public final class MutableDenseHashTable extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of MutableDenseHashTable
    */
-  public static <T, U> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, Class<U> valueDtype, Options... options) {
+  public static <T, U> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput());
     opBuilder.addInput(deletedKey.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("value_dtype", DataType.fromClass(valueDtype));
+    opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

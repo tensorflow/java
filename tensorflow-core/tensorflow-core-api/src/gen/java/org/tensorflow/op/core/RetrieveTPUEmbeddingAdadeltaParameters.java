@@ -22,6 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve Adadelta embedding parameters.
@@ -105,27 +106,27 @@ public final class RetrieveTPUEmbeddingAdadeltaParameters extends PrimitiveOp {
   /**
    * Parameter parameters updated by the Adadelta optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   /**
    * Parameter accumulators updated by the Adadelta optimization algorithm.
    */
-  public Output<Float> accumulators() {
+  public Output<TFloat> accumulators() {
     return accumulators;
   }
   
   /**
    * Parameter updates updated by the Adadelta optimization algorithm.
    */
-  public Output<Float> updates() {
+  public Output<TFloat> updates() {
     return updates;
   }
   
-  private Output<Float> parameters;
-  private Output<Float> accumulators;
-  private Output<Float> updates;
+  private Output<TFloat> parameters;
+  private Output<TFloat> accumulators;
+  private Output<TFloat> updates;
   
   private RetrieveTPUEmbeddingAdadeltaParameters(Operation operation) {
     super(operation);

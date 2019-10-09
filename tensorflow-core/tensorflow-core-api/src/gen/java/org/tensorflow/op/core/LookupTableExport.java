@@ -44,12 +44,12 @@ public final class LookupTableExport<T, U> extends PrimitiveOp {
    * @param Tvalues 
    * @return a new instance of LookupTableExport
    */
-  public static <T, U> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, Class<T> Tkeys, Class<U> Tvalues) {
+  public static <T, U> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tkeys", DataType.fromClass(Tkeys));
-    opBuilder.setAttr("Tvalues", DataType.fromClass(Tvalues));
+    opBuilder.setAttr("Tkeys", Tkeys);
+    opBuilder.setAttr("Tvalues", Tvalues);
     return new LookupTableExport<T, U>(opBuilder.build());
   }
   

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Adds up a SparseTensor and a dense Tensor, using these special rules:
@@ -53,7 +54,7 @@ public final class SparseDenseCwiseAdd<T> extends PrimitiveOp implements Operand
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseAdd
    */
-  public static <T> SparseDenseCwiseAdd<T> create(Scope scope, Operand<Long> spIndices, Operand<T> spValues, Operand<Long> spShape, Operand<T> dense) {
+  public static <T> SparseDenseCwiseAdd<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseAdd", scope.makeOpName("SparseDenseCwiseAdd"));
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());

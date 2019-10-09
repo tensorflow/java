@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
 
 /**
  * Get the number of nodes in a tree
  */
-public final class TensorForestTreeSize extends PrimitiveOp implements Operand<Integer> {
+public final class TensorForestTreeSize extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new TensorForestTreeSize operation.
@@ -46,16 +47,16 @@ public final class TensorForestTreeSize extends PrimitiveOp implements Operand<I
   /**
    * The size of the tree.
    */
-  public Output<Integer> treeSize() {
+  public Output<TInt32> treeSize() {
     return treeSize;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return treeSize;
   }
   
-  private Output<Integer> treeSize;
+  private Output<TInt32> treeSize;
   
   private TensorForestTreeSize(Operation operation) {
     super(operation);

@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchCholeskyGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class BatchCholeskyGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchCholeskyGrad operation.
@@ -39,7 +40,7 @@ public final class BatchCholeskyGrad<T extends Number> extends PrimitiveOp imple
    * @param grad 
    * @return a new instance of BatchCholeskyGrad
    */
-  public static <T extends Number> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
+  public static <T extends TNumber> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchCholeskyGrad", scope.makeOpName("BatchCholeskyGrad"));
     opBuilder.addInput(l.asOutput());
     opBuilder.addInput(grad.asOutput());

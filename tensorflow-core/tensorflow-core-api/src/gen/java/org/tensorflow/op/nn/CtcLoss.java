@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
@@ -89,7 +92,7 @@ public final class CtcLoss extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcLoss
    */
-  public static CtcLoss create(Scope scope, Operand<Float> inputs, Operand<Long> labelsIndices, Operand<Integer> labelsValues, Operand<Integer> sequenceLength, Options... options) {
+  public static CtcLoss create(Scope scope, Operand<TFloat> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
@@ -141,7 +144,7 @@ public final class CtcLoss extends PrimitiveOp {
   /**
    * A vector (batch) containing log-probabilities.
    */
-  public Output<Float> loss() {
+  public Output<TFloat> loss() {
     return loss;
   }
   
@@ -149,12 +152,12 @@ public final class CtcLoss extends PrimitiveOp {
    * The gradient of `loss`.  3-D, shape:
    * `(max_time x batch_size x num_classes)`.
    */
-  public Output<Float> gradient() {
+  public Output<TFloat> gradient() {
     return gradient;
   }
   
-  private Output<Float> loss;
-  private Output<Float> gradient;
+  private Output<TFloat> loss;
+  private Output<TFloat> gradient;
   
   private CtcLoss(Operation operation) {
     super(operation);

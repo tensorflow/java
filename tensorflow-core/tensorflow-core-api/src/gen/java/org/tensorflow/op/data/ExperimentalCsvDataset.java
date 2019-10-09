@@ -22,10 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  */
@@ -47,7 +50,7 @@ public final class ExperimentalCsvDataset extends PrimitiveOp implements Operand
    * @param outputShapes 
    * @return a new instance of ExperimentalCsvDataset
    */
-  public static ExperimentalCsvDataset create(Scope scope, Operand<String> filenames, Operand<String> compressionType, Operand<Long> bufferSize, Operand<Boolean> header, Operand<String> fieldDelim, Operand<Boolean> useQuoteDelim, Operand<String> naValue, Operand<Long> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
+  public static ExperimentalCsvDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header, Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue, Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalCSVDataset", scope.makeOpName("ExperimentalCsvDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());

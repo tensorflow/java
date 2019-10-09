@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TString;
 
 /**
  * Generate a sharded filename. The filename is printf formatted as
@@ -31,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  *    %s-%05d-of-%05d, basename, shard, num_shards.
  */
 @Operator(group = "io")
-public final class ShardedFilename extends PrimitiveOp implements Operand<String> {
+public final class ShardedFilename extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new ShardedFilename operation.
@@ -42,7 +44,7 @@ public final class ShardedFilename extends PrimitiveOp implements Operand<String
    * @param numShards 
    * @return a new instance of ShardedFilename
    */
-  public static ShardedFilename create(Scope scope, Operand<String> basename, Operand<Integer> shard, Operand<Integer> numShards) {
+  public static ShardedFilename create(Scope scope, Operand<TString> basename, Operand<TInt32> shard, Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilename", scope.makeOpName("ShardedFilename"));
     opBuilder.addInput(basename.asOutput());
     opBuilder.addInput(shard.asOutput());
@@ -53,16 +55,16 @@ public final class ShardedFilename extends PrimitiveOp implements Operand<String
   
   /**
    */
-  public Output<String> filename() {
+  public Output<TString> filename() {
     return filename;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return filename;
   }
   
-  private Output<String> filename;
+  private Output<TString> filename;
   
   private ShardedFilename(Operation operation) {
     super(operation);

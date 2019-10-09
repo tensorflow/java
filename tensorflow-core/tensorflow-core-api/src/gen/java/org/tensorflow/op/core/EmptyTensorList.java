@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates and returns an empty tensor list.
@@ -48,12 +50,12 @@ public final class EmptyTensorList extends PrimitiveOp implements Operand<Object
    * @param elementDtype 
    * @return a new instance of EmptyTensorList
    */
-  public static <T extends Number, U> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<Integer> maxNumElements, Class<U> elementDtype) {
+  public static <T extends TNumber, U> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new EmptyTensorList(opBuilder.build());
   }
   

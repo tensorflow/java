@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Reduces sparse updates into a variable reference using the `max` operation.
@@ -54,7 +55,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class ScatterMax<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ScatterMax<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScatterMax}
@@ -86,7 +87,7 @@ public final class ScatterMax<T extends Number> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of ScatterMax
    */
-  public static <T extends Number, U extends Number> ScatterMax<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TNumber, U extends TNumber> ScatterMax<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMax", scope.makeOpName("ScatterMax"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

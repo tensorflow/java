@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Decode web-safe base64-encoded strings.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * Web-safe means that input must use - and _ instead of + and /.
  */
 @Operator(group = "io")
-public final class DecodeBase64 extends PrimitiveOp implements Operand<String> {
+public final class DecodeBase64 extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new DecodeBase64 operation.
@@ -41,7 +42,7 @@ public final class DecodeBase64 extends PrimitiveOp implements Operand<String> {
    * @param input Base64 strings to decode.
    * @return a new instance of DecodeBase64
    */
-  public static DecodeBase64 create(Scope scope, Operand<String> input) {
+  public static DecodeBase64 create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBase64", scope.makeOpName("DecodeBase64"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -51,16 +52,16 @@ public final class DecodeBase64 extends PrimitiveOp implements Operand<String> {
   /**
    * Decoded strings.
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private DecodeBase64(Operation operation) {
     super(operation);

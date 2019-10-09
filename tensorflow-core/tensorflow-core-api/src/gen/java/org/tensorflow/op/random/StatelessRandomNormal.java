@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom values from a normal distribution.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessRandomNormal<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class StatelessRandomNormal<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomNormal operation.
@@ -47,12 +49,12 @@ public final class StatelessRandomNormal<V extends Number> extends PrimitiveOp i
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomNormal
    */
-  public static <V extends Number, T extends Number, U extends Number> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomNormal<V>(opBuilder.build());
   }
   
@@ -64,8 +66,8 @@ public final class StatelessRandomNormal<V extends Number> extends PrimitiveOp i
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomNormal
    */
-  public static <T extends Number, U extends Number> StatelessRandomNormal<Float> create(Scope scope, Operand<T> shape, Operand<U> seed) {
-    return create(scope, shape, seed, Float.class);
+  public static <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+    return create(scope, shape, seed, TFloat.DTYPE);
   }
   
   /**

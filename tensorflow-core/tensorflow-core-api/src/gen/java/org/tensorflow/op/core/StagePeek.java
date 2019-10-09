@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Op peeks at the values at the specified index.  If the
@@ -94,13 +95,13 @@ public final class StagePeek extends PrimitiveOp implements Iterable<Operand<Obj
    * @param options carries optional attributes values
    * @return a new instance of StagePeek
    */
-  public static StagePeek create(Scope scope, Operand<Integer> index, List<Class<?>> dtypes, Options... options) {
+  public static StagePeek create(Scope scope, Operand<TInt32> index, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StagePeek", scope.makeOpName("StagePeek"));
     opBuilder.addInput(index.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = DataType.fromClass(dtypes.get(i));
+      dtypesArray[i] = dtypes.get(i);
     }
     opBuilder.setAttr("dtypes", dtypesArray);
     if (options != null) {

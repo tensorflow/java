@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Multiply matrix "a" by matrix "b".
@@ -39,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * in the input gradient when that gradient comes from a Relu.
  */
 @Operator(group = "sparse")
-public final class SparseMatMul extends PrimitiveOp implements Operand<Float> {
+public final class SparseMatMul extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseMatMul}
@@ -96,7 +98,7 @@ public final class SparseMatMul extends PrimitiveOp implements Operand<Float> {
    * @param options carries optional attributes values
    * @return a new instance of SparseMatMul
    */
-  public static <T extends Number, U extends Number> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
+  public static <T extends TNumber, U extends TNumber> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -150,16 +152,16 @@ public final class SparseMatMul extends PrimitiveOp implements Operand<Float> {
   
   /**
    */
-  public Output<Float> product() {
+  public Output<TFloat> product() {
     return product;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return product;
   }
   
-  private Output<Float> product;
+  private Output<TFloat> product;
   
   private SparseMatMul(Operation operation) {
     super(operation);

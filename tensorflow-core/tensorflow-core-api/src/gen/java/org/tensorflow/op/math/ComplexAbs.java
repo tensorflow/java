@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the complex absolute value of a tensor.
@@ -37,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class ComplexAbs<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new ComplexAbs operation.
@@ -47,11 +49,11 @@ public final class ComplexAbs<U extends Number> extends PrimitiveOp implements O
    * @param Tout 
    * @return a new instance of ComplexAbs
    */
-  public static <U extends Number, T> ComplexAbs<U> create(Scope scope, Operand<T> x, Class<U> Tout) {
+  public static <U extends TNumber, T> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tout", DataType.fromClass(Tout));
+    opBuilder.setAttr("Tout", Tout);
     return new ComplexAbs<U>(opBuilder.build());
   }
   
@@ -62,8 +64,8 @@ public final class ComplexAbs<U extends Number> extends PrimitiveOp implements O
    * @param x 
    * @return a new instance of ComplexAbs
    */
-  public static <T> ComplexAbs<Float> create(Scope scope, Operand<T> x) {
-    return create(scope, x, Float.class);
+  public static <T> ComplexAbs<TFloat> create(Scope scope, Operand<T> x) {
+    return create(scope, x, TFloat.DTYPE);
   }
   
   /**

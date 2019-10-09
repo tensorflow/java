@@ -18,7 +18,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;

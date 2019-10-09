@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Serialize an `N`-minibatch `SparseTensor` into an `[N, 3]` `Tensor` object.
@@ -53,13 +55,13 @@ public final class SerializeManySparse<U> extends PrimitiveOp implements Operand
    * (default) and `variant`.
    * @return a new instance of SerializeManySparse
    */
-  public static <U, T> SerializeManySparse<U> create(Scope scope, Operand<Long> sparseIndices, Operand<T> sparseValues, Operand<Long> sparseShape, Class<U> outType) {
+  public static <U, T> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeManySparse", scope.makeOpName("SerializeManySparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     return new SerializeManySparse<U>(opBuilder.build());
   }
   
@@ -72,8 +74,8 @@ public final class SerializeManySparse<U> extends PrimitiveOp implements Operand
    * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
    * @return a new instance of SerializeManySparse
    */
-  public static <T> SerializeManySparse<String> create(Scope scope, Operand<Long> sparseIndices, Operand<T> sparseValues, Operand<Long> sparseShape) {
-    return create(scope, sparseIndices, sparseValues, sparseShape, String.class);
+  public static <T> SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
   }
   
   /**

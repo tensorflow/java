@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * A RNN backed by cuDNN.
@@ -63,7 +64,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CudnnRnn<T extends Number> extends PrimitiveOp {
+public final class CudnnRnn<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CudnnRnn}
@@ -149,7 +150,7 @@ public final class CudnnRnn<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnn
    */
-  public static <T extends Number> CudnnRnn<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Options... options) {
+  public static <T extends TNumber> CudnnRnn<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNV2", scope.makeOpName("CudnnRnn"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());

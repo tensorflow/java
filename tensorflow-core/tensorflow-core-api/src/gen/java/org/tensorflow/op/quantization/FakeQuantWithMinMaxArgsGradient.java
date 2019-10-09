@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxArgs operation.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implements Operand<Float> {
+public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient}
@@ -86,7 +87,7 @@ public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxArgsGradient
    */
-  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<Float> gradients, Operand<Float> inputs, Options... options) {
+  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat> gradients, Operand<TFloat> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -142,16 +143,16 @@ public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implement
    * Backpropagated gradients below the FakeQuantWithMinMaxArgs operation:
    * `gradients * (inputs >= min && inputs <= max)`.
    */
-  public Output<Float> backprops() {
+  public Output<TFloat> backprops() {
     return backprops;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return backprops;
   }
   
-  private Output<Float> backprops;
+  private Output<TFloat> backprops;
   
   private FakeQuantWithMinMaxArgsGradient(Operation operation) {
     super(operation);

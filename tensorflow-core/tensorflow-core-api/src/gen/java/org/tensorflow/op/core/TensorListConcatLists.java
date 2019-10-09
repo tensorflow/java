@@ -40,12 +40,12 @@ public final class TensorListConcatLists extends PrimitiveOp implements Operand<
    * @param elementDtype 
    * @return a new instance of TensorListConcatLists
    */
-  public static <T> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, Class<T> elementDtype) {
+  public static <T> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcatLists(opBuilder.build());
   }
   

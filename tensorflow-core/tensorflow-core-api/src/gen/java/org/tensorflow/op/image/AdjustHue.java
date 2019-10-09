@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adjust the hue of one or more images.
@@ -38,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class AdjustHue<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class AdjustHue<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AdjustHue operation.
@@ -48,7 +50,7 @@ public final class AdjustHue<T extends Number> extends PrimitiveOp implements Op
    * @param delta A float delta to add to the hue.
    * @return a new instance of AdjustHue
    */
-  public static <T extends Number> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<Float> delta) {
+  public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<TFloat> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(delta.asOutput());

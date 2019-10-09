@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns which elements of x are Inf.
@@ -33,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @end_compatibility
  */
 @Operator(group = "math")
-public final class IsInf extends PrimitiveOp implements Operand<Boolean> {
+public final class IsInf extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsInf operation.
@@ -42,7 +44,7 @@ public final class IsInf extends PrimitiveOp implements Operand<Boolean> {
    * @param x 
    * @return a new instance of IsInf
    */
-  public static <T extends Number> IsInf create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> IsInf create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsInf", scope.makeOpName("IsInf"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -51,16 +53,16 @@ public final class IsInf extends PrimitiveOp implements Operand<Boolean> {
   
   /**
    */
-  public Output<Boolean> y() {
+  public Output<TBool> y() {
     return y;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return y;
   }
   
-  private Output<Boolean> y;
+  private Output<TBool> y;
   
   private IsInf(Operation operation) {
     super(operation);

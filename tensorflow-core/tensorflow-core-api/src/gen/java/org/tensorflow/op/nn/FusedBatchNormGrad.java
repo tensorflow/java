@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Gradient for batch normalization.
@@ -35,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code scaleBackprop()} output
  */
 @Operator(group = "nn")
-public final class FusedBatchNormGrad<T extends Number, U extends Number> extends PrimitiveOp {
+public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FusedBatchNormGrad}
@@ -95,7 +97,7 @@ public final class FusedBatchNormGrad<T extends Number, U extends Number> extend
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNormGrad
    */
-  public static <T extends Number, U extends Number> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<Float> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Options... options) {
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV2", scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());

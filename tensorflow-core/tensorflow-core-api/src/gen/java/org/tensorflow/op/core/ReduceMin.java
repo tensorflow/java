@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the minimum of elements across dimensions of a tensor.
@@ -67,7 +68,7 @@ public final class ReduceMin<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceMin
    */
-  public static <T, U extends Number> ReduceMin<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T, U extends TNumber> ReduceMin<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("ReduceMin"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

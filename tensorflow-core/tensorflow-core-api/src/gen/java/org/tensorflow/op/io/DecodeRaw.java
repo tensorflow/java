@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
@@ -64,11 +65,11 @@ public final class DecodeRaw<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of DecodeRaw
    */
-  public static <T> DecodeRaw<T> create(Scope scope, Operand<String> bytes, Class<T> outType, Options... options) {
+  public static <T> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeRaw", scope.makeOpName("DecodeRaw"));
     opBuilder.addInput(bytes.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     if (options != null) {
       for (Options opts : options) {
         if (opts.littleEndian != null) {

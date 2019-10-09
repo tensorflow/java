@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Gradients for Local Response Normalization.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class LocalResponseNormalizationGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LocalResponseNormalizationGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LocalResponseNormalizationGrad}
@@ -87,7 +88,7 @@ public final class LocalResponseNormalizationGrad<T extends Number> extends Prim
    * @param options carries optional attributes values
    * @return a new instance of LocalResponseNormalizationGrad
    */
-  public static <T extends Number> LocalResponseNormalizationGrad<T> create(Scope scope, Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
+  public static <T extends TNumber> LocalResponseNormalizationGrad<T> create(Scope scope, Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRNGrad", scope.makeOpName("LocalResponseNormalizationGrad"));
     opBuilder.addInput(inputGrads.asOutput());
     opBuilder.addInput(inputImage.asOutput());

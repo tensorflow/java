@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Joins the strings in the given list of string tensors into one tensor;
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * with the given separator (default is an empty separator).
  */
 @Operator(group = "strings")
-public final class Join extends PrimitiveOp implements Operand<String> {
+public final class Join extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.Join}
@@ -63,7 +64,7 @@ public final class Join extends PrimitiveOp implements Operand<String> {
    * @param options carries optional attributes values
    * @return a new instance of Join
    */
-  public static Join create(Scope scope, Iterable<Operand<String>> inputs, Options... options) {
+  public static Join create(Scope scope, Iterable<Operand<TString>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringJoin", scope.makeOpName("Join"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -86,16 +87,16 @@ public final class Join extends PrimitiveOp implements Operand<String> {
   
   /**
    */
-  public Output<String> output() {
+  public Output<TString> output() {
     return output;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return output;
   }
   
-  private Output<String> output;
+  private Output<TString> output;
   
   private Join(Operation operation) {
     super(operation);

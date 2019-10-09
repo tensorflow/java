@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Computes QuantizedConv2D per channel.
@@ -68,7 +69,7 @@ public final class QuantizedConv2DPerChannel<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DPerChannel
    */
-  public static <V, T, U> QuantizedConv2DPerChannel<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minFilter, Operand<Float> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V, T, U> QuantizedConv2DPerChannel<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DPerChannel", scope.makeOpName("QuantizedConv2DPerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -77,7 +78,7 @@ public final class QuantizedConv2DPerChannel<V> extends PrimitiveOp {
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);
@@ -115,20 +116,20 @@ public final class QuantizedConv2DPerChannel<V> extends PrimitiveOp {
   /**
    * The minimum value of the final output tensor.
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    * The maximum value of the final output tensor.
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<V> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedConv2DPerChannel(Operation operation) {
     super(operation);

@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
  * Forwards the value of an available tensor from `inputs` to `output`.
@@ -64,12 +65,12 @@ public final class Merge<T> extends PrimitiveOp {
   /**
    * The index of the chosen input tensor in `inputs`.
    */
-  public Output<Integer> valueIndex() {
+  public Output<TInt32> valueIndex() {
     return valueIndex;
   }
   
   private Output<T> output;
-  private Output<Integer> valueIndex;
+  private Output<TInt32> valueIndex;
   
   private Merge(Operation operation) {
     super(operation);

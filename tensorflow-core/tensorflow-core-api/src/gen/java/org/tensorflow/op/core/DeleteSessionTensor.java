@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Delete the tensor specified by its handle in the session.
@@ -37,7 +38,7 @@ public final class DeleteSessionTensor extends PrimitiveOp {
    * @param handle The handle for a tensor stored in the session state.
    * @return a new instance of DeleteSessionTensor
    */
-  public static DeleteSessionTensor create(Scope scope, Operand<String> handle) {
+  public static DeleteSessionTensor create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteSessionTensor", scope.makeOpName("DeleteSessionTensor"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

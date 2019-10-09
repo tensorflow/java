@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Rolls the elements of a tensor along an axis.
@@ -69,7 +70,7 @@ public final class Roll<T> extends PrimitiveOp implements Operand<T> {
    * axis.
    * @return a new instance of Roll
    */
-  public static <T, U extends Number, V extends Number> Roll<T> create(Scope scope, Operand<T> input, Operand<U> shift, Operand<V> axis) {
+  public static <T, U extends TNumber, V extends TNumber> Roll<T> create(Scope scope, Operand<T> input, Operand<U> shift, Operand<V> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("Roll", scope.makeOpName("Roll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shift.asOutput());

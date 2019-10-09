@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Load SGD embedding parameters.
@@ -72,7 +73,7 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends P
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingStochasticGradientDescentParameters
    */
-  public static LoadTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Operand<Float> parameters, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Operand<TFloat> parameters, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

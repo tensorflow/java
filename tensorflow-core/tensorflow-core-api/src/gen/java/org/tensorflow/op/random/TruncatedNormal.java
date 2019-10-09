@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random values from a truncated normal distribution.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class TruncatedNormal<U extends Number> extends PrimitiveOp implements Operand<U> {
+public final class TruncatedNormal<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.TruncatedNormal}
@@ -77,11 +78,11 @@ public final class TruncatedNormal<U extends Number> extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of TruncatedNormal
    */
-  public static <U extends Number, T extends Number> TruncatedNormal<U> create(Scope scope, Operand<T> shape, Class<U> dtype, Options... options) {
+  public static <U extends TNumber, T extends TNumber> TruncatedNormal<U> create(Scope scope, Operand<T> shape, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncatedNormal", scope.makeOpName("TruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

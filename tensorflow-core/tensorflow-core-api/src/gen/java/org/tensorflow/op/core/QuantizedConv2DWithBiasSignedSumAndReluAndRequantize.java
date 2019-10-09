@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * @param <X> data type for {@code output()} output
@@ -81,7 +82,7 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> exten
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasSignedSumAndReluAndRequantize
    */
-  public static <X, T, U, V, W> QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minFilter, Operand<Float> maxFilter, Operand<Float> minFreezedOutput, Operand<Float> maxFreezedOutput, Operand<W> summand, Operand<Float> minSummand, Operand<Float> maxSummand, Class<X> outType, List<Long> strides, String padding, Options... options) {
+  public static <X, T, U, V, W> QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, Operand<W> summand, Operand<TFloat> minSummand, Operand<TFloat> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSignedSumAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasSignedSumAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -96,7 +97,7 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> exten
     opBuilder.addInput(minSummand.asOutput());
     opBuilder.addInput(maxSummand.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);
@@ -146,19 +147,19 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> exten
   
   /**
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<X> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedConv2DWithBiasSignedSumAndReluAndRequantize(Operation operation) {
     super(operation);

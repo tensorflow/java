@@ -26,6 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Computes a 2D convolution given quantized 4D input and filter tensors.
@@ -80,7 +81,7 @@ public final class QuantizedConv2d<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2d
    */
-  public static <V, T, U> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<Float> minInput, Operand<Float> maxInput, Operand<Float> minFilter, Operand<Float> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V, T, U> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2D", scope.makeOpName("QuantizedConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -89,7 +90,7 @@ public final class QuantizedConv2d<V> extends PrimitiveOp {
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", DataType.fromClass(outType));
+    opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);
@@ -130,20 +131,20 @@ public final class QuantizedConv2d<V> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minOutput() {
+  public Output<TFloat> minOutput() {
     return minOutput;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<Float> maxOutput() {
+  public Output<TFloat> maxOutput() {
     return maxOutput;
   }
   
   private Output<V> output;
-  private Output<Float> minOutput;
-  private Output<Float> maxOutput;
+  private Output<TFloat> minOutput;
+  private Output<TFloat> maxOutput;
   
   private QuantizedConv2d(Operation operation) {
     super(operation);

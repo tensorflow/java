@@ -24,7 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.UInt8;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.TUInt8;
 
 /**
  * Generates fingerprint values.
@@ -59,7 +60,7 @@ import org.tensorflow.types.UInt8;
  * Fingerprint(ReduceJoin(data))` in general.
  */
 @Operator
-public final class Fingerprint extends PrimitiveOp implements Operand<UInt8> {
+public final class Fingerprint extends PrimitiveOp implements Operand<TUInt8> {
   
   /**
    * Factory method to create a class wrapping a new Fingerprint operation.
@@ -70,7 +71,7 @@ public final class Fingerprint extends PrimitiveOp implements Operand<UInt8> {
    * `farmhash::fingerprint64`.
    * @return a new instance of Fingerprint
    */
-  public static <T> Fingerprint create(Scope scope, Operand<T> data, Operand<String> method) {
+  public static <T> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(method.asOutput());
@@ -83,16 +84,16 @@ public final class Fingerprint extends PrimitiveOp implements Operand<UInt8> {
    * `data`'s first dimension, and the second dimension size depends on the
    * fingerprint algorithm.
    */
-  public Output<UInt8> fingerprint() {
+  public Output<TUInt8> fingerprint() {
     return fingerprint;
   }
   
   @Override
-  public Output<UInt8> asOutput() {
+  public Output<TUInt8> asOutput() {
     return fingerprint;
   }
   
-  private Output<UInt8> fingerprint;
+  private Output<TUInt8> fingerprint;
   
   private Fingerprint(Operation operation) {
     super(operation);

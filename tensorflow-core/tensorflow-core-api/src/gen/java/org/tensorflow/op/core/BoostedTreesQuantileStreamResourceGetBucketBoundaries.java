@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Generate the bucket boundaries for each feature based on accumulated summaries.
@@ -33,7 +34,7 @@ import org.tensorflow.op.Scope;
  * An op that returns a list of float tensors for a quantile stream resource. Each
  * tensor is Rank 1 containing bucket boundaries for a single feature.
  */
-public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends PrimitiveOp implements Iterable<Operand<Float>> {
+public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends PrimitiveOp implements Iterable<Operand<TFloat>> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesQuantileStreamResourceGetBucketBoundaries operation.
@@ -54,24 +55,24 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
   /**
    * float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
    */
-  public List<Output<Float>> bucketBoundaries() {
+  public List<Output<TFloat>> bucketBoundaries() {
     return bucketBoundaries;
   }
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Float>> iterator() {
+  public Iterator<Operand<TFloat>> iterator() {
     return (Iterator) bucketBoundaries.iterator();
   }
   
-  private List<Output<Float>> bucketBoundaries;
+  private List<Output<TFloat>> bucketBoundaries;
   
   @SuppressWarnings("unchecked")
   private BoostedTreesQuantileStreamResourceGetBucketBoundaries(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int bucketBoundariesLength = operation.outputListLength("bucket_boundaries");
-    bucketBoundaries = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, bucketBoundariesLength));
+    bucketBoundaries = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, bucketBoundariesLength));
     outputIdx += bucketBoundariesLength;
   }
 }

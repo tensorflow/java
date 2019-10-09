@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
@@ -39,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code bins()} output
  */
 @Operator(group = "math")
-public final class Bincount<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Bincount<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Bincount operation.
@@ -52,7 +54,7 @@ public final class Bincount<T extends Number> extends PrimitiveOp implements Ope
    * equal to 1.
    * @return a new instance of Bincount
    */
-  public static <T extends Number> Bincount<T> create(Scope scope, Operand<Integer> arr, Operand<Integer> size, Operand<T> weights) {
+  public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr, Operand<TInt32> size, Operand<T> weights) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
     opBuilder.addInput(arr.asOutput());
     opBuilder.addInput(size.asOutput());

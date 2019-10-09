@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * List of the given size with empty elements.
@@ -46,12 +48,12 @@ public final class TensorListReserve extends PrimitiveOp implements Operand<Obje
    * @param elementDtype 
    * @return a new instance of TensorListReserve
    */
-  public static <T extends Number, U> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<Integer> numElements, Class<U> elementDtype) {
+  public static <T extends TNumber, U> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(numElements.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", DataType.fromClass(elementDtype));
+    opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListReserve(opBuilder.build());
   }
   

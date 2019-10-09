@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Fake-quantize the 'inputs' tensor of type float via global float scalars `min`
@@ -49,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * values.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxVars extends PrimitiveOp implements Operand<Float> {
+public final class FakeQuantWithMinMaxVars extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVars}
@@ -89,7 +90,7 @@ public final class FakeQuantWithMinMaxVars extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVars
    */
-  public static FakeQuantWithMinMaxVars create(Scope scope, Operand<Float> inputs, Operand<Float> min, Operand<Float> max, Options... options) {
+  public static FakeQuantWithMinMaxVars create(Scope scope, Operand<TFloat> inputs, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVars", scope.makeOpName("FakeQuantWithMinMaxVars"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
@@ -124,16 +125,16 @@ public final class FakeQuantWithMinMaxVars extends PrimitiveOp implements Operan
   
   /**
    */
-  public Output<Float> outputs() {
+  public Output<TFloat> outputs() {
     return outputs;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return outputs;
   }
   
-  private Output<Float> outputs;
+  private Output<TFloat> outputs;
   
   private FakeQuantWithMinMaxVars(Operation operation) {
     super(operation);

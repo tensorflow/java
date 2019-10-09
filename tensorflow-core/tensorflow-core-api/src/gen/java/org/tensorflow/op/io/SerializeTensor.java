@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Transforms a Tensor into a serialized TensorProto proto.
  */
 @Operator(group = "io")
-public final class SerializeTensor extends PrimitiveOp implements Operand<String> {
+public final class SerializeTensor extends PrimitiveOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new SerializeTensor operation.
@@ -48,16 +49,16 @@ public final class SerializeTensor extends PrimitiveOp implements Operand<String
   /**
    * A serialized TensorProto proto of the input tensor.
    */
-  public Output<String> serialized() {
+  public Output<TString> serialized() {
     return serialized;
   }
   
   @Override
-  public Output<String> asOutput() {
+  public Output<TString> asOutput() {
     return serialized;
   }
   
-  private Output<String> serialized;
+  private Output<TString> serialized;
   
   private SerializeTensor(Operation operation) {
     super(operation);

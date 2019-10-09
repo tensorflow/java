@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
@@ -33,7 +34,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <V> data type for {@code output()} output
  */
-public final class StatelessRandomUniformInt<V extends Number> extends PrimitiveOp implements Operand<V> {
+public final class StatelessRandomUniformInt<V extends TNumber> extends PrimitiveOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomUniformInt operation.
@@ -45,7 +46,7 @@ public final class StatelessRandomUniformInt<V extends Number> extends Primitive
    * @param maxval Maximum value (exclusive, scalar).
    * @return a new instance of StatelessRandomUniformInt
    */
-  public static <V extends Number, T extends Number, U extends Number> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformInt", scope.makeOpName("StatelessRandomUniformInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());

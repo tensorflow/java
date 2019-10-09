@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the permuted vector/tensor in the destination data format given the
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class DataFormatVecPermute<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class DataFormatVecPermute<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DataFormatVecPermute}
@@ -71,7 +72,7 @@ public final class DataFormatVecPermute<T extends Number> extends PrimitiveOp im
    * @param options carries optional attributes values
    * @return a new instance of DataFormatVecPermute
    */
-  public static <T extends Number> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
+  public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatVecPermute", scope.makeOpName("DataFormatVecPermute"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

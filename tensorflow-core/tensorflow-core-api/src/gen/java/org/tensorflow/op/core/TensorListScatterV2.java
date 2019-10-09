@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates a TensorList by indexing into a Tensor.
@@ -53,7 +55,7 @@ public final class TensorListScatterV2 extends PrimitiveOp implements Operand<Ob
    * @param numElements 
    * @return a new instance of TensorListScatterV2
    */
-  public static <T, U extends Number> TensorListScatterV2 create(Scope scope, Operand<T> tensor, Operand<Integer> indices, Operand<U> elementShape, Operand<Integer> numElements) {
+  public static <T, U extends TNumber> TensorListScatterV2 create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatterV2"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the "logical and" of elements across dimensions of a tensor.
@@ -34,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * retained with length 1.
  */
 @Operator
-public final class ReduceAll extends PrimitiveOp implements Operand<Boolean> {
+public final class ReduceAll extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ReduceAll}
@@ -65,7 +67,7 @@ public final class ReduceAll extends PrimitiveOp implements Operand<Boolean> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceAll
    */
-  public static <T extends Number> ReduceAll create(Scope scope, Operand<Boolean> input, Operand<T> axis, Options... options) {
+  public static <T extends TNumber> ReduceAll create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("ReduceAll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -90,16 +92,16 @@ public final class ReduceAll extends PrimitiveOp implements Operand<Boolean> {
   /**
    * The reduced tensor.
    */
-  public Output<Boolean> output() {
+  public Output<TBool> output() {
     return output;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return output;
   }
   
-  private Output<Boolean> output;
+  private Output<TBool> output;
   
   private ReduceAll(Operation operation) {
     super(operation);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Copy a tensor setting everything outside a central band in each innermost matrix
@@ -82,7 +83,7 @@ public final class BandPart<T> extends PrimitiveOp implements Operand<T> {
    * entire upper triangle.
    * @return a new instance of BandPart
    */
-  public static <T, U extends Number> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
+  public static <T, U extends TNumber> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixBandPart", scope.makeOpName("BandPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());

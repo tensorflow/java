@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Adds sparse `updates` to an existing tensor according to `indices`.
@@ -103,7 +104,7 @@ public final class TensorScatterAdd<T> extends PrimitiveOp implements Operand<T>
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterAdd
    */
-  public static <T, U extends Number> TensorScatterAdd<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T, U extends TNumber> TensorScatterAdd<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterAdd", scope.makeOpName("TensorScatterAdd"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

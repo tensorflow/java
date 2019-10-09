@@ -25,6 +25,8 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 
 /**
  * Concatenates quantized tensors along one dimension.
@@ -46,7 +48,7 @@ public final class QuantizedConcat<T> extends PrimitiveOp {
    * @param inputMaxes The maximum scalar values for each of the input tensors.
    * @return a new instance of QuantizedConcat
    */
-  public static <T> QuantizedConcat<T> create(Scope scope, Operand<Integer> concatDim, Iterable<Operand<T>> values, Iterable<Operand<Float>> inputMins, Iterable<Operand<Float>> inputMaxes) {
+  public static <T> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim, Iterable<Operand<T>> values, Iterable<Operand<TFloat>> inputMins, Iterable<Operand<TFloat>> inputMaxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcat", scope.makeOpName("QuantizedConcat"));
     opBuilder.addInput(concatDim.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
@@ -68,20 +70,20 @@ public final class QuantizedConcat<T> extends PrimitiveOp {
   /**
    * The float value that the minimum quantized output value represents.
    */
-  public Output<Float> outputMin() {
+  public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
    * The float value that the maximum quantized output value represents.
    */
-  public Output<Float> outputMax() {
+  public Output<TFloat> outputMax() {
     return outputMax;
   }
   
   private Output<T> output;
-  private Output<Float> outputMin;
-  private Output<Float> outputMax;
+  private Output<TFloat> outputMin;
+  private Output<TFloat> outputMax;
   
   private QuantizedConcat(Operation operation) {
     super(operation);

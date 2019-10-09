@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates a TensorList which, when stacked, has the value of `tensor`.
@@ -44,7 +45,7 @@ public final class TensorListFromTensor extends PrimitiveOp implements Operand<O
    * @param elementShape 
    * @return a new instance of TensorListFromTensor
    */
-  public static <T, U extends Number> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
+  public static <T, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());

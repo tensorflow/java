@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import org.tensorflow.nio.nd.Shape;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
@@ -72,7 +73,7 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public long[] shape(int outputIndex) {
+  public Shape shape(int outputIndex) {
     // If the tensor of this output has already been resolved, return its shape.
     // Otherwise, retrieve the tensor shape from the native library.
     Tensor<?> tensor = outputTensors.get(outputIndex);
@@ -84,11 +85,11 @@ class EagerOperation extends AbstractOperation {
     for (int i = 0; i < shape.length; ++i) {
       shape[i] = dim(outputNativeHandle, i);
     }
-    return shape;
+    return Shape.make(shape);
   }
 
   @Override
-  public DataType dtype(int outputIndex) {
+  public DataType<?> dtype(int outputIndex) {
     // If the tensor of this output has already been resolved, return its datatype.
     // Otherwise, retrieve the tensor datatype from the native library.
     Tensor<?> tensor = outputTensors.get(outputIndex);
@@ -96,7 +97,7 @@ class EagerOperation extends AbstractOperation {
       return tensor.dataType();
     }
     long outputNativeHandle = getUnsafeNativeHandle(outputIndex);
-    return DataType.fromC(dataType(outputNativeHandle));
+    return DataTypes.fromNativeCode(dataType(outputNativeHandle));
   }
 
   @Override

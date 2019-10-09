@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the log of the absolute value of `Gamma(x)` element-wise.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Lgamma<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class Lgamma<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Lgamma operation.
@@ -40,7 +41,7 @@ public final class Lgamma<T extends Number> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Lgamma
    */
-  public static <T extends Number> Lgamma<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Lgamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lgamma", scope.makeOpName("Lgamma"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

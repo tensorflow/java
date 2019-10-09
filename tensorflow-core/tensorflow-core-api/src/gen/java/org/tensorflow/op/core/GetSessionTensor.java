@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
 
 /**
  * Get the value of the tensor specified by its handle.
@@ -42,11 +43,11 @@ public final class GetSessionTensor<T> extends PrimitiveOp implements Operand<T>
    * @param dtype The type of the output value.
    * @return a new instance of GetSessionTensor
    */
-  public static <T> GetSessionTensor<T> create(Scope scope, Operand<String> handle, Class<T> dtype) {
+  public static <T> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new GetSessionTensor<T>(opBuilder.build());
   }
   

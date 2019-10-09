@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Read `SparseTensors` from a `SparseTensorsMap` and concatenate them.
@@ -120,11 +121,11 @@ public final class TakeManySparseFromTensorsMap<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TakeManySparseFromTensorsMap
    */
-  public static <T> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<Long> sparseHandles, Class<T> dtype, Options... options) {
+  public static <T> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
     opBuilder.addInput(sparseHandles.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {
@@ -157,7 +158,7 @@ public final class TakeManySparseFromTensorsMap<T> extends PrimitiveOp {
   /**
    * 2-D.  The `indices` of the minibatch `SparseTensor`.
    */
-  public Output<Long> sparseIndices() {
+  public Output<TInt64> sparseIndices() {
     return sparseIndices;
   }
   
@@ -171,13 +172,13 @@ public final class TakeManySparseFromTensorsMap<T> extends PrimitiveOp {
   /**
    * 1-D.  The `shape` of the minibatch `SparseTensor`.
    */
-  public Output<Long> sparseShape() {
+  public Output<TInt64> sparseShape() {
     return sparseShape;
   }
   
-  private Output<Long> sparseIndices;
+  private Output<TInt64> sparseIndices;
   private Output<T> sparseValues;
-  private Output<Long> sparseShape;
+  private Output<TInt64> sparseShape;
   
   private TakeManySparseFromTensorsMap(Operation operation) {
     super(operation);

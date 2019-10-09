@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b`.
@@ -83,7 +84,7 @@ public final class QuantizedMatMul<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMul
    */
-  public static <V, T, U, W> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<Float> minA, Operand<Float> maxA, Operand<Float> minB, Operand<Float> maxB, Class<V> Toutput, Class<W> Tactivation, Options... options) {
+  public static <V, T, U, W> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMul", scope.makeOpName("QuantizedMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -92,8 +93,8 @@ public final class QuantizedMatMul<V> extends PrimitiveOp {
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Toutput", DataType.fromClass(Toutput));
-    opBuilder.setAttr("Tactivation", DataType.fromClass(Tactivation));
+    opBuilder.setAttr("Toutput", Toutput);
+    opBuilder.setAttr("Tactivation", Tactivation);
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {
@@ -130,20 +131,20 @@ public final class QuantizedMatMul<V> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minOut() {
+  public Output<TFloat> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<Float> maxOut() {
+  public Output<TFloat> maxOut() {
     return maxOut;
   }
   
   private Output<V> out;
-  private Output<Float> minOut;
-  private Output<Float> maxOut;
+  private Output<TFloat> minOut;
+  private Output<TFloat> maxOut;
   
   private QuantizedMatMul(Operation operation) {
     super(operation);

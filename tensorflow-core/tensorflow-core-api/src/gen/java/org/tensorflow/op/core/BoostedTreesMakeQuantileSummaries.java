@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Makes the summary of quantiles for the batch.
@@ -34,7 +35,7 @@ import org.tensorflow.op.Scope;
  * An op that takes a list of tensors (one tensor per feature) and outputs the
  * quantile summaries for each tensor.
  */
-public final class BoostedTreesMakeQuantileSummaries extends PrimitiveOp implements Iterable<Operand<Float>> {
+public final class BoostedTreesMakeQuantileSummaries extends PrimitiveOp implements Iterable<Operand<TFloat>> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesMakeQuantileSummaries operation.
@@ -45,7 +46,7 @@ public final class BoostedTreesMakeQuantileSummaries extends PrimitiveOp impleme
    * @param epsilon float; The required maximum approximation error.
    * @return a new instance of BoostedTreesMakeQuantileSummaries
    */
-  public static BoostedTreesMakeQuantileSummaries create(Scope scope, Iterable<Operand<Float>> floatValues, Operand<Float> exampleWeights, Operand<Float> epsilon) {
+  public static BoostedTreesMakeQuantileSummaries create(Scope scope, Iterable<Operand<TFloat>> floatValues, Operand<TFloat> exampleWeights, Operand<TFloat> epsilon) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeQuantileSummaries", scope.makeOpName("BoostedTreesMakeQuantileSummaries"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));
     opBuilder.addInput(exampleWeights.asOutput());
@@ -58,24 +59,24 @@ public final class BoostedTreesMakeQuantileSummaries extends PrimitiveOp impleme
    * float; List of Rank 2 Tensors each containing the quantile summary
    * (value, weight, min_rank, max_rank) of a single feature.
    */
-  public List<Output<Float>> summaries() {
+  public List<Output<TFloat>> summaries() {
     return summaries;
   }
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Float>> iterator() {
+  public Iterator<Operand<TFloat>> iterator() {
     return (Iterator) summaries.iterator();
   }
   
-  private List<Output<Float>> summaries;
+  private List<Output<TFloat>> summaries;
   
   @SuppressWarnings("unchecked")
   private BoostedTreesMakeQuantileSummaries(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int summariesLength = operation.outputListLength("summaries");
-    summaries = Arrays.asList((Output<Float>[])operation.outputList(outputIdx, summariesLength));
+    summaries = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, summariesLength));
     outputIdx += summariesLength;
   }
 }

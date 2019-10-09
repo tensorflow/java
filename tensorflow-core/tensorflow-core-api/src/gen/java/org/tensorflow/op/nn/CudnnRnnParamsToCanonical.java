@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Retrieves CudnnRNN params in canonical form.
@@ -63,7 +65,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code weights()} output
  */
 @Operator(group = "nn")
-public final class CudnnRnnParamsToCanonical<T extends Number> extends PrimitiveOp {
+public final class CudnnRnnParamsToCanonical<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CudnnRnnParamsToCanonical}
@@ -141,7 +143,7 @@ public final class CudnnRnnParamsToCanonical<T extends Number> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnParamsToCanonical
    */
-  public static <T extends Number> CudnnRnnParamsToCanonical<T> create(Scope scope, Operand<Integer> numLayers, Operand<Integer> numUnits, Operand<Integer> inputSize, Operand<T> params, Long numParams, Options... options) {
+  public static <T extends TNumber> CudnnRnnParamsToCanonical<T> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Operand<T> params, Long numParams, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsToCanonical", scope.makeOpName("CudnnRnnParamsToCanonical"));
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());

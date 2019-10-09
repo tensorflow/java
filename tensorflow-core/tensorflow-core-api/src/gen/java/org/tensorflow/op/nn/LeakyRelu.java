@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear: `max(features, features * alpha)`.
  * 
  * @param <T> data type for {@code activations()} output
  */
-public final class LeakyRelu<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class LeakyRelu<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LeakyRelu}
@@ -58,7 +59,7 @@ public final class LeakyRelu<T extends Number> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of LeakyRelu
    */
-  public static <T extends Number> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
+  public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

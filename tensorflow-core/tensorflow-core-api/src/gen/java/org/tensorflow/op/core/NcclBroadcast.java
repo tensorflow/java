@@ -21,9 +21,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Shape;
+import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Sends `input` to all devices that are connected to the output.
@@ -40,7 +41,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class NcclBroadcast<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class NcclBroadcast<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclBroadcast operation.
@@ -50,7 +51,7 @@ public final class NcclBroadcast<T extends Number> extends PrimitiveOp implement
    * @param shape 
    * @return a new instance of NcclBroadcast
    */
-  public static <T extends Number> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

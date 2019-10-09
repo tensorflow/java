@@ -23,13 +23,15 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of bicubic interpolation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class ResizeBicubicGrad<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class ResizeBicubicGrad<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeBicubicGrad}
@@ -70,7 +72,7 @@ public final class ResizeBicubicGrad<T extends Number> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of ResizeBicubicGrad
    */
-  public static <T extends Number> ResizeBicubicGrad<T> create(Scope scope, Operand<Float> grads, Operand<T> originalImage, Options... options) {
+  public static <T extends TNumber> ResizeBicubicGrad<T> create(Scope scope, Operand<TFloat> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubicGrad", scope.makeOpName("ResizeBicubicGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());

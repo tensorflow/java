@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat;
 
 /**
  * Retrieve SGD embedding parameters.
@@ -32,7 +33,7 @@ import org.tensorflow.op.Scope;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
-public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters extends PrimitiveOp implements Operand<Float> {
+public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.RetrieveTPUEmbeddingStochasticGradientDescentParameters}
@@ -106,16 +107,16 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters exten
   /**
    * Parameter parameters updated by the stochastic gradient descent optimization algorithm.
    */
-  public Output<Float> parameters() {
+  public Output<TFloat> parameters() {
     return parameters;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return parameters;
   }
   
-  private Output<Float> parameters;
+  private Output<TFloat> parameters;
   
   private RetrieveTPUEmbeddingStochasticGradientDescentParameters(Operation operation) {
     super(operation);

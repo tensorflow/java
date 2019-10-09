@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
 
 /**
  * Returns the number of gradients aggregated in the given accumulators.
  */
-public final class ResourceAccumulatorNumAccumulated extends PrimitiveOp implements Operand<Integer> {
+public final class ResourceAccumulatorNumAccumulated extends PrimitiveOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new ResourceAccumulatorNumAccumulated operation.
@@ -46,16 +47,16 @@ public final class ResourceAccumulatorNumAccumulated extends PrimitiveOp impleme
   /**
    * The number of gradients aggregated in the given accumulator.
    */
-  public Output<Integer> numAccumulated() {
+  public Output<TInt32> numAccumulated() {
     return numAccumulated;
   }
   
   @Override
-  public Output<Integer> asOutput() {
+  public Output<TInt32> asOutput() {
     return numAccumulated;
   }
   
-  private Output<Integer> numAccumulated;
+  private Output<TInt32> numAccumulated;
   
   private ResourceAccumulatorNumAccumulated(Operation operation) {
     super(operation);

@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Randomly crop `image`.
@@ -38,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class RandomCrop<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class RandomCrop<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.RandomCrop}
@@ -79,7 +81,7 @@ public final class RandomCrop<T extends Number> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of RandomCrop
    */
-  public static <T extends Number> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<Long> size, Options... options) {
+  public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<TInt64> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(size.asOutput());

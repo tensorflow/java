@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 
 /**
  * Split elements of `source` based on `sep` into a `SparseTensor`.
@@ -83,7 +85,7 @@ public final class StringSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of StringSplit
    */
-  public static StringSplit create(Scope scope, Operand<String> input, Operand<String> sep, Options... options) {
+  public static StringSplit create(Scope scope, Operand<TString> input, Operand<TString> sep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sep.asOutput());
@@ -107,25 +109,25 @@ public final class StringSplit extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> indices() {
+  public Output<TInt64> indices() {
     return indices;
   }
   
   /**
    */
-  public Output<String> values() {
+  public Output<TString> values() {
     return values;
   }
   
   /**
    */
-  public Output<Long> shape() {
+  public Output<TInt64> shape() {
     return shape;
   }
   
-  private Output<Long> indices;
-  private Output<String> values;
-  private Output<Long> shape;
+  private Output<TInt64> indices;
+  private Output<TString> values;
+  private Output<TInt64> shape;
   
   private StringSplit(Operation operation) {
     super(operation);

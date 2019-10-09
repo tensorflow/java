@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 
 /**
  * Returns the truth value of (x == y) element-wise.
@@ -42,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator(group = "math")
-public final class Equal extends PrimitiveOp implements Operand<Boolean> {
+public final class Equal extends PrimitiveOp implements Operand<TBool> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.math.Equal}
@@ -96,16 +97,16 @@ public final class Equal extends PrimitiveOp implements Operand<Boolean> {
   
   /**
    */
-  public Output<Boolean> z() {
+  public Output<TBool> z() {
     return z;
   }
   
   @Override
-  public Output<Boolean> asOutput() {
+  public Output<TBool> asOutput() {
     return z;
   }
   
-  private Output<Boolean> z;
+  private Output<TBool> z;
   
   private Equal(Operation operation) {
     super(operation);

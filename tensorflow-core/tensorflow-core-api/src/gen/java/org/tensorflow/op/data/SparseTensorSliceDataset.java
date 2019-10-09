@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt64;
 
 /**
  * Creates a dataset that splits a SparseTensor into elements row-wise.
@@ -38,7 +39,7 @@ public final class SparseTensorSliceDataset extends PrimitiveOp implements Opera
    * @param denseShape 
    * @return a new instance of SparseTensorSliceDataset
    */
-  public static <T> SparseTensorSliceDataset create(Scope scope, Operand<Long> indices, Operand<T> values, Operand<Long> denseShape) {
+  public static <T> SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorSliceDataset", scope.makeOpName("SparseTensorSliceDataset"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());

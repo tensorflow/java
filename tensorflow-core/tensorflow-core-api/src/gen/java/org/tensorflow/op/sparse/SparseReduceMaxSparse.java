@@ -24,6 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the max of elements across dimensions of a SparseTensor.
@@ -44,7 +47,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReduceMaxSparse<T extends Number> extends PrimitiveOp {
+public final class SparseReduceMaxSparse<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceMaxSparse}
@@ -77,7 +80,7 @@ public final class SparseReduceMaxSparse<T extends Number> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceMaxSparse
    */
-  public static <T extends Number> SparseReduceMaxSparse<T> create(Scope scope, Operand<Long> inputIndices, Operand<T> inputValues, Operand<Long> inputShape, Operand<Integer> reductionAxes, Options... options) {
+  public static <T extends TNumber> SparseReduceMaxSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceMaxSparse", scope.makeOpName("SparseReduceMaxSparse"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
@@ -103,7 +106,7 @@ public final class SparseReduceMaxSparse<T extends Number> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> outputIndices() {
+  public Output<TInt64> outputIndices() {
     return outputIndices;
   }
   
@@ -115,13 +118,13 @@ public final class SparseReduceMaxSparse<T extends Number> extends PrimitiveOp {
   
   /**
    */
-  public Output<Long> outputShape() {
+  public Output<TInt64> outputShape() {
     return outputShape;
   }
   
-  private Output<Long> outputIndices;
+  private Output<TInt64> outputIndices;
   private Output<T> outputValues;
-  private Output<Long> outputShape;
+  private Output<TInt64> outputShape;
   
   private SparseReduceMaxSparse(Operation operation) {
     super(operation);

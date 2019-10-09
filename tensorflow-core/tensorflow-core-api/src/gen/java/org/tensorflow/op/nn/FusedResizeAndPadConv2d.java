@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs a resize and padding as a preprocess during a convolution.
@@ -43,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class FusedResizeAndPadConv2d<T extends Number> extends PrimitiveOp implements Operand<T> {
+public final class FusedResizeAndPadConv2d<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FusedResizeAndPadConv2d}
@@ -83,7 +85,7 @@ public final class FusedResizeAndPadConv2d<T extends Number> extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of FusedResizeAndPadConv2d
    */
-  public static <T extends Number> FusedResizeAndPadConv2d<T> create(Scope scope, Operand<T> input, Operand<Integer> size, Operand<Integer> paddings, Operand<T> filter, String mode, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> FusedResizeAndPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> size, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedResizeAndPadConv2D", scope.makeOpName("FusedResizeAndPadConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(size.asOutput());

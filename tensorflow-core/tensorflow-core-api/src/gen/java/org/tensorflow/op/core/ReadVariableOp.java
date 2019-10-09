@@ -49,11 +49,11 @@ public final class ReadVariableOp<T> extends PrimitiveOp implements Operand<T> {
    * @param dtype the dtype of the value.
    * @return a new instance of ReadVariableOp
    */
-  public static <T> ReadVariableOp<T> create(Scope scope, Operand<?> resource, Class<T> dtype) {
+  public static <T> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", DataType.fromClass(dtype));
+    opBuilder.setAttr("dtype", dtype);
     return new ReadVariableOp<T>(opBuilder.build());
   }
   

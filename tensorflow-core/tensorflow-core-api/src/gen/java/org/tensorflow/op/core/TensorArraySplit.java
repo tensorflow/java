@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt64;
 
 /**
  * Split the data from the input value into TensorArray elements.
@@ -51,7 +53,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class TensorArraySplit extends PrimitiveOp implements Operand<Float> {
+public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    * Factory method to create a class wrapping a new TensorArraySplit operation.
@@ -64,7 +66,7 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<Float
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  public static <T> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<Long> lengths, Operand<Float> flowIn) {
+  public static <T> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySplitV3", scope.makeOpName("TensorArraySplit"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -77,16 +79,16 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<Float
   /**
    * A float scalar that enforces proper chaining of operations.
    */
-  public Output<Float> flowOut() {
+  public Output<TFloat> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<Float> asOutput() {
+  public Output<TFloat> asOutput() {
     return flowOut;
   }
   
-  private Output<Float> flowOut;
+  private Output<TFloat> flowOut;
   
   private TensorArraySplit(Operation operation) {
     super(operation);

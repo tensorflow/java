@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt64;
 
 /**
  * Add a `SparseTensor` to a `SparseTensorsMap` return its handle.
@@ -44,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * `TakeManySparseFromTensorsMap`.  Ensure the Operations are colocated.
  */
 @Operator(group = "sparse")
-public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<Long> {
+public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<TInt64> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.AddSparseToTensorsMap}
@@ -85,7 +86,7 @@ public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of AddSparseToTensorsMap
    */
-  public static <T> AddSparseToTensorsMap create(Scope scope, Operand<Long> sparseIndices, Operand<T> sparseValues, Operand<Long> sparseShape, Options... options) {
+  public static <T> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddSparseToTensorsMap", scope.makeOpName("AddSparseToTensorsMap"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
@@ -123,16 +124,16 @@ public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<
    * 0-D.  The handle of the `SparseTensor` now stored in the
    * `SparseTensorsMap`.
    */
-  public Output<Long> sparseHandle() {
+  public Output<TInt64> sparseHandle() {
     return sparseHandle;
   }
   
   @Override
-  public Output<Long> asOutput() {
+  public Output<TInt64> asOutput() {
     return sparseHandle;
   }
   
-  private Output<Long> sparseHandle;
+  private Output<TInt64> sparseHandle;
   
   private AddSparseToTensorsMap(Operation operation) {
     super(operation);

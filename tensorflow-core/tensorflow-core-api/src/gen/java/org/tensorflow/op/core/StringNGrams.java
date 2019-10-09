@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates ngrams from ragged string data.
@@ -36,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code ngramsSplits()} output
  */
 @Operator
-public final class StringNGrams<T extends Number> extends PrimitiveOp {
+public final class StringNGrams<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new StringNGrams operation.
@@ -58,7 +60,7 @@ public final class StringNGrams<T extends Number> extends PrimitiveOp {
    * @param preserveShortSequences 
    * @return a new instance of StringNGrams
    */
-  public static <T extends Number> StringNGrams<T> create(Scope scope, Operand<String> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
+  public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringNGrams", scope.makeOpName("StringNGrams"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(dataSplits.asOutput());
@@ -79,7 +81,7 @@ public final class StringNGrams<T extends Number> extends PrimitiveOp {
   /**
    * The values tensor of the output ngrams ragged tensor.
    */
-  public Output<String> ngrams() {
+  public Output<TString> ngrams() {
     return ngrams;
   }
   
@@ -90,7 +92,7 @@ public final class StringNGrams<T extends Number> extends PrimitiveOp {
     return ngramsSplits;
   }
   
-  private Output<String> ngrams;
+  private Output<TString> ngrams;
   private Output<T> ngramsSplits;
   
   private StringNGrams(Operation operation) {

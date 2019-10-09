@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TFloat;
 
 /**
  * Returns x + y element-wise, working on quantized buffers.
@@ -47,7 +48,7 @@ public final class QuantizedAdd<V> extends PrimitiveOp {
    * @param Toutput 
    * @return a new instance of QuantizedAdd
    */
-  public static <V, T, U> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<Float> minX, Operand<Float> maxX, Operand<Float> minY, Operand<Float> maxY, Class<V> Toutput) {
+  public static <V, T, U> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAdd", scope.makeOpName("QuantizedAdd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -56,7 +57,7 @@ public final class QuantizedAdd<V> extends PrimitiveOp {
     opBuilder.addInput(minY.asOutput());
     opBuilder.addInput(maxY.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Toutput", DataType.fromClass(Toutput));
+    opBuilder.setAttr("Toutput", Toutput);
     return new QuantizedAdd<V>(opBuilder.build());
   }
   
@@ -69,7 +70,7 @@ public final class QuantizedAdd<V> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<Float> minZ() {
+  public Output<TFloat> minZ() {
     return minZ;
   }
   
@@ -79,13 +80,13 @@ public final class QuantizedAdd<V> extends PrimitiveOp {
    * <i>NOTE</i>: `math.QuantizedAdd` supports limited forms of broadcasting. More about
    * broadcasting [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
    */
-  public Output<Float> maxZ() {
+  public Output<TFloat> maxZ() {
     return maxZ;
   }
   
   private Output<V> z;
-  private Output<Float> minZ;
-  private Output<Float> maxZ;
+  private Output<TFloat> minZ;
+  private Output<TFloat> maxZ;
   
   private QuantizedAdd(Operation operation) {
     super(operation);

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Retrieves the tree ensemble resource stamp token, number of trees and growing statistics.
@@ -46,28 +48,28 @@ public final class BoostedTreesGetEnsembleStates extends PrimitiveOp {
   /**
    * Stamp token of the tree ensemble resource.
    */
-  public Output<Long> stampToken() {
+  public Output<TInt64> stampToken() {
     return stampToken;
   }
   
   /**
    * The number of trees in the tree ensemble resource.
    */
-  public Output<Integer> numTrees() {
+  public Output<TInt32> numTrees() {
     return numTrees;
   }
   
   /**
    * The number of trees that were finished successfully.
    */
-  public Output<Integer> numFinalizedTrees() {
+  public Output<TInt32> numFinalizedTrees() {
     return numFinalizedTrees;
   }
   
   /**
    * The number of layers we attempted to build (but not necessarily succeeded).
    */
-  public Output<Integer> numAttemptedLayers() {
+  public Output<TInt32> numAttemptedLayers() {
     return numAttemptedLayers;
   }
   
@@ -75,15 +77,15 @@ public final class BoostedTreesGetEnsembleStates extends PrimitiveOp {
    * Rank size 2 tensor that contains start and end ids of the nodes in the latest
    * layer.
    */
-  public Output<Integer> lastLayerNodesRange() {
+  public Output<TInt32> lastLayerNodesRange() {
     return lastLayerNodesRange;
   }
   
-  private Output<Long> stampToken;
-  private Output<Integer> numTrees;
-  private Output<Integer> numFinalizedTrees;
-  private Output<Integer> numAttemptedLayers;
-  private Output<Integer> lastLayerNodesRange;
+  private Output<TInt64> stampToken;
+  private Output<TInt32> numTrees;
+  private Output<TInt32> numFinalizedTrees;
+  private Output<TInt32> numAttemptedLayers;
+  private Output<TInt32> lastLayerNodesRange;
   
   private BoostedTreesGetEnsembleStates(Operation operation) {
     super(operation);
