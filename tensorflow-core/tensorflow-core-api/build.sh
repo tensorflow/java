@@ -18,7 +18,7 @@ else
 fi
 
 # Build C API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow @org_tensorflow//tensorflow/java:tensorflow
+bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow :java_op_gen_sources
 
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=(bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.so.?.?.?)
@@ -38,4 +38,4 @@ fi
 
 # Copy only main generated Java source files for ops
 mkdir -p src/gen/java/
-cp -r bazel-genfiles/external/org_tensorflow/tensorflow/java/ops/src/main/java/* src/gen/java/
+cp -r bazel-genfiles/ops/src/* src/gen/java/

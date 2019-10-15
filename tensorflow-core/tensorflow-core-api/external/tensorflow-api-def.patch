@@ -1,0 +1,13 @@
+diff --git a/tensorflow/core/api_def/BUILD b/tensorflow/core/api_def/BUILD
+index f96645ad9f..63f94d3b87 100644
+--- a/tensorflow/core/api_def/BUILD
++++ b/tensorflow/core/api_def/BUILD
+@@ -28,7 +28,7 @@ package(
+ filegroup(
+     name = "base_api_def",
+     srcs = glob(["base_api/*"]),
+-    visibility = ["//tensorflow:internal"],
++    visibility = ["//visibility:public"],
+ )
+ 
+ filegroup(
