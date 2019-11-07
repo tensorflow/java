@@ -5,21 +5,24 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Slice;
 
-public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoader<T>, AutoCloseable {
+public class GraphTensorArrayDataset<T> implements ArrayDataset<Slice<T>>, AutoCloseable {
     private Graph graphRef;
     private Class<T> dtype;
 
     private Tensor<T>[] dataTensors;
     private Placeholder<T>[] dataPlaceholders;
-    private Slice<T>[] batchOperands;
 
-    private Placeholder<Long>[] batchStart;
-    private Placeholder<Long>[] batchSize;
+    private Slice<T>[] batchOperands;
+    private Placeholder<Long>[] batchSizes;
+    private Placeholder<Long>[] batchStarts;
+
+    private long batchSize = 1;
+    private boolean dropRemainder = false;
 
     private boolean built = false;
 
     @SafeVarargs
-    public GraphModeTensorFrame(Graph graph, Class<T> dtype, Tensor<T> firstTensor, Tensor<T>... tensors) {
+    public GraphTensorArrayDataset(Graph graph, Class<T> dtype, Tensor<T> firstTensor, Tensor<T>... tensors) {
         this.graphRef = graph;
         this.dtype = dtype;
 
@@ -39,12 +42,10 @@ public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoad
         System.arraycopy(tensors, 0, this.dataTensors, 1, tensors.length);
     }
 
-    public int length() {
-        return this.dataTensors.length;
-    }
-
-    public long size() {
-        return this.dataTensors[0].shape()[0];
+    public Dataset<Slice<T>, Slice<T>[]> batch(long batchSize, boolean dropRemainder) {
+        this.batchSize = batchSize;
+        this.dropRemainder = dropRemainder;
+        return this;
     }
 
     public void build(Ops tf) {
@@ -56,36 +57,21 @@ public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoad
         }
 
         // Placeholder representing batch start and size selectors.
-        this.batchStart = new Placeholder[this.length()];
-        this.batchSize = new Placeholder[this.length()];
+        this.batchStarts = new Placeholder[this.length()];
+        this.batchSizes = new Placeholder[this.length()];
 
         for (int i = 0; i < this.length(); i++) {
-            batchStart[i] = tf.placeholder(Long.class, Placeholder.shape(Shape.make(this.dataTensors[i].numDimensions())));
-            batchSize[i] = tf.placeholder(Long.class, Placeholder.shape(Shape.make(this.dataTensors[i].numDimensions())));
+            batchStarts[i] = tf.placeholder(Long.class, Placeholder.shape(Shape.make(this.dataTensors[i].numDimensions())));
+            batchSizes[i] = tf.placeholder(Long.class, Placeholder.shape(Shape.make(this.dataTensors[i].numDimensions())));
         }
 
         // Create batch slice operands
         this.batchOperands = new Slice[this.length()];
         for (int i = 0; i < this.length(); i++) {
-            batchOperands[i] = tf.slice(dataPlaceholders[i], batchStart[i], batchSize[i]);
+            batchOperands[i] = tf.slice(dataPlaceholders[i], batchStarts[i], batchSizes[i]);
         }
 
         this.built = true;
-    }
-
-    @Override
-    public Operand<T>[] getBatchOperands() {
-        return this.batchOperands;
-    }
-
-    @Override
-    public long numTensors() {
-        return this.batchOperands.length;
-    }
-
-    @Override
-    public long numElementsPerTensor() {
-        return this.dataTensors[0].shape()[0];
     }
 
     public void feedBatchToSessionRunner(Ops tf, Session.Runner runner, long batchIndex, boolean fetchBatches) {
@@ -96,11 +82,11 @@ public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoad
 
         // Feed Batch Selectors
         for (int i = 0; i < length(); i++) {
-            long[] startSelector = Utils.batchStartSelector(tf, batchIndex * getBatchSize(), dataTensors[i].numDimensions());
-            long[] sizeSelector = Utils.batchSizeSelector(tf, getBatchSize(), dataTensors[i].numDimensions());
+            long[] startSelector = Utils.batchStartSelector(tf, batchIndex * batchSize, dataTensors[i].numDimensions());
+            long[] sizeSelector = Utils.batchSizeSelector(tf, batchSize, dataTensors[i].numDimensions());
 
-            runner.feed(batchStart[i].asOutput(), Tensors.create(startSelector));
-            runner.feed(batchSize[i].asOutput(), Tensors.create(sizeSelector));
+            runner.feed(batchStarts[i].asOutput(), Tensors.create(startSelector));
+            runner.feed(batchSizes[i].asOutput(), Tensors.create(sizeSelector));
         }
 
         if (fetchBatches) {
@@ -115,6 +101,29 @@ public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoad
         return built;
     }
 
+    public Slice<T>[] getBatchOperands() {
+        return this.batchOperands;
+    }
+
+    public int length() {
+        return this.dataTensors.length;
+    }
+
+    public long size() {
+        return this.dataTensors[0].shape()[0];
+    }
+
+    public long numBatches() {
+        return size() / batchSize;
+    }
+
+    @Override
+    public void close() {
+        for (Tensor<T> tensor : this.dataTensors) {
+            tensor.close();
+        }
+    }
+
     /**
      * Utility to construct a Shape from a long[]
      */
@@ -126,12 +135,5 @@ public class GraphModeTensorFrame<T> extends TensorFrame<T> implements GraphLoad
         System.arraycopy(dims, 1, tail, 0, dims.length - 1);
 
         return Shape.make(head, tail);
-    }
-
-    @Override
-    public void close() {
-        for (Tensor<T> tensor : this.dataTensors) {
-            tensor.close();
-        }
     }
 }
