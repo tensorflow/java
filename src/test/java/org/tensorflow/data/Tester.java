@@ -1,4 +1,4 @@
 package org.tensorflow.data;
 
-public class NioArrayDataset {
+public class Test {
 }
