@@ -30,8 +30,8 @@
 //             );
 //
 //             Tensor<Float> yTensor = Tensors.create(new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
-//             GraphModeTensorFrame<Float> graphModeTensorFrame
-//                     = new GraphModeTensorFrame<>(graph, Float.class, XTensor, yTensor)) {
+//             GraphTensorArrayDataset<Float> graphModeTensorFrame
+//                     = new GraphTensorArrayDataset<>(graph, Float.class, XTensor, yTensor)) {
 //
 //            Ops tf = Ops.create(graph);
 //
