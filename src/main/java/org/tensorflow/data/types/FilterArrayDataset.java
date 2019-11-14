@@ -1,4 +1,4 @@
-//package org.tensorflow.data;
+//package org.tensorflow.data.types;
 //
 //import org.tensorflow.EagerSession;
 //import org.tensorflow.ExecutionEnvironment;
@@ -10,23 +10,23 @@
 //import java.util.function.BiFunction;
 //import java.util.stream.StreamSupport;
 //
-//public class MapArrayDataset<T, U> extends OperandArrayDataset<U> {
+//public class FilterArrayDataset<T> extends OperandArrayDataset<T> {
 //    EagerSession env;
 //    OperandArrayDataset<T> dataset;
-//    BiFunction<Ops, Operand<T>[], Operand<U>[]> transform;
+//    BiFunction<Ops, Operand<T>[], Boolean> predicate;
 //
-//    public MapArrayDataset(EagerSession env, OperandArrayDataset<T> dataset, BiFunction<Ops, Operand<T>[], Operand<U>[]> transform) {
+//    public FilterArrayDataset(EagerSession env, OperandArrayDataset<T> dataset, BiFunction<Ops, Operand<T>[], Boolean> predicate) {
 //        this.env = env;
 //        this.dataset = dataset;
-//        this.transform = transform;
+//        this.predicate = predicate;
 //    }
 //
 //    @Override
-//    public Iterator<Operand<U>[]> iterator() {
+//    public Iterator<Operand<T>[]> iterator() {
 //        Ops tf = Ops.create(environment());
 //        return StreamSupport
 //                .stream(dataset.spliterator(), false)
-//                .map(x -> transform.apply(tf, x))
+//                .filter(x -> predicate.apply(tf, x))
 //                .iterator();
 //    }
 //
