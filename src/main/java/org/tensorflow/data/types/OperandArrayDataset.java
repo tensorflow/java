@@ -2,8 +2,8 @@
 //
 //import org.tensorflow.EagerSession;
 //import org.tensorflow.Operand;
-//import org.tensorflow.data.BatchedArrayDataset;
-//import org.tensorflow.data.FilterArrayDataset;
+//import org.tensorflow.data.types.BatchedArrayDataset;
+//import org.tensorflow.data.types.FilterArrayDataset;
 //import org.tensorflow.data.MapArrayDataset;
 //import org.tensorflow.op.Ops;
 //
