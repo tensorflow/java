@@ -1,3 +1,7 @@
 op {
   graph_op_name: "NcclReduce"
+  out_arg: {
+    name: "data"
+    rename_to: "output"
+  }
 }

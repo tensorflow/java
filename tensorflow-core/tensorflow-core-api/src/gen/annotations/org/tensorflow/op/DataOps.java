@@ -3,7 +3,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.DeserializeIterator;
 import org.tensorflow.op.data.IteratorGetNext;
@@ -20,6 +19,7 @@ import org.tensorflow.op.data.SerializeIterator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * An API for building {@code data} operations as {@link Op Op}s
@@ -34,17 +34,17 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link IteratorGetNextAsOptional} operation
+   * Builds an {@link OptionalGetValue} operation
    *
-   * @param iterator 
+   * @param optional 
    * @param outputTypes 
    * @param outputShapes 
-   * @return a new instance of IteratorGetNextAsOptional
-   * @see org.tensorflow.op.data.IteratorGetNextAsOptional
+   * @return a new instance of OptionalGetValue
+   * @see org.tensorflow.op.data.OptionalGetValue
    */
-  public IteratorGetNextAsOptional iteratorGetNextAsOptional(Operand<?> iterator,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
-    return IteratorGetNextAsOptional.create(scope, iterator, outputTypes, outputShapes);
+  public OptionalGetValue optionalGetValue(Operand<?> optional, List<DataType<?>> outputTypes,
+      List<Shape> outputShapes) {
+    return OptionalGetValue.create(scope, optional, outputTypes, outputShapes);
   }
 
   /**
@@ -79,16 +79,17 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link AnonymousIterator} operation
+   * Builds an {@link IteratorGetNextAsOptional} operation
    *
+   * @param iterator 
    * @param outputTypes 
    * @param outputShapes 
-   * @return a new instance of AnonymousIterator
-   * @see org.tensorflow.op.data.AnonymousIterator
+   * @return a new instance of IteratorGetNextAsOptional
+   * @see org.tensorflow.op.data.IteratorGetNextAsOptional
    */
-  public AnonymousIterator anonymousIterator(List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
-    return AnonymousIterator.create(scope, outputTypes, outputShapes);
+  public IteratorGetNextAsOptional iteratorGetNextAsOptional(Operand<?> iterator,
+      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+    return IteratorGetNextAsOptional.create(scope, iterator, outputTypes, outputShapes);
   }
 
   /**
@@ -102,17 +103,49 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link IteratorGetNext} operation
+   * Builds an {@link OptionalFromValue} operation
    *
-   * @param iterator 
+   * @param components 
+   * @return a new instance of OptionalFromValue
+   * @see org.tensorflow.op.data.OptionalFromValue
+   */
+  public OptionalFromValue optionalFromValue(Iterable<Operand<?>> components) {
+    return OptionalFromValue.create(scope, components);
+  }
+
+  /**
+   * Builds an {@link IteratorToStringHandle} operation
+   *
+   * @param resourceHandle A handle to an iterator resource.
+   * @return a new instance of IteratorToStringHandle
+   * @see org.tensorflow.op.data.IteratorToStringHandle
+   */
+  public IteratorToStringHandle iteratorToStringHandle(Operand<?> resourceHandle) {
+    return IteratorToStringHandle.create(scope, resourceHandle);
+  }
+
+  /**
+   * Builds an {@link AnonymousIterator} operation
+   *
    * @param outputTypes 
    * @param outputShapes 
-   * @return a new instance of IteratorGetNext
-   * @see org.tensorflow.op.data.IteratorGetNext
+   * @return a new instance of AnonymousIterator
+   * @see org.tensorflow.op.data.AnonymousIterator
    */
-  public IteratorGetNext iteratorGetNext(Operand<?> iterator, List<DataType<?>> outputTypes,
+  public AnonymousIterator anonymousIterator(List<DataType<?>> outputTypes,
       List<Shape> outputShapes) {
-    return IteratorGetNext.create(scope, iterator, outputTypes, outputShapes);
+    return AnonymousIterator.create(scope, outputTypes, outputShapes);
+  }
+
+  /**
+   * Builds an {@link OptionalHasValue} operation
+   *
+   * @param optional 
+   * @return a new instance of OptionalHasValue
+   * @see org.tensorflow.op.data.OptionalHasValue
+   */
+  public OptionalHasValue optionalHasValue(Operand<?> optional) {
+    return OptionalHasValue.create(scope, optional);
   }
 
   /**
@@ -130,50 +163,14 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link OptionalFromValue} operation
-   *
-   * @param components 
-   * @return a new instance of OptionalFromValue
-   * @see org.tensorflow.op.data.OptionalFromValue
-   */
-  public OptionalFromValue optionalFromValue(Iterable<Operand<?>> components) {
-    return OptionalFromValue.create(scope, components);
-  }
-
-  /**
-   * Builds an {@link OptionalGetValue} operation
-   *
-   * @param optional 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of OptionalGetValue
-   * @see org.tensorflow.op.data.OptionalGetValue
-   */
-  public OptionalGetValue optionalGetValue(Operand<?> optional, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
-    return OptionalGetValue.create(scope, optional, outputTypes, outputShapes);
-  }
-
-  /**
-   * Builds an {@link IteratorToStringHandle} operation
+   * Builds an {@link SerializeIterator} operation
    *
    * @param resourceHandle A handle to an iterator resource.
-   * @return a new instance of IteratorToStringHandle
-   * @see org.tensorflow.op.data.IteratorToStringHandle
+   * @return a new instance of SerializeIterator
+   * @see org.tensorflow.op.data.SerializeIterator
    */
-  public IteratorToStringHandle iteratorToStringHandle(Operand<?> resourceHandle) {
-    return IteratorToStringHandle.create(scope, resourceHandle);
-  }
-
-  /**
-   * Builds an {@link OptionalHasValue} operation
-   *
-   * @param optional 
-   * @return a new instance of OptionalHasValue
-   * @see org.tensorflow.op.data.OptionalHasValue
-   */
-  public OptionalHasValue optionalHasValue(Operand<?> optional) {
-    return OptionalHasValue.create(scope, optional);
+  public SerializeIterator serializeIterator(Operand<?> resourceHandle) {
+    return SerializeIterator.create(scope, resourceHandle);
   }
 
   /**
@@ -189,13 +186,16 @@ public final class DataOps {
   }
 
   /**
-   * Builds an {@link SerializeIterator} operation
+   * Builds an {@link IteratorGetNext} operation
    *
-   * @param resourceHandle A handle to an iterator resource.
-   * @return a new instance of SerializeIterator
-   * @see org.tensorflow.op.data.SerializeIterator
+   * @param iterator 
+   * @param outputTypes 
+   * @param outputShapes 
+   * @return a new instance of IteratorGetNext
+   * @see org.tensorflow.op.data.IteratorGetNext
    */
-  public SerializeIterator serializeIterator(Operand<?> resourceHandle) {
-    return SerializeIterator.create(scope, resourceHandle);
+  public IteratorGetNext iteratorGetNext(Operand<?> iterator, List<DataType<?>> outputTypes,
+      List<Shape> outputShapes) {
+    return IteratorGetNext.create(scope, iterator, outputTypes, outputShapes);
   }
 }

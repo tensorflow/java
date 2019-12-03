@@ -3,7 +3,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.train.AccumulatorApplyGradient;
 import org.tensorflow.op.train.AccumulatorNumAccumulated;
 import org.tensorflow.op.train.AccumulatorSetGlobalStep;
@@ -69,6 +68,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * An API for building {@code train} operations as {@link Op Op}s
@@ -80,6 +80,20 @@ public final class TrainOps {
 
   TrainOps(Scope scope) {
     this.scope = scope;
+  }
+
+  /**
+   * Builds an {@link ConditionalAccumulator} operation
+   *
+   * @param dtype The type of the value being accumulated.
+   * @param shape The shape of the values, can be [], in which case shape is unknown.
+   * @param options carries optional attributes values
+   * @return a new instance of ConditionalAccumulator
+   * @see org.tensorflow.op.train.ConditionalAccumulator
+   */
+  public <T> ConditionalAccumulator conditionalAccumulator(DataType<T> dtype, Shape shape,
+      ConditionalAccumulator.Options... options) {
+    return ConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**
@@ -191,20 +205,6 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link AccumulatorApplyGradient} operation
-   *
-   * @param handle The handle to a accumulator.
-   * @param localStep The local_step value at which the gradient was computed.
-   * @param gradient A tensor of the gradient to be accumulated.
-   * @return a new instance of AccumulatorApplyGradient
-   * @see org.tensorflow.op.train.AccumulatorApplyGradient
-   */
-  public <T> AccumulatorApplyGradient accumulatorApplyGradient(Operand<TString> handle,
-      Operand<TInt64> localStep, Operand<T> gradient) {
-    return AccumulatorApplyGradient.create(scope, handle, localStep, gradient);
-  }
-
-  /**
    * Builds an {@link ResourceSparseApplyFtrl} operation
    *
    * @param var Should be from a Variable().
@@ -229,26 +229,17 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link ApplyAdam} operation
+   * Builds an {@link AccumulatorApplyGradient} operation
    *
-   * @param var Should be from a Variable().
-   * @param m Should be from a Variable().
-   * @param v Should be from a Variable().
-   * @param beta1Power Must be a scalar.
-   * @param beta2Power Must be a scalar.
-   * @param lr Scaling factor. Must be a scalar.
-   * @param beta1 Momentum factor. Must be a scalar.
-   * @param beta2 Momentum factor. Must be a scalar.
-   * @param epsilon Ridge term. Must be a scalar.
-   * @param grad The gradient.
-   * @param options carries optional attributes values
-   * @return a new instance of ApplyAdam
-   * @see org.tensorflow.op.train.ApplyAdam
+   * @param handle The handle to a accumulator.
+   * @param localStep The local_step value at which the gradient was computed.
+   * @param gradient A tensor of the gradient to be accumulated.
+   * @return a new instance of AccumulatorApplyGradient
+   * @see org.tensorflow.op.train.AccumulatorApplyGradient
    */
-  public <T> ApplyAdam<T> applyAdam(Operand<T> var, Operand<T> m, Operand<T> v,
-      Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1,
-      Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, ApplyAdam.Options... options) {
-    return ApplyAdam.create(scope, var, m, v, beta1Power, beta2Power, lr, beta1, beta2, epsilon, grad, options);
+  public <T> AccumulatorApplyGradient accumulatorApplyGradient(Operand<TString> handle,
+      Operand<TInt64> localStep, Operand<T> gradient) {
+    return AccumulatorApplyGradient.create(scope, handle, localStep, gradient);
   }
 
   /**
@@ -288,6 +279,29 @@ public final class TrainOps {
       Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad,
       ResourceApplyAddSign.Options... options) {
     return ResourceApplyAddSign.create(scope, var, m, lr, alpha, signDecay, beta, grad, options);
+  }
+
+  /**
+   * Builds an {@link ApplyAdam} operation
+   *
+   * @param var Should be from a Variable().
+   * @param m Should be from a Variable().
+   * @param v Should be from a Variable().
+   * @param beta1Power Must be a scalar.
+   * @param beta2Power Must be a scalar.
+   * @param lr Scaling factor. Must be a scalar.
+   * @param beta1 Momentum factor. Must be a scalar.
+   * @param beta2 Momentum factor. Must be a scalar.
+   * @param epsilon Ridge term. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attributes values
+   * @return a new instance of ApplyAdam
+   * @see org.tensorflow.op.train.ApplyAdam
+   */
+  public <T> ApplyAdam<T> applyAdam(Operand<T> var, Operand<T> m, Operand<T> v,
+      Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1,
+      Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, ApplyAdam.Options... options) {
+    return ApplyAdam.create(scope, var, m, v, beta1Power, beta2Power, lr, beta1, beta2, epsilon, grad, options);
   }
 
   /**
@@ -466,6 +480,21 @@ public final class TrainOps {
   }
 
   /**
+   * Builds an {@link Save} operation
+   *
+   * @param prefix Must have a single element. The prefix of the V2 checkpoint to which we
+   * @param tensorNames shape {N}. The names of the tensors to be saved.
+   * @param shapeAndSlices shape {N}.  The slice specs of the tensors to be saved.
+   * @param tensors `N` tensors to save.
+   * @return a new instance of Save
+   * @see org.tensorflow.op.train.Save
+   */
+  public Save save(Operand<TString> prefix, Operand<TString> tensorNames,
+      Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
+    return Save.create(scope, prefix, tensorNames, shapeAndSlices, tensors);
+  }
+
+  /**
    * Builds an {@link ResourceSparseApplyMomentum} operation
    *
    * @param var Should be from a Variable().
@@ -482,21 +511,6 @@ public final class TrainOps {
       Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
       Operand<T> momentum, ResourceSparseApplyMomentum.Options... options) {
     return ResourceSparseApplyMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
-  }
-
-  /**
-   * Builds an {@link Save} operation
-   *
-   * @param prefix Must have a single element. The prefix of the V2 checkpoint to which we
-   * @param tensorNames shape {N}. The names of the tensors to be saved.
-   * @param shapeAndSlices shape {N}.  The slice specs of the tensors to be saved.
-   * @param tensors `N` tensors to save.
-   * @return a new instance of Save
-   * @see org.tensorflow.op.train.Save
-   */
-  public Save save(Operand<TString> prefix, Operand<TString> tensorNames,
-      Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
-    return Save.create(scope, prefix, tensorNames, shapeAndSlices, tensors);
   }
 
   /**
@@ -627,17 +641,6 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link AccumulatorNumAccumulated} operation
-   *
-   * @param handle The handle to an accumulator.
-   * @return a new instance of AccumulatorNumAccumulated
-   * @see org.tensorflow.op.train.AccumulatorNumAccumulated
-   */
-  public AccumulatorNumAccumulated accumulatorNumAccumulated(Operand<TString> handle) {
-    return AccumulatorNumAccumulated.create(scope, handle);
-  }
-
-  /**
    * Builds an {@link MergeV2Checkpoints} operation
    *
    * @param checkpointPrefixes prefixes of V2 checkpoints to merge.
@@ -649,6 +652,17 @@ public final class TrainOps {
   public MergeV2Checkpoints mergeV2Checkpoints(Operand<TString> checkpointPrefixes,
       Operand<TString> destinationPrefix, MergeV2Checkpoints.Options... options) {
     return MergeV2Checkpoints.create(scope, checkpointPrefixes, destinationPrefix, options);
+  }
+
+  /**
+   * Builds an {@link AccumulatorNumAccumulated} operation
+   *
+   * @param handle The handle to an accumulator.
+   * @return a new instance of AccumulatorNumAccumulated
+   * @see org.tensorflow.op.train.AccumulatorNumAccumulated
+   */
+  public AccumulatorNumAccumulated accumulatorNumAccumulated(Operand<TString> handle) {
+    return AccumulatorNumAccumulated.create(scope, handle);
   }
 
   /**
@@ -751,6 +765,24 @@ public final class TrainOps {
   }
 
   /**
+   * Builds an {@link ResourceApplyProximalGradientDescent} operation
+   *
+   * @param var Should be from a Variable().
+   * @param alpha Scaling factor. Must be a scalar.
+   * @param l1 L1 regularization. Must be a scalar.
+   * @param l2 L2 regularization. Must be a scalar.
+   * @param delta The change.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceApplyProximalGradientDescent
+   * @see org.tensorflow.op.train.ResourceApplyProximalGradientDescent
+   */
+  public <T> ResourceApplyProximalGradientDescent resourceApplyProximalGradientDescent(
+      Operand<?> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta,
+      ResourceApplyProximalGradientDescent.Options... options) {
+    return ResourceApplyProximalGradientDescent.create(scope, var, alpha, l1, l2, delta, options);
+  }
+
+  /**
    * Builds an {@link ResourceApplyAdam} operation
    *
    * @param var Should be from a Variable().
@@ -771,24 +803,6 @@ public final class TrainOps {
       Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1,
       Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, ResourceApplyAdam.Options... options) {
     return ResourceApplyAdam.create(scope, var, m, v, beta1Power, beta2Power, lr, beta1, beta2, epsilon, grad, options);
-  }
-
-  /**
-   * Builds an {@link ResourceApplyProximalGradientDescent} operation
-   *
-   * @param var Should be from a Variable().
-   * @param alpha Scaling factor. Must be a scalar.
-   * @param l1 L1 regularization. Must be a scalar.
-   * @param l2 L2 regularization. Must be a scalar.
-   * @param delta The change.
-   * @param options carries optional attributes values
-   * @return a new instance of ResourceApplyProximalGradientDescent
-   * @see org.tensorflow.op.train.ResourceApplyProximalGradientDescent
-   */
-  public <T> ResourceApplyProximalGradientDescent resourceApplyProximalGradientDescent(
-      Operand<?> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta,
-      ResourceApplyProximalGradientDescent.Options... options) {
-    return ResourceApplyProximalGradientDescent.create(scope, var, alpha, l1, l2, delta, options);
   }
 
   /**
@@ -1069,20 +1083,6 @@ public final class TrainOps {
       Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
       SparseApplyFtrl.Options... options) {
     return SparseApplyFtrl.create(scope, var, accum, linear, grad, indices, lr, l1, l2, l2Shrinkage, lrPower, options);
-  }
-
-  /**
-   * Builds an {@link ConditionalAccumulator} operation
-   *
-   * @param dtype The type of the value being accumulated.
-   * @param shape The shape of the values, can be [], in which case shape is unknown.
-   * @param options carries optional attributes values
-   * @return a new instance of ConditionalAccumulator
-   * @see org.tensorflow.op.train.ConditionalAccumulator
-   */
-  public <T> ConditionalAccumulator conditionalAccumulator(DataType<T> dtype, Shape shape,
-      ConditionalAccumulator.Options... options) {
-    return ConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**

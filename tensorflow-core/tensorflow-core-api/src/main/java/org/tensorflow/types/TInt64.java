@@ -4,34 +4,34 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.nio.buffer.LongDataBuffer;
-import org.tensorflow.nio.nd.LongNdArray;
-import org.tensorflow.nio.nd.NdArray;
-import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.nio.nd.impl.dense.LongDenseNdArray;
+import org.tensorflow.util.buffer.LongDataBuffer;
+import org.tensorflow.util.ndarray.LongNdArray;
+import org.tensorflow.util.ndarray.NdArray;
+import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
 public interface TInt64 extends LongNdArray, TNumber {
 
   DataType<TInt64> DTYPE = DataType.create("INT64", 9, 8, TInt64Impl::mapTensor);
 
-  static Tensor<TInt64> scalar(long value) {
-    Tensor<TInt64> t = tensorOfShape();
+  static Tensor<TInt64> scalarOf(long value) {
+    Tensor<TInt64> t = ofShape();
     t.data().setLong(value);
     return t;
   }
 
-  static Tensor<TInt64> vector(long... values) {
-    Tensor<TInt64> t = tensorOfShape(values.length);
+  static Tensor<TInt64> vectorOf(long... values) {
+    Tensor<TInt64> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
-  static Tensor<TInt64> tensor(Shape shape) {
+  static Tensor<TInt64> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
-  static Tensor<TInt64> tensorOfShape(long... dimensionSizes) {
+  static Tensor<TInt64> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 

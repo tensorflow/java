@@ -3,4 +3,8 @@ op {
   endpoint {
     name: "collective.BroadcastRecv"
   }
+  out_arg: {
+    name: "data"
+    rename_to: "output"
+  }
 }

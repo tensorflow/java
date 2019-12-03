@@ -2,7 +2,6 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.math.Abs;
 import org.tensorflow.op.math.AccumulateN;
 import org.tensorflow.op.math.Acos;
@@ -108,6 +107,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * An API for building {@code math} operations as {@link Op Op}s
@@ -134,18 +134,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Polygamma} operation
-   *
-   * @param a 
-   * @param x 
-   * @return a new instance of Polygamma
-   * @see org.tensorflow.op.math.Polygamma
-   */
-  public <T extends TNumber> Polygamma<T> polygamma(Operand<T> a, Operand<T> x) {
-    return Polygamma.create(scope, a, x);
-  }
-
-  /**
    * Builds an {@link Bincount} operation
    *
    * @param arr int32 `Tensor`.
@@ -157,6 +145,18 @@ public final class MathOps {
   public <T extends TNumber> Bincount<T> bincount(Operand<TInt32> arr, Operand<TInt32> size,
       Operand<T> weights) {
     return Bincount.create(scope, arr, size, weights);
+  }
+
+  /**
+   * Builds an {@link Polygamma} operation
+   *
+   * @param a 
+   * @param x 
+   * @return a new instance of Polygamma
+   * @see org.tensorflow.op.math.Polygamma
+   */
+  public <T extends TNumber> Polygamma<T> polygamma(Operand<T> a, Operand<T> x) {
+    return Polygamma.create(scope, a, x);
   }
 
   /**
@@ -292,6 +292,17 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Ceil} operation
+   *
+   * @param x 
+   * @return a new instance of Ceil
+   * @see org.tensorflow.op.math.Ceil
+   */
+  public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
+    return Ceil.create(scope, x);
+  }
+
+  /**
    * Builds an {@link Mul} operation
    *
    * @param x 
@@ -304,14 +315,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Ceil} operation
+   * Builds an {@link Neg} operation
    *
    * @param x 
-   * @return a new instance of Ceil
-   * @see org.tensorflow.op.math.Ceil
+   * @return a new instance of Neg
+   * @see org.tensorflow.op.math.Neg
    */
-  public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
-    return Ceil.create(scope, x);
+  public <T> Neg<T> neg(Operand<T> x) {
+    return Neg.create(scope, x);
   }
 
   /**
@@ -324,17 +335,6 @@ public final class MathOps {
    */
   public <T extends TNumber> Atan2<T> atan2(Operand<T> y, Operand<T> x) {
     return Atan2.create(scope, y, x);
-  }
-
-  /**
-   * Builds an {@link Neg} operation
-   *
-   * @param x 
-   * @return a new instance of Neg
-   * @see org.tensorflow.op.math.Neg
-   */
-  public <T> Neg<T> neg(Operand<T> x) {
-    return Neg.create(scope, x);
   }
 
   /**
@@ -360,6 +360,17 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Acos} operation
+   *
+   * @param x 
+   * @return a new instance of Acos
+   * @see org.tensorflow.op.math.Acos
+   */
+  public <T> Acos<T> acos(Operand<T> x) {
+    return Acos.create(scope, x);
+  }
+
+  /**
    * Builds an {@link Xlogy} operation
    *
    * @param x 
@@ -369,17 +380,6 @@ public final class MathOps {
    */
   public <T> Xlogy<T> xlogy(Operand<T> x, Operand<T> y) {
     return Xlogy.create(scope, x, y);
-  }
-
-  /**
-   * Builds an {@link Acos} operation
-   *
-   * @param x 
-   * @return a new instance of Acos
-   * @see org.tensorflow.op.math.Acos
-   */
-  public <T> Acos<T> acos(Operand<T> x) {
-    return Acos.create(scope, x);
   }
 
   /**
@@ -443,17 +443,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link LogicalNot} operation
-   *
-   * @param x 
-   * @return a new instance of LogicalNot
-   * @see org.tensorflow.op.math.LogicalNot
-   */
-  public LogicalNot logicalNot(Operand<TBool> x) {
-    return LogicalNot.create(scope, x);
-  }
-
-  /**
    * Builds an {@link Sqrt} operation
    *
    * @param x 
@@ -462,6 +451,17 @@ public final class MathOps {
    */
   public <T> Sqrt<T> sqrt(Operand<T> x) {
     return Sqrt.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link LogicalNot} operation
+   *
+   * @param x 
+   * @return a new instance of LogicalNot
+   * @see org.tensorflow.op.math.LogicalNot
+   */
+  public LogicalNot logicalNot(Operand<TBool> x) {
+    return LogicalNot.create(scope, x);
   }
 
   /**
@@ -559,6 +559,18 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link AccumulateN} operation
+   *
+   * @param inputs A list of `Tensor` objects, each with same shape and type.
+   * @param shape Shape of elements of `inputs`.
+   * @return a new instance of AccumulateN
+   * @see org.tensorflow.op.math.AccumulateN
+   */
+  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
+    return AccumulateN.create(scope, inputs, shape);
+  }
+
+  /**
    * Builds an {@link Digamma} operation
    *
    * @param x 
@@ -605,17 +617,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Sin} operation
-   *
-   * @param x 
-   * @return a new instance of Sin
-   * @see org.tensorflow.op.math.Sin
-   */
-  public <T> Sin<T> sin(Operand<T> x) {
-    return Sin.create(scope, x);
-  }
-
-  /**
    * Builds an {@link SegmentMean} operation
    *
    * @param data 
@@ -625,6 +626,17 @@ public final class MathOps {
    */
   public <T, U extends TNumber> SegmentMean<T> segmentMean(Operand<T> data, Operand<U> segmentIds) {
     return SegmentMean.create(scope, data, segmentIds);
+  }
+
+  /**
+   * Builds an {@link Sin} operation
+   *
+   * @param x 
+   * @return a new instance of Sin
+   * @see org.tensorflow.op.math.Sin
+   */
+  public <T> Sin<T> sin(Operand<T> x) {
+    return Sin.create(scope, x);
   }
 
   /**
@@ -797,6 +809,17 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Real} operation
+   *
+   * @param input 
+   * @return a new instance of Real
+   * @see org.tensorflow.op.math.Real
+   */
+  public <T> Real<TFloat> real(Operand<T> input) {
+    return Real.create(scope, input);
+  }
+
+  /**
    * Builds an {@link FloorMod} operation
    *
    * @param x 
@@ -806,17 +829,6 @@ public final class MathOps {
    */
   public <T extends TNumber> FloorMod<T> floorMod(Operand<T> x, Operand<T> y) {
     return FloorMod.create(scope, x, y);
-  }
-
-  /**
-   * Builds an {@link Real} operation
-   *
-   * @param input 
-   * @return a new instance of Real
-   * @see org.tensorflow.op.math.Real
-   */
-  public <T> Real<TFloat> real(Operand<T> input) {
-    return Real.create(scope, input);
   }
 
   /**
@@ -856,17 +868,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Lgamma} operation
-   *
-   * @param x 
-   * @return a new instance of Lgamma
-   * @see org.tensorflow.op.math.Lgamma
-   */
-  public <T extends TNumber> Lgamma<T> lgamma(Operand<T> x) {
-    return Lgamma.create(scope, x);
-  }
-
-  /**
    * Builds an {@link Sub} operation
    *
    * @param x 
@@ -876,6 +877,17 @@ public final class MathOps {
    */
   public <T> Sub<T> sub(Operand<T> x, Operand<T> y) {
     return Sub.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link Lgamma} operation
+   *
+   * @param x 
+   * @return a new instance of Lgamma
+   * @see org.tensorflow.op.math.Lgamma
+   */
+  public <T extends TNumber> Lgamma<T> lgamma(Operand<T> x) {
+    return Lgamma.create(scope, x);
   }
 
   /**
@@ -901,17 +913,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Asin} operation
-   *
-   * @param x 
-   * @return a new instance of Asin
-   * @see org.tensorflow.op.math.Asin
-   */
-  public <T> Asin<T> asin(Operand<T> x) {
-    return Asin.create(scope, x);
-  }
-
-  /**
    * Builds an {@link Round} operation
    *
    * @param x 
@@ -920,6 +921,17 @@ public final class MathOps {
    */
   public <T> Round<T> round(Operand<T> x) {
     return Round.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Asin} operation
+   *
+   * @param x 
+   * @return a new instance of Asin
+   * @see org.tensorflow.op.math.Asin
+   */
+  public <T> Asin<T> asin(Operand<T> x) {
+    return Asin.create(scope, x);
   }
 
   /**
@@ -970,6 +982,18 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Pow} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of Pow
+   * @see org.tensorflow.op.math.Pow
+   */
+  public <T> Pow<T> pow(Operand<T> x, Operand<T> y) {
+    return Pow.create(scope, x, y);
+  }
+
+  /**
    * Builds an {@link UnsortedSegmentMax} operation
    *
    * @param data 
@@ -995,15 +1019,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Pow} operation
+   * Builds an {@link InvertPermutation} operation
    *
-   * @param x 
-   * @param y 
-   * @return a new instance of Pow
-   * @see org.tensorflow.op.math.Pow
+   * @param x 1-D.
+   * @return a new instance of InvertPermutation
+   * @see org.tensorflow.op.math.InvertPermutation
    */
-  public <T> Pow<T> pow(Operand<T> x, Operand<T> y) {
-    return Pow.create(scope, x, y);
+  public <T extends TNumber> InvertPermutation<T> invertPermutation(Operand<T> x) {
+    return InvertPermutation.create(scope, x);
   }
 
   /**
@@ -1015,17 +1038,6 @@ public final class MathOps {
    */
   public <T extends TNumber> IsFinite isFinite(Operand<T> x) {
     return IsFinite.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link InvertPermutation} operation
-   *
-   * @param x 1-D.
-   * @return a new instance of InvertPermutation
-   * @see org.tensorflow.op.math.InvertPermutation
-   */
-  public <T extends TNumber> InvertPermutation<T> invertPermutation(Operand<T> x) {
-    return InvertPermutation.create(scope, x);
   }
 
   /**
@@ -1191,17 +1203,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Conj} operation
-   *
-   * @param input 
-   * @return a new instance of Conj
-   * @see org.tensorflow.op.math.Conj
-   */
-  public <T> Conj<T> conj(Operand<T> input) {
-    return Conj.create(scope, input);
-  }
-
-  /**
    * Builds an {@link ArgMax} operation
    *
    * @param input 
@@ -1213,6 +1214,17 @@ public final class MathOps {
   public <V extends TNumber, T, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
       Operand<U> dimension, DataType<V> outputType) {
     return ArgMax.create(scope, input, dimension, outputType);
+  }
+
+  /**
+   * Builds an {@link Conj} operation
+   *
+   * @param input 
+   * @return a new instance of Conj
+   * @see org.tensorflow.op.math.Conj
+   */
+  public <T> Conj<T> conj(Operand<T> input) {
+    return Conj.create(scope, input);
   }
 
   /**
@@ -1263,17 +1275,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Cos} operation
-   *
-   * @param x 
-   * @return a new instance of Cos
-   * @see org.tensorflow.op.math.Cos
-   */
-  public <T> Cos<T> cos(Operand<T> x) {
-    return Cos.create(scope, x);
-  }
-
-  /**
    * Builds an {@link Fact} operation
    *
    * @return a new instance of Fact
@@ -1284,15 +1285,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link AccumulateN} operation
+   * Builds an {@link Cos} operation
    *
-   * @param inputs A list of `Tensor` objects, each with same shape and type.
-   * @param shape Shape of elements of `inputs`.
-   * @return a new instance of AccumulateN
-   * @see org.tensorflow.op.math.AccumulateN
+   * @param x 
+   * @return a new instance of Cos
+   * @see org.tensorflow.op.math.Cos
    */
-  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
-    return AccumulateN.create(scope, inputs, shape);
+  public <T> Cos<T> cos(Operand<T> x) {
+    return Cos.create(scope, x);
   }
 
   /**

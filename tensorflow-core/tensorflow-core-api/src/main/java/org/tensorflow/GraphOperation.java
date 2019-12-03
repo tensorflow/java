@@ -15,7 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.

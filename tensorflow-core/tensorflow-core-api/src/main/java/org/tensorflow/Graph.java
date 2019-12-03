@@ -247,14 +247,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * <p>Example usage (prior to Java 8):
    *
-   * <p>{@code WhileSubgraphBuilder bodyGraphBuilder = new WhileSubgraphBuilder() { @Override public
-   * void buildSubgraph(Graph bodyGraph, Output<?>[] bodyInputs, Output<?>[] bodyOutputs) { // build
-   * body subgraph } }; }
-   *
-   * <p>Example usage (after Java 8):
-   *
-   * <p>{@code WhileSubgraphBuilder bodyGraphBuilder = (bodyGraph, bodyInputs, bodyOutputs) -> { //
-   * build body subgraph };}
+   * <pre>{@code
+   * WhileSubgraphBuilder bodyGraphBuilder = new WhileSubgraphBuilder() {
+   *   @Override
+   *   public void buildSubgraph(Graph bodyGraph, Output<?>[] bodyInputs, Output<?>[] bodyOutputs) { // build
+   *     body subgraph
+   *   }
+   * };
+   * }</pre>
+   * Example usage (after Java 8):
+   * <pre>{@code
+   * WhileSubgraphBuilder bodyGraphBuilder = (bodyGraph, bodyInputs, bodyOutputs) -> { //
+   *   build body subgraph
+   * };
+   * }</pre>
    */
   public interface WhileSubgraphBuilder {
     /**

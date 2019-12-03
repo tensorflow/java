@@ -21,10 +21,10 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * Feeds multiple Tensor values into the computation as an XLA tuple.

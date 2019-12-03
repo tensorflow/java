@@ -4,37 +4,37 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.nio.buffer.BooleanDataBuffer;
-import org.tensorflow.nio.buffer.ByteDataBuffer;
-import org.tensorflow.nio.buffer.DataBuffers;
-import org.tensorflow.nio.buffer.adapter.BooleanDataAdapter;
-import org.tensorflow.nio.nd.BooleanNdArray;
-import org.tensorflow.nio.nd.NdArray;
-import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.nio.nd.impl.dense.BooleanDenseNdArray;
+import org.tensorflow.util.buffer.BooleanDataBuffer;
+import org.tensorflow.util.buffer.ByteDataBuffer;
+import org.tensorflow.util.buffer.DataBuffers;
+import org.tensorflow.util.buffer.adapter.BooleanDataAdapter;
+import org.tensorflow.util.ndarray.BooleanNdArray;
+import org.tensorflow.util.ndarray.NdArray;
+import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 
 public interface TBool extends BooleanNdArray, TType {
 
   DataType<TBool> DTYPE = DataType.create("BOOL", 10, 1, TBoolImpl::mapTensor);
 
-  static Tensor<TBool> scalar(boolean value) {
-    Tensor<TBool> t = tensorOfShape();
+  static Tensor<TBool> scalarOf(boolean value) {
+    Tensor<TBool> t = ofShape();
     t.data().setBoolean(value);
     return t;
   }
 
-  static Tensor<TBool> vector(boolean... values) {
-    Tensor<TBool> t = tensorOfShape(values.length);
+  static Tensor<TBool> vectorOf(boolean... values) {
+    Tensor<TBool> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
-  static Tensor<TBool> tensor(Shape shape) {
+  static Tensor<TBool> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
-  static Tensor<TBool> tensorOfShape(long... dimensionSizes) {
+  static Tensor<TBool> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
@@ -59,12 +59,12 @@ class TBoolImpl extends BooleanDenseNdArray implements TBool {
 
     @Override
     public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
-      buffer.set((byte)(value ? 1 : 0), index);
+      buffer.setByte((byte)(value ? 1 : 0), index);
     }
 
     @Override
     public boolean readBoolean(ByteDataBuffer buffer, long index) {
-      return buffer.get(index) > 0;
+      return buffer.getByte(index) > 0;
     }
 
     @Override

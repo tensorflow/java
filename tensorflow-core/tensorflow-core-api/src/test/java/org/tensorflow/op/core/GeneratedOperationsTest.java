@@ -25,7 +25,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.util.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 

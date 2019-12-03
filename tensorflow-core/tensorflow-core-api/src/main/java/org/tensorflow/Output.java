@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.Objects;
-import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * A symbolic handle to a tensor produced by an {@link Operation}.

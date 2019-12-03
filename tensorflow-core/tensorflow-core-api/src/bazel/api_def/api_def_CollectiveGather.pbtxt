@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "CollectiveGather"
+  out_arg: {
+    name: "data"
+    rename_to: "output"
+  }
+}

@@ -22,15 +22,15 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * Receives a tensor value broadcast from another device.
  * 
- * @param <T> data type for {@code data()} output
+ * @param <T> data type for {@code output()} output
  */
 public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
@@ -58,20 +58,20 @@ public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implemen
   
   /**
    */
-  public Output<T> data() {
-    return data;
+  public Output<T> output() {
+    return output;
   }
   
   @Override
   public Output<T> asOutput() {
-    return data;
+    return output;
   }
   
-  private Output<T> data;
+  private Output<T> output;
   
   private BroadcastRecv(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    data = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

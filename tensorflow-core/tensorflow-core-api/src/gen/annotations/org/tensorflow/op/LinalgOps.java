@@ -71,17 +71,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link BatchMatrixDiagPart} operation
-   *
-   * @param input 
-   * @return a new instance of BatchMatrixDiagPart
-   * @see org.tensorflow.op.linalg.BatchMatrixDiagPart
-   */
-  public <T> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
-    return BatchMatrixDiagPart.create(scope, input);
-  }
-
-  /**
    * Builds an {@link BatchMatrixSolveLs} operation
    *
    * @param matrix 
@@ -94,6 +83,17 @@ public final class LinalgOps {
   public <T extends TNumber> BatchMatrixSolveLs<T> batchMatrixSolveLs(Operand<T> matrix,
       Operand<T> rhs, Operand<TDouble> l2Regularizer, BatchMatrixSolveLs.Options... options) {
     return BatchMatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
+  }
+
+  /**
+   * Builds an {@link BatchMatrixDiagPart} operation
+   *
+   * @param input 
+   * @return a new instance of BatchMatrixDiagPart
+   * @see org.tensorflow.op.linalg.BatchMatrixDiagPart
+   */
+  public <T> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
+    return BatchMatrixDiagPart.create(scope, input);
   }
 
   /**
@@ -158,6 +158,18 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link SelfAdjointEig} operation
+   *
+   * @param input `Tensor` input of shape `[N, N]`.
+   * @param options carries optional attributes values
+   * @return a new instance of SelfAdjointEig
+   * @see org.tensorflow.op.linalg.SelfAdjointEig
+   */
+  public <T> SelfAdjointEig<T> selfAdjointEig(Operand<T> input, SelfAdjointEig.Options... options) {
+    return SelfAdjointEig.create(scope, input, options);
+  }
+
+  /**
    * Builds an {@link TriangularSolve} operation
    *
    * @param matrix Shape is `[..., M, M]`.
@@ -169,18 +181,6 @@ public final class LinalgOps {
   public <T> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
       TriangularSolve.Options... options) {
     return TriangularSolve.create(scope, matrix, rhs, options);
-  }
-
-  /**
-   * Builds an {@link SelfAdjointEig} operation
-   *
-   * @param input `Tensor` input of shape `[N, N]`.
-   * @param options carries optional attributes values
-   * @return a new instance of SelfAdjointEig
-   * @see org.tensorflow.op.linalg.SelfAdjointEig
-   */
-  public <T> SelfAdjointEig<T> selfAdjointEig(Operand<T> input, SelfAdjointEig.Options... options) {
-    return SelfAdjointEig.create(scope, input, options);
   }
 
   /**
@@ -207,18 +207,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link Svd} operation
-   *
-   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
-   * @param options carries optional attributes values
-   * @return a new instance of Svd
-   * @see org.tensorflow.op.linalg.Svd
-   */
-  public <T> Svd<T> svd(Operand<T> input, Svd.Options... options) {
-    return Svd.create(scope, input, options);
-  }
-
-  /**
    * Builds an {@link Cholesky} operation
    *
    * @param input Shape is `[..., M, M]`.
@@ -238,6 +226,18 @@ public final class LinalgOps {
    */
   public <T> Det<T> det(Operand<T> input) {
     return Det.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Svd} operation
+   *
+   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
+   * @param options carries optional attributes values
+   * @return a new instance of Svd
+   * @see org.tensorflow.op.linalg.Svd
+   */
+  public <T> Svd<T> svd(Operand<T> input, Svd.Options... options) {
+    return Svd.create(scope, input, options);
   }
 
   /**
@@ -298,18 +298,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link SetDiag} operation
-   *
-   * @param input Rank `k+1`, where `k >= 1`.
-   * @param diagonal Rank `k`, where `k >= 1`.
-   * @return a new instance of SetDiag
-   * @see org.tensorflow.op.linalg.SetDiag
-   */
-  public <T> SetDiag<T> setDiag(Operand<T> input, Operand<T> diagonal) {
-    return SetDiag.create(scope, input, diagonal);
-  }
-
-  /**
    * Builds an {@link Solve} operation
    *
    * @param matrix Shape is `[..., M, M]`.
@@ -320,6 +308,18 @@ public final class LinalgOps {
    */
   public <T> Solve<T> solve(Operand<T> matrix, Operand<T> rhs, Solve.Options... options) {
     return Solve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Builds an {@link SetDiag} operation
+   *
+   * @param input Rank `k+1`, where `k >= 1`.
+   * @param diagonal Rank `k`, where `k >= 1`.
+   * @return a new instance of SetDiag
+   * @see org.tensorflow.op.linalg.SetDiag
+   */
+  public <T> SetDiag<T> setDiag(Operand<T> input, Operand<T> diagonal) {
+    return SetDiag.create(scope, input, diagonal);
   }
 
   /**
