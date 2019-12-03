@@ -51,7 +51,7 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @return an integer constant
    */
   public static Constant<TInt32> create(Scope scope, int data) {
-    try (Tensor<TInt32> value = TInt32.scalar(data)) {
+    try (Tensor<TInt32> value = TInt32.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -64,7 +64,7 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    *     new constant will match those of the array.
    */
   public static Constant<TInt32> create(Scope scope, int[] data) {
-    try (Tensor<TInt32> value = TInt32.vector(data)) {
+    try (Tensor<TInt32> value = TInt32.vectorOf(data)) {
       return create(scope, value);
     }
   }

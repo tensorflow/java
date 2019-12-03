@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.nio.charset.Charset;
-import org.tensorflow.nio.nd.Shape;
+import org.tensorflow.util.ndarray.Shape;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {

@@ -20,6 +20,19 @@ public final class DtypesOps {
   }
 
   /**
+   * Builds an {@link Cast} operation
+   *
+   * @param x 
+   * @param DstT 
+   * @param options carries optional attributes values
+   * @return a new instance of Cast
+   * @see org.tensorflow.op.dtypes.Cast
+   */
+  public <U, T> Cast<U> cast(Operand<T> x, DataType<U> DstT, Cast.Options... options) {
+    return Cast.create(scope, x, DstT, options);
+  }
+
+  /**
    * Builds an {@link AsString} operation
    *
    * @param input 
@@ -43,18 +56,5 @@ public final class DtypesOps {
   public <U, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
       DataType<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
-  }
-
-  /**
-   * Builds an {@link Cast} operation
-   *
-   * @param x 
-   * @param DstT 
-   * @param options carries optional attributes values
-   * @return a new instance of Cast
-   * @see org.tensorflow.op.dtypes.Cast
-   */
-  public <U, T> Cast<U> cast(Operand<T> x, DataType<U> DstT, Cast.Options... options) {
-    return Cast.create(scope, x, DstT, options);
   }
 }

@@ -4,15 +4,15 @@ import com.google.common.base.Charsets;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.nio.ReadOnlyBufferException;
-import org.tensorflow.nio.buffer.ByteDataBuffer;
-import org.tensorflow.nio.buffer.DataBuffer;
-import org.tensorflow.nio.buffer.DataBuffers;
-import org.tensorflow.nio.buffer.LongDataBuffer;
-import org.tensorflow.nio.buffer.impl.AbstractDataBuffer;
-import org.tensorflow.nio.buffer.impl.Validator;
-import org.tensorflow.nio.buffer.impl.raw.ByteRawDataBuffer;
-import org.tensorflow.nio.buffer.impl.raw.LongRawDataBuffer;
-import org.tensorflow.nio.nd.NdArray;
+import org.tensorflow.util.buffer.ByteDataBuffer;
+import org.tensorflow.util.buffer.DataBuffer;
+import org.tensorflow.util.buffer.DataBuffers;
+import org.tensorflow.util.buffer.LongDataBuffer;
+import org.tensorflow.util.buffer.impl.AbstractDataBuffer;
+import org.tensorflow.util.buffer.impl.Validator;
+import org.tensorflow.util.buffer.impl.raw.ByteRawDataBuffer;
+import org.tensorflow.util.buffer.impl.raw.LongRawDataBuffer;
+import org.tensorflow.util.ndarray.NdArray;
 
 public class StringTensorBuffer extends AbstractDataBuffer<String> {
 
@@ -22,16 +22,16 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
   }
 
   @Override
-  public String get(long index) {
+  public String getObject(long index) {
     Validator.getArgs(this, index);
-    long offset = offsets.get(index);
+    long offset = offsets.getLong(index);
 
     // Read string length as a varint from the given offset
     byte b;
     int pos = 0;
     int length = 0;
     do {
-      b = data.get(offset++);
+      b = data.getByte(offset++);
       length |= (b & 0x7F) << pos++;
     } while ((b & 0x80) != 0);
 
@@ -43,7 +43,7 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
   }
 
   @Override
-  public DataBuffer<String> set(String value, long index) {
+  public DataBuffer<String> setObject(String value, long index) {
     throw new ReadOnlyBufferException();
   }
 
@@ -80,7 +80,7 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
 
   public void init(NdArray<String> src) {
     DataWriter writer = new DataWriter();
-    src.scalars().forEach(s -> writer.writeNext(s.getValue()));
+    src.scalars().forEach(s -> writer.writeNext(s.getObject()));
   }
 
   StringTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {

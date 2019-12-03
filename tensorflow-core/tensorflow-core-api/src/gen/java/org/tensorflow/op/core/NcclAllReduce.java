@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * num_devices: The number of devices participating in this reduction.
  * shared_name: Identifier that shared between ops of the same reduction.
  * 
- * @param <T> data type for {@code data()} output
+ * @param <T> data type for {@code output()} output
  */
 public final class NcclAllReduce<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
@@ -67,20 +67,20 @@ public final class NcclAllReduce<T extends TNumber> extends PrimitiveOp implemen
   
   /**
    */
-  public Output<T> data() {
-    return data;
+  public Output<T> output() {
+    return output;
   }
   
   @Override
   public Output<T> asOutput() {
-    return data;
+    return output;
   }
   
-  private Output<T> data;
+  private Output<T> output;
   
   private NcclAllReduce(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    data = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

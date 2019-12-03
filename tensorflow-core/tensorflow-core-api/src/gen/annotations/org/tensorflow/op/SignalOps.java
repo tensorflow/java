@@ -181,17 +181,6 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link BatchIfft2d} operation
-   *
-   * @param input 
-   * @return a new instance of BatchIfft2d
-   * @see org.tensorflow.op.signal.BatchIfft2d
-   */
-  public BatchIfft2d batchIfft2d(Operand<?> input) {
-    return BatchIfft2d.create(scope, input);
-  }
-
-  /**
    * Builds an {@link BatchFft} operation
    *
    * @param input 
@@ -203,15 +192,14 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link Rfft2d} operation
+   * Builds an {@link BatchIfft2d} operation
    *
-   * @param input A float32 tensor.
-   * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-   * @return a new instance of Rfft2d
-   * @see org.tensorflow.op.signal.Rfft2d
+   * @param input 
+   * @return a new instance of BatchIfft2d
+   * @see org.tensorflow.op.signal.BatchIfft2d
    */
-  public Rfft2d rfft2d(Operand<TFloat> input, Operand<TInt32> fftLength) {
-    return Rfft2d.create(scope, input, fftLength);
+  public BatchIfft2d batchIfft2d(Operand<?> input) {
+    return BatchIfft2d.create(scope, input);
   }
 
   /**
@@ -224,6 +212,18 @@ public final class SignalOps {
    */
   public Irfft3d irfft3d(Operand<?> input, Operand<TInt32> fftLength) {
     return Irfft3d.create(scope, input, fftLength);
+  }
+
+  /**
+   * Builds an {@link Rfft2d} operation
+   *
+   * @param input A float32 tensor.
+   * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
+   * @return a new instance of Rfft2d
+   * @see org.tensorflow.op.signal.Rfft2d
+   */
+  public Rfft2d rfft2d(Operand<TFloat> input, Operand<TInt32> fftLength) {
+    return Rfft2d.create(scope, input, fftLength);
   }
 
   /**

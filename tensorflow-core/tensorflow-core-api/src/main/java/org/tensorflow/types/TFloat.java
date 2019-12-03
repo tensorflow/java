@@ -4,34 +4,34 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.nio.buffer.FloatDataBuffer;
-import org.tensorflow.nio.nd.FloatNdArray;
-import org.tensorflow.nio.nd.NdArray;
-import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.nio.nd.impl.dense.FloatDenseNdArray;
+import org.tensorflow.util.buffer.FloatDataBuffer;
+import org.tensorflow.util.ndarray.FloatNdArray;
+import org.tensorflow.util.ndarray.NdArray;
+import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TDecimal;
 
 public interface TFloat extends FloatNdArray, TDecimal {
 
   DataType<TFloat> DTYPE = DataType.create("FLOAT", 1, 4, TFloatImpl::mapTensor);
 
-  static Tensor<TFloat> scalar(float value) {
-    Tensor<TFloat> t = tensorOfShape();
+  static Tensor<TFloat> scalarOf(float value) {
+    Tensor<TFloat> t = ofShape();
     t.data().setFloat(value);
     return t;
   }
 
-  static Tensor<TFloat> vector(float... values) {
-    Tensor<TFloat> t = tensorOfShape(values.length);
+  static Tensor<TFloat> vectorOf(float... values) {
+    Tensor<TFloat> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
-  static Tensor<TFloat> tensor(Shape shape) {
+  static Tensor<TFloat> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
-  static Tensor<TFloat> tensorOfShape(long... dimensionSizes) {
+  static Tensor<TFloat> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 

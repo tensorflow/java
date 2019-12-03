@@ -5,15 +5,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Tensor;
-import org.tensorflow.nio.nd.FloatNdArray;
-import org.tensorflow.nio.nd.IntNdArray;
-import org.tensorflow.nio.nd.NdArray;
-import org.tensorflow.nio.nd.NdArrays;
-import org.tensorflow.nio.nd.Shape;
-import org.tensorflow.nio.nd.index.Indices;
+import org.tensorflow.util.ndarray.IntNdArray;
+import org.tensorflow.util.ndarray.NdArray;
+import org.tensorflow.util.ndarray.NdArrays;
+import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.op.math.Pow;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.family.TNumber;
 
@@ -34,27 +32,27 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
       Ops tf = Ops.create(session);
 
       // Initialize tensor memory with zeros and take a snapshot
-      tensorData.scalars().forEach(scalar -> scalar.setValue(valueOf(0)));
+      tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(0)));
       Constant<T> x = tf.constant(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
-      tensorData.scalars().forEach(scalar -> scalar.setValue(valueOf(1)));
+      tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(1)));
       Constant<T> y = tf.constant(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
-      sub.tensorData().scalars().forEach(scalar ->
-          assertEquals(valueOf(-1), scalar.getValue())
+      sub.data().scalars().forEach(scalar ->
+          assertEquals(valueOf(-1), scalar.getObject())
       );
     }
   }
 
   @Test
   public void genericTest() {
-    IntNdArray heapData = NdArrays.vector(0, 1, 2, 3);
+    IntNdArray heapData = NdArrays.vectorOf(0, 1, 2, 3);
 
     // Creates a 2x2 matrix
-    try (Tensor<TInt32> tensor = TInt32.tensorOfShape(2, 2)) {
+    try (Tensor<TInt32> tensor = TInt32.ofShape(2, 2)) {
       IntNdArray tensorData = tensor.data();
 
       // Copy first 2 values of the vector to the first row of the matrix
@@ -81,7 +79,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
         // Compute the power of the tensor by itself
         Constant<TInt32> x = tf.constant(tensor);
-        IntNdArray result = tf.math.pow(x, x).tensorData();
+        IntNdArray result = tf.math.pow(x, x).data();
 
         // Validate result by computing the same operation in Java
         tensorData.scalars().forEachIndexed((coords, s) ->
@@ -93,5 +91,5 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
   abstract Tensor<T> allocateTensor(Shape shape);
 
-  abstract U valueOf(int value);
+  abstract U valueOf(Integer value);
 }

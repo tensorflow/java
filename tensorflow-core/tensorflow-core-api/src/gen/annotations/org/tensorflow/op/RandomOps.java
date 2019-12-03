@@ -78,6 +78,20 @@ public final class RandomOps {
   }
 
   /**
+   * Builds an {@link RandomPoisson} operation
+   *
+   * @param shape 1-D integer tensor. Shape of independent samples to draw from each
+   * @param rate A tensor in which each scalar is a "rate" parameter describing the
+   * @param options carries optional attributes values
+   * @return a new instance of RandomPoisson
+   * @see org.tensorflow.op.random.RandomPoisson
+   */
+  public <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> randomPoisson(
+      Operand<T> shape, Operand<U> rate, RandomPoisson.Options... options) {
+    return RandomPoisson.create(scope, shape, rate, options);
+  }
+
+  /**
    * Builds an {@link ParameterizedTruncatedNormal} operation
    *
    * @param shape The shape of the output tensor. Batches are indexed by the 0th dimension.
@@ -100,13 +114,14 @@ public final class RandomOps {
    *
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    * @param rate A tensor in which each scalar is a "rate" parameter describing the
+   * @param dtype 
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    * @see org.tensorflow.op.random.RandomPoisson
    */
-  public <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> randomPoisson(
-      Operand<T> shape, Operand<U> rate, RandomPoisson.Options... options) {
-    return RandomPoisson.create(scope, shape, rate, options);
+  public <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> randomPoisson(
+      Operand<T> shape, Operand<U> rate, DataType<V> dtype, RandomPoisson.Options... options) {
+    return RandomPoisson.create(scope, shape, rate, dtype, options);
   }
 
   /**
@@ -123,34 +138,6 @@ public final class RandomOps {
   public AllCandidateSampler allCandidateSampler(Operand<TInt64> trueClasses, Long numTrue,
       Long numSampled, Boolean unique, AllCandidateSampler.Options... options) {
     return AllCandidateSampler.create(scope, trueClasses, numTrue, numSampled, unique, options);
-  }
-
-  /**
-   * Builds an {@link RandomPoisson} operation
-   *
-   * @param shape 1-D integer tensor. Shape of independent samples to draw from each
-   * @param rate A tensor in which each scalar is a "rate" parameter describing the
-   * @param dtype 
-   * @param options carries optional attributes values
-   * @return a new instance of RandomPoisson
-   * @see org.tensorflow.op.random.RandomPoisson
-   */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> randomPoisson(
-      Operand<T> shape, Operand<U> rate, DataType<V> dtype, RandomPoisson.Options... options) {
-    return RandomPoisson.create(scope, shape, rate, dtype, options);
-  }
-
-  /**
-   * Builds an {@link StatelessRandomNormal} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomNormal
-   * @see org.tensorflow.op.random.StatelessRandomNormal
-   */
-  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat> statelessRandomNormal(
-      Operand<T> shape, Operand<U> seed) {
-    return StatelessRandomNormal.create(scope, shape, seed);
   }
 
   /**
@@ -181,6 +168,19 @@ public final class RandomOps {
   public UniformCandidateSampler uniformCandidateSampler(Operand<TInt64> trueClasses, Long numTrue,
       Long numSampled, Boolean unique, Long rangeMax, UniformCandidateSampler.Options... options) {
     return UniformCandidateSampler.create(scope, trueClasses, numTrue, numSampled, unique, rangeMax, options);
+  }
+
+  /**
+   * Builds an {@link StatelessRandomNormal} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessRandomNormal
+   * @see org.tensorflow.op.random.StatelessRandomNormal
+   */
+  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat> statelessRandomNormal(
+      Operand<T> shape, Operand<U> seed) {
+    return StatelessRandomNormal.create(scope, shape, seed);
   }
 
   /**
@@ -231,20 +231,6 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link StatelessRandomUniform} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @param dtype The type of the output.
-   * @return a new instance of StatelessRandomUniform
-   * @see org.tensorflow.op.random.StatelessRandomUniform
-   */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> statelessRandomUniform(
-      Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
-    return StatelessRandomUniform.create(scope, shape, seed, dtype);
-  }
-
-  /**
    * Builds an {@link StatelessTruncatedNormal} operation
    *
    * @param shape The shape of the output tensor.
@@ -256,6 +242,20 @@ public final class RandomOps {
   public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessTruncatedNormal<V> statelessTruncatedNormal(
       Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     return StatelessTruncatedNormal.create(scope, shape, seed, dtype);
+  }
+
+  /**
+   * Builds an {@link StatelessRandomUniform} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @param dtype The type of the output.
+   * @return a new instance of StatelessRandomUniform
+   * @see org.tensorflow.op.random.StatelessRandomUniform
+   */
+  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> statelessRandomUniform(
+      Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+    return StatelessRandomUniform.create(scope, shape, seed, dtype);
   }
 
   /**
@@ -329,20 +329,6 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link RandomUniform} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param dtype The type of the output.
-   * @param options carries optional attributes values
-   * @return a new instance of RandomUniform
-   * @see org.tensorflow.op.random.RandomUniform
-   */
-  public <U extends TNumber, T extends TNumber> RandomUniform<U> randomUniform(Operand<T> shape,
-      DataType<U> dtype, RandomUniform.Options... options) {
-    return RandomUniform.create(scope, shape, dtype, options);
-  }
-
-  /**
    * Builds an {@link RandomStandardNormal} operation
    *
    * @param shape The shape of the output tensor.
@@ -354,6 +340,20 @@ public final class RandomOps {
   public <U extends TNumber, T extends TNumber> RandomStandardNormal<U> randomStandardNormal(
       Operand<T> shape, DataType<U> dtype, RandomStandardNormal.Options... options) {
     return RandomStandardNormal.create(scope, shape, dtype, options);
+  }
+
+  /**
+   * Builds an {@link RandomUniform} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param dtype The type of the output.
+   * @param options carries optional attributes values
+   * @return a new instance of RandomUniform
+   * @see org.tensorflow.op.random.RandomUniform
+   */
+  public <U extends TNumber, T extends TNumber> RandomUniform<U> randomUniform(Operand<T> shape,
+      DataType<U> dtype, RandomUniform.Options... options) {
+    return RandomUniform.create(scope, shape, dtype, options);
   }
 
   /**

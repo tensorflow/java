@@ -53,7 +53,7 @@ public interface Operand<T> {
    *
    * @throws IllegalStateException if this is an operand of a graph
    */
-  default T tensorData() {
+  default T data() {
     return asOutput().tensor().data();
   }
 }

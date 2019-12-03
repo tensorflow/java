@@ -21,10 +21,10 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * Sends `input` to all devices that are connected to the output.

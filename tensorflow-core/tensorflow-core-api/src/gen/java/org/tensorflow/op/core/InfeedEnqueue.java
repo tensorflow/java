@@ -21,9 +21,9 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.util.ndarray.Shape;
 
 /**
  * An op which feeds a single Tensor value into the computation.

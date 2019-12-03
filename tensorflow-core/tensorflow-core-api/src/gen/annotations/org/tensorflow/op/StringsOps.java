@@ -188,17 +188,17 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link ReduceJoin} operation
+   * Builds an {@link ToHashBucketStrong} operation
    *
-   * @param inputs The input to be joined.  All reduced indices must have non-zero size.
-   * @param reductionIndices The dimensions to reduce over.  Dimensions are reduced in the
-   * @param options carries optional attributes values
-   * @return a new instance of ReduceJoin
-   * @see org.tensorflow.op.strings.ReduceJoin
+   * @param input The strings to assign a hash bucket.
+   * @param numBuckets The number of buckets.
+   * @param key The key used to seed the hash function, passed as a list of two uint64
+   * @return a new instance of ToHashBucketStrong
+   * @see org.tensorflow.op.strings.ToHashBucketStrong
    */
-  public ReduceJoin reduceJoin(Operand<TString> inputs, Operand<TInt32> reductionIndices,
-      ReduceJoin.Options... options) {
-    return ReduceJoin.create(scope, inputs, reductionIndices, options);
+  public ToHashBucketStrong toHashBucketStrong(Operand<TString> input, Long numBuckets,
+      List<Long> key) {
+    return ToHashBucketStrong.create(scope, input, numBuckets, key);
   }
 
   /**
@@ -215,17 +215,17 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link ToHashBucketStrong} operation
+   * Builds an {@link ReduceJoin} operation
    *
-   * @param input The strings to assign a hash bucket.
-   * @param numBuckets The number of buckets.
-   * @param key The key used to seed the hash function, passed as a list of two uint64
-   * @return a new instance of ToHashBucketStrong
-   * @see org.tensorflow.op.strings.ToHashBucketStrong
+   * @param inputs The input to be joined.  All reduced indices must have non-zero size.
+   * @param reductionIndices The dimensions to reduce over.  Dimensions are reduced in the
+   * @param options carries optional attributes values
+   * @return a new instance of ReduceJoin
+   * @see org.tensorflow.op.strings.ReduceJoin
    */
-  public ToHashBucketStrong toHashBucketStrong(Operand<TString> input, Long numBuckets,
-      List<Long> key) {
-    return ToHashBucketStrong.create(scope, input, numBuckets, key);
+  public ReduceJoin reduceJoin(Operand<TString> inputs, Operand<TInt32> reductionIndices,
+      ReduceJoin.Options... options) {
+    return ReduceJoin.create(scope, inputs, reductionIndices, options);
   }
 
   /**

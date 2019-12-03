@@ -78,6 +78,17 @@ public final class SummaryOps {
   }
 
   /**
+   * Builds an {@link MergeSummary} operation
+   *
+   * @param inputs Can be of any shape.  Each must contain serialized `Summary` protocol
+   * @return a new instance of MergeSummary
+   * @see org.tensorflow.op.summary.MergeSummary
+   */
+  public MergeSummary mergeSummary(Iterable<Operand<TString>> inputs) {
+    return MergeSummary.create(scope, inputs);
+  }
+
+  /**
    * Builds an {@link TensorSummary} operation
    *
    * @param tag A string attached to this summary. Used for organization in TensorBoard.
@@ -89,16 +100,5 @@ public final class SummaryOps {
   public <T> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
       Operand<TString> serializedSummaryMetadata) {
     return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
-  }
-
-  /**
-   * Builds an {@link MergeSummary} operation
-   *
-   * @param inputs Can be of any shape.  Each must contain serialized `Summary` protocol
-   * @return a new instance of MergeSummary
-   * @see org.tensorflow.op.summary.MergeSummary
-   */
-  public MergeSummary mergeSummary(Iterable<Operand<TString>> inputs) {
-    return MergeSummary.create(scope, inputs);
   }
 }

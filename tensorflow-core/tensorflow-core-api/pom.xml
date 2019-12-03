@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>nio-utils</artifactId>
+      <artifactId>tensorflow-utils</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -146,7 +146,6 @@
             <compilerOption>${project.basedir}/src/main/native/server_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/session_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/tensorflow_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/tensor_buffers_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/tensor_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/utils_jni.cc</compilerOption>
           </compilerOptions>
