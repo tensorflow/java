@@ -90,7 +90,7 @@ public class MNISTTest {
     // Scaling the features
     Constant<TFloat> centeringFactor = tf.constant(PIXEL_DEPTH / 2.0f);
     Constant<TFloat> scalingFactor = tf.constant((float) PIXEL_DEPTH);
-    Operand<TFloat> scaledInput = tf.math.div(tf.math.add(input, centeringFactor), scalingFactor);
+    Operand<TFloat> scaledInput = tf.math.div(tf.math.sub(input, centeringFactor), scalingFactor);
 
     // First conv layer
     Variable<TFloat> conv1Weights = tf.variable(Shape.make(5, 5, NUM_CHANNELS, 32), TFloat.DTYPE);
