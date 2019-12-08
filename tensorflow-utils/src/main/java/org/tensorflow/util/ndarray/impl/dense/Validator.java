@@ -17,7 +17,7 @@
 package org.tensorflow.util.ndarray.impl.dense;
 
 import org.tensorflow.util.buffer.DataBuffer;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 final class Validator extends org.tensorflow.util.ndarray.impl.Validator {
 

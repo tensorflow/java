@@ -68,7 +68,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code train} operations as {@link Op Op}s
@@ -80,20 +80,6 @@ public final class TrainOps {
 
   TrainOps(Scope scope) {
     this.scope = scope;
-  }
-
-  /**
-   * Builds an {@link ConditionalAccumulator} operation
-   *
-   * @param dtype The type of the value being accumulated.
-   * @param shape The shape of the values, can be [], in which case shape is unknown.
-   * @param options carries optional attributes values
-   * @return a new instance of ConditionalAccumulator
-   * @see org.tensorflow.op.train.ConditionalAccumulator
-   */
-  public <T> ConditionalAccumulator conditionalAccumulator(DataType<T> dtype, Shape shape,
-      ConditionalAccumulator.Options... options) {
-    return ConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**
@@ -570,6 +556,20 @@ public final class TrainOps {
       Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
       Operand<T> grad, Operand<U> indices, SparseApplyAdadelta.Options... options) {
     return SparseApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, indices, options);
+  }
+
+  /**
+   * Builds an {@link ConditionalAccumulator} operation
+   *
+   * @param dtype The type of the value being accumulated.
+   * @param shape The shape of the values, can be [], in which case shape is unknown.
+   * @param options carries optional attributes values
+   * @return a new instance of ConditionalAccumulator
+   * @see org.tensorflow.op.train.ConditionalAccumulator
+   */
+  public <T> ConditionalAccumulator conditionalAccumulator(DataType<T> dtype, Shape shape,
+      ConditionalAccumulator.Options... options) {
+    return ConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**

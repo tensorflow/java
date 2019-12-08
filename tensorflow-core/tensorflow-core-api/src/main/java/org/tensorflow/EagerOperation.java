@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.

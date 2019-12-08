@@ -30,7 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * Transforms a scalar brain.SequenceExample proto (as strings) into typed tensors.

@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 

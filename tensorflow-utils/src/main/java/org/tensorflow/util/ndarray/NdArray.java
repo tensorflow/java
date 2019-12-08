@@ -18,6 +18,7 @@ package org.tensorflow.util.ndarray;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.buffer.DataBuffer;
 import org.tensorflow.util.ndarray.index.Index;
 

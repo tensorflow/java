@@ -16,7 +16,7 @@
  */
 package org.tensorflow.util.ndarray.impl.dimension;
 
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 final class UnknownDimension extends AbstractDimension {
 

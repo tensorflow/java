@@ -18,7 +18,7 @@
 package org.tensorflow.util.ndarray.impl.dimension;
 
 import java.util.Arrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.index.Index;
 
 public class DimensionalSpace {

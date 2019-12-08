@@ -107,7 +107,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code math} operations as {@link Op Op}s
@@ -556,18 +556,6 @@ public final class MathOps {
    */
   public <T> RealDiv<T> realDiv(Operand<T> x, Operand<T> y) {
     return RealDiv.create(scope, x, y);
-  }
-
-  /**
-   * Builds an {@link AccumulateN} operation
-   *
-   * @param inputs A list of `Tensor` objects, each with same shape and type.
-   * @param shape Shape of elements of `inputs`.
-   * @return a new instance of AccumulateN
-   * @see org.tensorflow.op.math.AccumulateN
-   */
-  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
-    return AccumulateN.create(scope, inputs, shape);
   }
 
   /**
@@ -1305,6 +1293,18 @@ public final class MathOps {
    */
   public <U extends TNumber, T> Real<U> real(Operand<T> input, DataType<U> Tout) {
     return Real.create(scope, input, Tout);
+  }
+
+  /**
+   * Builds an {@link AccumulateN} operation
+   *
+   * @param inputs A list of `Tensor` objects, each with same shape and type.
+   * @param shape Shape of elements of `inputs`.
+   * @return a new instance of AccumulateN
+   * @see org.tensorflow.op.math.AccumulateN
+   */
+  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
+    return AccumulateN.create(scope, inputs, shape);
   }
 
   /**

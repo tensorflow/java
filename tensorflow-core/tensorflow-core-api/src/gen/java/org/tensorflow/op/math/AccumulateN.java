@@ -25,7 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * Returns the element-wise sum of a list of tensors.

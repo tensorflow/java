@@ -15,11 +15,10 @@
  =======================================================================
  */
 
-package org.tensorflow.util.ndarray;
+package org.tensorflow.util;
 
 import java.util.Arrays;
 
-/** The possibly partially known shape of a tensor produced by an operation. */
 public final class Shape {
 
   public static long UNKNOWN_SIZE = -1L;

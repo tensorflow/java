@@ -21,7 +21,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.ndarray.NdArray;
 import org.tensorflow.util.ndarray.NdArrayTestBase;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 public class StringDenseNdArrayTest extends NdArrayTestBase<String> {
 

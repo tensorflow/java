@@ -35,7 +35,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.RunnerException;
 import org.tensorflow.util.ndarray.FloatNdArray;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 @Fork(value = 1, jvmArgs = {"-Xms4G", "-Xmx4G"})
 @BenchmarkMode(Mode.AverageTime)

@@ -19,7 +19,7 @@ package org.tensorflow.util.ndarray.impl.dense;
 import org.tensorflow.util.buffer.DataBuffer;
 import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.ShortNdArray;
 import org.tensorflow.util.ndarray.ShortNdArrayTestBase;
 

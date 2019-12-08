@@ -21,7 +21,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.ndarray.LongNdArray;
 import org.tensorflow.util.ndarray.LongNdArrayTestBase;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 public class LongDenseNdArrayTest extends LongNdArrayTestBase {
 

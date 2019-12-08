@@ -7,7 +7,7 @@ import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.util.buffer.LongDataBuffer;
 import org.tensorflow.util.ndarray.LongNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
