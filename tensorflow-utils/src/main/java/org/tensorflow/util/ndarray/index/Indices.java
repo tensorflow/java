@@ -20,7 +20,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.ndarray.IllegalRankException;
 import org.tensorflow.util.ndarray.NdArray;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * Helper class for instantiating {@link Index} objects.

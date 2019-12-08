@@ -8,7 +8,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.util.ndarray.IntNdArray;
 import org.tensorflow.util.ndarray.NdArray;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;

@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.tensorflow.util.ndarray.IntNdArray;
 import org.tensorflow.util.ndarray.NdArraySequence;
 import org.tensorflow.util.ndarray.NdArrays;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.AbstractNdArray;
 
 public class ElementSequenceTest {

@@ -35,6 +35,7 @@ import java.nio.BufferUnderflowException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.LongStream;
 import org.junit.Test;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.buffer.DataBuffer;
 
 public abstract class NdArrayTestBase<T> {

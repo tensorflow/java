@@ -7,7 +7,7 @@ import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.util.buffer.FloatDataBuffer;
 import org.tensorflow.util.ndarray.FloatNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TDecimal;
 

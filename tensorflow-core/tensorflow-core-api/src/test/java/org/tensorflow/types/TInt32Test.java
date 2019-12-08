@@ -1,7 +1,7 @@
 package org.tensorflow.types;
 
 import org.tensorflow.Tensor;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 public class TInt32Test extends NumericTypesTestBase<TInt32, Integer> {
 

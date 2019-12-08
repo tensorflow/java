@@ -14,7 +14,7 @@
  limitations under the License.
  =======================================================================
  */
-package org.tensorflow.util.ndarray;
+package org.tensorflow.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.tensorflow.util.Shape;
 
 public class ShapeTest {
 

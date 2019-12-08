@@ -16,6 +16,7 @@
  */
 package org.tensorflow.util.ndarray;
 
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.buffer.BooleanDataBuffer;
 import org.tensorflow.util.buffer.ByteDataBuffer;
 import org.tensorflow.util.buffer.DataBuffer;

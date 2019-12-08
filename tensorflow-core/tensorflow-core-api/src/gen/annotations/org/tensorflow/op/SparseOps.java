@@ -49,7 +49,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code sparse} operations as {@link Op Op}s
@@ -92,6 +92,20 @@ public final class SparseOps {
       Operand<T> sparseValues, Operand<TInt64> sparseShape,
       AddManySparseToTensorsMap.Options... options) {
     return AddManySparseToTensorsMap.create(scope, sparseIndices, sparseValues, sparseShape, options);
+  }
+
+  /**
+   * Builds an {@link SparseConditionalAccumulator} operation
+   *
+   * @param dtype The type of the value being accumulated.
+   * @param shape The shape of the values.
+   * @param options carries optional attributes values
+   * @return a new instance of SparseConditionalAccumulator
+   * @see org.tensorflow.op.sparse.SparseConditionalAccumulator
+   */
+  public <T> SparseConditionalAccumulator sparseConditionalAccumulator(DataType<T> dtype,
+      Shape shape, SparseConditionalAccumulator.Options... options) {
+    return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**
@@ -411,20 +425,6 @@ public final class SparseOps {
   public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
       Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, outputDim0);
-  }
-
-  /**
-   * Builds an {@link SparseConditionalAccumulator} operation
-   *
-   * @param dtype The type of the value being accumulated.
-   * @param shape The shape of the values.
-   * @param options carries optional attributes values
-   * @return a new instance of SparseConditionalAccumulator
-   * @see org.tensorflow.op.sparse.SparseConditionalAccumulator
-   */
-  public <T> SparseConditionalAccumulator sparseConditionalAccumulator(DataType<T> dtype,
-      Shape shape, SparseConditionalAccumulator.Options... options) {
-    return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**

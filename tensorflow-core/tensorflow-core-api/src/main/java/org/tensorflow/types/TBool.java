@@ -10,7 +10,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.buffer.adapter.BooleanDataAdapter;
 import org.tensorflow.util.ndarray.BooleanNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 

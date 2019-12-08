@@ -18,7 +18,7 @@ package org.tensorflow.util.ndarray.impl.dense;
 
 import org.tensorflow.util.buffer.DataBuffer;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dimension.DimensionalSpace;
 
 public class DenseNdArray<T> extends AbstractDenseNdArray<T, NdArray<T>> {

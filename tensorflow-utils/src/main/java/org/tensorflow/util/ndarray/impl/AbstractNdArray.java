@@ -20,7 +20,7 @@ import org.tensorflow.util.ndarray.NdArraySequence;
 import org.tensorflow.util.ndarray.impl.sequence.ElementSequence;
 import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dimension.DimensionalSpace;
 
 @SuppressWarnings("unchecked")

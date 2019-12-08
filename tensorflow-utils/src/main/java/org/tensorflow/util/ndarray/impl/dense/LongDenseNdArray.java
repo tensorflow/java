@@ -21,7 +21,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.buffer.LongDataBuffer;
 import org.tensorflow.util.ndarray.LongNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dimension.DimensionalSpace;
 
 public class LongDenseNdArray extends AbstractDenseNdArray<Long, LongNdArray>

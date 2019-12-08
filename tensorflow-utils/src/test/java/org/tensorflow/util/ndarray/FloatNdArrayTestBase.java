@@ -23,6 +23,7 @@ import static org.tensorflow.util.ndarray.NdArrays.vectorOf;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import org.junit.Test;
+import org.tensorflow.util.Shape;
 
 public abstract class FloatNdArrayTestBase extends NdArrayTestBase<Float> {
 

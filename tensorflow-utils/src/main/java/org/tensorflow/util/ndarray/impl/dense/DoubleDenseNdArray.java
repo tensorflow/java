@@ -21,7 +21,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.buffer.DoubleDataBuffer;
 import org.tensorflow.util.ndarray.DoubleNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dimension.DimensionalSpace;
 
 public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArray>

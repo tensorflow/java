@@ -21,7 +21,7 @@ import org.tensorflow.util.buffer.DataBuffers;
 import org.tensorflow.util.buffer.FloatDataBuffer;
 import org.tensorflow.util.ndarray.FloatNdArray;
 import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 import org.tensorflow.util.ndarray.impl.dimension.DimensionalSpace;
 
 public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray>

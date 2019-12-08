@@ -15,7 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.util.ndarray.Shape;
+import org.tensorflow.util.Shape;
 
 /**
  * A builder for {@link Operation}s.
