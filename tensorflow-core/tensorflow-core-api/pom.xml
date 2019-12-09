@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-utils</artifactId>
+      <artifactId>tensorflow-tools</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

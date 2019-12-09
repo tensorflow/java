@@ -1,18 +1,13 @@
 package org.tensorflow.internal.buffer;
 
 import com.google.common.base.Charsets;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 import java.nio.ReadOnlyBufferException;
-import org.tensorflow.util.buffer.ByteDataBuffer;
-import org.tensorflow.util.buffer.DataBuffer;
-import org.tensorflow.util.buffer.DataBuffers;
-import org.tensorflow.util.buffer.LongDataBuffer;
-import org.tensorflow.util.buffer.impl.AbstractDataBuffer;
-import org.tensorflow.util.buffer.impl.Validator;
-import org.tensorflow.util.buffer.impl.raw.ByteRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.LongRawDataBuffer;
-import org.tensorflow.util.ndarray.NdArray;
+import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
+import org.tensorflow.tools.buffer.impl.Validator;
+import org.tensorflow.tools.ndarray.NdArray;
 
 public class StringTensorBuffer extends AbstractDataBuffer<String> {
 

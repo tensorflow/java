@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /** Represents a type of elements in a {@link Tensor} */
 public final class DataType<T> {

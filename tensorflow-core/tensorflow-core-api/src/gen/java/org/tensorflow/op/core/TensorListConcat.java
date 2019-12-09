@@ -25,8 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.util.Shape;
 
 /**
  * Concats all tensors in the list along the 0th dimension.

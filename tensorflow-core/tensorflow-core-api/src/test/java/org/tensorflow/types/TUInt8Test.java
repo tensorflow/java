@@ -1,7 +1,7 @@
 package org.tensorflow.types;
 
 import org.tensorflow.Tensor;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 public class TUInt8Test extends NumericTypesTestBase<TUInt8, Byte> {
 

@@ -23,7 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;

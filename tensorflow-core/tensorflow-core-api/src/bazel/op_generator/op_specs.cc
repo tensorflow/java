@@ -148,7 +148,7 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
     types = MakeTypePair(Type::Class("Boolean"), Type::Boolean());
 
   } else if (attr_type == "shape") {
-    types = MakeTypePair(Type::Class("Shape", "org.tensorflow.util"));
+    types = MakeTypePair(Type::Class("Shape", "org.tensorflow.tools"));
 
   } else if (attr_type == "tensor") {
     types = MakeTypePair(Type::Class("Tensor", "org.tensorflow")

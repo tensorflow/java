@@ -28,7 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /**
  * Gets the next output from the given iterator.

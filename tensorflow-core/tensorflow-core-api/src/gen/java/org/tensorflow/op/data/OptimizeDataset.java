@@ -25,8 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
-import org.tensorflow.util.Shape;
 
 /**
  * Creates a dataset by applying optimizations to `input_dataset`.

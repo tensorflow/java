@@ -48,10 +48,10 @@ import org.tensorflow.op.io.TextLineReader;
 import org.tensorflow.op.io.TfRecordReader;
 import org.tensorflow.op.io.WholeFileReader;
 import org.tensorflow.op.io.WriteFile;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code io} operations as {@link Op Op}s
@@ -63,20 +63,6 @@ public final class IoOps {
 
   IoOps(Scope scope) {
     this.scope = scope;
-  }
-
-  /**
-   * Builds an {@link PriorityQueue} operation
-   *
-   * @param componentTypes The type of each component in a value.
-   * @param shapes The shape of each component in a value. The length of this attr must
-   * @param options carries optional attributes values
-   * @return a new instance of PriorityQueue
-   * @see org.tensorflow.op.io.PriorityQueue
-   */
-  public PriorityQueue priorityQueue(List<DataType<?>> componentTypes, List<Shape> shapes,
-      PriorityQueue.Options... options) {
-    return PriorityQueue.create(scope, componentTypes, shapes, options);
   }
 
   /**
@@ -192,6 +178,25 @@ public final class IoOps {
   }
 
   /**
+   * Builds an {@link ParseExample} operation
+   *
+   * @param serialized A vector containing a batch of binary serialized Example protos.
+   * @param names A vector containing the names of the serialized protos.
+   * @param sparseKeys A list of Nsparse string Tensors (scalars).
+   * @param denseKeys A list of Ndense string Tensors (scalars).
+   * @param denseDefaults A list of Ndense Tensors (some may be empty).
+   * @param sparseTypes A list of Nsparse types; the data types of data in each Feature
+   * @param denseShapes A list of Ndense shapes; the shapes of data in each Feature
+   * @return a new instance of ParseExample
+   * @see org.tensorflow.op.io.ParseExample
+   */
+  public ParseExample parseExample(Operand<TString> serialized, Operand<TString> names,
+      Iterable<Operand<TString>> sparseKeys, Iterable<Operand<TString>> denseKeys,
+      Iterable<Operand<?>> denseDefaults, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
+    return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, denseDefaults, sparseTypes, denseShapes);
+  }
+
+  /**
    * Builds an {@link WholeFileReader} operation
    *
    * @param options carries optional attributes values
@@ -200,25 +205,6 @@ public final class IoOps {
    */
   public WholeFileReader wholeFileReader(WholeFileReader.Options... options) {
     return WholeFileReader.create(scope, options);
-  }
-
-  /**
-   * Builds an {@link ParseSingleExample} operation
-   *
-   * @param serialized A vector containing a batch of binary serialized Example protos.
-   * @param denseDefaults A list of Tensors (some may be empty), whose length matches
-   * @param numSparse The number of sparse features to be parsed from the example. This
-   * @param sparseKeys A list of `num_sparse` strings.
-   * @param denseKeys The keys expected in the Examples' features associated with dense
-   * @param sparseTypes A list of `num_sparse` types; the data types of data in each
-   * @param denseShapes The shapes of data in each Feature given in dense_keys.
-   * @return a new instance of ParseSingleExample
-   * @see org.tensorflow.op.io.ParseSingleExample
-   */
-  public ParseSingleExample parseSingleExample(Operand<TString> serialized,
-      Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys,
-      List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
-    return ParseSingleExample.create(scope, serialized, denseDefaults, numSparse, sparseKeys, denseKeys, sparseTypes, denseShapes);
   }
 
   /**
@@ -281,6 +267,20 @@ public final class IoOps {
    */
   public ReaderSerializeState readerSerializeState(Operand<?> readerHandle) {
     return ReaderSerializeState.create(scope, readerHandle);
+  }
+
+  /**
+   * Builds an {@link PriorityQueue} operation
+   *
+   * @param componentTypes The type of each component in a value.
+   * @param shapes The shape of each component in a value. The length of this attr must
+   * @param options carries optional attributes values
+   * @return a new instance of PriorityQueue
+   * @see org.tensorflow.op.io.PriorityQueue
+   */
+  public PriorityQueue priorityQueue(List<DataType<?>> componentTypes, List<Shape> shapes,
+      PriorityQueue.Options... options) {
+    return PriorityQueue.create(scope, componentTypes, shapes, options);
   }
 
   /**
@@ -412,6 +412,25 @@ public final class IoOps {
   }
 
   /**
+   * Builds an {@link ParseSingleExample} operation
+   *
+   * @param serialized A vector containing a batch of binary serialized Example protos.
+   * @param denseDefaults A list of Tensors (some may be empty), whose length matches
+   * @param numSparse The number of sparse features to be parsed from the example. This
+   * @param sparseKeys A list of `num_sparse` strings.
+   * @param denseKeys The keys expected in the Examples' features associated with dense
+   * @param sparseTypes A list of `num_sparse` types; the data types of data in each
+   * @param denseShapes The shapes of data in each Feature given in dense_keys.
+   * @return a new instance of ParseSingleExample
+   * @see org.tensorflow.op.io.ParseSingleExample
+   */
+  public ParseSingleExample parseSingleExample(Operand<TString> serialized,
+      Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys,
+      List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
+    return ParseSingleExample.create(scope, serialized, denseDefaults, numSparse, sparseKeys, denseKeys, sparseTypes, denseShapes);
+  }
+
+  /**
    * Builds an {@link EncodeBase64} operation
    *
    * @param input Strings to be encoded.
@@ -487,25 +506,6 @@ public final class IoOps {
    */
   public ReaderNumWorkUnitsCompleted readerNumWorkUnitsCompleted(Operand<?> readerHandle) {
     return ReaderNumWorkUnitsCompleted.create(scope, readerHandle);
-  }
-
-  /**
-   * Builds an {@link ParseExample} operation
-   *
-   * @param serialized A vector containing a batch of binary serialized Example protos.
-   * @param names A vector containing the names of the serialized protos.
-   * @param sparseKeys A list of Nsparse string Tensors (scalars).
-   * @param denseKeys A list of Ndense string Tensors (scalars).
-   * @param denseDefaults A list of Ndense Tensors (some may be empty).
-   * @param sparseTypes A list of Nsparse types; the data types of data in each Feature
-   * @param denseShapes A list of Ndense shapes; the shapes of data in each Feature
-   * @return a new instance of ParseExample
-   * @see org.tensorflow.op.io.ParseExample
-   */
-  public ParseExample parseExample(Operand<TString> serialized, Operand<TString> names,
-      Iterable<Operand<TString>> sparseKeys, Iterable<Operand<TString>> denseKeys,
-      Iterable<Operand<?>> denseDefaults, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
-    return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, denseDefaults, sparseTypes, denseShapes);
   }
 
   /**

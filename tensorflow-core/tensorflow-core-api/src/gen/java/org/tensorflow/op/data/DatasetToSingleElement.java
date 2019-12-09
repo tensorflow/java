@@ -27,7 +27,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /**
  * Outputs the single element from the given dataset.

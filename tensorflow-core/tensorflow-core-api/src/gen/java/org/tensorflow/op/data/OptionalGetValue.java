@@ -28,7 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /**
  * Returns the value stored in an Optional variant or raises an error if none exists.

@@ -4,11 +4,11 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.util.buffer.IntDataBuffer;
-import org.tensorflow.util.ndarray.IntNdArray;
-import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.Shape;
-import org.tensorflow.util.ndarray.impl.dense.IntDenseNdArray;
+import org.tensorflow.tools.buffer.IntDataBuffer;
+import org.tensorflow.tools.ndarray.IntNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
 public interface TInt32 extends IntNdArray, TNumber {

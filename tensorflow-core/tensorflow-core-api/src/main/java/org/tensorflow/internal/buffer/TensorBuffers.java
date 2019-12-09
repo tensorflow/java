@@ -7,17 +7,17 @@ import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.util.buffer.ByteDataBuffer;
-import org.tensorflow.util.buffer.DataBuffers;
-import org.tensorflow.util.buffer.DoubleDataBuffer;
-import org.tensorflow.util.buffer.FloatDataBuffer;
-import org.tensorflow.util.buffer.IntDataBuffer;
-import org.tensorflow.util.buffer.LongDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.ByteRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.DoubleRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.FloatRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.IntRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.LongRawDataBuffer;
+import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffers;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.IntDataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.ByteRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.DoubleRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.FloatRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.IntRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.LongRawDataBuffer;
 
 public final class TensorBuffers {
 

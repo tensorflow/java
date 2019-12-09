@@ -102,12 +102,12 @@ import org.tensorflow.op.math.UnsortedSegmentSum;
 import org.tensorflow.op.math.Xdivy;
 import org.tensorflow.op.math.Xlogy;
 import org.tensorflow.op.math.Zeta;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code math} operations as {@link Op Op}s
@@ -727,6 +727,18 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link AccumulateN} operation
+   *
+   * @param inputs A list of `Tensor` objects, each with same shape and type.
+   * @param shape Shape of elements of `inputs`.
+   * @return a new instance of AccumulateN
+   * @see org.tensorflow.op.math.AccumulateN
+   */
+  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
+    return AccumulateN.create(scope, inputs, shape);
+  }
+
+  /**
    * Builds an {@link Expm1} operation
    *
    * @param x 
@@ -1293,18 +1305,6 @@ public final class MathOps {
    */
   public <U extends TNumber, T> Real<U> real(Operand<T> input, DataType<U> Tout) {
     return Real.create(scope, input, Tout);
-  }
-
-  /**
-   * Builds an {@link AccumulateN} operation
-   *
-   * @param inputs A list of `Tensor` objects, each with same shape and type.
-   * @param shape Shape of elements of `inputs`.
-   * @return a new instance of AccumulateN
-   * @see org.tensorflow.op.math.AccumulateN
-   */
-  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
-    return AccumulateN.create(scope, inputs, shape);
   }
 
   /**

@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /**
  * An op which linearizes multiple Tensor values to an opaque variant tensor.
