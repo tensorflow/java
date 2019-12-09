@@ -15,7 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.util.Shape;
+import org.tensorflow.tools.Shape;
 
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.

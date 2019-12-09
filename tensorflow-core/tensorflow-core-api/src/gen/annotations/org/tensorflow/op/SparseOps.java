@@ -45,11 +45,11 @@ import org.tensorflow.op.sparse.SparseTensorDenseMatMul;
 import org.tensorflow.op.sparse.SparseToDense;
 import org.tensorflow.op.sparse.SparseToSparseSetOperation;
 import org.tensorflow.op.sparse.TakeManySparseFromTensorsMap;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.Shape;
 
 /**
  * An API for building {@code sparse} operations as {@link Op Op}s
@@ -92,20 +92,6 @@ public final class SparseOps {
       Operand<T> sparseValues, Operand<TInt64> sparseShape,
       AddManySparseToTensorsMap.Options... options) {
     return AddManySparseToTensorsMap.create(scope, sparseIndices, sparseValues, sparseShape, options);
-  }
-
-  /**
-   * Builds an {@link SparseConditionalAccumulator} operation
-   *
-   * @param dtype The type of the value being accumulated.
-   * @param shape The shape of the values.
-   * @param options carries optional attributes values
-   * @return a new instance of SparseConditionalAccumulator
-   * @see org.tensorflow.op.sparse.SparseConditionalAccumulator
-   */
-  public <T> SparseConditionalAccumulator sparseConditionalAccumulator(DataType<T> dtype,
-      Shape shape, SparseConditionalAccumulator.Options... options) {
-    return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**
@@ -344,6 +330,20 @@ public final class SparseOps {
       Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues,
       Operand<TInt64> bShape) {
     return SparseSparseMinimum.create(scope, aIndices, aValues, aShape, bIndices, bValues, bShape);
+  }
+
+  /**
+   * Builds an {@link SparseConditionalAccumulator} operation
+   *
+   * @param dtype The type of the value being accumulated.
+   * @param shape The shape of the values.
+   * @param options carries optional attributes values
+   * @return a new instance of SparseConditionalAccumulator
+   * @see org.tensorflow.op.sparse.SparseConditionalAccumulator
+   */
+  public <T> SparseConditionalAccumulator sparseConditionalAccumulator(DataType<T> dtype,
+      Shape shape, SparseConditionalAccumulator.Options... options) {
+    return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
   /**

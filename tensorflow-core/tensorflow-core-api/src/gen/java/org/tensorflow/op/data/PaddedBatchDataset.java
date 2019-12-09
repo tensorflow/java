@@ -25,9 +25,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.util.Shape;
 
 /**
  * Creates a dataset that batches and pads `batch_size` elements from the input.

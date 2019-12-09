@@ -636,6 +636,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link VarHandleOp} operation
+   *
+   * @param dtype the type of this variable. Must agree with the dtypes
+   * @param shape The (possibly partially specified) shape of this variable.
+   * @param options carries optional attributes values
+   * @return a new instance of VarHandleOp
+   * @see org.tensorflow.op.core.VarHandleOp
+   */
+  public <T> VarHandleOp varHandleOp(DataType<T> dtype, org.tensorflow.tools.Shape shape,
+      VarHandleOp.Options... options) {
+    return VarHandleOp.create(scope, dtype, shape, options);
+  }
+
+  /**
    * Builds an {@link TensorArrayPack} operation
    *
    * @param handle 
@@ -648,20 +662,6 @@ public final class Ops {
   public <T> TensorArrayPack<T> tensorArrayPack(Operand<TString> handle, Operand<TFloat> flowIn,
       DataType<T> dtype, TensorArrayPack.Options... options) {
     return TensorArrayPack.create(scope, handle, flowIn, dtype, options);
-  }
-
-  /**
-   * Builds an {@link ImmutableConst} operation
-   *
-   * @param dtype Type of the returned tensor.
-   * @param shape Shape of the returned tensor.
-   * @param memoryRegionName Name of readonly memory region used by the tensor, see
-   * @return a new instance of ImmutableConst
-   * @see org.tensorflow.op.core.ImmutableConst
-   */
-  public <T> ImmutableConst<T> immutableConst(DataType<T> dtype, org.tensorflow.util.Shape shape,
-      String memoryRegionName) {
-    return ImmutableConst.create(scope, dtype, shape, memoryRegionName);
   }
 
   /**
@@ -1204,6 +1204,19 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link PlaceholderWithDefault} operation
+   *
+   * @param input The default value to produce when `output` is not fed.
+   * @param shape The (possibly partial) shape of the tensor.
+   * @return a new instance of PlaceholderWithDefault
+   * @see org.tensorflow.op.core.PlaceholderWithDefault
+   */
+  public <T> PlaceholderWithDefault<T> placeholderWithDefault(Operand<T> input,
+      org.tensorflow.tools.Shape shape) {
+    return PlaceholderWithDefault.create(scope, input, shape);
+  }
+
+  /**
    * Builds an {@link Reverse} operation
    *
    * @param tensor Up to 8-D.
@@ -1244,6 +1257,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Variable} operation
+   *
+   * @param shape The shape of the variable tensor.
+   * @param dtype The type of elements in the variable tensor.
+   * @param options carries optional attributes values
+   * @return a new instance of Variable
+   * @see org.tensorflow.op.core.Variable
+   */
+  public <T> Variable<T> variable(org.tensorflow.tools.Shape shape, DataType<T> dtype,
+      Variable.Options... options) {
+    return Variable.create(scope, shape, dtype, options);
+  }
+
+  /**
    * Builds an {@link OnesLike} operation
    *
    * @param x a tensor of type T.
@@ -1276,19 +1303,6 @@ public final class Ops {
    */
   public <T> Placeholder<T> placeholder(DataType<T> dtype, Placeholder.Options... options) {
     return Placeholder.create(scope, dtype, options);
-  }
-
-  /**
-   * Builds an {@link ParallelConcat} operation
-   *
-   * @param values Tensors to be concatenated. All must have size 1 in the first dimension
-   * @param shape the final shape of the result; should be equal to the shapes of any input
-   * @return a new instance of ParallelConcat
-   * @see org.tensorflow.op.core.ParallelConcat
-   */
-  public <T> ParallelConcat<T> parallelConcat(Iterable<Operand<T>> values,
-      org.tensorflow.util.Shape shape) {
-    return ParallelConcat.create(scope, values, shape);
   }
 
   /**
@@ -1578,18 +1592,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link EnsureShape} operation
-   *
-   * @param input A tensor, whose shape is to be validated.
-   * @param shape The expected (possibly partially specified) shape of the input tensor.
-   * @return a new instance of EnsureShape
-   * @see org.tensorflow.op.core.EnsureShape
-   */
-  public <T> EnsureShape<T> ensureShape(Operand<T> input, org.tensorflow.util.Shape shape) {
-    return EnsureShape.create(scope, input, shape);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1739,6 +1741,19 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link ParallelConcat} operation
+   *
+   * @param values Tensors to be concatenated. All must have size 1 in the first dimension
+   * @param shape the final shape of the result; should be equal to the shapes of any input
+   * @return a new instance of ParallelConcat
+   * @see org.tensorflow.op.core.ParallelConcat
+   */
+  public <T> ParallelConcat<T> parallelConcat(Iterable<Operand<T>> values,
+      org.tensorflow.tools.Shape shape) {
+    return ParallelConcat.create(scope, values, shape);
+  }
+
+  /**
    * Builds an {@link DynamicStitch} operation
    *
    * @param indices 
@@ -1796,19 +1811,6 @@ public final class Ops {
   public <T, U extends TNumber> TensorScatterAdd<T> tensorScatterAdd(Operand<T> tensor,
       Operand<U> indices, Operand<T> updates) {
     return TensorScatterAdd.create(scope, tensor, indices, updates);
-  }
-
-  /**
-   * Builds an {@link PlaceholderWithDefault} operation
-   *
-   * @param input The default value to produce when `output` is not fed.
-   * @param shape The (possibly partial) shape of the tensor.
-   * @return a new instance of PlaceholderWithDefault
-   * @see org.tensorflow.op.core.PlaceholderWithDefault
-   */
-  public <T> PlaceholderWithDefault<T> placeholderWithDefault(Operand<T> input,
-      org.tensorflow.util.Shape shape) {
-    return PlaceholderWithDefault.create(scope, input, shape);
   }
 
   /**
@@ -2324,20 +2326,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TemporaryVariable} operation
-   *
-   * @param shape The shape of the variable tensor.
-   * @param dtype The type of elements in the variable tensor.
-   * @param options carries optional attributes values
-   * @return a new instance of TemporaryVariable
-   * @see org.tensorflow.op.core.TemporaryVariable
-   */
-  public <T> TemporaryVariable<T> temporaryVariable(org.tensorflow.util.Shape shape,
-      DataType<T> dtype, TemporaryVariable.Options... options) {
-    return TemporaryVariable.create(scope, shape, dtype, options);
-  }
-
-  /**
    * Builds an {@link TensorListPopBack} operation
    *
    * @param inputHandle 
@@ -2560,6 +2548,18 @@ public final class Ops {
    */
   public <T> Split<T> split(Operand<TInt32> axis, Operand<T> value, Long numSplit) {
     return Split.create(scope, axis, value, numSplit);
+  }
+
+  /**
+   * Builds an {@link EnsureShape} operation
+   *
+   * @param input A tensor, whose shape is to be validated.
+   * @param shape The expected (possibly partially specified) shape of the input tensor.
+   * @return a new instance of EnsureShape
+   * @see org.tensorflow.op.core.EnsureShape
+   */
+  public <T> EnsureShape<T> ensureShape(Operand<T> input, org.tensorflow.tools.Shape shape) {
+    return EnsureShape.create(scope, input, shape);
   }
 
   /**
@@ -3119,20 +3119,6 @@ public final class Ops {
   public <T, U> MutableHashTable mutableHashTable(DataType<T> keyDtype, DataType<U> valueDtype,
       MutableHashTable.Options... options) {
     return MutableHashTable.create(scope, keyDtype, valueDtype, options);
-  }
-
-  /**
-   * Builds an {@link VarHandleOp} operation
-   *
-   * @param dtype the type of this variable. Must agree with the dtypes
-   * @param shape The (possibly partially specified) shape of this variable.
-   * @param options carries optional attributes values
-   * @return a new instance of VarHandleOp
-   * @see org.tensorflow.op.core.VarHandleOp
-   */
-  public <T> VarHandleOp varHandleOp(DataType<T> dtype, org.tensorflow.util.Shape shape,
-      VarHandleOp.Options... options) {
-    return VarHandleOp.create(scope, dtype, shape, options);
   }
 
   /**
@@ -3795,6 +3781,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TemporaryVariable} operation
+   *
+   * @param shape The shape of the variable tensor.
+   * @param dtype The type of elements in the variable tensor.
+   * @param options carries optional attributes values
+   * @return a new instance of TemporaryVariable
+   * @see org.tensorflow.op.core.TemporaryVariable
+   */
+  public <T> TemporaryVariable<T> temporaryVariable(org.tensorflow.tools.Shape shape,
+      DataType<T> dtype, TemporaryVariable.Options... options) {
+    return TemporaryVariable.create(scope, shape, dtype, options);
+  }
+
+  /**
    * Builds an {@link InplaceSub} operation
    *
    * @param x A `Tensor` of type T.
@@ -3869,6 +3869,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link ImmutableConst} operation
+   *
+   * @param dtype Type of the returned tensor.
+   * @param shape Shape of the returned tensor.
+   * @param memoryRegionName Name of readonly memory region used by the tensor, see
+   * @return a new instance of ImmutableConst
+   * @see org.tensorflow.op.core.ImmutableConst
+   */
+  public <T> ImmutableConst<T> immutableConst(DataType<T> dtype, org.tensorflow.tools.Shape shape,
+      String memoryRegionName) {
+    return ImmutableConst.create(scope, dtype, shape, memoryRegionName);
+  }
+
+  /**
    * Builds an {@link ResourceApplyAdamWithAmsgrad} operation
    *
    * @param var Should be from a Variable().
@@ -3933,20 +3947,6 @@ public final class Ops {
   public MapUnstageNoKey mapUnstageNoKey(Operand<TInt32> indices, List<DataType<?>> dtypes,
       MapUnstageNoKey.Options... options) {
     return MapUnstageNoKey.create(scope, indices, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link Variable} operation
-   *
-   * @param shape The shape of the variable tensor.
-   * @param dtype The type of elements in the variable tensor.
-   * @param options carries optional attributes values
-   * @return a new instance of Variable
-   * @see org.tensorflow.op.core.Variable
-   */
-  public <T> Variable<T> variable(org.tensorflow.util.Shape shape, DataType<T> dtype,
-      Variable.Options... options) {
-    return Variable.create(scope, shape, dtype, options);
   }
 
   /**

@@ -23,8 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.util.Shape;
 
 /**
  * Broadcasts a tensor value to one or more other devices.

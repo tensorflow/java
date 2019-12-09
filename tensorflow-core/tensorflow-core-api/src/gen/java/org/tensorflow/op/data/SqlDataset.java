@@ -25,8 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
-import org.tensorflow.util.Shape;
 
 /**
  * Creates a dataset that executes a SQL query and emits rows of the result set.

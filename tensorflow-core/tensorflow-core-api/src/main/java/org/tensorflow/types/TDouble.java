@@ -4,11 +4,11 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.util.buffer.DoubleDataBuffer;
-import org.tensorflow.util.ndarray.DoubleNdArray;
-import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.Shape;
-import org.tensorflow.util.ndarray.impl.dense.DoubleDenseNdArray;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.ndarray.DoubleNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.types.family.TDecimal;
 
 public interface TDouble extends DoubleNdArray, TDecimal {

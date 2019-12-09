@@ -29,7 +29,7 @@
   </scm>
 
   <modules>
-    <module>tensorflow-utils</module>
+    <module>tensorflow-tools</module>
     <module>tensorflow-core</module>
     <!--module>tensorflow-frameworks</module> TODO -->
     <!--module>tensorflow-starters</module> TODO -->

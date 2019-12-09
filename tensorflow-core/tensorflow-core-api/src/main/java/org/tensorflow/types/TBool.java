@@ -4,14 +4,14 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.util.buffer.BooleanDataBuffer;
-import org.tensorflow.util.buffer.ByteDataBuffer;
-import org.tensorflow.util.buffer.DataBuffers;
-import org.tensorflow.util.buffer.adapter.BooleanDataAdapter;
-import org.tensorflow.util.ndarray.BooleanNdArray;
-import org.tensorflow.util.ndarray.NdArray;
-import org.tensorflow.util.Shape;
-import org.tensorflow.util.ndarray.impl.dense.BooleanDenseNdArray;
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
+import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffers;
+import org.tensorflow.tools.buffer.adapter.BooleanDataAdapter;
+import org.tensorflow.tools.ndarray.BooleanNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 
 public interface TBool extends BooleanNdArray, TType {

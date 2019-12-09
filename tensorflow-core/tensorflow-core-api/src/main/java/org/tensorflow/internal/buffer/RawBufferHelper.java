@@ -2,11 +2,11 @@ package org.tensorflow.internal.buffer;
 
 import java.lang.reflect.Field;
 import org.bytedeco.javacpp.Pointer;
-import org.tensorflow.util.buffer.ByteDataBuffer;
-import org.tensorflow.util.buffer.LongDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.ByteRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.LongRawDataBuffer;
-import org.tensorflow.util.buffer.impl.raw.UnsafeReference;
+import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.ByteRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.LongRawDataBuffer;
+import org.tensorflow.tools.buffer.impl.raw.UnsafeReference;
 
 final class RawBufferHelper {
 
