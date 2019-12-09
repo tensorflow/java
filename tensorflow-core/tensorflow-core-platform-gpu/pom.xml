@@ -24,11 +24,12 @@
     <artifactId>tensorflow-core</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tensorflow-core-platform</artifactId>
-  <name>TensorFlow Core API Library Platform</name>
+  <artifactId>tensorflow-core-platform-gpu</artifactId>
+  <name>TensorFlow Core API Library Platform GPU</name>
 
   <properties>
     <javacpp.moduleId>tensorflow-core-api</javacpp.moduleId>
+    <javacpp.platform.extension>-gpu</javacpp.platform.extension>
   </properties>
 
   <dependencies>
@@ -67,7 +68,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64.jar ${javacpp.moduleId}-macosx-x86_64.jar ${javacpp.moduleId}-windows-x86_64.jar</Class-Path>
+                  <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64-gpu.jar ${javacpp.moduleId}-macosx-x86_64-gpu.jar ${javacpp.moduleId}-windows-x86_64-gpu.jar</Class-Path>
                 </manifestEntries>
               </archive>
             </configuration>

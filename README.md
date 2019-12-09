@@ -42,7 +42,9 @@ The following describes the layout of the repository and its different artifacts
 ## Building Sources
 
 To build all the artifacts, simply invoke the command `mvn install` at the root of this repository (or 
-the Maven command of your choice).
+the Maven command of your choice). It is also possible to build artifacts with support for MKL enabled with
+`mvn install -Djavacpp.platform.extension=-mkl` or CUDA with `mvn install -Djavacpp.platform.extension=-gpu`
+or both with `mvn install -Djavacpp.platform.extension=-mkl-gpu`.
 
 Note that in some cases, if a version of the TensorFlow runtime library is not found for your environment,
 this process will fetch TensorFlow sources and trigger a build of all the native code (which can take
@@ -55,7 +57,9 @@ read [TensorFlow documentation](https://www.tensorflow.org/install/source) for m
 To include TensorFlow in your Maven application, you first need to add a dependency on either the
 `tensorflow-core` or `tensorflow-core-platform` artifacts. The former could be included multiple times
 for different targeted systems by their classifiers, while the later includes them as dependencies for
-`linux-x86_64`, `macosx-x86_64`, and `windows-x86_64`, with more to come in the future.
+`linux-x86_64`, `macosx-x86_64`, and `windows-x86_64`, with more to come in the future. There are also
+`tensorflow-core-platform-mkl`, `tensorflow-core-platform-gpu`, and `tensorflow-core-platform-mkl-gpu`
+artifacts that depend on artifacts with MKL and/or CUDA support enabled.
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems, you should add the following dependencies:
@@ -69,7 +73,7 @@ systems, you should add the following dependencies:
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <classifier>linux-x86_64</classifier>
+  <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
 
@@ -85,29 +89,30 @@ native dependencies as follows:
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <classifier>linux-x86_64</classifier>
+  <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <classifier>macosx-x86_64</classifier>
+  <classifier>macosx-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <classifier>windows-x86_64</classifier>
+  <classifier>windows-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
 
 In some cases, pre-configured starter artifacts can help to automatically include all versions of
-the native library for a given configuration. For example, the `tensorflow-core-platform` artifact includes
-transitively all the artifacts above as a single dependency:
+the native library for a given configuration. For example, the `tensorflow-core-platform`,
+`tensorflow-core-platform-mkl`, `tensorflow-core-platform-gpu`, or `tensorflow-core-platform-mkl-gpu`
+artifact includes transitively all the artifacts above as a single dependency:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-platform</artifactId>
+  <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```

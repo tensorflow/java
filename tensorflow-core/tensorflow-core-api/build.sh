@@ -17,8 +17,16 @@ else
     export PYTHON_BIN_PATH=$(which python3)
 fi
 
+if [[ "${EXTENSION:-}" == *mkl* ]]; then
+    export BUILD_FLAGS="$BUILD_FLAGS --config=mkl"
+fi
+
+if [[ "${EXTENSION:-}" == *gpu* ]]; then
+    export BUILD_FLAGS="$BUILD_FLAGS --config=cuda"
+fi
+
 # Build C API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --config=mkl --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow :java_op_gen_sources
+bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow :java_op_gen_sources
 
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=(bazel-bin/external/org_tensorflow/tensorflow/libtensorflow.so.?.?.?)

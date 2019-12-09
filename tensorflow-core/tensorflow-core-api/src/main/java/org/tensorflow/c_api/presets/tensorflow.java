@@ -84,6 +84,10 @@ import org.bytedeco.javacpp.tools.Logger;
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/redist/x64/Microsoft.VC140.OpenMP/",
                 "C:/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x64/"
             }
+        ),
+        @Platform(
+            value = {"linux", "macosx", "windows"},
+            extension = {"-mkl", "-gpu", "-mkl-gpu"}
         )
     },
     target = "org.tensorflow.c_api",
@@ -92,7 +96,68 @@ public class tensorflow implements LoadEnabled, InfoMapper {
 
     @Override public void init(ClassProperties properties) {
         String platform = properties.getProperty("platform");
+        String extension = properties.getProperty("platform.extension");
+        List<String> preloads = properties.get("platform.preload");
+        List<String> resources = properties.get("platform.preloadresource");
         List<String> preloadpaths = properties.get("platform.preloadpath");
+
+        // Only apply this at load time
+        if (!Loader.isLoadLibraries()) {
+            return;
+        }
+
+        // Let users enable loading of the full version of MKL
+        String load = System.getProperty("org.bytedeco.openblas.load",
+                      System.getProperty("org.bytedeco.mklml.load", "")).toLowerCase();
+
+        int i = 0;
+        if (load.equals("mkl") || load.equals("mkl_rt")) {
+            String[] libs = {"iomp5", "libiomp5md", "mkl_core", "mkl_avx", "mkl_avx2", "mkl_avx512", "mkl_avx512_mic",
+                             "mkl_def", "mkl_mc", "mkl_mc3", "mkl_intel_lp64", "mkl_intel_thread", "mkl_gnu_thread", "mkl_rt"};
+            for (i = 0; i < libs.length; i++) {
+                preloads.add(i, libs[i] + "#" + libs[i]);
+            }
+            load = "mkl_rt";
+            resources.add("/org/bytedeco/mkl/");
+        }
+
+        if (load.length() > 0) {
+            if (platform.startsWith("linux")) {
+                preloads.add(i, load + "#mklml_intel");
+            } else if (platform.startsWith("macosx")) {
+                preloads.add(i, load + "#mklml");
+            } else if (platform.startsWith("windows")) {
+                preloads.add(i, load + "#mklml");
+            }
+        }
+
+        // Only apply this at load time since we don't want to copy the CUDA libraries here
+        if (!Loader.isLoadLibraries() || extension == null || !extension.endsWith("-gpu")) {
+            return;
+        }
+        String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl", "nvinfer"};
+        for (String lib : libs) {
+            switch (platform) {
+                case "linux-arm64":
+                case "linux-ppc64le":
+                case "linux-x86_64":
+                case "macosx-x86_64":
+                    lib += lib.equals("cudnn") ? "@.7" : lib.equals("nccl") ? "@.2" : lib.equals("nvinfer") ? "@.5" : lib.equals("cudart") ? "@.10.1" : "@.10";
+                    break;
+                case "windows-x86_64":
+                    lib += lib.equals("cudnn") ? "64_7" : lib.equals("cudart") ? "64_101" : "64_10";
+                    break;
+                default:
+                    continue; // no CUDA
+            }
+            if (!preloads.contains(lib)) {
+                preloads.add(i++, lib);
+            }
+        }
+        if (i > 0) {
+            resources.add("/org/bytedeco/cuda/");
+            resources.add("/org/bytedeco/tensorrt/");
+        }
 
         String vcredistdir = System.getenv("VCToolsRedistDir");
         if (vcredistdir != null && vcredistdir.length() > 0) {
