@@ -73,7 +73,7 @@ public final class DataType<T> {
    * @param tensor tensor to map
    * @return data structure of elements of this type
    */
-  T map(Tensor tensor) {
+  T map(Tensor<T> tensor) {
     return tensorMapper.apply(tensor.getNative(), tensor.shape());
   }
 

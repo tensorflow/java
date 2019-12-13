@@ -23,11 +23,11 @@ public class IntRawDataBufferTest extends IntDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return IntRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected IntDataBuffer allocate(long size) {
-    return IntRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateInts(size);
   }
 }

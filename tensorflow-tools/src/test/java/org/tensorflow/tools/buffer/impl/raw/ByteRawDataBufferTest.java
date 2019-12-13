@@ -23,11 +23,11 @@ public class ByteRawDataBufferTest extends ByteDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return ByteRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected ByteDataBuffer allocate(long size) {
-    return ByteRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateBytes(size);
   }
 }

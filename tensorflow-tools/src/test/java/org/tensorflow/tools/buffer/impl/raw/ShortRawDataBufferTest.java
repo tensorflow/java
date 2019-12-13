@@ -23,11 +23,11 @@ public class ShortRawDataBufferTest extends ShortDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return ShortRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected ShortDataBuffer allocate(long size) {
-    return ShortRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateShorts(size);
   }
 }

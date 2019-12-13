@@ -13,63 +13,58 @@ import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.ByteRawDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.DoubleRawDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.FloatRawDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.IntRawDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.LongRawDataBuffer;
 
 public final class TensorBuffers {
 
   public static ByteDataBuffer toBytes(TF_Tensor nativeTensor) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.map(tensorData, ByteRawDataBuffer::map);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory);
     }
-    return DataBuffers.wrap(tensorData.asByteBuffer());
+    return DataBuffers.wrap(tensorMemory.asByteBuffer());
   }
 
   public static IntDataBuffer toInts(TF_Tensor nativeTensor) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.map(tensorData, IntRawDataBuffer::map);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToInts(tensorMemory);
     }
-    return DataBuffers.wrap(tensorData.asByteBuffer().asIntBuffer());
+    return DataBuffers.wrap(tensorMemory.asByteBuffer().asIntBuffer());
   }
 
   public static LongDataBuffer toLongs(TF_Tensor nativeTensor) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.map(tensorData, LongRawDataBuffer::map);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToLongs(tensorMemory);
     }
-    return DataBuffers.wrap(tensorData.asByteBuffer().asLongBuffer());
+    return DataBuffers.wrap(tensorMemory.asByteBuffer().asLongBuffer());
   }
 
   public static FloatDataBuffer toFloats(TF_Tensor nativeTensor) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.map(tensorData, FloatRawDataBuffer::map);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToFloats(tensorMemory);
     }
-    return DataBuffers.wrap(tensorData.asByteBuffer().asFloatBuffer());
+    return DataBuffers.wrap(tensorMemory.asByteBuffer().asFloatBuffer());
   }
 
   public static DoubleDataBuffer toDoubles(TF_Tensor nativeTensor) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.map(tensorData, DoubleRawDataBuffer::map);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToDoubles(tensorMemory);
     }
-    return DataBuffers.wrap(tensorData.asByteBuffer().asDoubleBuffer());
+    return DataBuffers.wrap(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
   public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
-    Pointer tensorData = tensorData(nativeTensor);
-    if (RawBufferHelper.isUnsafeAvailable()) {
-      return RawBufferHelper.mapToStrings(tensorData, numElements);
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToStrings(tensorMemory, numElements);
     }
     if (numElements > Integer.MAX_VALUE) {
       throw new IllegalArgumentException("Cannot map string tensor of " + numElements + " elements");
     }
-    ByteBuffer dataBuffer = tensorData.asByteBuffer();
+    ByteBuffer dataBuffer = tensorMemory.asByteBuffer();
 
     LongBuffer offsetBuffer = dataBuffer.asLongBuffer();
     offsetBuffer.limit((int)numElements);
@@ -81,7 +76,7 @@ public final class TensorBuffers {
     return new StringTensorBuffer(offsets, data);
   }
 
-  private static Pointer tensorData(TF_Tensor nativeTensor) {
+  private static Pointer tensorMemory(TF_Tensor nativeTensor) {
     return TF_TensorData(nativeTensor).capacity(TF_TensorByteSize(nativeTensor));
   }
 }

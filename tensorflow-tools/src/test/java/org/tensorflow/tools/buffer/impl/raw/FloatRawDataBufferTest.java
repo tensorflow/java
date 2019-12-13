@@ -23,11 +23,11 @@ public class FloatRawDataBufferTest extends FloatDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return FloatRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected FloatDataBuffer allocate(long size) {
-    return FloatRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateFloats(size);
   }
 }

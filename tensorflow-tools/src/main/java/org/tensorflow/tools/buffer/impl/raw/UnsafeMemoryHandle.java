@@ -1,118 +1,88 @@
 package org.tensorflow.tools.buffer.impl.raw;
 
-public final class UnsafeMemoryHandle {
+final class UnsafeMemoryHandle {
 
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, byte[] array) {
-    return fromArray(unsafe, array, array.length);
+  static UnsafeMemoryHandle fromArray(Object array, int length) {
+    long byteOffset = UnsafeReference.UNSAFE.arrayBaseOffset(array.getClass());
+    long scale = UnsafeReference.UNSAFE.arrayIndexScale(array.getClass());
+    return new UnsafeMemoryHandle(array, byteOffset, length * scale, scale);
   }
 
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, boolean[] array) {
-    return fromArray(unsafe, array, array.length);
+  static UnsafeMemoryHandle fromAddress(long address, long byteSize, long scale) {
+    return new UnsafeMemoryHandle(null, address, byteSize, scale);
   }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, short[] array) {
-    return fromArray(unsafe, array, array.length);
-  }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, int[] array) {
-    return fromArray(unsafe, array, array.length);
-  }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, float[] array) {
-    return fromArray(unsafe, array, array.length);
-  }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, double[] array) {
-    return fromArray(unsafe, array, array.length);
-  }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, long[] array) {
-    return fromArray(unsafe, array, array.length);
-  }
-
-  static UnsafeMemoryHandle of(UnsafeReference unsafe, long address, long byteSize, long scale) {
-    return new UnsafeMemoryHandle(unsafe, null, address, byteSize, scale);
-  }
-
-  final UnsafeReference unsafe;
 
   long size() {
     return byteSize / scale;
   }
 
   byte getByte(long index) {
-    return unsafe.instance.getByte(object, align(index));
+    return UnsafeReference.UNSAFE.getByte(object, align(index));
   }
 
   void setByte(byte value, long index) {
-    unsafe.instance.putByte(object, align(index), value);
+    UnsafeReference.UNSAFE.putByte(object, align(index), value);
   }
 
   boolean getBoolean(long index) {
-    return unsafe.instance.getBoolean(object, align(index));
+    return UnsafeReference.UNSAFE.getBoolean(object, align(index));
   }
 
   void setBoolean(boolean value, long index) {
-    unsafe.instance.putBoolean(object, align(index), value);
+    UnsafeReference.UNSAFE.putBoolean(object, align(index), value);
   }
 
   short getShort(long index) {
-    return unsafe.instance.getShort(object, align(index));
+    return UnsafeReference.UNSAFE.getShort(object, align(index));
   }
 
   void setShort(short value, long index) {
-    unsafe.instance.putShort(object, align(index), value);
+    UnsafeReference.UNSAFE.putShort(object, align(index), value);
   }
 
   int getInt(long index) {
-    return unsafe.instance.getInt(object, align(index));
+    return UnsafeReference.UNSAFE.getInt(object, align(index));
   }
 
   void setInt(int value, long index) {
-    unsafe.instance.putInt(object, align(index), value);
+    UnsafeReference.UNSAFE.putInt(object, align(index), value);
   }
 
   float getFloat(long index) {
-    return unsafe.instance.getFloat(object, align(index));
+    return UnsafeReference.UNSAFE.getFloat(object, align(index));
   }
 
   void setFloat(float value, long index) {
-    unsafe.instance.putFloat(object, align(index), value);
+    UnsafeReference.UNSAFE.putFloat(object, align(index), value);
   }
 
   double getDouble(long index) {
-    return unsafe.instance.getDouble(object, align(index));
+    return UnsafeReference.UNSAFE.getDouble(object, align(index));
   }
 
   void setDouble(double value, long index) {
-    unsafe.instance.putDouble(object, align(index), value);
+    UnsafeReference.UNSAFE.putDouble(object, align(index), value);
   }
 
   long getLong(long index) {
-    return unsafe.instance.getLong(object, align(index));
+    return UnsafeReference.UNSAFE.getLong(object, align(index));
   }
 
   void setLong(long value, long index) {
-    unsafe.instance.putLong(object, align(index), value);
+    UnsafeReference.UNSAFE.putLong(object, align(index), value);
   }
 
   void copyTo(UnsafeMemoryHandle memory, long length) {
-    unsafe.instance.copyMemory(object, byteOffset, memory.object, memory.byteOffset, length * scale);
+    UnsafeReference.UNSAFE.copyMemory(object, byteOffset, memory.object, memory.byteOffset, length * scale);
   }
 
   UnsafeMemoryHandle offset(long index) {
     long offset = scale(index);
-    return new UnsafeMemoryHandle(unsafe, object, this.byteOffset + offset, byteSize - offset, scale);
+    return new UnsafeMemoryHandle(object, this.byteOffset + offset, byteSize - offset, scale);
   }
 
   UnsafeMemoryHandle narrow(long size) {
-    return new UnsafeMemoryHandle(unsafe, object, byteOffset, scale(size), scale);
-  }
-
-  private static UnsafeMemoryHandle fromArray(UnsafeReference unsafe, Object array, int length) {
-    long byteOffset = unsafe.instance.arrayBaseOffset(array.getClass());
-    long scale = unsafe.instance.arrayIndexScale(array.getClass());
-    return new UnsafeMemoryHandle(unsafe, array, byteOffset, length * scale, scale);
+    return new UnsafeMemoryHandle(object, byteOffset, scale(size), scale);
   }
 
   private final Object object;
@@ -120,8 +90,7 @@ public final class UnsafeMemoryHandle {
   private final long byteSize;
   private final long scale;
 
-  private UnsafeMemoryHandle(UnsafeReference unsafe, Object object, long byteOffset, long byteSize, long scale) {
-    this.unsafe = unsafe;
+  private UnsafeMemoryHandle(Object object, long byteOffset, long byteSize, long scale) {
     this.object = object;
     this.byteOffset = byteOffset;
     this.byteSize = byteSize;

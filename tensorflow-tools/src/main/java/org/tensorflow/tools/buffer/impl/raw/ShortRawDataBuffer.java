@@ -3,22 +3,8 @@ package org.tensorflow.tools.buffer.impl.raw;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
-public final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuffer>
+final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuffer>
     implements ShortDataBuffer {
-
-  public static ShortDataBuffer allocate(long size) {
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new short[(int)size], false);
-  }
-
-  public static ShortDataBuffer wrap(short[] array, boolean readOnly) {
-    return new ShortRawDataBuffer(UnsafeMemoryHandle.of(UnsafeReference.get(), array), readOnly);
-  }
-
-  public static ShortDataBuffer map(UnsafeReference unsafe, long address, long size, boolean readOnly) {
-    Validator.createArgs(size, MAX_64BITS);
-    return new ShortRawDataBuffer(UnsafeMemoryHandle.of(unsafe, address, size, Short.BYTES), readOnly);
-  }
 
   @Override
   public short getShort(long index) {
@@ -35,38 +21,30 @@ public final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, Short
 
   @Override
   public ShortDataBuffer read(short[] dst) {
-    Validator.readArgs(this, dst.length, 0, dst.length);
-    memory.copyTo(UnsafeMemoryHandle.of(memory.unsafe, dst), dst.length);
-    return this;
+    return read(dst, dst.length);
   }
 
   @Override
   public ShortDataBuffer read(short[] dst, int offset, int length) {
-    Validator.readArgs(this, dst.length, offset, length);
-    memory.copyTo(UnsafeMemoryHandle.of(memory.unsafe, dst).offset(offset), length);
-    return this;
+    return read(dst, dst.length, offset, length);
   }
 
   @Override
   public ShortDataBuffer write(short[] src) {
-    Validator.writeArgs(this, src.length, 0, src.length);
-    UnsafeMemoryHandle.of(memory.unsafe, src).copyTo(memory, src.length);
-    return this;
+    return write(src, src.length);
   }
 
   @Override
   public ShortDataBuffer write(short[] src, int offset, int length) {
-    Validator.writeArgs(this, src.length, offset, length);
-    UnsafeMemoryHandle.of(memory.unsafe, src).offset(offset).copyTo(memory, length);
-    return this;
+    return write(src, src.length, offset, length);
   }
 
   @Override
-  protected ShortDataBuffer instantiate(UnsafeMemoryHandle memory, boolean readOnly) {
+  protected ShortDataBuffer instantiate(UnsafeMemoryHandle memory) {
     return new ShortRawDataBuffer(memory, readOnly);
   }
 
-  private ShortRawDataBuffer(UnsafeMemoryHandle memory, boolean readOnly) {
+  ShortRawDataBuffer(UnsafeMemoryHandle memory, boolean readOnly) {
     super(memory, readOnly);
   }
 }

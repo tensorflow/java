@@ -23,11 +23,11 @@ public class LongRawDataBufferTest extends LongDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return LongRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected LongDataBuffer allocate(long size) {
-    return LongRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateLongs(size);
   }
 }

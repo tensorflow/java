@@ -4,16 +4,8 @@ import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
+@SuppressWarnings("unchecked")
 abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends AbstractDataBuffer<T> {
-
-  /*
-   * The maximum size for a buffer of this type, i.e. the maximum number of bytes it can store.
-   * <p>
-   * As the maximum size may vary depending on the JVM implementation and on the platform, this
-   * property returns a value that is safe for most of them.
-   */
-  static long MAX_32BITS = Integer.MAX_VALUE - 10;
-  static long MAX_64BITS = Long.MAX_VALUE - 10;
 
   public long size() {
     return memory.size();
@@ -24,12 +16,35 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
     return readOnly;
   }
 
+  public B read(Object dst, int dstLength) {
+    Validator.readArgs(this, dstLength, 0, dstLength);
+    memory.copyTo(UnsafeMemoryHandle.fromArray(dst, dstLength), dstLength);
+    return (B)this;
+  }
+
+  public B read(Object dst, int dstLength, int offset, int length) {
+    Validator.readArgs(this, dstLength, offset, length);
+    memory.copyTo(UnsafeMemoryHandle.fromArray(dst, dstLength).offset(offset), length);
+    return (B)this;
+  }
+
+  public B write(Object src, int srcLength) {
+    Validator.writeArgs(this, srcLength, 0, srcLength);
+    UnsafeMemoryHandle.fromArray(src, srcLength).copyTo(memory, srcLength);
+    return (B)this;
+  }
+
+  public B write(Object src, int srcLength, int offset, int length) {
+    Validator.writeArgs(this, srcLength, offset, length);
+    UnsafeMemoryHandle.fromArray(src, srcLength).offset(offset).copyTo(memory, length);
+    return (B)this;
+  }
+
   @Override
-  @SuppressWarnings("unchecked")
   public B copyTo(DataBuffer<T> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof AbstractRawDataBuffer) {
-      AbstractRawDataBuffer unsafeDst = (AbstractRawDataBuffer)dst;
+      AbstractRawDataBuffer<?, ?> unsafeDst = (AbstractRawDataBuffer<?, ?>)dst;
       memory.copyTo(unsafeDst.memory, size);
     } else {
       slowCopyTo(dst, size);
@@ -40,23 +55,22 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
   @Override
   public B offset(long index) {
     Validator.offsetArgs(this, index);
-    return instantiate(memory.offset(index), isReadOnly());
+    return instantiate(memory.offset(index));
   }
 
   @Override
   public B narrow(long size) {
     Validator.narrowArgs(this, size);
-    return instantiate(memory.narrow(size), isReadOnly());
+    return instantiate(memory.narrow(size));
   }
 
-  protected abstract B instantiate(UnsafeMemoryHandle region, boolean readOnly);
+  protected final UnsafeMemoryHandle memory;
+  protected final boolean readOnly;
 
-  final UnsafeMemoryHandle memory;
+  protected abstract B instantiate(UnsafeMemoryHandle region);
 
   AbstractRawDataBuffer(UnsafeMemoryHandle memory, boolean readOnly) {
     this.memory = memory;
     this.readOnly = readOnly;
   }
-
-  private final boolean readOnly;
 }

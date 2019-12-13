@@ -23,11 +23,11 @@ public class DoubleRawDataBufferTest extends DoubleDataBufferTestBase {
 
   @Override
   protected long maxSize() {
-    return DoubleRawDataBuffer.MAX_32BITS;
+    return RawDataBufferFactory.MAX_32BITS;
   }
 
   @Override
   protected DoubleDataBuffer allocate(long size) {
-    return DoubleRawDataBuffer.allocate(size);
+    return RawDataBufferFactory.allocateDoubles(size);
   }
 }
