@@ -12,7 +12,7 @@ public class BigIntegerVirtualDataBufferTest extends DataBufferTestBase<BigInteg
 
   @Override
   protected DataBuffer<BigInteger> allocate(long size) {
-    return DataBuffers.of(size, new TestBigIntegerAdapter());
+    return DataBuffers.ofObjects(size, new TestBigIntegerAdapter());
   }
 
   @Override

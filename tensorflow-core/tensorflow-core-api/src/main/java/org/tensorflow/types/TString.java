@@ -7,10 +7,10 @@ import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.StringTensorBuffer;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
 
@@ -19,11 +19,11 @@ public interface TString extends NdArray<String>, TType {
   DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
 
   static Tensor<TString> scalarOf(String value) {
-    return copyOf(NdArrays.of(String.class, Shape.scalar()).setObject(value));
+    return copyOf(NdArrays.ofRefs(String.class, Shape.scalar()).setObject(value));
   }
 
   static Tensor<TString> vectorOf(String... values) {
-    return copyOf(NdArrays.of(String.class, Shape.make(values.length)).write(values));
+    return copyOf(NdArrays.ofRefs(String.class, Shape.make(values.length)).write(values));
   }
 
   static Tensor<TString> copyOf(NdArray<String> src) {

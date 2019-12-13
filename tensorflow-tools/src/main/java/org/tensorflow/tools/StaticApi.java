@@ -34,8 +34,8 @@ public interface StaticApi {
    * @param size size of the buffer to allocate
    * @return a new buffer
    */
-  static <T> DataBuffer<T> bufferOf(Class<T> clazz, long size) {
-    return DataBuffers.of(clazz, size);
+  static <T> DataBuffer<T> bufferOfRefs(Class<T> clazz, long size) {
+    return DataBuffers.ofObjects(clazz, size);
   }
 
   /**
@@ -115,7 +115,7 @@ public interface StaticApi {
    * @param readOnly true if the buffer created must be read-only
    * @return a new buffer
    */
-  static <T> DataBuffer<T> bufferOf(T[] array, boolean readOnly) {
+  static <T> DataBuffer<T> bufferOfRefs(T[] array, boolean readOnly) {
     return DataBuffers.wrap(array, readOnly);
   }
 
@@ -195,8 +195,8 @@ public interface StaticApi {
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
-  static <T> NdArray<T> ndArrayOf(Class<T> clazz, Shape shape) {
-    return NdArrays.of(clazz, shape);
+  static <T> NdArray<T> ndArrayOfRefs(Class<T> clazz, Shape shape) {
+    return NdArrays.ofRefs(clazz, shape);
   }
 
   /**
@@ -400,8 +400,8 @@ public interface StaticApi {
    * @param value scalar value
    * @return new scalar
    */
-  static <T> NdArray<T> scalarOfObject(T value) {
-    return NdArrays.scalarOfObject(value);
+  static <T> NdArray<T> scalarOfRef(T value) {
+    return NdArrays.scalarOfRef(value);
   }
 
   /**
@@ -481,8 +481,8 @@ public interface StaticApi {
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
-  static <T> NdArray<T> vectorOfObjects(T... values) {
-    return NdArrays.vectorOfObjects(values);
+  static <T> NdArray<T> vectorOfRefs(T... values) {
+    return NdArrays.vectorOfRefs(values);
   }
 
   /**

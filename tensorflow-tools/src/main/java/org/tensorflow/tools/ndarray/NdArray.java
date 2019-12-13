@@ -30,7 +30,7 @@ import org.tensorflow.tools.ndarray.index.Index;
  * better performances than standard multi-dimensional arrays in Java by mapping directly linear
  * data segments in memory.
  *
- * <p>Like {@link DataBuffer}, {@code NdArray} instances support 64-bits indexation so they can be
+ * <p>Like {@link DataBuffer}, {@code NdArray} instances support 64-bits indexing so they can be
  * used to map very large data records. They also support special coordinates that allow traversing
  * their values in any direction or to select only a subset of them.
  *

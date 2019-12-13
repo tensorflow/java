@@ -19,7 +19,7 @@ package org.tensorflow.tools.ndarray;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.tensorflow.tools.ndarray.NdArrays.scalarOf;
-import static org.tensorflow.tools.ndarray.NdArrays.vectorOfObjects;
+import static org.tensorflow.tools.ndarray.NdArrays.vectorOfRefs;
 import static org.tensorflow.tools.ndarray.index.Indices.all;
 import static org.tensorflow.tools.ndarray.index.Indices.at;
 import static org.tensorflow.tools.ndarray.index.Indices.even;
@@ -37,10 +37,6 @@ import java.util.stream.LongStream;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.ndarray.IllegalRankException;
-import org.tensorflow.tools.ndarray.LongNdArray;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.ndarray.NdArrays;
 
 public abstract class NdArrayTestBase<T> {
 
@@ -101,8 +97,8 @@ public abstract class NdArrayTestBase<T> {
     }
 
     NdArray<T> matrix2 = allocate(Shape.make(3, 2))
-        .set(vectorOfObjects(valueOf(1L), valueOf(2L)), 0)
-        .set(vectorOfObjects(valueOf(3L), valueOf(4L)), 1)
+        .set(vectorOfRefs(valueOf(1L), valueOf(2L)), 0)
+        .set(vectorOfRefs(valueOf(3L), valueOf(4L)), 1)
         .setObject(valueOf(5L), 2, 0)
         .setObject(valueOf(6L), 2, 1);
 
@@ -128,7 +124,7 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(2L), matrix3d.getObject(0, 1, 2));
 
     matrix3d.elements(1).forEach(vector -> {
-      vector.set(vectorOfObjects(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
+      vector.set(vectorOfRefs(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
     });
 
     assertEquals(valueOf(5L), matrix3d.getObject(0, 0, 0));

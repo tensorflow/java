@@ -25,8 +25,7 @@ import java.nio.ReadOnlyBufferException;
  * <p>Instances of {@code DataBuffer} map native or heap memory segments to a linear view that
  * supports:
  * <ul>
- *  <li>64-bits indexation, allowing to work with a single buffer with a size up to
- *      approximately 2<sup>63</sup> bytes</li>
+ *  <li>64-bits indexing, allowing to work with buffer larger than 2<sup>31</sup> bytes</li>
  *  <li>Storage of object of any types and not only primitives</li>
  *  <li>Generic types allows to work directly with boxed types as well, which does not require
  *      explicit buffer types as with the standard JDK buffers.

@@ -4,10 +4,10 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.types.family.TDecimal;
 

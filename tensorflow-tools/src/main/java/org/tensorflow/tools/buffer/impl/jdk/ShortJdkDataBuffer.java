@@ -25,7 +25,7 @@ import org.tensorflow.tools.buffer.impl.Validator;
 /**
  * A buffer of bytes using a JDK {@link ShortBuffer} for storage.
  * <p>
- * Since JDK buffers supports only 32-bits indexation, the size of this buffer type cannot
+ * Since JDK buffers supports only 32-bits indexing, the size of this buffer type cannot
  * exceed 2<sup>32</sup> - 1 (see {@link ShortJdkDataBuffer#MAX_SIZE} for the real maximum
  * value supported).
  */

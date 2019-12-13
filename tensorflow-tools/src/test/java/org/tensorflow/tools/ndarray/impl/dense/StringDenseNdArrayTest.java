@@ -26,11 +26,11 @@ import org.tensorflow.tools.Shape;
 public class StringDenseNdArrayTest extends NdArrayTestBase<String> {
 
   @Override protected NdArray<String> allocate(Shape shape) {
-    return NdArrays.of(String.class, shape);
+    return NdArrays.ofRefs(String.class, shape);
   }
 
   @Override protected DataBuffer<String> allocateBuffer(long size) {
-    return DataBuffers.of(String.class, size);
+    return DataBuffers.ofObjects(String.class, size);
   }
 
   @Override protected String valueOf(Long val) {
