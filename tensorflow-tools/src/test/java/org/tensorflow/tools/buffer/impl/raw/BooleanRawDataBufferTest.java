@@ -18,18 +18,11 @@ package org.tensorflow.tools.buffer.impl.raw;
 
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.BooleanDataBufferTestBase;
-import org.tensorflow.tools.buffer.DoubleDataBuffer;
-import org.tensorflow.tools.buffer.DoubleDataBufferTestBase;
 
 public class BooleanRawDataBufferTest extends BooleanDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected BooleanDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateBooleans(size);
+    return new BooleanRawDataBuffer(UnsafeMemoryHandle.fromArray(new boolean[(int)size], (int)size), false);
   }
 }

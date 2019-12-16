@@ -18,99 +18,46 @@ public class RawDataBufferFactory {
     return UnsafeReference.isAvailable();
   }
 
-  public static BooleanDataBuffer allocateBooleans(long size) {
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new boolean[(int)size], false);
-  }
-
-  public static ByteDataBuffer allocateBytes(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new byte[(int)size], false);
-  }
-
-  public static DoubleDataBuffer allocateDoubles(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new double[(int)size], false);
-  }
-
-  public static FloatDataBuffer allocateFloats(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new float[(int)size], false);
-  }
-
-  public static IntDataBuffer allocateInts(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new int[(int)size], false);
-  }
-
-  public static LongDataBuffer allocateLongs(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new long[(int)size], false);
-  }
-
-  public static ShortDataBuffer allocateShorts(long size) {
-    if (!canBeUsed()) {
-      throw new IllegalStateException("Raw data buffers are not available");
-    }
-    Validator.createArgs(size, MAX_32BITS);
-    return wrap(new short[(int)size], false);
-  }
-
-  public static BooleanDataBuffer wrap(boolean[] array, boolean readOnly) {
+  public static BooleanDataBuffer create(boolean[] array, boolean readOnly) {
     return new BooleanRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static ByteDataBuffer wrap(byte[] array, boolean readOnly) {
+  public static ByteDataBuffer create(byte[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     return new ByteRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static DoubleDataBuffer wrap(double[] array, boolean readOnly) {
+  public static DoubleDataBuffer create(double[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     return new DoubleRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static FloatDataBuffer wrap(float[] array, boolean readOnly) {
+  public static FloatDataBuffer create(float[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     return new FloatRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static IntDataBuffer wrap(int[] array, boolean readOnly) {
+  public static IntDataBuffer create(int[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     return new IntRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static LongDataBuffer wrap(long[] array, boolean readOnly) {
+  public static LongDataBuffer create(long[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     return new LongRawDataBuffer(UnsafeMemoryHandle.fromArray(array, array.length), readOnly);
   }
 
-  public static ShortDataBuffer wrap(short[] array, boolean readOnly) {
+  public static ShortDataBuffer create(short[] array, boolean readOnly) {
     if (!canBeUsed()) {
       throw new IllegalStateException("Raw data buffers are not available");
     }

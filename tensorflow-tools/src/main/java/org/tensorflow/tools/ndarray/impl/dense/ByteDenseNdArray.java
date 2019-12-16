@@ -34,25 +34,25 @@ public class ByteDenseNdArray extends AbstractDenseNdArray<Byte, ByteNdArray>
 
   @Override
   public byte getByte(long... indices) {
-    return buffer().getByte(positionOf(indices, true));
+    return buffer.getByte(positionOf(indices, true));
   }
 
   @Override
   public ByteNdArray setByte(byte value, long... indices) {
-    buffer().setByte(value, positionOf(indices, true));
+    buffer.setByte(value, positionOf(indices, true));
     return this;
   }
 
   @Override
   public ByteNdArray read(byte[] dst, int offset) {
     Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.wrap(dst, false).offset(offset));
+    return read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
   @Override
   public ByteNdArray write(byte[] src, int offset) {
     Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.wrap(src, true).offset(offset));
+    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

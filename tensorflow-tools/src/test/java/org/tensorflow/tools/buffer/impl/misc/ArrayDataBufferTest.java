@@ -23,13 +23,8 @@ import org.tensorflow.tools.buffer.DataBufferTestBase;
 public class ArrayDataBufferTest extends DataBufferTestBase<BigDecimal> {
 
   @Override
-  protected long maxSize() {
-    return ArrayDataBuffer.MAX_CAPACITY;
-  }
-
-  @Override
   protected DataBuffer<BigDecimal> allocate(long size) {
-    return ArrayDataBuffer.allocate(BigDecimal.class, size);
+    return new ArrayDataBuffer<>(new BigDecimal[(int)size], false);
   }
 
   @Override

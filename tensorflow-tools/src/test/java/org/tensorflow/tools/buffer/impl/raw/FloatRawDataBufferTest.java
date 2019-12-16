@@ -22,12 +22,7 @@ import org.tensorflow.tools.buffer.FloatDataBufferTestBase;
 public class FloatRawDataBufferTest extends FloatDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected FloatDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateFloats(size);
+    return new FloatRawDataBuffer(UnsafeMemoryHandle.fromArray(new float[(int)size], (int)size), false);
   }
 }

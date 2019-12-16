@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class To implements Index {
+final class To implements Index {
 
   @Override
   public long numElements(Dimension dim) {
@@ -34,5 +34,5 @@ class To implements Index {
     this.end = end;
   }
 
-  private long end;
+  private final long end;
 }

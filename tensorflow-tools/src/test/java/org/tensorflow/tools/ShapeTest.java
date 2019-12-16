@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.tensorflow.tools.Shape;
 
 public class ShapeTest {
 

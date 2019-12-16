@@ -16,12 +16,12 @@
  */
 package org.tensorflow.tools.ndarray.impl.dense;
 
-import org.tensorflow.tools.ndarray.FloatNdArrayTestBase;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.ndarray.FloatNdArray;
+import org.tensorflow.tools.ndarray.FloatNdArrayTestBase;
 import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
 
 public class FloatDenseNdArrayTest extends FloatNdArrayTestBase {
 

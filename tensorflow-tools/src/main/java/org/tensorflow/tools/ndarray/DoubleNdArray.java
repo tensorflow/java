@@ -16,8 +16,8 @@
  */
 package org.tensorflow.tools.ndarray;
 
-import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.ndarray.index.Index;
 
 /**

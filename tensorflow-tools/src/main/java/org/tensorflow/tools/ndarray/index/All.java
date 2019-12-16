@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class All implements Index {
+final class All implements Index {
 
   static final All INSTANCE = new All();
 

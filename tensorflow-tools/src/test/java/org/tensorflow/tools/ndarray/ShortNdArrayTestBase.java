@@ -18,7 +18,6 @@ package org.tensorflow.tools.ndarray;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;

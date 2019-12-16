@@ -16,11 +16,11 @@
  */
 package org.tensorflow.tools.ndarray.index;
 
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.ndarray.IllegalRankException;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
 
 /**
  * Helper class for instantiating {@link Index} objects.
@@ -89,7 +89,7 @@ public final class Indices {
     if (coords == null) {
       throw new IllegalArgumentException();
     }
-    return new Sequence(NdArrays.wrap(DataBuffers.wrap(coords, true), Shape.make(coords.length)));
+    return new Sequence(NdArrays.wrap(DataBuffers.from(coords, true, false), Shape.make(coords.length)));
   }
 
   /**

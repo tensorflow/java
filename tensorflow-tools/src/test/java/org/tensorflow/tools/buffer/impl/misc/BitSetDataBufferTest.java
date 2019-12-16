@@ -16,19 +16,15 @@
  */
 package org.tensorflow.tools.buffer.impl.misc;
 
+import java.util.BitSet;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.BooleanDataBufferTestBase;
 
 public class BitSetDataBufferTest extends BooleanDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return BitSetDataBuffer.MAX_CAPACITY;
-  }
-
-  @Override
   protected BooleanDataBuffer allocate(long size) {
-    return BitSetDataBuffer.allocate(size);
+    return new BitSetDataBuffer(new BitSet((int)size), size, false);
   }
 
   @Override

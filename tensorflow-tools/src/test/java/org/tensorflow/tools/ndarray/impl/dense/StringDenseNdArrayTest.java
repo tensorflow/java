@@ -16,17 +16,17 @@
  */
 package org.tensorflow.tools.ndarray.impl.dense;
 
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArrayTestBase;
 import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
 
 public class StringDenseNdArrayTest extends NdArrayTestBase<String> {
 
   @Override protected NdArray<String> allocate(Shape shape) {
-    return NdArrays.ofRefs(String.class, shape);
+    return NdArrays.ofObjects(String.class, shape);
   }
 
   @Override protected DataBuffer<String> allocateBuffer(long size) {

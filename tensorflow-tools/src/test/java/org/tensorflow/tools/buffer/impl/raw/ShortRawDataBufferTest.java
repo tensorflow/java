@@ -16,18 +16,13 @@
  */
 package org.tensorflow.tools.buffer.impl.raw;
 
-import org.tensorflow.tools.buffer.ShortDataBufferTestBase;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
+import org.tensorflow.tools.buffer.ShortDataBufferTestBase;
 
 public class ShortRawDataBufferTest extends ShortDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected ShortDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateShorts(size);
+    return new ShortRawDataBuffer(UnsafeMemoryHandle.fromArray(new short[(int)size], (int)size), false);
   }
 }

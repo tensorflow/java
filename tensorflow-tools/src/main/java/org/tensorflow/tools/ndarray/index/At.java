@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class At implements Index {
+final class At implements Index {
 
   @Override
   public long numElements(Dimension dim) {
@@ -44,5 +44,5 @@ class At implements Index {
     this.coord = coord;
   }
 
-  private long coord;
+  private final long coord;
 }

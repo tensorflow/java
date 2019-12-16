@@ -16,31 +16,11 @@
  */
 package org.tensorflow.tools.buffer.impl.misc;
 
-import java.lang.reflect.Array;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
-import org.tensorflow.tools.buffer.DataBuffer;
 
-public class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
-
-  public static long MAX_CAPACITY = Integer.MAX_VALUE - 2;
-  
-  public static <T> DataBuffer<T> allocate(Class<T> clazz, long size) {
-    if (size < 0) {
-      throw new IllegalArgumentException("Capacity must be non-negative");
-    }
-    if (size > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Size for an array-based data buffer cannot exceeds " + MAX_CAPACITY +
-          " elements, use a JoinDataBuffer instead");
-    }
-    @SuppressWarnings("unchecked")
-    T[] array = (T[])Array.newInstance(clazz, (int)size);
-    return new ArrayDataBuffer<>(array, false);
-  }
-
-  public static <T> DataBuffer<T> wrap(T[] array, boolean readOnly) {
-    return new ArrayDataBuffer<>(array, readOnly);
-  }
+class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
 
   @Override
   public long size() {
@@ -89,7 +69,7 @@ public class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
     return new ArrayDataBuffer<>(values, readOnly, offset, (int)size);
   }
 
-  private ArrayDataBuffer(T[] values, boolean readOnly) {
+  ArrayDataBuffer(T[] values, boolean readOnly) {
     this(values, readOnly, 0, values.length);
   }
 

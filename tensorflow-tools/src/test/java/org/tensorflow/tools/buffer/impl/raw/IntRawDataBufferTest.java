@@ -22,12 +22,7 @@ import org.tensorflow.tools.buffer.IntDataBufferTestBase;
 public class IntRawDataBufferTest extends IntDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected IntDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateInts(size);
+    return new IntRawDataBuffer(UnsafeMemoryHandle.fromArray(new int[(int)size], (int)size), false);
   }
 }

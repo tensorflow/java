@@ -21,8 +21,8 @@ import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.tools.ndarray.ShortNdArray;
+import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
 public class ShortDenseNdArray extends AbstractDenseNdArray<Short, ShortNdArray>
     implements ShortNdArray {
@@ -34,25 +34,25 @@ public class ShortDenseNdArray extends AbstractDenseNdArray<Short, ShortNdArray>
 
   @Override
   public short getShort(long... indices) {
-    return buffer().getShort(positionOf(indices, true));
+    return buffer.getShort(positionOf(indices, true));
   }
 
   @Override
   public ShortNdArray setShort(short value, long... indices) {
-    buffer().setShort(value, positionOf(indices, true));
+    buffer.setShort(value, positionOf(indices, true));
     return this;
   }
 
   @Override
   public ShortNdArray read(short[] dst, int offset) {
     Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.wrap(dst, false).offset(offset));
+    return read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
   @Override
   public ShortNdArray write(short[] src, int offset) {
     Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.wrap(src, true).offset(offset));
+    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

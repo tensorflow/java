@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class Step implements Index {
+final class Step implements Index {
 
   @Override
   public long numElements(Dimension dim) {

@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class Even implements Index {
+final class Even implements Index {
 
   static final Even INSTANCE = new Even();
 
