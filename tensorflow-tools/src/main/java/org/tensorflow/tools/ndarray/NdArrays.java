@@ -416,11 +416,11 @@ public final class NdArrays {
    * @return new scalar
    */
   @SuppressWarnings("unchecked")
-  public static <T> NdArray<T> scalarOfRef(T value) {
+  public static <T> NdArray<T> scalarOfObject(T value) {
     if (value == null) {
       throw new IllegalArgumentException();
     }
-    return ofRefs((Class<T>)value.getClass(), Shape.scalar()).setObject(value);
+    return ofObjects((Class<T>)value.getClass(), Shape.scalar()).setObject(value);
   }
 
   /**
@@ -431,11 +431,11 @@ public final class NdArrays {
    * @throws IllegalArgumentException if values is null
    */
   @SuppressWarnings("unchecked")
-  public static <T> NdArray<T> vectorOfRefs(T... values) {
+  public static <T> NdArray<T> vectorOfObjects(T... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofRefs((Class<T>)values[0].getClass(), Shape.make(values.length)).write(values);
+    return ofObjects((Class<T>)values[0].getClass(), Shape.make(values.length)).write(values);
   }
 
   /**
@@ -448,7 +448,7 @@ public final class NdArrays {
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
-  public static <T> NdArray<T> ofRefs(Class<T> clazz, Shape shape) {
+  public static <T> NdArray<T> ofObjects(Class<T> clazz, Shape shape) {
     return wrap(DataBuffers.ofObjects(clazz, shape.size()), shape);
   }
 

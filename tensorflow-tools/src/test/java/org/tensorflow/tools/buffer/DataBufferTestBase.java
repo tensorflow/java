@@ -17,20 +17,19 @@
 package org.tensorflow.tools.buffer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import org.junit.Test;
-import org.tensorflow.tools.buffer.DataBuffer;
 
-abstract public class DataBufferTestBase<T> {
+public abstract class DataBufferTestBase<T> {
 
   protected final boolean enableLargeBufferTests = System.getProperty("testLargeBuffers") != null;
 
-  protected abstract long maxSize();
+  protected long maxSize() {
+    return DataBuffers.MAX_32BITS;
+  }
 
   protected abstract DataBuffer<T> allocate(long size);
 
@@ -44,18 +43,6 @@ abstract public class DataBufferTestBase<T> {
     buffer = allocate(0L);
     assertEquals(0L, buffer.size());
 
-    try {
-      allocate(-1L);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // as expected
-    }
-    try {
-      allocate(maxSize() + 1);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // as expected
-    }
     if (enableLargeBufferTests) {
       buffer = allocate(maxSize());
       assertEquals(maxSize(), buffer.size());

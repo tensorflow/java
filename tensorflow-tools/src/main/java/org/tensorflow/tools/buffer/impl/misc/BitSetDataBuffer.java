@@ -6,24 +6,11 @@ import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
-public class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDataBuffer {
-
-  public static long MAX_CAPACITY = Integer.MAX_VALUE - 2;
-
-  public static BooleanDataBuffer allocate(long size) {
-    if (size < 0) {
-      throw new IllegalArgumentException("Capacity must be non-negative");
-    }
-    if (size > MAX_CAPACITY) {
-      throw new IllegalArgumentException("Size for an bit-set data buffer cannot exceeds " + MAX_CAPACITY +
-          " elements, use a JoinDataBuffer instead");
-    }
-    return new BitSetDataBuffer(new BitSet((int)size), false, 0, (int)size);
-  }
+class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDataBuffer {
 
   @Override
   public long size() {
-    return length;
+    return numBits;
   }
 
   @Override
@@ -72,24 +59,28 @@ public class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements Boo
   @Override
   public BooleanDataBuffer offset(long index) {
     Validator.offsetArgs(this, index);
-    return new BitSetDataBuffer(bitSet, readOnly, offset + (int)index, length - (int)index);
+    return new BitSetDataBuffer(bitSet, numBits - index, readOnly, offset + (int)index);
   }
 
   @Override
   public BooleanDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
-    return new BitSetDataBuffer(bitSet, readOnly, offset, (int)size);
+    return new BitSetDataBuffer(bitSet, size, readOnly, offset);
   }
 
-  private BitSetDataBuffer(BitSet bitSet, boolean readOnly, int offset, int length) {
+  BitSetDataBuffer(BitSet bitSet, long numBits, boolean readOnly) {
+    this(bitSet, numBits, readOnly, 0);
+  }
+
+  private BitSetDataBuffer(BitSet bitSet, long numBits, boolean readOnly, int offset) {
     this.bitSet = bitSet;
+    this.numBits = numBits;
     this.readOnly = readOnly;
     this.offset = offset;
-    this.length = length;
   }
 
   private final BitSet bitSet;
+  private final long numBits;
   private final boolean readOnly;
   private final int offset;
-  private final int length;
 }

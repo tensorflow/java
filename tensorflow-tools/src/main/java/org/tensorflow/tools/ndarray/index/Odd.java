@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class Odd implements Index {
+final class Odd implements Index {
 
   static final Odd INSTANCE = new Odd();
 

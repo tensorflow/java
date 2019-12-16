@@ -1,7 +1,7 @@
 package org.tensorflow.tools.ndarray.impl.sequence;
 
+import java.util.Iterator;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
@@ -17,11 +17,21 @@ public class ElementSequence<T, U extends NdArray<T>> implements NdArraySequence
   }
 
   @Override
-  public void forEach(Consumer<U> consumer) {
+  public Iterator<U> iterator() {
     DimensionalSpace elementDimensions = ndArray.dimensions().from(dimensionIdx + 1);
-    PositionIterator.create(ndArray.dimensions(), dimensionIdx).forEachRemaining((long position) ->
-        consumer.accept(ndArray.slice(position, elementDimensions))
-    );
+    PositionIterator positionIterator = PositionIterator.create(ndArray.dimensions(), dimensionIdx);
+    return new Iterator<U>() {
+
+      @Override
+      public boolean hasNext() {
+        return positionIterator.hasNext();
+      }
+
+      @Override
+      public U next() {
+        return ndArray.slice(positionIterator.next(), elementDimensions);
+      }
+    };
   }
 
   @Override

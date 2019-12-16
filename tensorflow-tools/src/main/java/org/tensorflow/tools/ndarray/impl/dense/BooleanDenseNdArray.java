@@ -34,25 +34,25 @@ public class BooleanDenseNdArray extends AbstractDenseNdArray<Boolean, BooleanNd
 
   @Override
   public boolean getBoolean(long... indices) {
-    return buffer().getBoolean(positionOf(indices, true));
+    return buffer.getBoolean(positionOf(indices, true));
   }
 
   @Override
   public BooleanNdArray setBoolean(boolean value, long... indices) {
-    buffer().setBoolean(value, positionOf(indices, true));
+    buffer.setBoolean(value, positionOf(indices, true));
     return this;
   }
 
   @Override
   public BooleanNdArray read(boolean[] dst, int offset) {
     Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.wrap(dst, false).offset(offset));
+    return read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
   @Override
   public BooleanNdArray write(boolean[] src, int offset) {
     Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.wrap(src, true).offset(offset));
+    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

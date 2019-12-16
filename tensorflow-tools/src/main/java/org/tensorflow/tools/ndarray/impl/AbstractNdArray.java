@@ -16,12 +16,12 @@
  */
 package org.tensorflow.tools.ndarray.impl;
 
-import org.tensorflow.tools.ndarray.NdArraySequence;
-import org.tensorflow.tools.ndarray.impl.sequence.ElementSequence;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
+import org.tensorflow.tools.ndarray.impl.sequence.ElementSequence;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArray<T> {
@@ -53,20 +53,22 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
 
   @Override
   public U read(T[] dst) {
-    return (U)read(DataBuffers.wrap(dst, false));
+    return (U)read(DataBuffers.from(dst, false, false));
   }
 
   @Override
   public U read(T[] dst, int offset) {
-    return (U)read(DataBuffers.wrap(dst, false).offset(offset));
+    return (U)read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
-  @Override public U write(T[] src) {
-    return (U)write(DataBuffers.wrap(src, false));
+  @Override
+  public U write(T[] src) {
+    return (U)write(DataBuffers.from(src, true, false));
   }
 
-  @Override public U write(T[] src, int offset) {
-    return (U)write(DataBuffers.wrap(src, false).offset(offset));
+  @Override
+  public U write(T[] src, int offset) {
+    return (U)write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   protected AbstractNdArray(DimensionalSpace dimensions) {

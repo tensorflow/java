@@ -1,7 +1,6 @@
 package org.tensorflow.types;
 
 import com.google.common.base.Charsets;
-import java.util.concurrent.atomic.AtomicLong;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.StringTensorBuffer;
@@ -19,11 +18,11 @@ public interface TString extends NdArray<String>, TType {
   DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
 
   static Tensor<TString> scalarOf(String value) {
-    return copyOf(NdArrays.ofRefs(String.class, Shape.scalar()).setObject(value));
+    return copyOf(NdArrays.ofObjects(String.class, Shape.scalar()).setObject(value));
   }
 
   static Tensor<TString> vectorOf(String... values) {
-    return copyOf(NdArrays.ofRefs(String.class, Shape.make(values.length)).write(values));
+    return copyOf(NdArrays.ofObjects(String.class, Shape.make(values.length)).write(values));
   }
 
   static Tensor<TString> copyOf(NdArray<String> src) {
@@ -36,14 +35,14 @@ class TStringImpl extends DenseNdArray<String> implements TString {
   static Tensor<TString> createTensor(NdArray<String> src) {
 
     // First, compute the capacity of the tensor to create
-    AtomicLong size = new AtomicLong(src.size() * 8);  // add space to store 64-bits offsets
-    src.scalars().forEach(s -> {
+    long size = src.size() * 8;  // reserve space to store 64-bits offsets
+    for (NdArray<String> s : src.scalars()) {
       byte[] bytes = s.getObject().getBytes(Charsets.UTF_8);
-      size.addAndGet(bytes.length + varintLength(bytes.length));  // add space to store value + length
-    });
+      size += bytes.length + varintLength(bytes.length);  // add space to store value + length
+    }
 
     // Allocate the tensor of the right capacity and init its data from source array
-    Tensor<TString> tensor = Tensor.allocate(TString.DTYPE, src.shape(), size.get());
+    Tensor<TString> tensor = Tensor.allocate(TString.DTYPE, src.shape(), size);
     StringTensorBuffer buffer = (StringTensorBuffer)(((TStringImpl)tensor.data()).buffer());
     buffer.init(src);
 

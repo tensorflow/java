@@ -8,7 +8,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
-import org.tensorflow.tools.buffer.adapter.BooleanDataAdapter;
+import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
@@ -55,7 +55,7 @@ class TBoolImpl extends BooleanDenseNdArray implements TBool {
     super(buffer, shape);
   }
 
-  private static BooleanDataAdapter ADAPTER = new BooleanDataAdapter() {
+  private static BooleanDataLayout ADAPTER = new BooleanDataLayout() {
 
     @Override
     public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {

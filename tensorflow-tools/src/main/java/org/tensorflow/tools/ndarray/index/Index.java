@@ -16,8 +16,8 @@
  */
 package org.tensorflow.tools.ndarray.index;
 
-import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
 /**
  * An index used for slicing a view out of an N-dimensional array.

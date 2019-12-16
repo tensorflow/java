@@ -22,12 +22,7 @@ import org.tensorflow.tools.buffer.ByteDataBufferTestBase;
 public class ByteRawDataBufferTest extends ByteDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected ByteDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateBytes(size);
+    return new ByteRawDataBuffer(UnsafeMemoryHandle.fromArray(new byte[(int)size], (int)size), false);
   }
 }

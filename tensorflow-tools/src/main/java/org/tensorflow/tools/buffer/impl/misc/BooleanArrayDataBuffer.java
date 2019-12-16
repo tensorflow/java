@@ -21,12 +21,8 @@ import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
-public class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
+class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
     BooleanDataBuffer {
-
-  public static BooleanDataBuffer wrap(boolean[] array, boolean readOnly) {
-    return new BooleanArrayDataBuffer(array, readOnly);
-  }
 
   @Override
   public long size() {
@@ -87,7 +83,7 @@ public class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implemen
     return new BooleanArrayDataBuffer(values, readOnly, offset, (int)size);
   }
 
-  private BooleanArrayDataBuffer(boolean[] values, boolean readOnly) {
+  BooleanArrayDataBuffer(boolean[] values, boolean readOnly) {
     this(values, readOnly, 0, values.length);
   }
 

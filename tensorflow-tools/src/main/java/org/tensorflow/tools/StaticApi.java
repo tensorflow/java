@@ -2,18 +2,18 @@ package org.tensorflow.tools;
 
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
+import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.ByteNdArray;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
-import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.IntDataBuffer;
-import org.tensorflow.tools.ndarray.BooleanNdArray;
-import org.tensorflow.tools.ndarray.IllegalRankException;
 import org.tensorflow.tools.ndarray.FloatNdArray;
+import org.tensorflow.tools.ndarray.IllegalRankException;
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.LongNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
@@ -34,7 +34,7 @@ public interface StaticApi {
    * @param size size of the buffer to allocate
    * @return a new buffer
    */
-  static <T> DataBuffer<T> bufferOfRefs(Class<T> clazz, long size) {
+  static <T> DataBuffer<T> bufferOfObjects(Class<T> clazz, long size) {
     return DataBuffers.ofObjects(clazz, size);
   }
 
@@ -109,80 +109,99 @@ public interface StaticApi {
   }
 
   /**
-   * Wraps an array of objects into a data buffer.
+   * Create a buffer from an array of floats into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of floats
    * @param readOnly true if the buffer created must be read-only
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  static <T> DataBuffer<T> bufferOfRefs(T[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static FloatDataBuffer bufferOfFloats(float[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of bytes into a data buffer.
+   * Create a buffer from an array of bytes into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of bytes
    * @param readOnly true if the buffer created must be read-only
-   * @return a new byte buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static ByteDataBuffer bufferOf(byte[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static ByteDataBuffer bufferOfBytes(byte[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of shorts into a data buffer.
+   * Create a buffer from an array of longs into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of longs
    * @param readOnly true if the buffer created must be read-only
-   * @return a new short buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static ShortDataBuffer bufferOf(short[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static LongDataBuffer bufferOfLongs(long[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of ints into a data buffer.
+   * Create a buffer from an array of ints into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of ints
    * @param readOnly true if the buffer created must be read-only
-   * @return a new int buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static IntDataBuffer bufferOf(int[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static IntDataBuffer bufferOfInts(int[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of longs into a data buffer.
+   * Create a buffer from an array of shorts into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of shorts
    * @param readOnly true if the buffer created must be read-only
-   * @return a long buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static LongDataBuffer bufferOf(long[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static ShortDataBuffer bufferOfShorts(short[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of floats into a data buffer.
+   * Create a buffer from an array of doubles into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of doubles
    * @param readOnly true if the buffer created must be read-only
-   * @return a new float buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static FloatDataBuffer bufferOf(float[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static DoubleDataBuffer bufferOfDoubles(double[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
-   * Wraps an array of doubles into a data buffer.
+   * Create a buffer from an array of booleans into a data buffer.
    *
-   * @param array array to wrap
+   * @param array array of booleans
    * @param readOnly true if the buffer created must be read-only
-   * @return a new double buffer
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
    */
-  static DoubleDataBuffer bufferOf(double[] array, boolean readOnly) {
-    return DataBuffers.wrap(array, readOnly);
+  public static BooleanDataBuffer bufferOfBooleans(boolean[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
+  }
+
+  /**
+   * Create a buffer from an array of objects into a data buffer.
+   *
+   * @param array array of objects
+   * @param readOnly true if the buffer created must be read-only
+   * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @return a new buffer
+   */
+  public static <T> DataBuffer<T> bufferOfObjects(T[] array, boolean readOnly, boolean makeCopy) {
+    return DataBuffers.from(array, readOnly, makeCopy);
   }
 
   /**
@@ -195,8 +214,8 @@ public interface StaticApi {
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
-  static <T> NdArray<T> ndArrayOfRefs(Class<T> clazz, Shape shape) {
-    return NdArrays.ofRefs(clazz, shape);
+  static <T> NdArray<T> ndArrayOfObjects(Class<T> clazz, Shape shape) {
+    return NdArrays.ofObjects(clazz, shape);
   }
 
   /**
@@ -400,8 +419,8 @@ public interface StaticApi {
    * @param value scalar value
    * @return new scalar
    */
-  static <T> NdArray<T> scalarOfRef(T value) {
-    return NdArrays.scalarOfRef(value);
+  static <T> NdArray<T> scalarOfObject(T value) {
+    return NdArrays.scalarOfObject(value);
   }
 
   /**
@@ -481,8 +500,8 @@ public interface StaticApi {
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
-  static <T> NdArray<T> vectorOfRefs(T... values) {
-    return NdArrays.vectorOfRefs(values);
+  static <T> NdArray<T> vectorOfObjects(T... values) {
+    return NdArrays.vectorOfObjects(values);
   }
 
   /**

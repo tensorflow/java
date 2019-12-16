@@ -34,25 +34,25 @@ public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray>
 
   @Override
   public float getFloat(long... indices) {
-    return buffer().getFloat(positionOf(indices, true));
+    return buffer.getFloat(positionOf(indices, true));
   }
 
   @Override
   public FloatNdArray setFloat(float value, long... indices) {
-    buffer().setFloat(value, positionOf(indices, true));
+    buffer.setFloat(value, positionOf(indices, true));
     return this;
   }
 
   @Override
   public FloatNdArray read(float[] dst, int offset) {
     Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.wrap(dst, false).offset(offset));
+    return read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
   @Override
   public FloatNdArray write(float[] src, int offset) {
     Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.wrap(src, true).offset(offset));
+    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

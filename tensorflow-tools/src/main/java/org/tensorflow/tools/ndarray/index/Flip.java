@@ -18,7 +18,7 @@ package org.tensorflow.tools.ndarray.index;
 
 import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class Flip implements Index {
+final class Flip implements Index {
 
   static final Flip INSTANCE = new Flip();
 

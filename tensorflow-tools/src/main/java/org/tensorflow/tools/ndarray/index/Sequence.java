@@ -16,10 +16,10 @@
  */
 package org.tensorflow.tools.ndarray.index;
 
-import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.impl.dimension.Dimension;
 
-class Sequence implements Index {
+final class Sequence implements Index {
 
   @Override
   public long numElements(Dimension dim) {
@@ -35,5 +35,5 @@ class Sequence implements Index {
     this.coords = coords;
   }
 
-  private NdArray<? extends Number> coords;
+  private final NdArray<? extends Number> coords;
 }

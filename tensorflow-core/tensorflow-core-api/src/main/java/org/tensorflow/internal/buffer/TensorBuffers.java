@@ -21,7 +21,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory);
     }
-    return DataBuffers.wrap(tensorMemory.asByteBuffer());
+    return DataBuffers.from(tensorMemory.asByteBuffer());
   }
 
   public static IntDataBuffer toInts(TF_Tensor nativeTensor) {
@@ -29,7 +29,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToInts(tensorMemory);
     }
-    return DataBuffers.wrap(tensorMemory.asByteBuffer().asIntBuffer());
+    return DataBuffers.from(tensorMemory.asByteBuffer().asIntBuffer());
   }
 
   public static LongDataBuffer toLongs(TF_Tensor nativeTensor) {
@@ -37,7 +37,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToLongs(tensorMemory);
     }
-    return DataBuffers.wrap(tensorMemory.asByteBuffer().asLongBuffer());
+    return DataBuffers.from(tensorMemory.asByteBuffer().asLongBuffer());
   }
 
   public static FloatDataBuffer toFloats(TF_Tensor nativeTensor) {
@@ -45,7 +45,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToFloats(tensorMemory);
     }
-    return DataBuffers.wrap(tensorMemory.asByteBuffer().asFloatBuffer());
+    return DataBuffers.from(tensorMemory.asByteBuffer().asFloatBuffer());
   }
 
   public static DoubleDataBuffer toDoubles(TF_Tensor nativeTensor) {
@@ -53,7 +53,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToDoubles(tensorMemory);
     }
-    return DataBuffers.wrap(tensorMemory.asByteBuffer().asDoubleBuffer());
+    return DataBuffers.from(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
   public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
@@ -68,10 +68,10 @@ public final class TensorBuffers {
 
     LongBuffer offsetBuffer = dataBuffer.asLongBuffer();
     offsetBuffer.limit((int)numElements);
-    LongDataBuffer offsets = DataBuffers.wrap(offsetBuffer.slice());
+    LongDataBuffer offsets = DataBuffers.from(offsetBuffer.slice());
 
     dataBuffer.position((int)numElements * Long.BYTES);
-    ByteDataBuffer data = DataBuffers.wrap(dataBuffer.slice());
+    ByteDataBuffer data = DataBuffers.from(dataBuffer.slice());
 
     return new StringTensorBuffer(offsets, data);
   }

@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
-import org.tensorflow.tools.ndarray.impl.sequence.ElementSequence;
 
 public class ElementSequenceTest {
 

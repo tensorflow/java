@@ -22,13 +22,8 @@ import org.tensorflow.tools.buffer.DataBufferTestBase;
 public class StringArrayDataBufferTest extends DataBufferTestBase<String> {
 
   @Override
-  protected long maxSize() {
-    return ArrayDataBuffer.MAX_CAPACITY;
-  }
-
-  @Override
   protected DataBuffer<String> allocate(long size) {
-    return ArrayDataBuffer.allocate(String.class, size);
+    return new ArrayDataBuffer<>(new String[(int)size], false);
   }
 
   @Override

@@ -22,12 +22,7 @@ import org.tensorflow.tools.buffer.LongDataBufferTestBase;
 public class LongRawDataBufferTest extends LongDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected LongDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateLongs(size);
+    return new LongRawDataBuffer(UnsafeMemoryHandle.fromArray(new long[(int)size], (int)size), false);
   }
 }

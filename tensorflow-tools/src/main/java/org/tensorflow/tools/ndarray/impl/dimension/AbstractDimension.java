@@ -23,7 +23,9 @@ abstract class AbstractDimension implements Dimension {
    */
   @Override
   public int hashCode() {
-    return (int) numElements();
+    final int prime = 17;
+    long numElements = numElements();
+    return 31 * prime + (int)(numElements ^ (numElements >>> 32));
   }
 
   /**

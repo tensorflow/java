@@ -21,7 +21,6 @@ import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

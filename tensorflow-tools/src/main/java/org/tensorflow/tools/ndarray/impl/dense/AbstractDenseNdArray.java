@@ -16,14 +16,13 @@
  */
 package org.tensorflow.tools.ndarray.impl.dense;
 
-import java.util.concurrent.atomic.AtomicLong;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.ndarray.IllegalRankException;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
-import org.tensorflow.tools.ndarray.index.Index;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.tools.ndarray.impl.dimension.RelativeDimensionalSpace;
+import org.tensorflow.tools.ndarray.index.Index;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends AbstractNdArray<T, U> {
@@ -103,8 +102,10 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
   protected void slowCopyTo(NdArray<T> array) {
     if (array instanceof AbstractDenseNdArray) {
       AbstractDenseNdArray<T, U> dst = (AbstractDenseNdArray)array;
-      AtomicLong off = new AtomicLong();
-      scalars().forEach(s -> dst.buffer().setObject(s.getObject(), off.getAndIncrement()));
+      long offset = 0L;
+      for (NdArray<T> s : scalars()) {
+        dst.buffer().setObject(s.getObject(), offset++);
+      }
     } else {
       super.slowCopyTo(array);
     }

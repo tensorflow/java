@@ -18,8 +18,7 @@ package org.tensorflow.tools.ndarray;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.tensorflow.tools.ndarray.NdArrays.scalarOf;
-import static org.tensorflow.tools.ndarray.NdArrays.vectorOfRefs;
+import static org.tensorflow.tools.ndarray.NdArrays.vectorOfObjects;
 import static org.tensorflow.tools.ndarray.index.Indices.all;
 import static org.tensorflow.tools.ndarray.index.Indices.at;
 import static org.tensorflow.tools.ndarray.index.Indices.even;
@@ -32,7 +31,6 @@ import static org.tensorflow.tools.ndarray.index.Indices.to;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.LongStream;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
@@ -97,8 +95,8 @@ public abstract class NdArrayTestBase<T> {
     }
 
     NdArray<T> matrix2 = allocate(Shape.make(3, 2))
-        .set(vectorOfRefs(valueOf(1L), valueOf(2L)), 0)
-        .set(vectorOfRefs(valueOf(3L), valueOf(4L)), 1)
+        .set(vectorOfObjects(valueOf(1L), valueOf(2L)), 0)
+        .set(vectorOfObjects(valueOf(3L), valueOf(4L)), 1)
         .setObject(valueOf(5L), 2, 0)
         .setObject(valueOf(6L), 2, 1);
 
@@ -124,7 +122,7 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(2L), matrix3d.getObject(0, 1, 2));
 
     matrix3d.elements(1).forEach(vector -> {
-      vector.set(vectorOfRefs(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
+      vector.set(vectorOfObjects(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
     });
 
     assertEquals(valueOf(5L), matrix3d.getObject(0, 0, 0));
@@ -132,28 +130,28 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(9L), matrix3d.getObject(0, 0, 4));
     assertEquals(valueOf(7L), matrix3d.getObject(0, 1, 2));
 
-    AtomicLong value = new AtomicLong();
-    matrix3d.elements(0).forEach(matrix -> {
+    long value = 0L;
+    for (NdArray<T> matrix : matrix3d.elements(0)) {
       assertEquals(2L, matrix.shape().numDimensions());
       assertEquals(4L, matrix.shape().size(0));
       assertEquals(5L, matrix.shape().size(1));
 
-      matrix.elements(0).forEach(vector -> {
+      for (NdArray<T> vector : matrix.elements(0)) {
         assertEquals(1L, vector.shape().numDimensions()) ;
         assertEquals(5L, vector.shape().size(0));
 
-        vector.scalars().forEach(scalar -> {
+        for (NdArray<T> scalar : vector.scalars()) {
           assertEquals(0L, scalar.shape().numDimensions()) ;
-          scalar.setObject(valueOf(value.getAndIncrement()));
+          scalar.setObject(valueOf(value++));
           try {
             scalar.elements(0);
             fail();
           } catch (IllegalArgumentException e) {
             // as expected
           }
-        });
-      });
-    });
+        }
+      }
+    }
     assertEquals(valueOf(0L), matrix3d.getObject(0, 0, 0));
     assertEquals(valueOf(5L), matrix3d.getObject(0, 1, 0));
     assertEquals(valueOf(9L), matrix3d.getObject(0, 1, 4));
@@ -279,9 +277,10 @@ public abstract class NdArrayTestBase<T> {
   public void ndArrayCopies() {
     NdArray<T> matrixA = allocate(Shape.make(3, 5));
 
-    AtomicLong value = new AtomicLong();
-    matrixA.scalars().forEach(e -> e.setObject(valueOf(value.getAndIncrement())));
-
+    long value = 0L;
+    for (NdArray<T> s : matrixA.scalars()) {
+      s.setObject(valueOf(value++));
+    }
     NdArray<T> matrixB = allocate(Shape.make(3, 5)).setObject(valueOf(100L), 1, 0);
     matrixA.copyTo(matrixB);
     assertEquals(valueOf(0L), matrixB.getObject(0, 0));

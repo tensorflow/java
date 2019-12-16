@@ -22,12 +22,7 @@ import org.tensorflow.tools.buffer.DoubleDataBufferTestBase;
 public class DoubleRawDataBufferTest extends DoubleDataBufferTestBase {
 
   @Override
-  protected long maxSize() {
-    return RawDataBufferFactory.MAX_32BITS;
-  }
-
-  @Override
   protected DoubleDataBuffer allocate(long size) {
-    return RawDataBufferFactory.allocateDoubles(size);
+    return new DoubleRawDataBuffer(UnsafeMemoryHandle.fromArray(new double[(int)size], (int)size), false);
   }
 }

@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Tensor;
-import org.tensorflow.tools.ndarray.IntNdArray;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.math.Sub;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.IntNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.NdArrays;
+import org.tensorflow.tools.ndarray.index.Indices;
 import org.tensorflow.types.family.TNumber;
 
 abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {

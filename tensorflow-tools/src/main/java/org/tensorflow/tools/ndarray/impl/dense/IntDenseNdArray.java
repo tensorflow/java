@@ -34,25 +34,25 @@ public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray>
 
   @Override
   public int getInt(long... indices) {
-    return buffer().getInt(positionOf(indices, true));
+    return buffer.getInt(positionOf(indices, true));
   }
 
   @Override
   public IntNdArray setInt(int value, long... indices) {
-    buffer().setInt(value, positionOf(indices, true));
+    buffer.setInt(value, positionOf(indices, true));
     return this;
   }
 
   @Override
   public IntNdArray read(int[] dst, int offset) {
     Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.wrap(dst, false).offset(offset));
+    return read(DataBuffers.from(dst, false, false).offset(offset));
   }
 
   @Override
   public IntNdArray write(int[] src, int offset) {
     Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.wrap(src, true).offset(offset));
+    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override
