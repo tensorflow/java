@@ -77,6 +77,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code nn} operations as {@link Op Op}s
@@ -91,36 +92,19 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedBatchNormWithGlobalNormalization} operation
+   * Builds an {@link MaxPool} operation
    *
-   * @param t A 4D input Tensor.
-   * @param tMin The value represented by the lowest quantized input.
-   * @param tMax The value represented by the highest quantized input.
-   * @param m A 1D mean Tensor with size matching the last dimension of t.
-   * @param mMin The value represented by the lowest quantized mean.
-   * @param mMax The value represented by the highest quantized mean.
-   * @param v A 1D variance Tensor with size matching the last dimension of t.
-   * @param vMin The value represented by the lowest quantized variance.
-   * @param vMax The value represented by the highest quantized variance.
-   * @param beta A 1D beta Tensor with size matching the last dimension of t.
-   * @param betaMin The value represented by the lowest quantized offset.
-   * @param betaMax The value represented by the highest quantized offset.
-   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * @param gammaMin The value represented by the lowest quantized gamma.
-   * @param gammaMax The value represented by the highest quantized gamma.
-   * @param outType 
-   * @param varianceEpsilon A small float number to avoid dividing by 0.
-   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
-   * @return a new instance of QuantizedBatchNormWithGlobalNormalization
-   * @see org.tensorflow.op.nn.QuantizedBatchNormWithGlobalNormalization
+   * @param input 4-D input to pool over.
+   * @param ksize The size of the window for each dimension of the input tensor.
+   * @param strides The stride of the sliding window for each dimension of the
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attributes values
+   * @return a new instance of MaxPool
+   * @see org.tensorflow.op.nn.MaxPool
    */
-  public <U, T> QuantizedBatchNormWithGlobalNormalization<U> quantizedBatchNormWithGlobalNormalization(
-      Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin,
-      Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax,
-      Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma,
-      Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType,
-      Float varianceEpsilon, Boolean scaleAfterNormalization) {
-    return QuantizedBatchNormWithGlobalNormalization.create(scope, t, tMin, tMax, m, mMin, mMax, v, vMin, vMax, beta, betaMin, betaMax, gamma, gammaMin, gammaMax, outType, varianceEpsilon, scaleAfterNormalization);
+  public <T extends TType> MaxPool<T> maxPool(Operand<T> input, Operand<TInt32> ksize,
+      Operand<TInt32> strides, String padding, MaxPool.Options... options) {
+    return MaxPool.create(scope, input, ksize, strides, padding, options);
   }
 
   /**
@@ -154,6 +138,20 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link SpaceToBatch} operation
+   *
+   * @param input 4-D with shape `[batch, height, width, depth]`.
+   * @param paddings 2-D tensor of non-negative integers with shape `[2, 2]`. It specifies
+   * @param blockSize 
+   * @return a new instance of SpaceToBatch
+   * @see org.tensorflow.op.nn.SpaceToBatch
+   */
+  public <T extends TType, U extends TNumber> SpaceToBatch<T> spaceToBatch(Operand<T> input,
+      Operand<U> paddings, Long blockSize) {
+    return SpaceToBatch.create(scope, input, paddings, blockSize);
+  }
+
+  /**
    * Builds an {@link DepthToSpace} operation
    *
    * @param input 
@@ -162,7 +160,7 @@ public final class NnOps {
    * @return a new instance of DepthToSpace
    * @see org.tensorflow.op.nn.DepthToSpace
    */
-  public <T> DepthToSpace<T> depthToSpace(Operand<T> input, Long blockSize,
+  public <T extends TType> DepthToSpace<T> depthToSpace(Operand<T> input, Long blockSize,
       DepthToSpace.Options... options) {
     return DepthToSpace.create(scope, input, blockSize, options);
   }
@@ -197,6 +195,20 @@ public final class NnOps {
   public <T extends TNumber> MaxPoolWithArgmax<T, TInt64> maxPoolWithArgmax(Operand<T> input,
       List<Long> ksize, List<Long> strides, String padding, MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, padding, options);
+  }
+
+  /**
+   * Builds an {@link SpaceToDepth} operation
+   *
+   * @param input 
+   * @param blockSize The size of the spatial block.
+   * @param options carries optional attributes values
+   * @return a new instance of SpaceToDepth
+   * @see org.tensorflow.op.nn.SpaceToDepth
+   */
+  public <T extends TType> SpaceToDepth<T> spaceToDepth(Operand<T> input, Long blockSize,
+      SpaceToDepth.Options... options) {
+    return SpaceToDepth.create(scope, input, blockSize, options);
   }
 
   /**
@@ -278,23 +290,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedMaxPool} operation
-   *
-   * @param input The 4D (batch x rows x cols x depth) Tensor to MaxReduce over.
-   * @param minInput The float value that the lowest quantized input value represents.
-   * @param maxInput The float value that the highest quantized input value represents.
-   * @param ksize The size of the window for each dimension of the input tensor.
-   * @param strides The stride of the sliding window for each dimension of the input
-   * @param padding The type of padding algorithm to use.
-   * @return a new instance of QuantizedMaxPool
-   * @see org.tensorflow.op.nn.QuantizedMaxPool
-   */
-  public <T> QuantizedMaxPool<T> quantizedMaxPool(Operand<T> input, Operand<TFloat> minInput,
-      Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
-    return QuantizedMaxPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
-  }
-
-  /**
    * Builds an {@link NthElement} operation
    *
    * @param input 1-D or higher with last dimension at least `n+1`.
@@ -309,18 +304,22 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedRelu} operation
+   * Builds an {@link BatchNormWithGlobalNormalizationGrad} operation
    *
-   * @param features 
-   * @param minFeatures The float value that the lowest quantized value represents.
-   * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType 
-   * @return a new instance of QuantizedRelu
-   * @see org.tensorflow.op.nn.QuantizedRelu
+   * @param t A 4D input Tensor.
+   * @param m A 1D mean Tensor with size matching the last dimension of t.
+   * @param v A 1D variance Tensor with size matching the last dimension of t.
+   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
+   * @param backprop 4D backprop Tensor.
+   * @param varianceEpsilon A small float number to avoid dividing by 0.
+   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
+   * @return a new instance of BatchNormWithGlobalNormalizationGrad
+   * @see org.tensorflow.op.nn.BatchNormWithGlobalNormalizationGrad
    */
-  public <U, T> QuantizedRelu<U> quantizedRelu(Operand<T> features, Operand<TFloat> minFeatures,
-      Operand<TFloat> maxFeatures, DataType<U> outType) {
-    return QuantizedRelu.create(scope, features, minFeatures, maxFeatures, outType);
+  public <T extends TType> BatchNormWithGlobalNormalizationGrad<T> batchNormWithGlobalNormalizationGrad(
+      Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
+    return BatchNormWithGlobalNormalizationGrad.create(scope, t, m, v, gamma, backprop, varianceEpsilon, scaleAfterNormalization);
   }
 
   /**
@@ -339,6 +338,39 @@ public final class NnOps {
       Operand<T> input, List<Long> ksize, List<Long> strides, DataType<U> Targmax, String padding,
       MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, Targmax, padding, options);
+  }
+
+  /**
+   * Builds an {@link QuantizedBatchNormWithGlobalNormalization} operation
+   *
+   * @param t A 4D input Tensor.
+   * @param tMin The value represented by the lowest quantized input.
+   * @param tMax The value represented by the highest quantized input.
+   * @param m A 1D mean Tensor with size matching the last dimension of t.
+   * @param mMin The value represented by the lowest quantized mean.
+   * @param mMax The value represented by the highest quantized mean.
+   * @param v A 1D variance Tensor with size matching the last dimension of t.
+   * @param vMin The value represented by the lowest quantized variance.
+   * @param vMax The value represented by the highest quantized variance.
+   * @param beta A 1D beta Tensor with size matching the last dimension of t.
+   * @param betaMin The value represented by the lowest quantized offset.
+   * @param betaMax The value represented by the highest quantized offset.
+   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
+   * @param gammaMin The value represented by the lowest quantized gamma.
+   * @param gammaMax The value represented by the highest quantized gamma.
+   * @param outType 
+   * @param varianceEpsilon A small float number to avoid dividing by 0.
+   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
+   * @return a new instance of QuantizedBatchNormWithGlobalNormalization
+   * @see org.tensorflow.op.nn.QuantizedBatchNormWithGlobalNormalization
+   */
+  public <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> quantizedBatchNormWithGlobalNormalization(
+      Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin,
+      Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax,
+      Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma,
+      Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
+    return QuantizedBatchNormWithGlobalNormalization.create(scope, t, tMin, tMax, m, mMin, mMax, v, vMin, vMax, beta, betaMin, betaMax, gamma, gammaMin, gammaMax, outType, varianceEpsilon, scaleAfterNormalization);
   }
 
   /**
@@ -438,22 +470,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedReluX} operation
-   *
-   * @param features 
-   * @param maxValue 
-   * @param minFeatures The float value that the lowest quantized value represents.
-   * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType 
-   * @return a new instance of QuantizedReluX
-   * @see org.tensorflow.op.nn.QuantizedReluX
-   */
-  public <U, T> QuantizedReluX<U> quantizedReluX(Operand<T> features, Operand<TFloat> maxValue,
-      Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
-    return QuantizedReluX.create(scope, features, maxValue, minFeatures, maxFeatures, outType);
-  }
-
-  /**
    * Builds an {@link MaxPool3dGradGrad} operation
    *
    * @param origInput The original input tensor.
@@ -492,19 +508,35 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link MaxPool} operation
+   * Builds an {@link BiasAdd} operation
    *
-   * @param input 4-D input to pool over.
-   * @param ksize The size of the window for each dimension of the input tensor.
-   * @param strides The stride of the sliding window for each dimension of the
-   * @param padding The type of padding algorithm to use.
+   * @param value Any number of dimensions.
+   * @param bias 1-D with size the last dimension of `value`.
    * @param options carries optional attributes values
-   * @return a new instance of MaxPool
-   * @see org.tensorflow.op.nn.MaxPool
+   * @return a new instance of BiasAdd
+   * @see org.tensorflow.op.nn.BiasAdd
    */
-  public <T> MaxPool<T> maxPool(Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides,
-      String padding, MaxPool.Options... options) {
-    return MaxPool.create(scope, input, ksize, strides, padding, options);
+  public <T extends TType> BiasAdd<T> biasAdd(Operand<T> value, Operand<T> bias,
+      BiasAdd.Options... options) {
+    return BiasAdd.create(scope, value, bias, options);
+  }
+
+  /**
+   * Builds an {@link QuantizedMaxPool} operation
+   *
+   * @param input The 4D (batch x rows x cols x depth) Tensor to MaxReduce over.
+   * @param minInput The float value that the lowest quantized input value represents.
+   * @param maxInput The float value that the highest quantized input value represents.
+   * @param ksize The size of the window for each dimension of the input tensor.
+   * @param strides The stride of the sliding window for each dimension of the input
+   * @param padding The type of padding algorithm to use.
+   * @return a new instance of QuantizedMaxPool
+   * @see org.tensorflow.op.nn.QuantizedMaxPool
+   */
+  public <T extends TType> QuantizedMaxPool<T> quantizedMaxPool(Operand<T> input,
+      Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides,
+      String padding) {
+    return QuantizedMaxPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
   }
 
   /**
@@ -542,6 +574,19 @@ public final class NnOps {
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T,
       DataType<U> S, CudnnRnnParamsSize.Options... options) {
     return CudnnRnnParamsSize.create(scope, numLayers, numUnits, inputSize, T, S, options);
+  }
+
+  /**
+   * Builds an {@link BiasAddGrad} operation
+   *
+   * @param outBackprop Any number of dimensions.
+   * @param options carries optional attributes values
+   * @return a new instance of BiasAddGrad
+   * @see org.tensorflow.op.nn.BiasAddGrad
+   */
+  public <T extends TType> BiasAddGrad<T> biasAddGrad(Operand<T> outBackprop,
+      BiasAddGrad.Options... options) {
+    return BiasAddGrad.create(scope, outBackprop, options);
   }
 
   /**
@@ -595,54 +640,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedConv2d} operation
-   *
-   * @param input 
-   * @param filter filter's input_depth dimension must match input's depth dimensions.
-   * @param minInput The float value that the lowest quantized input value represents.
-   * @param maxInput The float value that the highest quantized input value represents.
-   * @param minFilter The float value that the lowest quantized filter value represents.
-   * @param maxFilter The float value that the highest quantized filter value represents.
-   * @param outType 
-   * @param strides The stride of the sliding window for each dimension of the input
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
-   * @return a new instance of QuantizedConv2d
-   * @see org.tensorflow.op.nn.QuantizedConv2d
-   */
-  public <V, T, U> QuantizedConv2d<V> quantizedConv2d(Operand<T> input, Operand<U> filter,
-      Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter,
-      Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding,
-      QuantizedConv2d.Options... options) {
-    return QuantizedConv2d.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
-  }
-
-  /**
-   * Builds an {@link Relu} operation
-   *
-   * @param features 
-   * @return a new instance of Relu
-   * @see org.tensorflow.op.nn.Relu
-   */
-  public <T> Relu<T> relu(Operand<T> features) {
-    return Relu.create(scope, features);
-  }
-
-  /**
-   * Builds an {@link SpaceToDepth} operation
-   *
-   * @param input 
-   * @param blockSize The size of the spatial block.
-   * @param options carries optional attributes values
-   * @return a new instance of SpaceToDepth
-   * @see org.tensorflow.op.nn.SpaceToDepth
-   */
-  public <T> SpaceToDepth<T> spaceToDepth(Operand<T> input, Long blockSize,
-      SpaceToDepth.Options... options) {
-    return SpaceToDepth.create(scope, input, blockSize, options);
-  }
-
-  /**
    * Builds an {@link CtcLoss} operation
    *
    * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
@@ -669,6 +666,40 @@ public final class NnOps {
   public <T extends TNumber> LocalResponseNormalization<T> localResponseNormalization(
       Operand<T> input, LocalResponseNormalization.Options... options) {
     return LocalResponseNormalization.create(scope, input, options);
+  }
+
+  /**
+   * Builds an {@link QuantizedBiasAdd} operation
+   *
+   * @param input 
+   * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
+   * @param minInput The float value that the lowest quantized input value represents.
+   * @param maxInput The float value that the highest quantized input value represents.
+   * @param minBias The float value that the lowest quantized bias value represents.
+   * @param maxBias The float value that the highest quantized bias value represents.
+   * @param outType 
+   * @return a new instance of QuantizedBiasAdd
+   * @see org.tensorflow.op.nn.QuantizedBiasAdd
+   */
+  public <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> quantizedBiasAdd(
+      Operand<T> input, Operand<U> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput,
+      Operand<TFloat> minBias, Operand<TFloat> maxBias, DataType<V> outType) {
+    return QuantizedBiasAdd.create(scope, input, bias, minInput, maxInput, minBias, maxBias, outType);
+  }
+
+  /**
+   * Builds an {@link QuantizedRelu} operation
+   *
+   * @param features 
+   * @param minFeatures The float value that the lowest quantized value represents.
+   * @param maxFeatures The float value that the highest quantized value represents.
+   * @param outType 
+   * @return a new instance of QuantizedRelu
+   * @see org.tensorflow.op.nn.QuantizedRelu
+   */
+  public <U extends TType, T extends TType> QuantizedRelu<U> quantizedRelu(Operand<T> features,
+      Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
+    return QuantizedRelu.create(scope, features, minFeatures, maxFeatures, outType);
   }
 
   /**
@@ -708,22 +739,21 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link BatchNormWithGlobalNormalizationGrad} operation
+   * Builds an {@link QuantizedAvgPool} operation
    *
-   * @param t A 4D input Tensor.
-   * @param m A 1D mean Tensor with size matching the last dimension of t.
-   * @param v A 1D variance Tensor with size matching the last dimension of t.
-   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * @param backprop 4D backprop Tensor.
-   * @param varianceEpsilon A small float number to avoid dividing by 0.
-   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
-   * @return a new instance of BatchNormWithGlobalNormalizationGrad
-   * @see org.tensorflow.op.nn.BatchNormWithGlobalNormalizationGrad
+   * @param input 4-D with shape `[batch, height, width, channels]`.
+   * @param minInput The float value that the lowest quantized input value represents.
+   * @param maxInput The float value that the highest quantized input value represents.
+   * @param ksize The size of the window for each dimension of the input tensor.
+   * @param strides The stride of the sliding window for each dimension of the input
+   * @param padding The type of padding algorithm to use.
+   * @return a new instance of QuantizedAvgPool
+   * @see org.tensorflow.op.nn.QuantizedAvgPool
    */
-  public <T> BatchNormWithGlobalNormalizationGrad<T> batchNormWithGlobalNormalizationGrad(
-      Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop,
-      Float varianceEpsilon, Boolean scaleAfterNormalization) {
-    return BatchNormWithGlobalNormalizationGrad.create(scope, t, m, v, gamma, backprop, varianceEpsilon, scaleAfterNormalization);
+  public <T extends TType> QuantizedAvgPool<T> quantizedAvgPool(Operand<T> input,
+      Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides,
+      String padding) {
+    return QuantizedAvgPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
   }
 
   /**
@@ -756,25 +786,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link BatchNormWithGlobalNormalization} operation
-   *
-   * @param t A 4D input Tensor.
-   * @param m A 1D mean Tensor with size matching the last dimension of t.
-   * @param v A 1D variance Tensor with size matching the last dimension of t.
-   * @param beta A 1D beta Tensor with size matching the last dimension of t.
-   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * @param varianceEpsilon A small float number to avoid dividing by 0.
-   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
-   * @return a new instance of BatchNormWithGlobalNormalization
-   * @see org.tensorflow.op.nn.BatchNormWithGlobalNormalization
-   */
-  public <T> BatchNormWithGlobalNormalization<T> batchNormWithGlobalNormalization(Operand<T> t,
-      Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon,
-      Boolean scaleAfterNormalization) {
-    return BatchNormWithGlobalNormalization.create(scope, t, m, v, beta, gamma, varianceEpsilon, scaleAfterNormalization);
-  }
-
-  /**
    * Builds an {@link AvgPool3d} operation
    *
    * @param input Shape `[batch, depth, rows, cols, channels]` tensor to pool over.
@@ -791,22 +802,26 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link QuantizedBiasAdd} operation
+   * Builds an {@link QuantizedConv2d} operation
    *
    * @param input 
-   * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
+   * @param filter filter's input_depth dimension must match input's depth dimensions.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
-   * @param minBias The float value that the lowest quantized bias value represents.
-   * @param maxBias The float value that the highest quantized bias value represents.
+   * @param minFilter The float value that the lowest quantized filter value represents.
+   * @param maxFilter The float value that the highest quantized filter value represents.
    * @param outType 
-   * @return a new instance of QuantizedBiasAdd
-   * @see org.tensorflow.op.nn.QuantizedBiasAdd
+   * @param strides The stride of the sliding window for each dimension of the input
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizedConv2d
+   * @see org.tensorflow.op.nn.QuantizedConv2d
    */
-  public <V, T, U> QuantizedBiasAdd<V> quantizedBiasAdd(Operand<T> input, Operand<U> bias,
-      Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minBias,
-      Operand<TFloat> maxBias, DataType<V> outType) {
-    return QuantizedBiasAdd.create(scope, input, bias, minInput, maxInput, minBias, maxBias, outType);
+  public <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> quantizedConv2d(
+      Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput,
+      Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides,
+      String padding, QuantizedConv2d.Options... options) {
+    return QuantizedConv2d.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
   }
 
   /**
@@ -820,6 +835,17 @@ public final class NnOps {
   public <T extends TNumber> DataFormatDimMap<T> dataFormatDimMap(Operand<T> x,
       DataFormatDimMap.Options... options) {
     return DataFormatDimMap.create(scope, x, options);
+  }
+
+  /**
+   * Builds an {@link Relu} operation
+   *
+   * @param features 
+   * @return a new instance of Relu
+   * @see org.tensorflow.op.nn.Relu
+   */
+  public <T extends TType> Relu<T> relu(Operand<T> features) {
+    return Relu.create(scope, features);
   }
 
   /**
@@ -837,6 +863,17 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link LogSoftmax} operation
+   *
+   * @param logits 2-D with shape `[batch_size, num_classes]`.
+   * @return a new instance of LogSoftmax
+   * @see org.tensorflow.op.nn.LogSoftmax
+   */
+  public <T extends TNumber> LogSoftmax<T> logSoftmax(Operand<T> logits) {
+    return LogSoftmax.create(scope, logits);
+  }
+
+  /**
    * Builds an {@link QuantizedInstanceNorm} operation
    *
    * @param x A 4D input Tensor.
@@ -846,32 +883,9 @@ public final class NnOps {
    * @return a new instance of QuantizedInstanceNorm
    * @see org.tensorflow.op.nn.QuantizedInstanceNorm
    */
-  public <T> QuantizedInstanceNorm<T> quantizedInstanceNorm(Operand<T> x, Operand<TFloat> xMin,
-      Operand<TFloat> xMax, QuantizedInstanceNorm.Options... options) {
+  public <T extends TType> QuantizedInstanceNorm<T> quantizedInstanceNorm(Operand<T> x,
+      Operand<TFloat> xMin, Operand<TFloat> xMax, QuantizedInstanceNorm.Options... options) {
     return QuantizedInstanceNorm.create(scope, x, xMin, xMax, options);
-  }
-
-  /**
-   * Builds an {@link BiasAddGrad} operation
-   *
-   * @param outBackprop Any number of dimensions.
-   * @param options carries optional attributes values
-   * @return a new instance of BiasAddGrad
-   * @see org.tensorflow.op.nn.BiasAddGrad
-   */
-  public <T> BiasAddGrad<T> biasAddGrad(Operand<T> outBackprop, BiasAddGrad.Options... options) {
-    return BiasAddGrad.create(scope, outBackprop, options);
-  }
-
-  /**
-   * Builds an {@link LogSoftmax} operation
-   *
-   * @param logits 2-D with shape `[batch_size, num_classes]`.
-   * @return a new instance of LogSoftmax
-   * @see org.tensorflow.op.nn.LogSoftmax
-   */
-  public <T extends TNumber> LogSoftmax<T> logSoftmax(Operand<T> logits) {
-    return LogSoftmax.create(scope, logits);
   }
 
   /**
@@ -932,6 +946,21 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link QuantizedRelu6} operation
+   *
+   * @param features 
+   * @param minFeatures The float value that the lowest quantized value represents.
+   * @param maxFeatures The float value that the highest quantized value represents.
+   * @param outType 
+   * @return a new instance of QuantizedRelu6
+   * @see org.tensorflow.op.nn.QuantizedRelu6
+   */
+  public <U extends TType, T extends TType> QuantizedRelu6<U> quantizedRelu6(Operand<T> features,
+      Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
+    return QuantizedRelu6.create(scope, features, minFeatures, maxFeatures, outType);
+  }
+
+  /**
    * Builds an {@link Conv2d} operation
    *
    * @param input A 4-D tensor. The dimension order is interpreted according to the value
@@ -945,38 +974,6 @@ public final class NnOps {
   public <T extends TNumber> Conv2d<T> conv2d(Operand<T> input, Operand<T> filter,
       List<Long> strides, String padding, Conv2d.Options... options) {
     return Conv2d.create(scope, input, filter, strides, padding, options);
-  }
-
-  /**
-   * Builds an {@link QuantizedRelu6} operation
-   *
-   * @param features 
-   * @param minFeatures The float value that the lowest quantized value represents.
-   * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType 
-   * @return a new instance of QuantizedRelu6
-   * @see org.tensorflow.op.nn.QuantizedRelu6
-   */
-  public <U, T> QuantizedRelu6<U> quantizedRelu6(Operand<T> features, Operand<TFloat> minFeatures,
-      Operand<TFloat> maxFeatures, DataType<U> outType) {
-    return QuantizedRelu6.create(scope, features, minFeatures, maxFeatures, outType);
-  }
-
-  /**
-   * Builds an {@link QuantizedAvgPool} operation
-   *
-   * @param input 4-D with shape `[batch, height, width, channels]`.
-   * @param minInput The float value that the lowest quantized input value represents.
-   * @param maxInput The float value that the highest quantized input value represents.
-   * @param ksize The size of the window for each dimension of the input tensor.
-   * @param strides The stride of the sliding window for each dimension of the input
-   * @param padding The type of padding algorithm to use.
-   * @return a new instance of QuantizedAvgPool
-   * @see org.tensorflow.op.nn.QuantizedAvgPool
-   */
-  public <T> QuantizedAvgPool<T> quantizedAvgPool(Operand<T> input, Operand<TFloat> minInput,
-      Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
-    return QuantizedAvgPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
   }
 
   /**
@@ -995,6 +992,23 @@ public final class NnOps {
       Operand<T> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides,
       String padding, Conv3dBackpropInput.Options... options) {
     return Conv3dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
+  }
+
+  /**
+   * Builds an {@link QuantizedReluX} operation
+   *
+   * @param features 
+   * @param maxValue 
+   * @param minFeatures The float value that the lowest quantized value represents.
+   * @param maxFeatures The float value that the highest quantized value represents.
+   * @param outType 
+   * @return a new instance of QuantizedReluX
+   * @see org.tensorflow.op.nn.QuantizedReluX
+   */
+  public <U extends TType, T extends TType> QuantizedReluX<U> quantizedReluX(Operand<T> features,
+      Operand<TFloat> maxValue, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures,
+      DataType<U> outType) {
+    return QuantizedReluX.create(scope, features, maxValue, minFeatures, maxFeatures, outType);
   }
 
   /**
@@ -1166,6 +1180,25 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link BatchNormWithGlobalNormalization} operation
+   *
+   * @param t A 4D input Tensor.
+   * @param m A 1D mean Tensor with size matching the last dimension of t.
+   * @param v A 1D variance Tensor with size matching the last dimension of t.
+   * @param beta A 1D beta Tensor with size matching the last dimension of t.
+   * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
+   * @param varianceEpsilon A small float number to avoid dividing by 0.
+   * @param scaleAfterNormalization A bool indicating whether the resulted tensor
+   * @return a new instance of BatchNormWithGlobalNormalization
+   * @see org.tensorflow.op.nn.BatchNormWithGlobalNormalization
+   */
+  public <T extends TType> BatchNormWithGlobalNormalization<T> batchNormWithGlobalNormalization(
+      Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
+    return BatchNormWithGlobalNormalization.create(scope, t, m, v, beta, gamma, varianceEpsilon, scaleAfterNormalization);
+  }
+
+  /**
    * Builds an {@link FractionalMaxPool} operation
    *
    * @param value 4-D with shape `[batch, height, width, channels]`.
@@ -1206,32 +1239,5 @@ public final class NnOps {
    */
   public <T extends TNumber> Softsign<T> softsign(Operand<T> features) {
     return Softsign.create(scope, features);
-  }
-
-  /**
-   * Builds an {@link SpaceToBatch} operation
-   *
-   * @param input 4-D with shape `[batch, height, width, depth]`.
-   * @param paddings 2-D tensor of non-negative integers with shape `[2, 2]`. It specifies
-   * @param blockSize 
-   * @return a new instance of SpaceToBatch
-   * @see org.tensorflow.op.nn.SpaceToBatch
-   */
-  public <T, U extends TNumber> SpaceToBatch<T> spaceToBatch(Operand<T> input, Operand<U> paddings,
-      Long blockSize) {
-    return SpaceToBatch.create(scope, input, paddings, blockSize);
-  }
-
-  /**
-   * Builds an {@link BiasAdd} operation
-   *
-   * @param value Any number of dimensions.
-   * @param bias 1-D with size the last dimension of `value`.
-   * @param options carries optional attributes values
-   * @return a new instance of BiasAdd
-   * @see org.tensorflow.op.nn.BiasAdd
-   */
-  public <T> BiasAdd<T> biasAdd(Operand<T> value, Operand<T> bias, BiasAdd.Options... options) {
-    return BiasAdd.create(scope, value, bias, options);
   }
 }

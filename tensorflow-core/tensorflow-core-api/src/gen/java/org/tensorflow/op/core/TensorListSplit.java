@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Splits a tensor into a list.
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * output_handle: The list.
  */
 @Operator
-public final class TensorListSplit extends PrimitiveOp implements Operand<Object> {
+public final class TensorListSplit extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListSplit operation.
@@ -50,7 +51,7 @@ public final class TensorListSplit extends PrimitiveOp implements Operand<Object
    * @param lengths 
    * @return a new instance of TensorListSplit
    */
-  public static <T, U extends TNumber> TensorListSplit create(Scope scope, Operand<T> tensor, Operand<U> elementShape, Operand<TInt64> lengths) {
+  public static <T extends TType, U extends TNumber> TensorListSplit create(Scope scope, Operand<T> tensor, Operand<U> elementShape, Operand<TInt64> lengths) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSplit", scope.makeOpName("TensorListSplit"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
@@ -67,8 +68,8 @@ public final class TensorListSplit extends PrimitiveOp implements Operand<Object
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

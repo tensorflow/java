@@ -53,7 +53,7 @@ import org.tensorflow.types.family.TType;
  * }
  * }</pre>
  */
-public final class Tensor<T> implements AutoCloseable {
+public final class Tensor<T extends TType> implements AutoCloseable {
 
   /**
    * Creates a Tensor from a Java object.
@@ -591,7 +591,7 @@ public final class Tensor<T> implements AutoCloseable {
     return n;
   }
 
-  private static <T> int elemByteSize(DataType<T> dataType) {
+  private static int elemByteSize(DataType<?> dataType) {
     int size = dataType.byteSize();
     if (size < 0) {
         throw new IllegalArgumentException("STRING tensors do not have a fixed element size");
@@ -716,7 +716,7 @@ public final class Tensor<T> implements AutoCloseable {
    * @param o The object to inspect. It must be a valid representation of the given data type.
    * @param dtype The expected data type of the tensor.
    */
-  private static <T> int numDimensions(Object o, DataType<T> dtype) {
+  private static int numDimensions(Object o, DataType<?> dtype) {
     int ret = numArrayDimensions(o);
     if (dtype == TString.DTYPE && ret > 0) {
       return ret - 1;

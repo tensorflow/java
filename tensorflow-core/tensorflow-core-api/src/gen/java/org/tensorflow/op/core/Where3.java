@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Selects elements from `x` or `y`, depending on `condition`.
@@ -71,7 +72,7 @@ import org.tensorflow.types.TBool;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Where3<T> extends PrimitiveOp implements Operand<T> {
+public final class Where3<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Where3 operation.
@@ -84,7 +85,7 @@ public final class Where3<T> extends PrimitiveOp implements Operand<T> {
    * @param y = A `Tensor` with the same type and shape as `x`.
    * @return a new instance of Where3
    */
-  public static <T> Where3<T> create(Scope scope, Operand<TBool> condition, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> Where3<T> create(Scope scope, Operand<TBool> condition, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Select", scope.makeOpName("Where3"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(x.asOutput());

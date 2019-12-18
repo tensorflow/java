@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a batched matrix tensor with new batched diagonal values.
@@ -101,7 +102,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class MatrixSetDiagV2<T> extends PrimitiveOp implements Operand<T> {
+public final class MatrixSetDiagV2<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MatrixSetDiagV2 operation.
@@ -116,7 +117,7 @@ public final class MatrixSetDiagV2<T> extends PrimitiveOp implements Operand<T> 
    * of a matrix band. `k[0]` must not be larger than `k[1]`.
    * @return a new instance of MatrixSetDiagV2
    */
-  public static <T> MatrixSetDiagV2<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k) {
+  public static <T extends TType> MatrixSetDiagV2<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV2", scope.makeOpName("MatrixSetDiagV2"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(diagonal.asOutput());

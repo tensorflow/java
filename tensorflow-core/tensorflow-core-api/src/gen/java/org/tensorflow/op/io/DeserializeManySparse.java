@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
@@ -76,7 +77,7 @@ import org.tensorflow.types.TString;
  * @param <T> data type for {@code sparseValues()} output
  */
 @Operator(group = "io")
-public final class DeserializeManySparse<T> extends PrimitiveOp {
+public final class DeserializeManySparse<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new DeserializeManySparse operation.
@@ -87,7 +88,7 @@ public final class DeserializeManySparse<T> extends PrimitiveOp {
    * @param dtype The `dtype` of the serialized `SparseTensor` objects.
    * @return a new instance of DeserializeManySparse
    */
-  public static <T> DeserializeManySparse<T> create(Scope scope, Operand<TString> serializedSparse, DataType<T> dtype) {
+  public static <T extends TType> DeserializeManySparse<T> create(Scope scope, Operand<TString> serializedSparse, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeManySparse", scope.makeOpName("DeserializeManySparse"));
     opBuilder.addInput(serializedSparse.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

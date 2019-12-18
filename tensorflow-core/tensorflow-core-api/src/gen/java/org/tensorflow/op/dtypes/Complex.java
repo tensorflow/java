@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts two real numbers to a complex number.
@@ -48,7 +49,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code out()} output
  */
 @Operator(group = "dtypes")
-public final class Complex<U> extends PrimitiveOp implements Operand<U> {
+public final class Complex<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Complex operation.
@@ -59,7 +60,7 @@ public final class Complex<U> extends PrimitiveOp implements Operand<U> {
    * @param Tout 
    * @return a new instance of Complex
    */
-  public static <U, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
+  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput());
     opBuilder.addInput(imag.asOutput());

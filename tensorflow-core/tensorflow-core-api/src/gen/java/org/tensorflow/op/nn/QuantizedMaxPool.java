@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produces the max pool of the input tensor for quantized types.
@@ -33,7 +34,7 @@ import org.tensorflow.types.TFloat;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedMaxPool<T> extends PrimitiveOp {
+public final class QuantizedMaxPool<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedMaxPool operation.
@@ -49,7 +50,7 @@ public final class QuantizedMaxPool<T> extends PrimitiveOp {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedMaxPool
    */
-  public static <T> QuantizedMaxPool<T> create(Scope scope, Operand<T> input, Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
+  public static <T extends TType> QuantizedMaxPool<T> create(Scope scope, Operand<T> input, Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMaxPool", scope.makeOpName("QuantizedMaxPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());

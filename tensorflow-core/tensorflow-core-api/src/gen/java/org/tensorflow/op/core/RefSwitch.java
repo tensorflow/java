@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the ref tensor `data` to the output port determined by `pred`.
@@ -37,7 +38,7 @@ import org.tensorflow.types.TBool;
  * @param <T> data type for {@code outputFalse()} output
  */
 @Operator
-public final class RefSwitch<T> extends PrimitiveOp {
+public final class RefSwitch<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RefSwitch operation.
@@ -47,7 +48,7 @@ public final class RefSwitch<T> extends PrimitiveOp {
    * @param pred A scalar that specifies which output port will receive data.
    * @return a new instance of RefSwitch
    */
-  public static <T> RefSwitch<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
+  public static <T extends TType> RefSwitch<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSwitch", scope.makeOpName("RefSwitch"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(pred.asOutput());

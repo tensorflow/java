@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Split a `SparseTensor` into `num_split` tensors along one dimension.
@@ -52,7 +53,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseSplit<T> extends PrimitiveOp {
+public final class SparseSplit<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSplit operation.
@@ -68,7 +69,7 @@ public final class SparseSplit<T> extends PrimitiveOp {
    * @param numSplit The number of ways to split.
    * @return a new instance of SparseSplit
    */
-  public static <T> SparseSplit<T> create(Scope scope, Operand<TInt64> splitDim, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
+  public static <T extends TType> SparseSplit<T> create(Scope scope, Operand<TInt64> splitDim, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSplit", scope.makeOpName("SparseSplit"));
     opBuilder.addInput(splitDim.asOutput());
     opBuilder.addInput(indices.asOutput());

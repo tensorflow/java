@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Inverse 3D fast Fourier transform.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Ifft3d<T> extends PrimitiveOp implements Operand<T> {
+public final class Ifft3d<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Ifft3d operation.
@@ -43,7 +44,7 @@ public final class Ifft3d<T> extends PrimitiveOp implements Operand<T> {
    * @param input A complex64 tensor.
    * @return a new instance of Ifft3d
    */
-  public static <T> Ifft3d<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Ifft3d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IFFT3D", scope.makeOpName("Ifft3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

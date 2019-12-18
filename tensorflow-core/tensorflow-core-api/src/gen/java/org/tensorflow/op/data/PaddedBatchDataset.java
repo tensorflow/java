@@ -28,11 +28,12 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that batches and pads `batch_size` elements from the input.
  */
-public final class PaddedBatchDataset extends PrimitiveOp implements Operand<Object> {
+public final class PaddedBatchDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.PaddedBatchDataset}
@@ -110,8 +111,8 @@ public final class PaddedBatchDataset extends PrimitiveOp implements Operand<Obj
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

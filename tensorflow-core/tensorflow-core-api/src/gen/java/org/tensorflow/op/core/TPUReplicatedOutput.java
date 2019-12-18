@@ -26,13 +26,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Connects outputs of an N-way replicated computation to N outputs.
  * 
  * @param <T> data type for {@code outputs()} output
  */
-public final class TPUReplicatedOutput<T> extends PrimitiveOp implements Iterable<Operand<T>> {
+public final class TPUReplicatedOutput<T extends TType> extends PrimitiveOp implements Iterable<Operand<T>> {
   
   /**
    * Factory method to create a class wrapping a new TPUReplicatedOutput operation.
@@ -42,7 +43,7 @@ public final class TPUReplicatedOutput<T> extends PrimitiveOp implements Iterabl
    * @param numReplicas 
    * @return a new instance of TPUReplicatedOutput
    */
-  public static <T> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
+  public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

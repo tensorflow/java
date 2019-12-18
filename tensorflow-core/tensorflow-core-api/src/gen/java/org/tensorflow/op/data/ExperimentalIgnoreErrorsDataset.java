@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that contains the elements of `input_dataset` ignoring errors.
  */
-public final class ExperimentalIgnoreErrorsDataset extends PrimitiveOp implements Operand<Object> {
+public final class ExperimentalIgnoreErrorsDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new ExperimentalIgnoreErrorsDataset operation.
@@ -66,8 +67,8 @@ public final class ExperimentalIgnoreErrorsDataset extends PrimitiveOp implement
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

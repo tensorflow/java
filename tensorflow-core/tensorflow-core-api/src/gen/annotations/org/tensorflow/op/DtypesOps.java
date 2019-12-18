@@ -6,6 +6,7 @@ import org.tensorflow.op.dtypes.AsString;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.dtypes.Complex;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code dtypes} operations as {@link Op Op}s
@@ -28,7 +29,8 @@ public final class DtypesOps {
    * @return a new instance of Cast
    * @see org.tensorflow.op.dtypes.Cast
    */
-  public <U, T> Cast<U> cast(Operand<T> x, DataType<U> DstT, Cast.Options... options) {
+  public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, DataType<U> DstT,
+      Cast.Options... options) {
     return Cast.create(scope, x, DstT, options);
   }
 
@@ -40,7 +42,7 @@ public final class DtypesOps {
    * @return a new instance of AsString
    * @see org.tensorflow.op.dtypes.AsString
    */
-  public <T> AsString asString(Operand<T> input, AsString.Options... options) {
+  public <T extends TType> AsString asString(Operand<T> input, AsString.Options... options) {
     return AsString.create(scope, input, options);
   }
 
@@ -53,7 +55,7 @@ public final class DtypesOps {
    * @return a new instance of Complex
    * @see org.tensorflow.op.dtypes.Complex
    */
-  public <U, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
+  public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
       DataType<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
   }

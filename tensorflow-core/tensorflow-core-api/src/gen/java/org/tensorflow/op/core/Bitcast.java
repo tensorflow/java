@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Bitcasts a tensor from one type to another without copying data.
@@ -81,7 +82,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class Bitcast<U> extends PrimitiveOp implements Operand<U> {
+public final class Bitcast<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Bitcast operation.
@@ -91,7 +92,7 @@ public final class Bitcast<U> extends PrimitiveOp implements Operand<U> {
    * @param type 
    * @return a new instance of Bitcast
    */
-  public static <U, T> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
+  public static <U extends TType, T extends TType> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -31,6 +31,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns shape of tensors.
@@ -50,7 +51,7 @@ public final class ShapeN<U extends TNumber> extends PrimitiveOp implements Iter
    * @param outType 
    * @return a new instance of ShapeN
    */
-  public static <U extends TNumber, T> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -65,7 +66,7 @@ public final class ShapeN<U extends TNumber> extends PrimitiveOp implements Iter
    * @param input 
    * @return a new instance of ShapeN
    */
-  public static <T> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
+  public static <T extends TType> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
     return create(scope, input, TInt32.DTYPE);
   }
   

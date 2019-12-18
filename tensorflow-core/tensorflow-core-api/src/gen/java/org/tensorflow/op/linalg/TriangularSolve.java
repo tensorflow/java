@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Solves systems of linear equations with upper or lower triangular matrices by backsubstitution.
@@ -76,7 +77,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class TriangularSolve<T> extends PrimitiveOp implements Operand<T> {
+public final class TriangularSolve<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.TriangularSolve}
@@ -121,7 +122,7 @@ public final class TriangularSolve<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of TriangularSolve
    */
-  public static <T> TriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  public static <T extends TType> TriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixTriangularSolve", scope.makeOpName("TriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

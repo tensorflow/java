@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that uses a custom thread pool to compute `input_dataset`.
  */
-public final class ExperimentalThreadPoolHandle extends PrimitiveOp implements Operand<Object> {
+public final class ExperimentalThreadPoolHandle extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.ExperimentalThreadPoolHandle}
@@ -131,8 +132,8 @@ public final class ExperimentalThreadPoolHandle extends PrimitiveOp implements O
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

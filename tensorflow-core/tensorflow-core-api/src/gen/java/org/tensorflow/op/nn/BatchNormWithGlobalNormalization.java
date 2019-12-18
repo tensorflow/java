@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Batch normalization.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code result()} output
  */
 @Operator(group = "nn")
-public final class BatchNormWithGlobalNormalization<T> extends PrimitiveOp implements Operand<T> {
+public final class BatchNormWithGlobalNormalization<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchNormWithGlobalNormalization operation.
@@ -56,7 +57,7 @@ public final class BatchNormWithGlobalNormalization<T> extends PrimitiveOp imple
    * needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalization
    */
-  public static <T> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <T extends TType> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalization", scope.makeOpName("BatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());

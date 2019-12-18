@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the matrix square root of one or more square matrices:
@@ -47,7 +48,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Sqrtm<T> extends PrimitiveOp implements Operand<T> {
+public final class Sqrtm<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sqrtm operation.
@@ -56,7 +57,7 @@ public final class Sqrtm<T> extends PrimitiveOp implements Operand<T> {
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Sqrtm
    */
-  public static <T> Sqrtm<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSquareRoot", scope.makeOpName("Sqrtm"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

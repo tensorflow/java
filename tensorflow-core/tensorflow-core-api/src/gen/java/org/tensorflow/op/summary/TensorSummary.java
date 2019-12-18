@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs a `Summary` protocol buffer with a tensor and per-plugin data.
@@ -42,7 +43,7 @@ public final class TensorSummary extends PrimitiveOp implements Operand<TString>
    * data.
    * @return a new instance of TensorSummary
    */
-  public static <T> TensorSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Operand<TString> serializedSummaryMetadata) {
+  public static <T extends TType> TensorSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Operand<TString> serializedSummaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSummaryV2", scope.makeOpName("TensorSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());

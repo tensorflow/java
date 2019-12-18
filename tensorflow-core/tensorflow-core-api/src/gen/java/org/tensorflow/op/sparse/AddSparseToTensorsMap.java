@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Add a `SparseTensor` to a `SparseTensorsMap` return its handle.
@@ -86,7 +87,7 @@ public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of AddSparseToTensorsMap
    */
-  public static <T> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
+  public static <T extends TType> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddSparseToTensorsMap", scope.makeOpName("AddSparseToTensorsMap"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());

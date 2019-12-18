@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates an empty hash table that uses tensors as the backing store.
@@ -38,7 +39,7 @@ import org.tensorflow.tools.Shape;
  * the insert operations. It does not support the initialization operation.
  */
 @Operator
-public final class MutableDenseHashTable extends PrimitiveOp implements Operand<Object> {
+public final class MutableDenseHashTable extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MutableDenseHashTable}
@@ -119,7 +120,7 @@ public final class MutableDenseHashTable extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of MutableDenseHashTable
    */
-  public static <T, U> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput());
     opBuilder.addInput(deletedKey.asOutput());
@@ -205,8 +206,8 @@ public final class MutableDenseHashTable extends PrimitiveOp implements Operand<
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) tableHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) tableHandle;
   }
   
   private Output<?> tableHandle;

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * The backward operation for "BiasAdd" on the "bias" tensor.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class BiasAddGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class BiasAddGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.BiasAddGrad}
@@ -70,7 +71,7 @@ public final class BiasAddGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of BiasAddGrad
    */
-  public static <T> BiasAddGrad<T> create(Scope scope, Operand<T> outBackprop, Options... options) {
+  public static <T extends TType> BiasAddGrad<T> create(Scope scope, Operand<T> outBackprop, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAddGrad", scope.makeOpName("BiasAddGrad"));
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

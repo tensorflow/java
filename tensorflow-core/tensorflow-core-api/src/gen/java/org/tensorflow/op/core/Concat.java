@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates tensors along one dimension.
@@ -33,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Concat<T> extends PrimitiveOp implements Operand<T> {
+public final class Concat<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Concat operation.
@@ -45,7 +46,7 @@ public final class Concat<T> extends PrimitiveOp implements Operand<T> {
    * range [-rank(values), rank(values)).
    * @return a new instance of Concat
    */
-  public static <T, U extends TNumber> Concat<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis) {
+  public static <T extends TType, U extends TNumber> Concat<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatV2", scope.makeOpName("Concat"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInput(axis.asOutput());

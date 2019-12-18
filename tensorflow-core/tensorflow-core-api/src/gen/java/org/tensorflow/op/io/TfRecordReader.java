@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the records from a TensorFlow Records file.
  */
 @Operator(group = "io")
-public final class TfRecordReader extends PrimitiveOp implements Operand<Object> {
+public final class TfRecordReader extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.TfRecordReader}
@@ -128,8 +129,8 @@ public final class TfRecordReader extends PrimitiveOp implements Operand<Object>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) readerHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) readerHandle;
   }
   
   private Output<?> readerHandle;

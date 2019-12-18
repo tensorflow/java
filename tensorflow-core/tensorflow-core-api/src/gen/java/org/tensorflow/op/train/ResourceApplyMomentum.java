@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the momentum scheme. Set use_nesterov = True if you
@@ -79,7 +80,7 @@ public final class ResourceApplyMomentum extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyMomentum
    */
-  public static <T> ResourceApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
+  public static <T extends TType> ResourceApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyMomentum", scope.makeOpName("ResourceApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

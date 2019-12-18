@@ -25,12 +25,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class SelectV2<T> extends PrimitiveOp implements Operand<T> {
+public final class SelectV2<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SelectV2 operation.
@@ -41,7 +42,7 @@ public final class SelectV2<T> extends PrimitiveOp implements Operand<T> {
    * @param e 
    * @return a new instance of SelectV2
    */
-  public static <T> SelectV2<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
+  public static <T extends TType> SelectV2<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("SelectV2"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(t.asOutput());

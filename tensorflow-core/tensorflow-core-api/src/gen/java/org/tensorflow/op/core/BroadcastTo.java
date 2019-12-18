@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Broadcast an array for a compatible shape.
@@ -50,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class BroadcastTo<T> extends PrimitiveOp implements Operand<T> {
+public final class BroadcastTo<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BroadcastTo operation.
@@ -60,7 +61,7 @@ public final class BroadcastTo<T> extends PrimitiveOp implements Operand<T> {
    * @param shape An 1-D `int` Tensor. The shape of the desired output.
    * @return a new instance of BroadcastTo
    */
-  public static <T, U extends TNumber> BroadcastTo<T> create(Scope scope, Operand<T> input, Operand<U> shape) {
+  public static <T extends TType, U extends TNumber> BroadcastTo<T> create(Scope scope, Operand<T> input, Operand<U> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastTo", scope.makeOpName("BroadcastTo"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shape.asOutput());

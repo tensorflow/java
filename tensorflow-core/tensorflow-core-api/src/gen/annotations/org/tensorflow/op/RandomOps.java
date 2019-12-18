@@ -23,6 +23,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code random} operations as {@link Op Op}s
@@ -49,18 +50,6 @@ public final class RandomOps {
   public <U extends TNumber, T extends TNumber> RandomUniformInt<U> randomUniformInt(
       Operand<T> shape, Operand<U> minval, Operand<U> maxval, RandomUniformInt.Options... options) {
     return RandomUniformInt.create(scope, shape, minval, maxval, options);
-  }
-
-  /**
-   * Builds an {@link RandomShuffle} operation
-   *
-   * @param value The tensor to be shuffled.
-   * @param options carries optional attributes values
-   * @return a new instance of RandomShuffle
-   * @see org.tensorflow.op.random.RandomShuffle
-   */
-  public <T> RandomShuffle<T> randomShuffle(Operand<T> value, RandomShuffle.Options... options) {
-    return RandomShuffle.create(scope, value, options);
   }
 
   /**
@@ -354,6 +343,19 @@ public final class RandomOps {
   public <U extends TNumber, T extends TNumber> RandomUniform<U> randomUniform(Operand<T> shape,
       DataType<U> dtype, RandomUniform.Options... options) {
     return RandomUniform.create(scope, shape, dtype, options);
+  }
+
+  /**
+   * Builds an {@link RandomShuffle} operation
+   *
+   * @param value The tensor to be shuffled.
+   * @param options carries optional attributes values
+   * @return a new instance of RandomShuffle
+   * @see org.tensorflow.op.random.RandomShuffle
+   */
+  public <T extends TType> RandomShuffle<T> randomShuffle(Operand<T> value,
+      RandomShuffle.Options... options) {
+    return RandomShuffle.create(scope, value, options);
   }
 
   /**

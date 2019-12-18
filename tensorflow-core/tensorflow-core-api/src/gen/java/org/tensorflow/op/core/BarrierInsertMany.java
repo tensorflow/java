@@ -24,6 +24,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * For each key, assigns the respective value to the specified component.
@@ -47,7 +48,7 @@ public final class BarrierInsertMany extends PrimitiveOp {
    * @param componentIndex The component of the barrier elements that is being assigned.
    * @return a new instance of BarrierInsertMany
    */
-  public static <T> BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<T> values, Long componentIndex) {
+  public static <T extends TType> BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<T> values, Long componentIndex) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierInsertMany", scope.makeOpName("BarrierInsertMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(keys.asOutput());

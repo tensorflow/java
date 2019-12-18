@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Subtracts a value from the current value of a variable.
@@ -41,7 +42,7 @@ public final class AssignSubVariableOp extends PrimitiveOp {
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignSubVariableOp
    */
-  public static <T> AssignSubVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static <T extends TType> AssignSubVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSubVariableOp", scope.makeOpName("AssignSubVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());

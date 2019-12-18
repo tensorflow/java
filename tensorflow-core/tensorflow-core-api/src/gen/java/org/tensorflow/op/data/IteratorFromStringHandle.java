@@ -27,10 +27,11 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class IteratorFromStringHandle extends PrimitiveOp implements Operand<Object> {
+public final class IteratorFromStringHandle extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.IteratorFromStringHandle}
@@ -98,8 +99,8 @@ public final class IteratorFromStringHandle extends PrimitiveOp implements Opera
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) resourceHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) resourceHandle;
   }
   
   private Output<?> resourceHandle;

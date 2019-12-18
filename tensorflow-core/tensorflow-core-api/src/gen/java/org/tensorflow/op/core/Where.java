@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns locations of nonzero / true values in a tensor.
@@ -99,7 +100,7 @@ public final class Where extends PrimitiveOp implements Operand<TInt64> {
    * @param condition 
    * @return a new instance of Where
    */
-  public static <T> Where create(Scope scope, Operand<T> condition) {
+  public static <T extends TType> Where create(Scope scope, Operand<T> condition) {
     OperationBuilder opBuilder = scope.env().opBuilder("Where", scope.makeOpName("Where"));
     opBuilder.addInput(condition.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

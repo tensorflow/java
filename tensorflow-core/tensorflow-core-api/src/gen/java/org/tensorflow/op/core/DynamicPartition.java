@@ -28,6 +28,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Partitions `data` into `num_partitions` tensors using indices from `partitions`.
@@ -69,7 +70,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code outputs()} output
  */
 @Operator
-public final class DynamicPartition<T> extends PrimitiveOp implements Iterable<Operand<T>> {
+public final class DynamicPartition<T extends TType> extends PrimitiveOp implements Iterable<Operand<T>> {
   
   /**
    * Factory method to create a class wrapping a new DynamicPartition operation.
@@ -80,7 +81,7 @@ public final class DynamicPartition<T> extends PrimitiveOp implements Iterable<O
    * @param numPartitions The number of partitions to output.
    * @return a new instance of DynamicPartition
    */
-  public static <T> DynamicPartition<T> create(Scope scope, Operand<T> data, Operand<TInt32> partitions, Long numPartitions) {
+  public static <T extends TType> DynamicPartition<T> create(Scope scope, Operand<T> data, Operand<TInt32> partitions, Long numPartitions) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicPartition", scope.makeOpName("DynamicPartition"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(partitions.asOutput());

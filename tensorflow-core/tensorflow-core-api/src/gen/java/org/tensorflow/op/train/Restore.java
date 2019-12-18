@@ -29,6 +29,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Restores tensors from a V2 checkpoint.
@@ -48,7 +49,7 @@ import org.tensorflow.types.TString;
  * Callers must ensure all the named tensors are indeed stored in the checkpoint.
  */
 @Operator(group = "train")
-public final class Restore extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class Restore extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new Restore operation.
@@ -86,7 +87,7 @@ public final class Restore extends PrimitiveOp implements Iterable<Operand<Objec
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) tensors.iterator();
   }
   

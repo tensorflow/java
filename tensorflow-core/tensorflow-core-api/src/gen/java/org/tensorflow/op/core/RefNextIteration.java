@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Makes its input available to the next iteration.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class RefNextIteration<T> extends PrimitiveOp implements Operand<T> {
+public final class RefNextIteration<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefNextIteration operation.
@@ -40,7 +41,7 @@ public final class RefNextIteration<T> extends PrimitiveOp implements Operand<T>
    * @param data The tensor to be made available to the next iteration.
    * @return a new instance of RefNextIteration
    */
-  public static <T> RefNextIteration<T> create(Scope scope, Operand<T> data) {
+  public static <T extends TType> RefNextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefNextIteration", scope.makeOpName("RefNextIteration"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

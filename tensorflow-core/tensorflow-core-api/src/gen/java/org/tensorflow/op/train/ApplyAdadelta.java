@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adadelta scheme.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAdadelta<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyAdadelta<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdadelta}
@@ -72,7 +73,7 @@ public final class ApplyAdadelta<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdadelta
    */
-  public static <T> ApplyAdadelta<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdadelta<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdadelta", scope.makeOpName("ApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

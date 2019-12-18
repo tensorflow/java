@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the shape of a tensor.
@@ -53,7 +54,7 @@ public final class Shape<U extends TNumber> extends PrimitiveOp implements Opera
    * @param outType 
    * @return a new instance of Shape
    */
-  public static <U extends TNumber, T> Shape<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> Shape<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Shape", scope.makeOpName("Shape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -68,7 +69,7 @@ public final class Shape<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Shape
    */
-  public static <T> Shape<TInt32> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Shape<TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }
   

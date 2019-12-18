@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes sine of x element-wise.
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Sin<T> extends PrimitiveOp implements Operand<T> {
+public final class Sin<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sin operation.
@@ -50,7 +51,7 @@ public final class Sin<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Sin
    */
-  public static <T> Sin<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Sin<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sin", scope.makeOpName("Sin"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

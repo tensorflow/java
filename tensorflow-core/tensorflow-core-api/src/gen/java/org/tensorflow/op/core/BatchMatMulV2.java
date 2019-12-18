@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Multiplies slices of two tensors in batches.
@@ -55,7 +56,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class BatchMatMulV2<T> extends PrimitiveOp implements Operand<T> {
+public final class BatchMatMulV2<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.BatchMatMulV2}
@@ -94,7 +95,7 @@ public final class BatchMatMulV2<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of BatchMatMulV2
    */
-  public static <T> BatchMatMulV2<T> create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  public static <T extends TType> BatchMatMulV2<T> create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatMulV2", scope.makeOpName("BatchMatMulV2"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

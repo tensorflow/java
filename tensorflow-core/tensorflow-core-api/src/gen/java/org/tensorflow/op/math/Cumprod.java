@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Compute the cumulative product of the tensor `x` along `axis`.
@@ -55,7 +56,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "math")
-public final class Cumprod<T> extends PrimitiveOp implements Operand<T> {
+public final class Cumprod<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.math.Cumprod}
@@ -97,7 +98,7 @@ public final class Cumprod<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Cumprod
    */
-  public static <T, U extends TNumber> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
+  public static <T extends TType, U extends TNumber> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumprod", scope.makeOpName("Cumprod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());

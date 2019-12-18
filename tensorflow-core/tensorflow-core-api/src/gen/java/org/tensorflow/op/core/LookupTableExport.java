@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs all keys and values in the table.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code values()} output
  */
 @Operator
-public final class LookupTableExport<T, U> extends PrimitiveOp {
+public final class LookupTableExport<T extends TType, U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new LookupTableExport operation.
@@ -44,7 +45,7 @@ public final class LookupTableExport<T, U> extends PrimitiveOp {
    * @param Tvalues 
    * @return a new instance of LookupTableExport
    */
-  public static <T, U> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
+  public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

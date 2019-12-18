@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise sum of a list of tensors.
@@ -42,7 +43,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code sum()} output
  */
 @Operator(group = "math")
-public final class AccumulateN<T> extends PrimitiveOp implements Operand<T> {
+public final class AccumulateN<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AccumulateN operation.
@@ -52,7 +53,7 @@ public final class AccumulateN<T> extends PrimitiveOp implements Operand<T> {
    * @param shape Shape of elements of `inputs`.
    * @return a new instance of AccumulateN
    */
-  public static <T> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs, Shape shape) {
+  public static <T extends TType> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulateNV2", scope.makeOpName("AccumulateN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

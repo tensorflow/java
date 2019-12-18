@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Solves systems of linear equations.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Solve<T> extends PrimitiveOp implements Operand<T> {
+public final class Solve<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.Solve}
@@ -69,7 +70,7 @@ public final class Solve<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Solve
    */
-  public static <T> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  public static <T extends TType> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolve", scope.makeOpName("Solve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

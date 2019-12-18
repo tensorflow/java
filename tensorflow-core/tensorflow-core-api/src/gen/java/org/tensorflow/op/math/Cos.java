@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes cos of x element-wise.
@@ -42,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Cos<T> extends PrimitiveOp implements Operand<T> {
+public final class Cos<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Cos operation.
@@ -51,7 +52,7 @@ public final class Cos<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Cos
    */
-  public static <T> Cos<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Cos<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cos", scope.makeOpName("Cos"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

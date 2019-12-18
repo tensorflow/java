@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset containing elements of first component of `input_dataset` having true in the last component.
  */
-public final class FilterByLastComponentDataset extends PrimitiveOp implements Operand<Object> {
+public final class FilterByLastComponentDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new FilterByLastComponentDataset operation.
@@ -66,8 +67,8 @@ public final class FilterByLastComponentDataset extends PrimitiveOp implements O
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) output;
+  public Output<TType> asOutput() {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

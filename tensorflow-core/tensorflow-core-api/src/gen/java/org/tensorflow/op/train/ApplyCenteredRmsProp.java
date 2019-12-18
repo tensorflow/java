@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
@@ -50,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyCenteredRmsProp<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyCenteredRmsProp<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyCenteredRmsProp}
@@ -89,7 +90,7 @@ public final class ApplyCenteredRmsProp<T> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of ApplyCenteredRmsProp
    */
-  public static <T> ApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyCenteredRMSProp", scope.makeOpName("ApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());

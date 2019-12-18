@@ -24,10 +24,11 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class MatchingFilesDataset extends PrimitiveOp implements Operand<Object> {
+public final class MatchingFilesDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new MatchingFilesDataset operation.
@@ -51,8 +52,8 @@ public final class MatchingFilesDataset extends PrimitiveOp implements Operand<O
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

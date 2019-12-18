@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the batched diagonal part of a batched tensor.
@@ -60,7 +61,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code diagonal()} output
  */
 @Operator(group = "linalg")
-public final class DiagPart<T> extends PrimitiveOp implements Operand<T> {
+public final class DiagPart<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DiagPart operation.
@@ -69,7 +70,7 @@ public final class DiagPart<T> extends PrimitiveOp implements Operand<T> {
    * @param input Rank `k` tensor where `k >= 2`.
    * @return a new instance of DiagPart
    */
-  public static <T> DiagPart<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> DiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagPart", scope.makeOpName("DiagPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

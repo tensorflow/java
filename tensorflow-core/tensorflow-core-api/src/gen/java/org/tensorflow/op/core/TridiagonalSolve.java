@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Solves tridiagonal systems of equations.
@@ -36,7 +37,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TridiagonalSolve<T> extends PrimitiveOp implements Operand<T> {
+public final class TridiagonalSolve<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TridiagonalSolve}
@@ -71,7 +72,7 @@ public final class TridiagonalSolve<T> extends PrimitiveOp implements Operand<T>
    * @param options carries optional attributes values
    * @return a new instance of TridiagonalSolve
    */
-  public static <T> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals, Operand<T> rhs, Options... options) {
+  public static <T extends TType> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalSolve", scope.makeOpName("TridiagonalSolve"));
     opBuilder.addInput(diagonals.asOutput());
     opBuilder.addInput(rhs.asOutput());

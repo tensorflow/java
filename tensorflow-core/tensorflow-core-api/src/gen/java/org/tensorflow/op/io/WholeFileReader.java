@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the entire contents of a file as a value.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * be a filename (key) and the contents of that file (value).
  */
 @Operator(group = "io")
-public final class WholeFileReader extends PrimitiveOp implements Operand<Object> {
+public final class WholeFileReader extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.WholeFileReader}
@@ -112,8 +113,8 @@ public final class WholeFileReader extends PrimitiveOp implements Operand<Object
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) readerHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) readerHandle;
   }
   
   private Output<?> readerHandle;

@@ -25,11 +25,12 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListSetItem extends PrimitiveOp implements Operand<Object> {
+public final class TensorListSetItem extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListSetItem operation.
@@ -40,7 +41,7 @@ public final class TensorListSetItem extends PrimitiveOp implements Operand<Obje
    * @param item 
    * @return a new instance of TensorListSetItem
    */
-  public static <T> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
+  public static <T extends TType> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSetItem", scope.makeOpName("TensorListSetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -57,8 +58,8 @@ public final class TensorListSetItem extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

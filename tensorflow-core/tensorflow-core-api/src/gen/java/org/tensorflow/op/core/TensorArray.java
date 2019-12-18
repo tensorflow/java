@@ -28,6 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * An array of Tensors of given size.
@@ -113,7 +114,7 @@ public final class TensorArray extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArray
    */
-  public static <T> TensorArray create(Scope scope, Operand<TInt32> size, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> size, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayV3", scope.makeOpName("TensorArray"));
     opBuilder.addInput(size.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update 'ref' by adding 'value' to it.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class AssignAdd<T> extends PrimitiveOp implements Operand<T> {
+public final class AssignAdd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.AssignAdd}
@@ -65,7 +66,7 @@ public final class AssignAdd<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of AssignAdd
    */
-  public static <T> AssignAdd<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
+  public static <T extends TType> AssignAdd<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignAdd", scope.makeOpName("AssignAdd"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());

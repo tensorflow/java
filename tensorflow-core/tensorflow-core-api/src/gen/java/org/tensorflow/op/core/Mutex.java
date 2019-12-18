@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Mutex resource that can be locked by `MutexLock`.
  */
 @Operator
-public final class Mutex extends PrimitiveOp implements Operand<Object> {
+public final class Mutex extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Mutex}
@@ -109,8 +110,8 @@ public final class Mutex extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) resource;
+  public Output<TType> asOutput() {
+    return (Output<TType>) resource;
   }
   
   private Output<?> resource;

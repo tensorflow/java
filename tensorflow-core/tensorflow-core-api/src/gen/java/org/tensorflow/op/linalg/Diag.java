@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a batched diagonal tensor with a given batched diagonal values.
@@ -58,7 +59,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Diag<T> extends PrimitiveOp implements Operand<T> {
+public final class Diag<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Diag operation.
@@ -67,7 +68,7 @@ public final class Diag<T> extends PrimitiveOp implements Operand<T> {
    * @param diagonal Rank `k`, where `k >= 1`.
    * @return a new instance of Diag
    */
-  public static <T> Diag<T> create(Scope scope, Operand<T> diagonal) {
+  public static <T extends TType> Diag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiag", scope.makeOpName("Diag"));
     opBuilder.addInput(diagonal.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

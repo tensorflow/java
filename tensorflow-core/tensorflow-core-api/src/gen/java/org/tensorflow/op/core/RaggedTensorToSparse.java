@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts a `RaggedTensor` into a `SparseTensor` with the same values.
@@ -36,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <U> data type for {@code sparseValues()} output
  */
-public final class RaggedTensorToSparse<U> extends PrimitiveOp {
+public final class RaggedTensorToSparse<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorToSparse operation.
@@ -46,7 +47,7 @@ public final class RaggedTensorToSparse<U> extends PrimitiveOp {
    * @param rtDenseValues The `flat_values` for the `RaggedTensor`.
    * @return a new instance of RaggedTensorToSparse
    */
-  public static <U, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
+  public static <U extends TType, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());

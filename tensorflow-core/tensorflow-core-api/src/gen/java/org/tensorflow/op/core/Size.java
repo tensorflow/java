@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the size of a tensor.
@@ -54,7 +55,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param outType 
    * @return a new instance of Size
    */
-  public static <U extends TNumber, T> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -69,7 +70,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Size
    */
-  public static <T> Size<TInt32> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Size<TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }
   

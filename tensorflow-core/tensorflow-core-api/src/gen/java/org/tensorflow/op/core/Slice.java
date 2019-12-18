@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Return a slice from 'input'.
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Slice<T> extends PrimitiveOp implements Operand<T> {
+public final class Slice<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Slice operation.
@@ -54,7 +55,7 @@ public final class Slice<T> extends PrimitiveOp implements Operand<T> {
    * size[i] = input.dim_size(i) - begin[i]).
    * @return a new instance of Slice
    */
-  public static <T, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> size) {
+  public static <T extends TType, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("Slice", scope.makeOpName("Slice"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * An op which feeds a single Tensor value into the computation.
@@ -79,7 +80,7 @@ public final class InfeedEnqueue extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InfeedEnqueue
    */
-  public static <T> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueue", scope.makeOpName("InfeedEnqueue"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

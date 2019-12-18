@@ -39,7 +39,7 @@ class EagerOperation extends AbstractOperation {
     this.type = type;
     this.name = name;
     this.nativeRef = new NativeReference(session, this, opNativeHandle, outputNativeHandles);
-    this.outputTensors = new AtomicReferenceArray<Tensor<?>>(outputNativeHandles.length);
+    this.outputTensors = new AtomicReferenceArray<>(outputNativeHandles.length);
   }
 
   @Override

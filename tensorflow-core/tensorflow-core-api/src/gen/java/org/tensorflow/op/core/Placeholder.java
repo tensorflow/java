@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
@@ -37,7 +38,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Placeholder<T> extends PrimitiveOp implements Operand<T> {
+public final class Placeholder<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Placeholder}
@@ -67,7 +68,7 @@ public final class Placeholder<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Placeholder
    */
-  public static <T> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
+  public static <T extends TType> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Removes dimensions of size 1 from the shape of a tensor.
@@ -49,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Squeeze<T> extends PrimitiveOp implements Operand<T> {
+public final class Squeeze<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Squeeze}
@@ -80,7 +81,7 @@ public final class Squeeze<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Squeeze
    */
-  public static <T> Squeeze<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> Squeeze<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Squeeze", scope.makeOpName("Squeeze"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

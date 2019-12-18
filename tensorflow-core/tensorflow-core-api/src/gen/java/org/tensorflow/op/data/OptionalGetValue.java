@@ -29,12 +29,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the value stored in an Optional variant or raises an error if none exists.
  */
 @Operator(group = "data")
-public final class OptionalGetValue extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class OptionalGetValue extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new OptionalGetValue operation.
@@ -70,7 +71,7 @@ public final class OptionalGetValue extends PrimitiveOp implements Iterable<Oper
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

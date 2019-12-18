@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Quantized Instance normalization.
@@ -32,7 +33,7 @@ import org.tensorflow.types.TFloat;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class QuantizedInstanceNorm<T> extends PrimitiveOp {
+public final class QuantizedInstanceNorm<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.QuantizedInstanceNorm}
@@ -101,7 +102,7 @@ public final class QuantizedInstanceNorm<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedInstanceNorm
    */
-  public static <T> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat> xMin, Operand<TFloat> xMax, Options... options) {
+  public static <T extends TType> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat> xMin, Operand<TFloat> xMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedInstanceNorm", scope.makeOpName("QuantizedInstanceNorm"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(xMin.asOutput());

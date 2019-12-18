@@ -25,13 +25,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Requantizes input with min and max values known per channel.
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class RequantizePerChannel<U> extends PrimitiveOp {
+public final class RequantizePerChannel<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RequantizePerChannel operation.
@@ -45,7 +46,7 @@ public final class RequantizePerChannel<U> extends PrimitiveOp {
    * @param outType The quantized type of output tensor that needs to be converted.
    * @return a new instance of RequantizePerChannel
    */
-  public static <U, T> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Operand<TFloat> requestedOutputMin, Operand<TFloat> requestedOutputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Operand<TFloat> requestedOutputMin, Operand<TFloat> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

@@ -29,12 +29,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets the next output from the given iterator .
  */
 @Operator(group = "data")
-public final class IteratorGetNext extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class IteratorGetNext extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IteratorGetNext operation.
@@ -70,7 +71,7 @@ public final class IteratorGetNext extends PrimitiveOp implements Iterable<Opera
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

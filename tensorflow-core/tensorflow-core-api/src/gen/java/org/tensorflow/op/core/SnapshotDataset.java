@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that will write to / read from a snapshot.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TString;
  * If not, it will run the preprocessing pipeline as usual, and write out a
  * snapshot of the data processed for future use.
  */
-public final class SnapshotDataset extends PrimitiveOp implements Operand<Object> {
+public final class SnapshotDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.SnapshotDataset}
@@ -260,8 +261,8 @@ public final class SnapshotDataset extends PrimitiveOp implements Operand<Object
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

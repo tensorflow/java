@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse `updates` to individual values or slices within a given
@@ -66,7 +67,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class ScatterNdUpdate<T> extends PrimitiveOp implements Operand<T> {
+public final class ScatterNdUpdate<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScatterNdUpdate}
@@ -101,7 +102,7 @@ public final class ScatterNdUpdate<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdUpdate
    */
-  public static <T, U extends TNumber> ScatterNdUpdate<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TType, U extends TNumber> ScatterNdUpdate<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdUpdate", scope.makeOpName("ScatterNdUpdate"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Decodes a `variant` Tensor into a `RaggedTensor`.
@@ -47,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code outputNestedSplits()} output
  * @param <T> data type for {@code outputDenseValues()} output
  */
-public final class RaggedTensorFromVariant<U extends TNumber, T> extends PrimitiveOp {
+public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorFromVariant operation.
@@ -62,7 +63,7 @@ public final class RaggedTensorFromVariant<U extends TNumber, T> extends Primiti
    * @param Tsplits 
    * @return a new instance of RaggedTensorFromVariant
    */
-  public static <U extends TNumber, T> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
+  public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

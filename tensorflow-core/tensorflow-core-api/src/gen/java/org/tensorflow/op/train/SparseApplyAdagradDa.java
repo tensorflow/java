@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
@@ -33,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class SparseApplyAdagradDa<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseApplyAdagradDa<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyAdagradDa}
@@ -71,7 +72,7 @@ public final class SparseApplyAdagradDa<T> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyAdagradDa
    */
-  public static <T, U extends TNumber> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradDA", scope.makeOpName("SparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());

@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates an empty hash table.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * the insert operations. It does not support the initialization operation.
  */
 @Operator
-public final class MutableHashTable extends PrimitiveOp implements Operand<Object> {
+public final class MutableHashTable extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MutableHashTable}
@@ -85,7 +86,7 @@ public final class MutableHashTable extends PrimitiveOp implements Operand<Objec
    * @param options carries optional attributes values
    * @return a new instance of MutableHashTable
    */
-  public static <T, U> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);
@@ -139,8 +140,8 @@ public final class MutableHashTable extends PrimitiveOp implements Operand<Objec
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) tableHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) tableHandle;
   }
   
   private Output<?> tableHandle;

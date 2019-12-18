@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Quantize the 'input' tensor of type float to 'output' tensor of type 'T'.
@@ -118,7 +119,7 @@ import org.tensorflow.types.TFloat;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class Quantize<T> extends PrimitiveOp {
+public final class Quantize<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Quantize}
@@ -159,7 +160,7 @@ public final class Quantize<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Quantize
    */
-  public static <T> Quantize<T> create(Scope scope, Operand<TFloat> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, DataType<T> T, Options... options) {
+  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());

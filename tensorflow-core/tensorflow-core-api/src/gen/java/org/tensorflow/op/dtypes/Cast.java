@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Cast x of type SrcT to y of DstT.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code y()} output
  */
 @Operator(group = "dtypes")
-public final class Cast<U> extends PrimitiveOp implements Operand<U> {
+public final class Cast<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.dtypes.Cast}
@@ -62,7 +63,7 @@ public final class Cast<U> extends PrimitiveOp implements Operand<U> {
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  public static <U, T> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
+  public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Op peeks at the values at the specified key.  If the
@@ -39,7 +40,7 @@ import org.tensorflow.types.TInt64;
  * performance.
  */
 @Operator
-public final class OrderedMapPeek extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class OrderedMapPeek extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.OrderedMapPeek}
@@ -162,7 +163,7 @@ public final class OrderedMapPeek extends PrimitiveOp implements Iterable<Operan
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
   

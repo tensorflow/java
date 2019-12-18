@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
@@ -41,7 +42,7 @@ public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFlo
    * @param flowIn 
    * @return a new instance of TensorArrayUnpack
    */
-  public static <T> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());

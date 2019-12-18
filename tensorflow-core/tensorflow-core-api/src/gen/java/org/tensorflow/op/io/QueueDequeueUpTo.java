@@ -29,6 +29,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Dequeues `n` tuples of one or more tensors from the given queue.
@@ -52,7 +53,7 @@ import org.tensorflow.types.TInt32;
  * component of the dequeued tuple.
  */
 @Operator(group = "io")
-public final class QueueDequeueUpTo extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class QueueDequeueUpTo extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.QueueDequeueUpTo}
@@ -123,7 +124,7 @@ public final class QueueDequeueUpTo extends PrimitiveOp implements Iterable<Oper
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

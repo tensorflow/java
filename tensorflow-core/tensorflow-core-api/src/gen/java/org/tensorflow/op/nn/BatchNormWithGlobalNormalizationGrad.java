@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gradients for batch normalization.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code dx()} output
  */
 @Operator(group = "nn")
-public final class BatchNormWithGlobalNormalizationGrad<T> extends PrimitiveOp {
+public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new BatchNormWithGlobalNormalizationGrad operation.
@@ -55,7 +56,7 @@ public final class BatchNormWithGlobalNormalizationGrad<T> extends PrimitiveOp {
    * needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalizationGrad
    */
-  public static <T> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <T extends TType> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalizationGrad", scope.makeOpName("BatchNormWithGlobalNormalizationGrad"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());

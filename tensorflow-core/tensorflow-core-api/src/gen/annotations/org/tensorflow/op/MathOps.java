@@ -108,6 +108,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code math} operations as {@link Op Op}s
@@ -119,18 +120,6 @@ public final class MathOps {
 
   MathOps(Scope scope) {
     this.scope = scope;
-  }
-
-  /**
-   * Builds an {@link ArgMax} operation
-   *
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
-   * @return a new instance of ArgMax
-   * @see org.tensorflow.op.math.ArgMax
-   */
-  public <T, U extends TNumber> ArgMax<TInt64> argMax(Operand<T> input, Operand<U> dimension) {
-    return ArgMax.create(scope, input, dimension);
   }
 
   /**
@@ -171,17 +160,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link UnsortedSegmentSum} operation
+   * Builds an {@link Reciprocal} operation
    *
-   * @param data 
-   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-   * @param numSegments 
-   * @return a new instance of UnsortedSegmentSum
-   * @see org.tensorflow.op.math.UnsortedSegmentSum
+   * @param x 
+   * @return a new instance of Reciprocal
+   * @see org.tensorflow.op.math.Reciprocal
    */
-  public <T, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> unsortedSegmentSum(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
-    return UnsortedSegmentSum.create(scope, data, segmentIds, numSegments);
+  public <T extends TType> Reciprocal<T> reciprocal(Operand<T> x) {
+    return Reciprocal.create(scope, x);
   }
 
   /**
@@ -208,40 +194,37 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link TruncateDiv} operation
+   * Builds an {@link Pow} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of TruncateDiv
-   * @see org.tensorflow.op.math.TruncateDiv
+   * @return a new instance of Pow
+   * @see org.tensorflow.op.math.Pow
    */
-  public <T> TruncateDiv<T> truncateDiv(Operand<T> x, Operand<T> y) {
-    return TruncateDiv.create(scope, x, y);
+  public <T extends TType> Pow<T> pow(Operand<T> x, Operand<T> y) {
+    return Pow.create(scope, x, y);
   }
 
   /**
-   * Builds an {@link Mean} operation
-   *
-   * @param input The tensor to reduce.
-   * @param axis The dimensions to reduce. Must be in the range
-   * @param options carries optional attributes values
-   * @return a new instance of Mean
-   * @see org.tensorflow.op.math.Mean
-   */
-  public <T, U extends TNumber> Mean<T> mean(Operand<T> input, Operand<U> axis,
-      Mean.Options... options) {
-    return Mean.create(scope, input, axis, options);
-  }
-
-  /**
-   * Builds an {@link Square} operation
+   * Builds an {@link Cosh} operation
    *
    * @param x 
-   * @return a new instance of Square
-   * @see org.tensorflow.op.math.Square
+   * @return a new instance of Cosh
+   * @see org.tensorflow.op.math.Cosh
    */
-  public <T> Square<T> square(Operand<T> x) {
-    return Square.create(scope, x);
+  public <T extends TType> Cosh<T> cosh(Operand<T> x) {
+    return Cosh.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Round} operation
+   *
+   * @param x 
+   * @return a new instance of Round
+   * @see org.tensorflow.op.math.Round
+   */
+  public <T extends TType> Round<T> round(Operand<T> x) {
+    return Round.create(scope, x);
   }
 
   /**
@@ -279,16 +262,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Equal} operation
+   * Builds an {@link Atanh} operation
    *
    * @param x 
-   * @param y 
-   * @param options carries optional attributes values
-   * @return a new instance of Equal
-   * @see org.tensorflow.op.math.Equal
+   * @return a new instance of Atanh
+   * @see org.tensorflow.op.math.Atanh
    */
-  public <T> Equal equal(Operand<T> x, Operand<T> y, Equal.Options... options) {
-    return Equal.create(scope, x, y, options);
+  public <T extends TType> Atanh<T> atanh(Operand<T> x) {
+    return Atanh.create(scope, x);
   }
 
   /**
@@ -300,29 +281,6 @@ public final class MathOps {
    */
   public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
     return Ceil.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Mul} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of Mul
-   * @see org.tensorflow.op.math.Mul
-   */
-  public <T> Mul<T> mul(Operand<T> x, Operand<T> y) {
-    return Mul.create(scope, x, y);
-  }
-
-  /**
-   * Builds an {@link Neg} operation
-   *
-   * @param x 
-   * @return a new instance of Neg
-   * @see org.tensorflow.op.math.Neg
-   */
-  public <T> Neg<T> neg(Operand<T> x) {
-    return Neg.create(scope, x);
   }
 
   /**
@@ -338,48 +296,74 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Asinh} operation
+   * Builds an {@link ArgMin} operation
    *
-   * @param x 
-   * @return a new instance of Asinh
-   * @see org.tensorflow.op.math.Asinh
+   * @param input 
+   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @param outputType 
+   * @return a new instance of ArgMin
+   * @see org.tensorflow.op.math.ArgMin
    */
-  public <T> Asinh<T> asinh(Operand<T> x) {
-    return Asinh.create(scope, x);
+  public <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> argMin(Operand<T> input,
+      Operand<U> dimension, DataType<V> outputType) {
+    return ArgMin.create(scope, input, dimension, outputType);
   }
 
   /**
-   * Builds an {@link Atan} operation
+   * Builds an {@link Sign} operation
    *
    * @param x 
-   * @return a new instance of Atan
-   * @see org.tensorflow.op.math.Atan
+   * @return a new instance of Sign
+   * @see org.tensorflow.op.math.Sign
    */
-  public <T> Atan<T> atan(Operand<T> x) {
-    return Atan.create(scope, x);
+  public <T extends TType> Sign<T> sign(Operand<T> x) {
+    return Sign.create(scope, x);
   }
 
   /**
-   * Builds an {@link Acos} operation
+   * Builds an {@link Exp} operation
    *
    * @param x 
-   * @return a new instance of Acos
-   * @see org.tensorflow.op.math.Acos
+   * @return a new instance of Exp
+   * @see org.tensorflow.op.math.Exp
    */
-  public <T> Acos<T> acos(Operand<T> x) {
-    return Acos.create(scope, x);
+  public <T extends TType> Exp<T> exp(Operand<T> x) {
+    return Exp.create(scope, x);
   }
 
   /**
-   * Builds an {@link Xlogy} operation
+   * Builds an {@link Angle} operation
+   *
+   * @param input 
+   * @param Tout 
+   * @return a new instance of Angle
+   * @see org.tensorflow.op.math.Angle
+   */
+  public <U extends TNumber, T extends TType> Angle<U> angle(Operand<T> input, DataType<U> Tout) {
+    return Angle.create(scope, input, Tout);
+  }
+
+  /**
+   * Builds an {@link Add} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of Xlogy
-   * @see org.tensorflow.op.math.Xlogy
+   * @return a new instance of Add
+   * @see org.tensorflow.op.math.Add
    */
-  public <T> Xlogy<T> xlogy(Operand<T> x, Operand<T> y) {
-    return Xlogy.create(scope, x, y);
+  public <T extends TType> Add<T> add(Operand<T> x, Operand<T> y) {
+    return Add.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link Log} operation
+   *
+   * @param x 
+   * @return a new instance of Log
+   * @see org.tensorflow.op.math.Log
+   */
+  public <T extends TType> Log<T> log(Operand<T> x) {
+    return Log.create(scope, x);
   }
 
   /**
@@ -397,26 +381,79 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Tan} operation
-   *
-   * @param x 
-   * @return a new instance of Tan
-   * @see org.tensorflow.op.math.Tan
-   */
-  public <T> Tan<T> tan(Operand<T> x) {
-    return Tan.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Xdivy} operation
+   * Builds an {@link SquaredDifference} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of Xdivy
-   * @see org.tensorflow.op.math.Xdivy
+   * @return a new instance of SquaredDifference
+   * @see org.tensorflow.op.math.SquaredDifference
    */
-  public <T> Xdivy<T> xdivy(Operand<T> x, Operand<T> y) {
-    return Xdivy.create(scope, x, y);
+  public <T extends TType> SquaredDifference<T> squaredDifference(Operand<T> x, Operand<T> y) {
+    return SquaredDifference.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link NotEqual} operation
+   *
+   * @param x 
+   * @param y 
+   * @param options carries optional attributes values
+   * @return a new instance of NotEqual
+   * @see org.tensorflow.op.math.NotEqual
+   */
+  public <T extends TType> NotEqual notEqual(Operand<T> x, Operand<T> y,
+      NotEqual.Options... options) {
+    return NotEqual.create(scope, x, y, options);
+  }
+
+  /**
+   * Builds an {@link Cumprod} operation
+   *
+   * @param x A `Tensor`. Must be one of the following types: `float32`, `float64`,
+   * @param axis A `Tensor` of type `int32` (default: 0). Must be in the range
+   * @param options carries optional attributes values
+   * @return a new instance of Cumprod
+   * @see org.tensorflow.op.math.Cumprod
+   */
+  public <T extends TType, U extends TNumber> Cumprod<T> cumprod(Operand<T> x, Operand<U> axis,
+      Cumprod.Options... options) {
+    return Cumprod.create(scope, x, axis, options);
+  }
+
+  /**
+   * Builds an {@link DivNoNan} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of DivNoNan
+   * @see org.tensorflow.op.math.DivNoNan
+   */
+  public <T extends TType> DivNoNan<T> divNoNan(Operand<T> x, Operand<T> y) {
+    return DivNoNan.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link Atan} operation
+   *
+   * @param x 
+   * @return a new instance of Atan
+   * @see org.tensorflow.op.math.Atan
+   */
+  public <T extends TType> Atan<T> atan(Operand<T> x) {
+    return Atan.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link ArgMax} operation
+   *
+   * @param input 
+   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @return a new instance of ArgMax
+   * @see org.tensorflow.op.math.ArgMax
+   */
+  public <T extends TType, U extends TNumber> ArgMax<TInt64> argMax(Operand<T> input,
+      Operand<U> dimension) {
+    return ArgMax.create(scope, input, dimension);
   }
 
   /**
@@ -432,25 +469,31 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Log} operation
+   * Builds an {@link ArgMax} operation
    *
-   * @param x 
-   * @return a new instance of Log
-   * @see org.tensorflow.op.math.Log
+   * @param input 
+   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @param outputType 
+   * @return a new instance of ArgMax
+   * @see org.tensorflow.op.math.ArgMax
    */
-  public <T> Log<T> log(Operand<T> x) {
-    return Log.create(scope, x);
+  public <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
+      Operand<U> dimension, DataType<V> outputType) {
+    return ArgMax.create(scope, input, dimension, outputType);
   }
 
   /**
-   * Builds an {@link Sqrt} operation
+   * Builds an {@link UnsortedSegmentProd} operation
    *
-   * @param x 
-   * @return a new instance of Sqrt
-   * @see org.tensorflow.op.math.Sqrt
+   * @param data 
+   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
+   * @param numSegments 
+   * @return a new instance of UnsortedSegmentProd
+   * @see org.tensorflow.op.math.UnsortedSegmentProd
    */
-  public <T> Sqrt<T> sqrt(Operand<T> x) {
-    return Sqrt.create(scope, x);
+  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> unsortedSegmentProd(
+      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+    return UnsortedSegmentProd.create(scope, data, segmentIds, numSegments);
   }
 
   /**
@@ -465,26 +508,25 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link SegmentSum} operation
+   * Builds an {@link Real} operation
    *
-   * @param data 
-   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
-   * @return a new instance of SegmentSum
-   * @see org.tensorflow.op.math.SegmentSum
+   * @param input 
+   * @return a new instance of Real
+   * @see org.tensorflow.op.math.Real
    */
-  public <T, U extends TNumber> SegmentSum<T> segmentSum(Operand<T> data, Operand<U> segmentIds) {
-    return SegmentSum.create(scope, data, segmentIds);
+  public <T extends TType> Real<TFloat> real(Operand<T> input) {
+    return Real.create(scope, input);
   }
 
   /**
-   * Builds an {@link ComplexAbs} operation
+   * Builds an {@link Cos} operation
    *
    * @param x 
-   * @return a new instance of ComplexAbs
-   * @see org.tensorflow.op.math.ComplexAbs
+   * @return a new instance of Cos
+   * @see org.tensorflow.op.math.Cos
    */
-  public <T> ComplexAbs<TFloat> complexAbs(Operand<T> x) {
-    return ComplexAbs.create(scope, x);
+  public <T extends TType> Cos<T> cos(Operand<T> x) {
+    return Cos.create(scope, x);
   }
 
   /**
@@ -500,6 +542,18 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link TruncateDiv} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of TruncateDiv
+   * @see org.tensorflow.op.math.TruncateDiv
+   */
+  public <T extends TType> TruncateDiv<T> truncateDiv(Operand<T> x, Operand<T> y) {
+    return TruncateDiv.create(scope, x, y);
+  }
+
+  /**
    * Builds an {@link CheckNumerics} operation
    *
    * @param tensor 
@@ -509,29 +563,6 @@ public final class MathOps {
    */
   public <T extends TNumber> CheckNumerics<T> checkNumerics(Operand<T> tensor, String message) {
     return CheckNumerics.create(scope, tensor, message);
-  }
-
-  /**
-   * Builds an {@link Angle} operation
-   *
-   * @param input 
-   * @return a new instance of Angle
-   * @see org.tensorflow.op.math.Angle
-   */
-  public <T> Angle<TFloat> angle(Operand<T> input) {
-    return Angle.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link FloorDiv} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of FloorDiv
-   * @see org.tensorflow.op.math.FloorDiv
-   */
-  public <T> FloorDiv<T> floorDiv(Operand<T> x, Operand<T> y) {
-    return FloorDiv.create(scope, x, y);
   }
 
   /**
@@ -547,15 +578,15 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link RealDiv} operation
+   * Builds an {@link Div} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of RealDiv
-   * @see org.tensorflow.op.math.RealDiv
+   * @return a new instance of Div
+   * @see org.tensorflow.op.math.Div
    */
-  public <T> RealDiv<T> realDiv(Operand<T> x, Operand<T> y) {
-    return RealDiv.create(scope, x, y);
+  public <T extends TType> Div<T> div(Operand<T> x, Operand<T> y) {
+    return Div.create(scope, x, y);
   }
 
   /**
@@ -570,25 +601,17 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Acosh} operation
+   * Builds an {@link Mean} operation
    *
-   * @param x 
-   * @return a new instance of Acosh
-   * @see org.tensorflow.op.math.Acosh
+   * @param input The tensor to reduce.
+   * @param axis The dimensions to reduce. Must be in the range
+   * @param options carries optional attributes values
+   * @return a new instance of Mean
+   * @see org.tensorflow.op.math.Mean
    */
-  public <T> Acosh<T> acosh(Operand<T> x) {
-    return Acosh.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Sigmoid} operation
-   *
-   * @param x 
-   * @return a new instance of Sigmoid
-   * @see org.tensorflow.op.math.Sigmoid
-   */
-  public <T> Sigmoid<T> sigmoid(Operand<T> x) {
-    return Sigmoid.create(scope, x);
+  public <T extends TType, U extends TNumber> Mean<T> mean(Operand<T> input, Operand<U> axis,
+      Mean.Options... options) {
+    return Mean.create(scope, input, axis, options);
   }
 
   /**
@@ -605,54 +628,93 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link SegmentMean} operation
+   * Builds an {@link Real} operation
    *
-   * @param data 
-   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
-   * @return a new instance of SegmentMean
-   * @see org.tensorflow.op.math.SegmentMean
+   * @param input 
+   * @param Tout 
+   * @return a new instance of Real
+   * @see org.tensorflow.op.math.Real
    */
-  public <T, U extends TNumber> SegmentMean<T> segmentMean(Operand<T> data, Operand<U> segmentIds) {
-    return SegmentMean.create(scope, data, segmentIds);
+  public <U extends TNumber, T extends TType> Real<U> real(Operand<T> input, DataType<U> Tout) {
+    return Real.create(scope, input, Tout);
   }
 
   /**
-   * Builds an {@link Sin} operation
+   * Builds an {@link Asin} operation
    *
    * @param x 
-   * @return a new instance of Sin
-   * @see org.tensorflow.op.math.Sin
+   * @return a new instance of Asin
+   * @see org.tensorflow.op.math.Asin
    */
-  public <T> Sin<T> sin(Operand<T> x) {
-    return Sin.create(scope, x);
+  public <T extends TType> Asin<T> asin(Operand<T> x) {
+    return Asin.create(scope, x);
   }
 
   /**
-   * Builds an {@link ApproximateEqual} operation
+   * Builds an {@link Log1p} operation
+   *
+   * @param x 
+   * @return a new instance of Log1p
+   * @see org.tensorflow.op.math.Log1p
+   */
+  public <T extends TType> Log1p<T> log1p(Operand<T> x) {
+    return Log1p.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Conj} operation
+   *
+   * @param input 
+   * @return a new instance of Conj
+   * @see org.tensorflow.op.math.Conj
+   */
+  public <T extends TType> Conj<T> conj(Operand<T> input) {
+    return Conj.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Imag} operation
+   *
+   * @param input 
+   * @return a new instance of Imag
+   * @see org.tensorflow.op.math.Imag
+   */
+  public <T extends TType> Imag<TFloat> imag(Operand<T> input) {
+    return Imag.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Mul} operation
    *
    * @param x 
    * @param y 
-   * @param options carries optional attributes values
-   * @return a new instance of ApproximateEqual
-   * @see org.tensorflow.op.math.ApproximateEqual
+   * @return a new instance of Mul
+   * @see org.tensorflow.op.math.Mul
    */
-  public <T> ApproximateEqual approximateEqual(Operand<T> x, Operand<T> y,
-      ApproximateEqual.Options... options) {
-    return ApproximateEqual.create(scope, x, y, options);
+  public <T extends TType> Mul<T> mul(Operand<T> x, Operand<T> y) {
+    return Mul.create(scope, x, y);
   }
 
   /**
-   * Builds an {@link UnsortedSegmentProd} operation
+   * Builds an {@link Rsqrt} operation
    *
-   * @param data 
-   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-   * @param numSegments 
-   * @return a new instance of UnsortedSegmentProd
-   * @see org.tensorflow.op.math.UnsortedSegmentProd
+   * @param x 
+   * @return a new instance of Rsqrt
+   * @see org.tensorflow.op.math.Rsqrt
    */
-  public <T, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> unsortedSegmentProd(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
-    return UnsortedSegmentProd.create(scope, data, segmentIds, numSegments);
+  public <T extends TType> Rsqrt<T> rsqrt(Operand<T> x) {
+    return Rsqrt.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Tanh} operation
+   *
+   * @param x 
+   * @return a new instance of Tanh
+   * @see org.tensorflow.op.math.Tanh
+   */
+  public <T extends TType> Tanh<T> tanh(Operand<T> x) {
+    return Tanh.create(scope, x);
   }
 
   /**
@@ -664,9 +726,21 @@ public final class MathOps {
    * @return a new instance of Cumsum
    * @see org.tensorflow.op.math.Cumsum
    */
-  public <T, U extends TNumber> Cumsum<T> cumsum(Operand<T> x, Operand<U> axis,
+  public <T extends TType, U extends TNumber> Cumsum<T> cumsum(Operand<T> x, Operand<U> axis,
       Cumsum.Options... options) {
     return Cumsum.create(scope, x, axis, options);
+  }
+
+  /**
+   * Builds an {@link Xlogy} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of Xlogy
+   * @see org.tensorflow.op.math.Xlogy
+   */
+  public <T extends TType> Xlogy<T> xlogy(Operand<T> x, Operand<T> y) {
+    return Xlogy.create(scope, x, y);
   }
 
   /**
@@ -682,71 +756,28 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link QuantizedMul} operation
-   *
-   * @param x 
-   * @param y 
-   * @param minX The float value that the lowest quantized `x` value represents.
-   * @param maxX The float value that the highest quantized `x` value represents.
-   * @param minY The float value that the lowest quantized `y` value represents.
-   * @param maxY The float value that the highest quantized `y` value represents.
-   * @param Toutput 
-   * @return a new instance of QuantizedMul
-   * @see org.tensorflow.op.math.QuantizedMul
-   */
-  public <V, T, U> QuantizedMul<V> quantizedMul(Operand<T> x, Operand<U> y, Operand<TFloat> minX,
-      Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
-    return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
-  }
-
-  /**
-   * Builds an {@link NotEqual} operation
-   *
-   * @param x 
-   * @param y 
-   * @param options carries optional attributes values
-   * @return a new instance of NotEqual
-   * @see org.tensorflow.op.math.NotEqual
-   */
-  public <T> NotEqual notEqual(Operand<T> x, Operand<T> y, NotEqual.Options... options) {
-    return NotEqual.create(scope, x, y, options);
-  }
-
-  /**
-   * Builds an {@link Cumprod} operation
-   *
-   * @param x A `Tensor`. Must be one of the following types: `float32`, `float64`,
-   * @param axis A `Tensor` of type `int32` (default: 0). Must be in the range
-   * @param options carries optional attributes values
-   * @return a new instance of Cumprod
-   * @see org.tensorflow.op.math.Cumprod
-   */
-  public <T, U extends TNumber> Cumprod<T> cumprod(Operand<T> x, Operand<U> axis,
-      Cumprod.Options... options) {
-    return Cumprod.create(scope, x, axis, options);
-  }
-
-  /**
-   * Builds an {@link AccumulateN} operation
-   *
-   * @param inputs A list of `Tensor` objects, each with same shape and type.
-   * @param shape Shape of elements of `inputs`.
-   * @return a new instance of AccumulateN
-   * @see org.tensorflow.op.math.AccumulateN
-   */
-  public <T> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
-    return AccumulateN.create(scope, inputs, shape);
-  }
-
-  /**
    * Builds an {@link Expm1} operation
    *
    * @param x 
    * @return a new instance of Expm1
    * @see org.tensorflow.op.math.Expm1
    */
-  public <T> Expm1<T> expm1(Operand<T> x) {
+  public <T extends TType> Expm1<T> expm1(Operand<T> x) {
     return Expm1.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link UnsortedSegmentSum} operation
+   *
+   * @param data 
+   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
+   * @param numSegments 
+   * @return a new instance of UnsortedSegmentSum
+   * @see org.tensorflow.op.math.UnsortedSegmentSum
+   */
+  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> unsortedSegmentSum(
+      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+    return UnsortedSegmentSum.create(scope, data, segmentIds, numSegments);
   }
 
   /**
@@ -775,6 +806,18 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link FloorDiv} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of FloorDiv
+   * @see org.tensorflow.op.math.FloorDiv
+   */
+  public <T extends TType> FloorDiv<T> floorDiv(Operand<T> x, Operand<T> y) {
+    return FloorDiv.create(scope, x, y);
+  }
+
+  /**
    * Builds an {@link LogicalOr} operation
    *
    * @param x 
@@ -787,36 +830,14 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Log1p} operation
+   * Builds an {@link Neg} operation
    *
    * @param x 
-   * @return a new instance of Log1p
-   * @see org.tensorflow.op.math.Log1p
+   * @return a new instance of Neg
+   * @see org.tensorflow.op.math.Neg
    */
-  public <T> Log1p<T> log1p(Operand<T> x) {
-    return Log1p.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Exp} operation
-   *
-   * @param x 
-   * @return a new instance of Exp
-   * @see org.tensorflow.op.math.Exp
-   */
-  public <T> Exp<T> exp(Operand<T> x) {
-    return Exp.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Real} operation
-   *
-   * @param input 
-   * @return a new instance of Real
-   * @see org.tensorflow.op.math.Real
-   */
-  public <T> Real<TFloat> real(Operand<T> input) {
-    return Real.create(scope, input);
+  public <T extends TType> Neg<T> neg(Operand<T> x) {
+    return Neg.create(scope, x);
   }
 
   /**
@@ -832,15 +853,33 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link SquaredDifference} operation
+   * Builds an {@link QuantizedMul} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of SquaredDifference
-   * @see org.tensorflow.op.math.SquaredDifference
+   * @param minX The float value that the lowest quantized `x` value represents.
+   * @param maxX The float value that the highest quantized `x` value represents.
+   * @param minY The float value that the lowest quantized `y` value represents.
+   * @param maxY The float value that the highest quantized `y` value represents.
+   * @param Toutput 
+   * @return a new instance of QuantizedMul
+   * @see org.tensorflow.op.math.QuantizedMul
    */
-  public <T> SquaredDifference<T> squaredDifference(Operand<T> x, Operand<T> y) {
-    return SquaredDifference.create(scope, x, y);
+  public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
+      Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY,
+      Operand<TFloat> maxY, DataType<V> Toutput) {
+    return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
+  }
+
+  /**
+   * Builds an {@link Acos} operation
+   *
+   * @param x 
+   * @return a new instance of Acos
+   * @see org.tensorflow.op.math.Acos
+   */
+  public <T extends TType> Acos<T> acos(Operand<T> x) {
+    return Acos.create(scope, x);
   }
 
   /**
@@ -856,27 +895,41 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link CompareAndBitpack} operation
+   * Builds an {@link Angle} operation
    *
-   * @param input Values to compare against `threshold` and bitpack.
-   * @param threshold Threshold to compare against.
-   * @return a new instance of CompareAndBitpack
-   * @see org.tensorflow.op.math.CompareAndBitpack
+   * @param input 
+   * @return a new instance of Angle
+   * @see org.tensorflow.op.math.Angle
    */
-  public <T> CompareAndBitpack compareAndBitpack(Operand<T> input, Operand<T> threshold) {
-    return CompareAndBitpack.create(scope, input, threshold);
+  public <T extends TType> Angle<TFloat> angle(Operand<T> input) {
+    return Angle.create(scope, input);
   }
 
   /**
-   * Builds an {@link Sub} operation
+   * Builds an {@link ApproximateEqual} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of Sub
-   * @see org.tensorflow.op.math.Sub
+   * @param options carries optional attributes values
+   * @return a new instance of ApproximateEqual
+   * @see org.tensorflow.op.math.ApproximateEqual
    */
-  public <T> Sub<T> sub(Operand<T> x, Operand<T> y) {
-    return Sub.create(scope, x, y);
+  public <T extends TType> ApproximateEqual approximateEqual(Operand<T> x, Operand<T> y,
+      ApproximateEqual.Options... options) {
+    return ApproximateEqual.create(scope, x, y, options);
+  }
+
+  /**
+   * Builds an {@link SegmentMean} operation
+   *
+   * @param data 
+   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
+   * @return a new instance of SegmentMean
+   * @see org.tensorflow.op.math.SegmentMean
+   */
+  public <T extends TType, U extends TNumber> SegmentMean<T> segmentMean(Operand<T> data,
+      Operand<U> segmentIds) {
+    return SegmentMean.create(scope, data, segmentIds);
   }
 
   /**
@@ -891,6 +944,17 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Sqrt} operation
+   *
+   * @param x 
+   * @return a new instance of Sqrt
+   * @see org.tensorflow.op.math.Sqrt
+   */
+  public <T extends TType> Sqrt<T> sqrt(Operand<T> x) {
+    return Sqrt.create(scope, x);
+  }
+
+  /**
    * Builds an {@link IsNan} operation
    *
    * @param x 
@@ -902,6 +966,19 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Equal} operation
+   *
+   * @param x 
+   * @param y 
+   * @param options carries optional attributes values
+   * @return a new instance of Equal
+   * @see org.tensorflow.op.math.Equal
+   */
+  public <T extends TType> Equal equal(Operand<T> x, Operand<T> y, Equal.Options... options) {
+    return Equal.create(scope, x, y, options);
+  }
+
+  /**
    * Builds an {@link Erf} operation
    *
    * @param x 
@@ -910,28 +987,6 @@ public final class MathOps {
    */
   public <T extends TNumber> Erf<T> erf(Operand<T> x) {
     return Erf.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Round} operation
-   *
-   * @param x 
-   * @return a new instance of Round
-   * @see org.tensorflow.op.math.Round
-   */
-  public <T> Round<T> round(Operand<T> x) {
-    return Round.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Asin} operation
-   *
-   * @param x 
-   * @return a new instance of Asin
-   * @see org.tensorflow.op.math.Asin
-   */
-  public <T> Asin<T> asin(Operand<T> x) {
-    return Asin.create(scope, x);
   }
 
   /**
@@ -947,50 +1002,38 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Imag} operation
-   *
-   * @param input 
-   * @param Tout 
-   * @return a new instance of Imag
-   * @see org.tensorflow.op.math.Imag
-   */
-  public <U extends TNumber, T> Imag<U> imag(Operand<T> input, DataType<U> Tout) {
-    return Imag.create(scope, input, Tout);
-  }
-
-  /**
-   * Builds an {@link Sign} operation
+   * Builds an {@link Square} operation
    *
    * @param x 
-   * @return a new instance of Sign
-   * @see org.tensorflow.op.math.Sign
+   * @return a new instance of Square
+   * @see org.tensorflow.op.math.Square
    */
-  public <T> Sign<T> sign(Operand<T> x) {
-    return Sign.create(scope, x);
+  public <T extends TType> Square<T> square(Operand<T> x) {
+    return Square.create(scope, x);
   }
 
   /**
-   * Builds an {@link Div} operation
+   * Builds an {@link Sub} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of Div
-   * @see org.tensorflow.op.math.Div
+   * @return a new instance of Sub
+   * @see org.tensorflow.op.math.Sub
    */
-  public <T> Div<T> div(Operand<T> x, Operand<T> y) {
-    return Div.create(scope, x, y);
+  public <T extends TType> Sub<T> sub(Operand<T> x, Operand<T> y) {
+    return Sub.create(scope, x, y);
   }
 
   /**
-   * Builds an {@link Pow} operation
+   * Builds an {@link AccumulateN} operation
    *
-   * @param x 
-   * @param y 
-   * @return a new instance of Pow
-   * @see org.tensorflow.op.math.Pow
+   * @param inputs A list of `Tensor` objects, each with same shape and type.
+   * @param shape Shape of elements of `inputs`.
+   * @return a new instance of AccumulateN
+   * @see org.tensorflow.op.math.AccumulateN
    */
-  public <T> Pow<T> pow(Operand<T> x, Operand<T> y) {
-    return Pow.create(scope, x, y);
+  public <T extends TType> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
+    return AccumulateN.create(scope, inputs, shape);
   }
 
   /**
@@ -1005,17 +1048,6 @@ public final class MathOps {
   public <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMax<T> unsortedSegmentMax(
       Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     return UnsortedSegmentMax.create(scope, data, segmentIds, numSegments);
-  }
-
-  /**
-   * Builds an {@link Imag} operation
-   *
-   * @param input 
-   * @return a new instance of Imag
-   * @see org.tensorflow.op.math.Imag
-   */
-  public <T> Imag<TFloat> imag(Operand<T> input) {
-    return Imag.create(scope, input);
   }
 
   /**
@@ -1064,15 +1096,39 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link DivNoNan} operation
+   * Builds an {@link SegmentProd} operation
+   *
+   * @param data 
+   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
+   * @return a new instance of SegmentProd
+   * @see org.tensorflow.op.math.SegmentProd
+   */
+  public <T extends TType, U extends TNumber> SegmentProd<T> segmentProd(Operand<T> data,
+      Operand<U> segmentIds) {
+    return SegmentProd.create(scope, data, segmentIds);
+  }
+
+  /**
+   * Builds an {@link AddN} operation
+   *
+   * @param inputs 
+   * @return a new instance of AddN
+   * @see org.tensorflow.op.math.AddN
+   */
+  public <T extends TType> AddN<T> addN(Iterable<Operand<T>> inputs) {
+    return AddN.create(scope, inputs);
+  }
+
+  /**
+   * Builds an {@link RealDiv} operation
    *
    * @param x 
    * @param y 
-   * @return a new instance of DivNoNan
-   * @see org.tensorflow.op.math.DivNoNan
+   * @return a new instance of RealDiv
+   * @see org.tensorflow.op.math.RealDiv
    */
-  public <T> DivNoNan<T> divNoNan(Operand<T> x, Operand<T> y) {
-    return DivNoNan.create(scope, x, y);
+  public <T extends TType> RealDiv<T> realDiv(Operand<T> x, Operand<T> y) {
+    return RealDiv.create(scope, x, y);
   }
 
   /**
@@ -1082,19 +1138,49 @@ public final class MathOps {
    * @return a new instance of Sinh
    * @see org.tensorflow.op.math.Sinh
    */
-  public <T> Sinh<T> sinh(Operand<T> x) {
+  public <T extends TType> Sinh<T> sinh(Operand<T> x) {
     return Sinh.create(scope, x);
   }
 
   /**
-   * Builds an {@link Rsqrt} operation
+   * Builds an {@link ComplexAbs} operation
    *
    * @param x 
-   * @return a new instance of Rsqrt
-   * @see org.tensorflow.op.math.Rsqrt
+   * @return a new instance of ComplexAbs
+   * @see org.tensorflow.op.math.ComplexAbs
    */
-  public <T> Rsqrt<T> rsqrt(Operand<T> x) {
-    return Rsqrt.create(scope, x);
+  public <T extends TType> ComplexAbs<TFloat> complexAbs(Operand<T> x) {
+    return ComplexAbs.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link QuantizedAdd} operation
+   *
+   * @param x 
+   * @param y 
+   * @param minX The float value that the lowest quantized `x` value represents.
+   * @param maxX The float value that the highest quantized `x` value represents.
+   * @param minY The float value that the lowest quantized `y` value represents.
+   * @param maxY The float value that the highest quantized `y` value represents.
+   * @param Toutput 
+   * @return a new instance of QuantizedAdd
+   * @see org.tensorflow.op.math.QuantizedAdd
+   */
+  public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
+      Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY,
+      Operand<TFloat> maxY, DataType<V> Toutput) {
+    return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
+  }
+
+  /**
+   * Builds an {@link Acosh} operation
+   *
+   * @param x 
+   * @return a new instance of Acosh
+   * @see org.tensorflow.op.math.Acosh
+   */
+  public <T extends TType> Acosh<T> acosh(Operand<T> x) {
+    return Acosh.create(scope, x);
   }
 
   /**
@@ -1133,32 +1219,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link ComplexAbs} operation
-   *
-   * @param x 
-   * @param Tout 
-   * @return a new instance of ComplexAbs
-   * @see org.tensorflow.op.math.ComplexAbs
-   */
-  public <U extends TNumber, T> ComplexAbs<U> complexAbs(Operand<T> x, DataType<U> Tout) {
-    return ComplexAbs.create(scope, x, Tout);
-  }
-
-  /**
-   * Builds an {@link ArgMin} operation
-   *
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
-   * @param outputType 
-   * @return a new instance of ArgMin
-   * @see org.tensorflow.op.math.ArgMin
-   */
-  public <V extends TNumber, T, U extends TNumber> ArgMin<V> argMin(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
-    return ArgMin.create(scope, input, dimension, outputType);
-  }
-
-  /**
    * Builds an {@link Softplus} operation
    *
    * @param features 
@@ -1170,73 +1230,25 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Tanh} operation
+   * Builds an {@link Asinh} operation
    *
    * @param x 
-   * @return a new instance of Tanh
-   * @see org.tensorflow.op.math.Tanh
+   * @return a new instance of Asinh
+   * @see org.tensorflow.op.math.Asinh
    */
-  public <T> Tanh<T> tanh(Operand<T> x) {
-    return Tanh.create(scope, x);
+  public <T extends TType> Asinh<T> asinh(Operand<T> x) {
+    return Asinh.create(scope, x);
   }
 
   /**
-   * Builds an {@link AddN} operation
-   *
-   * @param inputs 
-   * @return a new instance of AddN
-   * @see org.tensorflow.op.math.AddN
-   */
-  public <T> AddN<T> addN(Iterable<Operand<T>> inputs) {
-    return AddN.create(scope, inputs);
-  }
-
-  /**
-   * Builds an {@link Cosh} operation
+   * Builds an {@link Sin} operation
    *
    * @param x 
-   * @return a new instance of Cosh
-   * @see org.tensorflow.op.math.Cosh
+   * @return a new instance of Sin
+   * @see org.tensorflow.op.math.Sin
    */
-  public <T> Cosh<T> cosh(Operand<T> x) {
-    return Cosh.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link ArgMax} operation
-   *
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
-   * @param outputType 
-   * @return a new instance of ArgMax
-   * @see org.tensorflow.op.math.ArgMax
-   */
-  public <V extends TNumber, T, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
-    return ArgMax.create(scope, input, dimension, outputType);
-  }
-
-  /**
-   * Builds an {@link Conj} operation
-   *
-   * @param input 
-   * @return a new instance of Conj
-   * @see org.tensorflow.op.math.Conj
-   */
-  public <T> Conj<T> conj(Operand<T> input) {
-    return Conj.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Angle} operation
-   *
-   * @param input 
-   * @param Tout 
-   * @return a new instance of Angle
-   * @see org.tensorflow.op.math.Angle
-   */
-  public <U extends TNumber, T> Angle<U> angle(Operand<T> input, DataType<U> Tout) {
-    return Angle.create(scope, input, Tout);
+  public <T extends TType> Sin<T> sin(Operand<T> x) {
+    return Sin.create(scope, x);
   }
 
   /**
@@ -1251,30 +1263,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link ArgMin} operation
-   *
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
-   * @return a new instance of ArgMin
-   * @see org.tensorflow.op.math.ArgMin
-   */
-  public <T, U extends TNumber> ArgMin<TInt64> argMin(Operand<T> input, Operand<U> dimension) {
-    return ArgMin.create(scope, input, dimension);
-  }
-
-  /**
-   * Builds an {@link Add} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of Add
-   * @see org.tensorflow.op.math.Add
-   */
-  public <T> Add<T> add(Operand<T> x, Operand<T> y) {
-    return Add.create(scope, x, y);
-  }
-
-  /**
    * Builds an {@link Fact} operation
    *
    * @return a new instance of Fact
@@ -1285,44 +1273,76 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Cos} operation
+   * Builds an {@link SegmentSum} operation
+   *
+   * @param data 
+   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
+   * @return a new instance of SegmentSum
+   * @see org.tensorflow.op.math.SegmentSum
+   */
+  public <T extends TType, U extends TNumber> SegmentSum<T> segmentSum(Operand<T> data,
+      Operand<U> segmentIds) {
+    return SegmentSum.create(scope, data, segmentIds);
+  }
+
+  /**
+   * Builds an {@link Sigmoid} operation
    *
    * @param x 
-   * @return a new instance of Cos
-   * @see org.tensorflow.op.math.Cos
+   * @return a new instance of Sigmoid
+   * @see org.tensorflow.op.math.Sigmoid
    */
-  public <T> Cos<T> cos(Operand<T> x) {
-    return Cos.create(scope, x);
+  public <T extends TType> Sigmoid<T> sigmoid(Operand<T> x) {
+    return Sigmoid.create(scope, x);
   }
 
   /**
-   * Builds an {@link Real} operation
-   *
-   * @param input 
-   * @param Tout 
-   * @return a new instance of Real
-   * @see org.tensorflow.op.math.Real
-   */
-  public <U extends TNumber, T> Real<U> real(Operand<T> input, DataType<U> Tout) {
-    return Real.create(scope, input, Tout);
-  }
-
-  /**
-   * Builds an {@link QuantizedAdd} operation
+   * Builds an {@link Xdivy} operation
    *
    * @param x 
    * @param y 
-   * @param minX The float value that the lowest quantized `x` value represents.
-   * @param maxX The float value that the highest quantized `x` value represents.
-   * @param minY The float value that the lowest quantized `y` value represents.
-   * @param maxY The float value that the highest quantized `y` value represents.
-   * @param Toutput 
-   * @return a new instance of QuantizedAdd
-   * @see org.tensorflow.op.math.QuantizedAdd
+   * @return a new instance of Xdivy
+   * @see org.tensorflow.op.math.Xdivy
    */
-  public <V, T, U> QuantizedAdd<V> quantizedAdd(Operand<T> x, Operand<U> y, Operand<TFloat> minX,
-      Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
-    return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
+  public <T extends TType> Xdivy<T> xdivy(Operand<T> x, Operand<T> y) {
+    return Xdivy.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link Tan} operation
+   *
+   * @param x 
+   * @return a new instance of Tan
+   * @see org.tensorflow.op.math.Tan
+   */
+  public <T extends TType> Tan<T> tan(Operand<T> x) {
+    return Tan.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link ArgMin} operation
+   *
+   * @param input 
+   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @return a new instance of ArgMin
+   * @see org.tensorflow.op.math.ArgMin
+   */
+  public <T extends TType, U extends TNumber> ArgMin<TInt64> argMin(Operand<T> input,
+      Operand<U> dimension) {
+    return ArgMin.create(scope, input, dimension);
+  }
+
+  /**
+   * Builds an {@link CompareAndBitpack} operation
+   *
+   * @param input Values to compare against `threshold` and bitpack.
+   * @param threshold Threshold to compare against.
+   * @return a new instance of CompareAndBitpack
+   * @see org.tensorflow.op.math.CompareAndBitpack
+   */
+  public <T extends TType> CompareAndBitpack compareAndBitpack(Operand<T> input,
+      Operand<T> threshold) {
+    return CompareAndBitpack.create(scope, input, threshold);
   }
 
   /**
@@ -1350,36 +1370,27 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link SegmentProd} operation
+   * Builds an {@link ComplexAbs} operation
    *
-   * @param data 
-   * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
-   * @return a new instance of SegmentProd
-   * @see org.tensorflow.op.math.SegmentProd
+   * @param x 
+   * @param Tout 
+   * @return a new instance of ComplexAbs
+   * @see org.tensorflow.op.math.ComplexAbs
    */
-  public <T, U extends TNumber> SegmentProd<T> segmentProd(Operand<T> data, Operand<U> segmentIds) {
-    return SegmentProd.create(scope, data, segmentIds);
+  public <U extends TNumber, T extends TType> ComplexAbs<U> complexAbs(Operand<T> x,
+      DataType<U> Tout) {
+    return ComplexAbs.create(scope, x, Tout);
   }
 
   /**
-   * Builds an {@link Atanh} operation
+   * Builds an {@link Imag} operation
    *
-   * @param x 
-   * @return a new instance of Atanh
-   * @see org.tensorflow.op.math.Atanh
+   * @param input 
+   * @param Tout 
+   * @return a new instance of Imag
+   * @see org.tensorflow.op.math.Imag
    */
-  public <T> Atanh<T> atanh(Operand<T> x) {
-    return Atanh.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link Reciprocal} operation
-   *
-   * @param x 
-   * @return a new instance of Reciprocal
-   * @see org.tensorflow.op.math.Reciprocal
-   */
-  public <T> Reciprocal<T> reciprocal(Operand<T> x) {
-    return Reciprocal.create(scope, x);
+  public <U extends TNumber, T extends TType> Imag<U> imag(Operand<T> input, DataType<U> Tout) {
+    return Imag.create(scope, input, Tout);
   }
 }

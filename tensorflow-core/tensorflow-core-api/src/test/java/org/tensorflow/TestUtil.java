@@ -52,7 +52,7 @@ public class TestUtil {
     }
   }
 
-  public static <T> Output<T> constant(ExecutionEnvironment env, String name, Object value) {
+  public static <T extends TType> Output<T> constant(ExecutionEnvironment env, String name, Object value) {
     try (Tensor<?> t = Tensor.create(value)) {
       return env.opBuilder("Const", name)
           .setAttr("dtype", t.dataType())
@@ -69,11 +69,11 @@ public class TestUtil {
         .output(0);
   }
 
-  public static <T> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
+  public static <T extends TType> Output<T> addN(ExecutionEnvironment env, Output<?>... inputs) {
     return env.opBuilder("AddN", "AddN").addInputList(inputs).build().output(0);
   }
 
-  public static <T> Output<T> matmul(
+  public static <T extends TType> Output<T> matmul(
       Graph g, String name, Output<T> a, Output<T> b, boolean transposeA, boolean transposeB) {
     return g.opBuilder("MatMul", name)
         .addInput(a)
@@ -92,7 +92,7 @@ public class TestUtil {
         .build();
   }
   
-  public static <T> Output<T> square(Graph g, String name, Output<T> value) {
+  public static <T extends TType> Output<T> square(Graph g, String name, Output<T> value) {
     return g.opBuilder("Square", name)
         .addInput(value)
         .build()
@@ -151,7 +151,7 @@ public class TestUtil {
   /**
    * Converts a {@code boolean[]} to a {@code byte[]}.
    *
-   * <p>Suitable for creating tensors of type {@link DataType#BOOL} using {@link
+   * <p>Suitable for creating tensors of type {@link org.tensorflow.types.TBool TBool} using {@link
    * java.nio.ByteBuffer}.
    */
   public static byte[] bool2byte(boolean[] array) {
@@ -165,7 +165,7 @@ public class TestUtil {
   /**
    * Converts a {@code byte[]} to a {@code boolean[]}.
    *
-   * <p>Suitable for reading tensors of type {@link DataType#BOOL} using {@link
+   * <p>Suitable for reading tensors of type {@link org.tensorflow.types.TBool TBool} using {@link
    * java.nio.ByteBuffer}.
    */
   public static boolean[] byte2bool(byte[] array) {

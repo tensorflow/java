@@ -25,11 +25,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListConcatLists extends PrimitiveOp implements Operand<Object> {
+public final class TensorListConcatLists extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListConcatLists operation.
@@ -40,7 +41,7 @@ public final class TensorListConcatLists extends PrimitiveOp implements Operand<
    * @param elementDtype 
    * @return a new instance of TensorListConcatLists
    */
-  public static <T> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
@@ -57,8 +58,8 @@ public final class TensorListConcatLists extends PrimitiveOp implements Operand<
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) output;
+  public Output<TType> asOutput() {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

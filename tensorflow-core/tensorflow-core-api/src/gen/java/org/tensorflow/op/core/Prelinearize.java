@@ -25,11 +25,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * An op which linearizes one Tensor value to an opaque variant tensor.
  */
-public final class Prelinearize extends PrimitiveOp implements Operand<Object> {
+public final class Prelinearize extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Prelinearize}
@@ -69,7 +70,7 @@ public final class Prelinearize extends PrimitiveOp implements Operand<Object> {
    * @param options carries optional attributes values
    * @return a new instance of Prelinearize
    */
-  public static <T> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prelinearize", scope.makeOpName("Prelinearize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -114,8 +115,8 @@ public final class Prelinearize extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) output;
+  public Output<TType> asOutput() {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

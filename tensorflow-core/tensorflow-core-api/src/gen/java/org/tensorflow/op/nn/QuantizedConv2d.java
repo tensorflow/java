@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes a 2D convolution given quantized 4D input and filter tensors.
@@ -39,7 +40,7 @@ import org.tensorflow.types.TFloat;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedConv2d<V> extends PrimitiveOp {
+public final class QuantizedConv2d<V extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2d}
@@ -81,7 +82,7 @@ public final class QuantizedConv2d<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2d
    */
-  public static <V, T, U> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2D", scope.makeOpName("QuantizedConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

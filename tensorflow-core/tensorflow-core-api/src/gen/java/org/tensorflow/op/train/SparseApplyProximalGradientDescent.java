@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Sparse update '*var' as FOBOS algorithm with fixed learning rate.
@@ -36,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class SparseApplyProximalGradientDescent<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseApplyProximalGradientDescent<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyProximalGradientDescent}
@@ -71,7 +72,7 @@ public final class SparseApplyProximalGradientDescent<T> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyProximalGradientDescent
    */
-  public static <T, U extends TNumber> SparseApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyProximalGradientDescent", scope.makeOpName("SparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());

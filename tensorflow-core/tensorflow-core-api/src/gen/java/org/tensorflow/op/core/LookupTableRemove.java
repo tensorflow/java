@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Removes keys and its associated values from a table.
@@ -39,7 +40,7 @@ public final class LookupTableRemove extends PrimitiveOp {
    * @param keys Any shape.  Keys of the elements to remove.
    * @return a new instance of LookupTableRemove
    */
-  public static <T> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
+  public static <T extends TType> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

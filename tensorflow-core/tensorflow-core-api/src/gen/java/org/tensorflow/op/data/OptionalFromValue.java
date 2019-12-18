@@ -25,12 +25,13 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Constructs an Optional variant from a tuple of tensors.
  */
 @Operator(group = "data")
-public final class OptionalFromValue extends PrimitiveOp implements Operand<Object> {
+public final class OptionalFromValue extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new OptionalFromValue operation.
@@ -54,8 +55,8 @@ public final class OptionalFromValue extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) optional;
+  public Output<TType> asOutput() {
+    return (Output<TType>) optional;
   }
   
   private Output<?> optional;

@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op that passes through `input` when its output is not fed.
@@ -32,7 +33,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class PlaceholderWithDefault<T> extends PrimitiveOp implements Operand<T> {
+public final class PlaceholderWithDefault<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new PlaceholderWithDefault operation.
@@ -42,7 +43,7 @@ public final class PlaceholderWithDefault<T> extends PrimitiveOp implements Oper
    * @param shape The (possibly partial) shape of the tensor.
    * @return a new instance of PlaceholderWithDefault
    */
-  public static <T> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("PlaceholderWithDefault", scope.makeOpName("PlaceholderWithDefault"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Op peeks at the values at the specified key.  If the
@@ -38,7 +39,7 @@ import org.tensorflow.types.TInt64;
  * this op will block until it does.
  */
 @Operator
-public final class MapPeek extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class MapPeek extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MapPeek}
@@ -161,7 +162,7 @@ public final class MapPeek extends PrimitiveOp implements Iterable<Operand<Objec
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
   

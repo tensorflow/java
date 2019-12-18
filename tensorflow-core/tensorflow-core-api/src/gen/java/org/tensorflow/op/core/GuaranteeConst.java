@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gives a guarantee to the TF runtime that the input tensor is a constant.
@@ -38,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class GuaranteeConst<T> extends PrimitiveOp implements Operand<T> {
+public final class GuaranteeConst<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new GuaranteeConst operation.
@@ -47,7 +48,7 @@ public final class GuaranteeConst<T> extends PrimitiveOp implements Operand<T> {
    * @param input 
    * @return a new instance of GuaranteeConst
    */
-  public static <T> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("GuaranteeConst", scope.makeOpName("GuaranteeConst"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

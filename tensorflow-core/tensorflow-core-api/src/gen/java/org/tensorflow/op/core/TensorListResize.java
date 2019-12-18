@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Resizes the list.
@@ -35,7 +36,7 @@ import org.tensorflow.types.TInt32;
  * 
  */
 @Operator
-public final class TensorListResize extends PrimitiveOp implements Operand<Object> {
+public final class TensorListResize extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListResize operation.
@@ -61,8 +62,8 @@ public final class TensorListResize extends PrimitiveOp implements Operand<Objec
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

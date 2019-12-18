@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Pads a tensor with mirrored values.
@@ -58,7 +59,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class MirrorPad<T> extends PrimitiveOp implements Operand<T> {
+public final class MirrorPad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MirrorPad operation.
@@ -74,7 +75,7 @@ public final class MirrorPad<T> extends PrimitiveOp implements Operand<T> {
    * it is `[1, 2, 3, 3, 2]` in symmetric mode.
    * @return a new instance of MirrorPad
    */
-  public static <T, U extends TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T extends TType, U extends TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPad", scope.makeOpName("MirrorPad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

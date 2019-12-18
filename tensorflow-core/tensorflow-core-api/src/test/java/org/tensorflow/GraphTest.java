@@ -270,7 +270,7 @@ public class GraphTest {
             @Override
             public void buildSubgraph(
                 Graph condGraph, Output<?>[] condInputs, Output<?>[] condOutputs) {
-              Output<Integer> sixteen = TestUtil.constant(condGraph, "sixteen", 16);
+              Output<TInt32> sixteen = TestUtil.constant(condGraph, "sixteen", 16);
               // condInputs[0] < 16
               Output<?> condOutput =
                   condGraph
@@ -320,7 +320,7 @@ public class GraphTest {
             @Override
             public void buildSubgraph(
                 Graph condGraph, Output<?>[] condInputs, Output<?>[] condOutputs) {
-              Output<Integer> sixteen = TestUtil.constant(condGraph, "sixteen", 16);
+              Output<TInt32> sixteen = TestUtil.constant(condGraph, "sixteen", 16);
               Output<?> condOutput =
                   condGraph
                       .opBuilder("Less", "cond")

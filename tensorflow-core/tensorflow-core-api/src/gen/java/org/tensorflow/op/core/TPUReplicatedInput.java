@@ -24,13 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Connects N inputs to an N-way replicated TPU computation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TPUReplicatedInput<T> extends PrimitiveOp implements Operand<T> {
+public final class TPUReplicatedInput<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TPUReplicatedInput operation.
@@ -39,7 +40,7 @@ public final class TPUReplicatedInput<T> extends PrimitiveOp implements Operand<
    * @param inputs 
    * @return a new instance of TPUReplicatedInput
    */
-  public static <T> TPUReplicatedInput<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+  public static <T extends TType> TPUReplicatedInput<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedInput", scope.makeOpName("TPUReplicatedInput"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

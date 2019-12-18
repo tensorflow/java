@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Holds state in the form of a tensor that persists across steps.
@@ -37,7 +38,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code ref()} output
  */
 @Operator
-public final class Variable<T> extends PrimitiveOp implements Operand<T> {
+public final class Variable<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Variable}
@@ -78,7 +79,7 @@ public final class Variable<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Variable
    */
-  public static <T> Variable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
+  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableV2", scope.makeOpName("Variable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);

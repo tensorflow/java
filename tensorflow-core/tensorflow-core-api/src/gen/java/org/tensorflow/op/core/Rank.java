@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the rank of a tensor.
@@ -51,7 +52,7 @@ public final class Rank extends PrimitiveOp implements Operand<TInt32> {
    * @param input 
    * @return a new instance of Rank
    */
-  public static <T> Rank create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Rank create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rank", scope.makeOpName("Rank"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

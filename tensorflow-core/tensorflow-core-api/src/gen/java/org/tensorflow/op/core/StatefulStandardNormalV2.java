@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a normal distribution.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TInt64;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class StatefulStandardNormalV2<U> extends PrimitiveOp implements Operand<U> {
+public final class StatefulStandardNormalV2<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new StatefulStandardNormalV2 operation.
@@ -48,7 +49,7 @@ public final class StatefulStandardNormalV2<U> extends PrimitiveOp implements Op
    * @param dtype The type of the output.
    * @return a new instance of StatefulStandardNormalV2
    */
-  public static <U, T> StatefulStandardNormalV2<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulStandardNormalV2<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormalV2"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -67,7 +68,7 @@ public final class StatefulStandardNormalV2<U> extends PrimitiveOp implements Op
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulStandardNormalV2
    */
-  public static <T> StatefulStandardNormalV2<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+  public static <T extends TType> StatefulStandardNormalV2<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return create(scope, resource, algorithm, shape, TFloat.DTYPE);
   }
   

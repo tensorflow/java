@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gradient of Unbatch.
@@ -47,7 +48,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code batchedGrad()} output
  */
 @Operator
-public final class UnbatchGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class UnbatchGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.UnbatchGrad}
@@ -88,7 +89,7 @@ public final class UnbatchGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of UnbatchGrad
    */
-  public static <T> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
+  public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnbatchGrad", scope.makeOpName("UnbatchGrad"));
     opBuilder.addInput(originalInput.asOutput());
     opBuilder.addInput(batchIndex.asOutput());

@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Performs max pooling on the input.
@@ -32,7 +33,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPool<T> extends PrimitiveOp implements Operand<T> {
+public final class MaxPool<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPool}
@@ -69,7 +70,7 @@ public final class MaxPool<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of MaxPool
    */
-  public static <T> MaxPool<T> create(Scope scope, Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
+  public static <T extends TType> MaxPool<T> create(Scope scope, Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolV2", scope.makeOpName("MaxPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(ksize.asOutput());

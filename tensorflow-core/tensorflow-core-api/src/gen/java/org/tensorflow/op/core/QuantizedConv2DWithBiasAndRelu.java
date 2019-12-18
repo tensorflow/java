@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <V> data type for {@code output()} output
  */
-public final class QuantizedConv2DWithBiasAndRelu<V> extends PrimitiveOp {
+public final class QuantizedConv2DWithBiasAndRelu<V extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedConv2DWithBiasAndRelu}
@@ -77,7 +78,7 @@ public final class QuantizedConv2DWithBiasAndRelu<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasAndRelu
    */
-  public static <V, T, U> QuantizedConv2DWithBiasAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DWithBiasAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasAndRelu", scope.makeOpName("QuantizedConv2DWithBiasAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

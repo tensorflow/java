@@ -25,13 +25,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class InfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
+public final class InfeedDequeue<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InfeedDequeue operation.
@@ -41,7 +42,7 @@ public final class InfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
    * @param shape The shape of the tensor.
    * @return a new instance of InfeedDequeue
    */
-  public static <T> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
+  public static <T extends TType> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

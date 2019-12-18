@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorList which, when stacked, has the value of `tensor`.
@@ -35,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  * output_handle: The list.
  */
 @Operator
-public final class TensorListFromTensor extends PrimitiveOp implements Operand<Object> {
+public final class TensorListFromTensor extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListFromTensor operation.
@@ -45,7 +46,7 @@ public final class TensorListFromTensor extends PrimitiveOp implements Operand<O
    * @param elementShape 
    * @return a new instance of TensorListFromTensor
    */
-  public static <T, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
+  public static <T extends TType, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
@@ -61,8 +62,8 @@ public final class TensorListFromTensor extends PrimitiveOp implements Operand<O
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

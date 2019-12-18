@@ -41,7 +41,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
    * Controls how to act when we try to run an operation on a given device but some input tensors
    * are not on that device.
    */
-  public static enum DevicePlacementPolicy {
+  public enum DevicePlacementPolicy {
 
     /** Running operations with input tensors on the wrong device will fail. */
     EXPLICIT(0),
@@ -58,7 +58,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     /** Placement policy which silently copies int32 tensors but not other dtypes. */
     SILENT_FOR_INT32(3);
 
-    private DevicePlacementPolicy(int code) {
+    DevicePlacementPolicy(int code) {
       this.code = code;
     }
 
@@ -77,7 +77,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
    * <p>{@code EagerSession} instances can be notified in different ways when TensorFlow objects are
    * no longer being referred, so they can proceed to the cleanup of any resources they owned.
    */
-  public static enum ResourceCleanupStrategy {
+  public enum ResourceCleanupStrategy {
 
     /**
      * Monitor and delete unused resources from a new thread running in background.

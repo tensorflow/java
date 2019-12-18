@@ -17,9 +17,10 @@ package org.tensorflow;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /** Represents a type of elements in a {@link Tensor} */
-public final class DataType<T> {
+public final class DataType<T extends TType> {
 
   @FunctionalInterface
   public interface TensorMapper<T> {
@@ -42,7 +43,7 @@ public final class DataType<T> {
    * @param byteSize size of an element of this type, in bytes, -1 if unknown
    * @param tensorMapper method for mapping tensor memory to elements of this type
    */
-  public static <T> DataType<T> create(String name, int value, int byteSize, TensorMapper<T> tensorMapper) {
+  public static <T extends TType> DataType<T> create(String name, int value, int byteSize, TensorMapper<T> tensorMapper) {
     return new DataType<>(name, value, byteSize, tensorMapper);
   }
 

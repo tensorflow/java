@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Assigns a new value to a variable.
@@ -41,7 +42,7 @@ public final class AssignVariableOp extends PrimitiveOp {
    * @param value the value to set the new tensor to use.
    * @return a new instance of AssignVariableOp
    */
-  public static <T> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static <T extends TType> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignVariableOp", scope.makeOpName("AssignVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());

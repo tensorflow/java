@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the momentum scheme. Set use_nesterov = True if you
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyMomentum<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyMomentum<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyMomentum}
@@ -82,7 +83,7 @@ public final class ApplyMomentum<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyMomentum
    */
-  public static <T> ApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
+  public static <T extends TType> ApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyMomentum", scope.makeOpName("ApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

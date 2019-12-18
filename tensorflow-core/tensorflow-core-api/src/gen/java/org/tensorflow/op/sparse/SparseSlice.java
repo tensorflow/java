@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Slice a `SparseTensor` based on the `start` and `size`.
@@ -48,7 +49,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseSlice<T> extends PrimitiveOp {
+public final class SparseSlice<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSlice operation.
@@ -63,7 +64,7 @@ public final class SparseSlice<T> extends PrimitiveOp {
    * sparse tensors.
    * @return a new instance of SparseSlice
    */
-  public static <T> SparseSlice<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
+  public static <T extends TType> SparseSlice<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSlice", scope.makeOpName("SparseSlice"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());

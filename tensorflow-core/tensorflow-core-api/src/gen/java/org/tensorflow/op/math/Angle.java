@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the argument of a complex number.
@@ -60,7 +61,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param Tout 
    * @return a new instance of Angle
    */
-  public static <U extends TNumber, T> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -75,7 +76,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Angle
    */
-  public static <T> Angle<TFloat> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Angle<TFloat> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat.DTYPE);
   }
   

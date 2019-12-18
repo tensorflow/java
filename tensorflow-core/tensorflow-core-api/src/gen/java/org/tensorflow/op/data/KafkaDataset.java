@@ -27,12 +27,13 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that emits the messages of one or more Kafka topics.
  */
 @Operator(group = "data")
-public final class KafkaDataset extends PrimitiveOp implements Operand<Object> {
+public final class KafkaDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new KafkaDataset operation.
@@ -76,8 +77,8 @@ public final class KafkaDataset extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

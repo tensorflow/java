@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A queue that produces elements sorted by the first component value.
@@ -38,7 +39,7 @@ import org.tensorflow.tools.Shape;
  * entry in their input (resp. output) lists.
  */
 @Operator(group = "io")
-public final class PriorityQueue extends PrimitiveOp implements Operand<Object> {
+public final class PriorityQueue extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.PriorityQueue}
@@ -154,8 +155,8 @@ public final class PriorityQueue extends PrimitiveOp implements Operand<Object> 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

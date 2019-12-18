@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the value of an available tensor from `inputs` to `output`.
@@ -37,7 +38,7 @@ import org.tensorflow.types.TInt32;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefMerge<T> extends PrimitiveOp {
+public final class RefMerge<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new RefMerge operation.
@@ -46,7 +47,7 @@ public final class RefMerge<T> extends PrimitiveOp {
    * @param inputs The input tensors, exactly one of which will become available.
    * @return a new instance of RefMerge
    */
-  public static <T> RefMerge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+  public static <T extends TType> RefMerge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefMerge", scope.makeOpName("RefMerge"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

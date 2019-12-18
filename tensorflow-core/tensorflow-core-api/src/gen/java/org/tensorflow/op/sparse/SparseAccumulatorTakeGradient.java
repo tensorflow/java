@@ -28,6 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Extracts the average sparse gradient in a SparseConditionalAccumulator.
@@ -42,7 +43,7 @@ import org.tensorflow.types.TString;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "sparse")
-public final class SparseAccumulatorTakeGradient<T> extends PrimitiveOp {
+public final class SparseAccumulatorTakeGradient<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseAccumulatorTakeGradient operation.
@@ -54,7 +55,7 @@ public final class SparseAccumulatorTakeGradient<T> extends PrimitiveOp {
    * of the accumulator.
    * @return a new instance of SparseAccumulatorTakeGradient
    */
-  public static <T> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());

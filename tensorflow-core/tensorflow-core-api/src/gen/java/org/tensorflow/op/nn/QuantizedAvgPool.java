@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produces the average pool of the input tensor for quantized types.
@@ -33,7 +34,7 @@ import org.tensorflow.types.TFloat;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedAvgPool<T> extends PrimitiveOp {
+public final class QuantizedAvgPool<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedAvgPool operation.
@@ -49,7 +50,7 @@ public final class QuantizedAvgPool<T> extends PrimitiveOp {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedAvgPool
    */
-  public static <T> QuantizedAvgPool<T> create(Scope scope, Operand<T> input, Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
+  public static <T extends TType> QuantizedAvgPool<T> create(Scope scope, Operand<T> input, Operand<TFloat> minInput, Operand<TFloat> maxInput, List<Long> ksize, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAvgPool", scope.makeOpName("QuantizedAvgPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());

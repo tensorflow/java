@@ -24,11 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that splits a SparseTensor into elements row-wise.
  */
-public final class SparseTensorSliceDataset extends PrimitiveOp implements Operand<Object> {
+public final class SparseTensorSliceDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new SparseTensorSliceDataset operation.
@@ -39,7 +40,7 @@ public final class SparseTensorSliceDataset extends PrimitiveOp implements Opera
    * @param denseShape 
    * @return a new instance of SparseTensorSliceDataset
    */
-  public static <T> SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
+  public static <T extends TType> SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorSliceDataset", scope.makeOpName("SparseTensorSliceDataset"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -56,8 +57,8 @@ public final class SparseTensorSliceDataset extends PrimitiveOp implements Opera
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

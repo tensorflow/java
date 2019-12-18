@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the truth value of (x != y) element-wise.
@@ -63,7 +64,7 @@ public final class NotEqual extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of NotEqual
    */
-  public static <T> NotEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  public static <T extends TType> NotEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NotEqual", scope.makeOpName("NotEqual"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

@@ -27,13 +27,14 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset by applying optimizations to `input_dataset`.
  * <p>
  * Creates a dataset by applying optimizations to `input_dataset`.
  */
-public final class OptimizeDataset extends PrimitiveOp implements Operand<Object> {
+public final class OptimizeDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.OptimizeDataset}
@@ -109,8 +110,8 @@ public final class OptimizeDataset extends PrimitiveOp implements Operand<Object
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

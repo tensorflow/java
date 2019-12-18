@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a diagonal tensor with a given diagonal values.
@@ -49,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class TensorDiag<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorDiag<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorDiag operation.
@@ -58,7 +59,7 @@ public final class TensorDiag<T> extends PrimitiveOp implements Operand<T> {
    * @param diagonal Rank k tensor where k is at most 1.
    * @return a new instance of TensorDiag
    */
-  public static <T> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
+  public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
     opBuilder.addInput(diagonal.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

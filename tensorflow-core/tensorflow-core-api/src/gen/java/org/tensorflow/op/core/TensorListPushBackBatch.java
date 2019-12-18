@@ -24,11 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListPushBackBatch extends PrimitiveOp implements Operand<Object> {
+public final class TensorListPushBackBatch extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListPushBackBatch operation.
@@ -38,7 +39,7 @@ public final class TensorListPushBackBatch extends PrimitiveOp implements Operan
    * @param tensor 
    * @return a new instance of TensorListPushBackBatch
    */
-  public static <T> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
+  public static <T extends TType> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
     opBuilder.addInput(inputHandles.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -54,8 +55,8 @@ public final class TensorListPushBackBatch extends PrimitiveOp implements Operan
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandles;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandles;
   }
   
   private Output<?> outputHandles;

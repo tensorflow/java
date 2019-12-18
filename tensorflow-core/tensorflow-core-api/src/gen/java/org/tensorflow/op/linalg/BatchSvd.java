@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code s()} output
  */
 @Operator(group = "linalg")
-public final class BatchSvd<T> extends PrimitiveOp {
+public final class BatchSvd<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.BatchSvd}
@@ -67,7 +68,7 @@ public final class BatchSvd<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BatchSvd
    */
-  public static <T> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSvd", scope.makeOpName("BatchSvd"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

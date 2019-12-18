@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Retrieve multiple values from the computation outfeed.
@@ -35,7 +36,7 @@ import org.tensorflow.tools.Shape;
  * This operation will block indefinitely until data is available. Output `i`
  * corresponds to XLA tuple element `i`.
  */
-public final class OutfeedDequeueTuple extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class OutfeedDequeueTuple extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.OutfeedDequeueTuple}
@@ -108,7 +109,7 @@ public final class OutfeedDequeueTuple extends PrimitiveOp implements Iterable<O
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

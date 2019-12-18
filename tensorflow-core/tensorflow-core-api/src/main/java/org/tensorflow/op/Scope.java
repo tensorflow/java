@@ -84,7 +84,7 @@ public final class Scope {
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(), new ArrayList<Operand<?>>());
+    this(env, new NameScope(), new ArrayList<>());
   }
 
   /** Returns the execution environment used by this scope. */

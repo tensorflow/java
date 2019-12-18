@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Scatters tensor at indices in an input list.
@@ -38,7 +39,7 @@ import org.tensorflow.types.TInt32;
  * output_handle: The TensorList.
  */
 @Operator
-public final class TensorListScatterIntoExistingList extends PrimitiveOp implements Operand<Object> {
+public final class TensorListScatterIntoExistingList extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListScatterIntoExistingList operation.
@@ -49,7 +50,7 @@ public final class TensorListScatterIntoExistingList extends PrimitiveOp impleme
    * @param indices 
    * @return a new instance of TensorListScatterIntoExistingList
    */
-  public static <T> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
+  public static <T extends TType> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -66,8 +67,8 @@ public final class TensorListScatterIntoExistingList extends PrimitiveOp impleme
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

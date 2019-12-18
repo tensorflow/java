@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Fast Fourier transform.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Fft<T> extends PrimitiveOp implements Operand<T> {
+public final class Fft<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Fft operation.
@@ -43,7 +44,7 @@ public final class Fft<T> extends PrimitiveOp implements Operand<T> {
    * @param input A complex tensor.
    * @return a new instance of Fft
    */
-  public static <T> Fft<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Fft<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("FFT", scope.makeOpName("Fft"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

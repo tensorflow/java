@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the gradient of `Tile`.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "train")
-public final class TileGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class TileGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TileGrad operation.
@@ -46,7 +47,7 @@ public final class TileGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param multiples 
    * @return a new instance of TileGrad
    */
-  public static <T> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
+  public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(multiples.asOutput());

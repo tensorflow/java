@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the reciprocal of x element-wise.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Reciprocal<T> extends PrimitiveOp implements Operand<T> {
+public final class Reciprocal<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Reciprocal operation.
@@ -42,7 +43,7 @@ public final class Reciprocal<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Reciprocal
    */
-  public static <T> Reciprocal<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Reciprocal<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Reciprocal", scope.makeOpName("Reciprocal"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

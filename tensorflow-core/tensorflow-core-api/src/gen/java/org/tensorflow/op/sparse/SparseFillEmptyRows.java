@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Fills empty rows in the input 2-D `SparseTensor` with a default value.
@@ -70,7 +71,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseFillEmptyRows<T> extends PrimitiveOp {
+public final class SparseFillEmptyRows<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseFillEmptyRows operation.
@@ -84,7 +85,7 @@ public final class SparseFillEmptyRows<T> extends PrimitiveOp {
    * output indices: 2-D. the indices of the filled sparse tensor.
    * @return a new instance of SparseFillEmptyRows
    */
-  public static <T> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
+  public static <T extends TType> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRows", scope.makeOpName("SparseFillEmptyRows"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());

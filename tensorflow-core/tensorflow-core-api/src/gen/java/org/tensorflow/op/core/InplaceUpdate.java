@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  *     Updates specified rows with values in `v`.
@@ -34,7 +35,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class InplaceUpdate<T> extends PrimitiveOp implements Operand<T> {
+public final class InplaceUpdate<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InplaceUpdate operation.
@@ -45,7 +46,7 @@ public final class InplaceUpdate<T> extends PrimitiveOp implements Operand<T> {
    * @param v A `Tensor` of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
    * @return a new instance of InplaceUpdate
    */
-  public static <T> InplaceUpdate<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
+  public static <T extends TType> InplaceUpdate<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceUpdate", scope.makeOpName("InplaceUpdate"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());

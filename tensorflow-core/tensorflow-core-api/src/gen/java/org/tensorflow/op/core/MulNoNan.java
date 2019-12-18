@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x * y element-wise. Returns zero if y is zero, even if x if infinite or NaN.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator
-public final class MulNoNan<T> extends PrimitiveOp implements Operand<T> {
+public final class MulNoNan<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MulNoNan operation.
@@ -44,7 +45,7 @@ public final class MulNoNan<T> extends PrimitiveOp implements Operand<T> {
    * @param y 
    * @return a new instance of MulNoNan
    */
-  public static <T> MulNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> MulNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("MulNoNan", scope.makeOpName("MulNoNan"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

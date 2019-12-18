@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Exits the current frame to its parent frame.
@@ -31,7 +32,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefExit<T> extends PrimitiveOp implements Operand<T> {
+public final class RefExit<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefExit operation.
@@ -40,7 +41,7 @@ public final class RefExit<T> extends PrimitiveOp implements Operand<T> {
    * @param data The tensor to be made available to the parent frame.
    * @return a new instance of RefExit
    */
-  public static <T> RefExit<T> create(Scope scope, Operand<T> data) {
+  public static <T extends TType> RefExit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefExit", scope.makeOpName("RefExit"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

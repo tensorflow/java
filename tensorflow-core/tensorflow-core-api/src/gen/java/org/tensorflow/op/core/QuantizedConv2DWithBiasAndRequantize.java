@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <W> data type for {@code output()} output
  */
-public final class QuantizedConv2DWithBiasAndRequantize<W> extends PrimitiveOp {
+public final class QuantizedConv2DWithBiasAndRequantize<W extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedConv2DWithBiasAndRequantize}
@@ -79,7 +80,7 @@ public final class QuantizedConv2DWithBiasAndRequantize<W> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasAndRequantize
    */
-  public static <W, T, U, V> QuantizedConv2DWithBiasAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, DataType<W> outType, List<Long> strides, String padding, Options... options) {
+  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedConv2DWithBiasAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, DataType<W> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

@@ -17,6 +17,7 @@ package org.tensorflow;
 
 import java.util.Objects;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A symbolic handle to a tensor produced by an {@link Operation}.
@@ -27,7 +28,7 @@ import org.tensorflow.tools.Shape;
  * <p>By implementing the {@link Operand} interface, instances of this class also act as operands to
  * {@link org.tensorflow.op.Op Op} instances.
  */
-public final class Output<T> implements Operand<T> {
+public final class Output<T extends TType> implements Operand<T> {
 
   /** Returns the Operation that will produce the tensor referred to by this Output. */
   public Operation op() {
@@ -45,8 +46,9 @@ public final class Output<T> implements Operand<T> {
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
-  public DataType dataType() {
-    return operation.dtype(index);
+  @SuppressWarnings("unchecked")
+  public DataType<T> dataType() {
+    return (DataType<T>)operation.dtype(index);
   }
 
   /**

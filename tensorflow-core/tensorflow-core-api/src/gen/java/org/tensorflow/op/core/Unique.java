@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Finds unique elements along an axis of a tensor.
@@ -75,7 +76,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <V> data type for {@code idx()} output
  */
 @Operator
-public final class Unique<T, V extends TNumber> extends PrimitiveOp {
+public final class Unique<T extends TType, V extends TNumber> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new Unique operation.
@@ -87,7 +88,7 @@ public final class Unique<T, V extends TNumber> extends PrimitiveOp {
    * @param outIdx 
    * @return a new instance of Unique
    */
-  public static <T, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
+  public static <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -105,7 +106,7 @@ public final class Unique<T, V extends TNumber> extends PrimitiveOp {
    * find the unique elements.
    * @return a new instance of Unique
    */
-  public static <T, U extends TNumber> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
+  public static <T extends TType, U extends TNumber> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
     return create(scope, x, axis, TInt32.DTYPE);
   }
   

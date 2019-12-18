@@ -86,7 +86,8 @@ class TypeResolver {
     if (next_generic_letter_ > 'Z') {
       next_generic_letter_ = 'A';
     }
-    return Type::Generic(string(1, generic_letter));
+    return Type::Generic(string(1, generic_letter))
+        .add_supertype(Type::Class("TType", "org.tensorflow.types.family"));
   }
 };
 

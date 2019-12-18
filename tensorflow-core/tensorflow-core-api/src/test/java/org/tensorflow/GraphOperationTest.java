@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperation}. */
 @RunWith(JUnit4.class)
@@ -103,9 +104,9 @@ public class GraphOperationTest {
   @Test
   public void outputEquality() {
     try (Graph g = new Graph()) {
-      Output<Integer> output = TestUtil.constant(g, "c", 1);
-      Output<Integer> output1 = output.op().<Integer>output(0);
-      Output<Integer> output2 = g.operation("c").<Integer>output(0);
+      Output<TInt32> output = TestUtil.constant(g, "c", 1);
+      Output<TInt32> output1 = output.op().output(0);
+      Output<TInt32> output2 = g.operation("c").output(0);
       assertEquals(output, output1);
       assertEquals(output.hashCode(), output1.hashCode());
       assertEquals(output, output2);
@@ -116,10 +117,10 @@ public class GraphOperationTest {
   @Test
   public void outputCollection() {
     try (Graph g = new Graph()) {
-      Output<Integer> output = TestUtil.constant(g, "c", 1);
-      Output<Integer> output1 = output.op().<Integer>output(0);
-      Output<Integer> output2 = g.operation("c").<Integer>output(0);
-      Set<Output<Integer>> ops = new HashSet<>();
+      Output<TInt32> output = TestUtil.constant(g, "c", 1);
+      Output<TInt32> output1 = output.op().output(0);
+      Output<TInt32> output2 = g.operation("c").output(0);
+      Set<Output<TInt32>> ops = new HashSet<>();
       ops.addAll(Arrays.asList(output, output1, output2));
       assertEquals(1, ops.size());
       assertTrue(ops.contains(output));
@@ -131,7 +132,7 @@ public class GraphOperationTest {
   @Test
   public void outputToString() {
     try (Graph g = new Graph()) {
-      Output<Integer> output = TestUtil.constant(g, "c", new int[] {1});
+      Output<TInt32> output = TestUtil.constant(g, "c", new int[] {1});
       assertNotNull(output.toString());
     }
   }

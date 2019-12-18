@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes natural logarithm of (1 + x) element-wise.
@@ -33,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Log1p<T> extends PrimitiveOp implements Operand<T> {
+public final class Log1p<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Log1p operation.
@@ -42,7 +43,7 @@ public final class Log1p<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Log1p
    */
-  public static <T> Log1p<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Log1p<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Log1p", scope.makeOpName("Log1p"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Read an element from the TensorArray into output `value`.
@@ -34,7 +35,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class TensorArrayRead<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorArrayRead<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayRead operation.
@@ -46,7 +47,7 @@ public final class TensorArrayRead<T> extends PrimitiveOp implements Operand<T> 
    * @param dtype The type of the elem that is returned.
    * @return a new instance of TensorArrayRead
    */
-  public static <T> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat> flowIn, DataType<T> dtype) {
+  public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat> flowIn, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());

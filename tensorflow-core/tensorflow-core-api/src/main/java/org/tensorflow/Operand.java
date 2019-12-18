@@ -15,6 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.types.family.TType;
+
 /**
  * Interface implemented by operands of a TensorFlow operation.
  *
@@ -34,7 +36,7 @@ package org.tensorflow;
  * ops.array().concat(0, split);
  * }</pre>
  */
-public interface Operand<T> {
+public interface Operand<T extends TType> {
 
   /**
    * Returns the symbolic handle of the tensor.

@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the gradient of `StridedSlice`.
@@ -41,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class StridedSliceGrad<U> extends PrimitiveOp implements Operand<U> {
+public final class StridedSliceGrad<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.StridedSliceGrad}
@@ -110,7 +111,7 @@ public final class StridedSliceGrad<U> extends PrimitiveOp implements Operand<U>
    * @param options carries optional attributes values
    * @return a new instance of StridedSliceGrad
    */
-  public static <U, T extends TNumber> StridedSliceGrad<U> create(Scope scope, Operand<T> shape, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> dy, Options... options) {
+  public static <U extends TType, T extends TNumber> StridedSliceGrad<U> create(Scope scope, Operand<T> shape, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> dy, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StridedSliceGrad", scope.makeOpName("StridedSliceGrad"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(begin.asOutput());

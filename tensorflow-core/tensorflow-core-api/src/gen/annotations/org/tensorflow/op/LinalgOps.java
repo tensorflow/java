@@ -45,6 +45,7 @@ import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code linalg} operations as {@link Op Op}s
@@ -59,15 +60,16 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link Qr} operation
+   * Builds an {@link Transpose} operation
    *
-   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
-   * @param options carries optional attributes values
-   * @return a new instance of Qr
-   * @see org.tensorflow.op.linalg.Qr
+   * @param x 
+   * @param perm 
+   * @return a new instance of Transpose
+   * @see org.tensorflow.op.linalg.Transpose
    */
-  public <T> Qr<T> qr(Operand<T> input, Qr.Options... options) {
-    return Qr.create(scope, input, options);
+  public <T extends TType, U extends TNumber> Transpose<T> transpose(Operand<T> x,
+      Operand<U> perm) {
+    return Transpose.create(scope, x, perm);
   }
 
   /**
@@ -86,39 +88,40 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link BatchMatrixDiagPart} operation
+   * Builds an {@link LogMatrixDeterminant} operation
    *
-   * @param input 
-   * @return a new instance of BatchMatrixDiagPart
-   * @see org.tensorflow.op.linalg.BatchMatrixDiagPart
+   * @param input Shape is `[N, M, M]`.
+   * @return a new instance of LogMatrixDeterminant
+   * @see org.tensorflow.op.linalg.LogMatrixDeterminant
    */
-  public <T> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
-    return BatchMatrixDiagPart.create(scope, input);
+  public <T extends TType> LogMatrixDeterminant<T> logMatrixDeterminant(Operand<T> input) {
+    return LogMatrixDeterminant.create(scope, input);
   }
 
   /**
-   * Builds an {@link BatchMatrixBandPart} operation
+   * Builds an {@link TriangularSolve} operation
    *
-   * @param input 
-   * @param numLower 
-   * @param numUpper 
-   * @return a new instance of BatchMatrixBandPart
-   * @see org.tensorflow.op.linalg.BatchMatrixBandPart
+   * @param matrix Shape is `[..., M, M]`.
+   * @param rhs Shape is `[..., M, K]`.
+   * @param options carries optional attributes values
+   * @return a new instance of TriangularSolve
+   * @see org.tensorflow.op.linalg.TriangularSolve
    */
-  public <T> BatchMatrixBandPart<T> batchMatrixBandPart(Operand<T> input, Operand<TInt64> numLower,
-      Operand<TInt64> numUpper) {
-    return BatchMatrixBandPart.create(scope, input, numLower, numUpper);
+  public <T extends TType> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
+      TriangularSolve.Options... options) {
+    return TriangularSolve.create(scope, matrix, rhs, options);
   }
 
   /**
-   * Builds an {@link BatchMatrixDeterminant} operation
+   * Builds an {@link Svd} operation
    *
-   * @param input 
-   * @return a new instance of BatchMatrixDeterminant
-   * @see org.tensorflow.op.linalg.BatchMatrixDeterminant
+   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
+   * @param options carries optional attributes values
+   * @return a new instance of Svd
+   * @see org.tensorflow.op.linalg.Svd
    */
-  public <T> BatchMatrixDeterminant<T> batchMatrixDeterminant(Operand<T> input) {
-    return BatchMatrixDeterminant.create(scope, input);
+  public <T extends TType> Svd<T> svd(Operand<T> input, Svd.Options... options) {
+    return Svd.create(scope, input, options);
   }
 
   /**
@@ -135,14 +138,28 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link TensorDiag} operation
+   * Builds an {@link Solve} operation
    *
-   * @param diagonal Rank k tensor where k is at most 1.
-   * @return a new instance of TensorDiag
-   * @see org.tensorflow.op.linalg.TensorDiag
+   * @param matrix Shape is `[..., M, M]`.
+   * @param rhs Shape is `[..., M, K]`.
+   * @param options carries optional attributes values
+   * @return a new instance of Solve
+   * @see org.tensorflow.op.linalg.Solve
    */
-  public <T> TensorDiag<T> tensorDiag(Operand<T> diagonal) {
-    return TensorDiag.create(scope, diagonal);
+  public <T extends TType> Solve<T> solve(Operand<T> matrix, Operand<T> rhs,
+      Solve.Options... options) {
+    return Solve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Builds an {@link BatchMatrixDiagPart} operation
+   *
+   * @param input 
+   * @return a new instance of BatchMatrixDiagPart
+   * @see org.tensorflow.op.linalg.BatchMatrixDiagPart
+   */
+  public <T extends TType> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
+    return BatchMatrixDiagPart.create(scope, input);
   }
 
   /**
@@ -158,86 +175,56 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link SelfAdjointEig} operation
+   * Builds an {@link MatrixSolveLs} operation
    *
-   * @param input `Tensor` input of shape `[N, N]`.
-   * @param options carries optional attributes values
-   * @return a new instance of SelfAdjointEig
-   * @see org.tensorflow.op.linalg.SelfAdjointEig
-   */
-  public <T> SelfAdjointEig<T> selfAdjointEig(Operand<T> input, SelfAdjointEig.Options... options) {
-    return SelfAdjointEig.create(scope, input, options);
-  }
-
-  /**
-   * Builds an {@link TriangularSolve} operation
-   *
-   * @param matrix Shape is `[..., M, M]`.
+   * @param matrix Shape is `[..., M, N]`.
    * @param rhs Shape is `[..., M, K]`.
+   * @param l2Regularizer Scalar tensor.
    * @param options carries optional attributes values
-   * @return a new instance of TriangularSolve
-   * @see org.tensorflow.op.linalg.TriangularSolve
+   * @return a new instance of MatrixSolveLs
+   * @see org.tensorflow.op.linalg.MatrixSolveLs
    */
-  public <T> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
-      TriangularSolve.Options... options) {
-    return TriangularSolve.create(scope, matrix, rhs, options);
+  public <T extends TType> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
+      Operand<TDouble> l2Regularizer, MatrixSolveLs.Options... options) {
+    return MatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
   }
 
   /**
-   * Builds an {@link Transpose} operation
+   * Builds an {@link BatchMatrixSetDiag} operation
    *
-   * @param x 
-   * @param perm 
-   * @return a new instance of Transpose
-   * @see org.tensorflow.op.linalg.Transpose
+   * @param input 
+   * @param diagonal 
+   * @return a new instance of BatchMatrixSetDiag
+   * @see org.tensorflow.op.linalg.BatchMatrixSetDiag
    */
-  public <T, U extends TNumber> Transpose<T> transpose(Operand<T> x, Operand<U> perm) {
-    return Transpose.create(scope, x, perm);
+  public <T extends TType> BatchMatrixSetDiag<T> batchMatrixSetDiag(Operand<T> input,
+      Operand<T> diagonal) {
+    return BatchMatrixSetDiag.create(scope, input, diagonal);
   }
 
   /**
-   * Builds an {@link Sqrtm} operation
+   * Builds an {@link DiagPart} operation
    *
-   * @param input Shape is `[..., M, M]`.
-   * @return a new instance of Sqrtm
-   * @see org.tensorflow.op.linalg.Sqrtm
+   * @param input Rank `k` tensor where `k >= 2`.
+   * @return a new instance of DiagPart
+   * @see org.tensorflow.op.linalg.DiagPart
    */
-  public <T> Sqrtm<T> sqrtm(Operand<T> input) {
-    return Sqrtm.create(scope, input);
+  public <T extends TType> DiagPart<T> diagPart(Operand<T> input) {
+    return DiagPart.create(scope, input);
   }
 
   /**
-   * Builds an {@link Cholesky} operation
+   * Builds an {@link BatchMatMul} operation
    *
-   * @param input Shape is `[..., M, M]`.
-   * @return a new instance of Cholesky
-   * @see org.tensorflow.op.linalg.Cholesky
-   */
-  public <T> Cholesky<T> cholesky(Operand<T> input) {
-    return Cholesky.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Det} operation
-   *
-   * @param input Shape is `[..., M, M]`.
-   * @return a new instance of Det
-   * @see org.tensorflow.op.linalg.Det
-   */
-  public <T> Det<T> det(Operand<T> input) {
-    return Det.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Svd} operation
-   *
-   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
+   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
+   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
    * @param options carries optional attributes values
-   * @return a new instance of Svd
-   * @see org.tensorflow.op.linalg.Svd
+   * @return a new instance of BatchMatMul
+   * @see org.tensorflow.op.linalg.BatchMatMul
    */
-  public <T> Svd<T> svd(Operand<T> input, Svd.Options... options) {
-    return Svd.create(scope, input, options);
+  public <T extends TType> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
+      BatchMatMul.Options... options) {
+    return BatchMatMul.create(scope, x, y, options);
   }
 
   /**
@@ -250,6 +237,18 @@ public final class LinalgOps {
    */
   public <T extends TNumber> CholeskyGrad<T> choleskyGrad(Operand<T> l, Operand<T> grad) {
     return CholeskyGrad.create(scope, l, grad);
+  }
+
+  /**
+   * Builds an {@link Qr} operation
+   *
+   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
+   * @param options carries optional attributes values
+   * @return a new instance of Qr
+   * @see org.tensorflow.op.linalg.Qr
+   */
+  public <T extends TType> Qr<T> qr(Operand<T> input, Qr.Options... options) {
+    return Qr.create(scope, input, options);
   }
 
   /**
@@ -266,48 +265,14 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link QuantizedMatMul} operation
+   * Builds an {@link Cholesky} operation
    *
-   * @param a Must be a two-dimensional tensor.
-   * @param b Must be a two-dimensional tensor.
-   * @param minA The float value that the lowest quantized `a` value represents.
-   * @param maxA The float value that the highest quantized `a` value represents.
-   * @param minB The float value that the lowest quantized `b` value represents.
-   * @param maxB The float value that the highest quantized `b` value represents.
-   * @param Toutput 
-   * @param Tactivation The type of output produced by activation function
-   * @param options carries optional attributes values
-   * @return a new instance of QuantizedMatMul
-   * @see org.tensorflow.op.linalg.QuantizedMatMul
+   * @param input Shape is `[..., M, M]`.
+   * @return a new instance of Cholesky
+   * @see org.tensorflow.op.linalg.Cholesky
    */
-  public <V, T, U, W> QuantizedMatMul<V> quantizedMatMul(Operand<T> a, Operand<U> b,
-      Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB,
-      DataType<V> Toutput, DataType<W> Tactivation, QuantizedMatMul.Options... options) {
-    return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
-  }
-
-  /**
-   * Builds an {@link DiagPart} operation
-   *
-   * @param input Rank `k` tensor where `k >= 2`.
-   * @return a new instance of DiagPart
-   * @see org.tensorflow.op.linalg.DiagPart
-   */
-  public <T> DiagPart<T> diagPart(Operand<T> input) {
-    return DiagPart.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Solve} operation
-   *
-   * @param matrix Shape is `[..., M, M]`.
-   * @param rhs Shape is `[..., M, K]`.
-   * @param options carries optional attributes values
-   * @return a new instance of Solve
-   * @see org.tensorflow.op.linalg.Solve
-   */
-  public <T> Solve<T> solve(Operand<T> matrix, Operand<T> rhs, Solve.Options... options) {
-    return Solve.create(scope, matrix, rhs, options);
+  public <T extends TType> Cholesky<T> cholesky(Operand<T> input) {
+    return Cholesky.create(scope, input);
   }
 
   /**
@@ -318,8 +283,30 @@ public final class LinalgOps {
    * @return a new instance of SetDiag
    * @see org.tensorflow.op.linalg.SetDiag
    */
-  public <T> SetDiag<T> setDiag(Operand<T> input, Operand<T> diagonal) {
+  public <T extends TType> SetDiag<T> setDiag(Operand<T> input, Operand<T> diagonal) {
     return SetDiag.create(scope, input, diagonal);
+  }
+
+  /**
+   * Builds an {@link Diag} operation
+   *
+   * @param diagonal Rank `k`, where `k >= 1`.
+   * @return a new instance of Diag
+   * @see org.tensorflow.op.linalg.Diag
+   */
+  public <T extends TType> Diag<T> diag(Operand<T> diagonal) {
+    return Diag.create(scope, diagonal);
+  }
+
+  /**
+   * Builds an {@link BatchMatrixDiag} operation
+   *
+   * @param diagonal 
+   * @return a new instance of BatchMatrixDiag
+   * @see org.tensorflow.op.linalg.BatchMatrixDiag
+   */
+  public <T extends TType> BatchMatrixDiag<T> batchMatrixDiag(Operand<T> diagonal) {
+    return BatchMatrixDiag.create(scope, diagonal);
   }
 
   /**
@@ -344,15 +331,25 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link BatchSvd} operation
+   * Builds an {@link Sqrtm} operation
    *
-   * @param input 
-   * @param options carries optional attributes values
-   * @return a new instance of BatchSvd
-   * @see org.tensorflow.op.linalg.BatchSvd
+   * @param input Shape is `[..., M, M]`.
+   * @return a new instance of Sqrtm
+   * @see org.tensorflow.op.linalg.Sqrtm
    */
-  public <T> BatchSvd<T> batchSvd(Operand<T> input, BatchSvd.Options... options) {
-    return BatchSvd.create(scope, input, options);
+  public <T extends TType> Sqrtm<T> sqrtm(Operand<T> input) {
+    return Sqrtm.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link TensorDiag} operation
+   *
+   * @param diagonal Rank k tensor where k is at most 1.
+   * @return a new instance of TensorDiag
+   * @see org.tensorflow.op.linalg.TensorDiag
+   */
+  public <T extends TType> TensorDiag<T> tensorDiag(Operand<T> diagonal) {
+    return TensorDiag.create(scope, diagonal);
   }
 
   /**
@@ -381,39 +378,49 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link Inv} operation
+   * Builds an {@link BatchMatrixDeterminant} operation
    *
-   * @param input Shape is `[..., M, M]`.
-   * @param options carries optional attributes values
-   * @return a new instance of Inv
-   * @see org.tensorflow.op.linalg.Inv
+   * @param input 
+   * @return a new instance of BatchMatrixDeterminant
+   * @see org.tensorflow.op.linalg.BatchMatrixDeterminant
    */
-  public <T> Inv<T> inv(Operand<T> input, Inv.Options... options) {
-    return Inv.create(scope, input, options);
+  public <T extends TType> BatchMatrixDeterminant<T> batchMatrixDeterminant(Operand<T> input) {
+    return BatchMatrixDeterminant.create(scope, input);
   }
 
   /**
-   * Builds an {@link MatMul} operation
+   * Builds an {@link QuantizedMatMul} operation
    *
-   * @param a 
-   * @param b 
+   * @param a Must be a two-dimensional tensor.
+   * @param b Must be a two-dimensional tensor.
+   * @param minA The float value that the lowest quantized `a` value represents.
+   * @param maxA The float value that the highest quantized `a` value represents.
+   * @param minB The float value that the lowest quantized `b` value represents.
+   * @param maxB The float value that the highest quantized `b` value represents.
+   * @param Toutput 
+   * @param Tactivation The type of output produced by activation function
    * @param options carries optional attributes values
-   * @return a new instance of MatMul
-   * @see org.tensorflow.op.linalg.MatMul
+   * @return a new instance of QuantizedMatMul
+   * @see org.tensorflow.op.linalg.QuantizedMatMul
    */
-  public <T> MatMul<T> matMul(Operand<T> a, Operand<T> b, MatMul.Options... options) {
-    return MatMul.create(scope, a, b, options);
+  public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
+      Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB,
+      Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation,
+      QuantizedMatMul.Options... options) {
+    return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
   }
 
   /**
-   * Builds an {@link BatchMatrixDiag} operation
+   * Builds an {@link SelfAdjointEig} operation
    *
-   * @param diagonal 
-   * @return a new instance of BatchMatrixDiag
-   * @see org.tensorflow.op.linalg.BatchMatrixDiag
+   * @param input `Tensor` input of shape `[N, N]`.
+   * @param options carries optional attributes values
+   * @return a new instance of SelfAdjointEig
+   * @see org.tensorflow.op.linalg.SelfAdjointEig
    */
-  public <T> BatchMatrixDiag<T> batchMatrixDiag(Operand<T> diagonal) {
-    return BatchMatrixDiag.create(scope, diagonal);
+  public <T extends TType> SelfAdjointEig<T> selfAdjointEig(Operand<T> input,
+      SelfAdjointEig.Options... options) {
+    return SelfAdjointEig.create(scope, input, options);
   }
 
   /**
@@ -425,35 +432,59 @@ public final class LinalgOps {
    * @return a new instance of BandPart
    * @see org.tensorflow.op.linalg.BandPart
    */
-  public <T, U extends TNumber> BandPart<T> bandPart(Operand<T> input, Operand<U> numLower,
-      Operand<U> numUpper) {
+  public <T extends TType, U extends TNumber> BandPart<T> bandPart(Operand<T> input,
+      Operand<U> numLower, Operand<U> numUpper) {
     return BandPart.create(scope, input, numLower, numUpper);
   }
 
   /**
-   * Builds an {@link LogMatrixDeterminant} operation
+   * Builds an {@link ConjugateTranspose} operation
    *
-   * @param input Shape is `[N, M, M]`.
-   * @return a new instance of LogMatrixDeterminant
-   * @see org.tensorflow.op.linalg.LogMatrixDeterminant
+   * @param x 
+   * @param perm 
+   * @return a new instance of ConjugateTranspose
+   * @see org.tensorflow.op.linalg.ConjugateTranspose
    */
-  public <T> LogMatrixDeterminant<T> logMatrixDeterminant(Operand<T> input) {
-    return LogMatrixDeterminant.create(scope, input);
+  public <T extends TType, U extends TNumber> ConjugateTranspose<T> conjugateTranspose(Operand<T> x,
+      Operand<U> perm) {
+    return ConjugateTranspose.create(scope, x, perm);
   }
 
   /**
-   * Builds an {@link MatrixSolveLs} operation
+   * Builds an {@link Inv} operation
    *
-   * @param matrix Shape is `[..., M, N]`.
-   * @param rhs Shape is `[..., M, K]`.
-   * @param l2Regularizer Scalar tensor.
+   * @param input Shape is `[..., M, M]`.
    * @param options carries optional attributes values
-   * @return a new instance of MatrixSolveLs
-   * @see org.tensorflow.op.linalg.MatrixSolveLs
+   * @return a new instance of Inv
+   * @see org.tensorflow.op.linalg.Inv
    */
-  public <T> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
-      Operand<TDouble> l2Regularizer, MatrixSolveLs.Options... options) {
-    return MatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
+  public <T extends TType> Inv<T> inv(Operand<T> input, Inv.Options... options) {
+    return Inv.create(scope, input, options);
+  }
+
+  /**
+   * Builds an {@link BatchMatrixBandPart} operation
+   *
+   * @param input 
+   * @param numLower 
+   * @param numUpper 
+   * @return a new instance of BatchMatrixBandPart
+   * @see org.tensorflow.op.linalg.BatchMatrixBandPart
+   */
+  public <T extends TType> BatchMatrixBandPart<T> batchMatrixBandPart(Operand<T> input,
+      Operand<TInt64> numLower, Operand<TInt64> numUpper) {
+    return BatchMatrixBandPart.create(scope, input, numLower, numUpper);
+  }
+
+  /**
+   * Builds an {@link TensorDiagPart} operation
+   *
+   * @param input Rank k tensor where k is even and not zero.
+   * @return a new instance of TensorDiagPart
+   * @see org.tensorflow.op.linalg.TensorDiagPart
+   */
+  public <T extends TType> TensorDiagPart<T> tensorDiagPart(Operand<T> input) {
+    return TensorDiagPart.create(scope, input);
   }
 
   /**
@@ -469,64 +500,39 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link Diag} operation
-   *
-   * @param diagonal Rank `k`, where `k >= 1`.
-   * @return a new instance of Diag
-   * @see org.tensorflow.op.linalg.Diag
-   */
-  public <T> Diag<T> diag(Operand<T> diagonal) {
-    return Diag.create(scope, diagonal);
-  }
-
-  /**
-   * Builds an {@link BatchMatrixSetDiag} operation
+   * Builds an {@link BatchSvd} operation
    *
    * @param input 
-   * @param diagonal 
-   * @return a new instance of BatchMatrixSetDiag
-   * @see org.tensorflow.op.linalg.BatchMatrixSetDiag
-   */
-  public <T> BatchMatrixSetDiag<T> batchMatrixSetDiag(Operand<T> input, Operand<T> diagonal) {
-    return BatchMatrixSetDiag.create(scope, input, diagonal);
-  }
-
-  /**
-   * Builds an {@link TensorDiagPart} operation
-   *
-   * @param input Rank k tensor where k is even and not zero.
-   * @return a new instance of TensorDiagPart
-   * @see org.tensorflow.op.linalg.TensorDiagPart
-   */
-  public <T> TensorDiagPart<T> tensorDiagPart(Operand<T> input) {
-    return TensorDiagPart.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link ConjugateTranspose} operation
-   *
-   * @param x 
-   * @param perm 
-   * @return a new instance of ConjugateTranspose
-   * @see org.tensorflow.op.linalg.ConjugateTranspose
-   */
-  public <T, U extends TNumber> ConjugateTranspose<T> conjugateTranspose(Operand<T> x,
-      Operand<U> perm) {
-    return ConjugateTranspose.create(scope, x, perm);
-  }
-
-  /**
-   * Builds an {@link BatchMatMul} operation
-   *
-   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
-   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
    * @param options carries optional attributes values
-   * @return a new instance of BatchMatMul
-   * @see org.tensorflow.op.linalg.BatchMatMul
+   * @return a new instance of BatchSvd
+   * @see org.tensorflow.op.linalg.BatchSvd
    */
-  public <T> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
-      BatchMatMul.Options... options) {
-    return BatchMatMul.create(scope, x, y, options);
+  public <T extends TType> BatchSvd<T> batchSvd(Operand<T> input, BatchSvd.Options... options) {
+    return BatchSvd.create(scope, input, options);
+  }
+
+  /**
+   * Builds an {@link MatMul} operation
+   *
+   * @param a 
+   * @param b 
+   * @param options carries optional attributes values
+   * @return a new instance of MatMul
+   * @see org.tensorflow.op.linalg.MatMul
+   */
+  public <T extends TType> MatMul<T> matMul(Operand<T> a, Operand<T> b, MatMul.Options... options) {
+    return MatMul.create(scope, a, b, options);
+  }
+
+  /**
+   * Builds an {@link Det} operation
+   *
+   * @param input Shape is `[..., M, M]`.
+   * @return a new instance of Det
+   * @see org.tensorflow.op.linalg.Det
+   */
+  public <T extends TType> Det<T> det(Operand<T> input) {
+    return Det.create(scope, input);
   }
 
   /**

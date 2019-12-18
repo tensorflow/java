@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a tensor has been initialized.
@@ -41,7 +42,7 @@ public final class IsVariableInitialized extends PrimitiveOp implements Operand<
    * @param ref Should be from a `Variable` node. May be uninitialized.
    * @return a new instance of IsVariableInitialized
    */
-  public static <T> IsVariableInitialized create(Scope scope, Operand<T> ref) {
+  public static <T extends TType> IsVariableInitialized create(Scope scope, Operand<T> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

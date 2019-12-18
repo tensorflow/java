@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Push an element onto the tensor_array.
@@ -43,7 +44,7 @@ public final class TensorArrayWrite extends PrimitiveOp implements Operand<TFloa
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayWrite
    */
-  public static <T> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<T> value, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<T> value, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayWriteV3", scope.makeOpName("TensorArrayWrite"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());

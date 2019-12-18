@@ -23,11 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a TensorForestTreeResource
  */
-public final class TensorForestTreeResourceHandleOp extends PrimitiveOp implements Operand<Object> {
+public final class TensorForestTreeResourceHandleOp extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorForestTreeResourceHandleOp}
@@ -102,8 +103,8 @@ public final class TensorForestTreeResourceHandleOp extends PrimitiveOp implemen
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) resource;
+  public Output<TType> asOutput() {
+    return (Output<TType>) resource;
   }
   
   private Output<?> resource;
