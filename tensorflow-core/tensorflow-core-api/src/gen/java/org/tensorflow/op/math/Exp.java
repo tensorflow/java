@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes exponential of x element-wise.  \\(y = e^x\\).
@@ -57,7 +58,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Exp<T> extends PrimitiveOp implements Operand<T> {
+public final class Exp<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Exp operation.
@@ -66,7 +67,7 @@ public final class Exp<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Exp
    */
-  public static <T> Exp<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Exp<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Exp", scope.makeOpName("Exp"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

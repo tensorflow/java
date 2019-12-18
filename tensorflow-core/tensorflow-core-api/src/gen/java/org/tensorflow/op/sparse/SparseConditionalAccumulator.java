@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * A conditional accumulator for aggregating sparse gradients.
@@ -89,7 +90,7 @@ public final class SparseConditionalAccumulator extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of SparseConditionalAccumulator
    */
-  public static <T> SparseConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> SparseConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConditionalAccumulator", scope.makeOpName("SparseConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

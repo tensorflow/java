@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse addition to individual values or slices in a Variable.
@@ -62,7 +63,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class ScatterNdAdd<T> extends PrimitiveOp implements Operand<T> {
+public final class ScatterNdAdd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScatterNdAdd}
@@ -97,7 +98,7 @@ public final class ScatterNdAdd<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdAdd
    */
-  public static <T, U extends TNumber> ScatterNdAdd<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TType, U extends TNumber> ScatterNdAdd<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdAdd", scope.makeOpName("ScatterNdAdd"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

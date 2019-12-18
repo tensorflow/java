@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a uniform distribution.
@@ -35,7 +36,7 @@ import org.tensorflow.types.TInt64;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class StatefulUniform<U> extends PrimitiveOp implements Operand<U> {
+public final class StatefulUniform<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new StatefulUniform operation.
@@ -47,7 +48,7 @@ public final class StatefulUniform<U> extends PrimitiveOp implements Operand<U> 
    * @param dtype The type of the output.
    * @return a new instance of StatefulUniform
    */
-  public static <U, T> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -66,7 +67,7 @@ public final class StatefulUniform<U> extends PrimitiveOp implements Operand<U> 
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulUniform
    */
-  public static <T> StatefulUniform<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+  public static <T extends TType> StatefulUniform<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return create(scope, resource, algorithm, shape, TFloat.DTYPE);
   }
   

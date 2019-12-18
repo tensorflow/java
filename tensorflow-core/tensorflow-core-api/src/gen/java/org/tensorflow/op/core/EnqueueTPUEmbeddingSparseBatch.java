@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An op that enqueues TPUEmbedding input indices from a SparseTensor.

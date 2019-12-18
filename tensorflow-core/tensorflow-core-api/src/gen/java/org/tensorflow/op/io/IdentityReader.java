@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the queued work as both the key and value.
@@ -32,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * work string and output (work, work).
  */
 @Operator(group = "io")
-public final class IdentityReader extends PrimitiveOp implements Operand<Object> {
+public final class IdentityReader extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.IdentityReader}
@@ -112,8 +113,8 @@ public final class IdentityReader extends PrimitiveOp implements Operand<Object>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) readerHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) readerHandle;
   }
   
   private Output<?> readerHandle;

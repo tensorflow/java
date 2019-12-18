@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * A conditional accumulator for aggregating gradients.
@@ -89,7 +90,7 @@ public final class ConditionalAccumulator extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of ConditionalAccumulator
    */
-  public static <T> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConditionalAccumulator", scope.makeOpName("ConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

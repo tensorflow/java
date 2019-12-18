@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts the given `resource_handle` representing an iterator to a variant tensor.
  */
 @Operator(group = "data")
-public final class SerializeIterator extends PrimitiveOp implements Operand<Object> {
+public final class SerializeIterator extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new SerializeIterator operation.
@@ -55,8 +56,8 @@ public final class SerializeIterator extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) serialized;
+  public Output<TType> asOutput() {
+    return (Output<TType>) serialized;
   }
   
   private Output<?> serialized;

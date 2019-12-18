@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Ensures that the tensor's shape matches the expected shape.
@@ -35,7 +36,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class EnsureShape<T> extends PrimitiveOp implements Operand<T> {
+public final class EnsureShape<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new EnsureShape operation.
@@ -45,7 +46,7 @@ public final class EnsureShape<T> extends PrimitiveOp implements Operand<T> {
    * @param shape The expected (possibly partially specified) shape of the input tensor.
    * @return a new instance of EnsureShape
    */
-  public static <T> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

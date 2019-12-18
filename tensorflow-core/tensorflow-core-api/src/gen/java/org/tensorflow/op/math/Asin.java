@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the trignometric inverse sine of x element-wise.
@@ -47,7 +48,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Asin<T> extends PrimitiveOp implements Operand<T> {
+public final class Asin<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Asin operation.
@@ -56,7 +57,7 @@ public final class Asin<T> extends PrimitiveOp implements Operand<T> {
    * @param x 
    * @return a new instance of Asin
    */
-  public static <T> Asin<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Asin<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Asin", scope.makeOpName("Asin"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

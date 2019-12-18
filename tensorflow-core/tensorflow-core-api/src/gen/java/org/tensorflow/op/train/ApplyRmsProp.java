@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the RMSProp algorithm.
@@ -42,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyRmsProp<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyRmsProp<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyRmsProp}
@@ -80,7 +81,7 @@ public final class ApplyRmsProp<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyRmsProp
    */
-  public static <T> ApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyRMSProp", scope.makeOpName("ApplyRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());

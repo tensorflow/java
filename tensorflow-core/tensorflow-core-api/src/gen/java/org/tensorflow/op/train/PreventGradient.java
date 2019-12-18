@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * An identity op that triggers an error if a gradient is requested.
@@ -39,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "train")
-public final class PreventGradient<T> extends PrimitiveOp implements Operand<T> {
+public final class PreventGradient<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.PreventGradient}
@@ -69,7 +70,7 @@ public final class PreventGradient<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of PreventGradient
    */
-  public static <T> PreventGradient<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> PreventGradient<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PreventGradient", scope.makeOpName("PreventGradient"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Unpacks a given dimension of a rank-`R` tensor into `num` rank-`(R-1)` tensors.
@@ -47,7 +48,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Unstack<T> extends PrimitiveOp implements Iterable<Operand<T>> {
+public final class Unstack<T extends TType> extends PrimitiveOp implements Iterable<Operand<T>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Unstack}
@@ -78,7 +79,7 @@ public final class Unstack<T> extends PrimitiveOp implements Iterable<Operand<T>
    * @param options carries optional attributes values
    * @return a new instance of Unstack
    */
-  public static <T> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
+  public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

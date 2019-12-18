@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * 2D real-valued fast Fourier transform.
@@ -43,7 +44,7 @@ import org.tensorflow.types.TInt32;
  * the dimension is padded with zeros.
  */
 @Operator(group = "signal")
-public final class Rfft2d extends PrimitiveOp implements Operand<Object> {
+public final class Rfft2d extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new Rfft2d operation.
@@ -77,8 +78,8 @@ public final class Rfft2d extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) output;
+  public Output<TType> asOutput() {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

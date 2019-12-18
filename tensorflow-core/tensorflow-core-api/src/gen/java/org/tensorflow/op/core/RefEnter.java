@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates or finds a child frame, and makes `data` available to the child frame.
@@ -34,7 +35,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefEnter<T> extends PrimitiveOp implements Operand<T> {
+public final class RefEnter<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.RefEnter}
@@ -73,7 +74,7 @@ public final class RefEnter<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of RefEnter
    */
-  public static <T> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
+  public static <T extends TType> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefEnter", scope.makeOpName("RefEnter"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -30,11 +30,12 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets next element for the provided shard number.
  */
-public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorGetNextFromShard operation.
@@ -75,7 +76,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp imple
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

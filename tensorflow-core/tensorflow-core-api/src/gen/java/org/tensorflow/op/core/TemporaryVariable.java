@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor that may be mutated, but only persists within a single step.
@@ -48,7 +49,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code ref()} output
  */
 @Operator
-public final class TemporaryVariable<T> extends PrimitiveOp implements Operand<T> {
+public final class TemporaryVariable<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TemporaryVariable}
@@ -79,7 +80,7 @@ public final class TemporaryVariable<T> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of TemporaryVariable
    */
-  public static <T> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);

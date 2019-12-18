@@ -25,6 +25,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
@@ -68,7 +69,7 @@ public final class ResourceSparseApplyAdagradDa extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdagradDa
    */
-  public static <T, U extends TNumber> ResourceSparseApplyAdagradDa create(Scope scope, Operand<?> var, Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyAdagradDa create(Scope scope, Operand<?> var, Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdagradDA", scope.makeOpName("ResourceSparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());

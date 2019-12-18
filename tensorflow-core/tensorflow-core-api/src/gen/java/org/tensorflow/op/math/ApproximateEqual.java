@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the truth value of abs(x-y) < tolerance element-wise.
@@ -60,7 +61,7 @@ public final class ApproximateEqual extends PrimitiveOp implements Operand<TBool
    * @param options carries optional attributes values
    * @return a new instance of ApproximateEqual
    */
-  public static <T> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  public static <T extends TType> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApproximateEqual", scope.makeOpName("ApproximateEqual"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

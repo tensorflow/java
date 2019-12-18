@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.family.TType;
 
 /**
  * Generates fingerprint values.
@@ -71,7 +72,7 @@ public final class Fingerprint extends PrimitiveOp implements Operand<TUInt8> {
    * `farmhash::fingerprint64`.
    * @return a new instance of Fingerprint
    */
-  public static <T> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
+  public static <T extends TType> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(method.asOutput());

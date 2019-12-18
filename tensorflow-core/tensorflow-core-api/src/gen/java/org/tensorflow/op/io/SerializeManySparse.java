@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Serialize an `N`-minibatch `SparseTensor` into an `[N, 3]` `Tensor` object.
@@ -42,7 +43,7 @@ import org.tensorflow.types.TString;
  * @param <U> data type for {@code serializedSparse()} output
  */
 @Operator(group = "io")
-public final class SerializeManySparse<U> extends PrimitiveOp implements Operand<U> {
+public final class SerializeManySparse<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new SerializeManySparse operation.
@@ -55,7 +56,7 @@ public final class SerializeManySparse<U> extends PrimitiveOp implements Operand
    * (default) and `variant`.
    * @return a new instance of SerializeManySparse
    */
-  public static <U, T> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
+  public static <U extends TType, T extends TType> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeManySparse", scope.makeOpName("SerializeManySparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
@@ -74,7 +75,7 @@ public final class SerializeManySparse<U> extends PrimitiveOp implements Operand
    * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
    * @return a new instance of SerializeManySparse
    */
-  public static <T> SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+  public static <T extends TType> SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
     return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
   }
   

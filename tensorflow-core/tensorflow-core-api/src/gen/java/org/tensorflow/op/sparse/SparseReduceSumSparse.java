@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum of elements across dimensions of a SparseTensor.
@@ -46,7 +47,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReduceSumSparse<T> extends PrimitiveOp {
+public final class SparseReduceSumSparse<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceSumSparse}
@@ -79,7 +80,7 @@ public final class SparseReduceSumSparse<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceSumSparse
    */
-  public static <T> SparseReduceSumSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
+  public static <T extends TType> SparseReduceSumSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceSumSparse", scope.makeOpName("SparseReduceSumSparse"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());

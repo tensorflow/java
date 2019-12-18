@@ -28,6 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concat the elements from the TensorArray into value `value`.
@@ -46,7 +47,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class TensorArrayConcat<T> extends PrimitiveOp {
+public final class TensorArrayConcat<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorArrayConcat}
@@ -80,7 +81,7 @@ public final class TensorArrayConcat<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayConcat
    */
-  public static <T> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());

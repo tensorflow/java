@@ -26,11 +26,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * An op which linearizes multiple Tensor values to an opaque variant tensor.
  */
-public final class PrelinearizeTuple extends PrimitiveOp implements Operand<Object> {
+public final class PrelinearizeTuple extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.PrelinearizeTuple}
@@ -104,8 +105,8 @@ public final class PrelinearizeTuple extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) output;
+  public Output<TType> asOutput() {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

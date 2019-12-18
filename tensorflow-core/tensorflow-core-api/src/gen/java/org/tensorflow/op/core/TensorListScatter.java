@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorList by indexing into a Tensor.
@@ -40,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * output_handle: The TensorList.
  */
 @Operator
-public final class TensorListScatter extends PrimitiveOp implements Operand<Object> {
+public final class TensorListScatter extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListScatter operation.
@@ -51,7 +52,7 @@ public final class TensorListScatter extends PrimitiveOp implements Operand<Obje
    * @param elementShape 
    * @return a new instance of TensorListScatter
    */
-  public static <T, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape) {
+  public static <T extends TType, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatter", scope.makeOpName("TensorListScatter"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -68,8 +69,8 @@ public final class TensorListScatter extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

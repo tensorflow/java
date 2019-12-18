@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Tensor contraction according to Einstein summation convention.
@@ -109,7 +110,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Einsum<T> extends PrimitiveOp implements Operand<T> {
+public final class Einsum<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Einsum operation.
@@ -119,7 +120,7 @@ public final class Einsum<T> extends PrimitiveOp implements Operand<T> {
    * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
    * @return a new instance of Einsum
    */
-  public static <T> Einsum<T> create(Scope scope, Iterable<Operand<T>> inputs, String equation) {
+  public static <T extends TType> Einsum<T> create(Scope scope, Iterable<Operand<T>> inputs, String equation) {
     OperationBuilder opBuilder = scope.env().opBuilder("Einsum", scope.makeOpName("Einsum"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

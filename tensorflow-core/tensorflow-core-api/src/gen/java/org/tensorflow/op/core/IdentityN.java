@@ -28,6 +28,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a list of tensors with the same shapes and contents as the input
@@ -49,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class IdentityN extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class IdentityN extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IdentityN operation.
@@ -73,7 +74,7 @@ public final class IdentityN extends PrimitiveOp implements Iterable<Operand<Obj
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
   }
   

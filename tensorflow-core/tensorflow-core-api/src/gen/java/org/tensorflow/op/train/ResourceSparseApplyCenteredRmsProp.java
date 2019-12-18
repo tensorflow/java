@@ -24,6 +24,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
@@ -86,7 +87,7 @@ public final class ResourceSparseApplyCenteredRmsProp extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyCenteredRmsProp
    */
-  public static <T, U extends TNumber> ResourceSparseApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyCenteredRMSProp", scope.makeOpName("ResourceSparseApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());

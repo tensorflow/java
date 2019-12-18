@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AddSign update.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAddSign<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyAddSign<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAddSign}
@@ -72,7 +73,7 @@ public final class ApplyAddSign<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyAddSign
    */
-  public static <T> ApplyAddSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAddSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAddSign", scope.makeOpName("ApplyAddSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

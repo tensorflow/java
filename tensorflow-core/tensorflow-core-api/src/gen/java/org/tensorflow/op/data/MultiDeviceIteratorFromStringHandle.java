@@ -27,11 +27,12 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Generates a MultiDeviceIterator resource from its provided string handle.
  */
-public final class MultiDeviceIteratorFromStringHandle extends PrimitiveOp implements Operand<Object> {
+public final class MultiDeviceIteratorFromStringHandle extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle}
@@ -100,8 +101,8 @@ public final class MultiDeviceIteratorFromStringHandle extends PrimitiveOp imple
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) multiDeviceIterator;
+  public Output<TType> asOutput() {
+    return (Output<TType>) multiDeviceIterator;
   }
   
   private Output<?> multiDeviceIterator;

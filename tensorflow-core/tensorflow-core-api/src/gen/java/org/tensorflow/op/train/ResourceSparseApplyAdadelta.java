@@ -24,6 +24,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * var: Should be from a Variable().
@@ -66,7 +67,7 @@ public final class ResourceSparseApplyAdadelta extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdadelta
    */
-  public static <T, U extends TNumber> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdadelta", scope.makeOpName("ResourceSparseApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

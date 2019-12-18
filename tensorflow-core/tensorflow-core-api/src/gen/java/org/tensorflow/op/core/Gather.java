@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gather slices from `params` axis `axis` according to `indices`.
@@ -58,7 +59,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Gather<T> extends PrimitiveOp implements Operand<T> {
+public final class Gather<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Gather}
@@ -91,7 +92,7 @@ public final class Gather<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Gather
    */
-  public static <T, U extends TNumber, V extends TNumber> Gather<T> create(Scope scope, Operand<T> params, Operand<U> indices, Operand<V> axis, Options... options) {
+  public static <T extends TType, U extends TNumber, V extends TNumber> Gather<T> create(Scope scope, Operand<T> params, Operand<U> indices, Operand<V> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherV2", scope.makeOpName("Gather"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());

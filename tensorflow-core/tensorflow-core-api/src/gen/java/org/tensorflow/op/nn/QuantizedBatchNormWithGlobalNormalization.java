@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Quantized Batch normalization.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TFloat;
  * @param <U> data type for {@code result()} output
  */
 @Operator(group = "nn")
-public final class QuantizedBatchNormWithGlobalNormalization<U> extends PrimitiveOp {
+public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedBatchNormWithGlobalNormalization operation.
@@ -70,7 +71,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U> extends Primitiv
    * needs to be multiplied with gamma.
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
-  public static <U, T> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin, Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax, Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma, Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin, Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax, Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma, Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBatchNormWithGlobalNormalization", scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());

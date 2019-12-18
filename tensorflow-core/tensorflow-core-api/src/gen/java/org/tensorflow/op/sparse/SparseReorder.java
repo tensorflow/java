@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reorders a SparseTensor into the canonical, row-major ordering.
@@ -41,7 +42,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReorder<T> extends PrimitiveOp {
+public final class SparseReorder<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseReorder operation.
@@ -53,7 +54,7 @@ public final class SparseReorder<T> extends PrimitiveOp {
    * @param inputShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseReorder
    */
-  public static <T> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
+  public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());

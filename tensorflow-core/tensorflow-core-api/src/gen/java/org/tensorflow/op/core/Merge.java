@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the value of an available tensor from `inputs` to `output`.
@@ -39,7 +40,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Merge<T> extends PrimitiveOp {
+public final class Merge<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new Merge operation.
@@ -48,7 +49,7 @@ public final class Merge<T> extends PrimitiveOp {
    * @param inputs The input tensors, exactly one of which will become available.
    * @return a new instance of Merge
    */
-  public static <T> Merge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+  public static <T extends TType> Merge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("Merge", scope.makeOpName("Merge"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

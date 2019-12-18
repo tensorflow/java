@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b`.
@@ -38,7 +39,7 @@ import org.tensorflow.types.TFloat;
  * @param <V> data type for {@code out()} output
  */
 @Operator(group = "linalg")
-public final class QuantizedMatMul<V> extends PrimitiveOp {
+public final class QuantizedMatMul<V extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.QuantizedMatMul}
@@ -84,7 +85,7 @@ public final class QuantizedMatMul<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMul
    */
-  public static <V, T, U, W> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMul", scope.makeOpName("QuantizedMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient for the tanh of `x` wrt its input.
@@ -32,7 +33,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code z()} output
  */
-public final class TanhGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class TanhGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TanhGrad operation.
@@ -42,7 +43,7 @@ public final class TanhGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param dy 
    * @return a new instance of TanhGrad
    */
-  public static <T> TanhGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
+  public static <T extends TType> TanhGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("TanhGrad", scope.makeOpName("TanhGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());

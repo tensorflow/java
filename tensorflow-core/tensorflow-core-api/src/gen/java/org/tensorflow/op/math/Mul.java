@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x * y element-wise.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Mul<T> extends PrimitiveOp implements Operand<T> {
+public final class Mul<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Mul operation.
@@ -44,7 +45,7 @@ public final class Mul<T> extends PrimitiveOp implements Operand<T> {
    * @param y 
    * @return a new instance of Mul
    */
-  public static <T> Mul<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> Mul<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mul", scope.makeOpName("Mul"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

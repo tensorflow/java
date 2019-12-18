@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Randomly shuffles a tensor along its first dimension.
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomShuffle<T> extends PrimitiveOp implements Operand<T> {
+public final class RandomShuffle<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomShuffle}
@@ -81,7 +82,7 @@ public final class RandomShuffle<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffle
    */
-  public static <T> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
+  public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffle", scope.makeOpName("RandomShuffle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

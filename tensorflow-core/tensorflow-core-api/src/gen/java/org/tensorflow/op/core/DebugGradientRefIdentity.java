@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Identity op for gradient debugging.
@@ -33,7 +34,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class DebugGradientRefIdentity<T> extends PrimitiveOp implements Operand<T> {
+public final class DebugGradientRefIdentity<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DebugGradientRefIdentity operation.
@@ -42,7 +43,7 @@ public final class DebugGradientRefIdentity<T> extends PrimitiveOp implements Op
    * @param input 
    * @return a new instance of DebugGradientRefIdentity
    */
-  public static <T> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientRefIdentity", scope.makeOpName("DebugGradientRefIdentity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

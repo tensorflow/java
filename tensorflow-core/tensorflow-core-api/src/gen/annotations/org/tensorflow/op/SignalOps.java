@@ -21,6 +21,7 @@ import org.tensorflow.op.signal.Rfft2d;
 import org.tensorflow.op.signal.Rfft3d;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code signal} operations as {@link Op Op}s
@@ -52,41 +53,8 @@ public final class SignalOps {
    * @return a new instance of Ifft2d
    * @see org.tensorflow.op.signal.Ifft2d
    */
-  public <T> Ifft2d<T> ifft2d(Operand<T> input) {
+  public <T extends TType> Ifft2d<T> ifft2d(Operand<T> input) {
     return Ifft2d.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Ifft3d} operation
-   *
-   * @param input A complex64 tensor.
-   * @return a new instance of Ifft3d
-   * @see org.tensorflow.op.signal.Ifft3d
-   */
-  public <T> Ifft3d<T> ifft3d(Operand<T> input) {
-    return Ifft3d.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Fft2d} operation
-   *
-   * @param input A complex tensor.
-   * @return a new instance of Fft2d
-   * @see org.tensorflow.op.signal.Fft2d
-   */
-  public <T> Fft2d<T> fft2d(Operand<T> input) {
-    return Fft2d.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Ifft} operation
-   *
-   * @param input A complex tensor.
-   * @return a new instance of Ifft
-   * @see org.tensorflow.op.signal.Ifft
-   */
-  public <T> Ifft<T> ifft(Operand<T> input) {
-    return Ifft.create(scope, input);
   }
 
   /**
@@ -142,8 +110,19 @@ public final class SignalOps {
    * @return a new instance of Fft
    * @see org.tensorflow.op.signal.Fft
    */
-  public <T> Fft<T> fft(Operand<T> input) {
+  public <T extends TType> Fft<T> fft(Operand<T> input) {
     return Fft.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Fft3d} operation
+   *
+   * @param input A complex64 tensor.
+   * @return a new instance of Fft3d
+   * @see org.tensorflow.op.signal.Fft3d
+   */
+  public <T extends TType> Fft3d<T> fft3d(Operand<T> input) {
+    return Fft3d.create(scope, input);
   }
 
   /**
@@ -158,14 +137,25 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link Fft3d} operation
+   * Builds an {@link Ifft} operation
    *
-   * @param input A complex64 tensor.
-   * @return a new instance of Fft3d
-   * @see org.tensorflow.op.signal.Fft3d
+   * @param input A complex tensor.
+   * @return a new instance of Ifft
+   * @see org.tensorflow.op.signal.Ifft
    */
-  public <T> Fft3d<T> fft3d(Operand<T> input) {
-    return Fft3d.create(scope, input);
+  public <T extends TType> Ifft<T> ifft(Operand<T> input) {
+    return Ifft.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Fft2d} operation
+   *
+   * @param input A complex tensor.
+   * @return a new instance of Fft2d
+   * @see org.tensorflow.op.signal.Fft2d
+   */
+  public <T extends TType> Fft2d<T> fft2d(Operand<T> input) {
+    return Fft2d.create(scope, input);
   }
 
   /**
@@ -200,6 +190,17 @@ public final class SignalOps {
    */
   public BatchIfft2d batchIfft2d(Operand<?> input) {
     return BatchIfft2d.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Ifft3d} operation
+   *
+   * @param input A complex64 tensor.
+   * @return a new instance of Ifft3d
+   * @see org.tensorflow.op.signal.Ifft3d
+   */
+  public <T extends TType> Ifft3d<T> ifft3d(Operand<T> input) {
+    return Ifft3d.create(scope, input);
   }
 
   /**

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor of zeros with the same shape and type as x.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class ZerosLike<T> extends PrimitiveOp implements Operand<T> {
+public final class ZerosLike<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ZerosLike operation.
@@ -40,7 +41,7 @@ public final class ZerosLike<T> extends PrimitiveOp implements Operand<T> {
    * @param x a tensor of type T.
    * @return a new instance of ZerosLike
    */
-  public static <T> ZerosLike<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> ZerosLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZerosLike", scope.makeOpName("ZerosLike"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

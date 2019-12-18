@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adagrad scheme.
@@ -74,7 +75,7 @@ public final class ResourceApplyAdagrad extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyAdagrad
    */
-  public static <T> ResourceApplyAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Options... options) {
+  public static <T extends TType> ResourceApplyAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdagrad", scope.makeOpName("ResourceApplyAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

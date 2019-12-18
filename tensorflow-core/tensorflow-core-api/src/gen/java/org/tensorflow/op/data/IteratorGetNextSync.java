@@ -29,6 +29,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets the next output from the given iterator.
@@ -39,7 +40,7 @@ import org.tensorflow.tools.Shape;
  * operations (e.g. in eager mode).
  */
 @Operator(group = "data")
-public final class IteratorGetNextSync extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class IteratorGetNextSync extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IteratorGetNextSync operation.
@@ -75,7 +76,7 @@ public final class IteratorGetNextSync extends PrimitiveOp implements Iterable<O
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

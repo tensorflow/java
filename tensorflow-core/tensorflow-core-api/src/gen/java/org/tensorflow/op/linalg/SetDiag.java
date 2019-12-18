@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a batched matrix tensor with new batched diagonal values.
@@ -44,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class SetDiag<T> extends PrimitiveOp implements Operand<T> {
+public final class SetDiag<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SetDiag operation.
@@ -54,7 +55,7 @@ public final class SetDiag<T> extends PrimitiveOp implements Operand<T> {
    * @param diagonal Rank `k`, where `k >= 1`.
    * @return a new instance of SetDiag
    */
-  public static <T> SetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
+  public static <T extends TType> SetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiag", scope.makeOpName("SetDiag"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(diagonal.asOutput());

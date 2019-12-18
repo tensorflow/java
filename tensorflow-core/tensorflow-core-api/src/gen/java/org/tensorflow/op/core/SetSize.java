@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Number of unique elements along last dimension of input `set`.
@@ -69,7 +70,7 @@ public final class SetSize extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of SetSize
    */
-  public static <T> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
+  public static <T extends TType> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetSize", scope.makeOpName("SetSize"));
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());

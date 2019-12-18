@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the complex absolute value of a tensor.
@@ -49,7 +50,7 @@ public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements 
    * @param Tout 
    * @return a new instance of ComplexAbs
    */
-  public static <U extends TNumber, T> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -64,7 +65,7 @@ public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements 
    * @param x 
    * @return a new instance of ComplexAbs
    */
-  public static <T> ComplexAbs<TFloat> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> ComplexAbs<TFloat> create(Scope scope, Operand<T> x) {
     return create(scope, x, TFloat.DTYPE);
   }
   

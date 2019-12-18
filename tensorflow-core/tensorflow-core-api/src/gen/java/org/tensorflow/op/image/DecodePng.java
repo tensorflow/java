@@ -28,6 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUInt8;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Decode a PNG-encoded image to a uint8 or uint16 tensor.

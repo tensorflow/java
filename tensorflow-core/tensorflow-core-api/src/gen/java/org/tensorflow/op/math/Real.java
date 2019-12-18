@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the real part of a complex number.
@@ -56,7 +57,7 @@ public final class Real<U extends TNumber> extends PrimitiveOp implements Operan
    * @param Tout 
    * @return a new instance of Real
    */
-  public static <U extends TNumber, T> Real<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Real<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Real", scope.makeOpName("Real"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -71,7 +72,7 @@ public final class Real<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Real
    */
-  public static <T> Real<TFloat> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Real<TFloat> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat.DTYPE);
   }
   

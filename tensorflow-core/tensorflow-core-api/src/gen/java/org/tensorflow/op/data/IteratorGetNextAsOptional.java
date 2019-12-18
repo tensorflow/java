@@ -27,12 +27,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets the next output from the given iterator as an Optional variant.
  */
 @Operator(group = "data")
-public final class IteratorGetNextAsOptional extends PrimitiveOp implements Operand<Object> {
+public final class IteratorGetNextAsOptional extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new IteratorGetNextAsOptional operation.
@@ -68,8 +69,8 @@ public final class IteratorGetNextAsOptional extends PrimitiveOp implements Oper
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) optional;
+  public Output<TType> asOutput() {
+    return (Output<TType>) optional;
   }
   
   private Output<?> optional;

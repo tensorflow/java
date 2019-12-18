@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Generates sparse cross from a list of sparse and dense tensors.
@@ -71,7 +72,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseCross<T> extends PrimitiveOp {
+public final class SparseCross<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseCross operation.
@@ -91,7 +92,7 @@ public final class SparseCross<T> extends PrimitiveOp {
    * @param internalType 
    * @return a new instance of SparseCross
    */
-  public static <T, U> SparseCross<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
+  public static <T extends TType, U extends TType> SparseCross<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCross", scope.makeOpName("SparseCross"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));

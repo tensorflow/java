@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear: `max(features, 0)`.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Relu<T> extends PrimitiveOp implements Operand<T> {
+public final class Relu<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Relu operation.
@@ -40,7 +41,7 @@ public final class Relu<T> extends PrimitiveOp implements Operand<T> {
    * @param features 
    * @return a new instance of Relu
    */
-  public static <T> Relu<T> create(Scope scope, Operand<T> features) {
+  public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

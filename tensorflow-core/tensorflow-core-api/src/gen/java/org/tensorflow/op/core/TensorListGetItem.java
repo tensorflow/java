@@ -26,12 +26,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code item()} output
  */
 @Operator
-public final class TensorListGetItem<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorListGetItem<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorListGetItem operation.
@@ -43,7 +44,7 @@ public final class TensorListGetItem<T> extends PrimitiveOp implements Operand<T
    * @param elementDtype 
    * @return a new instance of TensorListGetItem
    */
-  public static <T> TensorListGetItem<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListGetItem<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGetItem", scope.makeOpName("TensorListGetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());

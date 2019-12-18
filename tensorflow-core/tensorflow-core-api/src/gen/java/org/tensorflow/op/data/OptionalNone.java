@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates an Optional variant with no value.
  */
 @Operator(group = "data")
-public final class OptionalNone extends PrimitiveOp implements Operand<Object> {
+public final class OptionalNone extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new OptionalNone operation.
@@ -51,8 +52,8 @@ public final class OptionalNone extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) optional;
+  public Output<TType> asOutput() {
+    return (Output<TType>) optional;
   }
   
   private Output<?> optional;

@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reshapes a quantized tensor as per the Reshape op.
@@ -35,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class QuantizedReshape<T> extends PrimitiveOp {
+public final class QuantizedReshape<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedReshape operation.
@@ -47,7 +48,7 @@ public final class QuantizedReshape<T> extends PrimitiveOp {
    * @param inputMax The maximum value of the input.
    * @return a new instance of QuantizedReshape
    */
-  public static <T, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
+  public static <T extends TType, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());

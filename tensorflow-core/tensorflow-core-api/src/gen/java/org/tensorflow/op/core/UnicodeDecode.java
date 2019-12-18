@@ -28,6 +28,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Decodes each string in `input` into a sequence of Unicode code points.

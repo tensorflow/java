@@ -38,6 +38,7 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUInt8;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code image} operations as {@link Op Op}s
@@ -295,6 +296,23 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link QuantizedResizeBilinear} operation
+   *
+   * @param images 4-D with shape `[batch, height, width, channels]`.
+   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param min 
+   * @param max 
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizedResizeBilinear
+   * @see org.tensorflow.op.image.QuantizedResizeBilinear
+   */
+  public <T extends TType> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
+      Operand<TInt32> size, Operand<TFloat> min, Operand<TFloat> max,
+      QuantizedResizeBilinear.Options... options) {
+    return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
+  }
+
+  /**
    * Builds an {@link CropAndResize} operation
    *
    * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
@@ -380,23 +398,6 @@ public final class ImageOps {
   public <T extends TNumber> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
       List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     return ExtractImagePatches.create(scope, images, ksizes, strides, rates, padding);
-  }
-
-  /**
-   * Builds an {@link QuantizedResizeBilinear} operation
-   *
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
-   * @param min 
-   * @param max 
-   * @param options carries optional attributes values
-   * @return a new instance of QuantizedResizeBilinear
-   * @see org.tensorflow.op.image.QuantizedResizeBilinear
-   */
-  public <T> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat> min, Operand<TFloat> max,
-      QuantizedResizeBilinear.Options... options) {
-    return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
   }
 
   /**

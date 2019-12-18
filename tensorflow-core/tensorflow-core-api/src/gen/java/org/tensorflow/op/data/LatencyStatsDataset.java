@@ -27,11 +27,12 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Records the latency of producing `input_dataset` elements in a StatsAggregator.
  */
-public final class LatencyStatsDataset extends PrimitiveOp implements Operand<Object> {
+public final class LatencyStatsDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new LatencyStatsDataset operation.
@@ -69,8 +70,8 @@ public final class LatencyStatsDataset extends PrimitiveOp implements Operand<Ob
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

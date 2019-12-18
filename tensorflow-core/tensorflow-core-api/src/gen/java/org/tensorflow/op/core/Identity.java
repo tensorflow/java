@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Return a tensor with the same shape and contents as the input tensor or value.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Identity<T> extends PrimitiveOp implements Operand<T> {
+public final class Identity<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Identity operation.
@@ -40,7 +41,7 @@ public final class Identity<T> extends PrimitiveOp implements Operand<T> {
    * @param input 
    * @return a new instance of Identity
    */
-  public static <T> Identity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' by subtracting 'alpha' * 'delta' from it.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyGradientDescent<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyGradientDescent<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyGradientDescent}
@@ -63,7 +64,7 @@ public final class ApplyGradientDescent<T> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of ApplyGradientDescent
    */
-  public static <T> ApplyGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> delta, Options... options) {
+  public static <T extends TType> ApplyGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyGradientDescent", scope.makeOpName("ApplyGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());

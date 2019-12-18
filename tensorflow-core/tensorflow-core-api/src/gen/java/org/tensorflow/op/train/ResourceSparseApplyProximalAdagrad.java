@@ -24,6 +24,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
@@ -71,7 +72,7 @@ public final class ResourceSparseApplyProximalAdagrad extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
-  public static <T, U extends TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalAdagrad", scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Looks up keys in a table, outputs the corresponding values.
@@ -37,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code values()} output
  */
 @Operator
-public final class LookupTableFind<U> extends PrimitiveOp implements Operand<U> {
+public final class LookupTableFind<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new LookupTableFind operation.
@@ -48,7 +49,7 @@ public final class LookupTableFind<U> extends PrimitiveOp implements Operand<U> 
    * @param defaultValue 
    * @return a new instance of LookupTableFind
    */
-  public static <U, T> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
+  public static <U extends TType, T extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

@@ -23,13 +23,14 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Return the same ref tensor as the input ref tensor.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefIdentity<T> extends PrimitiveOp implements Operand<T> {
+public final class RefIdentity<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefIdentity operation.
@@ -38,7 +39,7 @@ public final class RefIdentity<T> extends PrimitiveOp implements Operand<T> {
    * @param input 
    * @return a new instance of RefIdentity
    */
-  public static <T> RefIdentity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> RefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefIdentity", scope.makeOpName("RefIdentity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

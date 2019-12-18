@@ -29,6 +29,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Convert CSV records to tensors. Each column maps to one tensor.
@@ -38,7 +39,7 @@ import org.tensorflow.types.TString;
  * Note that we allow leading and trailing spaces with int or float field.
  */
 @Operator(group = "io")
-public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.DecodeCsv}
@@ -167,7 +168,7 @@ public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<Obj
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
   }
   

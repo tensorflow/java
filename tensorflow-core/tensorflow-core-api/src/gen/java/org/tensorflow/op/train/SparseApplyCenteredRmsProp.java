@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
@@ -49,7 +50,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class SparseApplyCenteredRmsProp<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseApplyCenteredRmsProp<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyCenteredRmsProp}
@@ -89,7 +90,7 @@ public final class SparseApplyCenteredRmsProp<T> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyCenteredRmsProp
    */
-  public static <T, U extends TNumber> SparseApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyCenteredRMSProp", scope.makeOpName("SparseApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());

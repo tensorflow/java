@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Store the input tensor in the state of the current session.
  */
 @Operator
-public final class GetSessionHandle extends PrimitiveOp implements Operand<Object> {
+public final class GetSessionHandle extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new GetSessionHandle operation.
@@ -38,7 +39,7 @@ public final class GetSessionHandle extends PrimitiveOp implements Operand<Objec
    * @param value The tensor to be stored.
    * @return a new instance of GetSessionHandle
    */
-  public static <T> GetSessionHandle create(Scope scope, Operand<T> value) {
+  public static <T extends TType> GetSessionHandle create(Scope scope, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionHandleV2", scope.makeOpName("GetSessionHandle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -55,8 +56,8 @@ public final class GetSessionHandle extends PrimitiveOp implements Operand<Objec
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

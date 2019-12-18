@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Retrieves a single tensor from the computation outfeed.
@@ -33,7 +34,7 @@ import org.tensorflow.tools.Shape;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class OutfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
+public final class OutfeedDequeue<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.OutfeedDequeue}
@@ -65,7 +66,7 @@ public final class OutfeedDequeue<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of OutfeedDequeue
    */
-  public static <T> OutfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> OutfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeue", scope.makeOpName("OutfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

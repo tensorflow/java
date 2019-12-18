@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sign and the log of the absolute value of the determinant of
@@ -41,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code sign()} output
  */
 @Operator(group = "linalg")
-public final class LogMatrixDeterminant<T> extends PrimitiveOp {
+public final class LogMatrixDeterminant<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new LogMatrixDeterminant operation.
@@ -50,7 +51,7 @@ public final class LogMatrixDeterminant<T> extends PrimitiveOp {
    * @param input Shape is `[N, M, M]`.
    * @return a new instance of LogMatrixDeterminant
    */
-  public static <T> LogMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> LogMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogMatrixDeterminant", scope.makeOpName("LogMatrixDeterminant"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

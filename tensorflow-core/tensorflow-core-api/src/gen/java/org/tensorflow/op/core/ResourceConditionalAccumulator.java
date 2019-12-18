@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * A conditional accumulator for aggregating gradients.
@@ -38,7 +39,7 @@ import org.tensorflow.tools.Shape;
  * This is a resource version of ConditionalAccumulator that will work in TF2.0
  * with tf.cond version 2.
  */
-public final class ResourceConditionalAccumulator extends PrimitiveOp implements Operand<Object> {
+public final class ResourceConditionalAccumulator extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ResourceConditionalAccumulator}
@@ -88,7 +89,7 @@ public final class ResourceConditionalAccumulator extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of ResourceConditionalAccumulator
    */
-  public static <T> ResourceConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> ResourceConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceConditionalAccumulator", scope.makeOpName("ResourceConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
@@ -141,8 +142,8 @@ public final class ResourceConditionalAccumulator extends PrimitiveOp implements
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

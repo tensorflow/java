@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Op is similar to a lightweight Dequeue.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * capabilities and options.  This Op is optimized for performance.
  */
 @Operator
-public final class Unstage extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class Unstage extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Unstage}
@@ -155,7 +156,7 @@ public final class Unstage extends PrimitiveOp implements Iterable<Operand<Objec
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
   

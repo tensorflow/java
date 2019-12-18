@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
@@ -41,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class SparseApplyFtrl<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseApplyFtrl<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyFtrl}
@@ -81,7 +82,7 @@ public final class SparseApplyFtrl<T> extends PrimitiveOp implements Operand<T> 
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyFtrl
    */
-  public static <T, U extends TNumber> SparseApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyFtrlV2", scope.makeOpName("SparseApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

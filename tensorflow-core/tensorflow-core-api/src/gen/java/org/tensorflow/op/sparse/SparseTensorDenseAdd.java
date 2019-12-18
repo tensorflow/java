@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds up a `SparseTensor` and a dense `Tensor`, producing a dense `Tensor`.
@@ -34,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseTensorDenseAdd<U> extends PrimitiveOp implements Operand<U> {
+public final class SparseTensorDenseAdd<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new SparseTensorDenseAdd operation.
@@ -46,7 +47,7 @@ public final class SparseTensorDenseAdd<U> extends PrimitiveOp implements Operan
    * @param b `ndims`-D Tensor.  With shape `a_shape`.
    * @return a new instance of SparseTensorDenseAdd
    */
-  public static <U, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
+  public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

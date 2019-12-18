@@ -24,12 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixDiag<T> extends PrimitiveOp implements Operand<T> {
+public final class BatchMatrixDiag<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchMatrixDiag operation.
@@ -38,7 +39,7 @@ public final class BatchMatrixDiag<T> extends PrimitiveOp implements Operand<T> 
    * @param diagonal 
    * @return a new instance of BatchMatrixDiag
    */
-  public static <T> BatchMatrixDiag<T> create(Scope scope, Operand<T> diagonal) {
+  public static <T extends TType> BatchMatrixDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiag", scope.makeOpName("BatchMatrixDiag"));
     opBuilder.addInput(diagonal.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

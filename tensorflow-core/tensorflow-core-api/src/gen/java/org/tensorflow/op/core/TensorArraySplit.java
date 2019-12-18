@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Split the data from the input value into TensorArray elements.
@@ -66,7 +67,7 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloa
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  public static <T> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySplitV3", scope.makeOpName("TensorArraySplit"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());

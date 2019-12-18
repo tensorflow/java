@@ -23,10 +23,11 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class SummaryWriter extends PrimitiveOp implements Operand<Object> {
+public final class SummaryWriter extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.summary.SummaryWriter}
@@ -101,8 +102,8 @@ public final class SummaryWriter extends PrimitiveOp implements Operand<Object> 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) writer;
+  public Output<TType> asOutput() {
+    return (Output<TType>) writer;
   }
   
   private Output<?> writer;

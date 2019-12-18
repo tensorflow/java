@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the index with the largest value across dimensions of a tensor.
@@ -60,7 +61,7 @@ public final class ArgMax<V extends TNumber> extends PrimitiveOp implements Oper
    * @param outputType 
    * @return a new instance of ArgMax
    */
-  public static <V extends TNumber, T, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
+  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
@@ -79,7 +80,7 @@ public final class ArgMax<V extends TNumber> extends PrimitiveOp implements Oper
    * use dimension = 0.
    * @return a new instance of ArgMax
    */
-  public static <T, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
+  public static <T extends TType, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
     return create(scope, input, dimension, TInt64.DTYPE);
   }
   

@@ -191,7 +191,7 @@ public class ScopeTest {
   }
 
   // "handwritten" sample operator classes
-  private static final class Const<T> {
+  private static final class Const<T extends TType> {
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
@@ -202,7 +202,7 @@ public class ScopeTest {
       return create(s, Tensors.create(v));
     }
 
-    static <T> Const<T> create(Scope s, Tensor<T> value) {
+    static <T extends TType> Const<T> create(Scope s, Tensor<T> value) {
       return new Const<>(
           s.env()
               .opBuilder("Const", s.makeOpName("Const"))
@@ -233,10 +233,10 @@ public class ScopeTest {
     }
   }
 
-  private static final class Mean<T> {
+  private static final class Mean<T extends TType> {
     private final Output<T> output;
 
-    static <T> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
+    static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
       return new Mean<>(
           s.env()
               .opBuilder("Mean", s.makeOpName("Mean"))
@@ -255,10 +255,10 @@ public class ScopeTest {
     }
   }
 
-  private static final class SquaredDifference<T> {
+  private static final class SquaredDifference<T extends TType> {
     private final Output<T> output;
 
-    static <T> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
+    static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
       return new SquaredDifference<>(
           s.env()
               .opBuilder("SquaredDifference", s.makeOpName("SquaredDifference"))
@@ -299,7 +299,7 @@ public class ScopeTest {
     zeros.put(TString.DTYPE, null); // no zero value
   }
 
-  private static final class Variance<T> {
+  private static final class Variance<T extends TType> {
     private final Output<T> output;
 
     static <T extends TType> Variance<T> create(Scope base, Output<T> x, DataType<T> type) {

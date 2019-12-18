@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AddSign update.
@@ -69,7 +70,7 @@ public final class ResourceApplyPowerSign extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyPowerSign
    */
-  public static <T> ResourceApplyPowerSign create(Scope scope, Operand<?> var, Operand<?> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
+  public static <T extends TType> ResourceApplyPowerSign create(Scope scope, Operand<?> var, Operand<?> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyPowerSign", scope.makeOpName("ResourceApplyPowerSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

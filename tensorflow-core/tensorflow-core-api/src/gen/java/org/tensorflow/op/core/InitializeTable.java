@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Table initializer that takes two tensors for keys and values respectively.
@@ -39,7 +40,7 @@ public final class InitializeTable extends PrimitiveOp {
    * @param values Values of type Tval.
    * @return a new instance of InitializeTable
    */
-  public static <T, U> InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
+  public static <T extends TType, U extends TType> InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableV2", scope.makeOpName("InitializeTable"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

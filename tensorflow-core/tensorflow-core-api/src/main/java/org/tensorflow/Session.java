@@ -337,7 +337,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      List<Tensor<?>> outputs = new ArrayList<Tensor<?>>();
+      List<Tensor<?>> outputs = new ArrayList<>();
       for (long h : outputTensorHandles) {
         try {
           outputs.add(Tensor.fromHandle(h));
@@ -401,10 +401,10 @@ public final class Session implements AutoCloseable {
       }
     }
 
-    private ArrayList<Output<?>> inputs = new ArrayList<Output<?>>();
-    private ArrayList<Tensor<?>> inputTensors = new ArrayList<Tensor<?>>();
-    private ArrayList<Output<?>> outputs = new ArrayList<Output<?>>();
-    private ArrayList<GraphOperation> targets = new ArrayList<GraphOperation>();
+    private ArrayList<Output<?>> inputs = new ArrayList<>();
+    private ArrayList<Tensor<?>> inputTensors = new ArrayList<>();
+    private ArrayList<Output<?>> outputs = new ArrayList<>();
+    private ArrayList<GraphOperation> targets = new ArrayList<>();
     private byte[] runOptions = null;
   }
 

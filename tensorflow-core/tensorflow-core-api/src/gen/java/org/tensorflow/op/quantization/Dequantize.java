@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Dequantize the 'input' tensor into a float Tensor.
@@ -129,7 +130,7 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public static <T> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, Options... options) {
+  public static <T extends TType> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * DepthToSpace for tensors of type T.
@@ -111,7 +112,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthToSpace<T> extends PrimitiveOp implements Operand<T> {
+public final class DepthToSpace<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthToSpace}
@@ -141,7 +142,7 @@ public final class DepthToSpace<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of DepthToSpace
    */
-  public static <T> DepthToSpace<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
+  public static <T extends TType> DepthToSpace<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthToSpace", scope.makeOpName("DepthToSpace"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

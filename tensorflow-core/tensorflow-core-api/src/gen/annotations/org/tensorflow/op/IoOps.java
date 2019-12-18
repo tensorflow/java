@@ -52,6 +52,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code io} operations as {@link Op Op}s
@@ -77,6 +78,20 @@ public final class IoOps {
   public QueueEnqueueMany queueEnqueueMany(Operand<?> handle, Iterable<Operand<?>> components,
       QueueEnqueueMany.Options... options) {
     return QueueEnqueueMany.create(scope, handle, components, options);
+  }
+
+  /**
+   * Builds an {@link SerializeManySparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+   * @return a new instance of SerializeManySparse
+   * @see org.tensorflow.op.io.SerializeManySparse
+   */
+  public <T extends TType> SerializeManySparse<TString> serializeManySparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
 
   /**
@@ -117,6 +132,35 @@ public final class IoOps {
   }
 
   /**
+   * Builds an {@link ParseTensor} operation
+   *
+   * @param serialized A scalar string containing a serialized TensorProto proto.
+   * @param outType The type of the serialized tensor.  The provided type must match the
+   * @return a new instance of ParseTensor
+   * @see org.tensorflow.op.io.ParseTensor
+   */
+  public <T extends TType> ParseTensor<T> parseTensor(Operand<TString> serialized,
+      DataType<T> outType) {
+    return ParseTensor.create(scope, serialized, outType);
+  }
+
+  /**
+   * Builds an {@link SerializeSparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+   * @param outType The `dtype` to use for serialization; the supported types are `string`
+   * @return a new instance of SerializeSparse
+   * @see org.tensorflow.op.io.SerializeSparse
+   */
+  public <U extends TType, T extends TType> SerializeSparse<U> serializeSparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
+      DataType<U> outType) {
+    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
+  }
+
+  /**
    * Builds an {@link ReaderReadUpTo} operation
    *
    * @param readerHandle Handle to a `Reader`.
@@ -142,17 +186,28 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link DecodeRaw} operation
+   * Builds an {@link SerializeTensor} operation
    *
-   * @param bytes All the elements must have the same length.
-   * @param outType 
-   * @param options carries optional attributes values
-   * @return a new instance of DecodeRaw
-   * @see org.tensorflow.op.io.DecodeRaw
+   * @param tensor A Tensor of type `T`.
+   * @return a new instance of SerializeTensor
+   * @see org.tensorflow.op.io.SerializeTensor
    */
-  public <T> DecodeRaw<T> decodeRaw(Operand<TString> bytes, DataType<T> outType,
-      DecodeRaw.Options... options) {
-    return DecodeRaw.create(scope, bytes, outType, options);
+  public <T extends TType> SerializeTensor serializeTensor(Operand<T> tensor) {
+    return SerializeTensor.create(scope, tensor);
+  }
+
+  /**
+   * Builds an {@link SerializeSparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+   * @return a new instance of SerializeSparse
+   * @see org.tensorflow.op.io.SerializeSparse
+   */
+  public <T extends TType> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
+      Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
 
   /**
@@ -197,6 +252,20 @@ public final class IoOps {
   }
 
   /**
+   * Builds an {@link DecodeRaw} operation
+   *
+   * @param bytes All the elements must have the same length.
+   * @param outType 
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeRaw
+   * @see org.tensorflow.op.io.DecodeRaw
+   */
+  public <T extends TType> DecodeRaw<T> decodeRaw(Operand<TString> bytes, DataType<T> outType,
+      DecodeRaw.Options... options) {
+    return DecodeRaw.create(scope, bytes, outType, options);
+  }
+
+  /**
    * Builds an {@link WholeFileReader} operation
    *
    * @param options carries optional attributes values
@@ -205,20 +274,6 @@ public final class IoOps {
    */
   public WholeFileReader wholeFileReader(WholeFileReader.Options... options) {
     return WholeFileReader.create(scope, options);
-  }
-
-  /**
-   * Builds an {@link SerializeManySparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-   * @return a new instance of SerializeManySparse
-   * @see org.tensorflow.op.io.SerializeManySparse
-   */
-  public <T> SerializeManySparse<TString> serializeManySparse(Operand<TInt64> sparseIndices,
-      Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
 
   /**
@@ -293,21 +348,6 @@ public final class IoOps {
    */
   public QueueClose queueClose(Operand<?> handle, QueueClose.Options... options) {
     return QueueClose.create(scope, handle, options);
-  }
-
-  /**
-   * Builds an {@link SerializeManySparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-   * @param outType The `dtype` to use for serialization; the supported types are `string`
-   * @return a new instance of SerializeManySparse
-   * @see org.tensorflow.op.io.SerializeManySparse
-   */
-  public <U, T> SerializeManySparse<U> serializeManySparse(Operand<TInt64> sparseIndices,
-      Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
-    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
   }
 
   /**
@@ -389,15 +429,19 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link ParseTensor} operation
+   * Builds an {@link SerializeManySparse} operation
    *
-   * @param serialized A scalar string containing a serialized TensorProto proto.
-   * @param outType The type of the serialized tensor.  The provided type must match the
-   * @return a new instance of ParseTensor
-   * @see org.tensorflow.op.io.ParseTensor
+   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+   * @param outType The `dtype` to use for serialization; the supported types are `string`
+   * @return a new instance of SerializeManySparse
+   * @see org.tensorflow.op.io.SerializeManySparse
    */
-  public <T> ParseTensor<T> parseTensor(Operand<TString> serialized, DataType<T> outType) {
-    return ParseTensor.create(scope, serialized, outType);
+  public <U extends TType, T extends TType> SerializeManySparse<U> serializeManySparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
+      DataType<U> outType) {
+    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
   }
 
   /**
@@ -443,21 +487,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link SerializeSparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-   * @param outType The `dtype` to use for serialization; the supported types are `string`
-   * @return a new instance of SerializeSparse
-   * @see org.tensorflow.op.io.SerializeSparse
-   */
-  public <U, T> SerializeSparse<U> serializeSparse(Operand<TInt64> sparseIndices,
-      Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
-    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
-  }
-
-  /**
    * Builds an {@link DecodeCsv} operation
    *
    * @param records Each string is a record/row in the csv and all records should have
@@ -484,6 +513,19 @@ public final class IoOps {
   public QueueDequeueMany queueDequeueMany(Operand<?> handle, Operand<TInt32> n,
       List<DataType<?>> componentTypes, QueueDequeueMany.Options... options) {
     return QueueDequeueMany.create(scope, handle, n, componentTypes, options);
+  }
+
+  /**
+   * Builds an {@link DeserializeManySparse} operation
+   *
+   * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
+   * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+   * @return a new instance of DeserializeManySparse
+   * @see org.tensorflow.op.io.DeserializeManySparse
+   */
+  public <T extends TType> DeserializeManySparse<T> deserializeManySparse(
+      Operand<TString> serializedSparse, DataType<T> dtype) {
+    return DeserializeManySparse.create(scope, serializedSparse, dtype);
   }
 
   /**
@@ -549,17 +591,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link SerializeTensor} operation
-   *
-   * @param tensor A Tensor of type `T`.
-   * @return a new instance of SerializeTensor
-   * @see org.tensorflow.op.io.SerializeTensor
-   */
-  public <T> SerializeTensor serializeTensor(Operand<T> tensor) {
-    return SerializeTensor.create(scope, tensor);
-  }
-
-  /**
    * Builds an {@link QueueIsClosed} operation
    *
    * @param handle The handle to a queue.
@@ -592,19 +623,6 @@ public final class IoOps {
    */
   public QueueSize queueSize(Operand<?> handle) {
     return QueueSize.create(scope, handle);
-  }
-
-  /**
-   * Builds an {@link DeserializeManySparse} operation
-   *
-   * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
-   * @param dtype The `dtype` of the serialized `SparseTensor` objects.
-   * @return a new instance of DeserializeManySparse
-   * @see org.tensorflow.op.io.DeserializeManySparse
-   */
-  public <T> DeserializeManySparse<T> deserializeManySparse(Operand<TString> serializedSparse,
-      DataType<T> dtype) {
-    return DeserializeManySparse.create(scope, serializedSparse, dtype);
   }
 
   /**
@@ -643,20 +661,6 @@ public final class IoOps {
    */
   public TextLineReader textLineReader(TextLineReader.Options... options) {
     return TextLineReader.create(scope, options);
-  }
-
-  /**
-   * Builds an {@link SerializeSparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-   * @return a new instance of SerializeSparse
-   * @see org.tensorflow.op.io.SerializeSparse
-   */
-  public <T> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
-      Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
 
   /**

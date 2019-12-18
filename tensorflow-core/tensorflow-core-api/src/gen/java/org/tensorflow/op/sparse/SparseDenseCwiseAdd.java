@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds up a SparseTensor and a dense Tensor, using these special rules:
@@ -41,7 +42,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseDenseCwiseAdd<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseDenseCwiseAdd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseDenseCwiseAdd operation.
@@ -54,7 +55,7 @@ public final class SparseDenseCwiseAdd<T> extends PrimitiveOp implements Operand
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseAdd
    */
-  public static <T> SparseDenseCwiseAdd<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
+  public static <T extends TType> SparseDenseCwiseAdd<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseAdd", scope.makeOpName("SparseDenseCwiseAdd"));
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());

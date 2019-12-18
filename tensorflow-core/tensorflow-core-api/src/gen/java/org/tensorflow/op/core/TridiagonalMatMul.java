@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Calculate product with tridiagonal matrix.
@@ -31,7 +32,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TridiagonalMatMul<T> extends PrimitiveOp implements Operand<T> {
+public final class TridiagonalMatMul<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TridiagonalMatMul operation.
@@ -47,7 +48,7 @@ public final class TridiagonalMatMul<T> extends PrimitiveOp implements Operand<T
    * multiplication.
    * @return a new instance of TridiagonalMatMul
    */
-  public static <T> TridiagonalMatMul<T> create(Scope scope, Operand<T> superdiag, Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
+  public static <T extends TType> TridiagonalMatMul<T> create(Scope scope, Operand<T> superdiag, Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalMatMul", scope.makeOpName("TridiagonalMatMul"));
     opBuilder.addInput(superdiag.asOutput());
     opBuilder.addInput(maindiag.asOutput());

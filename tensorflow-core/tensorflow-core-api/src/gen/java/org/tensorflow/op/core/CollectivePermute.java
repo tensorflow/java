@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * An Op to permute tensors across replicated TPU instances.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TInt32;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CollectivePermute<T> extends PrimitiveOp implements Operand<T> {
+public final class CollectivePermute<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CollectivePermute operation.
@@ -47,7 +48,7 @@ public final class CollectivePermute<T> extends PrimitiveOp implements Operand<T
    * @param sourceTargetPairs A tensor with shape [num_pairs, 2].
    * @return a new instance of CollectivePermute
    */
-  public static <T> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
+  public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sourceTargetPairs.asOutput());

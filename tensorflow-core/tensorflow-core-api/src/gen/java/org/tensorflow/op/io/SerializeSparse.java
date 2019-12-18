@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
@@ -34,7 +35,7 @@ import org.tensorflow.types.TString;
  * @param <U> data type for {@code serializedSparse()} output
  */
 @Operator(group = "io")
-public final class SerializeSparse<U> extends PrimitiveOp implements Operand<U> {
+public final class SerializeSparse<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new SerializeSparse operation.
@@ -47,7 +48,7 @@ public final class SerializeSparse<U> extends PrimitiveOp implements Operand<U> 
    * (default) and `variant`.
    * @return a new instance of SerializeSparse
    */
-  public static <U, T> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
+  public static <U extends TType, T extends TType> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeSparse", scope.makeOpName("SerializeSparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
@@ -66,7 +67,7 @@ public final class SerializeSparse<U> extends PrimitiveOp implements Operand<U> 
    * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
    * @return a new instance of SerializeSparse
    */
-  public static <T> SerializeSparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+  public static <T extends TType> SerializeSparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
     return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
   }
   

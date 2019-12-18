@@ -23,10 +23,11 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class WrapDatasetVariant extends PrimitiveOp implements Operand<Object> {
+public final class WrapDatasetVariant extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new WrapDatasetVariant operation.
@@ -50,8 +51,8 @@ public final class WrapDatasetVariant extends PrimitiveOp implements Operand<Obj
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

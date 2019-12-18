@@ -38,8 +38,8 @@ public class GraphOperationBuilderTest {
   public void failWhenMixingOperationsOnDifferentGraphs() {
     try (Graph g1 = new Graph();
         Graph g2 = new Graph()) {
-      Output<Integer> c1 = TestUtil.constant(g1, "C1", 3);
-      Output<Integer> c2 = TestUtil.constant(g2, "C2", 3);
+      Output<TInt32> c1 = TestUtil.constant(g1, "C1", 3);
+      Output<TInt32> c2 = TestUtil.constant(g2, "C2", 3);
       TestUtil.addN(g1, c1, c1);
       try {
         TestUtil.addN(g2, c1, c2);
@@ -204,8 +204,8 @@ public class GraphOperationBuilderTest {
               .build()
               .output(0);
       assertTrue(hasNode(g, "queue"));
-      Output<Integer> c1 = TestUtil.constant(g, "const1", matrix);
-      Output<Integer> c2 = TestUtil.constant(g, "const2", new int[][][] {matrix, matrix});
+      Output<TInt32> c1 = TestUtil.constant(g, "const1", matrix);
+      Output<TInt32> c2 = TestUtil.constant(g, "const2", new int[][][] {matrix, matrix});
       Operation enqueue =
           g.opBuilder("QueueEnqueue", "enqueue")
               .addInput(queue)

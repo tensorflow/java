@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random integers from a uniform distribution.
@@ -38,7 +39,7 @@ import org.tensorflow.types.TInt64;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class StatefulUniformInt<U> extends PrimitiveOp implements Operand<U> {
+public final class StatefulUniformInt<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new StatefulUniformInt operation.
@@ -51,7 +52,7 @@ public final class StatefulUniformInt<U> extends PrimitiveOp implements Operand<
    * @param maxval Maximum value (exclusive, scalar).
    * @return a new instance of StatefulUniformInt
    */
-  public static <U, T> StatefulUniformInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> minval, Operand<U> maxval) {
+  public static <U extends TType, T extends TType> StatefulUniformInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> minval, Operand<U> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformInt", scope.makeOpName("StatefulUniformInt"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());

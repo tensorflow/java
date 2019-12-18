@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b` with bias
@@ -40,7 +41,7 @@ import org.tensorflow.types.TFloat;
  * 
  * @param <W> data type for {@code out()} output
  */
-public final class QuantizedMatMulWithBiasAndReluAndRequantize<W> extends PrimitiveOp {
+public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedMatMulWithBiasAndReluAndRequantize}
@@ -97,7 +98,7 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W> extends Primit
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
    */
-  public static <W, T, U, V> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, DataType<W> Toutput, Options... options) {
+  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndReluAndRequantize"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

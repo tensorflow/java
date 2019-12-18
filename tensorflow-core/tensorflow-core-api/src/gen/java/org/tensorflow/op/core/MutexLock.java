@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Locks a mutex resource.  The output is the lock.  So long as the lock tensor
@@ -65,7 +66,7 @@ import org.tensorflow.op.annotation.Operator;
  * wish to ensure the usage is exclusive.
  */
 @Operator
-public final class MutexLock extends PrimitiveOp implements Operand<Object> {
+public final class MutexLock extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new MutexLock operation.
@@ -92,8 +93,8 @@ public final class MutexLock extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) mutexLock;
+  public Output<TType> asOutput() {
+    return (Output<TType>) mutexLock;
   }
   
   private Output<?> mutexLock;

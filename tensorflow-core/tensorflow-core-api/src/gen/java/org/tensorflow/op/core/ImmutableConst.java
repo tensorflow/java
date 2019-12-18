@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns immutable tensor from memory region.
@@ -35,7 +36,7 @@ import org.tensorflow.tools.Shape;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator
-public final class ImmutableConst<T> extends PrimitiveOp implements Operand<T> {
+public final class ImmutableConst<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ImmutableConst operation.
@@ -47,7 +48,7 @@ public final class ImmutableConst<T> extends PrimitiveOp implements Operand<T> {
    * NewReadOnlyMemoryRegionFromFile in tensorflow::Env.
    * @return a new instance of ImmutableConst
    */
-  public static <T> ImmutableConst<T> create(Scope scope, DataType<T> dtype, Shape shape, String memoryRegionName) {
+  public static <T extends TType> ImmutableConst<T> create(Scope scope, DataType<T> dtype, Shape shape, String memoryRegionName) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImmutableConst", scope.makeOpName("ImmutableConst"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

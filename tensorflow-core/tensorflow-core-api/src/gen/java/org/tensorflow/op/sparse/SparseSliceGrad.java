@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * The gradient operator for the SparseSlice op.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code valGrad()} output
  */
 @Operator(group = "sparse")
-public final class SparseSliceGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class SparseSliceGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSliceGrad operation.
@@ -49,7 +50,7 @@ public final class SparseSliceGrad<T> extends PrimitiveOp implements Operand<T> 
    * @param outputIndices 2-D.  The `indices` of the sliced `SparseTensor`.
    * @return a new instance of SparseSliceGrad
    */
-  public static <T> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
+  public static <T extends TType> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSliceGrad", scope.makeOpName("SparseSliceGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(inputIndices.asOutput());

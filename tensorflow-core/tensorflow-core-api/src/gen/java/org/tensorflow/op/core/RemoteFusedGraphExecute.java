@@ -29,6 +29,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Execute a sub graph on a remote processor.
@@ -42,7 +43,7 @@ import org.tensorflow.op.annotation.Operator;
  * will be passed to consumer nodes as outputs of this node.
  */
 @Operator
-public final class RemoteFusedGraphExecute extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class RemoteFusedGraphExecute extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new RemoteFusedGraphExecute operation.
@@ -76,7 +77,7 @@ public final class RemoteFusedGraphExecute extends PrimitiveOp implements Iterab
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

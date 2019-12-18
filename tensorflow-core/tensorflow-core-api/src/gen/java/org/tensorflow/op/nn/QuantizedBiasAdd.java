@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
@@ -35,7 +36,7 @@ import org.tensorflow.types.TFloat;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedBiasAdd<V> extends PrimitiveOp {
+public final class QuantizedBiasAdd<V extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedBiasAdd operation.
@@ -50,7 +51,7 @@ public final class QuantizedBiasAdd<V> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedBiasAdd
    */
-  public static <V, T, U> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minBias, Operand<TFloat> maxBias, DataType<V> outType) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minBias, Operand<TFloat> maxBias, DataType<V> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBiasAdd", scope.makeOpName("QuantizedBiasAdd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(bias.asOutput());

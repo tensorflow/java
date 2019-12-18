@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Adam algorithm.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAdam<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyAdam<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdam}
@@ -85,7 +86,7 @@ public final class ApplyAdam<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdam
    */
-  public static <T> ApplyAdam<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdam<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdam", scope.makeOpName("ApplyAdam"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

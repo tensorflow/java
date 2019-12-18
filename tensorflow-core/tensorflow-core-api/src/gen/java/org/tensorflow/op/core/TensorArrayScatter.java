@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Scatter the data from the input value into specific TensorArray elements.
@@ -45,7 +46,7 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFl
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayScatter
    */
-  public static <T> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());

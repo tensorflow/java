@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the imaginary part of a complex number.
@@ -56,7 +57,7 @@ public final class Imag<U extends TNumber> extends PrimitiveOp implements Operan
    * @param Tout 
    * @return a new instance of Imag
    */
-  public static <U extends TNumber, T> Imag<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Imag<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Imag", scope.makeOpName("Imag"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -71,7 +72,7 @@ public final class Imag<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Imag
    */
-  public static <T> Imag<TFloat> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Imag<TFloat> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat.DTYPE);
   }
   

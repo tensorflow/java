@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyProximalAdagrad<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyProximalAdagrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyProximalAdagrad}
@@ -70,7 +71,7 @@ public final class ApplyProximalAdagrad<T> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of ApplyProximalAdagrad
    */
-  public static <T> ApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalAdagrad", scope.makeOpName("ApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

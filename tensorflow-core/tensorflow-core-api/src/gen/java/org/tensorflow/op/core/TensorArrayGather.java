@@ -28,6 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gather specific elements from the TensorArray into output `value`.
@@ -37,7 +38,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class TensorArrayGather<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorArrayGather<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorArrayGather}
@@ -71,7 +72,7 @@ public final class TensorArrayGather<T> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayGather
    */
-  public static <T> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());

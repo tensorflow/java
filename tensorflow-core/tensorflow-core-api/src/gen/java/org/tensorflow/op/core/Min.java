@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the minimum of elements across dimensions of a tensor.
@@ -37,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Min<T> extends PrimitiveOp implements Operand<T> {
+public final class Min<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Min}
@@ -68,7 +69,7 @@ public final class Min<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Min
    */
-  public static <T, U extends TNumber> Min<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType, U extends TNumber> Min<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("Min"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

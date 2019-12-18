@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Packs a list of `N` rank-`R` tensors into one rank-`(R+1)` tensor.
@@ -50,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Stack<T> extends PrimitiveOp implements Operand<T> {
+public final class Stack<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Stack}
@@ -80,7 +81,7 @@ public final class Stack<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of Stack
    */
-  public static <T> Stack<T> create(Scope scope, Iterable<Operand<T>> values, Options... options) {
+  public static <T extends TType> Stack<T> create(Scope scope, Iterable<Operand<T>> values, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Pack", scope.makeOpName("Stack"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.applyControlDependencies(opBuilder);

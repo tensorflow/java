@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that uses a custom thread pool to compute `input_dataset`.
  */
-public final class ThreadPoolDataset extends PrimitiveOp implements Operand<Object> {
+public final class ThreadPoolDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new ThreadPoolDataset operation.
@@ -68,8 +69,8 @@ public final class ThreadPoolDataset extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

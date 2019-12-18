@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Encodes a `RaggedTensor` into a `variant` Tensor.
@@ -42,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * corresponding decoding logic.
  * 
  */
-public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<Object> {
+public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorToVariant operation.
@@ -54,7 +55,7 @@ public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<
    * @param batchedInput A `bool` denoting whether the input is a batched `RaggedTensor`.
    * @return a new instance of RaggedTensorToVariant
    */
-  public static <T extends TNumber, U> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
+  public static <T extends TNumber, U extends TType> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());
@@ -72,8 +73,8 @@ public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) encodedRagged;
+  public Output<TType> asOutput() {
+    return (Output<TType>) encodedRagged;
   }
   
   private Output<?> encodedRagged;

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds `bias` to `value`.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class BiasAdd<T> extends PrimitiveOp implements Operand<T> {
+public final class BiasAdd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.BiasAdd}
@@ -70,7 +71,7 @@ public final class BiasAdd<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of BiasAdd
    */
-  public static <T> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias, Options... options) {
+  public static <T extends TType> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAdd", scope.makeOpName("BiasAdd"));
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(bias.asOutput());

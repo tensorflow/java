@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x / y element-wise for integer types.
@@ -39,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class TruncateDiv<T> extends PrimitiveOp implements Operand<T> {
+public final class TruncateDiv<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TruncateDiv operation.
@@ -49,7 +50,7 @@ public final class TruncateDiv<T> extends PrimitiveOp implements Operand<T> {
    * @param y 
    * @return a new instance of TruncateDiv
    */
-  public static <T> TruncateDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> TruncateDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateDiv", scope.makeOpName("TruncateDiv"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

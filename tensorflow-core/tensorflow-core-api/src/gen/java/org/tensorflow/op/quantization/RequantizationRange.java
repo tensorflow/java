@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes a range that covers the actual values present in a quantized tensor.
@@ -46,7 +47,7 @@ public final class RequantizationRange extends PrimitiveOp {
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
    */
-  public static <T> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
+  public static <T extends TType> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRange", scope.makeOpName("RequantizationRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

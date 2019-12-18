@@ -25,6 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Add all input tensors element wise.
@@ -40,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code sum()} output
  */
 @Operator(group = "math")
-public final class AddN<T> extends PrimitiveOp implements Operand<T> {
+public final class AddN<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AddN operation.
@@ -49,7 +50,7 @@ public final class AddN<T> extends PrimitiveOp implements Operand<T> {
    * @param inputs 
    * @return a new instance of AddN
    */
-  public static <T> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+  public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

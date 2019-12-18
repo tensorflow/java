@@ -28,6 +28,7 @@ import org.junit.runners.JUnit4;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.TestUtil;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.op.PrimitiveOp} */
 @RunWith(JUnit4.class)
@@ -36,7 +37,7 @@ public class PrimitiveOpTest {
   @Test
   public void equalsHashcode() {
     try (Graph g = new Graph()) {
-      Output<Integer> array = TestUtil.constant(g, "array", new int[2]);
+      Output<TInt32> array = TestUtil.constant(g, "array", new int[2]);
 
       PrimitiveOp test1 =
           new PrimitiveOp(g.opBuilder("Shape", "shape1").addInput(array).build()) {};

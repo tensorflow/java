@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b` with bias
@@ -39,7 +40,7 @@ import org.tensorflow.types.TFloat;
  * 
  * @param <V> data type for {@code out()} output
  */
-public final class QuantizedMatMulWithBiasAndRelu<V> extends PrimitiveOp {
+public final class QuantizedMatMulWithBiasAndRelu<V extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedMatMulWithBiasAndRelu}
@@ -94,7 +95,7 @@ public final class QuantizedMatMulWithBiasAndRelu<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMulWithBiasAndRelu
    */
-  public static <V, T, U> QuantizedMatMulWithBiasAndRelu<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedMatMulWithBiasAndRelu<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndRelu", scope.makeOpName("QuantizedMatMulWithBiasAndRelu"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

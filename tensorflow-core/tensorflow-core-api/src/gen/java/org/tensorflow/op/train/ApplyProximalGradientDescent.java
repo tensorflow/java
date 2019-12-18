@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' as FOBOS algorithm with fixed learning rate.
@@ -34,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyProximalGradientDescent<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyProximalGradientDescent<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyProximalGradientDescent}
@@ -68,7 +69,7 @@ public final class ApplyProximalGradientDescent<T> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of ApplyProximalGradientDescent
    */
-  public static <T> ApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta, Options... options) {
+  public static <T extends TType> ApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalGradientDescent", scope.makeOpName("ApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());

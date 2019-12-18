@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * SpaceToBatch for 4-D tensors of type T.
@@ -40,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class SpaceToBatch<T> extends PrimitiveOp implements Operand<T> {
+public final class SpaceToBatch<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SpaceToBatch operation.
@@ -119,7 +120,7 @@ public final class SpaceToBatch<T> extends PrimitiveOp implements Operand<T> {
    * @param blockSize 
    * @return a new instance of SpaceToBatch
    */
-  public static <T, U extends TNumber> SpaceToBatch<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Long blockSize) {
+  public static <T extends TType, U extends TNumber> SpaceToBatch<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatch", scope.makeOpName("SpaceToBatch"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x * y element-wise, working on quantized buffers.
@@ -33,7 +34,7 @@ import org.tensorflow.types.TFloat;
  * @param <V> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class QuantizedMul<V> extends PrimitiveOp {
+public final class QuantizedMul<V extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedMul operation.
@@ -48,7 +49,7 @@ public final class QuantizedMul<V> extends PrimitiveOp {
    * @param Toutput 
    * @return a new instance of QuantizedMul
    */
-  public static <V, T, U> QuantizedMul<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedMul<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMul", scope.makeOpName("QuantizedMul"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

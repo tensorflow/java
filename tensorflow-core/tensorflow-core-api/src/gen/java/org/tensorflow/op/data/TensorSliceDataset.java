@@ -26,11 +26,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that emits each dim-0 slice of `components` once.
  */
-public final class TensorSliceDataset extends PrimitiveOp implements Operand<Object> {
+public final class TensorSliceDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorSliceDataset operation.
@@ -60,8 +61,8 @@ public final class TensorSliceDataset extends PrimitiveOp implements Operand<Obj
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

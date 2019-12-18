@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a list which has the passed-in `Tensor` as last element and the other elements of the given list in `input_handle`.
@@ -35,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * element_shape: a shape compatible with that of elements in the list.
  */
 @Operator
-public final class TensorListPushBack extends PrimitiveOp implements Operand<Object> {
+public final class TensorListPushBack extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListPushBack operation.
@@ -45,7 +46,7 @@ public final class TensorListPushBack extends PrimitiveOp implements Operand<Obj
    * @param tensor 
    * @return a new instance of TensorListPushBack
    */
-  public static <T> TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<T> tensor) {
+  public static <T extends TType> TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBack", scope.makeOpName("TensorListPushBack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -61,8 +62,8 @@ public final class TensorListPushBack extends PrimitiveOp implements Operand<Obj
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) outputHandle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
   
   private Output<?> outputHandle;

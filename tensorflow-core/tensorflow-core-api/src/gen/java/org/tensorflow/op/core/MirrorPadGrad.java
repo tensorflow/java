@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gradient op for `MirrorPad` op. This op folds a mirror-padded tensor.
@@ -49,7 +50,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class MirrorPadGrad<T> extends PrimitiveOp implements Operand<T> {
+public final class MirrorPadGrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MirrorPadGrad operation.
@@ -61,7 +62,7 @@ public final class MirrorPadGrad<T> extends PrimitiveOp implements Operand<T> {
    * @param mode The mode used in the `MirrorPad` op.
    * @return a new instance of MirrorPadGrad
    */
-  public static <T, U extends TNumber> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T extends TType, U extends TNumber> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPadGrad", scope.makeOpName("MirrorPadGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

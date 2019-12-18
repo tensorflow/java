@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Dequeues a tuple of one or more tensors from the given queue.
@@ -40,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * has been dequeued (or 'timeout_ms' elapses, if specified).
  */
 @Operator(group = "io")
-public final class QueueDequeue extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class QueueDequeue extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.QueueDequeue}
@@ -109,7 +110,7 @@ public final class QueueDequeue extends PrimitiveOp implements Iterable<Operand<
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

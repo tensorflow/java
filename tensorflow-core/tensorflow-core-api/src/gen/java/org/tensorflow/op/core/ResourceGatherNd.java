@@ -26,12 +26,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ResourceGatherNd<U> extends PrimitiveOp implements Operand<U> {
+public final class ResourceGatherNd<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new ResourceGatherNd operation.
@@ -42,7 +43,7 @@ public final class ResourceGatherNd<U> extends PrimitiveOp implements Operand<U>
    * @param dtype 
    * @return a new instance of ResourceGatherNd
    */
-  public static <U, T extends TNumber> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
+  public static <U extends TType, T extends TNumber> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGatherNd", scope.makeOpName("ResourceGatherNd"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());

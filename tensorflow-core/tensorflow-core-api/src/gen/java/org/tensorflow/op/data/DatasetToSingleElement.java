@@ -28,11 +28,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs the single element from the given dataset.
  */
-public final class DatasetToSingleElement extends PrimitiveOp implements Iterable<Operand<Object>> {
+public final class DatasetToSingleElement extends PrimitiveOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new DatasetToSingleElement operation.
@@ -69,7 +70,7 @@ public final class DatasetToSingleElement extends PrimitiveOp implements Iterabl
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Object>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

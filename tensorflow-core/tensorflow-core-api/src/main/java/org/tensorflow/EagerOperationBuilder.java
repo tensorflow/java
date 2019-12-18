@@ -82,7 +82,7 @@ final class EagerOperationBuilder implements OperationBuilder {
     for (int i = 0; i < values.length; ++i) {
       objects[i] = values[i].getBytes(utf8);
     }
-    setAttrStringList(nativeRef.opHandle, name, values);
+    setAttrStringList(nativeRef.opHandle, name, objects);
     return this;
   }
 
@@ -129,13 +129,13 @@ final class EagerOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, DataType value) {
+  public EagerOperationBuilder setAttr(String name, DataType<?> value) {
     setAttrType(nativeRef.opHandle, name, value.nativeCode());
     return this;
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, DataType[] values) {
+  public EagerOperationBuilder setAttr(String name, DataType<?>[] values) {
     int[] c = new int[values.length];
     for (int i = 0; i < values.length; ++i) {
       c[i] = values[i].nativeCode();

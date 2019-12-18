@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Convert the quantized 'input' tensor into a lower-precision 'output', using the
@@ -56,7 +57,7 @@ import org.tensorflow.types.TFloat;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class QuantizeDownAndShrinkRange<U> extends PrimitiveOp {
+public final class QuantizeDownAndShrinkRange<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizeDownAndShrinkRange operation.
@@ -68,7 +69,7 @@ public final class QuantizeDownAndShrinkRange<U> extends PrimitiveOp {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of QuantizeDownAndShrinkRange
    */
-  public static <U, T> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

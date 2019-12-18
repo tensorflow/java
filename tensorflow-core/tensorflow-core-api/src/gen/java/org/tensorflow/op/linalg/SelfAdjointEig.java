@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of one or more square self-adjoint matrices.
@@ -43,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code e()} output
  */
 @Operator(group = "linalg")
-public final class SelfAdjointEig<T> extends PrimitiveOp {
+public final class SelfAdjointEig<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.SelfAdjointEig}
@@ -73,7 +74,7 @@ public final class SelfAdjointEig<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SelfAdjointEig
    */
-  public static <T> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelfAdjointEigV2", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

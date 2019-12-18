@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that changes the batch size.
@@ -34,7 +35,7 @@ import org.tensorflow.types.TInt64;
  * Creates a dataset that changes the batch size of the dataset to current batch
  * size // num_replicas.
  */
-public final class ExperimentalRebatchDataset extends PrimitiveOp implements Operand<Object> {
+public final class ExperimentalRebatchDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ExperimentalRebatchDataset}
@@ -108,8 +109,8 @@ public final class ExperimentalRebatchDataset extends PrimitiveOp implements Ope
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

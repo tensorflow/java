@@ -26,11 +26,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <X> data type for {@code output()} output
  */
-public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X> extends PrimitiveOp {
+public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedConv2DWithBiasSumAndReluAndRequantize}
@@ -82,7 +83,7 @@ public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X> extends Pri
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasSumAndReluAndRequantize
    */
-  public static <X, T, U, V, W> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, Operand<W> summand, Operand<TFloat> minSummand, Operand<TFloat> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
+  public static <X extends TType, T extends TType, U extends TType, V extends TType, W extends TType> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, Operand<TFloat> minFreezedOutput, Operand<TFloat> maxFreezedOutput, Operand<W> summand, Operand<TFloat> minSummand, Operand<TFloat> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasSumAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a one-hot tensor.
@@ -114,7 +115,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class OneHot<U> extends PrimitiveOp implements Operand<U> {
+public final class OneHot<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.OneHot}
@@ -146,7 +147,7 @@ public final class OneHot<U> extends PrimitiveOp implements Operand<U> {
    * @param options carries optional attributes values
    * @return a new instance of OneHot
    */
-  public static <U, T extends TNumber> OneHot<U> create(Scope scope, Operand<T> indices, Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, Options... options) {
+  public static <U extends TType, T extends TNumber> OneHot<U> create(Scope scope, Operand<T> indices, Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OneHot", scope.makeOpName("OneHot"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(depth.asOutput());

@@ -27,6 +27,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Says whether the targets are in the top `K` predictions.

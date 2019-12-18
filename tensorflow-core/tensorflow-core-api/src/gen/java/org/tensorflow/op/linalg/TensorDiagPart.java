@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the diagonal part of the tensor.
@@ -50,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code diagonal()} output
  */
 @Operator(group = "linalg")
-public final class TensorDiagPart<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorDiagPart<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorDiagPart operation.
@@ -59,7 +60,7 @@ public final class TensorDiagPart<T> extends PrimitiveOp implements Operand<T> {
    * @param input Rank k tensor where k is even and not zero.
    * @return a new instance of TensorDiagPart
    */
-  public static <T> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DiagPart", scope.makeOpName("TensorDiagPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

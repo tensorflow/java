@@ -26,12 +26,13 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a Variable resource.
  */
 @Operator
-public final class VarHandleOp extends PrimitiveOp implements Operand<Object> {
+public final class VarHandleOp extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.VarHandleOp}
@@ -71,7 +72,7 @@ public final class VarHandleOp extends PrimitiveOp implements Operand<Object> {
    * @param options carries optional attributes values
    * @return a new instance of VarHandleOp
    */
-  public static <T> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
@@ -111,8 +112,8 @@ public final class VarHandleOp extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) resource;
+  public Output<TType> asOutput() {
+    return (Output<TType>) resource;
   }
   
   private Output<?> resource;

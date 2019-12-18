@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Clips tensor values to a specified min and max.
@@ -36,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ClipByValue<T> extends PrimitiveOp implements Operand<T> {
+public final class ClipByValue<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ClipByValue operation.
@@ -49,7 +50,7 @@ public final class ClipByValue<T> extends PrimitiveOp implements Operand<T> {
    * as `t`. The maximum value to clip by.
    * @return a new instance of ClipByValue
    */
-  public static <T> ClipByValue<T> create(Scope scope, Operand<T> t, Operand<T> clipValueMin, Operand<T> clipValueMax) {
+  public static <T extends TType> ClipByValue<T> create(Scope scope, Operand<T> t, Operand<T> clipValueMin, Operand<T> clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("ClipByValue", scope.makeOpName("ClipByValue"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(clipValueMin.asOutput());

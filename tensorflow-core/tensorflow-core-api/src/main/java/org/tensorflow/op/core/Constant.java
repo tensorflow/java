@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
 
 /** An operator producing a constant value. */
 @Operator
-public final class Constant<T> extends PrimitiveOp implements Operand<T> {
+public final class Constant<T extends TType> extends PrimitiveOp implements Operand<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -654,7 +654,7 @@ public final class Constant<T> extends PrimitiveOp implements Operand<T> {
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  public static <T> Constant<T> create(Scope scope, Tensor<T> tensor) {
+  public static <T extends TType> Constant<T> create(Scope scope, Tensor<T> tensor) {
     return new Constant<>(
         scope
             .env()

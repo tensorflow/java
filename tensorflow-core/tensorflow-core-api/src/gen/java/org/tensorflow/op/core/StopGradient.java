@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Stops gradient computation.
@@ -56,7 +57,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class StopGradient<T> extends PrimitiveOp implements Operand<T> {
+public final class StopGradient<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new StopGradient operation.
@@ -65,7 +66,7 @@ public final class StopGradient<T> extends PrimitiveOp implements Operand<T> {
    * @param input 
    * @return a new instance of StopGradient
    */
-  public static <T> StopGradient<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> StopGradient<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StopGradient", scope.makeOpName("StopGradient"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gather slices from `params` into a Tensor with shape specified by `indices`.
@@ -125,7 +126,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class GatherNd<T> extends PrimitiveOp implements Operand<T> {
+public final class GatherNd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new GatherNd operation.
@@ -135,7 +136,7 @@ public final class GatherNd<T> extends PrimitiveOp implements Operand<T> {
    * @param indices Index tensor.
    * @return a new instance of GatherNd
    */
-  public static <T, U extends TNumber> GatherNd<T> create(Scope scope, Operand<T> params, Operand<U> indices) {
+  public static <T extends TType, U extends TNumber> GatherNd<T> create(Scope scope, Operand<T> params, Operand<U> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());

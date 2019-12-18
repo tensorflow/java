@@ -27,6 +27,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that caches elements from `input_dataset`.
@@ -36,7 +37,7 @@ import org.tensorflow.types.TString;
  * (e.g. cannot be opened, contains tensors of the wrong shape / size), an error
  * will the returned when used.
  */
-public final class CacheDataset extends PrimitiveOp implements Operand<Object> {
+public final class CacheDataset extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new CacheDataset operation.
@@ -75,8 +76,8 @@ public final class CacheDataset extends PrimitiveOp implements Operand<Object> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

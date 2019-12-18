@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Makes a copy of `x`.
@@ -31,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class DeepCopy<T> extends PrimitiveOp implements Operand<T> {
+public final class DeepCopy<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DeepCopy operation.
@@ -40,7 +41,7 @@ public final class DeepCopy<T> extends PrimitiveOp implements Operand<T> {
    * @param x The source tensor of type `T`.
    * @return a new instance of DeepCopy
    */
-  public static <T> DeepCopy<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

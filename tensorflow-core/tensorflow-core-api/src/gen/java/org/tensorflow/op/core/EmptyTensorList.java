@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates and returns an empty tensor list.
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * element_shape: a shape compatible with that of elements in the list.
  */
 @Operator
-public final class EmptyTensorList extends PrimitiveOp implements Operand<Object> {
+public final class EmptyTensorList extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new EmptyTensorList operation.
@@ -50,7 +51,7 @@ public final class EmptyTensorList extends PrimitiveOp implements Operand<Object
    * @param elementDtype 
    * @return a new instance of EmptyTensorList
    */
-  public static <T extends TNumber, U> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
+  public static <T extends TNumber, U extends TType> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
@@ -67,8 +68,8 @@ public final class EmptyTensorList extends PrimitiveOp implements Operand<Object
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

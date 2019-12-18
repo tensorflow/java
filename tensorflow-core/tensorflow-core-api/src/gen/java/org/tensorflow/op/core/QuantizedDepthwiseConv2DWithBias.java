@@ -26,13 +26,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes quantized depthwise Conv2D with Bias.
  * 
  * @param <V> data type for {@code output()} output
  */
-public final class QuantizedDepthwiseConv2DWithBias<V> extends PrimitiveOp {
+public final class QuantizedDepthwiseConv2DWithBias<V extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.QuantizedDepthwiseConv2DWithBias}
@@ -70,7 +71,7 @@ public final class QuantizedDepthwiseConv2DWithBias<V> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedDepthwiseConv2DWithBias
    */
-  public static <V, T, U> QuantizedDepthwiseConv2DWithBias<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedDepthwiseConv2DWithBias<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2DWithBias", scope.makeOpName("QuantizedDepthwiseConv2DWithBias"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Scatter `updates` into an existing tensor according to `indices`.
@@ -104,7 +105,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class TensorScatterUpdate<T> extends PrimitiveOp implements Operand<T> {
+public final class TensorScatterUpdate<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorScatterUpdate operation.
@@ -115,7 +116,7 @@ public final class TensorScatterUpdate<T> extends PrimitiveOp implements Operand
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterUpdate
    */
-  public static <T, U extends TNumber> TensorScatterUpdate<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType, U extends TNumber> TensorScatterUpdate<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterUpdate", scope.makeOpName("TensorScatterUpdate"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes Quantized Rectified Linear: `max(features, 0)`
@@ -33,7 +34,7 @@ import org.tensorflow.types.TFloat;
  * @param <U> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class QuantizedRelu<U> extends PrimitiveOp {
+public final class QuantizedRelu<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedRelu operation.
@@ -45,7 +46,7 @@ public final class QuantizedRelu<U> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedRelu
    */
-  public static <U, T> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());

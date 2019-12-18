@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * BatchToSpace for N-D tensors of type T.
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class BatchToSpaceNd<T> extends PrimitiveOp implements Operand<T> {
+public final class BatchToSpaceNd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchToSpaceNd operation.
@@ -145,7 +146,7 @@ public final class BatchToSpaceNd<T> extends PrimitiveOp implements Operand<T> {
    * 
    * @return a new instance of BatchToSpaceNd
    */
-  public static <T, U extends TNumber, V extends TNumber> BatchToSpaceNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> crops) {
+  public static <T extends TType, U extends TNumber, V extends TNumber> BatchToSpaceNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> crops) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpaceND", scope.makeOpName("BatchToSpaceNd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());

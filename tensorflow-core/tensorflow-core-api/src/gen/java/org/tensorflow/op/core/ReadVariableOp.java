@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reads the value of a variable.
@@ -39,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class ReadVariableOp<T> extends PrimitiveOp implements Operand<T> {
+public final class ReadVariableOp<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ReadVariableOp operation.
@@ -49,7 +50,7 @@ public final class ReadVariableOp<T> extends PrimitiveOp implements Operand<T> {
    * @param dtype the dtype of the value.
    * @return a new instance of ReadVariableOp
    */
-  public static <T> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
+  public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

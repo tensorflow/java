@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the Cholesky decomposition of one or more square matrices.
@@ -45,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Cholesky<T> extends PrimitiveOp implements Operand<T> {
+public final class Cholesky<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Cholesky operation.
@@ -54,7 +55,7 @@ public final class Cholesky<T> extends PrimitiveOp implements Operand<T> {
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Cholesky
    */
-  public static <T> Cholesky<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Cholesky<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cholesky", scope.makeOpName("Cholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

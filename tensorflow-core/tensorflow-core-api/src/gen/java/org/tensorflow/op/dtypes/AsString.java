@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts each entry in the given tensor to strings.
@@ -106,7 +107,7 @@ public final class AsString extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of AsString
    */
-  public static <T> AsString create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends TType> AsString create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AsString", scope.makeOpName("AsString"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

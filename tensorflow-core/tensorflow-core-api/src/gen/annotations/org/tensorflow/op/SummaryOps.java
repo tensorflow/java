@@ -10,6 +10,7 @@ import org.tensorflow.op.summary.TensorSummary;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code summary} operations as {@link Op Op}s
@@ -36,6 +37,20 @@ public final class SummaryOps {
   public AudioSummary audioSummary(Operand<TString> tag, Operand<TFloat> tensor,
       Operand<TFloat> sampleRate, AudioSummary.Options... options) {
     return AudioSummary.create(scope, tag, tensor, sampleRate, options);
+  }
+
+  /**
+   * Builds an {@link TensorSummary} operation
+   *
+   * @param tag A string attached to this summary. Used for organization in TensorBoard.
+   * @param tensor A tensor to serialize.
+   * @param serializedSummaryMetadata A serialized SummaryMetadata proto. Contains plugin
+   * @return a new instance of TensorSummary
+   * @see org.tensorflow.op.summary.TensorSummary
+   */
+  public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
+      Operand<TString> serializedSummaryMetadata) {
+    return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
   }
 
   /**
@@ -86,19 +101,5 @@ public final class SummaryOps {
    */
   public MergeSummary mergeSummary(Iterable<Operand<TString>> inputs) {
     return MergeSummary.create(scope, inputs);
-  }
-
-  /**
-   * Builds an {@link TensorSummary} operation
-   *
-   * @param tag A string attached to this summary. Used for organization in TensorBoard.
-   * @param tensor A tensor to serialize.
-   * @param serializedSummaryMetadata A serialized SummaryMetadata proto. Contains plugin
-   * @return a new instance of TensorSummary
-   * @see org.tensorflow.op.summary.TensorSummary
-   */
-  public <T> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
-      Operand<TString> serializedSummaryMetadata) {
-    return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
   }
 }

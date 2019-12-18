@@ -26,6 +26,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds two `SparseTensor` objects to produce another `SparseTensor`.
@@ -47,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code sumValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseAdd<T> extends PrimitiveOp {
+public final class SparseAdd<T extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new SparseAdd operation.
@@ -63,7 +64,7 @@ public final class SparseAdd<T> extends PrimitiveOp {
    * pair takes space.
    * @return a new instance of SparseAdd
    */
-  public static <T, U extends TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
+  public static <T extends TType, U extends TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAdd", scope.makeOpName("SparseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

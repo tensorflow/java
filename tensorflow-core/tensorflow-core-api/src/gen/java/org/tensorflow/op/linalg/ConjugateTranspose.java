@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Shuffle dimensions of x according to a permutation and conjugate the result.
@@ -36,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "linalg")
-public final class ConjugateTranspose<T> extends PrimitiveOp implements Operand<T> {
+public final class ConjugateTranspose<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ConjugateTranspose operation.
@@ -46,7 +47,7 @@ public final class ConjugateTranspose<T> extends PrimitiveOp implements Operand<
    * @param perm 
    * @return a new instance of ConjugateTranspose
    */
-  public static <T, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
+  public static <T extends TType, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());

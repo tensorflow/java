@@ -26,6 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gather slices from the variable pointed to by `resource` according to `indices`.
@@ -47,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ResourceGather<U> extends PrimitiveOp implements Operand<U> {
+public final class ResourceGather<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ResourceGather}
@@ -87,7 +88,7 @@ public final class ResourceGather<U> extends PrimitiveOp implements Operand<U> {
    * @param options carries optional attributes values
    * @return a new instance of ResourceGather
    */
-  public static <U, T extends TNumber> ResourceGather<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype, Options... options) {
+  public static <U extends TType, T extends TNumber> ResourceGather<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGather", scope.makeOpName("ResourceGather"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());

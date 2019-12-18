@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies set operation along last dimension of 2 `Tensor` inputs.
@@ -40,7 +41,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code resultValues()} output
  */
 @Operator(group = "sparse")
-public final class DenseToDenseSetOperation<T> extends PrimitiveOp {
+public final class DenseToDenseSetOperation<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.DenseToDenseSetOperation}
@@ -73,7 +74,7 @@ public final class DenseToDenseSetOperation<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DenseToDenseSetOperation
    */
-  public static <T> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
+  public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToDenseSetOperation", scope.makeOpName("DenseToDenseSetOperation"));
     opBuilder.addInput(set1.asOutput());
     opBuilder.addInput(set2.asOutput());

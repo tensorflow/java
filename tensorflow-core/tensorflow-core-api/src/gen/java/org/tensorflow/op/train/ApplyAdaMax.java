@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AdaMax algorithm.
@@ -33,7 +34,7 @@ import org.tensorflow.op.Scope;
  * 
  * @param <T> data type for {@code out()} output
  */
-public final class ApplyAdaMax<T> extends PrimitiveOp implements Operand<T> {
+public final class ApplyAdaMax<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdaMax}
@@ -72,7 +73,7 @@ public final class ApplyAdaMax<T> extends PrimitiveOp implements Operand<T> {
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdaMax
    */
-  public static <T> ApplyAdaMax<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdaMax<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdaMax", scope.makeOpName("ApplyAdaMax"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

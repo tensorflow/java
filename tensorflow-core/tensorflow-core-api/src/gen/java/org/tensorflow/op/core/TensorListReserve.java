@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * List of the given size with empty elements.
@@ -37,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * element_dtype: the desired type of elements in the list.
  */
 @Operator
-public final class TensorListReserve extends PrimitiveOp implements Operand<Object> {
+public final class TensorListReserve extends PrimitiveOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListReserve operation.
@@ -48,7 +49,7 @@ public final class TensorListReserve extends PrimitiveOp implements Operand<Obje
    * @param elementDtype 
    * @return a new instance of TensorListReserve
    */
-  public static <T extends TNumber, U> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
+  public static <T extends TNumber, U extends TType> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(numElements.asOutput());
@@ -65,8 +66,8 @@ public final class TensorListReserve extends PrimitiveOp implements Operand<Obje
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Object> asOutput() {
-    return (Output<Object>) handle;
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

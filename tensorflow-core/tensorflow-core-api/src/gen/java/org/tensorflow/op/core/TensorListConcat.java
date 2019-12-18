@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concats all tensors in the list along the 0th dimension.
@@ -41,7 +42,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator
-public final class TensorListConcat<T> extends PrimitiveOp {
+public final class TensorListConcat<T extends TType> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorListConcat}
@@ -71,7 +72,7 @@ public final class TensorListConcat<T> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorListConcat
    */
-  public static <T> TensorListConcat<T> create(Scope scope, Operand<?> inputHandle, DataType<T> elementDtype, Options... options) {
+  public static <T extends TType> TensorListConcat<T> create(Scope scope, Operand<?> inputHandle, DataType<T> elementDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcat", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

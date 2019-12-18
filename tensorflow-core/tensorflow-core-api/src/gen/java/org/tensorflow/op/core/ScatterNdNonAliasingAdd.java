@@ -25,6 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse addition to `input` using individual values or slices
@@ -66,7 +67,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ScatterNdNonAliasingAdd<T> extends PrimitiveOp implements Operand<T> {
+public final class ScatterNdNonAliasingAdd<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ScatterNdNonAliasingAdd operation.
@@ -79,7 +80,7 @@ public final class ScatterNdNonAliasingAdd<T> extends PrimitiveOp implements Ope
    * to add to `input`.
    * @return a new instance of ScatterNdNonAliasingAdd
    */
-  public static <T, U extends TNumber> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType, U extends TNumber> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdNonAliasingAdd", scope.makeOpName("ScatterNdNonAliasingAdd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(indices.asOutput());
