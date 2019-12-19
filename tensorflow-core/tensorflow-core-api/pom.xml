@@ -21,11 +21,6 @@
       <version>${javacpp.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>mkl-dnn</artifactId>
-      <version>${mkl-dnn.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-generator</artifactId>
       <version>${project.version}</version>
@@ -174,6 +169,9 @@
                 <program>bash</program>
                 <argument>${project.basedir}/build.sh</argument>
               </buildCommand>
+              <environmentVariables>
+                <EXTENSION>${javacpp.platform.extension}</EXTENSION>
+              </environmentVariables>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>

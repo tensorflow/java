@@ -24,14 +24,20 @@
     <artifactId>tensorflow-core</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tensorflow-core-platform</artifactId>
-  <name>TensorFlow Core API Library Platform</name>
+  <artifactId>tensorflow-core-platform-mkl</artifactId>
+  <name>TensorFlow Core API Library Platform MKL</name>
 
   <properties>
     <javacpp.moduleId>tensorflow-core-api</javacpp.moduleId>
+    <javacpp.platform.extension>-mkl</javacpp.platform.extension>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>mkl-dnn-platform</artifactId>
+      <version>${mkl-dnn.version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
@@ -67,7 +73,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64.jar ${javacpp.moduleId}-macosx-x86_64.jar ${javacpp.moduleId}-windows-x86_64.jar</Class-Path>
+                  <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64-mkl.jar ${javacpp.moduleId}-macosx-x86_64-mkl.jar ${javacpp.moduleId}-windows-x86_64-mkl.jar</Class-Path>
                 </manifestEntries>
               </archive>
             </configuration>
