@@ -112,8 +112,9 @@ public class DatasetOpTester {
 
       Dataset dataset = Dataset
           .fromTensorSlices(tf, tensors, outputTypes)
-          .batch(2);
-
+          .batch(50)
+          .take(3)
+          .skip(1);
       for (List<Output<?>> output : dataset) {
         Tensor<?> XBatch = output.get(0).tensor();
         Tensor<?> yBatch = output.get(1).tensor();
@@ -247,6 +248,7 @@ public class DatasetOpTester {
         Operation makeIteratorOp = oneShotIterator.first();
         List<Output<?>> iteratorComponents = oneShotIterator.second();
 
+        // Run MakeIterator Op
         session.runner()
             .addTarget(makeIteratorOp)
             .run();
