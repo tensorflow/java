@@ -30,8 +30,5 @@ public class DataInterfaceTester {
     matrix2d.scalars().forEachIndexed((coords, scalar) ->
         System.out.println("Scalar at " + Arrays.toString(coords) + " has value " + scalar.getInt())
     );
-
-
-
   }
 }

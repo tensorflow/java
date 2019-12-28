@@ -2,6 +2,8 @@ package org.tensorflow.data;
 
 import org.tensorflow.*;
 import org.tensorflow.data.impl.BatchDataset;
+import org.tensorflow.data.impl.SkipDataset;
+import org.tensorflow.data.impl.TakeDataset;
 import org.tensorflow.data.impl.TensorSliceDataset;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
@@ -18,15 +20,20 @@ import java.util.stream.Collectors;
  * allows iteration and transformations to be performed across these elements.
  */
 public abstract class Dataset implements Iterable<List<Output<?>>> {
-
-  public static void main(String[] args) {
-
-  }
   protected Ops tf;
+  private List<DataType<?>> outputTypes;
+  private List<Shape> outputShapes;
 
-  public Dataset(Ops tf) {
-    if (Objects.isNull(tf)) throw new IllegalArgumentException("Ops accessor cannot be null.");
+  public Dataset(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+    if (Objects.isNull(tf)) {
+      throw new IllegalArgumentException("Ops accessor cannot be null.");
+    } else if (outputTypes.size() != outputShapes.size()) {
+      throw new IllegalArgumentException("`outputTypes` and `outputShapes` must have the same size.");
+    }
+
     this.tf = tf;
+    this.outputTypes = outputTypes;
+    this.outputShapes = outputShapes;
   }
 
   /**
@@ -54,6 +61,24 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    */
   public final Dataset batch(long batchSize) {
     return batch(batchSize, true);
+  }
+
+  /**
+   * Creates new `Dataset` skips `count` initial elements from this dataset
+   * @param count The number of elements to `skip` to form the new dataset.
+   * @return A new Dataset with `count` elements removed.
+   */
+  public final Dataset skip(long count) {
+    return new SkipDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+  }
+
+  /**
+   * Creates new `Dataset` with the first `count` elements from this dataset.
+   * @param count The number of elements to "take" from this dataset.
+   * @return A new Dataset containing the first `count` elements from this dataset.
+   */
+  public final  Dataset take(long count) {
+    return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
   }
 
   /**
@@ -143,27 +168,14 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   /**
    * Get a list of output types for each component of this dataset.
    */
-  public abstract List<DataType<?>> getOutputTypes();
+  public List<DataType<?>> getOutputTypes() {
+    return this.outputTypes;
+  }
 
   /**
    * Get a list of shapes for each component of this dataset.
    */
-  public abstract List<Shape> getOutputShapes();
-
-
-  // /**
-  // * Maps a function over elements of this dataset.
-  // *
-  // * @param transform A transform function to call on each element of this
-  // dataset
-  // * @return A new dataset, transformed via `transform`
-  // */
-  // public abstract <V> Dataset<V> map(Function<U, V> transform);
-  //
-  // /**
-  // * Filters elements of this dataset according to a predicate.
-  // * @param predicate A predicate function indicating which elements to keep.
-  // * @return A new dataset, filtered via `predicate`
-  // */
-  // public abstract Dataset<U> filter(Predicate<U> predicate);
+  public List<Shape> getOutputShapes() {
+    return this.outputShapes;
+  }
 }
