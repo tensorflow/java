@@ -1,10 +1,7 @@
 package org.tensorflow.data;
 
 import org.tensorflow.*;
-import org.tensorflow.data.impl.BatchDataset;
-import org.tensorflow.data.impl.SkipDataset;
-import org.tensorflow.data.impl.TakeDataset;
-import org.tensorflow.data.impl.TensorSliceDataset;
+import org.tensorflow.data.impl.*;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.MakeIterator;
@@ -65,6 +62,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
 
   /**
    * Creates new `Dataset` skips `count` initial elements from this dataset
+   *
    * @param count The number of elements to `skip` to form the new dataset.
    * @return A new Dataset with `count` elements removed.
    */
@@ -74,10 +72,11 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
 
   /**
    * Creates new `Dataset` with the first `count` elements from this dataset.
+   *
    * @param count The number of elements to "take" from this dataset.
    * @return A new Dataset containing the first `count` elements from this dataset.
    */
-  public final  Dataset take(long count) {
+  public final Dataset take(long count) {
     return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
   }
 
