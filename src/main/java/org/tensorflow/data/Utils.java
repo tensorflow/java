@@ -9,12 +9,12 @@ public class Utils {
     }
 
     public static Shape tail(Shape shape) {
-        long[] tail = new long[shape.numDimensions() - 2];
-        for (int i = 2; i < shape.numDimensions(); i++) {
-            tail[i] = shape.size(i);
+        long[] tail = new long[shape.numDimensions() - 1];
+        for (int i = 1; i < shape.numDimensions(); i++) {
+            tail[i - 1] = shape.size(i);
         }
 
-        return Shape.make(shape.size(1), tail);
+        return Shape.make(tail);
     }
 
     public static long[] shapeArray(Shape shape) {
