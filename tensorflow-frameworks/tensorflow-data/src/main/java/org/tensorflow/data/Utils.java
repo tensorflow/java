@@ -5,16 +5,16 @@ import org.tensorflow.tools.Shape;
 public class Utils {
 
     private static Shape head(Shape shape) {
-        return Shape.of(shape.size(0));
+        return Shape.make(shape.size(0));
     }
 
     public static Shape tail(Shape shape) {
-        long[] tail = new long[shape.numDimensions() - 1];
-        for (int i = 1; i < shape.numDimensions(); i++) {
-            tail[i - 1] = shape.size(i);
+        long[] tail = new long[shape.numDimensions() - 2];
+        for (int i = 2; i < shape.numDimensions(); i++) {
+            tail[i] = shape.size(i);
         }
 
-        return Shape.of(tail);
+        return Shape.make(shape.size(1), tail);
     }
 
     public static long[] shapeArray(Shape shape) {

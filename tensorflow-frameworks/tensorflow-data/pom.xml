@@ -19,12 +19,17 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-api</artifactId>
       <version>0.1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
+  </dependency>
+  <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-utils</artifactId>
+      <artifactId>tensorflow-core-generator</artifactId>
       <version>0.1.0-SNAPSHOT</version>
-    </dependency>
+  </dependency>
+  <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-platform</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+  </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -44,8 +49,6 @@
 
   <build>
     <plugins>
-
-      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -71,4 +74,5 @@
         </plugin>
     </plugins>
   </build>
+
 </project>

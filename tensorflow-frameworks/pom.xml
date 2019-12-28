@@ -16,7 +16,6 @@
 
   <modules>
     <module>tensorflow-data</module>
-    <module>tensorflow-utils</module>
   </modules>
 
 </project>
