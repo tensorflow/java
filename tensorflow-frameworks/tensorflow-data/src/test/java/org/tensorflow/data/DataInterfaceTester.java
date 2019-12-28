@@ -1,12 +1,15 @@
 package org.tensorflow.data;
 
+import static org.junit.Assert.*;
+import static org.tensorflow.tools.StaticApi.*;
+
 import org.junit.Test;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.StaticApi;
 import org.tensorflow.tools.ndarray.IntNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.tensorflow.tools.StaticApi.*;
 
 public class DataInterfaceTester {
   @Test
