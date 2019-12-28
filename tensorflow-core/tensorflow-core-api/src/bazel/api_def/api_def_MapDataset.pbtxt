@@ -1,5 +1,6 @@
 op {
   graph_op_name: "MapDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.MapDataset"
   }
