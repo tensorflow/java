@@ -37,7 +37,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
   private static final float EPSILON_F = 1e-7f;
 
   @Test
-  public void initializeTensorsWithZeros() {
+  public void initializeTensors() {
     // Allocate a tensor of 32-bits integer of the shape (2, 3, 2)
     Tensor<T> tensor = allocateTensor(Shape.make(2, 3, 2));
     NdArray<U> tensorData = tensor.data();

@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -42,7 +42,7 @@ public final class RequantizationRangePerChannel extends PrimitiveOp {
    * Example: set this to 6 for Relu6. 
    * @return a new instance of RequantizationRangePerChannel
    */
-  public static <T extends TType> RequantizationRangePerChannel create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Float clipValueMax) {
+  public static <T extends TType> RequantizationRangePerChannel create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRangePerChannel", scope.makeOpName("RequantizationRangePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -55,19 +55,19 @@ public final class RequantizationRangePerChannel extends PrimitiveOp {
   /**
    * The minimum value of the final output tensor
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    * The maximum value of the final output tensor.
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private RequantizationRangePerChannel(Operation operation) {
     super(operation);

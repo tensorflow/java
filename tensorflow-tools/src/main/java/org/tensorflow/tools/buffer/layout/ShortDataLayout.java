@@ -14,40 +14,52 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a short to/from bytes
+ * A {@link DataLayout} that converts data stored in a buffer to shorts.
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @see DataLayout
  */
-public interface ShortDataLayout extends DataLayout<Short> {
-
-  /**
-   * Writes a short as bytes to the given buffer at its current position.
-   *  @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index byte index of the value to write
-   */
-  void writeShort(ByteDataBuffer buffer, short value, long index);
-
-  /**
-   * Reads a short as bytes from the given buffer at its current position.
-   *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index byte index of the value to read
-   * @return value
-   */
-  short readShort(ByteDataBuffer buffer, long index);
+public interface ShortDataLayout<S extends DataBuffer<?>> extends DataLayout<S, Short> {
 
   @Override
-  default void writeValue(ByteDataBuffer buffer, Short value, long index) {
+  default ShortDataBuffer applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
+
+  /**
+   * Writes a short into the buffer at the given index after converting it to the raw data type.
+   *
+   * @param buffer the buffer to write to
+   * @param value the short to convert and write
+   * @param index index in the buffer where the converted value should be written
+   * @see #writeValue(DataBuffer, Short, long)
+   */
+  void writeShort(S buffer, short value, long index);
+
+  /**
+   * Reads one or more raw values from the buffer at the given index and to be returned as a short.
+   *
+   * @param buffer the buffer to read from
+   * @param index index in the buffer where the raw value should be read
+   * @return the short value
+   * @see #readValue(DataBuffer, long)
+   */
+  short readShort(S buffer, long index);
+
+  @Override
+  default void writeValue(S buffer, Short value, long index) {
     writeShort(buffer, value, index);
   }
 
   @Override
-  default Short readValue(ByteDataBuffer buffer, long index) {
+  default Short readValue(S buffer, long index) {
     return readShort(buffer, index);
   }
 }

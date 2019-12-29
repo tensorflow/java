@@ -104,7 +104,7 @@ import org.tensorflow.op.math.Xlogy;
 import org.tensorflow.op.math.Zeta;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -248,6 +248,17 @@ public final class MathOps {
    */
   public <T extends TNumber> LessEqual lessEqual(Operand<T> x, Operand<T> y) {
     return LessEqual.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link Real} operation
+   *
+   * @param input 
+   * @return a new instance of Real
+   * @see org.tensorflow.op.math.Real
+   */
+  public <T extends TType> Real<TFloat32> real(Operand<T> input) {
+    return Real.create(scope, input);
   }
 
   /**
@@ -508,17 +519,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link Real} operation
-   *
-   * @param input 
-   * @return a new instance of Real
-   * @see org.tensorflow.op.math.Real
-   */
-  public <T extends TType> Real<TFloat> real(Operand<T> input) {
-    return Real.create(scope, input);
-  }
-
-  /**
    * Builds an {@link Cos} operation
    *
    * @param x 
@@ -527,6 +527,17 @@ public final class MathOps {
    */
   public <T extends TType> Cos<T> cos(Operand<T> x) {
     return Cos.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Imag} operation
+   *
+   * @param input 
+   * @return a new instance of Imag
+   * @see org.tensorflow.op.math.Imag
+   */
+  public <T extends TType> Imag<TFloat32> imag(Operand<T> input) {
+    return Imag.create(scope, input);
   }
 
   /**
@@ -587,6 +598,25 @@ public final class MathOps {
    */
   public <T extends TType> Div<T> div(Operand<T> x, Operand<T> y) {
     return Div.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link QuantizedAdd} operation
+   *
+   * @param x 
+   * @param y 
+   * @param minX The float value that the lowest quantized `x` value represents.
+   * @param maxX The float value that the highest quantized `x` value represents.
+   * @param minY The float value that the lowest quantized `y` value represents.
+   * @param maxY The float value that the highest quantized `y` value represents.
+   * @param Toutput 
+   * @return a new instance of QuantizedAdd
+   * @see org.tensorflow.op.math.QuantizedAdd
+   */
+  public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
+      Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
+      Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+    return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
 
   /**
@@ -670,17 +700,6 @@ public final class MathOps {
    */
   public <T extends TType> Conj<T> conj(Operand<T> input) {
     return Conj.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Imag} operation
-   *
-   * @param input 
-   * @return a new instance of Imag
-   * @see org.tensorflow.op.math.Imag
-   */
-  public <T extends TType> Imag<TFloat> imag(Operand<T> input) {
-    return Imag.create(scope, input);
   }
 
   /**
@@ -853,25 +872,6 @@ public final class MathOps {
   }
 
   /**
-   * Builds an {@link QuantizedMul} operation
-   *
-   * @param x 
-   * @param y 
-   * @param minX The float value that the lowest quantized `x` value represents.
-   * @param maxX The float value that the highest quantized `x` value represents.
-   * @param minY The float value that the lowest quantized `y` value represents.
-   * @param maxY The float value that the highest quantized `y` value represents.
-   * @param Toutput 
-   * @return a new instance of QuantizedMul
-   * @see org.tensorflow.op.math.QuantizedMul
-   */
-  public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
-      Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY,
-      Operand<TFloat> maxY, DataType<V> Toutput) {
-    return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
-  }
-
-  /**
    * Builds an {@link Acos} operation
    *
    * @param x 
@@ -892,17 +892,6 @@ public final class MathOps {
    */
   public <T extends TNumber> Igammac<T> igammac(Operand<T> a, Operand<T> x) {
     return Igammac.create(scope, a, x);
-  }
-
-  /**
-   * Builds an {@link Angle} operation
-   *
-   * @param input 
-   * @return a new instance of Angle
-   * @see org.tensorflow.op.math.Angle
-   */
-  public <T extends TType> Angle<TFloat> angle(Operand<T> input) {
-    return Angle.create(scope, input);
   }
 
   /**
@@ -1109,6 +1098,17 @@ public final class MathOps {
   }
 
   /**
+   * Builds an {@link Angle} operation
+   *
+   * @param input 
+   * @return a new instance of Angle
+   * @see org.tensorflow.op.math.Angle
+   */
+  public <T extends TType> Angle<TFloat32> angle(Operand<T> input) {
+    return Angle.create(scope, input);
+  }
+
+  /**
    * Builds an {@link AddN} operation
    *
    * @param inputs 
@@ -1149,27 +1149,8 @@ public final class MathOps {
    * @return a new instance of ComplexAbs
    * @see org.tensorflow.op.math.ComplexAbs
    */
-  public <T extends TType> ComplexAbs<TFloat> complexAbs(Operand<T> x) {
+  public <T extends TType> ComplexAbs<TFloat32> complexAbs(Operand<T> x) {
     return ComplexAbs.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link QuantizedAdd} operation
-   *
-   * @param x 
-   * @param y 
-   * @param minX The float value that the lowest quantized `x` value represents.
-   * @param maxX The float value that the highest quantized `x` value represents.
-   * @param minY The float value that the lowest quantized `y` value represents.
-   * @param maxY The float value that the highest quantized `y` value represents.
-   * @param Toutput 
-   * @return a new instance of QuantizedAdd
-   * @see org.tensorflow.op.math.QuantizedAdd
-   */
-  public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
-      Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY,
-      Operand<TFloat> maxY, DataType<V> Toutput) {
-    return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
 
   /**
@@ -1249,6 +1230,25 @@ public final class MathOps {
    */
   public <T extends TType> Sin<T> sin(Operand<T> x) {
     return Sin.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link QuantizedMul} operation
+   *
+   * @param x 
+   * @param y 
+   * @param minX The float value that the lowest quantized `x` value represents.
+   * @param maxX The float value that the highest quantized `x` value represents.
+   * @param minY The float value that the lowest quantized `y` value represents.
+   * @param maxY The float value that the highest quantized `y` value represents.
+   * @param Toutput 
+   * @return a new instance of QuantizedMul
+   * @see org.tensorflow.op.math.QuantizedMul
+   */
+  public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
+      Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
+      Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+    return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
 
   /**

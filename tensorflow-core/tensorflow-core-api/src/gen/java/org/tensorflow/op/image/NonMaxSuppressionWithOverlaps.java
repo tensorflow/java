@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -64,7 +64,7 @@ public final class NonMaxSuppressionWithOverlaps extends PrimitiveOp implements 
    * boxes based on score.
    * @return a new instance of NonMaxSuppressionWithOverlaps
    */
-  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat> overlaps, Operand<TFloat> scores, Operand<TInt32> maxOutputSize, Operand<TFloat> overlapThreshold, Operand<TFloat> scoreThreshold) {
+  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat32> overlaps, Operand<TFloat32> scores, Operand<TInt32> maxOutputSize, Operand<TFloat32> overlapThreshold, Operand<TFloat32> scoreThreshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionWithOverlaps", scope.makeOpName("NonMaxSuppressionWithOverlaps"));
     opBuilder.addInput(overlaps.asOutput());
     opBuilder.addInput(scores.asOutput());

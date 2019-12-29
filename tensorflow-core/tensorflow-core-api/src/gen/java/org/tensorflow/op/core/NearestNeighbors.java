@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -45,7 +45,7 @@ public final class NearestNeighbors extends PrimitiveOp {
    * only m centers are returned.
    * @return a new instance of NearestNeighbors
    */
-  public static NearestNeighbors create(Scope scope, Operand<TFloat> points, Operand<TFloat> centers, Operand<TInt64> k) {
+  public static NearestNeighbors create(Scope scope, Operand<TFloat32> points, Operand<TFloat32> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
     opBuilder.addInput(points.asOutput());
     opBuilder.addInput(centers.asOutput());
@@ -66,12 +66,12 @@ public final class NearestNeighbors extends PrimitiveOp {
    * Matrix of shape (n, min(m, k)). Each row contains the squared L2 distance to the
    * corresponding center in nearest_center_indices.
    */
-  public Output<TFloat> nearestCenterDistances() {
+  public Output<TFloat32> nearestCenterDistances() {
     return nearestCenterDistances;
   }
   
   private Output<TInt64> nearestCenterIndices;
-  private Output<TFloat> nearestCenterDistances;
+  private Output<TFloat32> nearestCenterDistances;
   
   private NearestNeighbors(Operation operation) {
     super(operation);

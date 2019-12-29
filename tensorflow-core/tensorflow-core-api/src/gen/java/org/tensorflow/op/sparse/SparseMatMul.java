@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * in the input gradient when that gradient comes from a Relu.
  */
 @Operator(group = "sparse")
-public final class SparseMatMul extends PrimitiveOp implements Operand<TFloat> {
+public final class SparseMatMul extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseMatMul}
@@ -153,16 +153,16 @@ public final class SparseMatMul extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    */
-  public Output<TFloat> product() {
+  public Output<TFloat32> product() {
     return product;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return product;
   }
   
-  private Output<TFloat> product;
+  private Output<TFloat32> product;
   
   private SparseMatMul(Operation operation) {
     super(operation);

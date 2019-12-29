@@ -24,7 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -94,7 +94,7 @@ public final class QuantizedMatMulWithBias<W extends TType> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMulWithBias
    */
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBias<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<W> Toutput, Options... options) {
+  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBias<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBias", scope.makeOpName("QuantizedMatMulWithBias"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -151,20 +151,20 @@ public final class QuantizedMatMulWithBias<W extends TType> extends PrimitiveOp 
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<TFloat> minOut() {
+  public Output<TFloat32> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<TFloat> maxOut() {
+  public Output<TFloat32> maxOut() {
     return maxOut;
   }
   
   private Output<W> out;
-  private Output<TFloat> minOut;
-  private Output<TFloat> maxOut;
+  private Output<TFloat32> minOut;
+  private Output<TFloat32> maxOut;
   
   private QuantizedMatMulWithBias(Operation operation) {
     super(operation);

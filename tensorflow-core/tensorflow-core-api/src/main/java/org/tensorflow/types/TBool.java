@@ -24,37 +24,74 @@ import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 
+/**
+ * Boolean type.
+ */
 public interface TBool extends BooleanNdArray, TType {
 
+  /** Type metadata */
   DataType<TBool> DTYPE = DataType.create("BOOL", 10, 1, TBoolImpl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a boolean scalar.
+   *
+   * @param value boolean to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TBool> scalarOf(boolean value) {
     Tensor<TBool> t = ofShape();
     t.data().setBoolean(value);
     return t;
   }
 
+  /**
+   * Allocates a new tensor for storing a boolean vector.
+   *
+   * @param values booleans to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TBool> vectorOf(boolean... values) {
     Tensor<TBool> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TBool> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
+   *
+   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TBool> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array of booleans.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TBool> copyOf(NdArray<Boolean> src) {
     Tensor<TBool> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
@@ -65,18 +102,18 @@ public interface TBool extends BooleanNdArray, TType {
 class TBoolImpl extends BooleanDenseNdArray implements TBool {
 
   static TBool mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TBoolImpl(DataBuffers.toBooleans(TensorBuffers.toBytes(nativeTensor), ADAPTER), shape);
+    return new TBoolImpl(LAYOUT.applyTo(TensorBuffers.toBytes(nativeTensor)), shape);
   }
 
   private TBoolImpl(BooleanDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 
-  private static BooleanDataLayout ADAPTER = new BooleanDataLayout() {
+  private static BooleanDataLayout<ByteDataBuffer> LAYOUT = new BooleanDataLayout<ByteDataBuffer>() {
 
     @Override
     public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
-      buffer.setByte((byte)(value ? 1 : 0), index);
+      buffer.setByte((byte)(value ? 0x1 : 0x0), index);
     }
 
     @Override
@@ -85,7 +122,7 @@ class TBoolImpl extends BooleanDenseNdArray implements TBool {
     }
 
     @Override
-    public int sizeInBytes() {
+    public int scale() {
       return TBool.DTYPE.byteSize();
     }
   };

@@ -269,8 +269,8 @@ import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -496,20 +496,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link DrawBoundingBoxesV2} operation
-   *
-   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
-   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
-   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
-   * @return a new instance of DrawBoundingBoxesV2
-   * @see org.tensorflow.op.core.DrawBoundingBoxesV2
-   */
-  public <T extends TNumber> DrawBoundingBoxesV2<T> drawBoundingBoxesV2(Operand<T> images,
-      Operand<TFloat> boxes, Operand<TFloat> colors) {
-    return DrawBoundingBoxesV2.create(scope, images, boxes, colors);
-  }
-
-  /**
    * Builds an {@link StringUpper} operation
    *
    * @param input 
@@ -522,15 +508,29 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArraySize} operation
+   * Builds an {@link Constant} operation
    *
-   * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @return a new instance of TensorArraySize
-   * @see org.tensorflow.op.core.TensorArraySize
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
    */
-  public TensorArraySize tensorArraySize(Operand<?> handle, Operand<TFloat> flowIn) {
-    return TensorArraySize.create(scope, handle, flowIn);
+  public Constant<TFloat32> constant(float[][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
+   * Builds an {@link QuantizedConcat} operation
+   *
+   * @param concatDim 0-D.  The dimension along which to concatenate.  Must be in the
+   * @param values The `N` Tensors to concatenate. Their ranks and types must match,
+   * @param inputMins The minimum scalar values for each of the input tensors.
+   * @param inputMaxes The maximum scalar values for each of the input tensors.
+   * @return a new instance of QuantizedConcat
+   * @see org.tensorflow.op.core.QuantizedConcat
+   */
+  public <T extends TType> QuantizedConcat<T> quantizedConcat(Operand<TInt32> concatDim,
+      Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins,
+      Iterable<Operand<TFloat32>> inputMaxes) {
+    return QuantizedConcat.create(scope, concatDim, values, inputMins, inputMaxes);
   }
 
   /**
@@ -600,6 +600,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link DrawBoundingBoxesV2} operation
+   *
+   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
+   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
+   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
+   * @return a new instance of DrawBoundingBoxesV2
+   * @see org.tensorflow.op.core.DrawBoundingBoxesV2
+   */
+  public <T extends TNumber> DrawBoundingBoxesV2<T> drawBoundingBoxesV2(Operand<T> images,
+      Operand<TFloat32> boxes, Operand<TFloat32> colors) {
+    return DrawBoundingBoxesV2.create(scope, images, boxes, colors);
+  }
+
+  /**
    * Builds an {@link TensorScatterSub} operation
    *
    * @param tensor Tensor to copy/update.
@@ -611,25 +625,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> TensorScatterSub<T> tensorScatterSub(
       Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     return TensorScatterSub.create(scope, tensor, indices, updates);
-  }
-
-  /**
-   * Builds an {@link FusedBatchNormGradV3} operation
-   *
-   * @param yBackprop A 4D Tensor for the gradient with respect to y.
-   * @param x A 4D Tensor for input data.
-   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
-   * @param reserveSpace1 When is_training is True, a 1D Tensor for the computed batch
-   * @param reserveSpace2 When is_training is True, a 1D Tensor for the computed batch
-   * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
-   * @param options carries optional attributes values
-   * @return a new instance of FusedBatchNormGradV3
-   * @see org.tensorflow.op.core.FusedBatchNormGradV3
-   */
-  public <T extends TNumber, U extends TNumber> FusedBatchNormGradV3<T, U> fusedBatchNormGradV3(
-      Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1,
-      Operand<U> reserveSpace2, Operand<U> reserveSpace3, FusedBatchNormGradV3.Options... options) {
-    return FusedBatchNormGradV3.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, reserveSpace3, options);
   }
 
   /**
@@ -675,19 +670,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StatefulStandardNormal} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormal
-   * @see org.tensorflow.op.core.StatefulStandardNormal
-   */
-  public <T extends TType> StatefulStandardNormal<TFloat> statefulStandardNormal(
-      Operand<?> resource, Operand<T> shape) {
-    return StatefulStandardNormal.create(scope, resource, shape);
-  }
-
-  /**
    * Builds an {@link StageClear} operation
    *
    * @param dtypes 
@@ -700,13 +682,18 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
+   * Builds an {@link TensorArrayWrite} operation
    *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
+   * @param handle The handle to a TensorArray.
+   * @param index The position to write to inside the TensorArray.
+   * @param value The tensor to write to the TensorArray.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @return a new instance of TensorArrayWrite
+   * @see org.tensorflow.op.core.TensorArrayWrite
    */
-  public Constant<TFloat> constant(float[][][] data) {
-    return Constant.create(scope, data);
+  public <T extends TType> TensorArrayWrite tensorArrayWrite(Operand<?> handle,
+      Operand<TInt32> index, Operand<T> value, Operand<TFloat32> flowIn) {
+    return TensorArrayWrite.create(scope, handle, index, value, flowIn);
   }
 
   /**
@@ -748,6 +735,16 @@ public final class Ops {
   public <T extends TType, U extends TNumber> ReduceSum<T> reduceSum(Operand<T> input,
       Operand<U> axis, ReduceSum.Options... options) {
     return ReduceSum.create(scope, input, axis, options);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[][][][][] data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -836,23 +833,6 @@ public final class Ops {
    */
   public Constant<TInt32> constant(int[] data) {
     return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link TensorArrayGather} operation
-   *
-   * @param handle The handle to a TensorArray.
-   * @param indices The locations in the TensorArray from which to read tensor elements.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @param dtype The type of the elem that is returned.
-   * @param options carries optional attributes values
-   * @return a new instance of TensorArrayGather
-   * @see org.tensorflow.op.core.TensorArrayGather
-   */
-  public <T extends TType> TensorArrayGather<T> tensorArrayGather(Operand<?> handle,
-      Operand<TInt32> indices, Operand<TFloat> flowIn, DataType<T> dtype,
-      TensorArrayGather.Options... options) {
-    return TensorArrayGather.create(scope, handle, indices, flowIn, dtype, options);
   }
 
   /**
@@ -971,19 +951,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
-   *
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a float constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(long[] shape, FloatBuffer data) {
-    return Constant.create(scope, shape, data);
-  }
-
-  /**
    * Builds an {@link LookupTableInsert} operation
    *
    * @param tableHandle Handle to the table.
@@ -1053,22 +1020,6 @@ public final class Ops {
   public <T extends TType> TensorListPushBack tensorListPushBack(Operand<?> inputHandle,
       Operand<T> tensor) {
     return TensorListPushBack.create(scope, inputHandle, tensor);
-  }
-
-  /**
-   * Builds an {@link QuantizedConcat} operation
-   *
-   * @param concatDim 0-D.  The dimension along which to concatenate.  Must be in the
-   * @param values The `N` Tensors to concatenate. Their ranks and types must match,
-   * @param inputMins The minimum scalar values for each of the input tensors.
-   * @param inputMaxes The maximum scalar values for each of the input tensors.
-   * @return a new instance of QuantizedConcat
-   * @see org.tensorflow.op.core.QuantizedConcat
-   */
-  public <T extends TType> QuantizedConcat<T> quantizedConcat(Operand<TInt32> concatDim,
-      Iterable<Operand<T>> values, Iterable<Operand<TFloat>> inputMins,
-      Iterable<Operand<TFloat>> inputMaxes) {
-    return QuantizedConcat.create(scope, concatDim, values, inputMins, inputMaxes);
   }
 
   /**
@@ -1241,6 +1192,26 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link CombinedNonMaxSuppression} operation
+   *
+   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
+   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
+   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
+   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
+   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
+   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @param options carries optional attributes values
+   * @return a new instance of CombinedNonMaxSuppression
+   * @see org.tensorflow.op.core.CombinedNonMaxSuppression
+   */
+  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat32> boxes,
+      Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
+      Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold,
+      CombinedNonMaxSuppression.Options... options) {
+    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
+  }
+
+  /**
    * Builds an {@link MatrixDiagPartV2} operation
    *
    * @param input Rank `r` tensor where `r >= 2`.
@@ -1333,33 +1304,8 @@ public final class Ops {
    * @param data An array containing the values to put into the new constant. The dimensions of the
    * @see org.tensorflow.op.core.Constant
    */
-  public Constant<TDouble> constant(double[][][][][][] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
   public Constant<TBool> constant(boolean[][] data) {
     return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link TensorArrayWrite} operation
-   *
-   * @param handle The handle to a TensorArray.
-   * @param index The position to write to inside the TensorArray.
-   * @param value The tensor to write to the TensorArray.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @return a new instance of TensorArrayWrite
-   * @see org.tensorflow.op.core.TensorArrayWrite
-   */
-  public <T extends TType> TensorArrayWrite tensorArrayWrite(Operand<?> handle,
-      Operand<TInt32> index, Operand<T> value, Operand<TFloat> flowIn) {
-    return TensorArrayWrite.create(scope, handle, index, value, flowIn);
   }
 
   /**
@@ -1459,19 +1405,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
-   *
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a double constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(long[] shape, DoubleBuffer data) {
-    return Constant.create(scope, shape, data);
-  }
-
-  /**
    * Builds an {@link BarrierReadySize} operation
    *
    * @param handle The handle to a barrier.
@@ -1541,6 +1474,23 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorArrayGather} operation
+   *
+   * @param handle The handle to a TensorArray.
+   * @param indices The locations in the TensorArray from which to read tensor elements.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @param dtype The type of the elem that is returned.
+   * @param options carries optional attributes values
+   * @return a new instance of TensorArrayGather
+   * @see org.tensorflow.op.core.TensorArrayGather
+   */
+  public <T extends TType> TensorArrayGather<T> tensorArrayGather(Operand<?> handle,
+      Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype,
+      TensorArrayGather.Options... options) {
+    return TensorArrayGather.create(scope, handle, indices, flowIn, dtype, options);
+  }
+
+  /**
    * Builds an {@link Any} operation
    *
    * @param input The tensor to reduce.
@@ -1552,6 +1502,23 @@ public final class Ops {
   public <T extends TNumber> Any any(Operand<TBool> input, Operand<T> axis,
       Any.Options... options) {
     return Any.create(scope, input, axis, options);
+  }
+
+  /**
+   * Builds an {@link ScaleAndTranslate} operation
+   *
+   * @param images 
+   * @param size 
+   * @param scale 
+   * @param translation 
+   * @param options carries optional attributes values
+   * @return a new instance of ScaleAndTranslate
+   * @see org.tensorflow.op.core.ScaleAndTranslate
+   */
+  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
+      Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
+      ScaleAndTranslate.Options... options) {
+    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
   }
 
   /**
@@ -1580,16 +1547,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float[] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
    * Builds an {@link Empty} operation
    *
    * @param shape 1-D. Represents the shape of the output tensor.
@@ -1611,6 +1568,21 @@ public final class Ops {
    */
   public Constant<TString> constant(byte[][][][] data) {
     return Constant.create(scope, data);
+  }
+
+  /**
+   * Builds an {@link TensorArrayPack} operation
+   *
+   * @param handle 
+   * @param flowIn 
+   * @param dtype 
+   * @param options carries optional attributes values
+   * @return a new instance of TensorArrayPack
+   * @see org.tensorflow.op.core.TensorArrayPack
+   */
+  public <T extends TType> TensorArrayPack<T> tensorArrayPack(Operand<TString> handle,
+      Operand<TFloat32> flowIn, DataType<T> dtype, TensorArrayPack.Options... options) {
+    return TensorArrayPack.create(scope, handle, flowIn, dtype, options);
   }
 
   /**
@@ -1694,6 +1666,16 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[][][][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
    * Builds an {@link NextIteration} operation
    *
    * @param data The tensor to be made available to the next iteration.
@@ -1727,16 +1709,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> TensorScatterAdd<T> tensorScatterAdd(
       Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     return TensorScatterAdd.create(scope, tensor, indices, updates);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(double[][][][] data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -1951,21 +1923,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArrayConcat} operation
-   *
-   * @param handle The handle to a TensorArray.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @param dtype The type of the elem that is returned.
-   * @param options carries optional attributes values
-   * @return a new instance of TensorArrayConcat
-   * @see org.tensorflow.op.core.TensorArrayConcat
-   */
-  public <T extends TType> TensorArrayConcat<T> tensorArrayConcat(Operand<?> handle,
-      Operand<TFloat> flowIn, DataType<T> dtype, TensorArrayConcat.Options... options) {
-    return TensorArrayConcat.create(scope, handle, flowIn, dtype, options);
-  }
-
-  /**
    * Builds an {@link DeepCopy} operation
    *
    * @param x The source tensor of type `T`.
@@ -1988,17 +1945,6 @@ public final class Ops {
   public <T extends TNumber, U extends TType> ResourceScatterAdd resourceScatterAdd(
       Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     return ResourceScatterAdd.create(scope, resource, indices, updates);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data The value to put into the new constant. 
-   * @return a float constant
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -2051,6 +1997,21 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorArrayConcat} operation
+   *
+   * @param handle The handle to a TensorArray.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @param dtype The type of the elem that is returned.
+   * @param options carries optional attributes values
+   * @return a new instance of TensorArrayConcat
+   * @see org.tensorflow.op.core.TensorArrayConcat
+   */
+  public <T extends TType> TensorArrayConcat<T> tensorArrayConcat(Operand<?> handle,
+      Operand<TFloat32> flowIn, DataType<T> dtype, TensorArrayConcat.Options... options) {
+    return TensorArrayConcat.create(scope, handle, flowIn, dtype, options);
+  }
+
+  /**
    * Builds an {@link ScatterMin} operation
    *
    * @param ref Should be from a `Variable` node.
@@ -2078,23 +2039,6 @@ public final class Ops {
   public MapPeek mapPeek(Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes,
       MapPeek.Options... options) {
     return MapPeek.create(scope, key, indices, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link ScaleAndTranslate} operation
-   *
-   * @param images 
-   * @param size 
-   * @param scale 
-   * @param translation 
-   * @param options carries optional attributes values
-   * @return a new instance of ScaleAndTranslate
-   * @see org.tensorflow.op.core.ScaleAndTranslate
-   */
-  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat> scale, Operand<TFloat> translation,
-      ScaleAndTranslate.Options... options) {
-    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
   }
 
   /**
@@ -2184,16 +2128,6 @@ public final class Ops {
    */
   public <T extends TType> Snapshot<T> snapshot(Operand<T> input) {
     return Snapshot.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(double[] data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -2336,6 +2270,30 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(float[][][][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
+   * Builds an {@link TensorArrayUnpack} operation
+   *
+   * @param handle 
+   * @param value 
+   * @param flowIn 
+   * @return a new instance of TensorArrayUnpack
+   * @see org.tensorflow.op.core.TensorArrayUnpack
+   */
+  public <T extends TType> TensorArrayUnpack tensorArrayUnpack(Operand<TString> handle,
+      Operand<T> value, Operand<TFloat32> flowIn) {
+    return TensorArrayUnpack.create(scope, handle, value, flowIn);
+  }
+
+  /**
    * Builds an {@link Size} operation
    *
    * @param input 
@@ -2348,19 +2306,14 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link QuantizedConcatV2} operation
+   * Builds an {@link Constant} operation
    *
-   * @param values 
-   * @param axis 
-   * @param inputMins 
-   * @param inputMaxes 
-   * @return a new instance of QuantizedConcatV2
-   * @see org.tensorflow.op.core.QuantizedConcatV2
+   * @param data The value to put into the new constant. 
+   * @return a float constant
+   * @see org.tensorflow.op.core.Constant
    */
-  public <T extends TType, U extends TNumber> QuantizedConcatV2<T> quantizedConcatV2(
-      Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat>> inputMins,
-      Iterable<Operand<TFloat>> inputMaxes) {
-    return QuantizedConcatV2.create(scope, values, axis, inputMins, inputMaxes);
+  public Constant<TFloat32> constant(float data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -2400,6 +2353,17 @@ public final class Ops {
    */
   public Print print(Operand<TString> input, Print.Options... options) {
     return Print.create(scope, input, options);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data The value to put into the new constant.
+   * @return a double constant
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -2514,6 +2478,16 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
    * Builds an {@link RemoteFusedGraphExecute} operation
    *
    * @param inputs Arbitrary number of tensors with arbitrary data types
@@ -2558,19 +2532,6 @@ public final class Ops {
   public <T extends TNumber, U extends TNumber> ScatterMax<T> scatterMax(Operand<T> ref,
       Operand<U> indices, Operand<T> updates, ScatterMax.Options... options) {
     return ScatterMax.create(scope, ref, indices, updates, options);
-  }
-
-  /**
-   * Builds an {@link TensorArrayGrad} operation
-   *
-   * @param handle The handle to the forward TensorArray.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @param source The gradient source string, used to decide which gradient TensorArray
-   * @return a new instance of TensorArrayGrad
-   * @see org.tensorflow.op.core.TensorArrayGrad
-   */
-  public TensorArrayGrad tensorArrayGrad(Operand<?> handle, Operand<TFloat> flowIn, String source) {
-    return TensorArrayGrad.create(scope, handle, flowIn, source);
   }
 
   /**
@@ -2686,6 +2647,21 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorArrayScatter} operation
+   *
+   * @param handle The handle to a TensorArray.
+   * @param indices The locations at which to write the tensor elements.
+   * @param value The concatenated tensor to write to the TensorArray.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @return a new instance of TensorArrayScatter
+   * @see org.tensorflow.op.core.TensorArrayScatter
+   */
+  public <T extends TType> TensorArrayScatter tensorArrayScatter(Operand<?> handle,
+      Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
+    return TensorArrayScatter.create(scope, handle, indices, value, flowIn);
+  }
+
+  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. String elements are
@@ -2738,21 +2714,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArrayScatter} operation
-   *
-   * @param handle The handle to a TensorArray.
-   * @param indices The locations at which to write the tensor elements.
-   * @param value The concatenated tensor to write to the TensorArray.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @return a new instance of TensorArrayScatter
-   * @see org.tensorflow.op.core.TensorArrayScatter
-   */
-  public <T extends TType> TensorArrayScatter tensorArrayScatter(Operand<?> handle,
-      Operand<TInt32> indices, Operand<T> value, Operand<TFloat> flowIn) {
-    return TensorArrayScatter.create(scope, handle, indices, value, flowIn);
-  }
-
-  /**
    * Builds an {@link BarrierInsertMany} operation
    *
    * @param handle The handle to a barrier.
@@ -2765,21 +2726,6 @@ public final class Ops {
   public <T extends TType> BarrierInsertMany barrierInsertMany(Operand<TString> handle,
       Operand<TString> keys, Operand<T> values, Long componentIndex) {
     return BarrierInsertMany.create(scope, handle, keys, values, componentIndex);
-  }
-
-  /**
-   * Builds an {@link QuantizedReshape} operation
-   *
-   * @param tensor 
-   * @param shape Defines the shape of the output tensor.
-   * @param inputMin The minimum value of the input.
-   * @param inputMax The maximum value of the input.
-   * @return a new instance of QuantizedReshape
-   * @see org.tensorflow.op.core.QuantizedReshape
-   */
-  public <T extends TType, U extends TNumber> QuantizedReshape<T> quantizedReshape(
-      Operand<T> tensor, Operand<U> shape, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
-    return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
   }
 
   /**
@@ -2875,6 +2821,16 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(float[][][][][][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
    * Builds an {@link ResourceScatterSub} operation
    *
    * @param resource Should be from a `Variable` node.
@@ -2903,26 +2859,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(double[][] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float[][][][][] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
    * Builds an {@link Squeeze} operation
    *
    * @param input The `input` to squeeze.
@@ -2946,16 +2882,6 @@ public final class Ops {
   public <U extends TType, T extends TType> StatefulStandardNormal<U> statefulStandardNormal(
       Operand<?> resource, Operand<T> shape, DataType<U> dtype) {
     return StatefulStandardNormal.create(scope, resource, shape, dtype);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(double[][][][][] data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -3056,21 +2982,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArrayPack} operation
-   *
-   * @param handle 
-   * @param flowIn 
-   * @param dtype 
-   * @param options carries optional attributes values
-   * @return a new instance of TensorArrayPack
-   * @see org.tensorflow.op.core.TensorArrayPack
-   */
-  public <T extends TType> TensorArrayPack<T> tensorArrayPack(Operand<TString> handle,
-      Operand<TFloat> flowIn, DataType<T> dtype, TensorArrayPack.Options... options) {
-    return TensorArrayPack.create(scope, handle, flowIn, dtype, options);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -3142,18 +3053,18 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArrayGradWithShape} operation
+   * Builds an {@link QuantizedReshape} operation
    *
-   * @param handle The handle to the forward TensorArray.
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @param shapeToPrepend An int32 vector representing a shape. Elements in the gradient accumulator will
-   * @param source The gradient source string, used to decide which gradient TensorArray
-   * @return a new instance of TensorArrayGradWithShape
-   * @see org.tensorflow.op.core.TensorArrayGradWithShape
+   * @param tensor 
+   * @param shape Defines the shape of the output tensor.
+   * @param inputMin The minimum value of the input.
+   * @param inputMax The maximum value of the input.
+   * @return a new instance of QuantizedReshape
+   * @see org.tensorflow.op.core.QuantizedReshape
    */
-  public TensorArrayGradWithShape tensorArrayGradWithShape(Operand<?> handle,
-      Operand<TFloat> flowIn, Operand<TInt32> shapeToPrepend, String source) {
-    return TensorArrayGradWithShape.create(scope, handle, flowIn, shapeToPrepend, source);
+  public <T extends TType, U extends TNumber> QuantizedReshape<T> quantizedReshape(
+      Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+    return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
   }
 
   /**
@@ -3168,6 +3079,32 @@ public final class Ops {
   public <T extends TType, U extends TType> LookupTableExport<T, U> lookupTableExport(
       Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     return LookupTableExport.create(scope, tableHandle, Tkeys, Tvalues);
+  }
+
+  /**
+   * Builds an {@link QuantizedConcatV2} operation
+   *
+   * @param values 
+   * @param axis 
+   * @param inputMins 
+   * @param inputMaxes 
+   * @return a new instance of QuantizedConcatV2
+   * @see org.tensorflow.op.core.QuantizedConcatV2
+   */
+  public <T extends TType, U extends TNumber> QuantizedConcatV2<T> quantizedConcatV2(
+      Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat32>> inputMins,
+      Iterable<Operand<TFloat32>> inputMaxes) {
+    return QuantizedConcatV2.create(scope, values, axis, inputMins, inputMaxes);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(float[][][][][] data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -3196,6 +3133,16 @@ public final class Ops {
   public <T extends TType, U extends TType> HashTable hashTable(DataType<T> keyDtype,
       DataType<U> valueDtype, HashTable.Options... options) {
     return HashTable.create(scope, keyDtype, valueDtype, options);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[] data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -3288,6 +3235,16 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(float[][][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
    * Builds an {@link ResourceStridedSliceAssign} operation
    *
    * @param ref 
@@ -3331,6 +3288,18 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorArraySize} operation
+   *
+   * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @return a new instance of TensorArraySize
+   * @see org.tensorflow.op.core.TensorArraySize
+   */
+  public TensorArraySize tensorArraySize(Operand<?> handle, Operand<TFloat32> flowIn) {
+    return TensorArraySize.create(scope, handle, flowIn);
+  }
+
+  /**
    * Builds an {@link GuaranteeConst} operation
    *
    * @param input 
@@ -3355,6 +3324,16 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[][][] data) {
+    return Constant.create(scope, data);
+  }
+
+  /**
    * Builds an {@link DynamicPartition} operation
    *
    * @param data 
@@ -3366,16 +3345,6 @@ public final class Ops {
   public <T extends TType> DynamicPartition<T> dynamicPartition(Operand<T> data,
       Operand<TInt32> partitions, Long numPartitions) {
     return DynamicPartition.create(scope, data, partitions, numPartitions);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float[][][][][][] data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -3404,6 +3373,21 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorArrayRead} operation
+   *
+   * @param handle The handle to a TensorArray.
+   * @param index 
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @param dtype The type of the elem that is returned.
+   * @return a new instance of TensorArrayRead
+   * @see org.tensorflow.op.core.TensorArrayRead
+   */
+  public <T extends TType> TensorArrayRead<T> tensorArrayRead(Operand<?> handle,
+      Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
+    return TensorArrayRead.create(scope, handle, index, flowIn, dtype);
+  }
+
+  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -3424,6 +3408,21 @@ public final class Ops {
    */
   public Constant<TInt32> constant(long[] shape, IntBuffer data) {
     return Constant.create(scope, shape, data);
+  }
+
+  /**
+   * Builds an {@link TensorArrayGradWithShape} operation
+   *
+   * @param handle The handle to the forward TensorArray.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @param shapeToPrepend An int32 vector representing a shape. Elements in the gradient accumulator will
+   * @param source The gradient source string, used to decide which gradient TensorArray
+   * @return a new instance of TensorArrayGradWithShape
+   * @see org.tensorflow.op.core.TensorArrayGradWithShape
+   */
+  public TensorArrayGradWithShape tensorArrayGradWithShape(Operand<?> handle,
+      Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
+    return TensorArrayGradWithShape.create(scope, handle, flowIn, shapeToPrepend, source);
   }
 
   /**
@@ -3513,6 +3512,16 @@ public final class Ops {
   public <U extends TType, T extends TNumber> ScatterNd<U> scatterNd(Operand<T> indices,
       Operand<U> updates, Operand<T> shape) {
     return ScatterNd.create(scope, indices, updates, shape);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(float[] data) {
+    return Constant.create(scope, data);
   }
 
   /**
@@ -3667,6 +3676,19 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link StatefulStandardNormal} operation
+   *
+   * @param resource The handle of the resource variable that stores the state of the RNG.
+   * @param shape The shape of the output tensor.
+   * @return a new instance of StatefulStandardNormal
+   * @see org.tensorflow.op.core.StatefulStandardNormal
+   */
+  public <T extends TType> StatefulStandardNormal<TFloat32> statefulStandardNormal(
+      Operand<?> resource, Operand<T> shape) {
+    return StatefulStandardNormal.create(scope, resource, shape);
+  }
+
+  /**
    * Builds an {@link ResourceApplyKerasMomentum} operation
    *
    * @param var Should be from a Variable().
@@ -3682,6 +3704,19 @@ public final class Ops {
       Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum,
       ResourceApplyKerasMomentum.Options... options) {
     return ResourceApplyKerasMomentum.create(scope, var, accum, lr, grad, momentum, options);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a float constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat32> constant(long[] shape, FloatBuffer data) {
+    return Constant.create(scope, shape, data);
   }
 
   /**
@@ -3719,17 +3754,6 @@ public final class Ops {
   public StagePeek stagePeek(Operand<TInt32> index, List<DataType<?>> dtypes,
       StagePeek.Options... options) {
     return StagePeek.create(scope, index, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data The value to put into the new constant.
-   * @return a double constant
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TDouble> constant(double data) {
-    return Constant.create(scope, data);
   }
 
   /**
@@ -3829,20 +3853,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StatefulStandardNormalV2} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param algorithm The RNG algorithm.
-   * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormalV2
-   * @see org.tensorflow.op.core.StatefulStandardNormalV2
-   */
-  public <T extends TType> StatefulStandardNormalV2<TFloat> statefulStandardNormalV2(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return StatefulStandardNormalV2.create(scope, resource, algorithm, shape);
-  }
-
-  /**
    * Builds an {@link ReduceMin} operation
    *
    * @param input The tensor to reduce.
@@ -3897,16 +3907,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float[][] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
    * Builds an {@link ScatterDiv} operation
    *
    * @param ref Should be from a `Variable` node.
@@ -3933,21 +3933,6 @@ public final class Ops {
   public <T extends TNumber, U extends TType> ResourceScatterMul resourceScatterMul(
       Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     return ResourceScatterMul.create(scope, resource, indices, updates);
-  }
-
-  /**
-   * Builds an {@link TensorArrayRead} operation
-   *
-   * @param handle The handle to a TensorArray.
-   * @param index 
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @param dtype The type of the elem that is returned.
-   * @return a new instance of TensorArrayRead
-   * @see org.tensorflow.op.core.TensorArrayRead
-   */
-  public <T extends TType> TensorArrayRead<T> tensorArrayRead(Operand<?> handle,
-      Operand<TInt32> index, Operand<TFloat> flowIn, DataType<T> dtype) {
-    return TensorArrayRead.create(scope, handle, index, flowIn, dtype);
   }
 
   /**
@@ -4100,6 +4085,19 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Constant} operation
+   *
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a double constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(long[] shape, DoubleBuffer data) {
+    return Constant.create(scope, shape, data);
+  }
+
+  /**
    * Builds an {@link TensorListSplit} operation
    *
    * @param tensor 
@@ -4238,13 +4236,18 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Constant} operation
+   * Builds an {@link TensorArraySplit} operation
    *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
+   * @param handle The handle to a TensorArray.
+   * @param value The concatenated tensor to write to the TensorArray.
+   * @param lengths The vector of lengths, how to split the rows of value into the
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @return a new instance of TensorArraySplit
+   * @see org.tensorflow.op.core.TensorArraySplit
    */
-  public Constant<TDouble> constant(double[][][] data) {
-    return Constant.create(scope, data);
+  public <T extends TType> TensorArraySplit tensorArraySplit(Operand<?> handle, Operand<T> value,
+      Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
+    return TensorArraySplit.create(scope, handle, value, lengths, flowIn);
   }
 
   /**
@@ -4275,30 +4278,6 @@ public final class Ops {
       Operand<T> hypothesisValues, Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices,
       Operand<T> truthValues, Operand<TInt64> truthShape, EditDistance.Options... options) {
     return EditDistance.create(scope, hypothesisIndices, hypothesisValues, hypothesisShape, truthIndices, truthValues, truthShape, options);
-  }
-
-  /**
-   * Builds an {@link Constant} operation
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   * @see org.tensorflow.op.core.Constant
-   */
-  public Constant<TFloat> constant(float[][][][] data) {
-    return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link TensorArrayUnpack} operation
-   *
-   * @param handle 
-   * @param value 
-   * @param flowIn 
-   * @return a new instance of TensorArrayUnpack
-   * @see org.tensorflow.op.core.TensorArrayUnpack
-   */
-  public <T extends TType> TensorArrayUnpack tensorArrayUnpack(Operand<TString> handle,
-      Operand<T> value, Operand<TFloat> flowIn) {
-    return TensorArrayUnpack.create(scope, handle, value, flowIn);
   }
 
   /**
@@ -4352,23 +4331,17 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link CombinedNonMaxSuppression} operation
+   * Builds an {@link TensorArrayGrad} operation
    *
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
-   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
-   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
-   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
-   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
-   * @param options carries optional attributes values
-   * @return a new instance of CombinedNonMaxSuppression
-   * @see org.tensorflow.op.core.CombinedNonMaxSuppression
+   * @param handle The handle to the forward TensorArray.
+   * @param flowIn A float scalar that enforces proper chaining of operations.
+   * @param source The gradient source string, used to decide which gradient TensorArray
+   * @return a new instance of TensorArrayGrad
+   * @see org.tensorflow.op.core.TensorArrayGrad
    */
-  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat> boxes,
-      Operand<TFloat> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
-      Operand<TFloat> iouThreshold, Operand<TFloat> scoreThreshold,
-      CombinedNonMaxSuppression.Options... options) {
-    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
+  public TensorArrayGrad tensorArrayGrad(Operand<?> handle, Operand<TFloat32> flowIn,
+      String source) {
+    return TensorArrayGrad.create(scope, handle, flowIn, source);
   }
 
   /**
@@ -4485,18 +4458,46 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorArraySplit} operation
+   * Builds an {@link StatefulStandardNormalV2} operation
    *
-   * @param handle The handle to a TensorArray.
-   * @param value The concatenated tensor to write to the TensorArray.
-   * @param lengths The vector of lengths, how to split the rows of value into the
-   * @param flowIn A float scalar that enforces proper chaining of operations.
-   * @return a new instance of TensorArraySplit
-   * @see org.tensorflow.op.core.TensorArraySplit
+   * @param resource The handle of the resource variable that stores the state of the RNG.
+   * @param algorithm The RNG algorithm.
+   * @param shape The shape of the output tensor.
+   * @return a new instance of StatefulStandardNormalV2
+   * @see org.tensorflow.op.core.StatefulStandardNormalV2
    */
-  public <T extends TType> TensorArraySplit tensorArraySplit(Operand<?> handle, Operand<T> value,
-      Operand<TInt64> lengths, Operand<TFloat> flowIn) {
-    return TensorArraySplit.create(scope, handle, value, lengths, flowIn);
+  public <T extends TType> StatefulStandardNormalV2<TFloat32> statefulStandardNormalV2(
+      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+    return StatefulStandardNormalV2.create(scope, resource, algorithm, shape);
+  }
+
+  /**
+   * Builds an {@link FusedBatchNormGradV3} operation
+   *
+   * @param yBackprop A 4D Tensor for the gradient with respect to y.
+   * @param x A 4D Tensor for input data.
+   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
+   * @param reserveSpace1 When is_training is True, a 1D Tensor for the computed batch
+   * @param reserveSpace2 When is_training is True, a 1D Tensor for the computed batch
+   * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
+   * @param options carries optional attributes values
+   * @return a new instance of FusedBatchNormGradV3
+   * @see org.tensorflow.op.core.FusedBatchNormGradV3
+   */
+  public <T extends TNumber, U extends TNumber> FusedBatchNormGradV3<T, U> fusedBatchNormGradV3(
+      Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1,
+      Operand<U> reserveSpace2, Operand<U> reserveSpace3, FusedBatchNormGradV3.Options... options) {
+    return FusedBatchNormGradV3.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, reserveSpace3, options);
+  }
+
+  /**
+   * Builds an {@link Constant} operation
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   * @see org.tensorflow.op.core.Constant
+   */
+  public Constant<TFloat64> constant(double[][][][][][] data) {
+    return Constant.create(scope, data);
   }
 
   /**

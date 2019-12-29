@@ -30,6 +30,7 @@ import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
 
 public final class TensorBuffers {
 
@@ -39,6 +40,14 @@ public final class TensorBuffers {
       return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory);
     }
     return DataBuffers.from(tensorMemory.asByteBuffer());
+  }
+
+  public static ShortDataBuffer toShorts(TF_Tensor nativeTensor) {
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToShorts(tensorMemory);
+    }
+    return DataBuffers.from(tensorMemory.asByteBuffer().asShortBuffer());
   }
 
   public static IntDataBuffer toInts(TF_Tensor nativeTensor) {

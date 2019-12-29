@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
@@ -107,7 +107,7 @@ public class GraphOperationBuilderTest {
       g.opBuilder("RandomUniform", "Int")
           .addInput(TestUtil.constant(g, "RandomUniformShape", new int[] {1}))
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat.DTYPE)
+          .setAttr("dtype", TFloat32.DTYPE)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
@@ -133,23 +133,23 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Output<?> n =
           g.opBuilder("Placeholder", "unknown")
-              .setAttr("dtype", TFloat.DTYPE)
+              .setAttr("dtype", TFloat32.DTYPE)
               .setAttr("shape", Shape.unknown())
               .build()
               .output(0);
       assertEquals(-1, n.shape().numDimensions());
-      assertEquals(TFloat.DTYPE, n.dataType());
+      assertEquals(TFloat32.DTYPE, n.dataType());
 
       n =
           g.opBuilder("Placeholder", "batch_of_vectors")
-              .setAttr("dtype", TFloat.DTYPE)
+              .setAttr("dtype", TFloat32.DTYPE)
               .setAttr("shape", Shape.make(-1, 784))
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
       assertEquals(-1, n.shape().size(0));
       assertEquals(784, n.shape().size(1));
-      assertEquals(TFloat.DTYPE, n.dataType());
+      assertEquals(TFloat32.DTYPE, n.dataType());
     }
   }
 

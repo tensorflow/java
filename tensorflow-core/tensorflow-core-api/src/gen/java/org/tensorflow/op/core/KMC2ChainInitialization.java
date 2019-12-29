@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -45,7 +45,7 @@ public final class KMC2ChainInitialization extends PrimitiveOp implements Operan
    * @param seed Scalar. Seed for initializing the random number generator.
    * @return a new instance of KMC2ChainInitialization
    */
-  public static KMC2ChainInitialization create(Scope scope, Operand<TFloat> distances, Operand<TInt64> seed) {
+  public static KMC2ChainInitialization create(Scope scope, Operand<TFloat32> distances, Operand<TInt64> seed) {
     OperationBuilder opBuilder = scope.env().opBuilder("KMC2ChainInitialization", scope.makeOpName("KMC2ChainInitialization"));
     opBuilder.addInput(distances.asOutput());
     opBuilder.addInput(seed.asOutput());

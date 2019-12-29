@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxVars operation.
@@ -72,7 +72,7 @@ public final class FakeQuantWithMinMaxVarsGradient extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVarsGradient
    */
-  public static FakeQuantWithMinMaxVarsGradient create(Scope scope, Operand<TFloat> gradients, Operand<TFloat> inputs, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
+  public static FakeQuantWithMinMaxVarsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsGradient", scope.makeOpName("FakeQuantWithMinMaxVarsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -110,7 +110,7 @@ public final class FakeQuantWithMinMaxVarsGradient extends PrimitiveOp {
    * Backpropagated gradients w.r.t. inputs:
    * `gradients * (inputs >= min && inputs <= max)`.
    */
-  public Output<TFloat> backpropsWrtInput() {
+  public Output<TFloat32> backpropsWrtInput() {
     return backpropsWrtInput;
   }
   
@@ -118,7 +118,7 @@ public final class FakeQuantWithMinMaxVarsGradient extends PrimitiveOp {
    * Backpropagated gradients w.r.t. min parameter:
    * `sum(gradients * (inputs < min))`.
    */
-  public Output<TFloat> backpropWrtMin() {
+  public Output<TFloat32> backpropWrtMin() {
     return backpropWrtMin;
   }
   
@@ -126,13 +126,13 @@ public final class FakeQuantWithMinMaxVarsGradient extends PrimitiveOp {
    * Backpropagated gradients w.r.t. max parameter:
    * `sum(gradients * (inputs > max))`.
    */
-  public Output<TFloat> backpropWrtMax() {
+  public Output<TFloat32> backpropWrtMax() {
     return backpropWrtMax;
   }
   
-  private Output<TFloat> backpropsWrtInput;
-  private Output<TFloat> backpropWrtMin;
-  private Output<TFloat> backpropWrtMax;
+  private Output<TFloat32> backpropsWrtInput;
+  private Output<TFloat32> backpropWrtMin;
+  private Output<TFloat32> backpropWrtMax;
   
   private FakeQuantWithMinMaxVarsGradient(Operation operation) {
     super(operation);

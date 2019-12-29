@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -54,7 +54,7 @@ public final class Rfft2d extends PrimitiveOp implements Operand<TType> {
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @return a new instance of Rfft2d
    */
-  public static Rfft2d create(Scope scope, Operand<TFloat> input, Operand<TInt32> fftLength) {
+  public static Rfft2d create(Scope scope, Operand<TFloat32> input, Operand<TInt32> fftLength) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT2D", scope.makeOpName("Rfft2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());

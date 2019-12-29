@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -31,7 +31,7 @@ import org.tensorflow.types.TInt32;
  * <p>
  * The summary stats contains gradients and hessians accumulated for each node, feature dimension id and bucket.
  */
-public final class BoostedTreesAggregateStats extends PrimitiveOp implements Operand<TFloat> {
+public final class BoostedTreesAggregateStats extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesAggregateStats operation.
@@ -45,7 +45,7 @@ public final class BoostedTreesAggregateStats extends PrimitiveOp implements Ope
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesAggregateStats
    */
-  public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat> gradients, Operand<TFloat> hessians, Operand<TInt32> feature, Long maxSplits, Long numBuckets) {
+  public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> feature, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesAggregateStats", scope.makeOpName("BoostedTreesAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -61,16 +61,16 @@ public final class BoostedTreesAggregateStats extends PrimitiveOp implements Ope
    * output Rank 4 Tensor (shape=[splits, feature_dimension, buckets, logits_dimension + hessian_dimension])
    * containing accumulated stats for each node, feature dimension and bucket.
    */
-  public Output<TFloat> statsSummary() {
+  public Output<TFloat32> statsSummary() {
     return statsSummary;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return statsSummary;
   }
   
-  private Output<TFloat> statsSummary;
+  private Output<TFloat32> statsSummary;
   
   private BoostedTreesAggregateStats(Operation operation) {
     super(operation);

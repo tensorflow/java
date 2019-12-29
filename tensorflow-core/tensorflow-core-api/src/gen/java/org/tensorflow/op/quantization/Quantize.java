@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -160,7 +160,7 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Quantize
    */
-  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, DataType<T> T, Options... options) {
+  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
@@ -204,20 +204,20 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
   /**
    * The actual minimum scalar value used for the output.
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    * The actual maximum scalar value used for the output.
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
   private Output<T> output;
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private Quantize(Operation operation) {
     super(operation);

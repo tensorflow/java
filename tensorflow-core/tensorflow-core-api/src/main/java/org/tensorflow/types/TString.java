@@ -18,6 +18,7 @@
 package org.tensorflow.types;
 
 import com.google.common.base.Charsets;
+import javax.print.DocFlavor.STRING;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.StringTensorBuffer;
@@ -30,18 +31,42 @@ import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
 
+/**
+ * String type.
+ */
 public interface TString extends NdArray<String>, TType {
 
+  /** Type metadata */
   DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a string scalar.
+   *
+   * @param value scalar value to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> scalarOf(String value) {
     return copyOf(NdArrays.ofObjects(String.class, Shape.scalar()).setObject(value));
   }
 
+  /**
+   * Allocates a new tensor for storing a string vector.
+   *
+   * @param values values to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> vectorOf(String... values) {
     return copyOf(NdArrays.ofObjects(String.class, Shape.make(values.length)).write(values));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> copyOf(NdArray<String> src) {
     return TStringImpl.createTensor(src);
   }

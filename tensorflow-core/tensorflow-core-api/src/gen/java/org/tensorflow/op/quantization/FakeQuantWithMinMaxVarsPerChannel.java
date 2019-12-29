@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Fake-quantize the 'inputs' tensor of type float and one of the shapes: `[d]`,
@@ -51,7 +51,7 @@ import org.tensorflow.types.TFloat;
  * values.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp implements Operand<TFloat> {
+public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel}
@@ -91,7 +91,7 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
    */
-  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat> inputs, Operand<TFloat> min, Operand<TFloat> max, Options... options) {
+  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannel", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
@@ -126,16 +126,16 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp impleme
   
   /**
    */
-  public Output<TFloat> outputs() {
+  public Output<TFloat32> outputs() {
     return outputs;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return outputs;
   }
   
-  private Output<TFloat> outputs;
+  private Output<TFloat32> outputs;
   
   private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
     super(operation);

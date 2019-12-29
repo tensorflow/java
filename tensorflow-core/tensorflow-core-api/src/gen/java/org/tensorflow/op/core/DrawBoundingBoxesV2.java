@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -58,7 +58,7 @@ public final class DrawBoundingBoxesV2<T extends TNumber> extends PrimitiveOp im
    * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
    * @return a new instance of DrawBoundingBoxesV2
    */
-  public static <T extends TNumber> DrawBoundingBoxesV2<T> create(Scope scope, Operand<T> images, Operand<TFloat> boxes, Operand<TFloat> colors) {
+  public static <T extends TNumber> DrawBoundingBoxesV2<T> create(Scope scope, Operand<T> images, Operand<TFloat32> boxes, Operand<TFloat32> colors) {
     OperationBuilder opBuilder = scope.env().opBuilder("DrawBoundingBoxesV2", scope.makeOpName("DrawBoundingBoxesV2"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());

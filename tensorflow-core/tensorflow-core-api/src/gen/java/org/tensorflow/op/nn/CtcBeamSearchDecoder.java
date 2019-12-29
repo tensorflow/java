@@ -26,7 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
@@ -72,7 +72,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcBeamSearchDecoder
    */
-  public static CtcBeamSearchDecoder create(Scope scope, Operand<TFloat> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
+  public static CtcBeamSearchDecoder create(Scope scope, Operand<TFloat32> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -127,14 +127,14 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * A matrix, shaped: `(batch_size x top_paths)`.  The
    * sequence log-probabilities.
    */
-  public Output<TFloat> logProbability() {
+  public Output<TFloat32> logProbability() {
     return logProbability;
   }
   
   private List<Output<TInt64>> decodedIndices;
   private List<Output<TInt64>> decodedValues;
   private List<Output<TInt64>> decodedShape;
-  private Output<TFloat> logProbability;
+  private Output<TFloat32> logProbability;
   
   @SuppressWarnings("unchecked")
   private CtcBeamSearchDecoder(Operation operation) {

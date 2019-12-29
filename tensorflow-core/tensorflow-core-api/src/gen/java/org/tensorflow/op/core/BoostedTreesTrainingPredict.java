@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -66,7 +66,7 @@ public final class BoostedTreesTrainingPredict extends PrimitiveOp {
    * Rank 2 Tensor containing logits update (with respect to cached
    * values stored) for each example.
    */
-  public Output<TFloat> partialLogits() {
+  public Output<TFloat32> partialLogits() {
     return partialLogits;
   }
   
@@ -84,7 +84,7 @@ public final class BoostedTreesTrainingPredict extends PrimitiveOp {
     return nodeIds;
   }
   
-  private Output<TFloat> partialLogits;
+  private Output<TFloat32> partialLogits;
   private Output<TInt32> treeIds;
   private Output<TInt32> nodeIds;
   

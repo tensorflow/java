@@ -24,7 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -46,7 +46,7 @@ public final class RequantizePerChannel<U extends TType> extends PrimitiveOp {
    * @param outType The quantized type of output tensor that needs to be converted.
    * @return a new instance of RequantizePerChannel
    */
-  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, Operand<TFloat> requestedOutputMin, Operand<TFloat> requestedOutputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -68,20 +68,20 @@ public final class RequantizePerChannel<U extends TType> extends PrimitiveOp {
   /**
    * The minimum value of the final output tensor
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    * The maximum value of the final output tensor.
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
   private Output<U> output;
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private RequantizePerChannel(Operation operation) {
     super(operation);

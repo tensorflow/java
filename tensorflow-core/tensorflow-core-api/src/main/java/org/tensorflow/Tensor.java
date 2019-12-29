@@ -30,8 +30,8 @@ import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.c_api.global.tensorflow;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -180,8 +180,8 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param data a buffer containing the tensor data.
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  public static Tensor<TFloat> create(long[] shape, FloatBuffer data) {
-    Tensor<TFloat> t = allocateForBuffer(TFloat.DTYPE, shape, data.remaining());
+  public static Tensor<TFloat32> create(long[] shape, FloatBuffer data) {
+    Tensor<TFloat32> t = allocateForBuffer(TFloat32.DTYPE, shape, data.remaining());
     t.buffer().asFloatBuffer().put(data);
     return t;
   }
@@ -198,8 +198,8 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param data a buffer containing the tensor data.
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  public static Tensor<TDouble> create(long[] shape, DoubleBuffer data) {
-    Tensor<TDouble> t = allocateForBuffer(TDouble.DTYPE, shape, data.remaining());
+  public static Tensor<TFloat64> create(long[] shape, DoubleBuffer data) {
+    Tensor<TFloat64> t = allocateForBuffer(TFloat64.DTYPE, shape, data.remaining());
     t.buffer().asDoubleBuffer().put(data);
     return t;
   }
@@ -462,7 +462,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @throws IllegalArgumentException If the tensor datatype is not {@link Float}
    */
   public void writeTo(FloatBuffer dst) {
-    if (dtype != TFloat.DTYPE) {
+    if (dtype != TFloat32.DTYPE) {
       throw incompatibleBuffer(dst, dtype);
     }
     ByteBuffer src = buffer();
@@ -480,7 +480,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @throws IllegalArgumentException If the tensor datatype is not {@link Double}
    */
   public void writeTo(DoubleBuffer dst) {
-    if (dtype != TDouble.DTYPE) {
+    if (dtype != TFloat64.DTYPE) {
       throw incompatibleBuffer(dst, dtype);
     }
     ByteBuffer src = buffer();
@@ -671,10 +671,10 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     classDataTypes.put(Integer.class, TInt32.DTYPE);
     classDataTypes.put(long.class, TInt64.DTYPE);
     classDataTypes.put(Long.class, TInt64.DTYPE);
-    classDataTypes.put(float.class, TFloat.DTYPE);
-    classDataTypes.put(Float.class, TFloat.DTYPE);
-    classDataTypes.put(double.class, TDouble.DTYPE);
-    classDataTypes.put(Double.class, TDouble.DTYPE);
+    classDataTypes.put(float.class, TFloat32.DTYPE);
+    classDataTypes.put(Float.class, TFloat32.DTYPE);
+    classDataTypes.put(double.class, TFloat64.DTYPE);
+    classDataTypes.put(Double.class, TFloat64.DTYPE);
     classDataTypes.put(byte.class, TString.DTYPE);
     classDataTypes.put(Byte.class, TString.DTYPE);
     classDataTypes.put(boolean.class, TBool.DTYPE);

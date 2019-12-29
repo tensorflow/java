@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Performs gradient updates of embedding tables.
@@ -49,7 +49,7 @@ public final class SendTPUEmbeddingGradients extends PrimitiveOp {
    * @param config Serialized TPUEmbeddingConfiguration proto.
    * @return a new instance of SendTPUEmbeddingGradients
    */
-  public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat>> inputs, Iterable<Operand<TFloat>> learningRates, String config) {
+  public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat32>> inputs, Iterable<Operand<TFloat32>> learningRates, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("SendTPUEmbeddingGradients", scope.makeOpName("SendTPUEmbeddingGradients"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder.addInputList(Operands.asOutputs(learningRates));

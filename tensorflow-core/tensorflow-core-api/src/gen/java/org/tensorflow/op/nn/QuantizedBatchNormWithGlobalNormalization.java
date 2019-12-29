@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -71,7 +71,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
    * needs to be multiplied with gamma.
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
-  public static <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat> tMin, Operand<TFloat> tMax, Operand<T> m, Operand<TFloat> mMin, Operand<TFloat> mMax, Operand<T> v, Operand<TFloat> vMin, Operand<TFloat> vMax, Operand<T> beta, Operand<TFloat> betaMin, Operand<TFloat> betaMax, Operand<T> gamma, Operand<TFloat> gammaMin, Operand<TFloat> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m, Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin, Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax, Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBatchNormWithGlobalNormalization", scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());
@@ -103,19 +103,19 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
   
   /**
    */
-  public Output<TFloat> resultMin() {
+  public Output<TFloat32> resultMin() {
     return resultMin;
   }
   
   /**
    */
-  public Output<TFloat> resultMax() {
+  public Output<TFloat32> resultMax() {
     return resultMax;
   }
   
   private Output<U> result;
-  private Output<TFloat> resultMin;
-  private Output<TFloat> resultMax;
+  private Output<TFloat32> resultMin;
+  private Output<TFloat32> resultMax;
   
   private QuantizedBatchNormWithGlobalNormalization(Operation operation) {
     super(operation);

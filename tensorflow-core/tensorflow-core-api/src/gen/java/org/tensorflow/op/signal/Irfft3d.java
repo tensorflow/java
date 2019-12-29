@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -46,7 +46,7 @@ import org.tensorflow.types.TInt32;
  * the dimension is padded with zeros.
  */
 @Operator(group = "signal")
-public final class Irfft3d extends PrimitiveOp implements Operand<TFloat> {
+public final class Irfft3d extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new Irfft3d operation.
@@ -73,16 +73,16 @@ public final class Irfft3d extends PrimitiveOp implements Operand<TFloat> {
    * Equivalent to np.irfftn with 3 dimensions.
    * @end_compatibility
    */
-  public Output<TFloat> output() {
+  public Output<TFloat32> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<TFloat32> output;
   
   private Irfft3d(Operation operation) {
     super(operation);

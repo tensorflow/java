@@ -26,6 +26,7 @@ import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
+import org.tensorflow.tools.buffer.layout.ByteDataLayout;
 import org.tensorflow.tools.buffer.layout.DataLayout;
 import org.tensorflow.tools.buffer.layout.DoubleDataLayout;
 import org.tensorflow.tools.buffer.layout.FloatDataLayout;
@@ -35,31 +36,35 @@ import org.tensorflow.tools.buffer.layout.ShortDataLayout;
 
 public class DataBufferAdapterFactory {
 
-  public static BooleanDataBuffer create(ByteDataBuffer buffer, BooleanDataLayout layout) {
-    return new BooleanDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> ByteDataBuffer create(S buffer, ByteDataLayout<S> layout) {
+    return new ByteDataBufferAdapter<>(buffer, layout);
   }
 
-  public static DoubleDataBuffer create(ByteDataBuffer buffer, DoubleDataLayout layout) {
-    return new DoubleDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> BooleanDataBuffer create(S buffer, BooleanDataLayout<S> layout) {
+    return new BooleanDataBufferAdapter<>(buffer, layout);
   }
 
-  public static FloatDataBuffer create(ByteDataBuffer buffer, FloatDataLayout layout) {
-    return new FloatDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> DoubleDataBuffer create(S buffer, DoubleDataLayout<S> layout) {
+    return new DoubleDataBufferAdapter<>(buffer, layout);
   }
 
-  public static IntDataBuffer create(ByteDataBuffer buffer, IntDataLayout layout) {
-    return new IntDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> FloatDataBuffer create(S buffer, FloatDataLayout<S> layout) {
+    return new FloatDataBufferAdapter<>(buffer, layout);
   }
 
-  public static LongDataBuffer create(ByteDataBuffer buffer, LongDataLayout layout) {
-    return new LongDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> IntDataBuffer create(S buffer, IntDataLayout<S> layout) {
+    return new IntDataBufferAdapter<>(buffer, layout);
   }
 
-  public static ShortDataBuffer create(ByteDataBuffer buffer, ShortDataLayout layout) {
-    return new ShortDataBufferAdapter(buffer, layout);
+  public static <S extends DataBuffer<?>> LongDataBuffer create(S buffer, LongDataLayout<S> layout) {
+    return new LongDataBufferAdapter<>(buffer, layout);
   }
 
-  public static <T> DataBuffer<T> create(ByteDataBuffer buffer, DataLayout<T> layout) {
+  public static <S extends DataBuffer<?>> ShortDataBuffer create(S buffer, ShortDataLayout<S> layout) {
+    return new ShortDataBufferAdapter<>(buffer, layout);
+  }
+
+  public static <S extends DataBuffer<?>, T> DataBuffer<T> create(S buffer, DataLayout<S, T> layout) {
     return new DataBufferAdapter<>(buffer, layout);
   }
 }

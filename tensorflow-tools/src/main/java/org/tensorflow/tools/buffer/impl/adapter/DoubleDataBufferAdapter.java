@@ -17,24 +17,24 @@
 
 package org.tensorflow.tools.buffer.impl.adapter;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.DoubleDataLayout;
 
-class DoubleDataBufferAdapter extends AbstractDataBufferAdapter<Double, DoubleDataBuffer>
+class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Double, DoubleDataBuffer>
     implements DoubleDataBuffer {
 
   @Override
   public double getDouble(long index) {
     Validator.getArgs(this, index);
-    return layout.readDouble(buffer(), index * layout.sizeInBytes());
+    return layout.readDouble(buffer(), index * layout.scale());
   }
 
   @Override
   public DoubleDataBuffer setDouble(double value, long index) {
     Validator.setArgs(this, index);
-    layout.writeDouble(buffer(), value, index * layout.sizeInBytes());
+    layout.writeDouble(buffer(), value, index * layout.scale());
     return this;
   }
 
@@ -42,7 +42,7 @@ class DoubleDataBufferAdapter extends AbstractDataBufferAdapter<Double, DoubleDa
   public DoubleDataBuffer read(double[] dst, int offset, int length) {
     Validator.readArgs(this, dst.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      dst[j] = layout.readDouble(buffer(), i * layout.sizeInBytes());
+      dst[j] = layout.readDouble(buffer(), i * layout.scale());
     }
     return this;
   }
@@ -51,25 +51,27 @@ class DoubleDataBufferAdapter extends AbstractDataBufferAdapter<Double, DoubleDa
   public DoubleDataBuffer write(double[] src, int offset, int length) {
     Validator.writeArgs(this, src.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      layout.writeDouble(buffer(), src[j], i * layout.sizeInBytes());
+      layout.writeDouble(buffer(), src[j], i * layout.scale());
     }
     return this;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public DoubleDataBuffer offset(long index) {
-    return new DoubleDataBufferAdapter(buffer().offset(index * layout.sizeInBytes()), layout);
+    return new DoubleDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public DoubleDataBuffer narrow(long size) {
-    return new DoubleDataBufferAdapter(buffer().narrow(size * layout.sizeInBytes()), layout);
+    return new DoubleDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
   }
 
-  DoubleDataBufferAdapter(ByteDataBuffer physicalBuffer, DoubleDataLayout layout) {
-    super(physicalBuffer, layout);
+  DoubleDataBufferAdapter(S buffer, DoubleDataLayout<S> layout) {
+    super(buffer, layout);
     this.layout = layout;
   }
 
-  private DoubleDataLayout layout;
+  private DoubleDataLayout<S> layout;
 }

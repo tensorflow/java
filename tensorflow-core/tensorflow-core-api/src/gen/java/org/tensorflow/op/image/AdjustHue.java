@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -51,7 +51,7 @@ public final class AdjustHue<T extends TNumber> extends PrimitiveOp implements O
    * @param delta A float delta to add to the hue.
    * @return a new instance of AdjustHue
    */
-  public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<TFloat> delta) {
+  public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<TFloat32> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(delta.asOutput());

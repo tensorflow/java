@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -102,7 +102,7 @@ public final class QuantizedInstanceNorm<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedInstanceNorm
    */
-  public static <T extends TType> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat> xMin, Operand<TFloat> xMax, Options... options) {
+  public static <T extends TType> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat32> xMin, Operand<TFloat32> xMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedInstanceNorm", scope.makeOpName("QuantizedInstanceNorm"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(xMin.asOutput());
@@ -177,20 +177,20 @@ public final class QuantizedInstanceNorm<T extends TType> extends PrimitiveOp {
   /**
    * The value represented by the lowest quantized output.
    */
-  public Output<TFloat> yMin() {
+  public Output<TFloat32> yMin() {
     return yMin;
   }
   
   /**
    * The value represented by the highest quantized output.
    */
-  public Output<TFloat> yMax() {
+  public Output<TFloat32> yMax() {
     return yMax;
   }
   
   private Output<T> y;
-  private Output<TFloat> yMin;
-  private Output<TFloat> yMax;
+  private Output<TFloat32> yMin;
+  private Output<TFloat32> yMax;
   
   private QuantizedInstanceNorm(Operation operation) {
     super(operation);

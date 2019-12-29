@@ -18,7 +18,7 @@ import org.tensorflow.op.strings.ToHashBucketStrong;
 import org.tensorflow.op.strings.ToNumber;
 import org.tensorflow.op.strings.UnicodeScript;
 import org.tensorflow.op.strings.UnicodeTranscode;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -110,17 +110,6 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link ToNumber} operation
-   *
-   * @param stringTensor 
-   * @return a new instance of ToNumber
-   * @see org.tensorflow.op.strings.ToNumber
-   */
-  public ToNumber<TFloat> toNumber(Operand<TString> stringTensor) {
-    return ToNumber.create(scope, stringTensor);
-  }
-
-  /**
    * Builds an {@link UnicodeTranscode} operation
    *
    * @param input The text to be processed. Can have any shape.
@@ -174,6 +163,17 @@ public final class StringsOps {
   public StringSplit stringSplit(Operand<TString> input, Operand<TString> sep,
       StringSplit.Options... options) {
     return StringSplit.create(scope, input, sep, options);
+  }
+
+  /**
+   * Builds an {@link ToNumber} operation
+   *
+   * @param stringTensor 
+   * @return a new instance of ToNumber
+   * @see org.tensorflow.op.strings.ToNumber
+   */
+  public ToNumber<TFloat32> toNumber(Operand<TString> stringTensor) {
+    return ToNumber.create(scope, stringTensor);
   }
 
   /**

@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
@@ -73,7 +73,7 @@ import org.tensorflow.types.TString;
  *  [0.25,    -0.25,      42]]
  */
 @Operator(group = "linalg")
-public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFloat> {
+public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.LoadAndRemapMatrix}
@@ -118,7 +118,7 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFl
    * @param options carries optional attributes values
    * @return a new instance of LoadAndRemapMatrix
    */
-  public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat> initializingValues, Long numRows, Long numCols, Options... options) {
+  public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat32> initializingValues, Long numRows, Long numCols, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
     opBuilder.addInput(ckptPath.asOutput());
     opBuilder.addInput(oldTensorName.asOutput());
@@ -151,16 +151,16 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFl
    * Output matrix containing existing values loaded from the
    * checkpoint, and with any missing values filled in from initializing_values.
    */
-  public Output<TFloat> outputMatrix() {
+  public Output<TFloat32> outputMatrix() {
     return outputMatrix;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return outputMatrix;
   }
   
-  private Output<TFloat> outputMatrix;
+  private Output<TFloat32> outputMatrix;
   
   private LoadAndRemapMatrix(Operation operation) {
     super(operation);

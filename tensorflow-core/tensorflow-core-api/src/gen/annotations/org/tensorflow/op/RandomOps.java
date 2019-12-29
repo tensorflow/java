@@ -19,7 +19,7 @@ import org.tensorflow.op.random.StatelessRandomUniform;
 import org.tensorflow.op.random.StatelessTruncatedNormal;
 import org.tensorflow.op.random.TruncatedNormal;
 import org.tensorflow.op.random.UniformCandidateSampler;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -130,19 +130,6 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link StatelessTruncatedNormal} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessTruncatedNormal
-   * @see org.tensorflow.op.random.StatelessTruncatedNormal
-   */
-  public <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat> statelessTruncatedNormal(
-      Operand<T> shape, Operand<U> seed) {
-    return StatelessTruncatedNormal.create(scope, shape, seed);
-  }
-
-  /**
    * Builds an {@link UniformCandidateSampler} operation
    *
    * @param trueClasses A batch_size * num_true matrix, in which each row contains the
@@ -160,16 +147,16 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link StatelessRandomNormal} operation
+   * Builds an {@link StatelessRandomUniform} operation
    *
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomNormal
-   * @see org.tensorflow.op.random.StatelessRandomNormal
+   * @return a new instance of StatelessRandomUniform
+   * @see org.tensorflow.op.random.StatelessRandomUniform
    */
-  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat> statelessRandomNormal(
+  public <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> statelessRandomUniform(
       Operand<T> shape, Operand<U> seed) {
-    return StatelessRandomNormal.create(scope, shape, seed);
+    return StatelessRandomUniform.create(scope, shape, seed);
   }
 
   /**
@@ -263,6 +250,19 @@ public final class RandomOps {
   }
 
   /**
+   * Builds an {@link StatelessTruncatedNormal} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessTruncatedNormal
+   * @see org.tensorflow.op.random.StatelessTruncatedNormal
+   */
+  public <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> statelessTruncatedNormal(
+      Operand<T> shape, Operand<U> seed) {
+    return StatelessTruncatedNormal.create(scope, shape, seed);
+  }
+
+  /**
    * Builds an {@link StatelessMultinomial} operation
    *
    * @param logits 2-D Tensor with shape `[batch_size, num_classes]`.  Each slice `[i, :]`
@@ -291,6 +291,19 @@ public final class RandomOps {
   }
 
   /**
+   * Builds an {@link StatelessRandomNormal} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessRandomNormal
+   * @see org.tensorflow.op.random.StatelessRandomNormal
+   */
+  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> statelessRandomNormal(
+      Operand<T> shape, Operand<U> seed) {
+    return StatelessRandomNormal.create(scope, shape, seed);
+  }
+
+  /**
    * Builds an {@link Multinomial} operation
    *
    * @param logits 2-D Tensor with shape `[batch_size, num_classes]`.  Each slice `[i, :]`
@@ -302,19 +315,6 @@ public final class RandomOps {
   public <T extends TNumber> Multinomial<TInt64> multinomial(Operand<T> logits,
       Operand<TInt32> numSamples, Multinomial.Options... options) {
     return Multinomial.create(scope, logits, numSamples, options);
-  }
-
-  /**
-   * Builds an {@link StatelessRandomUniform} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomUniform
-   * @see org.tensorflow.op.random.StatelessRandomUniform
-   */
-  public <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat> statelessRandomUniform(
-      Operand<T> shape, Operand<U> seed) {
-    return StatelessRandomUniform.create(scope, shape, seed);
   }
 
   /**

@@ -25,7 +25,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -45,7 +45,7 @@ public final class QuantizedConcatV2<T extends TType> extends PrimitiveOp {
    * @param inputMaxes 
    * @return a new instance of QuantizedConcatV2
    */
-  public static <T extends TType, U extends TNumber> QuantizedConcatV2<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat>> inputMins, Iterable<Operand<TFloat>> inputMaxes) {
+  public static <T extends TType, U extends TNumber> QuantizedConcatV2<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat32>> inputMins, Iterable<Operand<TFloat32>> inputMaxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcatV2", scope.makeOpName("QuantizedConcatV2"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInput(axis.asOutput());
@@ -63,19 +63,19 @@ public final class QuantizedConcatV2<T extends TType> extends PrimitiveOp {
   
   /**
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
   private Output<T> output;
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private QuantizedConcatV2(Operation operation) {
     super(operation);

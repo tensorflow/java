@@ -14,40 +14,52 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a boolean to/from bytes
+ * A {@link DataLayout} that converts data stored in a buffer to booleans.
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @see DataLayout
  */
-public interface BooleanDataLayout extends DataLayout<Boolean> {
-
-  /**
-   * Writes a boolean as bytes to the given buffer at its current position.
-   *  @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index byte index of the value to write
-   */
-  void writeBoolean(ByteDataBuffer buffer, boolean value, long index);
-
-  /**
-   * Reads a boolean as bytes from the given buffer at its current position.
-   *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index byte index of the value to read
-   * @return value
-   */
-  boolean readBoolean(ByteDataBuffer buffer, long index);
+public interface BooleanDataLayout<S extends DataBuffer<?>> extends DataLayout<S, Boolean> {
 
   @Override
-  default void writeValue(ByteDataBuffer buffer, Boolean value, long index) {
+  default BooleanDataBuffer applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
+
+  /**
+   * Writes a boolean into the buffer at the given index after converting it to the raw data type.
+   *
+   * @param buffer the buffer to write to
+   * @param value the boolean to convert and write
+   * @param index index in the buffer where the converted value should be written
+   * @see #writeValue(DataBuffer, Boolean, long)
+   */
+  void writeBoolean(S buffer, boolean value, long index);
+
+  /**
+   * Reads one or more raw values from the buffer at the given index and to be returned as a boolean.
+   *
+   * @param buffer the buffer to read from
+   * @param index index in the buffer where the raw value should be read
+   * @return the boolean value
+   * @see #readValue(DataBuffer, long)
+   */
+  boolean readBoolean(S buffer, long index);
+
+  @Override
+  default void writeValue(S buffer, Boolean value, long index) {
     writeBoolean(buffer, value, index);
   }
 
   @Override
-  default Boolean readValue(ByteDataBuffer buffer, long index) {
+  default Boolean readValue(S buffer, long index) {
     return readBoolean(buffer, index);
   }
 }

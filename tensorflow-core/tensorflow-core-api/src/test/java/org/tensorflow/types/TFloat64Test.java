@@ -20,15 +20,15 @@ package org.tensorflow.types;
 import org.tensorflow.Tensor;
 import org.tensorflow.tools.Shape;
 
-public class TFloatTest extends NumericTypesTestBase<TFloat, Float> {
+public class TFloat64Test extends NumericTypesTestBase<TFloat64, Double> {
 
   @Override
-  Tensor<TFloat> allocateTensor(Shape shape) {
-    return TFloat.ofShape(shape);
+  Tensor<TFloat64> allocateTensor(Shape shape) {
+    return TFloat64.ofShape(shape);
   }
 
   @Override
-  Float valueOf(Integer value) {
-    return value.floatValue();
+  Double valueOf(Integer value) {
+    return value.doubleValue();
   }
 }

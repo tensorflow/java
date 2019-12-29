@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -64,8 +64,8 @@ public final class ToNumber<T extends TNumber> extends PrimitiveOp implements Op
    * @param stringTensor 
    * @return a new instance of ToNumber
    */
-  public static ToNumber<TFloat> create(Scope scope, Operand<TString> stringTensor) {
-    return create(scope, stringTensor, TFloat.DTYPE);
+  public static ToNumber<TFloat32> create(Scope scope, Operand<TString> stringTensor) {
+    return create(scope, stringTensor, TFloat32.DTYPE);
   }
   
   /**

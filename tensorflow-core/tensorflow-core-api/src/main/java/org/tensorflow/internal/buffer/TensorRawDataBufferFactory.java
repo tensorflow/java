@@ -23,12 +23,17 @@ import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.raw.RawDataBufferFactory;
 
 class TensorRawDataBufferFactory extends RawDataBufferFactory {
 
   static ByteDataBuffer mapTensorToBytes(Pointer tensorMemory) {
     return mapNativeBytes(tensorMemory.address(), tensorMemory.capacity(), false);
+  }
+
+  static ShortDataBuffer mapTensorToShorts(Pointer tensorMemory) {
+    return mapNativeShorts(tensorMemory.address(), tensorMemory.capacity(), false);
   }
 
   static IntDataBuffer mapTensorToInts(Pointer tensorMemory) {

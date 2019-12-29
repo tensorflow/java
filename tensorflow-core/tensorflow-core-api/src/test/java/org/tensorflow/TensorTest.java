@@ -33,8 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -82,7 +82,7 @@ public class TensorTest {
     {
       ByteBuffer buf = ByteBuffer.allocateDirect(8 * doubles.length).order(ByteOrder.nativeOrder());
       buf.asDoubleBuffer().put(doubles);
-      try (Tensor<TDouble> t = Tensor.create(TDouble.DTYPE, doubles_shape, buf)) {
+      try (Tensor<TFloat64> t = Tensor.create(TFloat64.DTYPE, doubles_shape, buf)) {
         double[] actual = new double[doubles.length];
         assertArrayEquals(doubles, t.copyTo(actual), EPSILON);
       }
@@ -109,7 +109,7 @@ public class TensorTest {
             .asDoubleBuffer()
             .put(doubles);
     flipBuffer(buf);
-    try (Tensor<TDouble> t = Tensor.create(new long[] {doubles.length}, buf)) {
+    try (Tensor<TFloat64> t = Tensor.create(new long[] {doubles.length}, buf)) {
       double[] actual = new double[doubles.length];
       assertArrayEquals(doubles, t.copyTo(actual), EPSILON);
     }
@@ -125,11 +125,11 @@ public class TensorTest {
 
     // validate creating a tensor using a typed buffer
     {
-      try (Tensor<TDouble> t = Tensor.create(shape, DoubleBuffer.wrap(doubles))) {
+      try (Tensor<TFloat64> t = Tensor.create(shape, DoubleBuffer.wrap(doubles))) {
         double[] actual = new double[doubles.length];
         assertArrayEquals(doubles, t.copyTo(actual), EPSILON);
       }
-      try (Tensor<TFloat> t = Tensor.create(shape, FloatBuffer.wrap(floats))) {
+      try (Tensor<TFloat32> t = Tensor.create(shape, FloatBuffer.wrap(floats))) {
         float[] actual = new float[floats.length];
         assertArrayEquals(floats, t.copyTo(actual), EPSILON_F);
       }
@@ -145,13 +145,13 @@ public class TensorTest {
 
     // validate shape-checking
     {
-      try (Tensor<TDouble> t =
+      try (Tensor<TFloat64> t =
           Tensor.create(new long[doubles.length + 1], DoubleBuffer.wrap(doubles))) {
         fail("should have failed on incompatible buffer");
       } catch (IllegalArgumentException e) {
         // expected
       }
-      try (Tensor<TFloat> t = Tensor.create(new long[floats.length + 1], FloatBuffer.wrap(floats))) {
+      try (Tensor<TFloat32> t = Tensor.create(new long[floats.length + 1], FloatBuffer.wrap(floats))) {
         fail("should have failed on incompatible buffer");
       } catch (IllegalArgumentException e) {
         // expected
@@ -178,8 +178,8 @@ public class TensorTest {
     boolean[] bools = {true, false, true};
 
     try (Tensor<TInt32> tints = Tensors.create(ints);
-        Tensor<TFloat> tfloats = Tensors.create(floats);
-        Tensor<TDouble> tdoubles = Tensors.create(doubles);
+        Tensor<TFloat32> tfloats = Tensors.create(floats);
+        Tensor<TFloat64> tdoubles = Tensors.create(doubles);
         Tensor<TInt64> tlongs = Tensors.create(longs);
         Tensor<TBool> tbools = Tensors.create(bools)) {
 
@@ -304,14 +304,14 @@ public class TensorTest {
 
   @Test
   public void scalars() {
-    try (Tensor<TFloat> t = Tensors.create(2.718f)) {
-      assertEquals(TFloat.DTYPE, t.dataType());
+    try (Tensor<TFloat32> t = Tensors.create(2.718f)) {
+      assertEquals(TFloat32.DTYPE, t.dataType());
       assertEquals(0, t.shape().numDimensions());
       assertEquals(2.718f, t.floatValue(), EPSILON_F);
     }
 
-    try (Tensor<TDouble> t = Tensors.create(3.1415)) {
-      assertEquals(TDouble.DTYPE, t.dataType());
+    try (Tensor<TFloat64> t = Tensors.create(3.1415)) {
+      assertEquals(TFloat64.DTYPE, t.dataType());
       assertEquals(0, t.shape().numDimensions());
       assertEquals(3.1415, t.doubleValue(), EPSILON);
     }
@@ -345,8 +345,8 @@ public class TensorTest {
   @Test
   public void nDimensional() {
     double[] vector = {1.414, 2.718, 3.1415};
-    try (Tensor<TDouble> t = Tensors.create(vector)) {
-      assertEquals(TDouble.DTYPE, t.dataType());
+    try (Tensor<TFloat64> t = Tensors.create(vector)) {
+      assertEquals(TFloat64.DTYPE, t.dataType());
       assertEquals(1, t.shape().numDimensions());
       assertEquals(3, t.shape().size(0));
 
@@ -556,8 +556,8 @@ public class TensorTest {
     // An exception is made for this test, where the pitfalls of this is avoided by not calling
     // close() on both Tensors.
     final float[][] matrix = {{1, 2, 3}, {4, 5, 6}};
-    try (Tensor<TFloat> src = Tensors.create(matrix)) {
-      Tensor<TFloat> cpy = Tensor.fromHandle(src.getNativeHandle()).expect(TFloat.DTYPE);
+    try (Tensor<TFloat32> src = Tensors.create(matrix)) {
+      Tensor<TFloat32> cpy = Tensor.fromHandle(src.getNativeHandle()).expect(TFloat32.DTYPE);
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
       assertEquals(src.shape(), cpy.shape());

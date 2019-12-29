@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat64;
 
 /**
  * Provides the time since epoch in seconds.
@@ -35,7 +35,7 @@ import org.tensorflow.types.TDouble;
  * to the graph.
  */
 @Operator
-public final class Timestamp extends PrimitiveOp implements Operand<TDouble> {
+public final class Timestamp extends PrimitiveOp implements Operand<TFloat64> {
   
   /**
    * Factory method to create a class wrapping a new Timestamp operation.
@@ -51,16 +51,16 @@ public final class Timestamp extends PrimitiveOp implements Operand<TDouble> {
   
   /**
    */
-  public Output<TDouble> ts() {
+  public Output<TFloat64> ts() {
     return ts;
   }
   
   @Override
-  public Output<TDouble> asOutput() {
+  public Output<TFloat64> asOutput() {
     return ts;
   }
   
-  private Output<TDouble> ts;
+  private Output<TFloat64> ts;
   
   private Timestamp(Operation operation) {
     super(operation);

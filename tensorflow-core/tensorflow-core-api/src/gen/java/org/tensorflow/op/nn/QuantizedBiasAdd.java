@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -51,7 +51,7 @@ public final class QuantizedBiasAdd<V extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedBiasAdd
    */
-  public static <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minBias, Operand<TFloat> maxBias, DataType<V> outType) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBiasAdd", scope.makeOpName("QuantizedBiasAdd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(bias.asOutput());
@@ -73,20 +73,20 @@ public final class QuantizedBiasAdd<V extends TType> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<TFloat> minOut() {
+  public Output<TFloat32> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<TFloat> maxOut() {
+  public Output<TFloat32> maxOut() {
     return maxOut;
   }
   
   private Output<V> output;
-  private Output<TFloat> minOut;
-  private Output<TFloat> maxOut;
+  private Output<TFloat32> minOut;
+  private Output<TFloat32> maxOut;
   
   private QuantizedBiasAdd(Operation operation) {
     super(operation);

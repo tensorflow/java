@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -50,7 +50,7 @@ public final class EncodeWav extends PrimitiveOp implements Operand<TString> {
    * @param sampleRate Scalar containing the sample frequency.
    * @return a new instance of EncodeWav
    */
-  public static EncodeWav create(Scope scope, Operand<TFloat> audio, Operand<TInt32> sampleRate) {
+  public static EncodeWav create(Scope scope, Operand<TFloat32> audio, Operand<TInt32> sampleRate) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeWav", scope.makeOpName("EncodeWav"));
     opBuilder.addInput(audio.asOutput());
     opBuilder.addInput(sampleRate.asOutput());

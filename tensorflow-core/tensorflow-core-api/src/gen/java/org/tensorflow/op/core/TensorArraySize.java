@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -41,7 +41,7 @@ public final class TensorArraySize extends PrimitiveOp implements Operand<TInt32
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySize
    */
-  public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn) {
+  public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());

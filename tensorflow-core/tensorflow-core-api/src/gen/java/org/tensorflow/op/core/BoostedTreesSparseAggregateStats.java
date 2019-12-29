@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -53,7 +53,7 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
    * @param numBuckets int; equals to the maximum possible value of bucketized feature + 1.
    * @return a new instance of BoostedTreesSparseAggregateStats
    */
-  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat> gradients, Operand<TFloat> hessians, Operand<TInt32> featureIndices, Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits, Long numBuckets) {
+  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> featureIndices, Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseAggregateStats", scope.makeOpName("BoostedTreesSparseAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -79,7 +79,7 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
   /**
    * output Rank 1 Tensor (shape=[number of non zero statistics])
    */
-  public Output<TFloat> statsSummaryValues() {
+  public Output<TFloat32> statsSummaryValues() {
     return statsSummaryValues;
   }
   
@@ -96,7 +96,7 @@ public final class BoostedTreesSparseAggregateStats extends PrimitiveOp {
   }
   
   private Output<TInt32> statsSummaryIndices;
-  private Output<TFloat> statsSummaryValues;
+  private Output<TFloat32> statsSummaryValues;
   private Output<TInt32> statsSummaryShape;
   
   private BoostedTreesSparseAggregateStats(Operation operation) {

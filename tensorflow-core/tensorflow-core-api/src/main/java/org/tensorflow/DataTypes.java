@@ -20,8 +20,9 @@ package org.tensorflow;
 import java.util.HashMap;
 import java.util.Map;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat16;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -54,8 +55,9 @@ final class DataTypes {
 
   static {
     register(TBool.DTYPE);
-    register(TDouble.DTYPE);
-    register(TFloat.DTYPE);
+    register(TFloat64.DTYPE);
+    register(TFloat32.DTYPE);
+    register(TFloat16.DTYPE);
     register(TInt32.DTYPE);
     register(TInt64.DTYPE);
     register(TString.DTYPE);

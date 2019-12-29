@@ -27,7 +27,7 @@ public class LongDataBufferAdapterTest extends LongDataBufferTestBase {
 
   @Override
   protected LongDataBuffer allocate(long size) {
-    return DataBuffers.ofLongs(size, new TestLongLayout());
+    return LAYOUT.applyTo(DataBuffers.ofBytes(size * LAYOUT.scale()));
   }
 
   @Override
@@ -35,26 +35,26 @@ public class LongDataBufferAdapterTest extends LongDataBufferTestBase {
     return super.maxSize() / 3;
   }
 
-  private static class TestLongLayout implements LongDataLayout {
+  private static LongDataLayout<ByteDataBuffer> LAYOUT = new LongDataLayout<ByteDataBuffer>() {
 
     @Override
     public void writeLong(ByteDataBuffer buffer, long value, long index) {
-      buffer.setObject((byte)(((value >> 56) & 0x80) | ((value >> 16) & 0x7F)), index);
-      buffer.setObject((byte)((value >> 8) & 0xFF), index + 1);
-      buffer.setObject((byte)(value & 0xFF), index + 2);
+      buffer.setByte((byte)(((value >> 56) & 0x80) | ((value >> 16) & 0x7F)), index);
+      buffer.setByte((byte)((value >> 8) & 0xFF), index + 1);
+      buffer.setByte((byte)(value & 0xFF), index + 2);
     }
 
     @Override
     public long readLong(ByteDataBuffer buffer, long index) {
-      long msb = buffer.getObject(index);
-      long midb = buffer.getObject(index + 1);
-      long lsb = buffer.getObject(index + 2);
+      long msb = buffer.getByte(index);
+      long midb = buffer.getByte(index + 1);
+      long lsb = buffer.getByte(index + 2);
       return ((msb & 0x80) << 56) | ((msb & 0x7F) << 16) | ((midb & 0xFF) << 8) | (lsb & 0xFF);
     }
 
     @Override
-    public int sizeInBytes() {
+    public int scale() {
       return 3;
     }
-  }
+  };
 }

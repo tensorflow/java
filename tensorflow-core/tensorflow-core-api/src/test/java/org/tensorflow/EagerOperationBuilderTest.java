@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperationBuilder} class. */
@@ -47,7 +47,7 @@ public class EagerOperationBuilderTest {
       opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
     }
     try {
-      opBuilder.setAttr("dtype", TFloat.DTYPE);
+      opBuilder.setAttr("dtype", TFloat32.DTYPE);
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -102,7 +102,7 @@ public class EagerOperationBuilderTest {
       opBuilder(session, "RandomUniform", "DataTypeAndInt")
           .addInput(TestUtil.constant(session, "RandomUniformShape", new int[] {1}))
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat.DTYPE)
+          .setAttr("dtype", TFloat32.DTYPE)
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")

@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -64,8 +64,8 @@ public final class StatefulStandardNormal<U extends TType> extends PrimitiveOp i
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulStandardNormal
    */
-  public static <T extends TType> StatefulStandardNormal<TFloat> create(Scope scope, Operand<?> resource, Operand<T> shape) {
-    return create(scope, resource, shape, TFloat.DTYPE);
+  public static <T extends TType> StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<T> shape) {
+    return create(scope, resource, shape, TFloat32.DTYPE);
   }
   
   /**

@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
@@ -92,7 +92,7 @@ public final class CtcLoss extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcLoss
    */
-  public static CtcLoss create(Scope scope, Operand<TFloat> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
+  public static CtcLoss create(Scope scope, Operand<TFloat32> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
@@ -144,7 +144,7 @@ public final class CtcLoss extends PrimitiveOp {
   /**
    * A vector (batch) containing log-probabilities.
    */
-  public Output<TFloat> loss() {
+  public Output<TFloat32> loss() {
     return loss;
   }
   
@@ -152,12 +152,12 @@ public final class CtcLoss extends PrimitiveOp {
    * The gradient of `loss`.  3-D, shape:
    * `(max_time x batch_size x num_classes)`.
    */
-  public Output<TFloat> gradient() {
+  public Output<TFloat32> gradient() {
     return gradient;
   }
   
-  private Output<TFloat> loss;
-  private Output<TFloat> gradient;
+  private Output<TFloat32> loss;
+  private Output<TFloat32> gradient;
   
   private CtcLoss(Operation operation) {
     super(operation);

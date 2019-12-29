@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -85,7 +85,7 @@ public final class QuantizedMatMul<V extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMul
    */
-  public static <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB, Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMul", scope.makeOpName("QuantizedMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -132,20 +132,20 @@ public final class QuantizedMatMul<V extends TType> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<TFloat> minOut() {
+  public Output<TFloat32> minOut() {
     return minOut;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<TFloat> maxOut() {
+  public Output<TFloat32> maxOut() {
     return maxOut;
   }
   
   private Output<V> out;
-  private Output<TFloat> minOut;
-  private Output<TFloat> maxOut;
+  private Output<TFloat32> minOut;
+  private Output<TFloat32> maxOut;
   
   private QuantizedMatMul(Operation operation) {
     super(operation);

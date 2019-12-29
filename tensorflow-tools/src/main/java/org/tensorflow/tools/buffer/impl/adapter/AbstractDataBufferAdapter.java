@@ -17,18 +17,17 @@
 
 package org.tensorflow.tools.buffer.impl.adapter;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.DataLayout;
 
 @SuppressWarnings("unchecked")
-abstract class AbstractDataBufferAdapter<T, B extends DataBuffer<T>> extends AbstractDataBuffer<T> {
+abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends DataBuffer<T>> extends AbstractDataBuffer<T> {
 
   @Override
   public long size() {
-    return buffer.size() / layout.sizeInBytes();
+    return buffer.size() / layout.scale();
   }
 
   @Override
@@ -39,36 +38,36 @@ abstract class AbstractDataBufferAdapter<T, B extends DataBuffer<T>> extends Abs
   @Override
   public T getObject(long index) {
     Validator.getArgs(this, index);
-    return layout.readValue(buffer, index * layout.sizeInBytes());
+    return layout.readValue(buffer, index * layout.scale());
   }
 
   @Override
-  public B setObject(T value, long index) {
+  public U setObject(T value, long index) {
     Validator.setArgs(this, index);
-    layout.writeValue(buffer, value, index * layout.sizeInBytes());
-    return (B)this;
+    layout.writeValue(buffer, value, index * layout.scale());
+    return (U)this;
   }
 
   @Override
-  public B copyTo(DataBuffer<T> dst, long size) {
+  public U copyTo(DataBuffer<T> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    slowCopyTo(dst, size); // FIXME anyway to speed up this?
-    return (B)this;
+    slowCopyTo(dst, size);
+    return (U)this;
   }
 
-  AbstractDataBufferAdapter(ByteDataBuffer buffer, DataLayout<T> layout) {
+  AbstractDataBufferAdapter(S buffer, DataLayout<S, T> layout) {
     this.buffer = buffer;
     this.layout = layout;
   }
 
-  DataLayout<T> layout() {
+  DataLayout<S, T> layout() {
     return layout;
   }
 
-  ByteDataBuffer buffer() {
+  S buffer() {
     return buffer;
   }
 
-  private final ByteDataBuffer buffer;
-  private final DataLayout<T> layout;
+  private final S buffer;
+  private final DataLayout<S, T> layout;
 }

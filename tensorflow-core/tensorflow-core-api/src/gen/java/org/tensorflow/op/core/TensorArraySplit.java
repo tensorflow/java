@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -54,7 +54,7 @@ import org.tensorflow.types.family.TType;
  * 
  */
 @Operator
-public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloat> {
+public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArraySplit operation.
@@ -67,7 +67,7 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloa
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  public static <T extends TType> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySplitV3", scope.makeOpName("TensorArraySplit"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -80,16 +80,16 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloa
   /**
    * A float scalar that enforces proper chaining of operations.
    */
-  public Output<TFloat> flowOut() {
+  public Output<TFloat32> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return flowOut;
   }
   
-  private Output<TFloat> flowOut;
+  private Output<TFloat32> flowOut;
   
   private TensorArraySplit(Operation operation) {
     super(operation);

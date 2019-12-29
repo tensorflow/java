@@ -32,8 +32,8 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -151,8 +151,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data The value to put into the new constant. 
    * @return a float constant
    */
-  public static Constant<TFloat> create(Scope scope, float data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -162,8 +162,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -173,8 +173,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[][] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[][] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -184,8 +184,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[][][] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[][][] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -195,8 +195,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[][][][] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[][][][] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -206,8 +206,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[][][][][] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[][][][][] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
@@ -217,12 +217,12 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TFloat> create(Scope scope, float[][][][][][] data) {
-    return create(scope, data, TFloat.DTYPE);
+  public static Constant<TFloat32> create(Scope scope, float[][][][][][] data) {
+    return create(scope, data, TFloat32.DTYPE);
   }
 
   /**
-   * Create a {@link TFloat} constant with data from the given buffer.
+   * Create a {@link TFloat32} constant with data from the given buffer.
    *
    * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
    * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
@@ -235,8 +235,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a float constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  public static Constant<TFloat> create(Scope scope, long[] shape, FloatBuffer data) {
-    try (Tensor<TFloat> value = Tensor.create(shape, data)) {
+  public static Constant<TFloat32> create(Scope scope, long[] shape, FloatBuffer data) {
+    try (Tensor<TFloat32> value = Tensor.create(shape, data)) {
       return create(scope, value);
     }
   }
@@ -248,8 +248,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data The value to put into the new constant.
    * @return a double constant
    */
-  public static Constant<TDouble> create(Scope scope, double data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -259,8 +259,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -270,8 +270,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[][] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[][] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -281,8 +281,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[][][] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[][][] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -292,8 +292,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[][][][] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[][][][] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -303,8 +303,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[][][][][] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[][][][][] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
@@ -314,12 +314,12 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
    */
-  public static Constant<TDouble> create(Scope scope, double[][][][][][] data) {
-    return create(scope, data, TDouble.DTYPE);
+  public static Constant<TFloat64> create(Scope scope, double[][][][][][] data) {
+    return create(scope, data, TFloat64.DTYPE);
   }
 
   /**
-   * Create a {@link TDouble} constant with data from the given buffer.
+   * Create a {@link TFloat64} constant with data from the given buffer.
    *
    * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
    * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
@@ -332,8 +332,8 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a double constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  public static Constant<TDouble> create(Scope scope, long[] shape, DoubleBuffer data) {
-    try (Tensor<TDouble> value = Tensor.create(shape, data)) {
+  public static Constant<TFloat64> create(Scope scope, long[] shape, DoubleBuffer data) {
+    try (Tensor<TFloat64> value = Tensor.create(shape, data)) {
       return create(scope, value);
     }
   }

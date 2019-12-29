@@ -24,13 +24,13 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxArgs operation.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implements Operand<TFloat> {
+public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient}
@@ -87,7 +87,7 @@ public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxArgsGradient
    */
-  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat> gradients, Operand<TFloat> inputs, Options... options) {
+  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -143,16 +143,16 @@ public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implement
    * Backpropagated gradients below the FakeQuantWithMinMaxArgs operation:
    * `gradients * (inputs >= min && inputs <= max)`.
    */
-  public Output<TFloat> backprops() {
+  public Output<TFloat32> backprops() {
     return backprops;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return backprops;
   }
   
-  private Output<TFloat> backprops;
+  private Output<TFloat32> backprops;
   
   private FakeQuantWithMinMaxArgsGradient(Operation operation) {
     super(operation);

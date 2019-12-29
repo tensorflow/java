@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient of the crop_and_resize op wrt the input boxes tensor.
  */
 @Operator(group = "image")
-public final class CropAndResizeGradBoxes extends PrimitiveOp implements Operand<TFloat> {
+public final class CropAndResizeGradBoxes extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.CropAndResizeGradBoxes}
@@ -77,7 +77,7 @@ public final class CropAndResizeGradBoxes extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradBoxes
    */
-  public static <T extends TNumber> CropAndResizeGradBoxes create(Scope scope, Operand<TFloat> grads, Operand<T> image, Operand<TFloat> boxes, Operand<TInt32> boxInd, Options... options) {
+  public static <T extends TNumber> CropAndResizeGradBoxes create(Scope scope, Operand<TFloat32> grads, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradBoxes", scope.makeOpName("CropAndResizeGradBoxes"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(image.asOutput());
@@ -105,16 +105,16 @@ public final class CropAndResizeGradBoxes extends PrimitiveOp implements Operand
   /**
    * A 2-D tensor of shape `[num_boxes, 4]`.
    */
-  public Output<TFloat> output() {
+  public Output<TFloat32> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<TFloat32> output;
   
   private CropAndResizeGradBoxes(Operation operation) {
     super(operation);
