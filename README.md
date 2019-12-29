@@ -119,7 +119,9 @@ artifact includes transitively all the artifacts above as a single dependency:
 
 Be aware though that the native library is quite large and including too many versions of it may
 significantly increase  the size of your JAR. So it is good practice to limit your dependencies to
-the platforms you are targeting.
+the platforms you are targeting. For this purpose the `-platform` artifacts include profiles that follow
+the conventions established on this page:
+* [Reducing the Number of Dependencies](https://github.com/bytedeco/javacpp-presets/wiki/Reducing-the-Number-of-Dependencies)
 
 *Note: the `tensorflow-starters` artifact is not available at this moment*
 
