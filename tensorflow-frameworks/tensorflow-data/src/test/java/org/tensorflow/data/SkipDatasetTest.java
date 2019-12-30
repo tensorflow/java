@@ -19,8 +19,8 @@ public class SkipDatasetTest extends DatasetTestBase {
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
             Arrays.asList(
-                tf.val(testMatrix1),
-                tf.val(testMatrix2)),
+                tf.constant(testMatrix1),
+                tf.constant(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .skip(2);
 
@@ -34,5 +34,4 @@ public class SkipDatasetTest extends DatasetTestBase {
       count++;
     }
   }
-
 }

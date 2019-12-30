@@ -11,9 +11,6 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 
 public class DatasetTest extends DatasetTestBase {
-  private static void main(String[] args) {
-    new DatasetTest().testEagerDatasetIterator();
-  }
 
   @Test
   public void testEagerDatasetIterator() {
@@ -21,8 +18,8 @@ public class DatasetTest extends DatasetTestBase {
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
             Arrays.asList(
-                tf.val(testMatrix1),
-                tf.val(testMatrix2)),
+                tf.constant(testMatrix1),
+                tf.constant(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE));
 
     int count = 0;
@@ -44,13 +41,13 @@ public class DatasetTest extends DatasetTestBase {
       Dataset dataset = Dataset
           .fromTensorSlices(tf,
               Arrays.asList(
-                  tf.val(testMatrix1),
-                  tf.val(testMatrix2)),
+                  tf.constant(testMatrix1),
+                  tf.constant(testMatrix2)),
               Arrays.asList(TInt32.DTYPE, TInt32.DTYPE));
 
-      OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
-      Operation makeIterator = oneShotIterator.getMakeIteratorOp();
-      List<Output<?>> components = oneShotIterator.getComponents();
+      Pair<Operation, List<Output<?>>> graphIteratorComponents = dataset.makeOneShotIterator();
+      Operation makeIterator = graphIteratorComponents.first();
+      List<Output<?>> components = graphIteratorComponents.second();
 
       try (Session session = new Session(graph)) {
         session.runner()
@@ -79,4 +76,6 @@ public class DatasetTest extends DatasetTestBase {
       }
     }
   }
+
+
 }
