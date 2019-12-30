@@ -7,6 +7,7 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.data.*;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.utils.Pair;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;

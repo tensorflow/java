@@ -6,6 +6,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.utils.Pair;
 
 import java.util.Iterator;
 import java.util.List;
