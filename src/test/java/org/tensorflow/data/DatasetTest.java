@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.utils.Pair;
 
 import java.util.Arrays;
 import java.util.List;
