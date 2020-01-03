@@ -140,7 +140,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 case "linux-ppc64le":
                 case "linux-x86_64":
                 case "macosx-x86_64":
-                    lib += lib.equals("cudnn") ? "@.7" : lib.equals("nccl") ? "@.2" : lib.equals("nvinfer") ? "@.5" : lib.equals("cudart") ? "@.10.1" : "@.10";
+                    lib += lib.equals("cudnn") ? "@.7" : lib.equals("nccl") ? "@.2" : lib.equals("nvinfer") ? "@.6" : lib.equals("cudart") ? "@.10.1" : "@.10";
                     break;
                 case "windows-x86_64":
                     lib += lib.equals("cudnn") ? "64_7" : lib.equals("cudart") ? "64_101" : "64_10";

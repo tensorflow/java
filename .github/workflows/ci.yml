@@ -1,0 +1,105 @@
+name: CI jobs
+on: [push, pull_request]
+
+jobs:
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    container: nvidia/cuda:10.1-cudnn7-devel-centos7
+    strategy:
+      matrix:
+        ext: ["", -mkl, -gpu, -mkl-gpu]
+    steps:
+      - name: Install environment
+        run: |
+          yum -y update
+          yum -y install centos-release-scl-rh epel-release
+          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 rh-maven35 patch python36-devel python36-pip python36-six
+          echo Downloading Bazel
+          curl -L https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-installer-linux-x86_64.sh -o bazel.sh --retry 10
+          bash bazel.sh
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          source scl_source enable devtoolset-7 rh-git218 rh-maven35 || true
+          git --version
+          gcc --version
+          mvn -version
+          bazel version
+          df -h
+          echo Executing Maven without Wagon HTTP pool that fails under Docker
+          mvn clean install -B -U -e -Dmaven.wagon.http.pool=false -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          df -h
+  macosx-x86_64:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        ext: ["", -mkl]
+    steps:
+      - name: Install environment
+        run: |
+          python3 -m pip install six
+          echo Downloading Bazel
+          curl -L https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-installer-darwin-x86_64.sh -o bazel.sh --retry 10
+          bash bazel.sh
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          git --version
+          clang --version
+          mvn -version
+          bazel version
+          df -h
+          echo Executing Maven
+          mvn clean install -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          df -h
+  windows-x86_64:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        ext: ["", -mkl, -gpu, -mkl-gpu]
+    steps:
+      - name: Install environment
+        shell: cmd
+        run: |
+          python -m pip install six
+          echo Removing some unused stuff to avoid running out of disk space
+          rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
+          echo Removing old versions of MSVC that interfere with Bazel
+          bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
+          echo Downloading Bazel
+          mkdir C:\bazel
+          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          echo Installing CUDA
+          curl.exe -L http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_windows.exe -o cuda.exe
+          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.4/cudnn-10.1-windows7-x64-v7.6.4.38.zip -o cudnn.zip
+          cuda.exe -s
+          mkdir cuda
+          unzip.exe cudnn.zip
+          cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.1/"
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
+          set "CUDA_PATH_V10_1=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
+          set "PATH=C:\bazel;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\libnvvp;%PATH%"
+          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
+          set "TEST_TMPDIR=C:\tmp"
+          set "TMPDIR=C:\tmp"
+          set "TEMP=C:\tmp"
+          set "TMP=C:\tmp"
+          mkdir C:\tmp
+          git --version
+          cl
+          call mvn -version
+          bazel version
+          df -h
+          wmic pagefile list /format:list
+          echo Executing Maven
+          call mvn clean install -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          df -h
+          wmic pagefile list /format:list
