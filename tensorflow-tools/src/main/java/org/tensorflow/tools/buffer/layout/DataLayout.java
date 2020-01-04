@@ -14,38 +14,116 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a value of a given type to/from bytes
+ * Converts data stored in a buffer to a given type.
  *
- * @param <T> value type
+ * <p>{@code DataLayout} instances are used to define a custom format for storing and reading data
+ * of a {@link DataBuffer}. They provide a segregation layer between the type of data stored in the
+ * buffer (the <i>buffer</i> type) and the type of data manipulated by the end user (the
+ * <i>user</i> type).
+ *
+ * <p>Since the conversion methods are invoked for every value that is written or read, working
+ * with data layouts may have a negative impact on the performances so using primitive types directly
+ * should be preferred whenever possible.
+ *
+ * <p>It is also recommended to implement immutable data layouts so they can be reapplied to multiple
+ * buffers without reallocating a new instance for each of them. For example:
+ *
+ * <pre>{@code
+ * class BigIntegerBufferAllocator {
+ *
+ *     public DataBuffer<BigInteger> allocate(long size) {
+ *         return LAYOUT.applyTo(bufferOfLongs(size * LAYOUT.scale()));  // scale is 1 by default
+ *     }
+ *
+ *     private static final DataLayout<LongDataBuffer, BigInteger> LAYOUT = new DataLayout<LongDataBuffer, BigInteger>() {
+ *
+ *         @Override
+ *         public void writeObject(LongDataBuffer buffer, BigInteger value, long index) {
+ *             buffer.setLong(value.longValue(), index);
+ *         }
+ *
+ *         @Override
+ *         public BigInteger readObject(LongDataBuffer buffer, long index) {
+ *             return BigInteger.valueOf(buffer.getLong(index));
+ *         }
+ *     };
+ * }
+ * }</pre>
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @param <T> user data type of this layout
  */
-public interface DataLayout<T> {
+public interface DataLayout<S extends DataBuffer<?>, T> {
 
   /**
-   * Writes a value as bytes to the given buffer at its current position.
+   * Apply this layout to the provided buffer.
    *
-   * @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index index of the value to write
-   */
-  void writeValue(ByteDataBuffer buffer, T value, long index);
-
-  /**
-   * Reads a value as bytes from the given buffer at its current position.
+   * <p>The returned {@link DataBuffer} instance is simply a wrapper to the original buffer and does
+   * not have a backing storage of his own.
    *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index index of the value to read
-   * @return value
+   * @param buffer the target buffer to apply this layout to
+   * @return a buffer with this layout
    */
-  T readValue(ByteDataBuffer buffer, long index);
+  default DataBuffer<T> applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
 
   /**
-   * Returns the number of bytes required to represent a single value
+   * Writes a user value into the buffer at the given index after converting it to the buffer type.
+   *
+   * <p>It is the responsibility of the implementors of this interface to write the converted value
+   * to the given buffer before this call returns, using the most appropriate method. For example,
+   * for a layout converting a {@code BigInteger} to a single {@code long},
+   * <pre>{@code
+   *  @Override
+   *  public void writeObject(LongDataBuffer buffer, BigInteger value, long index) {
+   *    buffer.setLong(value.longValue(), index);
+   *  }
+   * }</pre>
+   * If a single user value scales over more than one buffer values, {@code index} indicates the
+   * starting position of the sequence to be written to the buffer.
+   *
+   * @param buffer the buffer to write to
+   * @param value the value in the user type to convert and write
+   * @param index index in the buffer where the converted value should be written
    */
-  int sizeInBytes();
+  void writeObject(S buffer, T value, long index);
+
+  /**
+   * Reads {@code n = scale()} values from the buffer at the given index and return them as a single
+   * value in the user type.
+   *
+   * <p>It is the responsibility of the implementors of this interface to read the value to be
+   * converted from the given buffer, using the most appropriate method. For example, for a layout
+   * that converting a single {@code long} to a {@code BigInteger},
+   * <pre>{@code
+   *  @Override
+   *  public BigInteger readObject(LongDataBuffer buffer, long index) {
+   *    return BigInteger.valueOf(buffer.getLong(index));
+   *  }
+   * }</pre>
+   * If a single user value scales over more than one buffer values, {@code index} indicates the
+   * starting position of the sequence to be read from the buffer.
+   *
+   * @param buffer the buffer to read from
+   * @param index position of the buffer to read in the buffer
+   * @return the converted value
+   */
+  T readObject(S buffer, long index);
+
+  /**
+   * Indicates the number of buffer values are required to represent a single user value, default is 1.
+   *
+   * <p>Scale must be positive and must be an integer, meaning that a single buffer value in a buffer cannot
+   * be used to represent more than one user value.
+   */
+  default int scale() {
+    return 1;
+  }
 }

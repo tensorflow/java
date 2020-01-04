@@ -18,6 +18,7 @@
 package org.tensorflow.internal.buffer;
 
 import org.bytedeco.javacpp.Pointer;
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
@@ -45,6 +46,10 @@ class TensorRawDataBufferFactory extends RawDataBufferFactory {
 
   static DoubleDataBuffer mapTensorToDoubles(Pointer tensorMemory) {
     return mapNativeDoubles(tensorMemory.address(), tensorMemory.capacity(), false);
+  }
+
+  static BooleanDataBuffer mapTensorToBooleans(Pointer tensorMemory) {
+    return mapNativeBooleans(tensorMemory.address(), tensorMemory.capacity(), false);
   }
 
   static StringTensorBuffer mapTensorToStrings(Pointer tensorMemory, long numElements) {

@@ -27,24 +27,19 @@ public class BooleanDataBufferAdapterTest extends BooleanDataBufferTestBase {
 
   @Override
   protected BooleanDataBuffer allocate(long size) {
-    return DataBuffers.ofBooleans(size, new TestBooleanLayout());
+    return LAYOUT.applyTo(DataBuffers.ofBytes(size * LAYOUT.scale()));
   }
 
-  private static class TestBooleanLayout implements BooleanDataLayout {
+  private static BooleanDataLayout<ByteDataBuffer> LAYOUT = new BooleanDataLayout<ByteDataBuffer>() {
 
     @Override
     public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
-      buffer.setObject((byte)(value ? 1 : 0), index);
+      buffer.setByte((byte)(value ? 1 : 0), index);
     }
 
     @Override
     public boolean readBoolean(ByteDataBuffer buffer, long index) {
-      return buffer.getObject(index) > 0;
+      return buffer.getByte(index) > 0;
     }
-
-    @Override
-    public int sizeInBytes() {
-      return 1;
-    }
-  }
+  };
 }

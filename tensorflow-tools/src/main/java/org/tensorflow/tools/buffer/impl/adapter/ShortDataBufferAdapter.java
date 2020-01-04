@@ -17,24 +17,24 @@
 
 package org.tensorflow.tools.buffer.impl.adapter;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.ShortDataLayout;
 
-class ShortDataBufferAdapter extends AbstractDataBufferAdapter<Short, ShortDataBuffer>
+class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Short, ShortDataBuffer>
     implements ShortDataBuffer {
 
   @Override
   public short getShort(long index) {
     Validator.getArgs(this, index);
-    return layout.readShort(buffer(), index * layout.sizeInBytes());
+    return layout.readShort(buffer(), index * layout.scale());
   }
 
   @Override
   public ShortDataBuffer setShort(short value, long index) {
     Validator.setArgs(this, index);
-    layout.writeShort(buffer(), value, index * layout.sizeInBytes());
+    layout.writeShort(buffer(), value, index * layout.scale());
     return this;
   }
 
@@ -42,7 +42,7 @@ class ShortDataBufferAdapter extends AbstractDataBufferAdapter<Short, ShortDataB
   public ShortDataBuffer read(short[] dst, int offset, int length) {
     Validator.readArgs(this, dst.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      dst[j] = layout.readShort(buffer(), i * layout.sizeInBytes());
+      dst[j] = layout.readShort(buffer(), i * layout.scale());
     }
     return this;
   }
@@ -51,25 +51,27 @@ class ShortDataBufferAdapter extends AbstractDataBufferAdapter<Short, ShortDataB
   public ShortDataBuffer write(short[] src, int offset, int length) {
     Validator.writeArgs(this, src.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      layout.writeShort(buffer(), src[j], i * layout.sizeInBytes());
+      layout.writeShort(buffer(), src[j], i * layout.scale());
     }
     return this;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public ShortDataBuffer offset(long index) {
-    return new ShortDataBufferAdapter(buffer().offset(index * layout.sizeInBytes()), layout);
+    return new ShortDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public ShortDataBuffer narrow(long size) {
-    return new ShortDataBufferAdapter(buffer().narrow(size * layout.sizeInBytes()), layout);
+    return new ShortDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
   }
 
-  ShortDataBufferAdapter(ByteDataBuffer physicalBuffer, ShortDataLayout layout) {
-    super(physicalBuffer, layout);
+  ShortDataBufferAdapter(S buffer, ShortDataLayout<S> layout) {
+    super(buffer, layout);
     this.layout = layout;
   }
 
-  private ShortDataLayout layout;
+  private ShortDataLayout<S> layout;
 }

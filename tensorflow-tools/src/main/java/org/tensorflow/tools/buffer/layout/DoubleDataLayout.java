@@ -14,40 +14,52 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a double to/from bytes
+ * A {@link DataLayout} that converts data stored in a buffer to doubles.
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @see DataLayout
  */
-public interface DoubleDataLayout extends DataLayout<Double> {
-
-  /**
-   * Writes a double as bytes to the given buffer at its current position.
-   *  @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index byte index of the value to write
-   */
-  void writeDouble(ByteDataBuffer buffer, double value, long index);
-
-  /**
-   * Reads a double as bytes from the given buffer at its current position.
-   *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index byte index of the value to read
-   * @return value
-   */
-  double readDouble(ByteDataBuffer buffer, long index);
+public interface DoubleDataLayout<S extends DataBuffer<?>> extends DataLayout<S, Double> {
 
   @Override
-  default void writeValue(ByteDataBuffer buffer, Double value, long index) {
+  default DoubleDataBuffer applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
+
+  /**
+   * Writes a double into the buffer at the given index after converting it to the buffer type.
+   *
+   * @param buffer the buffer to write to
+   * @param value the double to convert and write
+   * @param index index in the buffer where the converted value should be written
+   * @see #writeObject(DataBuffer, Double, long)
+   */
+  void writeDouble(S buffer, double value, long index);
+
+  /**
+   * Reads {@code n = scale()} buffer values at the given index and return them as a double.
+   *
+   * @param buffer the buffer to read from
+   * @param index position of the buffer to read in the buffer
+   * @return the double value
+   * @see #readObject(DataBuffer, long)
+   */
+  double readDouble(S buffer, long index);
+
+  @Override
+  default void writeObject(S buffer, Double value, long index) {
     writeDouble(buffer, value, index);
   }
 
   @Override
-  default Double readValue(ByteDataBuffer buffer, long index) {
+  default Double readObject(S buffer, long index) {
     return readDouble(buffer, index);
   }
 }

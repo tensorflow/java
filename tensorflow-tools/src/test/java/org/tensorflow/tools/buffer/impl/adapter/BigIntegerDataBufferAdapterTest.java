@@ -28,7 +28,7 @@ public class BigIntegerDataBufferAdapterTest extends DataBufferTestBase<BigInteg
 
   @Override
   protected DataBuffer<BigInteger> allocate(long size) {
-    return DataBuffers.ofObjects(size, new TestBigIntegerLayout());
+    return LAYOUT.applyTo(DataBuffers.ofBytes(size * LAYOUT.scale()));
   }
 
   @Override
@@ -41,27 +41,27 @@ public class BigIntegerDataBufferAdapterTest extends DataBufferTestBase<BigInteg
     return BigInteger.valueOf(val);
   }
 
-  private static class TestBigIntegerLayout implements DataLayout<BigInteger> {
+  private static DataLayout<ByteDataBuffer, BigInteger> LAYOUT = new DataLayout<ByteDataBuffer, BigInteger>() {
 
     @Override
-    public void writeValue(ByteDataBuffer buffer, BigInteger value, long index) {
+    public void writeObject(ByteDataBuffer buffer, BigInteger value, long index) {
       byte[] bytes = value.toByteArray();
-      buffer.setObject(bytes.length > 2 ? bytes[2] : 0, index);
-      buffer.setObject(bytes.length > 1 ? bytes[1] : 0, index + 1);
-      buffer.setObject(bytes[0], index + 2);
+      buffer.setByte(bytes.length > 2 ? bytes[2] : 0, index);
+      buffer.setByte(bytes.length > 1 ? bytes[1] : 0, index + 1);
+      buffer.setByte(bytes[0], index + 2);
     }
 
     @Override
-    public BigInteger readValue(ByteDataBuffer buffer, long index) {
-      byte byte2 = buffer.getObject(index);
-      byte byte1 = buffer.getObject(index + 1);
-      byte byte0 = buffer.getObject(index + 2);
+    public BigInteger readObject(ByteDataBuffer buffer, long index) {
+      byte byte2 = buffer.getByte(index);
+      byte byte1 = buffer.getByte(index + 1);
+      byte byte0 = buffer.getByte(index + 2);
       return new BigInteger(new byte[] { byte2, byte1, byte0 });
     }
 
     @Override
-    public int sizeInBytes() {
+    public int scale() {
       return 3;
     }
-  }
+  };
 }

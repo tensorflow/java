@@ -24,12 +24,14 @@ import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
 
 public final class TensorBuffers {
 
@@ -73,6 +75,16 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
+  public static BooleanDataBuffer toBooleans(TF_Tensor nativeTensor) {
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToBooleans(tensorMemory);
+    }
+    // There is no boolean buffers in Java NIO, so apply a layout that converts booleans
+    // from/to bytes when raw memory mapping is not available.
+    return BOOLEAN_LAYOUT.applyTo(DataBuffers.from(tensorMemory.asByteBuffer()));
+  }
+
   public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -96,4 +108,20 @@ public final class TensorBuffers {
   private static Pointer tensorMemory(TF_Tensor nativeTensor) {
     return TF_TensorData(nativeTensor).capacity(TF_TensorByteSize(nativeTensor));
   }
+
+  /**
+   * Basic data layout that converts booleans from/to bytes.
+   */
+  private static final BooleanDataLayout<ByteDataBuffer> BOOLEAN_LAYOUT = new BooleanDataLayout<ByteDataBuffer>() {
+
+    @Override
+    public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
+      buffer.setByte((byte)(value ? 0x1 : 0x0), index);
+    }
+
+    @Override
+    public boolean readBoolean(ByteDataBuffer buffer, long index) {
+      return buffer.getByte(index) > 0x0;
+    }
+  };
 }
