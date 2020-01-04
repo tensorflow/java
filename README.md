@@ -28,7 +28,7 @@ The following describes the layout of the repository and its different artifacts
   * All artifacts that build up the core language bindings of TensorFlow for Java. 
   * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
   
-* `tensorflow-utils`
+* `tensorflow-tools`
   * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes
   
 * `tensorflow-frameworks`
@@ -37,7 +37,7 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-starters`
   * Artifacts aggregating others for simplifying dependency management with TensorFlow
   
-*Note: Right now, only the `tensorflow-core` component is present*
+*Note: Right now, only the `tensorflow-core` and `tensorflow-tools` components are present*
   
 ## Building Sources
 
