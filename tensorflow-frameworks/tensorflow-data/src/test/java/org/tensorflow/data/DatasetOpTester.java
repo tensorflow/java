@@ -7,6 +7,7 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.data.*;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.utils.Tuple2;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
@@ -244,17 +245,15 @@ public class DatasetOpTester {
             .fromTensorSlices(tf, tensors, outputTypes)
             .batch(2);
 
-        Pair<Operation, List<Output<?>>> oneShotIterator = dataset.makeOneShotIterator();
-        Operation makeIteratorOp = oneShotIterator.first();
-        List<Output<?>> iteratorComponents = oneShotIterator.second();
+        OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
+        List<Output<?>> components = oneShotIterator.getComponents();
+        Operand<?> XOp = components.get(0);
+        Operand<?> yOp = components.get(1);
 
         // Run MakeIterator Op
         session.runner()
-            .addTarget(makeIteratorOp)
+            .addTarget(oneShotIterator.getMakeIteratorOp())
             .run();
-
-        Operand<?> XOp = iteratorComponents.get(0);
-        Operand<?> yOp = iteratorComponents.get(1);
 
         while (true) {
           try {

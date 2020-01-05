@@ -6,6 +6,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.utils.Tuple2;
 
 import java.util.Iterator;
 import java.util.List;
@@ -140,19 +141,18 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return A Pair whose first element is a MakeIterator Operation, and whose
    * second element is a list batch components.
    */
-  public Pair<Operation, List<Output<?>>> makeOneShotIterator() {
+  public OneShotIterator makeOneShotIterator() {
     if (!(tf.scope().env() instanceof Graph)) {
       throw new UnsupportedOperationException("One shot iterator should only be used in Graph mode.");
     }
     List<DataType<?>> outputTypes = getOutputTypes();
     List<Shape> outputShapes = getOutputShapes();
-    Operand<?> iterator = tf.data.iterator(
-        "graphIteratorSharedName", "graphIteratorContainer", outputTypes, outputShapes);
+    Operand<?> iterator = tf.data.iterator("graphIteratorSharedName", "graphIteratorContainer", outputTypes, outputShapes);
 
     MakeIterator makeIterator = tf.data.makeIterator(getVariant(), iterator);
     List<Output<?>> components = tf.data.iteratorGetNext(iterator, outputTypes, outputShapes).components();
 
-    return Pair.of(makeIterator.op(), components);
+    return new OneShotIterator(makeIterator, components);
   }
 
   public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> slices, List<DataType<?>> outputTypes) {
