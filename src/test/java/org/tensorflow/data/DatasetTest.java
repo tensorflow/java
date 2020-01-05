@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.utils.Pair;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +11,9 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 
 public class DatasetTest extends DatasetTestBase {
+  private static void main(String[] args) {
+    new DatasetTest().testEagerDatasetIterator();
+  }
 
   @Test
   public void testEagerDatasetIterator() {
@@ -46,9 +48,9 @@ public class DatasetTest extends DatasetTestBase {
                   tf.constant(testMatrix2)),
               Arrays.asList(TInt32.DTYPE, TInt32.DTYPE));
 
-      Pair<Operation, List<Output<?>>> graphIteratorComponents = dataset.makeOneShotIterator();
-      Operation makeIterator = graphIteratorComponents.first();
-      List<Output<?>> components = graphIteratorComponents.second();
+      OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
+      Operation makeIterator = oneShotIterator.getMakeIteratorOp();
+      List<Output<?>> components = oneShotIterator.getComponents();
 
       try (Session session = new Session(graph)) {
         session.runner()
