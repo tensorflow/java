@@ -19,21 +19,17 @@ package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.DataType;
-import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
  */
-@Operator(group = "data")
-public final class AnonymousIterator extends PrimitiveOp implements Operand<TType> {
+public final class AnonymousIterator extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new AnonymousIterator operation.
@@ -44,7 +40,7 @@ public final class AnonymousIterator extends PrimitiveOp implements Operand<TTyp
    * @return a new instance of AnonymousIterator
    */
   public static AnonymousIterator create(Scope scope, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIterator", scope.makeOpName("AnonymousIterator"));
+    OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -69,17 +65,20 @@ public final class AnonymousIterator extends PrimitiveOp implements Operand<TTyp
     return handle;
   }
   
-  @Override
-  @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) handle;
+  /**
+   * A variant deleter that should be passed into the op that deletes the iterator.
+   */
+  public Output<?> deleter() {
+    return deleter;
   }
   
   private Output<?> handle;
+  private Output<?> deleter;
   
   private AnonymousIterator(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
+    deleter = operation.output(outputIdx++);
   }
 }

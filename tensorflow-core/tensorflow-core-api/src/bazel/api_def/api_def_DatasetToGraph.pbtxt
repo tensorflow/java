@@ -1,6 +1,4 @@
 op {
   graph_op_name: "DatasetToGraph"
-  endpoint {
-    name: "data.DatasetToGraph"
-  }
+  visibility: SKIP
 }

@@ -72,8 +72,7 @@ import org.tensorflow.types.family.TType;
  *     updates = tf.constant([9, 10, 11, 12])
  *     shape = tf.constant([8])
  *     scatter = tf.scatter_nd(indices, updates, shape)
- *     with tf.Session() as sess:
- *       print(sess.run(scatter))
+ *     print(scatter)
  * }</pre>
  * The resulting tensor would look like this:
  * <p>
@@ -96,8 +95,7 @@ import org.tensorflow.types.family.TType;
  *                             [7, 7, 7, 7], [8, 8, 8, 8]]])
  *     shape = tf.constant([4, 4, 4])
  *     scatter = tf.scatter_nd(indices, updates, shape)
- *     with tf.Session() as sess:
- *       print(sess.run(scatter))
+ *     print(scatter)
  * }</pre>
  * The resulting tensor would look like this:
  * <p>

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalSqlDataset"
+  endpoint {
+    name: "data.experimental.SqlDataset"
+  }
+}

@@ -61,6 +61,11 @@ public final class DataType<T extends TType> {
     return name;
   }
 
+  @Override
+  public String toString() {
+    return name + "(" + nativeCode + ")";
+  }
+
   /**
    * Returns the numeric code for this datatype, as recognized by the native library (C API)
    */

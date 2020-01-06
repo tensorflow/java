@@ -26,9 +26,10 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Performs beam search decoding on the logits given in input.
@@ -38,9 +39,11 @@ import org.tensorflow.types.TInt64;
  * the first of these is emitted.  That is, when the top path is "A B B B B",
  * "A B" is returned if merge_repeated = True but "A B B B B" is
  * returned if merge_repeated = False.
+ * 
+ * @param <T> data type for {@code logProbability()} output
  */
 @Operator(group = "nn")
-public final class CtcBeamSearchDecoder extends PrimitiveOp {
+public final class CtcBeamSearchDecoder<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CtcBeamSearchDecoder}
@@ -72,7 +75,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcBeamSearchDecoder
    */
-  public static CtcBeamSearchDecoder create(Scope scope, Operand<TFloat> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
+  public static <T extends TNumber> CtcBeamSearchDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -86,7 +89,7 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
         }
       }
     }
-    return new CtcBeamSearchDecoder(opBuilder.build());
+    return new CtcBeamSearchDecoder<T>(opBuilder.build());
   }
   
   /**
@@ -127,14 +130,14 @@ public final class CtcBeamSearchDecoder extends PrimitiveOp {
    * A matrix, shaped: `(batch_size x top_paths)`.  The
    * sequence log-probabilities.
    */
-  public Output<TFloat> logProbability() {
+  public Output<T> logProbability() {
     return logProbability;
   }
   
   private List<Output<TInt64>> decodedIndices;
   private List<Output<TInt64>> decodedValues;
   private List<Output<TInt64>> decodedShape;
-  private Output<TFloat> logProbability;
+  private Output<T> logProbability;
   
   @SuppressWarnings("unchecked")
   private CtcBeamSearchDecoder(Operation operation) {

@@ -24,18 +24,21 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
  * <p>
  * the gradient.  This class performs the softmax operation for you, so inputs
  * should be e.g. linear projections of outputs by an LSTM.
+ * 
+ * @param <T> data type for {@code loss()} output
  */
 @Operator(group = "nn")
-public final class CtcLoss extends PrimitiveOp {
+public final class CtcLoss<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CtcLoss}
@@ -92,7 +95,7 @@ public final class CtcLoss extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcLoss
    */
-  public static CtcLoss create(Scope scope, Operand<TFloat> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
+  public static <T extends TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
@@ -112,7 +115,7 @@ public final class CtcLoss extends PrimitiveOp {
         }
       }
     }
-    return new CtcLoss(opBuilder.build());
+    return new CtcLoss<T>(opBuilder.build());
   }
   
   /**
@@ -144,7 +147,7 @@ public final class CtcLoss extends PrimitiveOp {
   /**
    * A vector (batch) containing log-probabilities.
    */
-  public Output<TFloat> loss() {
+  public Output<T> loss() {
     return loss;
   }
   
@@ -152,12 +155,12 @@ public final class CtcLoss extends PrimitiveOp {
    * The gradient of `loss`.  3-D, shape:
    * `(max_time x batch_size x num_classes)`.
    */
-  public Output<TFloat> gradient() {
+  public Output<T> gradient() {
     return gradient;
   }
   
-  private Output<TFloat> loss;
-  private Output<TFloat> gradient;
+  private Output<T> loss;
+  private Output<T> gradient;
   
   private CtcLoss(Operation operation) {
     super(operation);

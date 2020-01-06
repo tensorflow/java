@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AllToAll"
+  endpoint {
+    name: "tpu.AllToAll"
+  }
+}

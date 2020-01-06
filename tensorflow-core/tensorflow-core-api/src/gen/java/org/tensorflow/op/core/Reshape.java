@@ -33,13 +33,16 @@ import org.tensorflow.types.family.TType;
  * Given `tensor`, this operation returns a tensor that has the same values
  * as `tensor` with shape `shape`.
  * <p>
- * If one component of `shape` is the special value -1, the size of that dimension
- * is computed so that the total size remains constant.  In particular, a `shape`
- * of `[-1]` flattens into 1-D.  At most one component of `shape` can be -1.
+ * If one component of 1-D tensor `shape` is the special value -1, the size of that
+ * dimension is computed so that the total size remains constant.  In particular, a
+ * `shape` of `[-1]` flattens into 1-D.  At most one component of `shape` may be
+ * unknown.
  * <p>
- * If `shape` is 1-D or higher, then the operation returns a tensor with shape
+ * The `shape` must be 1-D and the operation returns a tensor with shape
  * `shape` filled with the values of `tensor`. In this case, the number of elements
  * implied by `shape` must be the same as the number of elements in `tensor`.
+ * <p>
+ * It is an error if `shape` is not 1-D.
  * <p>
  * For example:
  * <pre>{@code

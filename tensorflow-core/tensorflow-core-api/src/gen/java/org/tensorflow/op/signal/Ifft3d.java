@@ -41,7 +41,7 @@ public final class Ifft3d<T extends TType> extends PrimitiveOp implements Operan
    * Factory method to create a class wrapping a new Ifft3d operation.
    * 
    * @param scope current scope
-   * @param input A complex64 tensor.
+   * @param input A complex tensor.
    * @return a new instance of Ifft3d
    */
   public static <T extends TType> Ifft3d<T> create(Scope scope, Operand<T> input) {
@@ -52,7 +52,7 @@ public final class Ifft3d<T extends TType> extends PrimitiveOp implements Operan
   }
   
   /**
-   * A complex64 tensor of the same shape as `input`. The inner-most 3
+   * A complex tensor of the same shape as `input`. The inner-most 3
    *   dimensions of `input` are replaced with their inverse 3D Fourier transform.
    * <p>
    * @compatibility(numpy)

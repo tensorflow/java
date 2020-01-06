@@ -92,7 +92,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
    * @return a new instance of FusedBatchNorm
    */
   public static <T extends TNumber, U extends TNumber> FusedBatchNorm<T, U> create(Scope scope, Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormV2", scope.makeOpName("FusedBatchNorm"));
+    OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormV3", scope.makeOpName("FusedBatchNorm"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(offset.asOutput());
@@ -176,11 +176,20 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     return reserveSpace2;
   }
   
+  /**
+   * A 1D Tensor for some intermediate results, to be reused in the gradient
+   * computation for better efficiency.
+   */
+  public Output<U> reserveSpace3() {
+    return reserveSpace3;
+  }
+  
   private Output<T> y;
   private Output<U> batchMean;
   private Output<U> batchVariance;
   private Output<U> reserveSpace1;
   private Output<U> reserveSpace2;
+  private Output<U> reserveSpace3;
   
   private FusedBatchNorm(Operation operation) {
     super(operation);
@@ -190,5 +199,6 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     batchVariance = operation.output(outputIdx++);
     reserveSpace1 = operation.output(outputIdx++);
     reserveSpace2 = operation.output(outputIdx++);
+    reserveSpace3 = operation.output(outputIdx++);
   }
 }

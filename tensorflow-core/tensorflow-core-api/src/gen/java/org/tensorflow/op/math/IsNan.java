@@ -34,6 +34,13 @@ import org.tensorflow.types.family.TType;
  * @compatibility(numpy)
  * Equivalent to np.isnan
  * @end_compatibility
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5.0, np.nan, 6.8, np.nan, np.inf])
+ * tf.math.is_nan(x) ==> [False, True, False, True, False]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class IsNan extends PrimitiveOp implements Operand<TBool> {

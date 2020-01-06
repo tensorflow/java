@@ -28,6 +28,11 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear: `max(features, 0)`.
+ * <p>
+ * See: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
+ * Example usage:
+ * >>> tf.nn.relu([-2., 0., -0., 3.]).numpy()
+ * array([ 0.,  0., -0.,  3.], dtype=float32)
  * 
  * @param <T> data type for {@code activations()} output
  */

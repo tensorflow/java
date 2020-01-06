@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RetrieveTPUEmbeddingMomentumParametersGradAccumDebug"
+  endpoint {
+    name: "tpu.RetrieveTPUEmbeddingMomentumParametersGradAccumDebug"
+  }
+}

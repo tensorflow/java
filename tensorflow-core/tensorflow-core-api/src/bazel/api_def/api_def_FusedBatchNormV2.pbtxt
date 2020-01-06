@@ -1,6 +1,4 @@
 op {
   graph_op_name: "FusedBatchNormV2"
-  endpoint {
-    name: "nn.FusedBatchNorm"
-  }
+  visibility: SKIP
 }

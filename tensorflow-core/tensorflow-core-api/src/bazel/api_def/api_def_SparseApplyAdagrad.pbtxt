@@ -1,6 +1,4 @@
 op {
   graph_op_name: "SparseApplyAdagrad"
-  endpoint {
-    name: "train.SparseApplyAdagrad"
-  }
+  visibility: SKIP
 }

@@ -95,16 +95,20 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
    * gradient computation. When is_training is False, a 1D Tensor
    * for the population variance to be reused in both 1st and 2nd
    * order gradient computation.
+   * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
+   * in gradient computation. When is_training is False, a dummy empty Tensor will be
+   * created.
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNormGrad
    */
-  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV2", scope.makeOpName("FusedBatchNormGrad"));
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(reserveSpace1.asOutput());
     opBuilder.addInput(reserveSpace2.asOutput());
+    opBuilder.addInput(reserveSpace3.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -169,23 +173,23 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
   /**
    * Unused placeholder to match the mean input in FusedBatchNorm.
    */
-  public Output<U> reserveSpace3() {
-    return reserveSpace3;
+  public Output<U> reserveSpace4() {
+    return reserveSpace4;
   }
   
   /**
    * Unused placeholder to match the variance input
    * in FusedBatchNorm.
    */
-  public Output<U> reserveSpace4() {
-    return reserveSpace4;
+  public Output<U> reserveSpace5() {
+    return reserveSpace5;
   }
   
   private Output<T> xBackprop;
   private Output<U> scaleBackprop;
   private Output<U> offsetBackprop;
-  private Output<U> reserveSpace3;
   private Output<U> reserveSpace4;
+  private Output<U> reserveSpace5;
   
   private FusedBatchNormGrad(Operation operation) {
     super(operation);
@@ -193,7 +197,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     xBackprop = operation.output(outputIdx++);
     scaleBackprop = operation.output(outputIdx++);
     offsetBackprop = operation.output(outputIdx++);
-    reserveSpace3 = operation.output(outputIdx++);
     reserveSpace4 = operation.output(outputIdx++);
+    reserveSpace5 = operation.output(outputIdx++);
   }
 }

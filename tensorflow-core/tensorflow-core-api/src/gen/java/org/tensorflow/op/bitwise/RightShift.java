@@ -60,7 +60,7 @@ import org.tensorflow.types.family.TType;
  * lhs = np.array([-2, 64, 101, 32], dtype=np.int8)
  * rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
  * bitwise_ops.right_shift(lhs, rhs)
- * # <tf.Tensor: id=151, shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
+ * # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
  * }</pre>
  * 
  * 

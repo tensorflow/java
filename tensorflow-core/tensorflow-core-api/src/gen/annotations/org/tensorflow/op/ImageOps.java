@@ -6,6 +6,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.image.AdjustContrast;
 import org.tensorflow.op.image.AdjustHue;
 import org.tensorflow.op.image.AdjustSaturation;
+import org.tensorflow.op.image.CombinedNonMaxSuppression;
 import org.tensorflow.op.image.CropAndResize;
 import org.tensorflow.op.image.CropAndResizeGradBoxes;
 import org.tensorflow.op.image.CropAndResizeGradImage;
@@ -32,6 +33,7 @@ import org.tensorflow.op.image.ResizeBilinear;
 import org.tensorflow.op.image.ResizeNearestNeighbor;
 import org.tensorflow.op.image.RgbToHsv;
 import org.tensorflow.op.image.SampleDistortedBoundingBox;
+import org.tensorflow.op.image.ScaleAndTranslate;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -57,12 +59,13 @@ public final class ImageOps {
    *
    * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
    * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
+   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
    * @return a new instance of DrawBoundingBoxes
    * @see org.tensorflow.op.image.DrawBoundingBoxes
    */
   public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
-      Operand<TFloat> boxes) {
-    return DrawBoundingBoxes.create(scope, images, boxes);
+      Operand<TFloat> boxes, Operand<TFloat> colors) {
+    return DrawBoundingBoxes.create(scope, images, boxes, colors);
   }
 
   /**
@@ -213,6 +216,42 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link ScaleAndTranslate} operation
+   *
+   * @param images 
+   * @param size 
+   * @param scale 
+   * @param translation 
+   * @param options carries optional attributes values
+   * @return a new instance of ScaleAndTranslate
+   * @see org.tensorflow.op.image.ScaleAndTranslate
+   */
+  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
+      Operand<TInt32> size, Operand<TFloat> scale, Operand<TFloat> translation,
+      ScaleAndTranslate.Options... options) {
+    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
+  }
+
+  /**
+   * Builds an {@link NonMaxSuppression} operation
+   *
+   * @param boxes A 2-D float tensor of shape `[num_boxes, 4]`.
+   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
+   * @param maxOutputSize A scalar integer tensor representing the maximum number of
+   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
+   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @param softNmsSigma A 0-D float tensor representing the sigma parameter for Soft NMS; see Bodla et
+   * @param options carries optional attributes values
+   * @return a new instance of NonMaxSuppression
+   * @see org.tensorflow.op.image.NonMaxSuppression
+   */
+  public <T extends TNumber> NonMaxSuppression<T> nonMaxSuppression(Operand<T> boxes,
+      Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold,
+      Operand<T> scoreThreshold, Operand<T> softNmsSigma, NonMaxSuppression.Options... options) {
+    return NonMaxSuppression.create(scope, boxes, scores, maxOutputSize, iouThreshold, scoreThreshold, softNmsSigma, options);
+  }
+
+  /**
    * Builds an {@link ExtractJpegShape} operation
    *
    * @param contents 0-D. The JPEG-encoded image.
@@ -252,6 +291,26 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link CombinedNonMaxSuppression} operation
+   *
+   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
+   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
+   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
+   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
+   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
+   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @param options carries optional attributes values
+   * @return a new instance of CombinedNonMaxSuppression
+   * @see org.tensorflow.op.image.CombinedNonMaxSuppression
+   */
+  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat> boxes,
+      Operand<TFloat> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
+      Operand<TFloat> iouThreshold, Operand<TFloat> scoreThreshold,
+      CombinedNonMaxSuppression.Options... options) {
+    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
+  }
+
+  /**
    * Builds an {@link ResizeArea} operation
    *
    * @param images 4-D with shape `[batch, height, width, channels]`.
@@ -275,24 +334,6 @@ public final class ImageOps {
    */
   public <T extends TNumber> EncodePng encodePng(Operand<T> image, EncodePng.Options... options) {
     return EncodePng.create(scope, image, options);
-  }
-
-  /**
-   * Builds an {@link NonMaxSuppression} operation
-   *
-   * @param boxes A 2-D float tensor of shape `[num_boxes, 4]`.
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
-   * @param maxOutputSize A scalar integer tensor representing the maximum number of
-   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
-   * @param options carries optional attributes values
-   * @return a new instance of NonMaxSuppression
-   * @see org.tensorflow.op.image.NonMaxSuppression
-   */
-  public <T extends TNumber, U extends TNumber> NonMaxSuppression nonMaxSuppression(
-      Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<U> iouThreshold,
-      Operand<U> scoreThreshold, NonMaxSuppression.Options... options) {
-    return NonMaxSuppression.create(scope, boxes, scores, maxOutputSize, iouThreshold, scoreThreshold, options);
   }
 
   /**

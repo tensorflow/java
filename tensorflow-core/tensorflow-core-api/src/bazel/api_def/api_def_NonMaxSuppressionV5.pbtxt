@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "NonMaxSuppressionV5"
+  endpoint {
+    name: "image.NonMaxSuppression"
+  }
+}

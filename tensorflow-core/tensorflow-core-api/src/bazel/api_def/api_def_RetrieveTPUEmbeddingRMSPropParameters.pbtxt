@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RetrieveTPUEmbeddingRMSPropParameters"
+  endpoint {
+    name: "tpu.RetrieveTPUEmbeddingRMSPropParameters"
+  }
+}

@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * `pos` with a total length of `len`.
  * <p>
  * If `len` defines a substring that would extend beyond the length of the input
- * string, then as many characters as possible are used.
+ * string, or if `len` is negative, then as many characters as possible are used.
  * <p>
  * A negative `pos` indicates distance within the string backwards from the end.
  * <p>

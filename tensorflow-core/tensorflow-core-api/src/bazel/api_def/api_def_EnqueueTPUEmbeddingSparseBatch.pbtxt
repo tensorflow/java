@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "EnqueueTPUEmbeddingSparseBatch"
+  endpoint {
+    name: "tpu.EnqueueTPUEmbeddingSparseBatch"
+  }
+}

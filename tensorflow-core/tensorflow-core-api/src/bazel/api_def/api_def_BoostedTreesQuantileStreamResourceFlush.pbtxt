@@ -1,3 +1,6 @@
 op {
   graph_op_name: "BoostedTreesQuantileStreamResourceFlush"
+  endpoint {
+    name: "estimator.BoostedTreesQuantileStreamResourceFlush"
+  }
 }

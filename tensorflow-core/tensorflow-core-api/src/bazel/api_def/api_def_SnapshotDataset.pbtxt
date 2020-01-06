@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SnapshotDataset"
+  endpoint {
+    name: "data.SnapshotDataset"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "PrelinearizeTuple"
+  endpoint {
+    name: "tpu.PrelinearizeTuple"
+  }
+}

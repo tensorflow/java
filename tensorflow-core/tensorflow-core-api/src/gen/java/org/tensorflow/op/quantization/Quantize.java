@@ -76,45 +76,70 @@ import org.tensorflow.types.family.TType;
  * `SCALED` mode matches the quantization approach used in
  * `QuantizeAndDequantize{V2|V3}`.
  * <p>
- * If the mode is `SCALED`, we do not use the full range of the output type,
- * choosing to elide the lowest possible value for symmetry (e.g., output range is
- * -127 to 127, not -128 to 127 for signed 8 bit quantization), so that 0.0 maps to
- * 0.
+ * If the mode is `SCALED`, the quantization is performed by multiplying each
+ * input value by a scaling_factor.
+ * The scaling_factor is determined from `min_range` and `max_range` to be as large
+ * as possible such that the range from `min_range` to `max_range` is representable
+ * within values of type T.
+ * <pre>{@code
+ *   const int min_T = std::numeric_limits<T>::min();
+ *   const int max_T = std::numeric_limits<T>::max();
+ *   const float max_float = std::numeric_limits<float>::max();
+ * 
+ *   const float scale_factor_from_min_side =
+ *       (min_T * min_range > 0) ? min_T / min_range : max_float;
+ *   const float scale_factor_from_max_side =
+ *       (max_T * max_range > 0) ? max_T / max_range : max_float;
+ * 
+ *   const float scale_factor = std::min(scale_factor_from_min_side,
+ *                                       scale_factor_from_max_side);
+ * }</pre>
+ * We next use the scale_factor to adjust min_range and max_range as follows:
+ * <pre>{@code
+ *       min_range = min_T / scale_factor;
+ *       max_range = max_T / scale_factor;
+ * }</pre>
+ * e.g. if T = qint8, and initially min_range = -10, and max_range = 9, we would
+ * compare -128/-10.0 = 12.8 to 127/9.0 = 14.11, and set scaling_factor = 12.8
+ * In this case, min_range would remain -10, but max_range would be adjusted to
+ * 127 / 12.8 = 9.921875
  * <p>
- * We first find the range of values in our tensor. The
- * range we use is always centered on 0, so we find m such that
- * <pre>{@code
- *   m = max(abs(input_min), abs(input_max))
- * }</pre>
- * Our input tensor range is then `[-m, m]`.
+ * So we will quantize input values in the range (-10, 9.921875) to (-128, 127).
  * <p>
- * Next, we choose our fixed-point quantization buckets, `[min_fixed, max_fixed]`.
- * If T is signed, this is
+ * The input tensor can now be quantized by clipping values to the range
+ * `min_range` to `max_range`, then multiplying by scale_factor as follows:
  * <pre>{@code
- *   num_bits = sizeof(T) * 8
- *   [min_fixed, max_fixed] =
- *       [-(1 << (num_bits - 1) - 1), (1 << (num_bits - 1)) - 1]
+ * result = round(min(max_range, max(min_range, input)) * scale_factor)
  * }</pre>
- * Otherwise, if T is unsigned, the fixed-point range is
- * <pre>{@code
- *   [min_fixed, max_fixed] = [0, (1 << num_bits) - 1]
- * }</pre>
- * From this we compute our scaling factor, s:
- * <pre>{@code
- *   s = (max_fixed - min_fixed) / (2 * m)
- * }</pre>
- * Now we can quantize the elements of our tensor:
- * <pre>{@code
- * result = round(input * s)
- * }</pre>
- * One thing to watch out for is that the operator may choose to adjust the
- * requested minimum and maximum values slightly during the quantization process,
- * so you should always use the output ports as the range for further calculations.
- * For example, if the requested minimum and maximum values are close to equal,
- * they will be separated by a small epsilon value to prevent ill-formed quantized
- * buffers from being created. Otherwise, you can end up with buffers where all the
- * quantized values map to the same float value, which causes problems for
- * operations that have to perform further calculations on them.
+ * The adjusted `min_range` and `max_range` are returned as outputs 2 and 3 of
+ * this operation. These outputs should be used as the range for any further
+ * calculations.
+ * <p>
+ * <i>narrow_range (bool) attribute</i>
+ * <p>
+ * If true, we do not use the minimum quantized value.
+ * i.e. for int8 the quantized output, it would be restricted to the range
+ * -127..127 instead of the full -128..127 range.
+ * This is provided for compatibility with certain inference backends.
+ * (Only applies to SCALED mode)
+ * <p>
+ * <i>axis (int) attribute</i>
+ * <p>
+ * An optional `axis` attribute can specify a dimension index of the input tensor,
+ * such that quantization ranges will be calculated and applied separately for each
+ * slice of the tensor along that dimension. This is useful for per-channel
+ * quantization.
+ * <p>
+ * If axis is specified, min_range and max_range
+ * <p>
+ * if `axis`=None, per-tensor quantization is performed as normal.
+ * <p>
+ * <i>ensure_minimum_range (float) attribute</i>
+ * <p>
+ * Ensures the minimum quantization range is at least this value.
+ * The legacy default value for this is 0.01, but it is strongly suggested to
+ * set it to 0 for new uses.
+ * 
  * 
  * @param <T> data type for {@code output()} output
  */
@@ -142,8 +167,35 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
       return this;
     }
     
+    /**
+     * @param narrowRange 
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
+    
+    /**
+     * @param axis 
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
+    
+    /**
+     * @param ensureMinimumRange 
+     */
+    public Options ensureMinimumRange(Float ensureMinimumRange) {
+      this.ensureMinimumRange = ensureMinimumRange;
+      return this;
+    }
+    
     private String mode;
     private String roundMode;
+    private Boolean narrowRange;
+    private Long axis;
+    private Float ensureMinimumRange;
     
     private Options() {
     }
@@ -154,8 +206,14 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
    * 
    * @param scope current scope
    * @param input 
-   * @param minRange The minimum scalar value possibly produced for the input.
-   * @param maxRange The maximum scalar value possibly produced for the input.
+   * @param minRange The minimum value of the quantization range. This value may be adjusted by the
+   * op depending on other parameters. The adjusted value is written to `output_min`.
+   * If the `axis` attribute is specified, this must be a 1-D tensor whose size
+   * matches the `axis` dimension of the input and output tensors.
+   * @param maxRange The maximum value of the quantization range. This value may be adjusted by the
+   * op depending on other parameters. The adjusted value is written to `output_max`.
+   * If the `axis` attribute is specified, this must be a 1-D tensor whose size
+   * matches the `axis` dimension of the input and output tensors.
    * @param T 
    * @param options carries optional attributes values
    * @return a new instance of Quantize
@@ -174,6 +232,15 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
         }
         if (opts.roundMode != null) {
           opBuilder.setAttr("round_mode", opts.roundMode);
+        }
+        if (opts.narrowRange != null) {
+          opBuilder.setAttr("narrow_range", opts.narrowRange);
+        }
+        if (opts.axis != null) {
+          opBuilder.setAttr("axis", opts.axis);
+        }
+        if (opts.ensureMinimumRange != null) {
+          opBuilder.setAttr("ensure_minimum_range", opts.ensureMinimumRange);
         }
       }
     }
@@ -195,6 +262,27 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
   }
   
   /**
+   * @param narrowRange 
+   */
+  public static Options narrowRange(Boolean narrowRange) {
+    return new Options().narrowRange(narrowRange);
+  }
+  
+  /**
+   * @param axis 
+   */
+  public static Options axis(Long axis) {
+    return new Options().axis(axis);
+  }
+  
+  /**
+   * @param ensureMinimumRange 
+   */
+  public static Options ensureMinimumRange(Float ensureMinimumRange) {
+    return new Options().ensureMinimumRange(ensureMinimumRange);
+  }
+  
+  /**
    * The quantized data produced from the float input.
    */
   public Output<T> output() {
@@ -202,14 +290,20 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
   }
   
   /**
-   * The actual minimum scalar value used for the output.
+   * The final quantization range minimum, used to clip input values before scaling
+   * and rounding them to quantized values.
+   * If the `axis` attribute is specified, this will be a 1-D tensor whose size
+   * matches the `axis` dimension of the input and output tensors.
    */
   public Output<TFloat> outputMin() {
     return outputMin;
   }
   
   /**
-   * The actual maximum scalar value used for the output.
+   * The final quantization range maximum, used to clip input values before scaling
+   * and rounding them to quantized values.
+   * If the `axis` attribute is specified, this will be a 1-D tensor whose size
+   * matches the `axis` dimension of the input and output tensors.
    */
   public Output<TFloat> outputMax() {
     return outputMax;

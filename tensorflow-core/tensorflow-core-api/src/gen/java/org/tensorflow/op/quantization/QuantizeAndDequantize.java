@@ -68,9 +68,18 @@ public final class QuantizeAndDequantize<T extends TNumber> extends PrimitiveOp 
       return this;
     }
     
+    /**
+     * @param axis 
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
+    
     private Boolean signedInput;
     private Boolean rangeGiven;
     private Boolean narrowRange;
+    private Long axis;
     
     private Options() {
     }
@@ -105,6 +114,9 @@ public final class QuantizeAndDequantize<T extends TNumber> extends PrimitiveOp 
         if (opts.narrowRange != null) {
           opBuilder.setAttr("narrow_range", opts.narrowRange);
         }
+        if (opts.axis != null) {
+          opBuilder.setAttr("axis", opts.axis);
+        }
       }
     }
     return new QuantizeAndDequantize<T>(opBuilder.build());
@@ -129,6 +141,13 @@ public final class QuantizeAndDequantize<T extends TNumber> extends PrimitiveOp 
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
+  }
+  
+  /**
+   * @param axis 
+   */
+  public static Options axis(Long axis) {
+    return new Options().axis(axis);
   }
   
   /**

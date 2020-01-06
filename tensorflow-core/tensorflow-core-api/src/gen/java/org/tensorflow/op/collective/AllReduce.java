@@ -47,7 +47,16 @@ public final class AllReduce<T extends TNumber> extends PrimitiveOp implements O
       return this;
     }
     
+    /**
+     * @param communicationHint 
+     */
+    public Options communicationHint(String communicationHint) {
+      this.communicationHint = communicationHint;
+      return this;
+    }
+    
     private List<Long> waitFor;
+    private String communicationHint;
     
     private Options() {
     }
@@ -90,6 +99,9 @@ public final class AllReduce<T extends TNumber> extends PrimitiveOp implements O
           }
           opBuilder.setAttr("wait_for", waitForArray);
         }
+        if (opts.communicationHint != null) {
+          opBuilder.setAttr("communication_hint", opts.communicationHint);
+        }
       }
     }
     return new AllReduce<T>(opBuilder.build());
@@ -100,6 +112,13 @@ public final class AllReduce<T extends TNumber> extends PrimitiveOp implements O
    */
   public static Options waitFor(List<Long> waitFor) {
     return new Options().waitFor(waitFor);
+  }
+  
+  /**
+   * @param communicationHint 
+   */
+  public static Options communicationHint(String communicationHint) {
+    return new Options().communicationHint(communicationHint);
   }
   
   /**

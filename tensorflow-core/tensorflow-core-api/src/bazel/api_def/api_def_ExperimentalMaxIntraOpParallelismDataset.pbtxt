@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalMaxIntraOpParallelismDataset"
+  endpoint {
+    name: "data.experimental.MaxIntraOpParallelismDataset"
+  }
+}

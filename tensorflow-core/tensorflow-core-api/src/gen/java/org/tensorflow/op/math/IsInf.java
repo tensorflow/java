@@ -34,6 +34,13 @@ import org.tensorflow.types.family.TType;
  * @compatibility(numpy)
  * Equivalent to np.isinf
  * @end_compatibility
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5.0, np.inf, 6.8, np.inf])
+ * tf.math.is_inf(x) ==> [False, True, False, True]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class IsInf extends PrimitiveOp implements Operand<TBool> {

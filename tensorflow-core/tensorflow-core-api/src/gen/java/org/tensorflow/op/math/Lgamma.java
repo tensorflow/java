@@ -29,6 +29,16 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the log of the absolute value of `Gamma(x)` element-wise.
+ * <p>
+ *   For positive numbers, this function computes log((input - 1)!) for every element in the tensor.
+ *   `lgamma(5) = log((5-1)!) = log(4!) = log(24) = 3.1780539`
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([0, 0.5, 1, 4.5, -4, -5.6])
+ * tf.math.lgamma(x) ==> [inf, 0.5723649, 0., 2.4537368, inf, -4.6477685]
+ * }</pre>
+ * 
  * 
  * @param <T> data type for {@code y()} output
  */

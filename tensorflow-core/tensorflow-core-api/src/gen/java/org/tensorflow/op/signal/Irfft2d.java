@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
+import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,6 +27,8 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Inverse 2D real-valued fast Fourier transform.
@@ -44,24 +47,40 @@ import org.tensorflow.types.TInt32;
  * `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
  * corresponding dimension of `input`, the dimension is cropped. If it is larger,
  * the dimension is padded with zeros.
+ * 
+ * @param <U> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Irfft2d extends PrimitiveOp implements Operand<TFloat> {
+public final class Irfft2d<U extends TNumber> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Irfft2d operation.
    * 
    * @param scope current scope
-   * @param input A complex64 tensor.
+   * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
+   * @param Treal 
    * @return a new instance of Irfft2d
    */
-  public static Irfft2d create(Scope scope, Operand<?> input, Operand<TInt32> fftLength) {
+  public static <U extends TNumber, T extends TType> Irfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT2D", scope.makeOpName("Irfft2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new Irfft2d(opBuilder.build());
+    opBuilder.setAttr("Treal", Treal);
+    return new Irfft2d<U>(opBuilder.build());
+  }
+  
+  /**
+   * Factory method to create a class wrapping a new Irfft2d operation using default output types.
+   * 
+   * @param scope current scope
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
+   * @return a new instance of Irfft2d
+   */
+  public static <T extends TType> Irfft2d<TFloat> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
+    return create(scope, input, fftLength, TFloat.DTYPE);
   }
   
   /**
@@ -73,16 +92,16 @@ public final class Irfft2d extends PrimitiveOp implements Operand<TFloat> {
    * Equivalent to np.fft.irfft2
    * @end_compatibility
    */
-  public Output<TFloat> output() {
+  public Output<U> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<U> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<U> output;
   
   private Irfft2d(Operation operation) {
     super(operation);

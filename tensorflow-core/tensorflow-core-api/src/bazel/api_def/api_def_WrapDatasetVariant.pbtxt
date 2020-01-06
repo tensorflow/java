@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "WrapDatasetVariant"
+  endpoint {
+    name: "data.WrapDatasetVariant"
+  }
+}

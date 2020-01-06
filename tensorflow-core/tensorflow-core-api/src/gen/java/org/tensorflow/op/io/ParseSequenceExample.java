@@ -29,11 +29,14 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Transforms a vector of brain.SequenceExample protos (as strings) into typed tensors.
+ * Transforms a vector of tf.io.SequenceExample protos (as strings) into
+ * typed tensors.
  */
 @Operator(group = "io")
 public final class ParseSequenceExample extends PrimitiveOp {
@@ -52,10 +55,14 @@ public final class ParseSequenceExample extends PrimitiveOp {
     }
     
     /**
-     * @param NcontextDense 
+     * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
+     * each context Feature given in context_dense_keys.
+     * The number of elements in the Feature corresponding to context_dense_key[j]
+     * must always equal context_dense_shapes[j].NumEntries().
+     * The shape of context_dense_values[j] will match context_dense_shapes[j].
      */
-    public Options NcontextDense(Long NcontextDense) {
-      this.NcontextDense = NcontextDense;
+    public Options contextDenseShapes(List<Shape> contextDenseShapes) {
+      this.contextDenseShapes = contextDenseShapes;
       return this;
     }
     
@@ -76,18 +83,6 @@ public final class ParseSequenceExample extends PrimitiveOp {
     }
     
     /**
-     * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
-     * each context Feature given in context_dense_keys.
-     * The number of elements in the Feature corresponding to context_dense_key[j]
-     * must always equal context_dense_shapes[j].NumEntries().
-     * The shape of context_dense_values[j] will match context_dense_shapes[j].
-     */
-    public Options contextDenseShapes(List<Shape> contextDenseShapes) {
-      this.contextDenseShapes = contextDenseShapes;
-      return this;
-    }
-    
-    /**
      * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
      * data in each FeatureList given in feature_list_dense_keys.
      * The shape of each Feature in the FeatureList corresponding to
@@ -100,10 +95,9 @@ public final class ParseSequenceExample extends PrimitiveOp {
     }
     
     private Long NcontextSparse;
-    private Long NcontextDense;
+    private List<Shape> contextDenseShapes;
     private Long NfeatureListSparse;
     private Long NfeatureListDense;
-    private List<Shape> contextDenseShapes;
     private List<Shape> featureListDenseShapes;
     
     private Options() {
@@ -114,12 +108,25 @@ public final class ParseSequenceExample extends PrimitiveOp {
    * Factory method to create a class wrapping a new ParseSequenceExample operation.
    * 
    * @param scope current scope
-   * @param serialized A vector containing binary serialized SequenceExample protos.
-   * @param debugName A vector containing the names of the serialized protos.
+   * @param serialized A scalar or vector containing binary serialized SequenceExample protos.
+   * @param debugName A scalar or vector containing the names of the serialized protos.
    * May contain, for example, table key (descriptive) name for the
    * corresponding serialized proto.  This is purely useful for debugging
    * purposes, and the presence of values here has no effect on the output.
    * May also be an empty vector if no name is available.
+   * @param contextSparseKeys The keys expected in the Examples' features associated with context_sparse
+   * values.
+   * @param contextDenseKeys The keys expected in the SequenceExamples' context features associated with
+   * dense values.
+   * @param contextRaggedKeys The keys expected in the Examples' features associated with context_ragged
+   * values.
+   * @param featureListSparseKeys The keys expected in the FeatureLists associated with sparse values.
+   * @param featureListDenseKeys The keys expected in the SequenceExamples' feature_lists associated
+   * with lists of dense values.
+   * @param featureListRaggedKeys The keys expected in the FeatureLists associated with ragged values.
+   * @param featureListDenseMissingAssumedEmpty A vector corresponding 1:1 with featue_list_dense_keys, indicating which
+   * features may be missing from the SequenceExamples.  If the associated
+   * FeatureList is missing, it is treated as empty.
    * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
    * context_dense_defaults[j] provides default values
    * when the SequenceExample's context map lacks context_dense_key[j].
@@ -128,70 +135,50 @@ public final class ParseSequenceExample extends PrimitiveOp {
    * The input type is inferred from context_dense_defaults[j], even when it's
    * empty.  If context_dense_defaults[j] is not empty, its shape must match
    * context_dense_shapes[j].
-   * @param featureListDenseMissingAssumedEmpty A vector listing the
-   * FeatureList keys which may be missing from the SequenceExamples.  If the
-   * associated FeatureList is missing, it is treated as empty.  By default,
-   * any FeatureList not listed in this vector must exist in the SequenceExamples.
-   * @param contextSparseKeys A list of Ncontext_sparse string Tensors (scalars).
-   * The keys expected in the Examples' features associated with context_sparse
-   * values.
-   * @param contextDenseKeys A list of Ncontext_dense string Tensors (scalars).
-   * The keys expected in the SequenceExamples' context features associated with
-   * dense values.
-   * @param featureListSparseKeys A list of Nfeature_list_sparse string Tensors
-   * (scalars).  The keys expected in the FeatureLists associated with sparse
-   * values.
-   * @param featureListDenseKeys A list of Nfeature_list_dense string Tensors (scalars).
-   * The keys expected in the SequenceExamples' feature_lists associated
-   * with lists of dense values.
    * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
    * each context Feature given in context_sparse_keys.
    * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
+   * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
+   * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context features.
    * @param featureListDenseTypes 
    * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
    * of data in each FeatureList given in feature_list_sparse_keys.
    * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
+   * @param featureListRaggedValueTypes RaggedTensor.value dtypes for the ragged FeatureList features.
+   * @param featureListRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged FeatureList features.
    * @param options carries optional attributes values
    * @return a new instance of ParseSequenceExample
    */
-  public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Iterable<Operand<?>> contextDenseDefaults, List<String> featureListDenseMissingAssumedEmpty, List<String> contextSparseKeys, List<String> contextDenseKeys, List<String> featureListSparseKeys, List<String> featureListDenseKeys, List<DataType<?>> contextSparseTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExample", scope.makeOpName("ParseSequenceExample"));
+  public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Operand<TString> contextSparseKeys, Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys, Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys, Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty, Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes, List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExampleV2", scope.makeOpName("ParseSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(debugName.asOutput());
+    opBuilder.addInput(contextSparseKeys.asOutput());
+    opBuilder.addInput(contextDenseKeys.asOutput());
+    opBuilder.addInput(contextRaggedKeys.asOutput());
+    opBuilder.addInput(featureListSparseKeys.asOutput());
+    opBuilder.addInput(featureListDenseKeys.asOutput());
+    opBuilder.addInput(featureListRaggedKeys.asOutput());
+    opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    String[] featureListDenseMissingAssumedEmptyArray = new String[featureListDenseMissingAssumedEmpty.size()];
-    for (int i = 0; i < featureListDenseMissingAssumedEmptyArray.length; ++i) {
-      featureListDenseMissingAssumedEmptyArray[i] = featureListDenseMissingAssumedEmpty.get(i);
-    }
-    opBuilder.setAttr("feature_list_dense_missing_assumed_empty", featureListDenseMissingAssumedEmptyArray);
-    String[] contextSparseKeysArray = new String[contextSparseKeys.size()];
-    for (int i = 0; i < contextSparseKeysArray.length; ++i) {
-      contextSparseKeysArray[i] = contextSparseKeys.get(i);
-    }
-    opBuilder.setAttr("context_sparse_keys", contextSparseKeysArray);
-    String[] contextDenseKeysArray = new String[contextDenseKeys.size()];
-    for (int i = 0; i < contextDenseKeysArray.length; ++i) {
-      contextDenseKeysArray[i] = contextDenseKeys.get(i);
-    }
-    opBuilder.setAttr("context_dense_keys", contextDenseKeysArray);
-    String[] featureListSparseKeysArray = new String[featureListSparseKeys.size()];
-    for (int i = 0; i < featureListSparseKeysArray.length; ++i) {
-      featureListSparseKeysArray[i] = featureListSparseKeys.get(i);
-    }
-    opBuilder.setAttr("feature_list_sparse_keys", featureListSparseKeysArray);
-    String[] featureListDenseKeysArray = new String[featureListDenseKeys.size()];
-    for (int i = 0; i < featureListDenseKeysArray.length; ++i) {
-      featureListDenseKeysArray[i] = featureListDenseKeys.get(i);
-    }
-    opBuilder.setAttr("feature_list_dense_keys", featureListDenseKeysArray);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {
       contextSparseTypesArray[i] = contextSparseTypes.get(i);
     }
     opBuilder.setAttr("context_sparse_types", contextSparseTypesArray);
+    DataType[] contextRaggedValueTypesArray = new DataType[contextRaggedValueTypes.size()];
+    for (int i = 0; i < contextRaggedValueTypesArray.length; ++i) {
+      contextRaggedValueTypesArray[i] = contextRaggedValueTypes.get(i);
+    }
+    opBuilder.setAttr("context_ragged_value_types", contextRaggedValueTypesArray);
+    DataType[] contextRaggedSplitTypesArray = new DataType[contextRaggedSplitTypes.size()];
+    for (int i = 0; i < contextRaggedSplitTypesArray.length; ++i) {
+      contextRaggedSplitTypesArray[i] = contextRaggedSplitTypes.get(i);
+    }
+    opBuilder.setAttr("context_ragged_split_types", contextRaggedSplitTypesArray);
     DataType[] featureListDenseTypesArray = new DataType[featureListDenseTypes.size()];
     for (int i = 0; i < featureListDenseTypesArray.length; ++i) {
       featureListDenseTypesArray[i] = featureListDenseTypes.get(i);
@@ -202,19 +189,20 @@ public final class ParseSequenceExample extends PrimitiveOp {
       featureListSparseTypesArray[i] = featureListSparseTypes.get(i);
     }
     opBuilder.setAttr("feature_list_sparse_types", featureListSparseTypesArray);
+    DataType[] featureListRaggedValueTypesArray = new DataType[featureListRaggedValueTypes.size()];
+    for (int i = 0; i < featureListRaggedValueTypesArray.length; ++i) {
+      featureListRaggedValueTypesArray[i] = featureListRaggedValueTypes.get(i);
+    }
+    opBuilder.setAttr("feature_list_ragged_value_types", featureListRaggedValueTypesArray);
+    DataType[] featureListRaggedSplitTypesArray = new DataType[featureListRaggedSplitTypes.size()];
+    for (int i = 0; i < featureListRaggedSplitTypesArray.length; ++i) {
+      featureListRaggedSplitTypesArray[i] = featureListRaggedSplitTypes.get(i);
+    }
+    opBuilder.setAttr("feature_list_ragged_split_types", featureListRaggedSplitTypesArray);
     if (options != null) {
       for (Options opts : options) {
         if (opts.NcontextSparse != null) {
           opBuilder.setAttr("Ncontext_sparse", opts.NcontextSparse);
-        }
-        if (opts.NcontextDense != null) {
-          opBuilder.setAttr("Ncontext_dense", opts.NcontextDense);
-        }
-        if (opts.NfeatureListSparse != null) {
-          opBuilder.setAttr("Nfeature_list_sparse", opts.NfeatureListSparse);
-        }
-        if (opts.NfeatureListDense != null) {
-          opBuilder.setAttr("Nfeature_list_dense", opts.NfeatureListDense);
         }
         if (opts.contextDenseShapes != null) {
           Shape[] contextDenseShapesArray = new Shape[opts.contextDenseShapes.size()];
@@ -222,6 +210,12 @@ public final class ParseSequenceExample extends PrimitiveOp {
             contextDenseShapesArray[i] = opts.contextDenseShapes.get(i);
           }
           opBuilder.setAttr("context_dense_shapes", contextDenseShapesArray);
+        }
+        if (opts.NfeatureListSparse != null) {
+          opBuilder.setAttr("Nfeature_list_sparse", opts.NfeatureListSparse);
+        }
+        if (opts.NfeatureListDense != null) {
+          opBuilder.setAttr("Nfeature_list_dense", opts.NfeatureListDense);
         }
         if (opts.featureListDenseShapes != null) {
           Shape[] featureListDenseShapesArray = new Shape[opts.featureListDenseShapes.size()];
@@ -243,10 +237,14 @@ public final class ParseSequenceExample extends PrimitiveOp {
   }
   
   /**
-   * @param NcontextDense 
+   * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
+   * each context Feature given in context_dense_keys.
+   * The number of elements in the Feature corresponding to context_dense_key[j]
+   * must always equal context_dense_shapes[j].NumEntries().
+   * The shape of context_dense_values[j] will match context_dense_shapes[j].
    */
-  public static Options NcontextDense(Long NcontextDense) {
-    return new Options().NcontextDense(NcontextDense);
+  public static Options contextDenseShapes(List<Shape> contextDenseShapes) {
+    return new Options().contextDenseShapes(contextDenseShapes);
   }
   
   /**
@@ -261,17 +259,6 @@ public final class ParseSequenceExample extends PrimitiveOp {
    */
   public static Options NfeatureListDense(Long NfeatureListDense) {
     return new Options().NfeatureListDense(NfeatureListDense);
-  }
-  
-  /**
-   * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
-   * each context Feature given in context_dense_keys.
-   * The number of elements in the Feature corresponding to context_dense_key[j]
-   * must always equal context_dense_shapes[j].NumEntries().
-   * The shape of context_dense_values[j] will match context_dense_shapes[j].
-   */
-  public static Options contextDenseShapes(List<Shape> contextDenseShapes) {
-    return new Options().contextDenseShapes(contextDenseShapes);
   }
   
   /**
@@ -311,6 +298,18 @@ public final class ParseSequenceExample extends PrimitiveOp {
   
   /**
    */
+  public List<Output<?>> contextRaggedValues() {
+    return contextRaggedValues;
+  }
+  
+  /**
+   */
+  public List<Output<?>> contextRaggedRowSplits() {
+    return contextRaggedRowSplits;
+  }
+  
+  /**
+   */
   public List<Output<TInt64>> featureListSparseIndices() {
     return featureListSparseIndices;
   }
@@ -339,15 +338,38 @@ public final class ParseSequenceExample extends PrimitiveOp {
     return featureListDenseLengths;
   }
   
+  /**
+   */
+  public List<Output<?>> featureListRaggedValues() {
+    return featureListRaggedValues;
+  }
+  
+  /**
+   */
+  public List<Output<?>> featureListRaggedOuterSplits() {
+    return featureListRaggedOuterSplits;
+  }
+  
+  /**
+   */
+  public List<Output<?>> featureListRaggedInnerSplits() {
+    return featureListRaggedInnerSplits;
+  }
+  
   private List<Output<TInt64>> contextSparseIndices;
   private List<Output<?>> contextSparseValues;
   private List<Output<TInt64>> contextSparseShapes;
   private List<Output<?>> contextDenseValues;
+  private List<Output<?>> contextRaggedValues;
+  private List<Output<?>> contextRaggedRowSplits;
   private List<Output<TInt64>> featureListSparseIndices;
   private List<Output<?>> featureListSparseValues;
   private List<Output<TInt64>> featureListSparseShapes;
   private List<Output<?>> featureListDenseValues;
   private List<Output<TInt64>> featureListDenseLengths;
+  private List<Output<?>> featureListRaggedValues;
+  private List<Output<?>> featureListRaggedOuterSplits;
+  private List<Output<?>> featureListRaggedInnerSplits;
   
   @SuppressWarnings("unchecked")
   private ParseSequenceExample(Operation operation) {
@@ -365,6 +387,12 @@ public final class ParseSequenceExample extends PrimitiveOp {
     int contextDenseValuesLength = operation.outputListLength("context_dense_values");
     contextDenseValues = Arrays.asList(operation.outputList(outputIdx, contextDenseValuesLength));
     outputIdx += contextDenseValuesLength;
+    int contextRaggedValuesLength = operation.outputListLength("context_ragged_values");
+    contextRaggedValues = Arrays.asList(operation.outputList(outputIdx, contextRaggedValuesLength));
+    outputIdx += contextRaggedValuesLength;
+    int contextRaggedRowSplitsLength = operation.outputListLength("context_ragged_row_splits");
+    contextRaggedRowSplits = Arrays.asList(operation.outputList(outputIdx, contextRaggedRowSplitsLength));
+    outputIdx += contextRaggedRowSplitsLength;
     int featureListSparseIndicesLength = operation.outputListLength("feature_list_sparse_indices");
     featureListSparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListSparseIndicesLength));
     outputIdx += featureListSparseIndicesLength;
@@ -380,5 +408,14 @@ public final class ParseSequenceExample extends PrimitiveOp {
     int featureListDenseLengthsLength = operation.outputListLength("feature_list_dense_lengths");
     featureListDenseLengths = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListDenseLengthsLength));
     outputIdx += featureListDenseLengthsLength;
+    int featureListRaggedValuesLength = operation.outputListLength("feature_list_ragged_values");
+    featureListRaggedValues = Arrays.asList(operation.outputList(outputIdx, featureListRaggedValuesLength));
+    outputIdx += featureListRaggedValuesLength;
+    int featureListRaggedOuterSplitsLength = operation.outputListLength("feature_list_ragged_outer_splits");
+    featureListRaggedOuterSplits = Arrays.asList(operation.outputList(outputIdx, featureListRaggedOuterSplitsLength));
+    outputIdx += featureListRaggedOuterSplitsLength;
+    int featureListRaggedInnerSplitsLength = operation.outputListLength("feature_list_ragged_inner_splits");
+    featureListRaggedInnerSplits = Arrays.asList(operation.outputList(outputIdx, featureListRaggedInnerSplitsLength));
+    outputIdx += featureListRaggedInnerSplitsLength;
   }
 }

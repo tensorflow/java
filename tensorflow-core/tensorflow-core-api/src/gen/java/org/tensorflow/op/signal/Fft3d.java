@@ -41,7 +41,7 @@ public final class Fft3d<T extends TType> extends PrimitiveOp implements Operand
    * Factory method to create a class wrapping a new Fft3d operation.
    * 
    * @param scope current scope
-   * @param input A complex64 tensor.
+   * @param input A complex tensor.
    * @return a new instance of Fft3d
    */
   public static <T extends TType> Fft3d<T> create(Scope scope, Operand<T> input) {
@@ -52,7 +52,7 @@ public final class Fft3d<T extends TType> extends PrimitiveOp implements Operand
   }
   
   /**
-   * A complex64 tensor of the same shape as `input`. The inner-most 3
+   * A complex tensor of the same shape as `input`. The inner-most 3
    *   dimensions of `input` are replaced with their 3D Fourier transform.
    * <p>
    * @compatibility(numpy)

@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * <p>
  *     output[\\(i_0, ..., i_{K-2}\\)] = params[indices[\\(i_0, ..., i_{K-2}\\)]]
  * <p>
- * Whereas in `tf.gather` `indices` defines slices into the first
+ * Whereas in `tf.gather` `indices` defines slices into the `axis`
  * dimension of `params`, in `tf.gather_nd`, `indices` defines slices into the
  * first `N` dimensions of `params`, where `N = indices.shape[-1]`.
  * <p>

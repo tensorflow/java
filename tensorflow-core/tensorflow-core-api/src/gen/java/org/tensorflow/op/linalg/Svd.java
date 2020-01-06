@@ -34,8 +34,8 @@ import org.tensorflow.types.family.TType;
  * <pre>{@code
  * # a is a tensor containing a batch of matrices.
  * # s is a tensor of singular values for each matrix.
- * # u is the tensor containing of left singular vectors for each matrix.
- * # v is the tensor containing of right singular vectors for each matrix.
+ * # u is the tensor containing the left singular vectors for each matrix.
+ * # v is the tensor containing the right singular vectors for each matrix.
  * s, u, v = svd(a)
  * s, _, _ = svd(a, compute_uv=False)
  * }</pre>

@@ -1,6 +1,6 @@
 op {
   graph_op_name: "ExperimentalFunctionBufferingResourceReset"
   endpoint {
-    name: "data.ExperimentalFunctionBufferingResourceReset"
+    name: "data.experimental.FunctionBufferingResourceReset"
   }
 }

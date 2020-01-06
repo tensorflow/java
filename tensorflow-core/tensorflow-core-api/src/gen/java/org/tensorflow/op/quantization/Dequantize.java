@@ -31,7 +31,7 @@ import org.tensorflow.types.family.TType;
  * Dequantize the 'input' tensor into a float Tensor.
  * <p>
  * [min_range, max_range] are scalar floats that specify the range for
- * the 'input' data. The 'mode' attribute controls exactly which calculations are
+ * the output. The 'mode' attribute controls exactly which calculations are
  * used to convert the float values to their quantized equivalents.
  * <p>
  * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
@@ -60,41 +60,22 @@ import org.tensorflow.types.family.TType;
  * const double offset_input = static_cast<double>(input) - lowest_quantized;
  * result = range_min + ((input - numeric_limits<T>::min()) * range_scale)
  * }</pre>
- * <i>SCALED mode Example</i>
+ * If the mode is `SCALED`, dequantization is performed by multiplying each
+ * input value by a scaling_factor. (Thus an input of 0 always maps to 0.0).
  * <p>
- * `SCALED` mode matches the quantization approach used in
- * `QuantizeAndDequantize{V2|V3}`.
- * <p>
- * If the mode is `SCALED`, we do not use the full range of the output type,
- * choosing to elide the lowest possible value for symmetry (e.g., output range is
- * -127 to 127, not -128 to 127 for signed 8 bit quantization), so that 0.0 maps to
- * 0.
- * <p>
- * We first find the range of values in our tensor. The
- * range we use is always centered on 0, so we find m such that
+ * The scaling_factor is determined from `min_range`, `max_range`, and
+ * `narrow_range` in a way that is compatible with `QuantizeAndDequantize{V2|V3}`
+ * and `QuantizeV2`, using the following algorithm:
  * <pre>{@code
- *   m = max(abs(input_min), abs(input_max))
- * }</pre>
- * Our input tensor range is then `[-m, m]`.
- * <p>
- * Next, we choose our fixed-point quantization buckets, `[min_fixed, max_fixed]`.
- * If T is signed, this is
- * <pre>{@code
- *   num_bits = sizeof(T) * 8
- *   [min_fixed, max_fixed] =
- *       [-(1 << (num_bits - 1) - 1), (1 << (num_bits - 1)) - 1]
- * }</pre>
- * Otherwise, if T is unsigned, the fixed-point range is
- * <pre>{@code
- *   [min_fixed, max_fixed] = [0, (1 << num_bits) - 1]
- * }</pre>
- * From this we compute our scaling factor, s:
- * <pre>{@code
- *   s = (2 * m) / (max_fixed - min_fixed)
- * }</pre>
- * Now we can dequantize the elements of our tensor:
- * <pre>{@code
- * result = input * s
+ *   const int min_expected_T = std::numeric_limits<T>::min() +
+ *     (narrow_range ? 1 : 0);
+ *   const int max_expected_T = std::numeric_limits<T>::max();
+ *   const float max_expected_T = std::numeric_limits<float>::max();
+ * 
+ *   const float scale_factor =
+ *     (std::numeric_limits<T>::min() == 0) ? (max_range / max_expected_T)
+ *                                          : std::max(min_range / min_expected_T,
+ *                                                     max_range / max_expected_T);
  * }</pre>
  * 
  */
@@ -114,7 +95,25 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
       return this;
     }
     
+    /**
+     * @param narrowRange 
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
+    
+    /**
+     * @param axis 
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
+    
     private String mode;
+    private Boolean narrowRange;
+    private Long axis;
     
     private Options() {
     }
@@ -141,6 +140,12 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
         if (opts.mode != null) {
           opBuilder.setAttr("mode", opts.mode);
         }
+        if (opts.narrowRange != null) {
+          opBuilder.setAttr("narrow_range", opts.narrowRange);
+        }
+        if (opts.axis != null) {
+          opBuilder.setAttr("axis", opts.axis);
+        }
       }
     }
     return new Dequantize(opBuilder.build());
@@ -151,6 +156,20 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
    */
   public static Options mode(String mode) {
     return new Options().mode(mode);
+  }
+  
+  /**
+   * @param narrowRange 
+   */
+  public static Options narrowRange(Boolean narrowRange) {
+    return new Options().narrowRange(narrowRange);
+  }
+  
+  /**
+   * @param axis 
+   */
+  public static Options axis(Long axis) {
+    return new Options().axis(axis);
   }
   
   /**

@@ -74,12 +74,29 @@ public @interface Operator {
    * class.
    *
    * <pre>{@code
-   * ops.math().add(...);
+   * ops.math.add(...);
+   * }</pre>
+   *
+   * <p>The operator can also be classified into subgroups of another group, following a semantic
+   * similar to Java packages. For example:
+   *
+   * <pre>{@code
+   * @Operator(group="data.experimental")
+   * public final class MyDataset extends PrimitiveOp implements Operand {
+   *   ...
+   * }
+   * }</pre>
+   *
+   * <p>results in the {@code add} method placed within a {@code experimental} group within the
+   * {@code DataOps} group class.
+   *
+   * <pre>{@code
+   * ops.data.experimental.myDataset(...);
    * }</pre>
    *
    * <p>The group name must be a <a
-   * href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8">valid Java
-   * identifier</a>.
+   * href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">valid Java
+   * package name</a>.
    */
   String group() default "";
 

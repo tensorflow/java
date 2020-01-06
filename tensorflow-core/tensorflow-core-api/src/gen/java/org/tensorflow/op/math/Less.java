@@ -33,6 +33,18 @@ import org.tensorflow.types.family.TType;
  * <p>
  * <i>NOTE</i>: `math.Less` supports broadcasting. More about broadcasting
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5])
+ * tf.math.less(x, y) ==> [False, True, False]
+ * 
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5, 6, 7])
+ * tf.math.less(x, y) ==> [False, True, True]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class Less extends PrimitiveOp implements Operand<TBool> {

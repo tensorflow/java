@@ -25,11 +25,11 @@ package org.tensorflow.op;
  *
  * <pre>{@code
  * // All values returned by an Ops call can be referred as a Op
- * Op split = ops.array().split(...);
- * Op shape = ops.array().shape(...);
+ * Op split = ops.split(...);
+ * Op add = ops.math.add(...);
  *
  * // All operations could be added to an Op collection
- * Collection<Op> allOps = Arrays.asList(split, shape);
+ * Collection<Op> allOps = Arrays.asList(split, add);
  * }
  */
 public interface Op {}

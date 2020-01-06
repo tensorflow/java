@@ -34,6 +34,13 @@ import org.tensorflow.types.family.TType;
  * @compatibility(numpy)
  * Equivalent to np.isfinite
  * @end_compatibility
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5.0, 4.8, 6.8, np.inf, np.nan])
+ * tf.math.is_finite(x) ==> [True, True, True, False, False]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class IsFinite extends PrimitiveOp implements Operand<TBool> {

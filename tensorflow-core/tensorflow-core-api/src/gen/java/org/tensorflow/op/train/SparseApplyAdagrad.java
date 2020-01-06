@@ -23,7 +23,6 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -36,7 +35,6 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code out()} output
  */
-@Operator(group = "train")
 public final class SparseApplyAdagrad<T extends TType> extends PrimitiveOp implements Operand<T> {
   
   /**
@@ -76,16 +74,18 @@ public final class SparseApplyAdagrad<T extends TType> extends PrimitiveOp imple
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyAdagrad
    */
-  public static <T extends TType, U extends TNumber> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagrad", scope.makeOpName("SparseApplyAdagrad"));
+  public static <T extends TType, U extends TNumber> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradV2", scope.makeOpName("SparseApplyAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
+    opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
