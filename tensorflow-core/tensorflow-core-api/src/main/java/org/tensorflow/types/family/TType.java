@@ -17,4 +17,21 @@
 
 package org.tensorflow.types.family;
 
+/**
+ * Marker interface for all tensor types.
+ *
+ * <p>Tensor types are carried as a generic parameter of the {@link org.tensorflow.Tensor Tensor}
+ * class bound by the {@code TType} interface. This generic parameter ensure type-compatibility
+ * between operands of a computation at compile-time. For example:
+ *
+ * <pre>{@code
+ * Tensor<TFloat32> tensor1 = TFloat32.ofShape(2, 3, 2);
+ * Tensor<TFloat32> tensor2 = TFloat32.ofShape(2, 3, 2);
+ * Tensor<TInt32> tensor3 = TInt32.ofShape(2, 3, 2);
+ *
+ * Ops tf = Ops.create();
+ * tf.math.add(tf.constant(tensor1), tf.constant(tensor2));  // OK
+ * tf.math.add(tf.constant(tensor1), tf.constant(tensor3));  // Compilation failure
+ * }</pre>
+ */
 public interface TType {}

@@ -27,10 +27,11 @@
   <artifactId>tensorflow-tools</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Utility Library</name>
+  <name>TensorFlow Tools Library</name>
   <description>
-    Library of utilities that do not depend on the TensorFlow runtime and can be used by other
-    projects outside the TensorFlow organization.
+    Utility library used by TensorFlow Java language bindings. This library does not depend on
+    the TensorFlow runtime and therefore can be included by any other projects outside the TensorFlow
+    organization.
   </description>
 
   <dependencies>

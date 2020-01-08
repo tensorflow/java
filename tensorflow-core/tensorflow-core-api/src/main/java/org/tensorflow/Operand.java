@@ -24,16 +24,16 @@ import org.tensorflow.types.family.TType;
  *
  * <pre>{@code
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
- * Operand<UInt8> decodeJpeg = ops.image().decodeJpeg(...);
- * ops.math().cast(decodeJpeg, DataType.FLOAT);
+ * Operand<TUInt8> decodeJpeg = ops.image.decodeJpeg(...);
+ * ops.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation
- * Output<Integer> y = ops.array().unique(...).y();
- * ops.math().cast(y, Float.class);
+ * Output<TInt32> y = ops.unique(...).y();
+ * ops.dtypes.cast(y, TFloat32.DTYPE);
  *
  * // The "split" operation can be used as operand list to the "concat" operation
- * Iterable<? extends Operand<Float>> split = ops.array().split(...);
- * ops.array().concat(0, split);
+ * Iterable<? extends Operand<TFloat32>> split = ops.split(...);
+ * ops.concat(split, ops.constant(0));
  * }</pre>
  */
 public interface Operand<T extends TType> {

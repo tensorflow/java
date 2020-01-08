@@ -28,30 +28,68 @@ import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
+/**
+ * 32-bit signed integer tensor type.
+ */
 public interface TInt32 extends IntNdArray, TNumber {
 
+  /** Type metadata */
   DataType<TInt32> DTYPE = DataType.create("INT32", 3, 4, TInt32Impl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a single int value.
+   *
+   * @param value int to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt32> scalarOf(int value) {
     Tensor<TInt32> t = ofShape();
     t.data().setInt(value);
     return t;
   }
 
+  /**
+   * Allocates a new tensor for storing a vector of ints.
+   *
+   * @param values ints to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt32> vectorOf(int... values) {
     Tensor<TInt32> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TInt32> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
+   *
+   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TInt32> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array of ints.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt32> copyOf(NdArray<Integer> src) {
     Tensor<TInt32> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
@@ -59,6 +97,9 @@ public interface TInt32 extends IntNdArray, TNumber {
   }
 }
 
+/**
+ * Hidden implementation of a {@code TInt32}
+ */
 class TInt32Impl extends IntDenseNdArray implements TInt32 {
 
   static TInt32 mapTensor(TF_Tensor nativeTensor, Shape shape) {
