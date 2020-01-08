@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,21 +15,14 @@
  *  =======================================================================
  */
 
-package org.tensorflow.types.family;
-
 /**
- * Marker interface for numeric tensor types.
+ * Interfaces used to group tensor types in families that define a particular domain of data.
  *
- * <p>Operations that only accepts numeric values as some of their operands enforce that the tensor
- * types for these operands to be bound to this interface. For example:
+ * <p>Some operations enforces that only operands of a type from a given family can be passed
+ * in argument. For example, if an operation only allows numeric operands, such operands must be
+ * bound to the {@link org.tensorflow.types.family.TNumber TNumber} interface.
  *
- * <pre>{@code
- * TFloat32 tensor1 = TFloat32.vectorOf(1, 2, 3);
- * TBool tensor2 = TBool.vectorOf(true, false, true);
- *
- * Ops tf = Ops.create();
- * tf.nn.softmax(tf.constant(tensor1));  // OK
- * tf.nn.softmax(tf.constant(tensor2));  // Compilation failure
- * }</pre>
+ * <p>All tensor types is bound to {@link org.tensorflow.types.family.TType TType}, which lays at
+ * the root of the family hierarchy.
  */
-public interface TNumber extends TType {}
+package org.tensorflow.types.family;

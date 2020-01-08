@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,21 +15,20 @@
  *  =======================================================================
  */
 
-package org.tensorflow.types.family;
+package org.tensorflow.types;
 
-/**
- * Marker interface for numeric tensor types.
- *
- * <p>Operations that only accepts numeric values as some of their operands enforce that the tensor
- * types for these operands to be bound to this interface. For example:
- *
- * <pre>{@code
- * TFloat32 tensor1 = TFloat32.vectorOf(1, 2, 3);
- * TBool tensor2 = TBool.vectorOf(true, false, true);
- *
- * Ops tf = Ops.create();
- * tf.nn.softmax(tf.constant(tensor1));  // OK
- * tf.nn.softmax(tf.constant(tensor2));  // Compilation failure
- * }</pre>
- */
-public interface TNumber extends TType {}
+import org.tensorflow.Tensor;
+import org.tensorflow.tools.Shape;
+
+public class TFloat16Test extends NumericTypesTestBase<TFloat16, Float> {
+
+  @Override
+  Tensor<TFloat16> allocateTensor(Shape shape) {
+    return TFloat16.ofShape(shape);
+  }
+
+  @Override
+  Float valueOf(Integer value) {
+    return value.floatValue();
+  }
+}

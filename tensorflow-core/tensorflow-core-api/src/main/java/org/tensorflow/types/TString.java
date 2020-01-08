@@ -30,23 +30,50 @@ import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
 
+/**
+ * String tensor type.
+ */
 public interface TString extends NdArray<String>, TType {
 
+  /** Type metadata */
   DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a single string value.
+   *
+   * @param value string to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> scalarOf(String value) {
     return copyOf(NdArrays.ofObjects(String.class, Shape.scalar()).setObject(value));
   }
 
+  /**
+   * Allocates a new tensor for storing a vector of strings.
+   *
+   * @param values strings to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> vectorOf(String... values) {
     return copyOf(NdArrays.ofObjects(String.class, Shape.make(values.length)).write(values));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array of strings.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TString> copyOf(NdArray<String> src) {
     return TStringImpl.createTensor(src);
   }
 }
 
+/**
+ * Hidden implementation of a {@code TString}
+ */
 class TStringImpl extends DenseNdArray<String> implements TString {
 
   static Tensor<TString> createTensor(NdArray<String> src) {

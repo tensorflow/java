@@ -31,7 +31,8 @@ import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
+import org.tensorflow.tools.buffer.layout.DataLayouts;
 
 public final class TensorBuffers {
 
@@ -75,6 +76,14 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
+  public static ShortDataBuffer toShorts(TF_Tensor nativeTensor) {
+    Pointer tensorMemory = tensorMemory(nativeTensor);
+    if (TensorRawDataBufferFactory.canBeUsed()) {
+      return TensorRawDataBufferFactory.mapTensorToShorts(tensorMemory);
+    }
+    return DataBuffers.from(tensorMemory.asByteBuffer().asShortBuffer());
+  }
+
   public static BooleanDataBuffer toBooleans(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -82,7 +91,7 @@ public final class TensorBuffers {
     }
     // There is no boolean buffers in Java NIO, so apply a layout that converts booleans
     // from/to bytes when raw memory mapping is not available.
-    return BOOLEAN_LAYOUT.applyTo(DataBuffers.from(tensorMemory.asByteBuffer()));
+    return DataLayouts.BOOL.applyTo(DataBuffers.from(tensorMemory.asByteBuffer()));
   }
 
   public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
@@ -108,20 +117,4 @@ public final class TensorBuffers {
   private static Pointer tensorMemory(TF_Tensor nativeTensor) {
     return TF_TensorData(nativeTensor).capacity(TF_TensorByteSize(nativeTensor));
   }
-
-  /**
-   * Basic data layout that converts booleans from/to bytes.
-   */
-  private static final BooleanDataLayout<ByteDataBuffer> BOOLEAN_LAYOUT = new BooleanDataLayout<ByteDataBuffer>() {
-
-    @Override
-    public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
-      buffer.setByte((byte)(value ? 0x1 : 0x0), index);
-    }
-
-    @Override
-    public boolean readBoolean(ByteDataBuffer buffer, long index) {
-      return buffer.getByte(index) > 0x0;
-    }
-  };
 }

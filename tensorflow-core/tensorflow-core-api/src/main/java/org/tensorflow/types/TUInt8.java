@@ -28,30 +28,68 @@ import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.ByteDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
+/**
+ * 8-bit unsigned integer tensor type.
+ */
 public interface TUInt8 extends ByteNdArray, TNumber {
 
+  /** Type metadata */
   DataType<TUInt8> DTYPE = DataType.create("UINT8", 4, 1, TUInt8Impl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a single byte value.
+   *
+   * @param value byte to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TUInt8> scalarOf(byte value) {
     Tensor<TUInt8> t = ofShape();
     t.data().setByte(value);
     return t;
   }
 
+  /**
+   * Allocates a new tensor for storing a vector of bytes.
+   *
+   * @param values bytes to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TUInt8> vectorOf(byte... values) {
     Tensor<TUInt8> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TUInt8> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
+   *
+   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TUInt8> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array of bytes.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TUInt8> copyOf(NdArray<Byte> src) {
     Tensor<TUInt8> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
@@ -59,6 +97,9 @@ public interface TUInt8 extends ByteNdArray, TNumber {
   }
 }
 
+/**
+ * Hidden implementation of a {@code TUInt8}
+ */
 class TUInt8Impl extends ByteDenseNdArray implements TUInt8 {
 
   static TUInt8 mapTensor(TF_Tensor nativeTensor, Shape shape) {

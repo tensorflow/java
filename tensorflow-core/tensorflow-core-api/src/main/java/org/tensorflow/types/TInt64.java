@@ -28,30 +28,68 @@ import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
+/**
+ * 64-bit signed integer tensor type.
+ */
 public interface TInt64 extends LongNdArray, TNumber {
 
+  /** Type metadata */
   DataType<TInt64> DTYPE = DataType.create("INT64", 9, 8, TInt64Impl::mapTensor);
 
+  /**
+   * Allocates a new tensor for storing a single long value.
+   *
+   * @param value long to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt64> scalarOf(long value) {
     Tensor<TInt64> t = ofShape();
     t.data().setLong(value);
     return t;
   }
 
+  /**
+   * Allocates a new tensor for storing a vector of longs.
+   *
+   * @param values longs to store in the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt64> vectorOf(long... values) {
     Tensor<TInt64> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TInt64> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
+   *
+   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
+   * @return the new tensor
+   */
   static Tensor<TInt64> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
+  /**
+   * Allocates a new tensor which is a copy of a given array of longs.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
   static Tensor<TInt64> copyOf(NdArray<Long> src) {
     Tensor<TInt64> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
@@ -59,6 +97,9 @@ public interface TInt64 extends LongNdArray, TNumber {
   }
 }
 
+/**
+ * Hidden implementation of a {@code TInt64}
+ */
 class TInt64Impl extends LongDenseNdArray implements TInt64 {
 
   static TInt64 mapTensor(TF_Tensor nativeTensor, Shape shape) {
