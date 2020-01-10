@@ -25,26 +25,21 @@ import org.tensorflow.tools.buffer.layout.ShortDataLayout;
 
 public class ShortDataBufferAdapterTest extends ShortDataBufferTestBase {
 
-  private static class TestShort8Layout implements ShortDataLayout {
+  public ShortDataBuffer allocate(long size) {
+    return LAYOUT.applyTo(DataBuffers.ofBytes(size * LAYOUT.scale()));
+  }
+
+  private static ShortDataLayout<ByteDataBuffer> LAYOUT = new ShortDataLayout<ByteDataBuffer>() {
 
     @Override
     public void writeShort(ByteDataBuffer buffer, short value, long index) {
-      buffer.setObject((byte)(((value & 0x8000) >> 8) | (value & 0x7F)), index);
+      buffer.setByte((byte)(((value & 0x8000) >> 8) | (value & 0x7F)), index);
     }
 
     @Override
     public short readShort(ByteDataBuffer buffer, long index) {
-      int b = buffer.getObject(index);
+      int b = buffer.getByte(index);
       return (short)(((b & 0x80) << 8) | (b & 0x7F));
     }
-
-    @Override
-    public int sizeInBytes() {
-      return 1;
-    }
-  }
-
-  public ShortDataBuffer allocate(long size) {
-    return DataBuffers.ofShorts(size, new TestShort8Layout());
-  }
+  };
 }

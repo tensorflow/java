@@ -23,9 +23,6 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
-import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
@@ -65,28 +62,10 @@ public interface TBool extends BooleanNdArray, TType {
 class TBoolImpl extends BooleanDenseNdArray implements TBool {
 
   static TBool mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TBoolImpl(DataBuffers.toBooleans(TensorBuffers.toBytes(nativeTensor), ADAPTER), shape);
+    return new TBoolImpl(TensorBuffers.toBooleans(nativeTensor), shape);
   }
 
   private TBoolImpl(BooleanDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
-
-  private static BooleanDataLayout ADAPTER = new BooleanDataLayout() {
-
-    @Override
-    public void writeBoolean(ByteDataBuffer buffer, boolean value, long index) {
-      buffer.setByte((byte)(value ? 1 : 0), index);
-    }
-
-    @Override
-    public boolean readBoolean(ByteDataBuffer buffer, long index) {
-      return buffer.getByte(index) > 0;
-    }
-
-    @Override
-    public int sizeInBytes() {
-      return TBool.DTYPE.byteSize();
-    }
-  };
 }

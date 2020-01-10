@@ -17,42 +17,36 @@
 
 package org.tensorflow.tools.buffer.impl.adapter;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.FloatDataBufferTestBase;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.layout.FloatDataLayout;
 
 public class FloatDataBufferAdapterTest extends FloatDataBufferTestBase {
+
+  @Override
+  public FloatDataBuffer allocate(long size) {
+    return LAYOUT.applyTo(DataBuffers.ofShorts(size * LAYOUT.scale()));
+  }
 
   @Override
   protected long maxSize() {
     return super.maxSize() / 2;
   }
 
-  private static class TestFloat16Layout implements FloatDataLayout {
+  private static FloatDataLayout<ShortDataBuffer> LAYOUT = new FloatDataLayout<ShortDataBuffer>() {
 
     @Override
-    public void writeFloat(ByteDataBuffer buffer, float value, long index) {
+    public void writeFloat(ShortDataBuffer buffer, float value, long index) {
       int bits = Float.floatToIntBits(value);
-      buffer.setObject((byte)((bits >> 24) & 0xFF), index);
-      buffer.setObject((byte)((bits >> 16) & 0xFF), index + 1);
+      buffer.setShort((short)(bits >> 16), index);
     }
 
     @Override
-    public float readFloat(ByteDataBuffer buffer, long index) {
-      int byte3 = buffer.getObject(index);
-      int byte2 = buffer.getObject(index + 1);
-      return Float.intBitsToFloat(((byte3 & 0xFF) << 24) | ((byte2 & 0xFF) << 16));
+    public float readFloat(ShortDataBuffer buffer, long index) {
+      int i = buffer.getShort(index);
+      return Float.intBitsToFloat(i << 16);
     }
-
-    @Override
-    public int sizeInBytes() {
-      return 2;
-    }
-  }
-
-  public FloatDataBuffer allocate(long size) {
-    return DataBuffers.ofFloats(size, new TestFloat16Layout());
-  }
+  };
 }

@@ -14,40 +14,52 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a long to/from bytes
+ * A {@link DataLayout} that converts data stored in a buffer to longs.
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @see DataLayout
  */
-public interface LongDataLayout extends DataLayout<Long> {
-
-  /**
-   * Writes a long as bytes to the given buffer at its current position.
-   *  @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index byte index of the value to write
-   */
-  void writeLong(ByteDataBuffer buffer, long value, long index);
-
-  /**
-   * Reads a long as bytes from the given buffer at its current position.
-   *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index byte index of the value to read
-   * @return value
-   */
-  long readLong(ByteDataBuffer buffer, long index);
+public interface LongDataLayout<S extends DataBuffer<?>>  extends DataLayout<S, Long> {
 
   @Override
-  default void writeValue(ByteDataBuffer buffer, Long value, long index) {
+  default LongDataBuffer applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
+
+  /**
+   * Writes a long into the buffer at the given index after converting it to the buffer type.
+   *
+   * @param buffer the buffer to write to
+   * @param value the long to convert and write
+   * @param index index in the buffer where the converted value should be written
+   * @see #writeObject(DataBuffer, Long, long)
+   */
+  void writeLong(S buffer, long value, long index);
+
+  /**
+   * Reads {@code n = scale()} values from the buffer at the given index and return them as a long.
+   *
+   * @param buffer the buffer to read from
+   * @param index position of the buffer to read in the buffer
+   * @return the long value
+   * @see #readObject(DataBuffer, long)
+   */
+  long readLong(S buffer, long index);
+
+  @Override
+  default void writeObject(S buffer, Long value, long index) {
     writeLong(buffer, value, index);
   }
 
   @Override
-  default Long readValue(ByteDataBuffer buffer, long index) {
+  default Long readObject(S buffer, long index) {
     return readLong(buffer, index);
   }
 }

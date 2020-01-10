@@ -14,40 +14,52 @@
  *  limitations under the License.
  *  =======================================================================
  */
-
 package org.tensorflow.tools.buffer.layout;
 
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
 
 /**
- * Converts a float to/from bytes
+ * A {@link DataLayout} that converts data stored in a buffer to floats.
+ *
+ * @param <S> type of buffer this layout can be applied to
+ * @see DataLayout
  */
-public interface FloatDataLayout extends DataLayout<Float> {
-
-  /**
-   * Writes a float as bytes to the given buffer at its current position.
-   *  @param buffer buffer that receives the value as bytes
-   * @param value value
-   * @param index byte index of the value to write
-   */
-  void writeFloat(ByteDataBuffer buffer, float value, long index);
-
-  /**
-   * Reads a float as bytes from the given buffer at its current position.
-   *
-   * @param buffer buffer that supplies the value as bytes
-   * @param index byte index of the value to read
-   * @return value
-   */
-  float readFloat(ByteDataBuffer buffer, long index);
+public interface FloatDataLayout<S extends DataBuffer<?>> extends DataLayout<S, Float> {
 
   @Override
-  default void writeValue(ByteDataBuffer buffer, Float value, long index) {
+  default FloatDataBuffer applyTo(S buffer) {
+    return DataBufferAdapterFactory.create(buffer, this);
+  }
+
+  /**
+   * Writes a float into the buffer at the given index after converting it to the buffer type.
+   *
+   * @param buffer the buffer to write to
+   * @param value the float to convert and write
+   * @param index index in the buffer where the converted value should be written
+   * @see #writeObject(DataBuffer, Float, long)
+   */
+  void writeFloat(S buffer, float value, long index);
+
+  /**
+   * Reads {@code n = scale()} values from the buffer at the given index and return them as a float.
+   *
+   * @param buffer the buffer to read from
+   * @param index position of the buffer to read in the buffer
+   * @return the float value
+   * @see #readObject(DataBuffer, long)
+   */
+  float readFloat(S buffer, long index);
+
+  @Override
+  default void writeObject(S buffer, Float value, long index) {
     writeFloat(buffer, value, index);
   }
 
   @Override
-  default Float readValue(ByteDataBuffer buffer, long index) {
+  default Float readObject(S buffer, long index) {
     return readFloat(buffer, index);
   }
 }

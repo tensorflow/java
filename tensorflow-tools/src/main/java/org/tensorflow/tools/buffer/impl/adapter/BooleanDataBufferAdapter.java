@@ -18,23 +18,23 @@
 package org.tensorflow.tools.buffer.impl.adapter;
 
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.BooleanDataLayout;
 
-class BooleanDataBufferAdapter extends AbstractDataBufferAdapter<Boolean, BooleanDataBuffer>
+class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Boolean, BooleanDataBuffer>
     implements BooleanDataBuffer {
 
   @Override
   public boolean getBoolean(long index) {
     Validator.getArgs(this, index);
-    return layout.readBoolean(buffer(), index * layout.sizeInBytes());
+    return layout.readBoolean(buffer(), index * layout.scale());
   }
 
   @Override
   public BooleanDataBuffer setBoolean(boolean value, long index) {
     Validator.setArgs(this, index);
-    layout.writeBoolean(buffer(), value, index * layout.sizeInBytes());
+    layout.writeBoolean(buffer(), value, index * layout.scale());
     return this;
   }
 
@@ -42,7 +42,7 @@ class BooleanDataBufferAdapter extends AbstractDataBufferAdapter<Boolean, Boolea
   public BooleanDataBuffer read(boolean[] dst, int offset, int length) {
     Validator.readArgs(this, dst.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      dst[j] = layout.readBoolean(buffer(), i * layout.sizeInBytes());
+      dst[j] = layout.readBoolean(buffer(), i * layout.scale());
     }
     return this;
   }
@@ -51,25 +51,27 @@ class BooleanDataBufferAdapter extends AbstractDataBufferAdapter<Boolean, Boolea
   public BooleanDataBuffer write(boolean[] src, int offset, int length) {
     Validator.writeArgs(this, src.length, offset, length);
     for (int i = 0, j = offset; i < length; ++i, ++j) {
-      layout.writeBoolean(buffer(), src[j], i * layout.sizeInBytes());
+      layout.writeBoolean(buffer(), src[j], i * layout.scale());
     }
     return this;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BooleanDataBuffer offset(long index) {
-    return new BooleanDataBufferAdapter(buffer().offset(index * layout.sizeInBytes()), layout);
+    return new BooleanDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BooleanDataBuffer narrow(long size) {
-    return new BooleanDataBufferAdapter(buffer().narrow(size * layout.sizeInBytes()), layout);
+    return new BooleanDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
   }
 
-  BooleanDataBufferAdapter(ByteDataBuffer physicalBuffer, BooleanDataLayout layout) {
-    super(physicalBuffer, layout);
+  BooleanDataBufferAdapter(S buffer, BooleanDataLayout<S> layout) {
+    super(buffer, layout);
     this.layout = layout;
   }
 
-  private BooleanDataLayout layout;
+  private BooleanDataLayout<S> layout;
 }
