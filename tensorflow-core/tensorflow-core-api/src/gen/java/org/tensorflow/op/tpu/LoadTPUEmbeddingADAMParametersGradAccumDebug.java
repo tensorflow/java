@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Load ADAM embedding parameters with debug support.
@@ -85,7 +85,7 @@ public final class LoadTPUEmbeddingADAMParametersGradAccumDebug extends Primitiv
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingADAMParametersGradAccumDebug
    */
-  public static LoadTPUEmbeddingADAMParametersGradAccumDebug create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> momenta, Operand<TFloat> velocities, Operand<TFloat> gradientAccumulators, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingADAMParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> momenta, Operand<TFloat32> velocities, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingADAMParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingADAMParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());

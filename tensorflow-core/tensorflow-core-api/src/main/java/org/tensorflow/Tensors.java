@@ -19,8 +19,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.nio.charset.Charset;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -53,8 +53,8 @@ public final class Tensors {
    *
    * @param data The value to put into the new scalar tensor.
    */
-  public static Tensor<TFloat> create(float data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -63,8 +63,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -73,8 +73,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[][] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[][] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -83,8 +83,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[][][] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[][][] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -93,8 +93,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[][][][] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[][][][] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -103,8 +103,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[][][][][] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[][][][][] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -113,8 +113,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TFloat> create(float[][][][][][] data) {
-    return Tensor.create(data, TFloat.DTYPE);
+  public static Tensor<TFloat32> create(float[][][][][][] data) {
+    return Tensor.create(data, TFloat32.DTYPE);
   }
 
   /**
@@ -122,8 +122,8 @@ public final class Tensors {
    *
    * @param data The value to put into the new scalar tensor.
    */
-  public static Tensor<TDouble> create(double data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -132,8 +132,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -142,8 +142,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[][] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[][] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -152,8 +152,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[][][] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[][][] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -162,8 +162,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[][][][] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[][][][] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -172,8 +172,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[][][][][] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[][][][][] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**
@@ -182,8 +182,8 @@ public final class Tensors {
    * @param data An array containing the values to put into the new tensor. The dimensions of the
    *     new tensor will match those of the array.
    */
-  public static Tensor<TDouble> create(double[][][][][][] data) {
-    return Tensor.create(data, TDouble.DTYPE);
+  public static Tensor<TFloat64> create(double[][][][][][] data) {
+    return Tensor.create(data, TFloat64.DTYPE);
   }
 
   /**

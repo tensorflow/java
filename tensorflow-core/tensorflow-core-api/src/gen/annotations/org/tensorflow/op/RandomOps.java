@@ -21,7 +21,7 @@ import org.tensorflow.op.random.StatelessRandomUniform;
 import org.tensorflow.op.random.StatelessTruncatedNormal;
 import org.tensorflow.op.random.TruncatedNormal;
 import org.tensorflow.op.random.UniformCandidateSampler;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -166,6 +166,19 @@ public final class RandomOps {
   }
 
   /**
+   * Builds an {@link StatelessRandomNormal} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessRandomNormal
+   * @see org.tensorflow.op.random.StatelessRandomNormal
+   */
+  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> statelessRandomNormal(
+      Operand<T> shape, Operand<U> seed) {
+    return StatelessRandomNormal.create(scope, shape, seed);
+  }
+
+  /**
    * Builds an {@link StatefulRandomBinomial} operation
    *
    * @param resource 
@@ -267,29 +280,16 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link StatelessTruncatedNormal} operation
+   * Builds an {@link StatelessRandomUniform} operation
    *
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessTruncatedNormal
-   * @see org.tensorflow.op.random.StatelessTruncatedNormal
+   * @return a new instance of StatelessRandomUniform
+   * @see org.tensorflow.op.random.StatelessRandomUniform
    */
-  public <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat> statelessTruncatedNormal(
+  public <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> statelessRandomUniform(
       Operand<T> shape, Operand<U> seed) {
-    return StatelessTruncatedNormal.create(scope, shape, seed);
-  }
-
-  /**
-   * Builds an {@link StatelessRandomNormal} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomNormal
-   * @see org.tensorflow.op.random.StatelessRandomNormal
-   */
-  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat> statelessRandomNormal(
-      Operand<T> shape, Operand<U> seed) {
-    return StatelessRandomNormal.create(scope, shape, seed);
+    return StatelessRandomUniform.create(scope, shape, seed);
   }
 
   /**
@@ -305,6 +305,33 @@ public final class RandomOps {
   public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> statelessMultinomial(
       Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     return StatelessMultinomial.create(scope, logits, numSamples, seed, outputDtype);
+  }
+
+  /**
+   * Builds an {@link StatelessTruncatedNormal} operation
+   *
+   * @param shape The shape of the output tensor.
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessTruncatedNormal
+   * @see org.tensorflow.op.random.StatelessTruncatedNormal
+   */
+  public <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> statelessTruncatedNormal(
+      Operand<T> shape, Operand<U> seed) {
+    return StatelessTruncatedNormal.create(scope, shape, seed);
+  }
+
+  /**
+   * Builds an {@link StatefulStandardNormal} operation
+   *
+   * @param resource The handle of the resource variable that stores the state of the RNG.
+   * @param algorithm The RNG algorithm.
+   * @param shape The shape of the output tensor.
+   * @return a new instance of StatefulStandardNormal
+   * @see org.tensorflow.op.random.StatefulStandardNormal
+   */
+  public <T extends TType> StatefulStandardNormal<TFloat32> statefulStandardNormal(
+      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+    return StatefulStandardNormal.create(scope, resource, algorithm, shape);
   }
 
   /**
@@ -382,19 +409,6 @@ public final class RandomOps {
   }
 
   /**
-   * Builds an {@link StatelessRandomUniform} operation
-   *
-   * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomUniform
-   * @see org.tensorflow.op.random.StatelessRandomUniform
-   */
-  public <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat> statelessRandomUniform(
-      Operand<T> shape, Operand<U> seed) {
-    return StatelessRandomUniform.create(scope, shape, seed);
-  }
-
-  /**
    * Builds an {@link RandomStandardNormal} operation
    *
    * @param shape The shape of the output tensor.
@@ -420,19 +434,5 @@ public final class RandomOps {
   public <U extends TNumber, T extends TNumber> RandomUniform<U> randomUniform(Operand<T> shape,
       DataType<U> dtype, RandomUniform.Options... options) {
     return RandomUniform.create(scope, shape, dtype, options);
-  }
-
-  /**
-   * Builds an {@link StatefulStandardNormal} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param algorithm The RNG algorithm.
-   * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormal
-   * @see org.tensorflow.op.random.StatefulStandardNormal
-   */
-  public <T extends TType> StatefulStandardNormal<TFloat> statefulStandardNormal(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return StatefulStandardNormal.create(scope, resource, algorithm, shape);
   }
 }

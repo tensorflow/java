@@ -24,7 +24,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Applies L1 regularization shrink step on the parameters.
@@ -42,7 +42,7 @@ public final class SdcaShrinkL1 extends PrimitiveOp {
    * @param l2 Symmetric l2 regularization strength. Should be a positive float.
    * @return a new instance of SdcaShrinkL1
    */
-  public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat>> weights, Float l1, Float l2) {
+  public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat32>> weights, Float l1, Float l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaShrinkL1", scope.makeOpName("SdcaShrinkL1"));
     opBuilder.addInputList(Operands.asOutputs(weights));
     opBuilder = scope.applyControlDependencies(opBuilder);

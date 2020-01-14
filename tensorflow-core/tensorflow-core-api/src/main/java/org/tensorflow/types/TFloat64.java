@@ -26,46 +26,46 @@ import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.DoubleDenseNdArray;
-import org.tensorflow.types.family.TDecimal;
+import org.tensorflow.types.family.TNumber;
 
-public interface TDouble extends DoubleNdArray, TDecimal {
+public interface TFloat64 extends DoubleNdArray, TNumber {
 
-  DataType<TDouble> DTYPE = DataType.create("DOUBLE", 2, 8, TDoubleImpl::mapTensor);
+  DataType<TFloat64> DTYPE = DataType.create("DOUBLE", 2, 8, TFloat64Impl::mapTensor);
 
-  static Tensor<TDouble> scalarOf(double value) {
-    Tensor<TDouble> t = ofShape();
+  static Tensor<TFloat64> scalarOf(double value) {
+    Tensor<TFloat64> t = ofShape();
     t.data().setDouble(value);
     return t;
   }
 
-  static Tensor<TDouble> vectorOf(double... values) {
-    Tensor<TDouble> t = ofShape(values.length);
+  static Tensor<TFloat64> vectorOf(double... values) {
+    Tensor<TFloat64> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
-  static Tensor<TDouble> ofShape(Shape shape) {
+  static Tensor<TFloat64> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
-  static Tensor<TDouble> ofShape(long... dimensionSizes) {
+  static Tensor<TFloat64> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
-  static Tensor<TDouble> copyOf(NdArray<Double> src) {
-    Tensor<TDouble> t = Tensor.allocate(DTYPE, src.shape());
+  static Tensor<TFloat64> copyOf(NdArray<Double> src) {
+    Tensor<TFloat64> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
     return t;
   }
 }
 
-class TDoubleImpl extends DoubleDenseNdArray implements TDouble {
+class TFloat64Impl extends DoubleDenseNdArray implements TFloat64 {
 
-  static TDouble mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TDoubleImpl(TensorBuffers.toDoubles(nativeTensor), shape);
+  static TFloat64 mapTensor(TF_Tensor nativeTensor, Shape shape) {
+    return new TFloat64Impl(TensorBuffers.toDoubles(nativeTensor), shape);
   }
 
-  private TDoubleImpl(DoubleDataBuffer buffer, Shape shape) {
+  private TFloat64Impl(DoubleDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 }

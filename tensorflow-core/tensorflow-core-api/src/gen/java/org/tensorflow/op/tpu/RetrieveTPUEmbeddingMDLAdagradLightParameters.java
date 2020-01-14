@@ -22,7 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve MDL Adagrad Light embedding parameters.
@@ -125,35 +125,35 @@ public final class RetrieveTPUEmbeddingMDLAdagradLightParameters extends Primiti
   /**
    * Parameter parameters updated by the MDL Adagrad Light optimization algorithm.
    */
-  public Output<TFloat> parameters() {
+  public Output<TFloat32> parameters() {
     return parameters;
   }
   
   /**
    * Parameter accumulators updated by the MDL Adagrad Light optimization algorithm.
    */
-  public Output<TFloat> accumulators() {
+  public Output<TFloat32> accumulators() {
     return accumulators;
   }
   
   /**
    * Parameter weights updated by the MDL Adagrad Light optimization algorithm.
    */
-  public Output<TFloat> weights() {
+  public Output<TFloat32> weights() {
     return weights;
   }
   
   /**
    * Parameter benefits updated by the MDL Adagrad Light optimization algorithm.
    */
-  public Output<TFloat> benefits() {
+  public Output<TFloat32> benefits() {
     return benefits;
   }
   
-  private Output<TFloat> parameters;
-  private Output<TFloat> accumulators;
-  private Output<TFloat> weights;
-  private Output<TFloat> benefits;
+  private Output<TFloat32> parameters;
+  private Output<TFloat32> accumulators;
+  private Output<TFloat32> weights;
+  private Output<TFloat32> benefits;
   
   private RetrieveTPUEmbeddingMDLAdagradLightParameters(Operation operation) {
     super(operation);

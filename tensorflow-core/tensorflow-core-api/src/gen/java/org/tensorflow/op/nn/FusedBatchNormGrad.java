@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -101,7 +101,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNormGrad
    */
-  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());

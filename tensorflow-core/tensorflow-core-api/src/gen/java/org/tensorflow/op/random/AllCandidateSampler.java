@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -136,7 +136,7 @@ public final class AllCandidateSampler extends PrimitiveOp {
    * the number of times each candidate is expected to occur in a batch
    * of sampled candidates. If unique=true, then this is a probability.
    */
-  public Output<TFloat> trueExpectedCount() {
+  public Output<TFloat32> trueExpectedCount() {
     return trueExpectedCount;
   }
   
@@ -146,13 +146,13 @@ public final class AllCandidateSampler extends PrimitiveOp {
    * to occur in a batch of sampled candidates.  If unique=true, then this is a
    * probability.
    */
-  public Output<TFloat> sampledExpectedCount() {
+  public Output<TFloat32> sampledExpectedCount() {
     return sampledExpectedCount;
   }
   
   private Output<TInt64> sampledCandidates;
-  private Output<TFloat> trueExpectedCount;
-  private Output<TFloat> sampledExpectedCount;
+  private Output<TFloat32> trueExpectedCount;
+  private Output<TFloat32> sampledExpectedCount;
   
   private AllCandidateSampler(Operation operation) {
     super(operation);

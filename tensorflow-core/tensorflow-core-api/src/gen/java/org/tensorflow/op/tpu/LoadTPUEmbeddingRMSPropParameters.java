@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Load RMSProp embedding parameters.
@@ -84,7 +84,7 @@ public final class LoadTPUEmbeddingRMSPropParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingRMSPropParameters
    */
-  public static LoadTPUEmbeddingRMSPropParameters create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> ms, Operand<TFloat> mom, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingRMSPropParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> ms, Operand<TFloat32> mom, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingRMSPropParameters", scope.makeOpName("LoadTPUEmbeddingRMSPropParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(ms.asOutput());

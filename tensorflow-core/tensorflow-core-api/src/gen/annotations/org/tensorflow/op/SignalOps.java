@@ -20,7 +20,7 @@ import org.tensorflow.op.signal.Irfft3d;
 import org.tensorflow.op.signal.Rfft;
 import org.tensorflow.op.signal.Rfft2d;
 import org.tensorflow.op.signal.Rfft3d;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -88,6 +88,18 @@ public final class SignalOps {
   }
 
   /**
+   * Builds an {@link Irfft3d} operation
+   *
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
+   * @return a new instance of Irfft3d
+   * @see org.tensorflow.op.signal.Irfft3d
+   */
+  public <T extends TType> Irfft3d<TFloat32> irfft3d(Operand<T> input, Operand<TInt32> fftLength) {
+    return Irfft3d.create(scope, input, fftLength);
+  }
+
+  /**
    * Builds an {@link Ifft2d} operation
    *
    * @param input A complex tensor.
@@ -113,18 +125,6 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link Irfft2d} operation
-   *
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-   * @return a new instance of Irfft2d
-   * @see org.tensorflow.op.signal.Irfft2d
-   */
-  public <T extends TType> Irfft2d<TFloat> irfft2d(Operand<T> input, Operand<TInt32> fftLength) {
-    return Irfft2d.create(scope, input, fftLength);
-  }
-
-  /**
    * Builds an {@link BatchIfft3d} operation
    *
    * @param input 
@@ -147,15 +147,15 @@ public final class SignalOps {
   }
 
   /**
-   * Builds an {@link Irfft3d} operation
+   * Builds an {@link Irfft2d} operation
    *
    * @param input A complex tensor.
-   * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @return a new instance of Irfft3d
-   * @see org.tensorflow.op.signal.Irfft3d
+   * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
+   * @return a new instance of Irfft2d
+   * @see org.tensorflow.op.signal.Irfft2d
    */
-  public <T extends TType> Irfft3d<TFloat> irfft3d(Operand<T> input, Operand<TInt32> fftLength) {
-    return Irfft3d.create(scope, input, fftLength);
+  public <T extends TType> Irfft2d<TFloat32> irfft2d(Operand<T> input, Operand<TInt32> fftLength) {
+    return Irfft2d.create(scope, input, fftLength);
   }
 
   /**
@@ -167,6 +167,18 @@ public final class SignalOps {
    */
   public <T extends TType> Fft<T> fft(Operand<T> input) {
     return Fft.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Irfft} operation
+   *
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor of shape [1]. The FFT length.
+   * @return a new instance of Irfft
+   * @see org.tensorflow.op.signal.Irfft
+   */
+  public <T extends TType> Irfft<TFloat32> irfft(Operand<T> input, Operand<TInt32> fftLength) {
+    return Irfft.create(scope, input, fftLength);
   }
 
   /**
@@ -253,18 +265,6 @@ public final class SignalOps {
    */
   public <T extends TType> Fft2d<T> fft2d(Operand<T> input) {
     return Fft2d.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link Irfft} operation
-   *
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor of shape [1]. The FFT length.
-   * @return a new instance of Irfft
-   * @see org.tensorflow.op.signal.Irfft
-   */
-  public <T extends TType> Irfft<TFloat> irfft(Operand<T> input, Operand<TInt32> fftLength) {
-    return Irfft.create(scope, input, fftLength);
   }
 
   /**

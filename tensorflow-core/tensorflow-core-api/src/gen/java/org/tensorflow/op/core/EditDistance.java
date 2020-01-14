@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * The inputs are:
  */
 @Operator
-public final class EditDistance extends PrimitiveOp implements Operand<TFloat> {
+public final class EditDistance extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.EditDistance}
@@ -140,16 +140,16 @@ public final class EditDistance extends PrimitiveOp implements Operand<TFloat> {
    *     output = [[inf, 1.0],  // (0,0): no truth, (0,1): no hypothesis
    *               [0.5, 1.0]]  // (1,0): addition, (1,1): no hypothesis
    */
-  public Output<TFloat> output() {
+  public Output<TFloat32> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<TFloat32> output;
   
   private EditDistance(Operation operation) {
     super(operation);

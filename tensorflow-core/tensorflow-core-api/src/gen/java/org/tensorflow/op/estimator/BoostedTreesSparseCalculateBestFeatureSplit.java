@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -76,7 +76,7 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesSparseCalculateBestFeatureSplit
    */
-  public static BoostedTreesSparseCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TInt32> statsSummaryIndices, Operand<TFloat> statsSummaryValues, Operand<TInt32> statsSummaryShape, Operand<TFloat> l1, Operand<TFloat> l2, Operand<TFloat> treeComplexity, Operand<TFloat> minNodeWeight, Long logitsDimension, Options... options) {
+  public static BoostedTreesSparseCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TInt32> statsSummaryIndices, Operand<TFloat32> statsSummaryValues, Operand<TInt32> statsSummaryShape, Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight, Long logitsDimension, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseCalculateBestFeatureSplit", scope.makeOpName("BoostedTreesSparseCalculateBestFeatureSplit"));
     opBuilder.addInput(nodeIdRange.asOutput());
     opBuilder.addInput(statsSummaryIndices.asOutput());
@@ -115,7 +115,7 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends Primitive
   /**
    * A Rank 1 tensor indicating the best gains to split each node.
    */
-  public Output<TFloat> gains() {
+  public Output<TFloat32> gains() {
     return gains;
   }
   
@@ -137,14 +137,14 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends Primitive
    * A Rank 2 tensor indicating the contribution of the left nodes when branching from parent nodes to the left direction by the given threshold for each feature.
    * This value will be used to make the left node value by adding to the parent node value. Second dimension size is logits dimension.
    */
-  public Output<TFloat> leftNodeContribs() {
+  public Output<TFloat32> leftNodeContribs() {
     return leftNodeContribs;
   }
   
   /**
    * A Rank 2 tensor, with the same shape/conditions as left_node_contribs_list, but just that the value is for the right node.
    */
-  public Output<TFloat> rightNodeContribs() {
+  public Output<TFloat32> rightNodeContribs() {
     return rightNodeContribs;
   }
   
@@ -157,11 +157,11 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends Primitive
   }
   
   private Output<TInt32> nodeIds;
-  private Output<TFloat> gains;
+  private Output<TFloat32> gains;
   private Output<TInt32> featureDimensions;
   private Output<TInt32> thresholds;
-  private Output<TFloat> leftNodeContribs;
-  private Output<TFloat> rightNodeContribs;
+  private Output<TFloat32> leftNodeContribs;
+  private Output<TFloat32> rightNodeContribs;
   private Output<TString> splitWithDefaultDirections;
   
   private BoostedTreesSparseCalculateBestFeatureSplit(Operation operation) {

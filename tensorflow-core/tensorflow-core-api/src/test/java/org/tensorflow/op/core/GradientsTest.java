@@ -30,7 +30,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.Tensors;
 import org.tensorflow.TestUtil;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 @RunWith(JUnit4.class)
 public class GradientsTest {
@@ -41,9 +41,9 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
 
-      Output<TFloat> x = TestUtil.placeholder(g, "x1", TFloat.DTYPE);
-      Output<TFloat> y0 = TestUtil.square(g, "y0", x);
-      Output<TFloat> y1 = TestUtil.square(g, "y1", y0);
+      Output<TFloat32> x = TestUtil.placeholder(g, "x1", TFloat32.DTYPE);
+      Output<TFloat32> y0 = TestUtil.square(g, "y0", x);
+      Output<TFloat32> y1 = TestUtil.square(g, "y1", y0);
 
       Gradients grads = Gradients.create(scope, y1, Arrays.asList(x, y0));
 
@@ -51,7 +51,7 @@ public class GradientsTest {
       assertNotNull(grads.dy());
       assertEquals(2, grads.dy().size());
 
-      try (Tensor<TFloat> c = Tensors.create(3.0f);
+      try (Tensor<TFloat32> c = Tensors.create(3.0f);
           TestUtil.AutoCloseableList<Tensor<?>> outputs =
               new TestUtil.AutoCloseableList<>(
                   sess.runner().feed(x, c).fetch(grads.dy(0)).fetch(grads.dy(1)).run())) {
@@ -68,9 +68,9 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
 
-      Output<TFloat> x = TestUtil.placeholder(g, "x1", TFloat.DTYPE);
-      Output<TFloat> y0 = TestUtil.square(g, "y0", x);
-      Output<TFloat> y1 = TestUtil.square(g, "y1", y0);
+      Output<TFloat32> x = TestUtil.placeholder(g, "x1", TFloat32.DTYPE);
+      Output<TFloat32> y0 = TestUtil.square(g, "y0", x);
+      Output<TFloat32> y1 = TestUtil.square(g, "y1", y0);
 
       Gradients grads = Gradients.create(scope, Arrays.asList(y0, y1), Arrays.asList(x));
 
@@ -78,7 +78,7 @@ public class GradientsTest {
       assertNotNull(grads.dy());
       assertEquals(1, grads.dy().size());
 
-      try (Tensor<TFloat> c = Tensors.create(3.0f);
+      try (Tensor<TFloat32> c = Tensors.create(3.0f);
           TestUtil.AutoCloseableList<Tensor<?>> outputs =
               new TestUtil.AutoCloseableList<>(sess.runner().feed(x, c).fetch(grads.dy(0)).run())) {
 
@@ -93,9 +93,9 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
 
-      Output<TFloat> x = TestUtil.placeholder(g, "x1", TFloat.DTYPE);
-      Output<TFloat> y0 = TestUtil.square(g, "y0", x);
-      Output<TFloat> y1 = TestUtil.square(g, "y1", y0);
+      Output<TFloat32> x = TestUtil.placeholder(g, "x1", TFloat32.DTYPE);
+      Output<TFloat32> y0 = TestUtil.square(g, "y0", x);
+      Output<TFloat32> y1 = TestUtil.square(g, "y1", y0);
 
       Gradients grads0 = Gradients.create(scope, y1, Arrays.asList(y0));
       Gradients grads1 = Gradients.create(scope, y0, Arrays.asList(x), Gradients.dx(grads0.dy()));
@@ -104,7 +104,7 @@ public class GradientsTest {
       assertNotNull(grads1.dy());
       assertEquals(1, grads1.dy().size());
 
-      try (Tensor<TFloat> c = Tensors.create(3.0f);
+      try (Tensor<TFloat32> c = Tensors.create(3.0f);
           TestUtil.AutoCloseableList<Tensor<?>> outputs =
               new TestUtil.AutoCloseableList<>(
                   sess.runner().feed(x, c).fetch(grads1.dy(0)).run())) {
@@ -119,8 +119,8 @@ public class GradientsTest {
     try (Graph g = new Graph()) {
       Scope scope = new Scope(g).withSubScope("sub");
 
-      Output<TFloat> x = TestUtil.placeholder(g, "x1", TFloat.DTYPE);
-      Output<TFloat> y = TestUtil.square(g, "y", x);
+      Output<TFloat32> x = TestUtil.placeholder(g, "x1", TFloat32.DTYPE);
+      Output<TFloat32> y = TestUtil.square(g, "y", x);
 
       Gradients grad0 = Gradients.create(scope, y, Arrays.asList(x));
       assertTrue(grad0.dy(0).op().name().startsWith("sub/Gradients/"));

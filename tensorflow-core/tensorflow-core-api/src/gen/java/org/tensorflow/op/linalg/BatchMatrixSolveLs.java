@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -63,7 +63,7 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixSolveLs
    */
-  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TDouble> l2Regularizer, Options... options) {
+  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolveLs", scope.makeOpName("BatchMatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

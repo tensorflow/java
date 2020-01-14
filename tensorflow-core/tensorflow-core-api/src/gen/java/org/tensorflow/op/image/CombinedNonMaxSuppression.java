@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -100,7 +100,7 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CombinedNonMaxSuppression
    */
-  public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat> boxes, Operand<TFloat> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize, Operand<TFloat> iouThreshold, Operand<TFloat> scoreThreshold, Options... options) {
+  public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat32> boxes, Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize, Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CombinedNonMaxSuppression", scope.makeOpName("CombinedNonMaxSuppression"));
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(scores.asOutput());
@@ -146,7 +146,7 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
    * A [batch_size, max_detections, 4] float32 tensor 
    * containing the non-max suppressed boxes.
    */
-  public Output<TFloat> nmsedBoxes() {
+  public Output<TFloat32> nmsedBoxes() {
     return nmsedBoxes;
   }
   
@@ -154,7 +154,7 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
    * A [batch_size, max_detections] float32 tensor 
    * containing the scores for the boxes.
    */
-  public Output<TFloat> nmsedScores() {
+  public Output<TFloat32> nmsedScores() {
     return nmsedScores;
   }
   
@@ -162,7 +162,7 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
    * A [batch_size, max_detections] float32 tensor 
    * containing the classes for the boxes.
    */
-  public Output<TFloat> nmsedClasses() {
+  public Output<TFloat32> nmsedClasses() {
     return nmsedClasses;
   }
   
@@ -176,9 +176,9 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
     return validDetections;
   }
   
-  private Output<TFloat> nmsedBoxes;
-  private Output<TFloat> nmsedScores;
-  private Output<TFloat> nmsedClasses;
+  private Output<TFloat32> nmsedBoxes;
+  private Output<TFloat32> nmsedScores;
+  private Output<TFloat32> nmsedClasses;
   private Output<TInt32> validDetections;
   
   private CombinedNonMaxSuppression(Operation operation) {

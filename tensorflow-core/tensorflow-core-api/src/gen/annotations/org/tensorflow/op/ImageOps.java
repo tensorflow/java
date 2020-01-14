@@ -34,7 +34,7 @@ import org.tensorflow.op.image.ResizeNearestNeighbor;
 import org.tensorflow.op.image.RgbToHsv;
 import org.tensorflow.op.image.SampleDistortedBoundingBox;
 import org.tensorflow.op.image.ScaleAndTranslate;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -55,17 +55,32 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link DrawBoundingBoxes} operation
+   * Builds an {@link AdjustHue} operation
    *
-   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
-   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
-   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
-   * @return a new instance of DrawBoundingBoxes
-   * @see org.tensorflow.op.image.DrawBoundingBoxes
+   * @param images Images to adjust.  At least 3-D.
+   * @param delta A float delta to add to the hue.
+   * @return a new instance of AdjustHue
+   * @see org.tensorflow.op.image.AdjustHue
    */
-  public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
-      Operand<TFloat> boxes, Operand<TFloat> colors) {
-    return DrawBoundingBoxes.create(scope, images, boxes, colors);
+  public <T extends TNumber> AdjustHue<T> adjustHue(Operand<T> images, Operand<TFloat32> delta) {
+    return AdjustHue.create(scope, images, delta);
+  }
+
+  /**
+   * Builds an {@link QuantizedResizeBilinear} operation
+   *
+   * @param images 4-D with shape `[batch, height, width, channels]`.
+   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param min 
+   * @param max 
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizedResizeBilinear
+   * @see org.tensorflow.op.image.QuantizedResizeBilinear
+   */
+  public <T extends TType> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
+      Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max,
+      QuantizedResizeBilinear.Options... options) {
+    return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
   }
 
   /**
@@ -116,23 +131,6 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link CropAndResizeGradBoxes} operation
-   *
-   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
-   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   * @param options carries optional attributes values
-   * @return a new instance of CropAndResizeGradBoxes
-   * @see org.tensorflow.op.image.CropAndResizeGradBoxes
-   */
-  public <T extends TNumber> CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat> grads,
-      Operand<T> image, Operand<TFloat> boxes, Operand<TInt32> boxInd,
-      CropAndResizeGradBoxes.Options... options) {
-    return CropAndResizeGradBoxes.create(scope, grads, image, boxes, boxInd, options);
-  }
-
-  /**
    * Builds an {@link DecodeBmp} operation
    *
    * @param contents 0-D.  The BMP-encoded image.
@@ -142,21 +140,6 @@ public final class ImageOps {
    */
   public DecodeBmp decodeBmp(Operand<TString> contents, DecodeBmp.Options... options) {
     return DecodeBmp.create(scope, contents, options);
-  }
-
-  /**
-   * Builds an {@link ExtractGlimpse} operation
-   *
-   * @param input A 4-D float tensor of shape `[batch_size, height, width, channels]`.
-   * @param size A 1-D tensor of 2 elements containing the size of the glimpses
-   * @param offsets A 2-D integer tensor of shape `[batch_size, 2]` containing
-   * @param options carries optional attributes values
-   * @return a new instance of ExtractGlimpse
-   * @see org.tensorflow.op.image.ExtractGlimpse
-   */
-  public ExtractGlimpse extractGlimpse(Operand<TFloat> input, Operand<TInt32> size,
-      Operand<TFloat> offsets, ExtractGlimpse.Options... options) {
-    return ExtractGlimpse.create(scope, input, size, offsets, options);
   }
 
   /**
@@ -216,20 +199,36 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link ScaleAndTranslate} operation
+   * Builds an {@link NonMaxSuppressionWithOverlaps} operation
    *
-   * @param images 
-   * @param size 
-   * @param scale 
-   * @param translation 
-   * @param options carries optional attributes values
-   * @return a new instance of ScaleAndTranslate
-   * @see org.tensorflow.op.image.ScaleAndTranslate
+   * @param overlaps A 2-D float tensor of shape `[num_boxes, num_boxes]` representing
+   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
+   * @param maxOutputSize A scalar integer tensor representing the maximum number of
+   * @param overlapThreshold A 0-D float tensor representing the threshold for deciding whether
+   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @return a new instance of NonMaxSuppressionWithOverlaps
+   * @see org.tensorflow.op.image.NonMaxSuppressionWithOverlaps
    */
-  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat> scale, Operand<TFloat> translation,
-      ScaleAndTranslate.Options... options) {
-    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
+  public NonMaxSuppressionWithOverlaps nonMaxSuppressionWithOverlaps(Operand<TFloat32> overlaps,
+      Operand<TFloat32> scores, Operand<TInt32> maxOutputSize, Operand<TFloat32> overlapThreshold,
+      Operand<TFloat32> scoreThreshold) {
+    return NonMaxSuppressionWithOverlaps.create(scope, overlaps, scores, maxOutputSize, overlapThreshold, scoreThreshold);
+  }
+
+  /**
+   * Builds an {@link SampleDistortedBoundingBox} operation
+   *
+   * @param imageSize 1-D, containing `[height, width, channels]`.
+   * @param boundingBoxes 3-D with shape `[batch, N, 4]` describing the N bounding boxes
+   * @param minObjectCovered The cropped area of the image must contain at least this
+   * @param options carries optional attributes values
+   * @return a new instance of SampleDistortedBoundingBox
+   * @see org.tensorflow.op.image.SampleDistortedBoundingBox
+   */
+  public <T extends TNumber> SampleDistortedBoundingBox<T> sampleDistortedBoundingBox(
+      Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered,
+      SampleDistortedBoundingBox.Options... options) {
+    return SampleDistortedBoundingBox.create(scope, imageSize, boundingBoxes, minObjectCovered, options);
   }
 
   /**
@@ -252,6 +251,19 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link AdjustSaturation} operation
+   *
+   * @param images Images to adjust.  At least 3-D.
+   * @param scale A float scale to add to the saturation.
+   * @return a new instance of AdjustSaturation
+   * @see org.tensorflow.op.image.AdjustSaturation
+   */
+  public <T extends TNumber> AdjustSaturation<T> adjustSaturation(Operand<T> images,
+      Operand<TFloat32> scale) {
+    return AdjustSaturation.create(scope, images, scale);
+  }
+
+  /**
    * Builds an {@link ExtractJpegShape} operation
    *
    * @param contents 0-D. The JPEG-encoded image.
@@ -262,6 +274,26 @@ public final class ImageOps {
   public <T extends TNumber> ExtractJpegShape<T> extractJpegShape(Operand<TString> contents,
       DataType<T> outputType) {
     return ExtractJpegShape.create(scope, contents, outputType);
+  }
+
+  /**
+   * Builds an {@link CombinedNonMaxSuppression} operation
+   *
+   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
+   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
+   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
+   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
+   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
+   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @param options carries optional attributes values
+   * @return a new instance of CombinedNonMaxSuppression
+   * @see org.tensorflow.op.image.CombinedNonMaxSuppression
+   */
+  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat32> boxes,
+      Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
+      Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold,
+      CombinedNonMaxSuppression.Options... options) {
+    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
   }
 
   /**
@@ -278,36 +310,20 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link AdjustSaturation} operation
+   * Builds an {@link CropAndResizeGradBoxes} operation
    *
-   * @param images Images to adjust.  At least 3-D.
-   * @param scale A float scale to add to the saturation.
-   * @return a new instance of AdjustSaturation
-   * @see org.tensorflow.op.image.AdjustSaturation
-   */
-  public <T extends TNumber> AdjustSaturation<T> adjustSaturation(Operand<T> images,
-      Operand<TFloat> scale) {
-    return AdjustSaturation.create(scope, images, scale);
-  }
-
-  /**
-   * Builds an {@link CombinedNonMaxSuppression} operation
-   *
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
-   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
-   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
-   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
-   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
+   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
+   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
+   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
+   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
    * @param options carries optional attributes values
-   * @return a new instance of CombinedNonMaxSuppression
-   * @see org.tensorflow.op.image.CombinedNonMaxSuppression
+   * @return a new instance of CropAndResizeGradBoxes
+   * @see org.tensorflow.op.image.CropAndResizeGradBoxes
    */
-  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat> boxes,
-      Operand<TFloat> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
-      Operand<TFloat> iouThreshold, Operand<TFloat> scoreThreshold,
-      CombinedNonMaxSuppression.Options... options) {
-    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
+  public <T extends TNumber> CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat32> grads,
+      Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
+      CropAndResizeGradBoxes.Options... options) {
+    return CropAndResizeGradBoxes.create(scope, grads, image, boxes, boxInd, options);
   }
 
   /**
@@ -337,54 +353,34 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link QuantizedResizeBilinear} operation
+   * Builds an {@link ScaleAndTranslate} operation
    *
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
-   * @param min 
-   * @param max 
+   * @param images 
+   * @param size 
+   * @param scale 
+   * @param translation 
    * @param options carries optional attributes values
-   * @return a new instance of QuantizedResizeBilinear
-   * @see org.tensorflow.op.image.QuantizedResizeBilinear
+   * @return a new instance of ScaleAndTranslate
+   * @see org.tensorflow.op.image.ScaleAndTranslate
    */
-  public <T extends TType> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat> min, Operand<TFloat> max,
-      QuantizedResizeBilinear.Options... options) {
-    return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
+  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
+      Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
+      ScaleAndTranslate.Options... options) {
+    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
   }
 
   /**
-   * Builds an {@link CropAndResize} operation
+   * Builds an {@link DrawBoundingBoxes} operation
    *
-   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   * @param cropSize A 1-D tensor of 2 elements, `size = [crop_height, crop_width]`. All
-   * @param options carries optional attributes values
-   * @return a new instance of CropAndResize
-   * @see org.tensorflow.op.image.CropAndResize
+   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
+   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
+   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
+   * @return a new instance of DrawBoundingBoxes
+   * @see org.tensorflow.op.image.DrawBoundingBoxes
    */
-  public <T extends TNumber> CropAndResize cropAndResize(Operand<T> image, Operand<TFloat> boxes,
-      Operand<TInt32> boxInd, Operand<TInt32> cropSize, CropAndResize.Options... options) {
-    return CropAndResize.create(scope, image, boxes, boxInd, cropSize, options);
-  }
-
-  /**
-   * Builds an {@link CropAndResizeGradImage} operation
-   *
-   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   * @param imageSize A 1-D tensor with value `[batch, image_height, image_width, depth]`
-   * @param T 
-   * @param options carries optional attributes values
-   * @return a new instance of CropAndResizeGradImage
-   * @see org.tensorflow.op.image.CropAndResizeGradImage
-   */
-  public <T extends TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(Operand<TFloat> grads,
-      Operand<TFloat> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, DataType<T> T,
-      CropAndResizeGradImage.Options... options) {
-    return CropAndResizeGradImage.create(scope, grads, boxes, boxInd, imageSize, T, options);
+  public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
+      Operand<TFloat32> boxes, Operand<TFloat32> colors) {
+    return DrawBoundingBoxes.create(scope, images, boxes, colors);
   }
 
   /**
@@ -414,15 +410,16 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link AdjustHue} operation
+   * Builds an {@link AdjustContrast} operation
    *
    * @param images Images to adjust.  At least 3-D.
-   * @param delta A float delta to add to the hue.
-   * @return a new instance of AdjustHue
-   * @see org.tensorflow.op.image.AdjustHue
+   * @param contrastFactor A float multiplier for adjusting contrast.
+   * @return a new instance of AdjustContrast
+   * @see org.tensorflow.op.image.AdjustContrast
    */
-  public <T extends TNumber> AdjustHue<T> adjustHue(Operand<T> images, Operand<TFloat> delta) {
-    return AdjustHue.create(scope, images, delta);
+  public <T extends TNumber> AdjustContrast<T> adjustContrast(Operand<T> images,
+      Operand<TFloat32> contrastFactor) {
+    return AdjustContrast.create(scope, images, contrastFactor);
   }
 
   /**
@@ -442,19 +439,6 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link AdjustContrast} operation
-   *
-   * @param images Images to adjust.  At least 3-D.
-   * @param contrastFactor A float multiplier for adjusting contrast.
-   * @return a new instance of AdjustContrast
-   * @see org.tensorflow.op.image.AdjustContrast
-   */
-  public <T extends TNumber> AdjustContrast<T> adjustContrast(Operand<T> images,
-      Operand<TFloat> contrastFactor) {
-    return AdjustContrast.create(scope, images, contrastFactor);
-  }
-
-  /**
    * Builds an {@link ExtractJpegShape} operation
    *
    * @param contents 0-D. The JPEG-encoded image.
@@ -463,6 +447,24 @@ public final class ImageOps {
    */
   public ExtractJpegShape<TInt32> extractJpegShape(Operand<TString> contents) {
     return ExtractJpegShape.create(scope, contents);
+  }
+
+  /**
+   * Builds an {@link CropAndResizeGradImage} operation
+   *
+   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
+   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
+   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
+   * @param imageSize A 1-D tensor with value `[batch, image_height, image_width, depth]`
+   * @param T 
+   * @param options carries optional attributes values
+   * @return a new instance of CropAndResizeGradImage
+   * @see org.tensorflow.op.image.CropAndResizeGradImage
+   */
+  public <T extends TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(
+      Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
+      Operand<TInt32> imageSize, DataType<T> T, CropAndResizeGradImage.Options... options) {
+    return CropAndResizeGradImage.create(scope, grads, boxes, boxInd, imageSize, T, options);
   }
 
   /**
@@ -478,23 +480,6 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link NonMaxSuppressionWithOverlaps} operation
-   *
-   * @param overlaps A 2-D float tensor of shape `[num_boxes, num_boxes]` representing
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
-   * @param maxOutputSize A scalar integer tensor representing the maximum number of
-   * @param overlapThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
-   * @return a new instance of NonMaxSuppressionWithOverlaps
-   * @see org.tensorflow.op.image.NonMaxSuppressionWithOverlaps
-   */
-  public NonMaxSuppressionWithOverlaps nonMaxSuppressionWithOverlaps(Operand<TFloat> overlaps,
-      Operand<TFloat> scores, Operand<TInt32> maxOutputSize, Operand<TFloat> overlapThreshold,
-      Operand<TFloat> scoreThreshold) {
-    return NonMaxSuppressionWithOverlaps.create(scope, overlaps, scores, maxOutputSize, overlapThreshold, scoreThreshold);
-  }
-
-  /**
    * Builds an {@link DecodeJpeg} operation
    *
    * @param contents 0-D.  The JPEG-encoded image.
@@ -507,18 +492,33 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link SampleDistortedBoundingBox} operation
+   * Builds an {@link ExtractGlimpse} operation
    *
-   * @param imageSize 1-D, containing `[height, width, channels]`.
-   * @param boundingBoxes 3-D with shape `[batch, N, 4]` describing the N bounding boxes
-   * @param minObjectCovered The cropped area of the image must contain at least this
+   * @param input A 4-D float tensor of shape `[batch_size, height, width, channels]`.
+   * @param size A 1-D tensor of 2 elements containing the size of the glimpses
+   * @param offsets A 2-D integer tensor of shape `[batch_size, 2]` containing
    * @param options carries optional attributes values
-   * @return a new instance of SampleDistortedBoundingBox
-   * @see org.tensorflow.op.image.SampleDistortedBoundingBox
+   * @return a new instance of ExtractGlimpse
+   * @see org.tensorflow.op.image.ExtractGlimpse
    */
-  public <T extends TNumber> SampleDistortedBoundingBox<T> sampleDistortedBoundingBox(
-      Operand<T> imageSize, Operand<TFloat> boundingBoxes, Operand<TFloat> minObjectCovered,
-      SampleDistortedBoundingBox.Options... options) {
-    return SampleDistortedBoundingBox.create(scope, imageSize, boundingBoxes, minObjectCovered, options);
+  public ExtractGlimpse extractGlimpse(Operand<TFloat32> input, Operand<TInt32> size,
+      Operand<TFloat32> offsets, ExtractGlimpse.Options... options) {
+    return ExtractGlimpse.create(scope, input, size, offsets, options);
+  }
+
+  /**
+   * Builds an {@link CropAndResize} operation
+   *
+   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
+   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
+   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
+   * @param cropSize A 1-D tensor of 2 elements, `size = [crop_height, crop_width]`. All
+   * @param options carries optional attributes values
+   * @return a new instance of CropAndResize
+   * @see org.tensorflow.op.image.CropAndResize
+   */
+  public <T extends TNumber> CropAndResize cropAndResize(Operand<T> image, Operand<TFloat32> boxes,
+      Operand<TInt32> boxInd, Operand<TInt32> cropSize, CropAndResize.Options... options) {
+    return CropAndResize.create(scope, image, boxes, boxInd, cropSize, options);
   }
 }

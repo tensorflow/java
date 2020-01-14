@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -77,7 +77,7 @@ public final class GenerateBoundingBoxProposals extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of GenerateBoundingBoxProposals
    */
-  public static GenerateBoundingBoxProposals create(Scope scope, Operand<TFloat> scores, Operand<TFloat> bboxDeltas, Operand<TFloat> imageInfo, Operand<TFloat> anchors, Operand<TFloat> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat> minSize, Options... options) {
+  public static GenerateBoundingBoxProposals create(Scope scope, Operand<TFloat32> scores, Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors, Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateBoundingBoxProposals", scope.makeOpName("GenerateBoundingBoxProposals"));
     opBuilder.addInput(scores.asOutput());
     opBuilder.addInput(bboxDeltas.asOutput());
@@ -108,7 +108,7 @@ public final class GenerateBoundingBoxProposals extends PrimitiveOp {
    * A 3-D float tensor of shape `[num_images,post_nms_topn,4]` representing the selected
    * region of interest boxes. Sorted in descending order in scores.
    */
-  public Output<TFloat> rois() {
+  public Output<TFloat32> rois() {
     return rois;
   }
   
@@ -116,12 +116,12 @@ public final class GenerateBoundingBoxProposals extends PrimitiveOp {
    * A 2-D float tensor of shape `[num_images, post_nms_topn]` representing the score of the
    * region of interest box in `rois` tensor at the same index.
    */
-  public Output<TFloat> roiProbabilities() {
+  public Output<TFloat32> roiProbabilities() {
     return roiProbabilities;
   }
   
-  private Output<TFloat> rois;
-  private Output<TFloat> roiProbabilities;
+  private Output<TFloat32> rois;
+  private Output<TFloat32> roiProbabilities;
   
   private GenerateBoundingBoxProposals(Operation operation) {
     super(operation);

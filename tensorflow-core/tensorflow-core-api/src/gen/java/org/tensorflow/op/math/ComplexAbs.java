@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -65,8 +65,8 @@ public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements 
    * @param x 
    * @return a new instance of ComplexAbs
    */
-  public static <T extends TType> ComplexAbs<TFloat> create(Scope scope, Operand<T> x) {
-    return create(scope, x, TFloat.DTYPE);
+  public static <T extends TType> ComplexAbs<TFloat32> create(Scope scope, Operand<T> x) {
+    return create(scope, x, TFloat32.DTYPE);
   }
   
   /**

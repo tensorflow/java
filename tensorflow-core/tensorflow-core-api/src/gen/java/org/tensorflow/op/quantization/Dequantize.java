@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -80,7 +80,7 @@ import org.tensorflow.types.family.TType;
  * 
  */
 @Operator(group = "quantization")
-public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
+public final class Dequantize extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
@@ -129,7 +129,7 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public static <T extends TType> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat> minRange, Operand<TFloat> maxRange, Options... options) {
+  public static <T extends TType> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
@@ -174,16 +174,16 @@ public final class Dequantize extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    */
-  public Output<TFloat> output() {
+  public Output<TFloat32> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<TFloat32> output;
   
   private Dequantize(Operation operation) {
     super(operation);

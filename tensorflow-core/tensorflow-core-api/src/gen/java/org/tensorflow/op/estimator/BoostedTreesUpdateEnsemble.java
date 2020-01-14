@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -57,7 +57,7 @@ public final class BoostedTreesUpdateEnsemble extends PrimitiveOp {
    * @param pruningMode 0-No pruning, 1-Pre-pruning, 2-Post-pruning.
    * @return a new instance of BoostedTreesUpdateEnsemble
    */
-  public static BoostedTreesUpdateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat>> leftNodeContribs, Iterable<Operand<TFloat>> rightNodeContribs, Operand<TInt32> maxDepth, Operand<TFloat> learningRate, Long pruningMode) {
+  public static BoostedTreesUpdateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Long pruningMode) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsemble", scope.makeOpName("BoostedTreesUpdateEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(featureIds.asOutput());

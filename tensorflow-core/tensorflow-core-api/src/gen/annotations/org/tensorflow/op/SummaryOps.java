@@ -7,7 +7,7 @@ import org.tensorflow.op.summary.ImageSummary;
 import org.tensorflow.op.summary.MergeSummary;
 import org.tensorflow.op.summary.ScalarSummary;
 import org.tensorflow.op.summary.TensorSummary;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -22,21 +22,6 @@ public final class SummaryOps {
 
   SummaryOps(Scope scope) {
     this.scope = scope;
-  }
-
-  /**
-   * Builds an {@link AudioSummary} operation
-   *
-   * @param tag Scalar. Used to build the `tag` attribute of the summary values.
-   * @param tensor 2-D of shape `[batch_size, frames]`.
-   * @param sampleRate The sample rate of the signal in hertz.
-   * @param options carries optional attributes values
-   * @return a new instance of AudioSummary
-   * @see org.tensorflow.op.summary.AudioSummary
-   */
-  public AudioSummary audioSummary(Operand<TString> tag, Operand<TFloat> tensor,
-      Operand<TFloat> sampleRate, AudioSummary.Options... options) {
-    return AudioSummary.create(scope, tag, tensor, sampleRate, options);
   }
 
   /**
@@ -78,6 +63,21 @@ public final class SummaryOps {
   public <T extends TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
       Operand<T> values) {
     return HistogramSummary.create(scope, tag, values);
+  }
+
+  /**
+   * Builds an {@link AudioSummary} operation
+   *
+   * @param tag Scalar. Used to build the `tag` attribute of the summary values.
+   * @param tensor 2-D of shape `[batch_size, frames]`.
+   * @param sampleRate The sample rate of the signal in hertz.
+   * @param options carries optional attributes values
+   * @return a new instance of AudioSummary
+   * @see org.tensorflow.op.summary.AudioSummary
+   */
+  public AudioSummary audioSummary(Operand<TString> tag, Operand<TFloat32> tensor,
+      Operand<TFloat32> sampleRate, AudioSummary.Options... options) {
+    return AudioSummary.create(scope, tag, tensor, sampleRate, options);
   }
 
   /**

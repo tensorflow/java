@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -54,7 +54,7 @@ public final class AdjustContrast<T extends TNumber> extends PrimitiveOp impleme
    * @param contrastFactor A float multiplier for adjusting contrast.
    * @return a new instance of AdjustContrast
    */
-  public static <T extends TNumber> AdjustContrast<T> create(Scope scope, Operand<T> images, Operand<TFloat> contrastFactor) {
+  public static <T extends TNumber> AdjustContrast<T> create(Scope scope, Operand<T> images, Operand<TFloat32> contrastFactor) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustContrastv2", scope.makeOpName("AdjustContrast"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(contrastFactor.asOutput());

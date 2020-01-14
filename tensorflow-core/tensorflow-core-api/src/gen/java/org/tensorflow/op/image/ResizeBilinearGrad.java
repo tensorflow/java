@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -73,7 +73,7 @@ public final class ResizeBilinearGrad<T extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinearGrad
    */
-  public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope, Operand<TFloat> grads, Operand<T> originalImage, Options... options) {
+  public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope, Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinearGrad", scope.makeOpName("ResizeBilinearGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());

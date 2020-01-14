@@ -24,14 +24,14 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFloat> {
+public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayUnpack operation.
@@ -42,7 +42,7 @@ public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFlo
    * @param flowIn 
    * @return a new instance of TensorArrayUnpack
    */
-  public static <T extends TType> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -53,16 +53,16 @@ public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFlo
   
   /**
    */
-  public Output<TFloat> flowOut() {
+  public Output<TFloat32> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return flowOut;
   }
   
-  private Output<TFloat> flowOut;
+  private Output<TFloat32> flowOut;
   
   private TensorArrayUnpack(Operation operation) {
     super(operation);

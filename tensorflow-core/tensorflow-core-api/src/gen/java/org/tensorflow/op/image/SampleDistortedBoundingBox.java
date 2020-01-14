@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -160,7 +160,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of SampleDistortedBoundingBox
    */
-  public static <T extends TNumber> SampleDistortedBoundingBox<T> create(Scope scope, Operand<T> imageSize, Operand<TFloat> boundingBoxes, Operand<TFloat> minObjectCovered, Options... options) {
+  public static <T extends TNumber> SampleDistortedBoundingBox<T> create(Scope scope, Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SampleDistortedBoundingBoxV2", scope.makeOpName("SampleDistortedBoundingBox"));
     opBuilder.addInput(imageSize.asOutput());
     opBuilder.addInput(boundingBoxes.asOutput());
@@ -269,13 +269,13 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends Primiti
    * 3-D with shape `[1, 1, 4]` containing the distorted bounding box.
    * Provide as input to `tf.image.draw_bounding_boxes`.
    */
-  public Output<TFloat> bboxes() {
+  public Output<TFloat32> bboxes() {
     return bboxes;
   }
   
   private Output<T> begin;
   private Output<T> size;
-  private Output<TFloat> bboxes;
+  private Output<TFloat32> bboxes;
   
   private SampleDistortedBoundingBox(Operation operation) {
     super(operation);

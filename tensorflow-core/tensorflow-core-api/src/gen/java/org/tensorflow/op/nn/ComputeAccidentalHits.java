@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
@@ -133,13 +133,13 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * A vector of the same length as indices and ids, in which each element
    * is -FLOAT_MAX.
    */
-  public Output<TFloat> weights() {
+  public Output<TFloat32> weights() {
     return weights;
   }
   
   private Output<TInt32> indices;
   private Output<TInt64> ids;
-  private Output<TFloat> weights;
+  private Output<TFloat32> weights;
   
   private ComputeAccidentalHits(Operation operation) {
     super(operation);

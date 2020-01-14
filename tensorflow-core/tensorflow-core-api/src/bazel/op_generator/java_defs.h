@@ -107,9 +107,9 @@ class Type {
       case DataType::DT_STRING:
         return Class("TString", "org.tensorflow.types");
       case DataType::DT_FLOAT:
-        return Class("TFloat", "org.tensorflow.types");
+        return Class("TFloat32", "org.tensorflow.types");
       case DataType::DT_DOUBLE:
-        return Class("TDouble", "org.tensorflow.types");
+        return Class("TFloat64", "org.tensorflow.types");
       case DataType::DT_UINT8:
         return Class("TUInt8", "org.tensorflow.types");
       case DataType::DT_INT32:

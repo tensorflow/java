@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperation} class. */
@@ -75,8 +75,8 @@ public class EagerOperationTest {
   @Test
   public void inputAndOutputListLengths() {
     try (EagerSession session = EagerSession.create()) {
-      Output<TFloat> c1 = TestUtil.constant(session, "Const1", new float[] {1f, 2f});
-      Output<TFloat> c2 = TestUtil.constant(session, "Const2", new float[] {3f, 4f});
+      Output<TFloat32> c1 = TestUtil.constant(session, "Const1", new float[] {1f, 2f});
+      Output<TFloat32> c2 = TestUtil.constant(session, "Const2", new float[] {3f, 4f});
 
       EagerOperation acc =
           opBuilder(session, "AddN", "InputListLength")

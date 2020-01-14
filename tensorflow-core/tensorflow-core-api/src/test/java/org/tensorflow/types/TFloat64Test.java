@@ -20,11 +20,11 @@ package org.tensorflow.types;
 import org.tensorflow.Tensor;
 import org.tensorflow.tools.Shape;
 
-public class TDoubleTest extends NumericTypesTestBase<TDouble, Double> {
+public class TFloat64Test extends NumericTypesTestBase<TFloat64, Double> {
 
   @Override
-  Tensor<TDouble> allocateTensor(Shape shape) {
-    return TDouble.ofShape(shape);
+  Tensor<TFloat64> allocateTensor(Shape shape) {
+    return TFloat64.ofShape(shape);
   }
 
   @Override

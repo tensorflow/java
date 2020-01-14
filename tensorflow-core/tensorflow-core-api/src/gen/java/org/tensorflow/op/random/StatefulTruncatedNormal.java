@@ -24,7 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -68,8 +68,8 @@ public final class StatefulTruncatedNormal<U extends TType> extends PrimitiveOp 
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulTruncatedNormal
    */
-  public static <T extends TType> StatefulTruncatedNormal<TFloat> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return create(scope, resource, algorithm, shape, TFloat.DTYPE);
+  public static <T extends TType> StatefulTruncatedNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+    return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
   }
   
   /**

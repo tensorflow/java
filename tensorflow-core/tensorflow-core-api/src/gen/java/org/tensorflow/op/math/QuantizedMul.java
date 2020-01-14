@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -49,7 +49,7 @@ public final class QuantizedMul<V extends TType> extends PrimitiveOp {
    * @param Toutput 
    * @return a new instance of QuantizedMul
    */
-  public static <V extends TType, T extends TType, U extends TType> QuantizedMul<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat> minX, Operand<TFloat> maxX, Operand<TFloat> minY, Operand<TFloat> maxY, DataType<V> Toutput) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedMul<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMul", scope.makeOpName("QuantizedMul"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -71,7 +71,7 @@ public final class QuantizedMul<V extends TType> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<TFloat> minZ() {
+  public Output<TFloat32> minZ() {
     return minZ;
   }
   
@@ -81,13 +81,13 @@ public final class QuantizedMul<V extends TType> extends PrimitiveOp {
    * <i>NOTE</i>: `math.QuantizedMul` supports limited forms of broadcasting. More about
    * broadcasting [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
    */
-  public Output<TFloat> maxZ() {
+  public Output<TFloat32> maxZ() {
     return maxZ;
   }
   
   private Output<V> z;
-  private Output<TFloat> minZ;
-  private Output<TFloat> maxZ;
+  private Output<TFloat32> minZ;
+  private Output<TFloat32> maxZ;
   
   private QuantizedMul(Operation operation) {
     super(operation);

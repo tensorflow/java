@@ -23,12 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Output the logits for the given input data
  */
-public final class TensorForestTreePredict extends PrimitiveOp implements Operand<TFloat> {
+public final class TensorForestTreePredict extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorForestTreePredict operation.
@@ -39,7 +39,7 @@ public final class TensorForestTreePredict extends PrimitiveOp implements Operan
    * @param logitsDimension Scalar, dimension of the logits.
    * @return a new instance of TensorForestTreePredict
    */
-  public static TensorForestTreePredict create(Scope scope, Operand<?> treeHandle, Operand<TFloat> denseFeatures, Long logitsDimension) {
+  public static TensorForestTreePredict create(Scope scope, Operand<?> treeHandle, Operand<TFloat32> denseFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreePredict", scope.makeOpName("TensorForestTreePredict"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(denseFeatures.asOutput());
@@ -51,16 +51,16 @@ public final class TensorForestTreePredict extends PrimitiveOp implements Operan
   /**
    * The logits predictions from the tree for each instance in the batch.
    */
-  public Output<TFloat> logits() {
+  public Output<TFloat32> logits() {
     return logits;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return logits;
   }
   
-  private Output<TFloat> logits;
+  private Output<TFloat32> logits;
   
   private TensorForestTreePredict(Operation operation) {
     super(operation);

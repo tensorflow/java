@@ -27,8 +27,8 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -62,9 +62,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat> op = Zeros.create(scope, Constant.create(scope, shape), TFloat.DTYPE);
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.create(scope, shape), TFloat32.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        float[][] actual = result.expect(TFloat.DTYPE).copyTo(new float[(int)shape[0]][(int)shape[1]]);
+        float[][] actual = result.expect(TFloat32.DTYPE).copyTo(new float[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0.0f, actual[i][j], EPSILON);
@@ -80,9 +80,9 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TDouble> op = Zeros.create(scope, Constant.create(scope, shape), TDouble.DTYPE);
+      Zeros<TFloat64> op = Zeros.create(scope, Constant.create(scope, shape), TFloat64.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        double[][] actual = result.expect(TDouble.DTYPE).copyTo(new double[(int)shape[0]][(int)shape[1]]);
+        double[][] actual = result.expect(TFloat64.DTYPE).copyTo(new double[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {
             assertEquals(0.0, actual[i][j], EPSILON);
@@ -163,7 +163,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat> zeros = Zeros.create(scope.withSubScope("test"), Constant.create(scope, shape), TFloat.DTYPE);
+      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.create(scope, shape), TFloat32.DTYPE);
       List<Tensor<?>> results = sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }

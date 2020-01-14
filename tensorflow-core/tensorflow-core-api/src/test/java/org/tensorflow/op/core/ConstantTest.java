@@ -35,8 +35,8 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -82,9 +82,9 @@ public class ConstantTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TFloat> op = Constant.create(scope, value);
+      Constant<TFloat32> op = Constant.create(scope, value);
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TFloat.DTYPE).floatValue(), 0.0f);
+        assertEquals(value, result.expect(TFloat32.DTYPE).floatValue(), 0.0f);
       }
     }
   }
@@ -97,10 +97,10 @@ public class ConstantTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TFloat> op = Constant.create(scope, shape, FloatBuffer.wrap(floats));
+      Constant<TFloat32> op = Constant.create(scope, shape, FloatBuffer.wrap(floats));
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
         float[] actual = new float[floats.length];
-        assertArrayEquals(floats, result.expect(TFloat.DTYPE).copyTo(actual), EPSILON);
+        assertArrayEquals(floats, result.expect(TFloat32.DTYPE).copyTo(actual), EPSILON);
       }
     }
   }
@@ -112,9 +112,9 @@ public class ConstantTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TDouble> op = Constant.create(scope, value);
+      Constant<TFloat64> op = Constant.create(scope, value);
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TDouble.DTYPE).doubleValue(), 0.0);
+        assertEquals(value, result.expect(TFloat64.DTYPE).doubleValue(), 0.0);
       }
     }
   }
@@ -127,10 +127,10 @@ public class ConstantTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TDouble> op = Constant.create(scope, shape, DoubleBuffer.wrap(doubles));
+      Constant<TFloat64> op = Constant.create(scope, shape, DoubleBuffer.wrap(doubles));
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
         double[] actual = new double[doubles.length];
-        assertArrayEquals(doubles, result.expect(TDouble.DTYPE).copyTo(actual), EPSILON);
+        assertArrayEquals(doubles, result.expect(TFloat64.DTYPE).copyTo(actual), EPSILON);
       }
     }
   }
