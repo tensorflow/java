@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -119,7 +119,7 @@ public final class DecodeWav extends PrimitiveOp {
   /**
    * 2-D with shape `[length, channels]`.
    */
-  public Output<TFloat> audio() {
+  public Output<TFloat32> audio() {
     return audio;
   }
   
@@ -130,7 +130,7 @@ public final class DecodeWav extends PrimitiveOp {
     return sampleRate;
   }
   
-  private Output<TFloat> audio;
+  private Output<TFloat32> audio;
   private Output<TInt32> sampleRate;
   
   private DecodeWav(Operation operation) {

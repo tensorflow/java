@@ -66,7 +66,7 @@ import org.tensorflow.op.train.SparseApplyProximalGradientDescent;
 import org.tensorflow.op.train.SparseApplyRmsProp;
 import org.tensorflow.op.train.TileGrad;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -379,6 +379,19 @@ public final class TrainOps {
       Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt,
       RestoreSlice.Options... options) {
     return RestoreSlice.create(scope, filePattern, tensorName, shapeAndSlice, dt, options);
+  }
+
+  /**
+   * Builds an {@link SdcaShrinkL1} operation
+   *
+   * @param weights a list of vectors where each value is the weight associated with a
+   * @param l1 Symmetric l1 regularization strength.
+   * @param l2 Symmetric l2 regularization strength. Should be a positive float.
+   * @return a new instance of SdcaShrinkL1
+   * @see org.tensorflow.op.train.SdcaShrinkL1
+   */
+  public SdcaShrinkL1 sdcaShrinkL1(Iterable<Operand<TFloat32>> weights, Float l1, Float l2) {
+    return SdcaShrinkL1.create(scope, weights, l1, l2);
   }
 
   /**
@@ -859,37 +872,6 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link NegTrain} operation
-   *
-   * @param wIn input word embedding.
-   * @param wOut output word embedding.
-   * @param examples A vector of word ids.
-   * @param labels A vector of word ids.
-   * @param lr 
-   * @param vocabCount Count of words in the vocabulary.
-   * @param numNegativeSamples Number of negative samples per example.
-   * @return a new instance of NegTrain
-   * @see org.tensorflow.op.train.NegTrain
-   */
-  public NegTrain negTrain(Operand<TFloat> wIn, Operand<TFloat> wOut, Operand<TInt32> examples,
-      Operand<TInt32> labels, Operand<TFloat> lr, List<Long> vocabCount, Long numNegativeSamples) {
-    return NegTrain.create(scope, wIn, wOut, examples, labels, lr, vocabCount, numNegativeSamples);
-  }
-
-  /**
-   * Builds an {@link SdcaShrinkL1} operation
-   *
-   * @param weights a list of vectors where each value is the weight associated with a
-   * @param l1 Symmetric l1 regularization strength.
-   * @param l2 Symmetric l2 regularization strength. Should be a positive float.
-   * @return a new instance of SdcaShrinkL1
-   * @see org.tensorflow.op.train.SdcaShrinkL1
-   */
-  public SdcaShrinkL1 sdcaShrinkL1(Iterable<Operand<TFloat>> weights, Float l1, Float l2) {
-    return SdcaShrinkL1.create(scope, weights, l1, l2);
-  }
-
-  /**
    * Builds an {@link ConditionalAccumulator} operation
    *
    * @param dtype The type of the value being accumulated.
@@ -1043,6 +1025,25 @@ public final class TrainOps {
       Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum,
       ResourceApplyKerasMomentum.Options... options) {
     return ResourceApplyKerasMomentum.create(scope, var, accum, lr, grad, momentum, options);
+  }
+
+  /**
+   * Builds an {@link NegTrain} operation
+   *
+   * @param wIn input word embedding.
+   * @param wOut output word embedding.
+   * @param examples A vector of word ids.
+   * @param labels A vector of word ids.
+   * @param lr 
+   * @param vocabCount Count of words in the vocabulary.
+   * @param numNegativeSamples Number of negative samples per example.
+   * @return a new instance of NegTrain
+   * @see org.tensorflow.op.train.NegTrain
+   */
+  public NegTrain negTrain(Operand<TFloat32> wIn, Operand<TFloat32> wOut, Operand<TInt32> examples,
+      Operand<TInt32> labels, Operand<TFloat32> lr, List<Long> vocabCount,
+      Long numNegativeSamples) {
+    return NegTrain.create(scope, wIn, wOut, examples, labels, lr, vocabCount, numNegativeSamples);
   }
 
   /**

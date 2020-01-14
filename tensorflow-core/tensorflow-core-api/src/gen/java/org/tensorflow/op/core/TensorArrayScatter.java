@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * `indices` must be a vector, its length must match the first dim of `value`.
  */
 @Operator
-public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFloat> {
+public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayScatter operation.
@@ -46,7 +46,7 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFl
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayScatter
    */
-  public static <T extends TType> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat> flowIn) {
+  public static <T extends TType> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -59,16 +59,16 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFl
   /**
    * A float scalar that enforces proper chaining of operations.
    */
-  public Output<TFloat> flowOut() {
+  public Output<TFloat32> flowOut() {
     return flowOut;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return flowOut;
   }
   
-  private Output<TFloat> flowOut;
+  private Output<TFloat32> flowOut;
   
   private TensorArrayScatter(Operation operation) {
     super(operation);

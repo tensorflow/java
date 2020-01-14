@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * Input images can be of different types but output images are always float.
  */
 @Operator(group = "image")
-public final class ResizeBilinear extends PrimitiveOp implements Operand<TFloat> {
+public final class ResizeBilinear extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeBilinear}
@@ -113,16 +113,16 @@ public final class ResizeBilinear extends PrimitiveOp implements Operand<TFloat>
    * 4-D with shape
    * `[batch, new_height, new_width, channels]`.
    */
-  public Output<TFloat> resizedImages() {
+  public Output<TFloat32> resizedImages() {
     return resizedImages;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return resizedImages;
   }
   
-  private Output<TFloat> resizedImages;
+  private Output<TFloat32> resizedImages;
   
   private ResizeBilinear(Operation operation) {
     super(operation);

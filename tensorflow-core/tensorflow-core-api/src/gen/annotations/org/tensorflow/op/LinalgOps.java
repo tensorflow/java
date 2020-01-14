@@ -43,8 +43,8 @@ import org.tensorflow.op.linalg.TensorDiag;
 import org.tensorflow.op.linalg.TensorDiagPart;
 import org.tensorflow.op.linalg.Transpose;
 import org.tensorflow.op.linalg.TriangularSolve;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -77,21 +77,6 @@ public final class LinalgOps {
   public <T extends TType, U extends TNumber> Transpose<T> transpose(Operand<T> x,
       Operand<U> perm) {
     return Transpose.create(scope, x, perm);
-  }
-
-  /**
-   * Builds an {@link BatchMatrixSolveLs} operation
-   *
-   * @param matrix 
-   * @param rhs 
-   * @param l2Regularizer 
-   * @param options carries optional attributes values
-   * @return a new instance of BatchMatrixSolveLs
-   * @see org.tensorflow.op.linalg.BatchMatrixSolveLs
-   */
-  public <T extends TNumber> BatchMatrixSolveLs<T> batchMatrixSolveLs(Operand<T> matrix,
-      Operand<T> rhs, Operand<TDouble> l2Regularizer, BatchMatrixSolveLs.Options... options) {
-    return BatchMatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
   }
 
   /**
@@ -195,21 +180,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link MatrixSolveLs} operation
-   *
-   * @param matrix Shape is `[..., M, N]`.
-   * @param rhs Shape is `[..., M, K]`.
-   * @param l2Regularizer Scalar tensor.
-   * @param options carries optional attributes values
-   * @return a new instance of MatrixSolveLs
-   * @see org.tensorflow.op.linalg.MatrixSolveLs
-   */
-  public <T extends TType> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
-      Operand<TDouble> l2Regularizer, MatrixSolveLs.Options... options) {
-    return MatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
-  }
-
-  /**
    * Builds an {@link BatchMatrixSetDiag} operation
    *
    * @param input 
@@ -220,6 +190,21 @@ public final class LinalgOps {
   public <T extends TType> BatchMatrixSetDiag<T> batchMatrixSetDiag(Operand<T> input,
       Operand<T> diagonal) {
     return BatchMatrixSetDiag.create(scope, input, diagonal);
+  }
+
+  /**
+   * Builds an {@link MatrixSolveLs} operation
+   *
+   * @param matrix Shape is `[..., M, N]`.
+   * @param rhs Shape is `[..., M, K]`.
+   * @param l2Regularizer Scalar tensor.
+   * @param options carries optional attributes values
+   * @return a new instance of MatrixSolveLs
+   * @see org.tensorflow.op.linalg.MatrixSolveLs
+   */
+  public <T extends TType> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
+      Operand<TFloat64> l2Regularizer, MatrixSolveLs.Options... options) {
+    return MatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
   }
 
   /**
@@ -296,27 +281,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link LoadAndRemapMatrix} operation
-   *
-   * @param ckptPath Path to the TensorFlow checkpoint (version 2, `TensorBundle`) from
-   * @param oldTensorName Name of the 2-D `Tensor` to load from checkpoint.
-   * @param rowRemapping An int `Tensor` of row remappings (generally created by
-   * @param colRemapping An int `Tensor` of column remappings (generally created by
-   * @param initializingValues A float `Tensor` containing  values to fill in for cells
-   * @param numRows Number of rows (length of the 1st dimension) in the output matrix.
-   * @param numCols Number of columns (length of the 2nd dimension) in the output matrix.
-   * @param options carries optional attributes values
-   * @return a new instance of LoadAndRemapMatrix
-   * @see org.tensorflow.op.linalg.LoadAndRemapMatrix
-   */
-  public LoadAndRemapMatrix loadAndRemapMatrix(Operand<TString> ckptPath,
-      Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping,
-      Operand<TFloat> initializingValues, Long numRows, Long numCols,
-      LoadAndRemapMatrix.Options... options) {
-    return LoadAndRemapMatrix.create(scope, ckptPath, oldTensorName, rowRemapping, colRemapping, initializingValues, numRows, numCols, options);
-  }
-
-  /**
    * Builds an {@link Sqrtm} operation
    *
    * @param input Shape is `[..., M, M]`.
@@ -364,6 +328,27 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link LoadAndRemapMatrix} operation
+   *
+   * @param ckptPath Path to the TensorFlow checkpoint (version 2, `TensorBundle`) from
+   * @param oldTensorName Name of the 2-D `Tensor` to load from checkpoint.
+   * @param rowRemapping An int `Tensor` of row remappings (generally created by
+   * @param colRemapping An int `Tensor` of column remappings (generally created by
+   * @param initializingValues A float `Tensor` containing  values to fill in for cells
+   * @param numRows Number of rows (length of the 1st dimension) in the output matrix.
+   * @param numCols Number of columns (length of the 2nd dimension) in the output matrix.
+   * @param options carries optional attributes values
+   * @return a new instance of LoadAndRemapMatrix
+   * @see org.tensorflow.op.linalg.LoadAndRemapMatrix
+   */
+  public LoadAndRemapMatrix loadAndRemapMatrix(Operand<TString> ckptPath,
+      Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping,
+      Operand<TFloat32> initializingValues, Long numRows, Long numCols,
+      LoadAndRemapMatrix.Options... options) {
+    return LoadAndRemapMatrix.create(scope, ckptPath, oldTensorName, rowRemapping, colRemapping, initializingValues, numRows, numCols, options);
+  }
+
+  /**
    * Builds an {@link BatchMatrixSolve} operation
    *
    * @param matrix 
@@ -397,28 +382,6 @@ public final class LinalgOps {
    */
   public <T extends TType> Lu<T, TInt32> lu(Operand<T> input) {
     return Lu.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link QuantizedMatMul} operation
-   *
-   * @param a Must be a two-dimensional tensor.
-   * @param b Must be a two-dimensional tensor.
-   * @param minA The float value that the lowest quantized `a` value represents.
-   * @param maxA The float value that the highest quantized `a` value represents.
-   * @param minB The float value that the lowest quantized `b` value represents.
-   * @param maxB The float value that the highest quantized `b` value represents.
-   * @param Toutput 
-   * @param Tactivation The type of output produced by activation function
-   * @param options carries optional attributes values
-   * @return a new instance of QuantizedMatMul
-   * @see org.tensorflow.op.linalg.QuantizedMatMul
-   */
-  public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
-      Operand<T> a, Operand<U> b, Operand<TFloat> minA, Operand<TFloat> maxA, Operand<TFloat> minB,
-      Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation,
-      QuantizedMatMul.Options... options) {
-    return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
   }
 
   /**
@@ -525,6 +488,21 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link BatchMatrixSolveLs} operation
+   *
+   * @param matrix 
+   * @param rhs 
+   * @param l2Regularizer 
+   * @param options carries optional attributes values
+   * @return a new instance of BatchMatrixSolveLs
+   * @see org.tensorflow.op.linalg.BatchMatrixSolveLs
+   */
+  public <T extends TNumber> BatchMatrixSolveLs<T> batchMatrixSolveLs(Operand<T> matrix,
+      Operand<T> rhs, Operand<TFloat64> l2Regularizer, BatchMatrixSolveLs.Options... options) {
+    return BatchMatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
+  }
+
+  /**
    * Builds an {@link MatrixDiag} operation
    *
    * @param diagonal Rank `r`, where `r >= 1`
@@ -614,5 +592,27 @@ public final class LinalgOps {
   public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, DataType<U> Tout,
       Eig.Options... options) {
     return Eig.create(scope, input, Tout, options);
+  }
+
+  /**
+   * Builds an {@link QuantizedMatMul} operation
+   *
+   * @param a Must be a two-dimensional tensor.
+   * @param b Must be a two-dimensional tensor.
+   * @param minA The float value that the lowest quantized `a` value represents.
+   * @param maxA The float value that the highest quantized `a` value represents.
+   * @param minB The float value that the lowest quantized `b` value represents.
+   * @param maxB The float value that the highest quantized `b` value represents.
+   * @param Toutput 
+   * @param Tactivation The type of output produced by activation function
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizedMatMul
+   * @see org.tensorflow.op.linalg.QuantizedMatMul
+   */
+  public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
+      Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA,
+      Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<V> Toutput, DataType<W> Tactivation,
+      QuantizedMatMul.Options... options) {
+    return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
   }
 }

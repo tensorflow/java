@@ -26,7 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -198,12 +198,12 @@ public final class TensorArray extends PrimitiveOp {
   /**
    * A scalar used to control gradient flow.
    */
-  public Output<TFloat> flow() {
+  public Output<TFloat32> flow() {
     return flow;
   }
   
   private Output<?> handle;
-  private Output<TFloat> flow;
+  private Output<TFloat32> flow;
   
   private TensorArray(Operation operation) {
     super(operation);

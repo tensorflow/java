@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -79,8 +79,8 @@ public final class Irfft3d<U extends TNumber> extends PrimitiveOp implements Ope
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
    * @return a new instance of Irfft3d
    */
-  public static <T extends TType> Irfft3d<TFloat> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
-    return create(scope, input, fftLength, TFloat.DTYPE);
+  public static <T extends TType> Irfft3d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
+    return create(scope, input, fftLength, TFloat32.DTYPE);
   }
   
   /**

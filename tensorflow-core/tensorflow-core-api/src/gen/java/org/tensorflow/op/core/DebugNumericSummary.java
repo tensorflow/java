@@ -24,7 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TDouble;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -61,7 +61,7 @@ import org.tensorflow.types.family.TType;
  *   [14+]: Sizes of the dimensions.
  * 
  */
-public final class DebugNumericSummary extends PrimitiveOp implements Operand<TDouble> {
+public final class DebugNumericSummary extends PrimitiveOp implements Operand<TFloat64> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.DebugNumericSummary}
@@ -251,16 +251,16 @@ public final class DebugNumericSummary extends PrimitiveOp implements Operand<TD
   
   /**
    */
-  public Output<TDouble> output() {
+  public Output<TFloat64> output() {
     return output;
   }
   
   @Override
-  public Output<TDouble> asOutput() {
+  public Output<TFloat64> asOutput() {
     return output;
   }
   
-  private Output<TDouble> output;
+  private Output<TFloat64> output;
   
   private DebugNumericSummary(Operation operation) {
     super(operation);

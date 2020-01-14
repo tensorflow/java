@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -46,7 +46,7 @@ public final class QuantizedRelu<U extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedRelu
    */
-  public static <U extends TType, T extends TType> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat> minFeatures, Operand<TFloat> maxFeatures, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
@@ -66,20 +66,20 @@ public final class QuantizedRelu<U extends TType> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized value represents.
    */
-  public Output<TFloat> minActivations() {
+  public Output<TFloat32> minActivations() {
     return minActivations;
   }
   
   /**
    * The float value that the highest quantized value represents.
    */
-  public Output<TFloat> maxActivations() {
+  public Output<TFloat32> maxActivations() {
     return maxActivations;
   }
   
   private Output<U> activations;
-  private Output<TFloat> minActivations;
-  private Output<TFloat> maxActivations;
+  private Output<TFloat32> minActivations;
+  private Output<TFloat32> maxActivations;
   
   private QuantizedRelu(Operation operation) {
     super(operation);

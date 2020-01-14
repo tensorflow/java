@@ -26,7 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Flush the quantile summaries from each quantile stream resource.
@@ -35,7 +35,7 @@ import org.tensorflow.types.TFloat;
  * Each summary Tensor is rank 2, containing summaries (value, weight, min_rank, 
  * max_rank) for a single feature.
  */
-public final class BoostedTreesFlushQuantileSummaries extends PrimitiveOp implements Iterable<Operand<TFloat>> {
+public final class BoostedTreesFlushQuantileSummaries extends PrimitiveOp implements Iterable<Operand<TFloat32>> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesFlushQuantileSummaries operation.
@@ -55,24 +55,24 @@ public final class BoostedTreesFlushQuantileSummaries extends PrimitiveOp implem
   
   /**
    */
-  public List<Output<TFloat>> summaries() {
+  public List<Output<TFloat32>> summaries() {
     return summaries;
   }
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TFloat>> iterator() {
+  public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) summaries.iterator();
   }
   
-  private List<Output<TFloat>> summaries;
+  private List<Output<TFloat32>> summaries;
   
   @SuppressWarnings("unchecked")
   private BoostedTreesFlushQuantileSummaries(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int summariesLength = operation.outputListLength("summaries");
-    summaries = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, summariesLength));
+    summaries = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, summariesLength));
     outputIdx += summariesLength;
   }
 }

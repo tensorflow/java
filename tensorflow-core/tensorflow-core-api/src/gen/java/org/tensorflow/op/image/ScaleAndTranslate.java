@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  */
 @Operator(group = "image")
-public final class ScaleAndTranslate extends PrimitiveOp implements Operand<TFloat> {
+public final class ScaleAndTranslate extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ScaleAndTranslate}
@@ -73,7 +73,7 @@ public final class ScaleAndTranslate extends PrimitiveOp implements Operand<TFlo
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslate
    */
-  public static <T extends TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat> scale, Operand<TFloat> translation, Options... options) {
+  public static <T extends TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslate", scope.makeOpName("ScaleAndTranslate"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
@@ -109,16 +109,16 @@ public final class ScaleAndTranslate extends PrimitiveOp implements Operand<TFlo
   
   /**
    */
-  public Output<TFloat> resizedImages() {
+  public Output<TFloat32> resizedImages() {
     return resizedImages;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return resizedImages;
   }
   
-  private Output<TFloat> resizedImages;
+  private Output<TFloat32> resizedImages;
   
   private ScaleAndTranslate(Operation operation) {
     super(operation);

@@ -31,8 +31,8 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.Tensors;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TDouble;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -290,8 +290,8 @@ public class ScopeTest {
   private static final Map<DataType<?>, Object> zeros = new HashMap<>();
 
   static {
-    zeros.put(TFloat.DTYPE, 0.0f);
-    zeros.put(TDouble.DTYPE, 0.0);
+    zeros.put(TFloat32.DTYPE, 0.0f);
+    zeros.put(TFloat64.DTYPE, 0.0);
     zeros.put(TInt32.DTYPE, 0);
     zeros.put(TUInt8.DTYPE, (byte) 0);
     zeros.put(TInt64.DTYPE, 0L);

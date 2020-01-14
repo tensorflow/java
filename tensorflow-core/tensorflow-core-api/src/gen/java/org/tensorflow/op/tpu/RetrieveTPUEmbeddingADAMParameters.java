@@ -22,7 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve ADAM embedding parameters.
@@ -125,27 +125,27 @@ public final class RetrieveTPUEmbeddingADAMParameters extends PrimitiveOp {
   /**
    * Parameter parameters updated by the ADAM optimization algorithm.
    */
-  public Output<TFloat> parameters() {
+  public Output<TFloat32> parameters() {
     return parameters;
   }
   
   /**
    * Parameter momenta updated by the ADAM optimization algorithm.
    */
-  public Output<TFloat> momenta() {
+  public Output<TFloat32> momenta() {
     return momenta;
   }
   
   /**
    * Parameter velocities updated by the ADAM optimization algorithm.
    */
-  public Output<TFloat> velocities() {
+  public Output<TFloat32> velocities() {
     return velocities;
   }
   
-  private Output<TFloat> parameters;
-  private Output<TFloat> momenta;
-  private Output<TFloat> velocities;
+  private Output<TFloat32> parameters;
+  private Output<TFloat32> momenta;
+  private Output<TFloat32> velocities;
   
   private RetrieveTPUEmbeddingADAMParameters(Operation operation) {
     super(operation);

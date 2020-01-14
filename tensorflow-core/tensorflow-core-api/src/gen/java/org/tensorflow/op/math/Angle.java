@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -76,8 +76,8 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Angle
    */
-  public static <T extends TType> Angle<TFloat> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TFloat.DTYPE);
+  public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TFloat32.DTYPE);
   }
   
   /**

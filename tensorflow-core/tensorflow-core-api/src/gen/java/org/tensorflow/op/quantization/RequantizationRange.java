@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -47,7 +47,7 @@ public final class RequantizationRange extends PrimitiveOp {
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
    */
-  public static <T extends TType> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax) {
+  public static <T extends TType> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRange", scope.makeOpName("RequantizationRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -59,19 +59,19 @@ public final class RequantizationRange extends PrimitiveOp {
   /**
    * The computed min output.
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    * the computed max output.
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private RequantizationRange(Operation operation) {
     super(operation);

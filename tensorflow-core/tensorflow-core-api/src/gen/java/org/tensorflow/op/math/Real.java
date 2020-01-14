@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -72,8 +72,8 @@ public final class Real<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Real
    */
-  public static <T extends TType> Real<TFloat> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TFloat.DTYPE);
+  public static <T extends TType> Real<TFloat32> create(Scope scope, Operand<T> input) {
+    return create(scope, input, TFloat32.DTYPE);
   }
   
   /**

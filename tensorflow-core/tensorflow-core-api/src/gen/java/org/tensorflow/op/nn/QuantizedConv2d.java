@@ -26,7 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -82,7 +82,7 @@ public final class QuantizedConv2d<V extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2d
    */
-  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat> minInput, Operand<TFloat> maxInput, Operand<TFloat> minFilter, Operand<TFloat> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2D", scope.makeOpName("QuantizedConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -132,20 +132,20 @@ public final class QuantizedConv2d<V extends TType> extends PrimitiveOp {
   /**
    * The float value that the lowest quantized output value represents.
    */
-  public Output<TFloat> minOutput() {
+  public Output<TFloat32> minOutput() {
     return minOutput;
   }
   
   /**
    * The float value that the highest quantized output value represents.
    */
-  public Output<TFloat> maxOutput() {
+  public Output<TFloat32> maxOutput() {
     return maxOutput;
   }
   
   private Output<V> output;
-  private Output<TFloat> minOutput;
-  private Output<TFloat> maxOutput;
+  private Output<TFloat32> minOutput;
+  private Output<TFloat32> maxOutput;
   
   private QuantizedConv2d(Operation operation) {
     super(operation);

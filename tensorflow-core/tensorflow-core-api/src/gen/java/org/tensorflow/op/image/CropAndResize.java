@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
  * `align_corners=True`.
  */
 @Operator(group = "image")
-public final class CropAndResize extends PrimitiveOp implements Operand<TFloat> {
+public final class CropAndResize extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.CropAndResize}
@@ -106,7 +106,7 @@ public final class CropAndResize extends PrimitiveOp implements Operand<TFloat> 
    * @param options carries optional attributes values
    * @return a new instance of CropAndResize
    */
-  public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
+  public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResize", scope.makeOpName("CropAndResize"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(boxes.asOutput());
@@ -145,16 +145,16 @@ public final class CropAndResize extends PrimitiveOp implements Operand<TFloat> 
   /**
    * A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
    */
-  public Output<TFloat> crops() {
+  public Output<TFloat32> crops() {
     return crops;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return crops;
   }
   
-  private Output<TFloat> crops;
+  private Output<TFloat32> crops;
   
   private CropAndResize(Operation operation) {
     super(operation);

@@ -22,7 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve Adagrad embedding parameters with debug support.
@@ -125,27 +125,27 @@ public final class RetrieveTPUEmbeddingAdagradParametersGradAccumDebug extends P
   /**
    * Parameter parameters updated by the Adagrad optimization algorithm.
    */
-  public Output<TFloat> parameters() {
+  public Output<TFloat32> parameters() {
     return parameters;
   }
   
   /**
    * Parameter accumulators updated by the Adagrad optimization algorithm.
    */
-  public Output<TFloat> accumulators() {
+  public Output<TFloat32> accumulators() {
     return accumulators;
   }
   
   /**
    * Parameter gradient_accumulators updated by the Adagrad optimization algorithm.
    */
-  public Output<TFloat> gradientAccumulators() {
+  public Output<TFloat32> gradientAccumulators() {
     return gradientAccumulators;
   }
   
-  private Output<TFloat> parameters;
-  private Output<TFloat> accumulators;
-  private Output<TFloat> gradientAccumulators;
+  private Output<TFloat32> parameters;
+  private Output<TFloat32> accumulators;
+  private Output<TFloat32> gradientAccumulators;
   
   private RetrieveTPUEmbeddingAdagradParametersGradAccumDebug(Operation operation) {
     super(operation);

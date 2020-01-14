@@ -5,7 +5,7 @@ import org.tensorflow.op.audio.AudioSpectrogram;
 import org.tensorflow.op.audio.DecodeWav;
 import org.tensorflow.op.audio.EncodeWav;
 import org.tensorflow.op.audio.Mfcc;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -34,6 +34,18 @@ public final class AudioOps {
   }
 
   /**
+   * Builds an {@link EncodeWav} operation
+   *
+   * @param audio 2-D with shape `[length, channels]`.
+   * @param sampleRate Scalar containing the sample frequency.
+   * @return a new instance of EncodeWav
+   * @see org.tensorflow.op.audio.EncodeWav
+   */
+  public EncodeWav encodeWav(Operand<TFloat32> audio, Operand<TInt32> sampleRate) {
+    return EncodeWav.create(scope, audio, sampleRate);
+  }
+
+  /**
    * Builds an {@link Mfcc} operation
    *
    * @param spectrogram Typically produced by the Spectrogram op, with magnitude_squared
@@ -42,21 +54,9 @@ public final class AudioOps {
    * @return a new instance of Mfcc
    * @see org.tensorflow.op.audio.Mfcc
    */
-  public Mfcc mfcc(Operand<TFloat> spectrogram, Operand<TInt32> sampleRate,
+  public Mfcc mfcc(Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate,
       Mfcc.Options... options) {
     return Mfcc.create(scope, spectrogram, sampleRate, options);
-  }
-
-  /**
-   * Builds an {@link EncodeWav} operation
-   *
-   * @param audio 2-D with shape `[length, channels]`.
-   * @param sampleRate Scalar containing the sample frequency.
-   * @return a new instance of EncodeWav
-   * @see org.tensorflow.op.audio.EncodeWav
-   */
-  public EncodeWav encodeWav(Operand<TFloat> audio, Operand<TInt32> sampleRate) {
-    return EncodeWav.create(scope, audio, sampleRate);
   }
 
   /**
@@ -69,7 +69,7 @@ public final class AudioOps {
    * @return a new instance of AudioSpectrogram
    * @see org.tensorflow.op.audio.AudioSpectrogram
    */
-  public AudioSpectrogram audioSpectrogram(Operand<TFloat> input, Long windowSize, Long stride,
+  public AudioSpectrogram audioSpectrogram(Operand<TFloat32> input, Long windowSize, Long stride,
       AudioSpectrogram.Options... options) {
     return AudioSpectrogram.create(scope, input, windowSize, stride, options);
   }

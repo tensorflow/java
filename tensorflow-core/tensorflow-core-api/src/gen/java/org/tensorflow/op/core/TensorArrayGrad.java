@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Creates a TensorArray for storing the gradients of values in the given handle.
@@ -79,7 +79,7 @@ public final class TensorArrayGrad extends PrimitiveOp {
    * to return.
    * @return a new instance of TensorArrayGrad
    */
-  public static TensorArrayGrad create(Scope scope, Operand<?> handle, Operand<TFloat> flowIn, String source) {
+  public static TensorArrayGrad create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradV3", scope.makeOpName("TensorArrayGrad"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -96,12 +96,12 @@ public final class TensorArrayGrad extends PrimitiveOp {
   
   /**
    */
-  public Output<TFloat> flowOut() {
+  public Output<TFloat32> flowOut() {
     return flowOut;
   }
   
   private Output<?> gradHandle;
-  private Output<TFloat> flowOut;
+  private Output<TFloat32> flowOut;
   
   private TensorArrayGrad(Operation operation) {
     super(operation);

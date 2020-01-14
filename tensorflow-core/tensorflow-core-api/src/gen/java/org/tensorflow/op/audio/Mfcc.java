@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -38,7 +38,7 @@ import org.tensorflow.types.TInt32;
  * is a good resource to learn more.
  */
 @Operator(group = "audio")
-public final class Mfcc extends PrimitiveOp implements Operand<TFloat> {
+public final class Mfcc extends PrimitiveOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.audio.Mfcc}
@@ -98,7 +98,7 @@ public final class Mfcc extends PrimitiveOp implements Operand<TFloat> {
    * @param options carries optional attributes values
    * @return a new instance of Mfcc
    */
-  public static Mfcc create(Scope scope, Operand<TFloat> spectrogram, Operand<TInt32> sampleRate, Options... options) {
+  public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mfcc", scope.makeOpName("Mfcc"));
     opBuilder.addInput(spectrogram.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
@@ -154,16 +154,16 @@ public final class Mfcc extends PrimitiveOp implements Operand<TFloat> {
   
   /**
    */
-  public Output<TFloat> output() {
+  public Output<TFloat32> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat> asOutput() {
+  public Output<TFloat32> asOutput() {
     return output;
   }
   
-  private Output<TFloat> output;
+  private Output<TFloat32> output;
   
   private Mfcc(Operation operation) {
     super(operation);

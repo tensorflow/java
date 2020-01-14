@@ -23,7 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Deserialize bucket boundaries and ready flag into current QuantileAccumulator.
@@ -40,7 +40,7 @@ public final class BoostedTreesQuantileStreamResourceDeserialize extends Primiti
    * @param bucketBoundaries float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
    * @return a new instance of BoostedTreesQuantileStreamResourceDeserialize
    */
-  public static BoostedTreesQuantileStreamResourceDeserialize create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat>> bucketBoundaries) {
+  public static BoostedTreesQuantileStreamResourceDeserialize create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> bucketBoundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceDeserialize", scope.makeOpName("BoostedTreesQuantileStreamResourceDeserialize"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));

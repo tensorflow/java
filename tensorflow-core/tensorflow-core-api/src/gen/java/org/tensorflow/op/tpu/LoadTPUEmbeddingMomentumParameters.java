@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Load Momentum embedding parameters.
@@ -83,7 +83,7 @@ public final class LoadTPUEmbeddingMomentumParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingMomentumParameters
    */
-  public static LoadTPUEmbeddingMomentumParameters create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> momenta, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingMomentumParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> momenta, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMomentumParameters", scope.makeOpName("LoadTPUEmbeddingMomentumParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());

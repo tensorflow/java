@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Load Adagrad embedding parameters.
@@ -83,7 +83,7 @@ public final class LoadTPUEmbeddingAdagradParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingAdagradParameters
    */
-  public static LoadTPUEmbeddingAdagradParameters create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> accumulators, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingAdagradParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdagradParameters", scope.makeOpName("LoadTPUEmbeddingAdagradParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());

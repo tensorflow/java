@@ -22,7 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve centered RMSProp embedding parameters.
@@ -125,35 +125,35 @@ public final class RetrieveTPUEmbeddingCenteredRMSPropParameters extends Primiti
   /**
    * Parameter parameters updated by the centered RMSProp optimization algorithm.
    */
-  public Output<TFloat> parameters() {
+  public Output<TFloat32> parameters() {
     return parameters;
   }
   
   /**
    * Parameter ms updated by the centered RMSProp optimization algorithm.
    */
-  public Output<TFloat> ms() {
+  public Output<TFloat32> ms() {
     return ms;
   }
   
   /**
    * Parameter mom updated by the centered RMSProp optimization algorithm.
    */
-  public Output<TFloat> mom() {
+  public Output<TFloat32> mom() {
     return mom;
   }
   
   /**
    * Parameter mg updated by the centered RMSProp optimization algorithm.
    */
-  public Output<TFloat> mg() {
+  public Output<TFloat32> mg() {
     return mg;
   }
   
-  private Output<TFloat> parameters;
-  private Output<TFloat> ms;
-  private Output<TFloat> mom;
-  private Output<TFloat> mg;
+  private Output<TFloat32> parameters;
+  private Output<TFloat32> ms;
+  private Output<TFloat32> mom;
+  private Output<TFloat32> mg;
   
   private RetrieveTPUEmbeddingCenteredRMSPropParameters(Operation operation) {
     super(operation);

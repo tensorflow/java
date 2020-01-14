@@ -25,7 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -69,7 +69,7 @@ public final class QuantizeDownAndShrinkRange<U extends TType> extends Primitive
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of QuantizeDownAndShrinkRange
    */
-  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat> inputMin, Operand<TFloat> inputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -88,20 +88,20 @@ public final class QuantizeDownAndShrinkRange<U extends TType> extends Primitive
   /**
    * The float value that the minimum quantized output value represents.
    */
-  public Output<TFloat> outputMin() {
+  public Output<TFloat32> outputMin() {
     return outputMin;
   }
   
   /**
    * The float value that the maximum quantized output value represents.
    */
-  public Output<TFloat> outputMax() {
+  public Output<TFloat32> outputMax() {
     return outputMax;
   }
   
   private Output<U> output;
-  private Output<TFloat> outputMin;
-  private Output<TFloat> outputMax;
+  private Output<TFloat32> outputMin;
+  private Output<TFloat32> outputMax;
   
   private QuantizeDownAndShrinkRange(Operation operation) {
     super(operation);

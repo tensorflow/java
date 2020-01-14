@@ -26,7 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -101,7 +101,7 @@ public final class SdcaOptimizer extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SdcaOptimizer
    */
-  public static SdcaOptimizer create(Scope scope, Iterable<Operand<TInt64>> sparseExampleIndices, Iterable<Operand<TInt64>> sparseFeatureIndices, Iterable<Operand<TFloat>> sparseFeatureValues, Iterable<Operand<TFloat>> denseFeatures, Operand<TFloat> exampleWeights, Operand<TFloat> exampleLabels, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat>> sparseWeights, Iterable<Operand<TFloat>> denseWeights, Operand<TFloat> exampleStateData, String lossType, Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
+  public static SdcaOptimizer create(Scope scope, Iterable<Operand<TInt64>> sparseExampleIndices, Iterable<Operand<TInt64>> sparseFeatureIndices, Iterable<Operand<TFloat32>> sparseFeatureValues, Iterable<Operand<TFloat32>> denseFeatures, Operand<TFloat32> exampleWeights, Operand<TFloat32> exampleLabels, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights, Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType, Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaOptimizerV2", scope.makeOpName("SdcaOptimizer"));
     opBuilder.addInputList(Operands.asOutputs(sparseExampleIndices));
     opBuilder.addInputList(Operands.asOutputs(sparseFeatureIndices));
@@ -140,7 +140,7 @@ public final class SdcaOptimizer extends PrimitiveOp {
    * a list of vectors containing the updated example state
    * data.
    */
-  public Output<TFloat> outExampleStateData() {
+  public Output<TFloat32> outExampleStateData() {
     return outExampleStateData;
   }
   
@@ -148,7 +148,7 @@ public final class SdcaOptimizer extends PrimitiveOp {
    * a list of vectors where each value is the delta
    * weights associated with a sparse feature group.
    */
-  public List<Output<TFloat>> outDeltaSparseWeights() {
+  public List<Output<TFloat32>> outDeltaSparseWeights() {
     return outDeltaSparseWeights;
   }
   
@@ -156,13 +156,13 @@ public final class SdcaOptimizer extends PrimitiveOp {
    * a list of vectors where the values are the delta
    * weights associated with a dense feature group.
    */
-  public List<Output<TFloat>> outDeltaDenseWeights() {
+  public List<Output<TFloat32>> outDeltaDenseWeights() {
     return outDeltaDenseWeights;
   }
   
-  private Output<TFloat> outExampleStateData;
-  private List<Output<TFloat>> outDeltaSparseWeights;
-  private List<Output<TFloat>> outDeltaDenseWeights;
+  private Output<TFloat32> outExampleStateData;
+  private List<Output<TFloat32>> outDeltaSparseWeights;
+  private List<Output<TFloat32>> outDeltaDenseWeights;
   
   @SuppressWarnings("unchecked")
   private SdcaOptimizer(Operation operation) {
@@ -170,10 +170,10 @@ public final class SdcaOptimizer extends PrimitiveOp {
     int outputIdx = 0;
     outExampleStateData = operation.output(outputIdx++);
     int outDeltaSparseWeightsLength = operation.outputListLength("out_delta_sparse_weights");
-    outDeltaSparseWeights = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, outDeltaSparseWeightsLength));
+    outDeltaSparseWeights = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, outDeltaSparseWeightsLength));
     outputIdx += outDeltaSparseWeightsLength;
     int outDeltaDenseWeightsLength = operation.outputListLength("out_delta_dense_weights");
-    outDeltaDenseWeights = Arrays.asList((Output<TFloat>[])operation.outputList(outputIdx, outDeltaDenseWeightsLength));
+    outDeltaDenseWeights = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, outDeltaDenseWeightsLength));
     outputIdx += outDeltaDenseWeightsLength;
   }
 }

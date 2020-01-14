@@ -15,8 +15,20 @@
  *  =======================================================================
  */
 
-package org.tensorflow.types.family;
+package org.tensorflow.types;
 
-public interface TDecimal extends TNumber {
+import org.tensorflow.Tensor;
+import org.tensorflow.tools.Shape;
 
+public class TFloat32Test extends NumericTypesTestBase<TFloat32, Float> {
+
+  @Override
+  Tensor<TFloat32> allocateTensor(Shape shape) {
+    return TFloat32.ofShape(shape);
+  }
+
+  @Override
+  Float valueOf(Integer value) {
+    return value.floatValue();
+  }
 }

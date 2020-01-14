@@ -26,46 +26,46 @@ import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.ndarray.FloatNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.impl.dense.FloatDenseNdArray;
-import org.tensorflow.types.family.TDecimal;
+import org.tensorflow.types.family.TNumber;
 
-public interface TFloat extends FloatNdArray, TDecimal {
+public interface TFloat32 extends FloatNdArray, TNumber {
 
-  DataType<TFloat> DTYPE = DataType.create("FLOAT", 1, 4, TFloatImpl::mapTensor);
+  DataType<TFloat32> DTYPE = DataType.create("FLOAT", 1, 4, TFloat32Impl::mapTensor);
 
-  static Tensor<TFloat> scalarOf(float value) {
-    Tensor<TFloat> t = ofShape();
+  static Tensor<TFloat32> scalarOf(float value) {
+    Tensor<TFloat32> t = ofShape();
     t.data().setFloat(value);
     return t;
   }
 
-  static Tensor<TFloat> vectorOf(float... values) {
-    Tensor<TFloat> t = ofShape(values.length);
+  static Tensor<TFloat32> vectorOf(float... values) {
+    Tensor<TFloat32> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
 
-  static Tensor<TFloat> ofShape(Shape shape) {
+  static Tensor<TFloat32> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
-  static Tensor<TFloat> ofShape(long... dimensionSizes) {
+  static Tensor<TFloat32> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
-  static Tensor<TFloat> copyOf(NdArray<Float> src) {
-    Tensor<TFloat> t = Tensor.allocate(DTYPE, src.shape());
+  static Tensor<TFloat32> copyOf(NdArray<Float> src) {
+    Tensor<TFloat32> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
     return t;
   }
 }
 
-class TFloatImpl extends FloatDenseNdArray implements TFloat {
+class TFloat32Impl extends FloatDenseNdArray implements TFloat32 {
 
-  static TFloat mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TFloatImpl(TensorBuffers.toFloats(nativeTensor), shape);
+  static TFloat32 mapTensor(TF_Tensor nativeTensor, Shape shape) {
+    return new TFloat32Impl(TensorBuffers.toFloats(nativeTensor), shape);
   }
 
-  private TFloatImpl(FloatDataBuffer buffer, Shape shape) {
+  private TFloat32Impl(FloatDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 }

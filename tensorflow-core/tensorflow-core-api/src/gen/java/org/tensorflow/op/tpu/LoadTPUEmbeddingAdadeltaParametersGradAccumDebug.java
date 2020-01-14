@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Load Adadelta parameters with debug support.
@@ -85,7 +85,7 @@ public final class LoadTPUEmbeddingAdadeltaParametersGradAccumDebug extends Prim
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingAdadeltaParametersGradAccumDebug
    */
-  public static LoadTPUEmbeddingAdadeltaParametersGradAccumDebug create(Scope scope, Operand<TFloat> parameters, Operand<TFloat> accumulators, Operand<TFloat> updates, Operand<TFloat> gradientAccumulators, Long numShards, Long shardId, Options... options) {
+  public static LoadTPUEmbeddingAdadeltaParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> updates, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdadeltaParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingAdadeltaParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());

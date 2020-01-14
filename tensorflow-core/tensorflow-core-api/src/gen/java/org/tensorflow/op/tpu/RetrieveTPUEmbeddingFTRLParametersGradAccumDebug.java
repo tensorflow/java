@@ -22,7 +22,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve FTRL embedding parameters with debug support.
@@ -125,35 +125,35 @@ public final class RetrieveTPUEmbeddingFTRLParametersGradAccumDebug extends Prim
   /**
    * Parameter parameters updated by the FTRL optimization algorithm.
    */
-  public Output<TFloat> parameters() {
+  public Output<TFloat32> parameters() {
     return parameters;
   }
   
   /**
    * Parameter accumulators updated by the FTRL optimization algorithm.
    */
-  public Output<TFloat> accumulators() {
+  public Output<TFloat32> accumulators() {
     return accumulators;
   }
   
   /**
    * Parameter linears updated by the FTRL optimization algorithm.
    */
-  public Output<TFloat> linears() {
+  public Output<TFloat32> linears() {
     return linears;
   }
   
   /**
    * Parameter gradient_accumulators updated by the FTRL optimization algorithm.
    */
-  public Output<TFloat> gradientAccumulators() {
+  public Output<TFloat32> gradientAccumulators() {
     return gradientAccumulators;
   }
   
-  private Output<TFloat> parameters;
-  private Output<TFloat> accumulators;
-  private Output<TFloat> linears;
-  private Output<TFloat> gradientAccumulators;
+  private Output<TFloat32> parameters;
+  private Output<TFloat32> accumulators;
+  private Output<TFloat32> linears;
+  private Output<TFloat32> gradientAccumulators;
   
   private RetrieveTPUEmbeddingFTRLParametersGradAccumDebug(Operation operation) {
     super(operation);
