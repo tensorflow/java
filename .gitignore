@@ -4,7 +4,6 @@ node_modules
 /.bazelrc.user
 /.tf_configure.bazelrc
 /**/bazel-*
-/**/target/
 /bazel_pip
 /tools/python_bin_path.sh
 /tensorflow/tools/git/gen
@@ -36,7 +35,7 @@ xcuserdata/**
 /api_init_files_list.txt
 /estimator_api_init_files_list.txt
 *.whl
-
+**/target
 # Android
 .gradle
 .idea
