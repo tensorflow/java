@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AnonymousRandomSeedGenerator"
+  endpoint {
+    name: "random.AnonymousRandomSeedGenerator"
+  }
+}

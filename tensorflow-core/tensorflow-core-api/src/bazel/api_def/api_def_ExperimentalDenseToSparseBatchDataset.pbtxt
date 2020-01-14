@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalDenseToSparseBatchDataset"
+  endpoint {
+    name: "data.experimental.DenseToSparseBatchDataset"
+  }
+}

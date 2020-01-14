@@ -31,6 +31,12 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that zips together `input_datasets`.
+ * <p>
+ * The elements of the resulting dataset are created by zipping corresponding 
+ * elements from each of the input datasets.
+ * <p>
+ * The size of the resulting dataset will match the size of the smallest input
+ * dataset, and no error will be raised if input datasets have different sizes.
  */
 public final class ZipDataset extends PrimitiveOp implements Operand<TType> {
   
@@ -38,7 +44,7 @@ public final class ZipDataset extends PrimitiveOp implements Operand<TType> {
    * Factory method to create a class wrapping a new ZipDataset operation.
    * 
    * @param scope current scope
-   * @param inputDatasets 
+   * @param inputDatasets List of `N` variant Tensors representing datasets to be zipped together.
    * @param outputTypes 
    * @param outputShapes 
    * @return a new instance of ZipDataset

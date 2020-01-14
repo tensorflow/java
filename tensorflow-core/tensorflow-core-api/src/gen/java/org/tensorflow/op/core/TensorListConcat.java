@@ -25,8 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -35,68 +35,44 @@ import org.tensorflow.types.family.TType;
  * Requires that all tensors have the same shape except the first dimension.
  * <p>
  * input_handle: The input list.
+ * element_shape: The shape of the uninitialized elements in the list. If the first
+ *   dimension is not -1, it is assumed that all list elements have the same
+ *   leading dim.
+ * leading_dims: The list of leading dims of uninitialized list elements. Used if
+ *   the leading dim of input_handle.element_shape or the element_shape input arg
+ *   is not already set.
  * tensor: The concated result.
  * lengths: Output tensor containing sizes of the 0th dimension of tensors in the list, used for computing the gradient.
  * 
  * 
- * @param <T> data type for {@code tensor()} output
+ * @param <U> data type for {@code tensor()} output
  */
 @Operator
-public final class TensorListConcat<T extends TType> extends PrimitiveOp {
-  
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorListConcat}
-   */
-  public static class Options {
-    
-    /**
-     * @param elementShape 
-     */
-    public Options elementShape(Shape elementShape) {
-      this.elementShape = elementShape;
-      return this;
-    }
-    
-    private Shape elementShape;
-    
-    private Options() {
-    }
-  }
+public final class TensorListConcat<U extends TType> extends PrimitiveOp {
   
   /**
    * Factory method to create a class wrapping a new TensorListConcat operation.
    * 
    * @param scope current scope
    * @param inputHandle 
+   * @param elementShape 
+   * @param leadingDims 
    * @param elementDtype 
-   * @param options carries optional attributes values
    * @return a new instance of TensorListConcat
    */
-  public static <T extends TType> TensorListConcat<T> create(Scope scope, Operand<?> inputHandle, DataType<T> elementDtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcat", scope.makeOpName("TensorListConcat"));
+  public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());
+    opBuilder.addInput(elementShape.asOutput());
+    opBuilder.addInput(leadingDims.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.elementShape != null) {
-          opBuilder.setAttr("element_shape", opts.elementShape);
-        }
-      }
-    }
-    return new TensorListConcat<T>(opBuilder.build());
-  }
-  
-  /**
-   * @param elementShape 
-   */
-  public static Options elementShape(Shape elementShape) {
-    return new Options().elementShape(elementShape);
+    return new TensorListConcat<U>(opBuilder.build());
   }
   
   /**
    */
-  public Output<T> tensor() {
+  public Output<U> tensor() {
     return tensor;
   }
   
@@ -106,7 +82,7 @@ public final class TensorListConcat<T extends TType> extends PrimitiveOp {
     return lengths;
   }
   
-  private Output<T> tensor;
+  private Output<U> tensor;
   private Output<TInt64> lengths;
   
   private TensorListConcat(Operation operation) {

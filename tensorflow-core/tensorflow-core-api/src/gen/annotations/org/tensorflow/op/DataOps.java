@@ -3,13 +3,11 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.DeserializeIterator;
 import org.tensorflow.op.data.IteratorGetNext;
 import org.tensorflow.op.data.IteratorGetNextAsOptional;
 import org.tensorflow.op.data.IteratorGetNextSync;
 import org.tensorflow.op.data.IteratorToStringHandle;
-import org.tensorflow.op.data.KafkaDataset;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.op.data.OptionalFromValue;
 import org.tensorflow.op.data.OptionalGetValue;
@@ -17,9 +15,6 @@ import org.tensorflow.op.data.OptionalHasValue;
 import org.tensorflow.op.data.OptionalNone;
 import org.tensorflow.op.data.SerializeIterator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
 
 /**
  * An API for building {@code data} operations as {@link Op Op}s
@@ -31,37 +26,6 @@ public final class DataOps {
 
   DataOps(Scope scope) {
     this.scope = scope;
-  }
-
-  /**
-   * Builds an {@link KafkaDataset} operation
-   *
-   * @param topics A `tf.string` tensor containing one or more subscriptions,
-   * @param servers A list of bootstrap servers.
-   * @param group The consumer group id.
-   * @param eof If True, the kafka reader will stop on EOF.
-   * @param timeout The timeout value for the Kafka Consumer to wait
-   * @param configGlobal A `tf.string` tensor containing global configuration
-   * @param configTopic A `tf.string` tensor containing topic configuration
-   * @return a new instance of KafkaDataset
-   * @see org.tensorflow.op.data.KafkaDataset
-   */
-  public KafkaDataset kafkaDataset(Operand<TString> topics, Operand<TString> servers,
-      Operand<TString> group, Operand<TBool> eof, Operand<TInt64> timeout,
-      Operand<TString> configGlobal, Operand<TString> configTopic) {
-    return KafkaDataset.create(scope, topics, servers, group, eof, timeout, configGlobal, configTopic);
-  }
-
-  /**
-   * Builds an {@link DeserializeIterator} operation
-   *
-   * @param resourceHandle A handle to an iterator resource.
-   * @param serialized A variant tensor storing the state of the iterator contained in the
-   * @return a new instance of DeserializeIterator
-   * @see org.tensorflow.op.data.DeserializeIterator
-   */
-  public DeserializeIterator deserializeIterator(Operand<?> resourceHandle, Operand<?> serialized) {
-    return DeserializeIterator.create(scope, resourceHandle, serialized);
   }
 
   /**
@@ -145,6 +109,18 @@ public final class DataOps {
   }
 
   /**
+   * Builds an {@link DeserializeIterator} operation
+   *
+   * @param resourceHandle A handle to an iterator resource.
+   * @param serialized A variant tensor storing the state of the iterator contained in the
+   * @return a new instance of DeserializeIterator
+   * @see org.tensorflow.op.data.DeserializeIterator
+   */
+  public DeserializeIterator deserializeIterator(Operand<?> resourceHandle, Operand<?> serialized) {
+    return DeserializeIterator.create(scope, resourceHandle, serialized);
+  }
+
+  /**
    * Builds an {@link OptionalGetValue} operation
    *
    * @param optional 
@@ -170,19 +146,6 @@ public final class DataOps {
   public IteratorGetNext iteratorGetNext(Operand<?> iterator, List<DataType<?>> outputTypes,
       List<Shape> outputShapes) {
     return IteratorGetNext.create(scope, iterator, outputTypes, outputShapes);
-  }
-
-  /**
-   * Builds an {@link AnonymousIterator} operation
-   *
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of AnonymousIterator
-   * @see org.tensorflow.op.data.AnonymousIterator
-   */
-  public AnonymousIterator anonymousIterator(List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
-    return AnonymousIterator.create(scope, outputTypes, outputShapes);
   }
 
   /**

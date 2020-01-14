@@ -46,21 +46,23 @@ import org.tensorflow.types.family.TType;
  * For example,
  * <p>
  * Example 1:
- * <pre>{@code
+ * <p>
  * >>> a = [1., 2., 3.]
- * >>> equality_bitcast = tf.bitcast(a,tf.complex128)
- * tensorflow.python.framework.errors_impl.InvalidArgumentError: Cannot bitcast from float to complex128: shape [3] [Op:Bitcast]
- * >>> equality_cast = tf.cast(a,tf.complex128)
+ * >>> equality_bitcast = tf.bitcast(a, tf.complex128)
+ * Traceback (most recent call last):
+ * ...
+ * InvalidArgumentError: Cannot bitcast from 1 to 18 [Op:Bitcast]
+ * >>> equality_cast = tf.cast(a, tf.complex128)
  * >>> print(equality_cast)
  * tf.Tensor([1.+0.j 2.+0.j 3.+0.j], shape=(3,), dtype=complex128)
- * }</pre>
+ * <p>
  * Example 2:
- * <pre>{@code
+ * <p>
  * >>> tf.bitcast(tf.constant(0xffffffff, dtype=tf.uint32), tf.uint8)
- * <tf.Tensor: ... shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)>
- * }</pre>
+ * <tf.Tensor: shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)>
+ * <p>
  * Example 3:
- * <pre>{@code
+ * <p>
  * >>> x = [1., 2., 3.]
  * >>> y = [0., 2., 3.]
  * >>> equality= tf.equal(x,y)
@@ -72,10 +74,10 @@ import org.tensorflow.types.family.TType;
  * tf.Tensor([0. 1. 1.], shape=(3,), dtype=float32)
  * >>> print(equality_bitcast)
  * tf.Tensor(
- * [[ 0 0 0 0]
- *  [ 0 0 128 63]
- *  [ 0 0 128 63]], shape=(3, 4), dtype=uint8)
- * }</pre>
+ *     [[  0   0   0   0]
+ *      [  0   0 128  63]
+ *      [  0   0 128  63]], shape=(3, 4), dtype=uint8)
+ * <p>
  * <i>NOTE</i>: Bitcast is implemented as a low-level cast, so machines with different
  * endian orderings will give different results.
  * 

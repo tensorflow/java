@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ShardDataset"
+  endpoint {
+    name: "data.ShardDataset"
+  }
+}

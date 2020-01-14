@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * <p>
  * For example, if an image is 100 x 200 pixels (height x width) and the bounding
  * box is `[0.1, 0.2, 0.5, 0.9]`, the upper-left and bottom-right coordinates of
- * the bounding box will be `(40, 10)` to `(180, 50)` (in (x,y) coordinates).
+ * the bounding box will be `(40, 10)` to `(100, 50)` (in (x,y) coordinates).
  * <p>
  * Parts of the bounding box may fall outside the image.
  * 
@@ -55,12 +55,14 @@ public final class DrawBoundingBoxes<T extends TNumber> extends PrimitiveOp impl
    * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
    * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
    * boxes.
+   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
    * @return a new instance of DrawBoundingBoxes
    */
-  public static <T extends TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<TFloat> boxes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DrawBoundingBoxes", scope.makeOpName("DrawBoundingBoxes"));
+  public static <T extends TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<TFloat> boxes, Operand<TFloat> colors) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DrawBoundingBoxesV2", scope.makeOpName("DrawBoundingBoxes"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());
+    opBuilder.addInput(colors.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DrawBoundingBoxes<T>(opBuilder.build());
   }

@@ -33,17 +33,70 @@ import org.tensorflow.types.TString;
 public final class DatasetToGraph extends PrimitiveOp implements Operand<TString> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.data.DatasetToGraph}
+   */
+  public static class Options {
+    
+    /**
+     * @param externalStatePolicy 
+     */
+    public Options externalStatePolicy(Long externalStatePolicy) {
+      this.externalStatePolicy = externalStatePolicy;
+      return this;
+    }
+    
+    /**
+     * @param stripDeviceAssignment 
+     */
+    public Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
+      this.stripDeviceAssignment = stripDeviceAssignment;
+      return this;
+    }
+    
+    private Long externalStatePolicy;
+    private Boolean stripDeviceAssignment;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new DatasetToGraph operation.
    * 
    * @param scope current scope
    * @param inputDataset A variant tensor representing the dataset to return the graph representation for.
+   * @param options carries optional attributes values
    * @return a new instance of DatasetToGraph
    */
-  public static DatasetToGraph create(Scope scope, Operand<?> inputDataset) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DatasetToGraph", scope.makeOpName("DatasetToGraph"));
+  public static DatasetToGraph create(Scope scope, Operand<?> inputDataset, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DatasetToGraphV2", scope.makeOpName("DatasetToGraph"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.externalStatePolicy != null) {
+          opBuilder.setAttr("external_state_policy", opts.externalStatePolicy);
+        }
+        if (opts.stripDeviceAssignment != null) {
+          opBuilder.setAttr("strip_device_assignment", opts.stripDeviceAssignment);
+        }
+      }
+    }
     return new DatasetToGraph(opBuilder.build());
+  }
+  
+  /**
+   * @param externalStatePolicy 
+   */
+  public static Options externalStatePolicy(Long externalStatePolicy) {
+    return new Options().externalStatePolicy(externalStatePolicy);
+  }
+  
+  /**
+   * @param stripDeviceAssignment 
+   */
+  public static Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
+    return new Options().stripDeviceAssignment(stripDeviceAssignment);
   }
   
   /**

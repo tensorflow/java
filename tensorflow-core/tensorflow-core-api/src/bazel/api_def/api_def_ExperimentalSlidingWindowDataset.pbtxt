@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalSlidingWindowDataset"
+  endpoint {
+    name: "data.experimental.SlidingWindowDataset"
+  }
+}

@@ -37,7 +37,7 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<TInt32> x = ops.math().add(ops.constant(1), ops.constant(2));
+      Operand<TInt32> x = ops.math.add(ops.constant(1), ops.constant(2));
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
         assertEquals(3, result.intValue());
       }
@@ -53,7 +53,7 @@ public final class GeneratedOperationsTest {
       inputs.add(ops.constant(1));
       inputs.add(ops.constant(2));
       inputs.add(ops.constant(3));
-      Operand<TInt32> x = ops.math().addN(inputs);
+      Operand<TInt32> x = ops.math.addN(inputs);
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
         assertEquals(6, result.intValue());
       }
@@ -77,7 +77,7 @@ public final class GeneratedOperationsTest {
       ArrayList<Operand<?>> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
       Operand<TInt32> x =
-          ops.withControlDependencies(controls).math().add(variable, ops.constant(0));
+          ops.withControlDependencies(controls).math.add(variable, ops.constant(0));
       sess.runner().addTarget(initVariable).run();
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
         assertEquals(3, result.intValue());

@@ -33,6 +33,18 @@ import org.tensorflow.types.family.TType;
  * <p>
  * <i>NOTE</i>: `math.Greater` supports broadcasting. More about broadcasting
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5, 2, 5])
+ * tf.math.greater(x, y) ==> [False, True, True]
+ * 
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5])
+ * tf.math.greater(x, y) ==> [False, False, True]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class Greater extends PrimitiveOp implements Operand<TBool> {

@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
+import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,8 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -42,9 +43,11 @@ import org.tensorflow.types.family.TType;
  * Along each axis `signal.Rfft3d` is computed on, if `fft_length` is smaller than the
  * corresponding dimension of `input`, the dimension is cropped. If it is larger,
  * the dimension is padded with zeros.
+ * 
+ * @param <U> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Rfft3d extends PrimitiveOp implements Operand<TType> {
+public final class Rfft3d<U extends TType> extends PrimitiveOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Rfft3d operation.
@@ -52,14 +55,16 @@ public final class Rfft3d extends PrimitiveOp implements Operand<TType> {
    * @param scope current scope
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
+   * @param Tcomplex 
    * @return a new instance of Rfft3d
    */
-  public static Rfft3d create(Scope scope, Operand<TFloat> input, Operand<TInt32> fftLength) {
+  public static <U extends TType, T extends TNumber> Rfft3d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT3D", scope.makeOpName("Rfft3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new Rfft3d(opBuilder.build());
+    opBuilder.setAttr("Tcomplex", Tcomplex);
+    return new Rfft3d<U>(opBuilder.build());
   }
   
   /**
@@ -72,17 +77,16 @@ public final class Rfft3d extends PrimitiveOp implements Operand<TType> {
    * Equivalent to np.fft.rfftn with 3 dimensions.
    * @end_compatibility
    */
-  public Output<?> output() {
+  public Output<U> output() {
     return output;
   }
   
   @Override
-  @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) output;
+  public Output<U> asOutput() {
+    return output;
   }
   
-  private Output<?> output;
+  private Output<U> output;
   
   private Rfft3d(Operation operation) {
     super(operation);

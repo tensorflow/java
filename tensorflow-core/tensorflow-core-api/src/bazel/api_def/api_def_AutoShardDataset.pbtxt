@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AutoShardDataset"
+  endpoint {
+    name: "data.AutoShardDataset"
+  }
+}

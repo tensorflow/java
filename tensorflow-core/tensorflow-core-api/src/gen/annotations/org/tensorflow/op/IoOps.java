@@ -7,6 +7,7 @@ import org.tensorflow.op.io.DecodeBase64;
 import org.tensorflow.op.io.DecodeCompressed;
 import org.tensorflow.op.io.DecodeCsv;
 import org.tensorflow.op.io.DecodeJsonExample;
+import org.tensorflow.op.io.DecodePaddedRaw;
 import org.tensorflow.op.io.DecodeRaw;
 import org.tensorflow.op.io.DeserializeManySparse;
 import org.tensorflow.op.io.EncodeBase64;
@@ -49,9 +50,11 @@ import org.tensorflow.op.io.TfRecordReader;
 import org.tensorflow.op.io.WholeFileReader;
 import org.tensorflow.op.io.WriteFile;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -233,25 +236,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link ParseExample} operation
-   *
-   * @param serialized A vector containing a batch of binary serialized Example protos.
-   * @param names A vector containing the names of the serialized protos.
-   * @param sparseKeys A list of Nsparse string Tensors (scalars).
-   * @param denseKeys A list of Ndense string Tensors (scalars).
-   * @param denseDefaults A list of Ndense Tensors (some may be empty).
-   * @param sparseTypes A list of Nsparse types; the data types of data in each Feature
-   * @param denseShapes A list of Ndense shapes; the shapes of data in each Feature
-   * @return a new instance of ParseExample
-   * @see org.tensorflow.op.io.ParseExample
-   */
-  public ParseExample parseExample(Operand<TString> serialized, Operand<TString> names,
-      Iterable<Operand<TString>> sparseKeys, Iterable<Operand<TString>> denseKeys,
-      Iterable<Operand<?>> denseDefaults, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
-    return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, denseDefaults, sparseTypes, denseShapes);
-  }
-
-  /**
    * Builds an {@link DecodeRaw} operation
    *
    * @param bytes All the elements must have the same length.
@@ -362,6 +346,31 @@ public final class IoOps {
   }
 
   /**
+   * Builds an {@link ParseExample} operation
+   *
+   * @param serialized A scalar or vector containing binary serialized Example protos.
+   * @param names A tensor containing the names of the serialized protos.
+   * @param sparseKeys Vector of strings.
+   * @param denseKeys Vector of strings.
+   * @param raggedKeys Vector of strings.
+   * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with `dense_keys`.
+   * @param numSparse The number of sparse keys.
+   * @param sparseTypes A list of `num_sparse` types; the data types of data in each Feature
+   * @param raggedValueTypes A list of `num_ragged` types; the data types of data in each Feature
+   * @param raggedSplitTypes A list of `num_ragged` types; the data types of row_splits in each Feature
+   * @param denseShapes A list of `num_dense` shapes; the shapes of data in each Feature
+   * @return a new instance of ParseExample
+   * @see org.tensorflow.op.io.ParseExample
+   */
+  public ParseExample parseExample(Operand<TString> serialized, Operand<TString> names,
+      Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys,
+      Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes,
+      List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes,
+      List<Shape> denseShapes) {
+    return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, raggedKeys, denseDefaults, numSparse, sparseTypes, raggedValueTypes, raggedSplitTypes, denseShapes);
+  }
+
+  /**
    * Builds an {@link QueueDequeueUpTo} operation
    *
    * @param handle The handle to a queue.
@@ -426,6 +435,43 @@ public final class IoOps {
    */
   public TfRecordReader tfRecordReader(TfRecordReader.Options... options) {
     return TfRecordReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link ParseSequenceExample} operation
+   *
+   * @param serialized A scalar or vector containing binary serialized SequenceExample protos.
+   * @param debugName A scalar or vector containing the names of the serialized protos.
+   * @param contextSparseKeys The keys expected in the Examples' features associated with context_sparse
+   * @param contextDenseKeys The keys expected in the SequenceExamples' context features associated with
+   * @param contextRaggedKeys The keys expected in the Examples' features associated with context_ragged
+   * @param featureListSparseKeys The keys expected in the FeatureLists associated with sparse values.
+   * @param featureListDenseKeys The keys expected in the SequenceExamples' feature_lists associated
+   * @param featureListRaggedKeys The keys expected in the FeatureLists associated with ragged values.
+   * @param featureListDenseMissingAssumedEmpty A vector corresponding 1:1 with featue_list_dense_keys, indicating which
+   * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
+   * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
+   * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
+   * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context features.
+   * @param featureListDenseTypes 
+   * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
+   * @param featureListRaggedValueTypes RaggedTensor.value dtypes for the ragged FeatureList features.
+   * @param featureListRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged FeatureList features.
+   * @param options carries optional attributes values
+   * @return a new instance of ParseSequenceExample
+   * @see org.tensorflow.op.io.ParseSequenceExample
+   */
+  public ParseSequenceExample parseSequenceExample(Operand<TString> serialized,
+      Operand<TString> debugName, Operand<TString> contextSparseKeys,
+      Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys,
+      Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys,
+      Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty,
+      Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes,
+      List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes,
+      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
+      List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes,
+      ParseSequenceExample.Options... options) {
+    return ParseSequenceExample.create(scope, serialized, debugName, contextSparseKeys, contextDenseKeys, contextRaggedKeys, featureListSparseKeys, featureListDenseKeys, featureListRaggedKeys, featureListDenseMissingAssumedEmpty, contextDenseDefaults, contextSparseTypes, contextRaggedValueTypes, contextRaggedSplitTypes, featureListDenseTypes, featureListSparseTypes, featureListRaggedValueTypes, featureListRaggedSplitTypes, options);
   }
 
   /**
@@ -563,34 +609,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link ParseSequenceExample} operation
-   *
-   * @param serialized A vector containing binary serialized SequenceExample protos.
-   * @param debugName A vector containing the names of the serialized protos.
-   * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
-   * @param featureListDenseMissingAssumedEmpty A vector listing the
-   * @param contextSparseKeys A list of Ncontext_sparse string Tensors (scalars).
-   * @param contextDenseKeys A list of Ncontext_dense string Tensors (scalars).
-   * @param featureListSparseKeys A list of Nfeature_list_sparse string Tensors
-   * @param featureListDenseKeys A list of Nfeature_list_dense string Tensors (scalars).
-   * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
-   * @param featureListDenseTypes 
-   * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
-   * @param options carries optional attributes values
-   * @return a new instance of ParseSequenceExample
-   * @see org.tensorflow.op.io.ParseSequenceExample
-   */
-  public ParseSequenceExample parseSequenceExample(Operand<TString> serialized,
-      Operand<TString> debugName, Iterable<Operand<?>> contextDenseDefaults,
-      List<String> featureListDenseMissingAssumedEmpty, List<String> contextSparseKeys,
-      List<String> contextDenseKeys, List<String> featureListSparseKeys,
-      List<String> featureListDenseKeys, List<DataType<?>> contextSparseTypes,
-      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
-      ParseSequenceExample.Options... options) {
-    return ParseSequenceExample.create(scope, serialized, debugName, contextDenseDefaults, featureListDenseMissingAssumedEmpty, contextSparseKeys, contextDenseKeys, featureListSparseKeys, featureListDenseKeys, contextSparseTypes, featureListDenseTypes, featureListSparseTypes, options);
-  }
-
-  /**
    * Builds an {@link QueueIsClosed} operation
    *
    * @param handle The handle to a queue.
@@ -674,6 +692,21 @@ public final class IoOps {
   public FixedLengthRecordReader fixedLengthRecordReader(Long recordBytes,
       FixedLengthRecordReader.Options... options) {
     return FixedLengthRecordReader.create(scope, recordBytes, options);
+  }
+
+  /**
+   * Builds an {@link DecodePaddedRaw} operation
+   *
+   * @param inputBytes Tensor of string to be decoded.
+   * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
+   * @param outType 
+   * @param options carries optional attributes values
+   * @return a new instance of DecodePaddedRaw
+   * @see org.tensorflow.op.io.DecodePaddedRaw
+   */
+  public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
+      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
+    return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
   }
 
   /**

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ScaleAndTranslate"
+  endpoint {
+    name: "image.ScaleAndTranslate"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ResourceSparseApplyAdagradV2"
+  endpoint {
+    name: "train.ResourceSparseApplyAdagradV2"
+  }
+}

@@ -29,7 +29,6 @@ import org.tensorflow.op.core.BarrierInsertMany;
 import org.tensorflow.op.core.BarrierReadySize;
 import org.tensorflow.op.core.BarrierTakeMany;
 import org.tensorflow.op.core.Batch;
-import org.tensorflow.op.core.BatchMatMulV2;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
@@ -37,34 +36,25 @@ import org.tensorflow.op.core.BroadcastDynamicShape;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
 import org.tensorflow.op.core.ClipByValue;
-import org.tensorflow.op.core.CombinedNonMaxSuppression;
 import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
 import org.tensorflow.op.core.CountUpTo;
-import org.tensorflow.op.core.CudnnRNNCanonicalToParamsV2;
-import org.tensorflow.op.core.CudnnRNNParamsToCanonicalV2;
-import org.tensorflow.op.core.DecodePaddedRaw;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
 import org.tensorflow.op.core.DestroyResourceOp;
 import org.tensorflow.op.core.DestroyTemporaryVariable;
-import org.tensorflow.op.core.DrawBoundingBoxesV2;
 import org.tensorflow.op.core.DynamicPartition;
 import org.tensorflow.op.core.DynamicStitch;
 import org.tensorflow.op.core.EditDistance;
-import org.tensorflow.op.core.Einsum;
 import org.tensorflow.op.core.Empty;
 import org.tensorflow.op.core.EmptyTensorList;
 import org.tensorflow.op.core.EnsureShape;
-import org.tensorflow.op.core.EuclideanNorm;
 import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
-import org.tensorflow.op.core.FusedBatchNormGradV3;
-import org.tensorflow.op.core.FusedBatchNormV3;
 import org.tensorflow.op.core.Gather;
 import org.tensorflow.op.core.GatherNd;
 import org.tensorflow.op.core.GetSessionHandle;
@@ -89,7 +79,6 @@ import org.tensorflow.op.core.LookupTableImport;
 import org.tensorflow.op.core.LookupTableInsert;
 import org.tensorflow.op.core.LookupTableSize;
 import org.tensorflow.op.core.LoopCond;
-import org.tensorflow.op.core.Lu;
 import org.tensorflow.op.core.MapClear;
 import org.tensorflow.op.core.MapIncompleteSize;
 import org.tensorflow.op.core.MapPeek;
@@ -97,23 +86,18 @@ import org.tensorflow.op.core.MapSize;
 import org.tensorflow.op.core.MapStage;
 import org.tensorflow.op.core.MapUnstage;
 import org.tensorflow.op.core.MapUnstageNoKey;
-import org.tensorflow.op.core.MatrixDiagPartV2;
-import org.tensorflow.op.core.MatrixDiagV2;
-import org.tensorflow.op.core.MatrixSetDiagV2;
 import org.tensorflow.op.core.Max;
 import org.tensorflow.op.core.Merge;
 import org.tensorflow.op.core.Min;
 import org.tensorflow.op.core.MirrorPad;
-import org.tensorflow.op.core.MulNoNan;
+import org.tensorflow.op.core.MlirPassthroughOp;
 import org.tensorflow.op.core.MutableDenseHashTable;
 import org.tensorflow.op.core.MutableHashTable;
 import org.tensorflow.op.core.MutableHashTableOfTensors;
 import org.tensorflow.op.core.Mutex;
 import org.tensorflow.op.core.MutexLock;
-import org.tensorflow.op.core.NextAfter;
 import org.tensorflow.op.core.NextIteration;
 import org.tensorflow.op.core.NoOp;
-import org.tensorflow.op.core.NonMaxSuppressionV5;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.OnesLike;
 import org.tensorflow.op.core.OrderedMapClear;
@@ -131,7 +115,6 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedConcat;
-import org.tensorflow.op.core.QuantizedConcatV2;
 import org.tensorflow.op.core.QuantizedReshape;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
@@ -147,8 +130,6 @@ import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
 import org.tensorflow.op.core.RemoteFusedGraphExecute;
 import org.tensorflow.op.core.Reshape;
-import org.tensorflow.op.core.ResourceApplyAdamWithAmsgrad;
-import org.tensorflow.op.core.ResourceApplyKerasMomentum;
 import org.tensorflow.op.core.ResourceCountUpTo;
 import org.tensorflow.op.core.ResourceGather;
 import org.tensorflow.op.core.ResourceGatherNd;
@@ -162,13 +143,11 @@ import org.tensorflow.op.core.ResourceScatterNdSub;
 import org.tensorflow.op.core.ResourceScatterNdUpdate;
 import org.tensorflow.op.core.ResourceScatterSub;
 import org.tensorflow.op.core.ResourceScatterUpdate;
-import org.tensorflow.op.core.ResourceSparseApplyKerasMomentum;
 import org.tensorflow.op.core.ResourceStridedSliceAssign;
 import org.tensorflow.op.core.Reverse;
 import org.tensorflow.op.core.ReverseSequence;
 import org.tensorflow.op.core.Roll;
 import org.tensorflow.op.core.Rpc;
-import org.tensorflow.op.core.ScaleAndTranslate;
 import org.tensorflow.op.core.ScatterAdd;
 import org.tensorflow.op.core.ScatterDiv;
 import org.tensorflow.op.core.ScatterMax;
@@ -181,7 +160,7 @@ import org.tensorflow.op.core.ScatterNdSub;
 import org.tensorflow.op.core.ScatterNdUpdate;
 import org.tensorflow.op.core.ScatterSub;
 import org.tensorflow.op.core.ScatterUpdate;
-import org.tensorflow.op.core.SelectV2;
+import org.tensorflow.op.core.Select;
 import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.core.SetSize;
 import org.tensorflow.op.core.ShapeN;
@@ -198,16 +177,10 @@ import org.tensorflow.op.core.Stage;
 import org.tensorflow.op.core.StageClear;
 import org.tensorflow.op.core.StagePeek;
 import org.tensorflow.op.core.StageSize;
-import org.tensorflow.op.core.StatefulRandomBinomial;
-import org.tensorflow.op.core.StatefulStandardNormal;
-import org.tensorflow.op.core.StatefulStandardNormalV2;
 import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
 import org.tensorflow.op.core.StridedSliceAssign;
 import org.tensorflow.op.core.StridedSliceGrad;
-import org.tensorflow.op.core.StringLower;
-import org.tensorflow.op.core.StringNGrams;
-import org.tensorflow.op.core.StringUpper;
 import org.tensorflow.op.core.Sum;
 import org.tensorflow.op.core.SwitchCond;
 import org.tensorflow.op.core.TemporaryVariable;
@@ -226,7 +199,6 @@ import org.tensorflow.op.core.TensorArrayUnpack;
 import org.tensorflow.op.core.TensorArrayWrite;
 import org.tensorflow.op.core.TensorListConcat;
 import org.tensorflow.op.core.TensorListConcatLists;
-import org.tensorflow.op.core.TensorListConcatV2;
 import org.tensorflow.op.core.TensorListElementShape;
 import org.tensorflow.op.core.TensorListFromTensor;
 import org.tensorflow.op.core.TensorListGather;
@@ -239,13 +211,12 @@ import org.tensorflow.op.core.TensorListReserve;
 import org.tensorflow.op.core.TensorListResize;
 import org.tensorflow.op.core.TensorListScatter;
 import org.tensorflow.op.core.TensorListScatterIntoExistingList;
-import org.tensorflow.op.core.TensorListScatterV2;
 import org.tensorflow.op.core.TensorListSetItem;
 import org.tensorflow.op.core.TensorListSplit;
 import org.tensorflow.op.core.TensorListStack;
-import org.tensorflow.op.core.TensorScatterAdd;
-import org.tensorflow.op.core.TensorScatterSub;
-import org.tensorflow.op.core.TensorScatterUpdate;
+import org.tensorflow.op.core.TensorScatterNdAdd;
+import org.tensorflow.op.core.TensorScatterNdSub;
+import org.tensorflow.op.core.TensorScatterNdUpdate;
 import org.tensorflow.op.core.TensorStridedSliceUpdate;
 import org.tensorflow.op.core.Tile;
 import org.tensorflow.op.core.Timestamp;
@@ -255,7 +226,6 @@ import org.tensorflow.op.core.UnbatchGrad;
 import org.tensorflow.op.core.Unique;
 import org.tensorflow.op.core.UniqueWithCounts;
 import org.tensorflow.op.core.UnravelIndex;
-import org.tensorflow.op.core.UnsortedSegmentJoin;
 import org.tensorflow.op.core.Unstack;
 import org.tensorflow.op.core.Unstage;
 import org.tensorflow.op.core.VarHandleOp;
@@ -263,8 +233,6 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
-import org.tensorflow.op.core.Where3;
-import org.tensorflow.op.core.WriteKafka;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.tools.Shape;
@@ -310,8 +278,6 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 public final class Ops {
-  private final Scope scope;
-
   public final NnOps nn;
 
   public final SummaryOps summary;
@@ -343,6 +309,8 @@ public final class Ops {
   public final TrainOps train;
 
   public final QuantizationOps quantization;
+
+  private final Scope scope;
 
   private Ops(Scope scope) {
     this.scope = scope;
@@ -456,31 +424,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link ResourceApplyAdamWithAmsgrad} operation
-   *
-   * @param var Should be from a Variable().
-   * @param m Should be from a Variable().
-   * @param v Should be from a Variable().
-   * @param vhat Should be from a Variable().
-   * @param beta1Power Must be a scalar.
-   * @param beta2Power Must be a scalar.
-   * @param lr Scaling factor. Must be a scalar.
-   * @param beta1 Momentum factor. Must be a scalar.
-   * @param beta2 Momentum factor. Must be a scalar.
-   * @param epsilon Ridge term. Must be a scalar.
-   * @param grad The gradient.
-   * @param options carries optional attributes values
-   * @return a new instance of ResourceApplyAdamWithAmsgrad
-   * @see org.tensorflow.op.core.ResourceApplyAdamWithAmsgrad
-   */
-  public <T extends TType> ResourceApplyAdamWithAmsgrad resourceApplyAdamWithAmsgrad(Operand<?> var,
-      Operand<?> m, Operand<?> v, Operand<?> vhat, Operand<T> beta1Power, Operand<T> beta2Power,
-      Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad,
-      ResourceApplyAdamWithAmsgrad.Options... options) {
-    return ResourceApplyAdamWithAmsgrad.create(scope, var, m, v, vhat, beta1Power, beta2Power, lr, beta1, beta2, epsilon, grad, options);
-  }
-
-  /**
    * Builds an {@link SetSize} operation
    *
    * @param setIndices 2D `Tensor`, indices of a `SparseTensor`.
@@ -493,32 +436,6 @@ public final class Ops {
   public <T extends TType> SetSize setSize(Operand<TInt64> setIndices, Operand<T> setValues,
       Operand<TInt64> setShape, SetSize.Options... options) {
     return SetSize.create(scope, setIndices, setValues, setShape, options);
-  }
-
-  /**
-   * Builds an {@link DrawBoundingBoxesV2} operation
-   *
-   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
-   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
-   * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
-   * @return a new instance of DrawBoundingBoxesV2
-   * @see org.tensorflow.op.core.DrawBoundingBoxesV2
-   */
-  public <T extends TNumber> DrawBoundingBoxesV2<T> drawBoundingBoxesV2(Operand<T> images,
-      Operand<TFloat> boxes, Operand<TFloat> colors) {
-    return DrawBoundingBoxesV2.create(scope, images, boxes, colors);
-  }
-
-  /**
-   * Builds an {@link StringUpper} operation
-   *
-   * @param input 
-   * @param options carries optional attributes values
-   * @return a new instance of StringUpper
-   * @see org.tensorflow.op.core.StringUpper
-   */
-  public StringUpper stringUpper(Operand<TString> input, StringUpper.Options... options) {
-    return StringUpper.create(scope, input, options);
   }
 
   /**
@@ -600,39 +517,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorScatterSub} operation
-   *
-   * @param tensor Tensor to copy/update.
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @return a new instance of TensorScatterSub
-   * @see org.tensorflow.op.core.TensorScatterSub
-   */
-  public <T extends TType, U extends TNumber> TensorScatterSub<T> tensorScatterSub(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
-    return TensorScatterSub.create(scope, tensor, indices, updates);
-  }
-
-  /**
-   * Builds an {@link FusedBatchNormGradV3} operation
-   *
-   * @param yBackprop A 4D Tensor for the gradient with respect to y.
-   * @param x A 4D Tensor for input data.
-   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
-   * @param reserveSpace1 When is_training is True, a 1D Tensor for the computed batch
-   * @param reserveSpace2 When is_training is True, a 1D Tensor for the computed batch
-   * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
-   * @param options carries optional attributes values
-   * @return a new instance of FusedBatchNormGradV3
-   * @see org.tensorflow.op.core.FusedBatchNormGradV3
-   */
-  public <T extends TNumber, U extends TNumber> FusedBatchNormGradV3<T, U> fusedBatchNormGradV3(
-      Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1,
-      Operand<U> reserveSpace2, Operand<U> reserveSpace3, FusedBatchNormGradV3.Options... options) {
-    return FusedBatchNormGradV3.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, reserveSpace3, options);
-  }
-
-  /**
    * Builds an {@link All} operation
    *
    * @param input The tensor to reduce.
@@ -644,6 +528,22 @@ public final class Ops {
   public <T extends TNumber> All all(Operand<TBool> input, Operand<T> axis,
       All.Options... options) {
     return All.create(scope, input, axis, options);
+  }
+
+  /**
+   * Builds an {@link TensorListConcat} operation
+   *
+   * @param inputHandle 
+   * @param elementShape 
+   * @param leadingDims 
+   * @param elementDtype 
+   * @return a new instance of TensorListConcat
+   * @see org.tensorflow.op.core.TensorListConcat
+   */
+  public <U extends TType, T extends TNumber> TensorListConcat<U> tensorListConcat(
+      Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims,
+      DataType<U> elementDtype) {
+    return TensorListConcat.create(scope, inputHandle, elementShape, leadingDims, elementDtype);
   }
 
   /**
@@ -672,19 +572,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> ReduceProd<T> reduceProd(Operand<T> input,
       Operand<U> axis, ReduceProd.Options... options) {
     return ReduceProd.create(scope, input, axis, options);
-  }
-
-  /**
-   * Builds an {@link StatefulStandardNormal} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormal
-   * @see org.tensorflow.op.core.StatefulStandardNormal
-   */
-  public <T extends TType> StatefulStandardNormal<TFloat> statefulStandardNormal(
-      Operand<?> resource, Operand<T> shape) {
-    return StatefulStandardNormal.create(scope, resource, shape);
   }
 
   /**
@@ -791,18 +678,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StringLower} operation
-   *
-   * @param input 
-   * @param options carries optional attributes values
-   * @return a new instance of StringLower
-   * @see org.tensorflow.op.core.StringLower
-   */
-  public StringLower stringLower(Operand<TString> input, StringLower.Options... options) {
-    return StringLower.create(scope, input, options);
-  }
-
-  /**
    * Builds an {@link BarrierIncompleteSize} operation
    *
    * @param handle The handle to a barrier.
@@ -870,22 +745,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorListScatterV2} operation
-   *
-   * @param tensor 
-   * @param indices 
-   * @param elementShape 
-   * @param numElements 
-   * @return a new instance of TensorListScatterV2
-   * @see org.tensorflow.op.core.TensorListScatterV2
-   */
-  public <T extends TType, U extends TNumber> TensorListScatterV2 tensorListScatterV2(
-      Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape,
-      Operand<TInt32> numElements) {
-    return TensorListScatterV2.create(scope, tensor, indices, elementShape, numElements);
-  }
-
-  /**
    * Builds an {@link ResourceScatterNdAdd} operation
    *
    * @param ref A resource handle. Must be from a VarHandleOp.
@@ -945,32 +804,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link NextAfter} operation
-   *
-   * @param x1 
-   * @param x2 
-   * @return a new instance of NextAfter
-   * @see org.tensorflow.op.core.NextAfter
-   */
-  public <T extends TNumber> NextAfter<T> nextAfter(Operand<T> x1, Operand<T> x2) {
-    return NextAfter.create(scope, x1, x2);
-  }
-
-  /**
-   * Builds an {@link TensorListConcat} operation
-   *
-   * @param inputHandle 
-   * @param elementDtype 
-   * @param options carries optional attributes values
-   * @return a new instance of TensorListConcat
-   * @see org.tensorflow.op.core.TensorListConcat
-   */
-  public <T extends TType> TensorListConcat<T> tensorListConcat(Operand<?> inputHandle,
-      DataType<T> elementDtype, TensorListConcat.Options... options) {
-    return TensorListConcat.create(scope, inputHandle, elementDtype, options);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param shape the tensor shape.
@@ -998,6 +831,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorScatterNdAdd} operation
+   *
+   * @param tensor Tensor to copy/update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdAdd
+   * @see org.tensorflow.op.core.TensorScatterNdAdd
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdAdd<T> tensorScatterNdAdd(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdAdd.create(scope, tensor, indices, updates);
+  }
+
+  /**
    * Builds an {@link ParallelConcat} operation
    *
    * @param values Tensors to be concatenated. All must have size 1 in the first dimension
@@ -1008,25 +855,6 @@ public final class Ops {
   public <T extends TType> ParallelConcat<T> parallelConcat(Iterable<Operand<T>> values,
       Shape shape) {
     return ParallelConcat.create(scope, values, shape);
-  }
-
-  /**
-   * Builds an {@link NonMaxSuppressionV5} operation
-   *
-   * @param boxes A 2-D float tensor of shape `[num_boxes, 4]`.
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
-   * @param maxOutputSize A scalar integer tensor representing the maximum number of
-   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
-   * @param softNmsSigma A 0-D float tensor representing the sigma parameter for Soft NMS; see Bodla et
-   * @param options carries optional attributes values
-   * @return a new instance of NonMaxSuppressionV5
-   * @see org.tensorflow.op.core.NonMaxSuppressionV5
-   */
-  public <T extends TNumber> NonMaxSuppressionV5<T> nonMaxSuppressionV5(Operand<T> boxes,
-      Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold,
-      Operand<T> scoreThreshold, Operand<T> softNmsSigma, NonMaxSuppressionV5.Options... options) {
-    return NonMaxSuppressionV5.create(scope, boxes, scores, maxOutputSize, iouThreshold, scoreThreshold, softNmsSigma, options);
   }
 
   /**
@@ -1124,21 +952,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StatefulStandardNormalV2} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param algorithm The RNG algorithm.
-   * @param shape The shape of the output tensor.
-   * @param dtype The type of the output.
-   * @return a new instance of StatefulStandardNormalV2
-   * @see org.tensorflow.op.core.StatefulStandardNormalV2
-   */
-  public <U extends TType, T extends TType> StatefulStandardNormalV2<U> statefulStandardNormalV2(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
-    return StatefulStandardNormalV2.create(scope, resource, algorithm, shape, dtype);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. String elements are
@@ -1208,53 +1021,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link DecodePaddedRaw} operation
-   *
-   * @param inputBytes Tensor of string to be decoded.
-   * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
-   * @param outType 
-   * @param options carries optional attributes values
-   * @return a new instance of DecodePaddedRaw
-   * @see org.tensorflow.op.core.DecodePaddedRaw
-   */
-  public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
-      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
-    return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
-  }
-
-  /**
-   * Builds an {@link StatefulRandomBinomial} operation
-   *
-   * @param resource 
-   * @param algorithm 
-   * @param shape 
-   * @param counts 
-   * @param probs 
-   * @param dtype 
-   * @return a new instance of StatefulRandomBinomial
-   * @see org.tensorflow.op.core.StatefulRandomBinomial
-   */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatefulRandomBinomial<V> statefulRandomBinomial(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts,
-      Operand<U> probs, DataType<V> dtype) {
-    return StatefulRandomBinomial.create(scope, resource, algorithm, shape, counts, probs, dtype);
-  }
-
-  /**
-   * Builds an {@link MatrixDiagPartV2} operation
-   *
-   * @param input Rank `r` tensor where `r >= 2`.
-   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
-   * @param paddingValue The value to fill the area outside the specified diagonal band with.
-   * @return a new instance of MatrixDiagPartV2
-   * @see org.tensorflow.op.core.MatrixDiagPartV2
-   */
-  public <T extends TType> MatrixDiagPartV2<T> matrixDiagPartV2(Operand<T> input, Operand<TInt32> k,
-      Operand<T> paddingValue) {
-    return MatrixDiagPartV2.create(scope, input, k, paddingValue);
-  }
-
-  /**
    * Builds an {@link MutableHashTable} operation
    *
    * @param keyDtype Type of the table keys.
@@ -1305,26 +1071,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> Unique<T, TInt32> unique(Operand<T> x,
       Operand<U> axis) {
     return Unique.create(scope, x, axis);
-  }
-
-  /**
-   * Builds an {@link StringNGrams} operation
-   *
-   * @param data The values tensor of the ragged string tensor to make ngrams out of. Must be a
-   * @param dataSplits The splits tensor of the ragged string tensor to make ngrams out of.
-   * @param separator The string to append between elements of the token. Use "" for no separator.
-   * @param ngramWidths The sizes of the ngrams to create.
-   * @param leftPad The string to use to pad the left side of the ngram sequence. Only used if
-   * @param rightPad The string to use to pad the right side of the ngram sequence. Only used if
-   * @param padWidth The number of padding elements to add to each side of each
-   * @param preserveShortSequences 
-   * @return a new instance of StringNGrams
-   * @see org.tensorflow.op.core.StringNGrams
-   */
-  public <T extends TNumber> StringNGrams<T> stringNGrams(Operand<TString> data,
-      Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad,
-      String rightPad, Long padWidth, Boolean preserveShortSequences) {
-    return StringNGrams.create(scope, data, dataSplits, separator, ngramWidths, leftPad, rightPad, padWidth, preserveShortSequences);
   }
 
   /**
@@ -1472,6 +1218,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorScatterNdUpdate} operation
+   *
+   * @param tensor Tensor to copy/update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdUpdate
+   * @see org.tensorflow.op.core.TensorScatterNdUpdate
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdUpdate<T> tensorScatterNdUpdate(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdUpdate.create(scope, tensor, indices, updates);
+  }
+
+  /**
    * Builds an {@link BarrierReadySize} operation
    *
    * @param handle The handle to a barrier.
@@ -1614,34 +1374,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link MulNoNan} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of MulNoNan
-   * @see org.tensorflow.op.core.MulNoNan
-   */
-  public <T extends TType> MulNoNan<T> mulNoNan(Operand<T> x, Operand<T> y) {
-    return MulNoNan.create(scope, x, y);
-  }
-
-  /**
-   * Builds an {@link TensorListConcatV2} operation
-   *
-   * @param inputHandle 
-   * @param elementShape 
-   * @param leadingDims 
-   * @param elementDtype 
-   * @return a new instance of TensorListConcatV2
-   * @see org.tensorflow.op.core.TensorListConcatV2
-   */
-  public <U extends TType, T extends TNumber> TensorListConcatV2<U> tensorListConcatV2(
-      Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims,
-      DataType<U> elementDtype) {
-    return TensorListConcatV2.create(scope, inputHandle, elementShape, leadingDims, elementDtype);
-  }
-
-  /**
    * Builds an {@link Timestamp} operation
    *
    * @return a new instance of Timestamp
@@ -1713,20 +1445,6 @@ public final class Ops {
    */
   public <T extends TType> ShapeN<TInt32> shapeN(Iterable<Operand<T>> input) {
     return ShapeN.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link TensorScatterAdd} operation
-   *
-   * @param tensor Tensor to copy/update.
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @return a new instance of TensorScatterAdd
-   * @see org.tensorflow.op.core.TensorScatterAdd
-   */
-  public <T extends TType, U extends TNumber> TensorScatterAdd<T> tensorScatterAdd(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
-    return TensorScatterAdd.create(scope, tensor, indices, updates);
   }
 
   /**
@@ -1833,25 +1551,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link CudnnRNNCanonicalToParamsV2} operation
-   *
-   * @param numLayers 
-   * @param numUnits 
-   * @param inputSize 
-   * @param weights 
-   * @param biases 
-   * @param options carries optional attributes values
-   * @return a new instance of CudnnRNNCanonicalToParamsV2
-   * @see org.tensorflow.op.core.CudnnRNNCanonicalToParamsV2
-   */
-  public <T extends TNumber> CudnnRNNCanonicalToParamsV2<T> cudnnRNNCanonicalToParamsV2(
-      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
-      Iterable<Operand<T>> weights, Iterable<Operand<T>> biases,
-      CudnnRNNCanonicalToParamsV2.Options... options) {
-    return CudnnRNNCanonicalToParamsV2.create(scope, numLayers, numUnits, inputSize, weights, biases, options);
-  }
-
-  /**
    * Builds an {@link Max} operation
    *
    * @param input The tensor to reduce.
@@ -1863,22 +1562,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> Max<T> max(Operand<T> input, Operand<U> axis,
       Max.Options... options) {
     return Max.create(scope, input, axis, options);
-  }
-
-  /**
-   * Builds an {@link MatrixDiagV2} operation
-   *
-   * @param diagonal Rank `r`, where `r >= 1`
-   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
-   * @param numRows The number of rows of the output matrix. If it is not provided, the op assumes
-   * @param numCols The number of columns of the output matrix. If it is not provided, the op
-   * @param paddingValue The number to fill the area outside the specified diagonal band with.
-   * @return a new instance of MatrixDiagV2
-   * @see org.tensorflow.op.core.MatrixDiagV2
-   */
-  public <T extends TType> MatrixDiagV2<T> matrixDiagV2(Operand<T> diagonal, Operand<TInt32> k,
-      Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
-    return MatrixDiagV2.create(scope, diagonal, k, numRows, numCols, paddingValue);
   }
 
   /**
@@ -2081,23 +1764,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link ScaleAndTranslate} operation
-   *
-   * @param images 
-   * @param size 
-   * @param scale 
-   * @param translation 
-   * @param options carries optional attributes values
-   * @return a new instance of ScaleAndTranslate
-   * @see org.tensorflow.op.core.ScaleAndTranslate
-   */
-  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat> scale, Operand<TFloat> translation,
-      ScaleAndTranslate.Options... options) {
-    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
-  }
-
-  /**
    * Builds an {@link Concat} operation
    *
    * @param values List of `N` Tensors to concatenate. Their ranks and types must match,
@@ -2163,6 +1829,21 @@ public final class Ops {
   public <T extends TType, U extends TNumber> Prod<T> prod(Operand<T> input, Operand<U> axis,
       Prod.Options... options) {
     return Prod.create(scope, input, axis, options);
+  }
+
+  /**
+   * Builds an {@link TensorListScatter} operation
+   *
+   * @param tensor 
+   * @param indices 
+   * @param elementShape 
+   * @param numElements 
+   * @return a new instance of TensorListScatter
+   * @see org.tensorflow.op.core.TensorListScatter
+   */
+  public <T extends TType, U extends TNumber> TensorListScatter tensorListScatter(Operand<T> tensor,
+      Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
+    return TensorListScatter.create(scope, tensor, indices, elementShape, numElements);
   }
 
   /**
@@ -2275,6 +1956,19 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link Select} operation
+   *
+   * @param condition 
+   * @param t 
+   * @param e 
+   * @return a new instance of Select
+   * @see org.tensorflow.op.core.Select
+   */
+  public <T extends TType> Select<T> select(Operand<TBool> condition, Operand<T> t, Operand<T> e) {
+    return Select.create(scope, condition, t, e);
+  }
+
+  /**
    * Builds an {@link TensorListLength} operation
    *
    * @param inputHandle 
@@ -2296,19 +1990,6 @@ public final class Ops {
   public OrderedMapClear orderedMapClear(List<DataType<?>> dtypes,
       OrderedMapClear.Options... options) {
     return OrderedMapClear.create(scope, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link Lu} operation
-   *
-   * @param input A tensor of shape `[..., M, M]` whose inner-most 2 dimensions form matrices of
-   * @param outputIdxType 
-   * @return a new instance of Lu
-   * @see org.tensorflow.op.core.Lu
-   */
-  public <T extends TType, U extends TNumber> Lu<T, U> lu(Operand<T> input,
-      DataType<U> outputIdxType) {
-    return Lu.create(scope, input, outputIdxType);
   }
 
   /**
@@ -2345,22 +2026,6 @@ public final class Ops {
    */
   public <U extends TNumber, T extends TType> Size<U> size(Operand<T> input, DataType<U> outType) {
     return Size.create(scope, input, outType);
-  }
-
-  /**
-   * Builds an {@link QuantizedConcatV2} operation
-   *
-   * @param values 
-   * @param axis 
-   * @param inputMins 
-   * @param inputMaxes 
-   * @return a new instance of QuantizedConcatV2
-   * @see org.tensorflow.op.core.QuantizedConcatV2
-   */
-  public <T extends TType, U extends TNumber> QuantizedConcatV2<T> quantizedConcatV2(
-      Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat>> inputMins,
-      Iterable<Operand<TFloat>> inputMaxes) {
-    return QuantizedConcatV2.create(scope, values, axis, inputMins, inputMaxes);
   }
 
   /**
@@ -2432,18 +2097,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Einsum} operation
-   *
-   * @param inputs List of 1 or 2 Tensors.
-   * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
-   * @return a new instance of Einsum
-   * @see org.tensorflow.op.core.Einsum
-   */
-  public <T extends TType> Einsum<T> einsum(Iterable<Operand<T>> inputs, String equation) {
-    return Einsum.create(scope, inputs, equation);
-  }
-
-  /**
    * Builds an {@link InplaceAdd} operation
    *
    * @param x A `Tensor` of type T.
@@ -2454,23 +2107,6 @@ public final class Ops {
    */
   public <T extends TType> InplaceAdd<T> inplaceAdd(Operand<T> x, Operand<TInt32> i, Operand<T> v) {
     return InplaceAdd.create(scope, x, i, v);
-  }
-
-  /**
-   * Builds an {@link StatefulRandomBinomial} operation
-   *
-   * @param resource 
-   * @param algorithm 
-   * @param shape 
-   * @param counts 
-   * @param probs 
-   * @return a new instance of StatefulRandomBinomial
-   * @see org.tensorflow.op.core.StatefulRandomBinomial
-   */
-  public <T extends TNumber, U extends TNumber> StatefulRandomBinomial<TInt64> statefulRandomBinomial(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts,
-      Operand<U> probs) {
-    return StatefulRandomBinomial.create(scope, resource, algorithm, shape, counts, probs);
   }
 
   /**
@@ -2625,26 +2261,6 @@ public final class Ops {
    */
   public Constant<TInt32> constant(int data) {
     return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link CudnnRNNParamsToCanonicalV2} operation
-   *
-   * @param numLayers 
-   * @param numUnits 
-   * @param inputSize 
-   * @param params 
-   * @param numParamsWeights 
-   * @param numParamsBiases 
-   * @param options carries optional attributes values
-   * @return a new instance of CudnnRNNParamsToCanonicalV2
-   * @see org.tensorflow.op.core.CudnnRNNParamsToCanonicalV2
-   */
-  public <T extends TNumber> CudnnRNNParamsToCanonicalV2<T> cudnnRNNParamsToCanonicalV2(
-      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
-      Operand<T> params, Long numParamsWeights, Long numParamsBiases,
-      CudnnRNNParamsToCanonicalV2.Options... options) {
-    return CudnnRNNParamsToCanonicalV2.create(scope, numLayers, numUnits, inputSize, params, numParamsWeights, numParamsBiases, options);
   }
 
   /**
@@ -2835,20 +2451,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link TensorListScatter} operation
-   *
-   * @param tensor 
-   * @param indices 
-   * @param elementShape 
-   * @return a new instance of TensorListScatter
-   * @see org.tensorflow.op.core.TensorListScatter
-   */
-  public <T extends TType, U extends TNumber> TensorListScatter tensorListScatter(Operand<T> tensor,
-      Operand<TInt32> indices, Operand<U> elementShape) {
-    return TensorListScatter.create(scope, tensor, indices, elementShape);
-  }
-
-  /**
    * Builds an {@link MapSize} operation
    *
    * @param dtypes 
@@ -2858,20 +2460,6 @@ public final class Ops {
    */
   public MapSize mapSize(List<DataType<?>> dtypes, MapSize.Options... options) {
     return MapSize.create(scope, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link EuclideanNorm} operation
-   *
-   * @param input The tensor to reduce.
-   * @param axis The dimensions to reduce. Must be in the range
-   * @param options carries optional attributes values
-   * @return a new instance of EuclideanNorm
-   * @see org.tensorflow.op.core.EuclideanNorm
-   */
-  public <T extends TType, U extends TNumber> EuclideanNorm<T> euclideanNorm(Operand<T> input,
-      Operand<U> axis, EuclideanNorm.Options... options) {
-    return EuclideanNorm.create(scope, input, axis, options);
   }
 
   /**
@@ -2935,20 +2523,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StatefulStandardNormal} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param shape The shape of the output tensor.
-   * @param dtype The type of the output.
-   * @return a new instance of StatefulStandardNormal
-   * @see org.tensorflow.op.core.StatefulStandardNormal
-   */
-  public <U extends TType, T extends TType> StatefulStandardNormal<U> statefulStandardNormal(
-      Operand<?> resource, Operand<T> shape, DataType<U> dtype) {
-    return StatefulStandardNormal.create(scope, resource, shape, dtype);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -2956,25 +2530,6 @@ public final class Ops {
    */
   public Constant<TDouble> constant(double[][][][][] data) {
     return Constant.create(scope, data);
-  }
-
-  /**
-   * Builds an {@link ResourceSparseApplyKerasMomentum} operation
-   *
-   * @param var Should be from a Variable().
-   * @param accum Should be from a Variable().
-   * @param lr Learning rate. Must be a scalar.
-   * @param grad The gradient.
-   * @param indices A vector of indices into the first dimension of var and accum.
-   * @param momentum Momentum. Must be a scalar.
-   * @param options carries optional attributes values
-   * @return a new instance of ResourceSparseApplyKerasMomentum
-   * @see org.tensorflow.op.core.ResourceSparseApplyKerasMomentum
-   */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyKerasMomentum resourceSparseApplyKerasMomentum(
-      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
-      Operand<T> momentum, ResourceSparseApplyKerasMomentum.Options... options) {
-    return ResourceSparseApplyKerasMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
   }
 
   /**
@@ -3002,24 +2557,6 @@ public final class Ops {
   public OrderedMapUnstage orderedMapUnstage(Operand<TInt64> key, Operand<TInt32> indices,
       List<DataType<?>> dtypes, OrderedMapUnstage.Options... options) {
     return OrderedMapUnstage.create(scope, key, indices, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link FusedBatchNormV3} operation
-   *
-   * @param x A 4D Tensor for input data.
-   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
-   * @param offset A 1D Tensor for offset, to shift to the normalized x.
-   * @param mean A 1D Tensor for population mean. Used for inference only;
-   * @param variance A 1D Tensor for population variance. Used for inference only;
-   * @param options carries optional attributes values
-   * @return a new instance of FusedBatchNormV3
-   * @see org.tensorflow.op.core.FusedBatchNormV3
-   */
-  public <T extends TNumber, U extends TNumber> FusedBatchNormV3<T, U> fusedBatchNormV3(
-      Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance,
-      FusedBatchNormV3.Options... options) {
-    return FusedBatchNormV3.create(scope, x, scale, offset, mean, variance, options);
   }
 
   /**
@@ -3269,22 +2806,6 @@ public final class Ops {
   public MapStage mapStage(Operand<TInt64> key, Operand<TInt32> indices,
       Iterable<Operand<?>> values, List<DataType<?>> dtypes, MapStage.Options... options) {
     return MapStage.create(scope, key, indices, values, dtypes, options);
-  }
-
-  /**
-   * Builds an {@link UnsortedSegmentJoin} operation
-   *
-   * @param inputs The input to be joined.
-   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
-   * @param numSegments A scalar.
-   * @param options carries optional attributes values
-   * @return a new instance of UnsortedSegmentJoin
-   * @see org.tensorflow.op.core.UnsortedSegmentJoin
-   */
-  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
-      Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
-      UnsortedSegmentJoin.Options... options) {
-    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
   }
 
   /**
@@ -3667,24 +3188,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link ResourceApplyKerasMomentum} operation
-   *
-   * @param var Should be from a Variable().
-   * @param accum Should be from a Variable().
-   * @param lr Scaling factor. Must be a scalar.
-   * @param grad The gradient.
-   * @param momentum Momentum. Must be a scalar.
-   * @param options carries optional attributes values
-   * @return a new instance of ResourceApplyKerasMomentum
-   * @see org.tensorflow.op.core.ResourceApplyKerasMomentum
-   */
-  public <T extends TType> ResourceApplyKerasMomentum resourceApplyKerasMomentum(Operand<?> var,
-      Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum,
-      ResourceApplyKerasMomentum.Options... options) {
-    return ResourceApplyKerasMomentum.create(scope, var, accum, lr, grad, momentum, options);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -3762,20 +3265,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link SelectV2} operation
-   *
-   * @param condition 
-   * @param t 
-   * @param e 
-   * @return a new instance of SelectV2
-   * @see org.tensorflow.op.core.SelectV2
-   */
-  public <T extends TType> SelectV2<T> selectV2(Operand<TBool> condition, Operand<T> t,
-      Operand<T> e) {
-    return SelectV2.create(scope, condition, t, e);
-  }
-
-  /**
    * Builds an {@link Bitcast} operation
    *
    * @param input 
@@ -3829,20 +3318,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link StatefulStandardNormalV2} operation
-   *
-   * @param resource The handle of the resource variable that stores the state of the RNG.
-   * @param algorithm The RNG algorithm.
-   * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormalV2
-   * @see org.tensorflow.op.core.StatefulStandardNormalV2
-   */
-  public <T extends TType> StatefulStandardNormalV2<TFloat> statefulStandardNormalV2(
-      Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return StatefulStandardNormalV2.create(scope, resource, algorithm, shape);
-  }
-
-  /**
    * Builds an {@link ReduceMin} operation
    *
    * @param input The tensor to reduce.
@@ -3880,20 +3355,6 @@ public final class Ops {
    */
   public <T extends TType> Identity<T> identity(Operand<T> input) {
     return Identity.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link TensorScatterUpdate} operation
-   *
-   * @param tensor Tensor to copy/update.
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @return a new instance of TensorScatterUpdate
-   * @see org.tensorflow.op.core.TensorScatterUpdate
-   */
-  public <T extends TType, U extends TNumber> TensorScatterUpdate<T> tensorScatterUpdate(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
-    return TensorScatterUpdate.create(scope, tensor, indices, updates);
   }
 
   /**
@@ -3998,17 +3459,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Lu} operation
-   *
-   * @param input A tensor of shape `[..., M, M]` whose inner-most 2 dimensions form matrices of
-   * @return a new instance of Lu
-   * @see org.tensorflow.op.core.Lu
-   */
-  public <T extends TType> Lu<T, TInt32> lu(Operand<T> input) {
-    return Lu.create(scope, input);
-  }
-
-  /**
    * Builds an {@link Constant} operation
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -4030,20 +3480,6 @@ public final class Ops {
   public <T extends TNumber, U extends TType> EmptyTensorList emptyTensorList(
       Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
     return EmptyTensorList.create(scope, elementShape, maxNumElements, elementDtype);
-  }
-
-  /**
-   * Builds an {@link MatrixSetDiagV2} operation
-   *
-   * @param input Rank `r+1`, where `r >= 1`.
-   * @param diagonal Rank `r` when `k` is an integer or `k[0] == k[1]`. Otherwise, it has rank `r+1`.
-   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
-   * @return a new instance of MatrixSetDiagV2
-   * @see org.tensorflow.op.core.MatrixSetDiagV2
-   */
-  public <T extends TType> MatrixSetDiagV2<T> matrixSetDiagV2(Operand<T> input, Operand<T> diagonal,
-      Operand<TInt32> k) {
-    return MatrixSetDiagV2.create(scope, input, diagonal, k);
   }
 
   /**
@@ -4127,6 +3563,20 @@ public final class Ops {
   }
 
   /**
+   * Builds an {@link TensorScatterNdSub} operation
+   *
+   * @param tensor Tensor to copy/update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdSub
+   * @see org.tensorflow.op.core.TensorScatterNdSub
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdSub<T> tensorScatterNdSub(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdSub.create(scope, tensor, indices, updates);
+  }
+
+  /**
    * Builds an {@link ImmutableConst} operation
    *
    * @param dtype Type of the returned tensor.
@@ -4168,20 +3618,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link WriteKafka} operation
-   *
-   * @param message 
-   * @param topic 
-   * @param servers 
-   * @return a new instance of WriteKafka
-   * @see org.tensorflow.op.core.WriteKafka
-   */
-  public WriteKafka writeKafka(Operand<TString> message, Operand<TString> topic,
-      Operand<TString> servers) {
-    return WriteKafka.create(scope, message, topic, servers);
-  }
-
-  /**
    * Builds an {@link BarrierTakeMany} operation
    *
    * @param handle The handle to a barrier.
@@ -4197,17 +3633,17 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link BatchMatMulV2} operation
+   * Builds an {@link MlirPassthroughOp} operation
    *
-   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
-   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
-   * @param options carries optional attributes values
-   * @return a new instance of BatchMatMulV2
-   * @see org.tensorflow.op.core.BatchMatMulV2
+   * @param inputs 
+   * @param mlirModule 
+   * @param Toutputs 
+   * @return a new instance of MlirPassthroughOp
+   * @see org.tensorflow.op.core.MlirPassthroughOp
    */
-  public <T extends TType> BatchMatMulV2<T> batchMatMulV2(Operand<T> x, Operand<T> y,
-      BatchMatMulV2.Options... options) {
-    return BatchMatMulV2.create(scope, x, y, options);
+  public MlirPassthroughOp mlirPassthroughOp(Iterable<Operand<?>> inputs, String mlirModule,
+      List<DataType<?>> Toutputs) {
+    return MlirPassthroughOp.create(scope, inputs, mlirModule, Toutputs);
   }
 
   /**
@@ -4349,26 +3785,6 @@ public final class Ops {
   public <T extends TType> ParallelDynamicStitch<T> parallelDynamicStitch(
       Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
     return ParallelDynamicStitch.create(scope, indices, data);
-  }
-
-  /**
-   * Builds an {@link CombinedNonMaxSuppression} operation
-   *
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
-   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
-   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
-   * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
-   * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
-   * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
-   * @param options carries optional attributes values
-   * @return a new instance of CombinedNonMaxSuppression
-   * @see org.tensorflow.op.core.CombinedNonMaxSuppression
-   */
-  public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat> boxes,
-      Operand<TFloat> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
-      Operand<TFloat> iouThreshold, Operand<TFloat> scoreThreshold,
-      CombinedNonMaxSuppression.Options... options) {
-    return CombinedNonMaxSuppression.create(scope, boxes, scores, maxOutputSizePerClass, maxTotalSize, iouThreshold, scoreThreshold, options);
   }
 
   /**
@@ -4552,19 +3968,6 @@ public final class Ops {
   }
 
   /**
-   * Builds an {@link Where3} operation
-   *
-   * @param condition 
-   * @param x = A `Tensor` which may have the same shape as `condition`.
-   * @param y = A `Tensor` with the same type and shape as `x`.
-   * @return a new instance of Where3
-   * @see org.tensorflow.op.core.Where3
-   */
-  public <T extends TType> Where3<T> where3(Operand<TBool> condition, Operand<T> x, Operand<T> y) {
-    return Where3.create(scope, condition, x, y);
-  }
-
-  /**
    * Builds an {@link ControlTrigger} operation
    *
    * @return a new instance of ControlTrigger
@@ -4633,118 +4036,6 @@ public final class Ops {
    */
   public final Scope scope() {
     return scope;
-  }
-
-  /**
-   * Returns an API for building {@code nn} operations
-   */
-  public final NnOps nn() {
-    return nn;
-  }
-
-  /**
-   * Returns an API for building {@code summary} operations
-   */
-  public final SummaryOps summary() {
-    return summary;
-  }
-
-  /**
-   * Returns an API for building {@code image} operations
-   */
-  public final ImageOps image() {
-    return image;
-  }
-
-  /**
-   * Returns an API for building {@code data} operations
-   */
-  public final DataOps data() {
-    return data;
-  }
-
-  /**
-   * Returns an API for building {@code io} operations
-   */
-  public final IoOps io() {
-    return io;
-  }
-
-  /**
-   * Returns an API for building {@code dtypes} operations
-   */
-  public final DtypesOps dtypes() {
-    return dtypes;
-  }
-
-  /**
-   * Returns an API for building {@code linalg} operations
-   */
-  public final LinalgOps linalg() {
-    return linalg;
-  }
-
-  /**
-   * Returns an API for building {@code random} operations
-   */
-  public final RandomOps random() {
-    return random;
-  }
-
-  /**
-   * Returns an API for building {@code strings} operations
-   */
-  public final StringsOps strings() {
-    return strings;
-  }
-
-  /**
-   * Returns an API for building {@code sparse} operations
-   */
-  public final SparseOps sparse() {
-    return sparse;
-  }
-
-  /**
-   * Returns an API for building {@code bitwise} operations
-   */
-  public final BitwiseOps bitwise() {
-    return bitwise;
-  }
-
-  /**
-   * Returns an API for building {@code math} operations
-   */
-  public final MathOps math() {
-    return math;
-  }
-
-  /**
-   * Returns an API for building {@code audio} operations
-   */
-  public final AudioOps audio() {
-    return audio;
-  }
-
-  /**
-   * Returns an API for building {@code signal} operations
-   */
-  public final SignalOps signal() {
-    return signal;
-  }
-
-  /**
-   * Returns an API for building {@code train} operations
-   */
-  public final TrainOps train() {
-    return train;
-  }
-
-  /**
-   * Returns an API for building {@code quantization} operations
-   */
-  public final QuantizationOps quantization() {
-    return quantization;
   }
 
   /**

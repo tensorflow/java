@@ -22,7 +22,6 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -31,7 +30,6 @@ import org.tensorflow.types.family.TType;
  * accum += grad * grad
  * var -= lr * grad * (1 / sqrt(accum))
  */
-@Operator(group = "train")
 public final class ResourceApplyAdagrad extends PrimitiveOp {
   
   /**
@@ -71,15 +69,17 @@ public final class ResourceApplyAdagrad extends PrimitiveOp {
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
    * @param grad The gradient.
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyAdagrad
    */
-  public static <T extends TType> ResourceApplyAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdagrad", scope.makeOpName("ResourceApplyAdagrad"));
+  public static <T extends TType> ResourceApplyAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdagradV2", scope.makeOpName("ResourceApplyAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
+    opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {

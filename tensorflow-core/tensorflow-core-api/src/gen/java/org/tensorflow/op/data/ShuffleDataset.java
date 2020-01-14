@@ -30,56 +30,25 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that shuffles elements from `input_dataset` pseudorandomly.
  */
 public final class ShuffleDataset extends PrimitiveOp implements Operand<TType> {
-  
-  /**
-   * Optional attributes for {@link org.tensorflow.op.data.ShuffleDataset}
-   */
-  public static class Options {
-    
-    /**
-     * @param reshuffleEachIteration If true, each iterator over this dataset will be given
-     * a different pseudorandomly generated seed, based on a sequence seeded by the
-     * `seed` and `seed2` inputs. If false, each iterator will be given the same
-     * seed, and repeated iteration over this dataset will yield the exact same
-     * sequence of results.
-     */
-    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
-      this.reshuffleEachIteration = reshuffleEachIteration;
-      return this;
-    }
-    
-    private Boolean reshuffleEachIteration;
-    
-    private Options() {
-    }
-  }
   
   /**
    * Factory method to create a class wrapping a new ShuffleDataset operation.
    * 
    * @param scope current scope
    * @param inputDataset 
-   * @param bufferSize The number of output elements to buffer in an iterator over
-   * this dataset. Compare with the `min_after_dequeue` attr when creating a
-   * `RandomShuffleQueue`.
-   * @param seed A scalar seed for the random number generator. If either `seed` or
-   * `seed2` is set to be non-zero, the random number generator is seeded
-   * by the given seed.  Otherwise, a random seed is used.
-   * @param seed2 A second scalar seed to avoid seed collision.
+   * @param bufferSize 
+   * @param seedGenerator 
    * @param outputTypes 
    * @param outputShapes 
-   * @param options carries optional attributes values
    * @return a new instance of ShuffleDataset
    */
-  public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDataset", scope.makeOpName("ShuffleDataset"));
+  public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV2", scope.makeOpName("ShuffleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(seed2.asOutput());
+    opBuilder.addInput(seedGenerator.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -91,25 +60,7 @@ public final class ShuffleDataset extends PrimitiveOp implements Operand<TType> 
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.reshuffleEachIteration != null) {
-          opBuilder.setAttr("reshuffle_each_iteration", opts.reshuffleEachIteration);
-        }
-      }
-    }
     return new ShuffleDataset(opBuilder.build());
-  }
-  
-  /**
-   * @param reshuffleEachIteration If true, each iterator over this dataset will be given
-   * a different pseudorandomly generated seed, based on a sequence seeded by the
-   * `seed` and `seed2` inputs. If false, each iterator will be given the same
-   * seed, and repeated iteration over this dataset will yield the exact same
-   * sequence of results.
-   */
-  public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
-    return new Options().reshuffleEachIteration(reshuffleEachIteration);
   }
   
   /**

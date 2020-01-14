@@ -31,9 +31,10 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Transforms a vector of brain.Example protos (as strings) into typed tensors.
+ * Transforms a vector of tf.Example protos (as strings) into typed tensors.
  */
 @Operator(group = "io")
 public final class ParseExample extends PrimitiveOp {
@@ -42,18 +43,21 @@ public final class ParseExample extends PrimitiveOp {
    * Factory method to create a class wrapping a new ParseExample operation.
    * 
    * @param scope current scope
-   * @param serialized A vector containing a batch of binary serialized Example protos.
-   * @param names A vector containing the names of the serialized protos.
+   * @param serialized A scalar or vector containing binary serialized Example protos.
+   * @param names A tensor containing the names of the serialized protos.
+   * Corresponds 1:1 with the `serialized` tensor.
    * May contain, for example, table key (descriptive) names for the
    * corresponding serialized protos.  These are purely useful for debugging
    * purposes, and the presence of values here has no effect on the output.
    * May also be an empty vector if no names are available.
-   * If non-empty, this vector must be the same length as "serialized".
-   * @param sparseKeys A list of Nsparse string Tensors (scalars).
+   * If non-empty, this tensor must have the same shape as "serialized".
+   * @param sparseKeys Vector of strings.
    * The keys expected in the Examples' features associated with sparse values.
-   * @param denseKeys A list of Ndense string Tensors (scalars).
+   * @param denseKeys Vector of strings.
    * The keys expected in the Examples' features associated with dense values.
-   * @param denseDefaults A list of Ndense Tensors (some may be empty).
+   * @param raggedKeys Vector of strings.
+   * The keys expected in the Examples' features associated with ragged values.
+   * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with `dense_keys`.
    * dense_defaults[j] provides default values
    * when the example's feature_map lacks dense_key[j].  If an empty Tensor is
    * provided for dense_defaults[j], then the Feature dense_keys[j] is required.
@@ -63,12 +67,20 @@ public final class ParseExample extends PrimitiveOp {
    * If dense_shapes[j] has an undefined major dimension (variable strides dense
    * feature), dense_defaults[j] must contain a single element:
    * the padding element.
-   * @param sparseTypes A list of Nsparse types; the data types of data in each Feature
+   * @param numSparse The number of sparse keys.
+   * @param sparseTypes A list of `num_sparse` types; the data types of data in each Feature
    * given in sparse_keys.
    * Currently the ParseExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
-   * @param denseShapes A list of Ndense shapes; the shapes of data in each Feature
-   * given in dense_keys.
+   * @param raggedValueTypes A list of `num_ragged` types; the data types of data in each Feature
+   * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+   * Currently the ParseExample supports DT_FLOAT (FloatList),
+   * DT_INT64 (Int64List), and DT_STRING (BytesList).
+   * @param raggedSplitTypes A list of `num_ragged` types; the data types of row_splits in each Feature
+   * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+   * May be DT_INT32 or DT_INT64.
+   * @param denseShapes A list of `num_dense` shapes; the shapes of data in each Feature
+   * given in dense_keys (where `num_dense = dense_keys.size()`).
    * The number of elements in the Feature corresponding to dense_key[j]
    * must always equal dense_shapes[j].NumEntries().
    * If dense_shapes[j] == (D0, D1, ..., DN) then the shape of output
@@ -83,19 +95,31 @@ public final class ParseExample extends PrimitiveOp {
    * scalar element along the second dimension.
    * @return a new instance of ParseExample
    */
-  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Iterable<Operand<TString>> sparseKeys, Iterable<Operand<TString>> denseKeys, Iterable<Operand<?>> denseDefaults, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseExample", scope.makeOpName("ParseExample"));
+  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, List<Shape> denseShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(names.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(sparseKeys));
-    opBuilder.addInputList(Operands.asOutputs(denseKeys));
+    opBuilder.addInput(sparseKeys.asOutput());
+    opBuilder.addInput(denseKeys.asOutput());
+    opBuilder.addInput(raggedKeys.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder.setAttr("num_sparse", numSparse);
     DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
       sparseTypesArray[i] = sparseTypes.get(i);
     }
     opBuilder.setAttr("sparse_types", sparseTypesArray);
+    DataType[] raggedValueTypesArray = new DataType[raggedValueTypes.size()];
+    for (int i = 0; i < raggedValueTypesArray.length; ++i) {
+      raggedValueTypesArray[i] = raggedValueTypes.get(i);
+    }
+    opBuilder.setAttr("ragged_value_types", raggedValueTypesArray);
+    DataType[] raggedSplitTypesArray = new DataType[raggedSplitTypes.size()];
+    for (int i = 0; i < raggedSplitTypesArray.length; ++i) {
+      raggedSplitTypesArray[i] = raggedSplitTypes.get(i);
+    }
+    opBuilder.setAttr("ragged_split_types", raggedSplitTypesArray);
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
     for (int i = 0; i < denseShapesArray.length; ++i) {
       denseShapesArray[i] = denseShapes.get(i);
@@ -128,10 +152,24 @@ public final class ParseExample extends PrimitiveOp {
     return denseValues;
   }
   
+  /**
+   */
+  public List<Output<?>> raggedValues() {
+    return raggedValues;
+  }
+  
+  /**
+   */
+  public List<Output<?>> raggedRowSplits() {
+    return raggedRowSplits;
+  }
+  
   private List<Output<TInt64>> sparseIndices;
   private List<Output<?>> sparseValues;
   private List<Output<TInt64>> sparseShapes;
   private List<Output<?>> denseValues;
+  private List<Output<?>> raggedValues;
+  private List<Output<?>> raggedRowSplits;
   
   @SuppressWarnings("unchecked")
   private ParseExample(Operation operation) {
@@ -149,5 +187,11 @@ public final class ParseExample extends PrimitiveOp {
     int denseValuesLength = operation.outputListLength("dense_values");
     denseValues = Arrays.asList(operation.outputList(outputIdx, denseValuesLength));
     outputIdx += denseValuesLength;
+    int raggedValuesLength = operation.outputListLength("ragged_values");
+    raggedValues = Arrays.asList(operation.outputList(outputIdx, raggedValuesLength));
+    outputIdx += raggedValuesLength;
+    int raggedRowSplitsLength = operation.outputListLength("ragged_row_splits");
+    raggedRowSplits = Arrays.asList(operation.outputList(outputIdx, raggedRowSplitsLength));
+    outputIdx += raggedRowSplitsLength;
   }
 }

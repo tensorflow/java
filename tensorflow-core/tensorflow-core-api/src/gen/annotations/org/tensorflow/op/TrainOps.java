@@ -20,19 +20,21 @@ import org.tensorflow.op.train.ApplyPowerSign;
 import org.tensorflow.op.train.ApplyProximalAdagrad;
 import org.tensorflow.op.train.ApplyProximalGradientDescent;
 import org.tensorflow.op.train.ApplyRmsProp;
+import org.tensorflow.op.train.BatchMatMul;
 import org.tensorflow.op.train.ConditionalAccumulator;
 import org.tensorflow.op.train.GenerateVocabRemapping;
 import org.tensorflow.op.train.MergeV2Checkpoints;
 import org.tensorflow.op.train.NegTrain;
 import org.tensorflow.op.train.PreventGradient;
 import org.tensorflow.op.train.ResourceApplyAdadelta;
-import org.tensorflow.op.train.ResourceApplyAdagrad;
 import org.tensorflow.op.train.ResourceApplyAdagradDa;
 import org.tensorflow.op.train.ResourceApplyAdam;
+import org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad;
 import org.tensorflow.op.train.ResourceApplyAddSign;
 import org.tensorflow.op.train.ResourceApplyCenteredRmsProp;
 import org.tensorflow.op.train.ResourceApplyFtrl;
 import org.tensorflow.op.train.ResourceApplyGradientDescent;
+import org.tensorflow.op.train.ResourceApplyKerasMomentum;
 import org.tensorflow.op.train.ResourceApplyMomentum;
 import org.tensorflow.op.train.ResourceApplyPowerSign;
 import org.tensorflow.op.train.ResourceApplyProximalAdagrad;
@@ -43,6 +45,7 @@ import org.tensorflow.op.train.ResourceSparseApplyAdagrad;
 import org.tensorflow.op.train.ResourceSparseApplyAdagradDa;
 import org.tensorflow.op.train.ResourceSparseApplyCenteredRmsProp;
 import org.tensorflow.op.train.ResourceSparseApplyFtrl;
+import org.tensorflow.op.train.ResourceSparseApplyKerasMomentum;
 import org.tensorflow.op.train.ResourceSparseApplyMomentum;
 import org.tensorflow.op.train.ResourceSparseApplyProximalAdagrad;
 import org.tensorflow.op.train.ResourceSparseApplyProximalGradientDescent;
@@ -54,7 +57,6 @@ import org.tensorflow.op.train.SaveSlices;
 import org.tensorflow.op.train.SdcaFprint;
 import org.tensorflow.op.train.SdcaShrinkL1;
 import org.tensorflow.op.train.SparseApplyAdadelta;
-import org.tensorflow.op.train.SparseApplyAdagrad;
 import org.tensorflow.op.train.SparseApplyAdagradDa;
 import org.tensorflow.op.train.SparseApplyCenteredRmsProp;
 import org.tensorflow.op.train.SparseApplyFtrl;
@@ -105,6 +107,31 @@ public final class TrainOps {
       Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
       SparseApplyFtrl.Options... options) {
     return SparseApplyFtrl.create(scope, var, accum, linear, grad, indices, lr, l1, l2, l2Shrinkage, lrPower, options);
+  }
+
+  /**
+   * Builds an {@link ResourceApplyAdamWithAmsgrad} operation
+   *
+   * @param var Should be from a Variable().
+   * @param m Should be from a Variable().
+   * @param v Should be from a Variable().
+   * @param vhat Should be from a Variable().
+   * @param beta1Power Must be a scalar.
+   * @param beta2Power Must be a scalar.
+   * @param lr Scaling factor. Must be a scalar.
+   * @param beta1 Momentum factor. Must be a scalar.
+   * @param beta2 Momentum factor. Must be a scalar.
+   * @param epsilon Ridge term. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceApplyAdamWithAmsgrad
+   * @see org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad
+   */
+  public <T extends TType> ResourceApplyAdamWithAmsgrad resourceApplyAdamWithAmsgrad(Operand<?> var,
+      Operand<?> m, Operand<?> v, Operand<?> vhat, Operand<T> beta1Power, Operand<T> beta2Power,
+      Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad,
+      ResourceApplyAdamWithAmsgrad.Options... options) {
+    return ResourceApplyAdamWithAmsgrad.create(scope, var, m, v, vhat, beta1Power, beta2Power, lr, beta1, beta2, epsilon, grad, options);
   }
 
   /**
@@ -317,24 +344,6 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link SparseApplyAdagrad} operation
-   *
-   * @param var Should be from a Variable().
-   * @param accum Should be from a Variable().
-   * @param lr Learning rate. Must be a scalar.
-   * @param grad The gradient.
-   * @param indices A vector of indices into the first dimension of var and accum.
-   * @param options carries optional attributes values
-   * @return a new instance of SparseApplyAdagrad
-   * @see org.tensorflow.op.train.SparseApplyAdagrad
-   */
-  public <T extends TType, U extends TNumber> SparseApplyAdagrad<T> sparseApplyAdagrad(
-      Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
-      SparseApplyAdagrad.Options... options) {
-    return SparseApplyAdagrad.create(scope, var, accum, lr, grad, indices, options);
-  }
-
-  /**
    * Builds an {@link ApplyRmsProp} operation
    *
    * @param var Should be from a Variable().
@@ -385,6 +394,25 @@ public final class TrainOps {
   public <T extends TType> ResourceApplyGradientDescent resourceApplyGradientDescent(Operand<?> var,
       Operand<T> alpha, Operand<T> delta, ResourceApplyGradientDescent.Options... options) {
     return ResourceApplyGradientDescent.create(scope, var, alpha, delta, options);
+  }
+
+  /**
+   * Builds an {@link ResourceSparseApplyKerasMomentum} operation
+   *
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Learning rate. Must be a scalar.
+   * @param grad The gradient.
+   * @param indices A vector of indices into the first dimension of var and accum.
+   * @param momentum Momentum. Must be a scalar.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceSparseApplyKerasMomentum
+   * @see org.tensorflow.op.train.ResourceSparseApplyKerasMomentum
+   */
+  public <T extends TType, U extends TNumber> ResourceSparseApplyKerasMomentum resourceSparseApplyKerasMomentum(
+      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
+      Operand<T> momentum, ResourceSparseApplyKerasMomentum.Options... options) {
+    return ResourceSparseApplyKerasMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
   }
 
   /**
@@ -582,6 +610,20 @@ public final class TrainOps {
   public SaveSlices saveSlices(Operand<TString> filename, Operand<TString> tensorNames,
       Operand<TString> shapesAndSlices, Iterable<Operand<?>> data) {
     return SaveSlices.create(scope, filename, tensorNames, shapesAndSlices, data);
+  }
+
+  /**
+   * Builds an {@link BatchMatMul} operation
+   *
+   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
+   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
+   * @param options carries optional attributes values
+   * @return a new instance of BatchMatMul
+   * @see org.tensorflow.op.train.BatchMatMul
+   */
+  public <T extends TType> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
+      BatchMatMul.Options... options) {
+    return BatchMatMul.create(scope, x, y, options);
   }
 
   /**
@@ -905,22 +947,6 @@ public final class TrainOps {
   }
 
   /**
-   * Builds an {@link ResourceApplyAdagrad} operation
-   *
-   * @param var Should be from a Variable().
-   * @param accum Should be from a Variable().
-   * @param lr Scaling factor. Must be a scalar.
-   * @param grad The gradient.
-   * @param options carries optional attributes values
-   * @return a new instance of ResourceApplyAdagrad
-   * @see org.tensorflow.op.train.ResourceApplyAdagrad
-   */
-  public <T extends TType> ResourceApplyAdagrad resourceApplyAdagrad(Operand<?> var,
-      Operand<?> accum, Operand<T> lr, Operand<T> grad, ResourceApplyAdagrad.Options... options) {
-    return ResourceApplyAdagrad.create(scope, var, accum, lr, grad, options);
-  }
-
-  /**
    * Builds an {@link ApplyProximalAdagrad} operation
    *
    * @param var Should be from a Variable().
@@ -999,6 +1025,24 @@ public final class TrainOps {
       Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
       Operand<T> grad, ResourceApplyAdadelta.Options... options) {
     return ResourceApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, options);
+  }
+
+  /**
+   * Builds an {@link ResourceApplyKerasMomentum} operation
+   *
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Scaling factor. Must be a scalar.
+   * @param grad The gradient.
+   * @param momentum Momentum. Must be a scalar.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceApplyKerasMomentum
+   * @see org.tensorflow.op.train.ResourceApplyKerasMomentum
+   */
+  public <T extends TType> ResourceApplyKerasMomentum resourceApplyKerasMomentum(Operand<?> var,
+      Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum,
+      ResourceApplyKerasMomentum.Options... options) {
+    return ResourceApplyKerasMomentum.create(scope, var, accum, lr, grad, momentum, options);
   }
 
   /**

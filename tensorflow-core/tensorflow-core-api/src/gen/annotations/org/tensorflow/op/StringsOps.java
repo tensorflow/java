@@ -4,11 +4,13 @@ import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.strings.Join;
+import org.tensorflow.op.strings.Lower;
 import org.tensorflow.op.strings.ReduceJoin;
 import org.tensorflow.op.strings.RegexFullMatch;
 import org.tensorflow.op.strings.RegexReplace;
 import org.tensorflow.op.strings.StringFormat;
 import org.tensorflow.op.strings.StringLength;
+import org.tensorflow.op.strings.StringNGrams;
 import org.tensorflow.op.strings.StringSplit;
 import org.tensorflow.op.strings.Strip;
 import org.tensorflow.op.strings.Substr;
@@ -18,6 +20,8 @@ import org.tensorflow.op.strings.ToHashBucketStrong;
 import org.tensorflow.op.strings.ToNumber;
 import org.tensorflow.op.strings.UnicodeScript;
 import org.tensorflow.op.strings.UnicodeTranscode;
+import org.tensorflow.op.strings.UnsortedSegmentJoin;
+import org.tensorflow.op.strings.Upper;
 import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -98,6 +102,22 @@ public final class StringsOps {
   }
 
   /**
+   * Builds an {@link UnsortedSegmentJoin} operation
+   *
+   * @param inputs The input to be joined.
+   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
+   * @param numSegments A scalar.
+   * @param options carries optional attributes values
+   * @return a new instance of UnsortedSegmentJoin
+   * @see org.tensorflow.op.strings.UnsortedSegmentJoin
+   */
+  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
+      Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
+      UnsortedSegmentJoin.Options... options) {
+    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
+  }
+
+  /**
    * Builds an {@link RegexFullMatch} operation
    *
    * @param input A string tensor of the text to be processed.
@@ -133,6 +153,26 @@ public final class StringsOps {
   public UnicodeTranscode unicodeTranscode(Operand<TString> input, String inputEncoding,
       String outputEncoding, UnicodeTranscode.Options... options) {
     return UnicodeTranscode.create(scope, input, inputEncoding, outputEncoding, options);
+  }
+
+  /**
+   * Builds an {@link StringNGrams} operation
+   *
+   * @param data The values tensor of the ragged string tensor to make ngrams out of. Must be a
+   * @param dataSplits The splits tensor of the ragged string tensor to make ngrams out of.
+   * @param separator The string to append between elements of the token. Use "" for no separator.
+   * @param ngramWidths The sizes of the ngrams to create.
+   * @param leftPad The string to use to pad the left side of the ngram sequence. Only used if
+   * @param rightPad The string to use to pad the right side of the ngram sequence. Only used if
+   * @param padWidth The number of padding elements to add to each side of each
+   * @param preserveShortSequences 
+   * @return a new instance of StringNGrams
+   * @see org.tensorflow.op.strings.StringNGrams
+   */
+  public <T extends TNumber> StringNGrams<T> stringNGrams(Operand<TString> data,
+      Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad,
+      String rightPad, Long padWidth, Boolean preserveShortSequences) {
+    return StringNGrams.create(scope, data, dataSplits, separator, ngramWidths, leftPad, rightPad, padWidth, preserveShortSequences);
   }
 
   /**
@@ -174,6 +214,18 @@ public final class StringsOps {
   public StringSplit stringSplit(Operand<TString> input, Operand<TString> sep,
       StringSplit.Options... options) {
     return StringSplit.create(scope, input, sep, options);
+  }
+
+  /**
+   * Builds an {@link Lower} operation
+   *
+   * @param input 
+   * @param options carries optional attributes values
+   * @return a new instance of Lower
+   * @see org.tensorflow.op.strings.Lower
+   */
+  public Lower lower(Operand<TString> input, Lower.Options... options) {
+    return Lower.create(scope, input, options);
   }
 
   /**
@@ -226,6 +278,18 @@ public final class StringsOps {
   public ReduceJoin reduceJoin(Operand<TString> inputs, Operand<TInt32> reductionIndices,
       ReduceJoin.Options... options) {
     return ReduceJoin.create(scope, inputs, reductionIndices, options);
+  }
+
+  /**
+   * Builds an {@link Upper} operation
+   *
+   * @param input 
+   * @param options carries optional attributes values
+   * @return a new instance of Upper
+   * @see org.tensorflow.op.strings.Upper
+   */
+  public Upper upper(Operand<TString> input, Upper.Options... options) {
+    return Upper.create(scope, input, options);
   }
 
   /**

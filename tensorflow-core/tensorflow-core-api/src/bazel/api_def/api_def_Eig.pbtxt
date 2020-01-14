@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "Eig"
+  endpoint {
+    name: "linalg.Eig"
+  }
+}

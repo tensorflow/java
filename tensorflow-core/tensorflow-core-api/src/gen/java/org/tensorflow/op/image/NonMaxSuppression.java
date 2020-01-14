@@ -48,9 +48,16 @@ import org.tensorflow.types.family.TType;
  *   selected_indices = tf.image.non_max_suppression_v2(
  *       boxes, scores, max_output_size, iou_threshold, score_threshold)
  *   selected_boxes = tf.gather(boxes, selected_indices)
+ * This op also supports a Soft-NMS (with Gaussian weighting) mode (c.f.
+ * Bodla et al, https://arxiv.org/abs/1704.04503) where boxes reduce the score
+ * of other overlapping boxes instead of directly causing them to be pruned.
+ * To enable this Soft-NMS mode, set the `soft_nms_sigma` parameter to be
+ * larger than 0.
+ * 
+ * @param <T> data type for {@code selectedScores()} output
  */
 @Operator(group = "image")
-public final class NonMaxSuppression extends PrimitiveOp {
+public final class NonMaxSuppression<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.NonMaxSuppression}
@@ -85,16 +92,20 @@ public final class NonMaxSuppression extends PrimitiveOp {
    * boxes overlap too much with respect to IOU.
    * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
    * boxes based on score.
+   * @param softNmsSigma A 0-D float tensor representing the sigma parameter for Soft NMS; see Bodla et
+   * al (c.f. https://arxiv.org/abs/1704.04503).  When `soft_nms_sigma=0.0` (which
+   * is default), we fall back to standard (hard) NMS.
    * @param options carries optional attributes values
    * @return a new instance of NonMaxSuppression
    */
-  public static <T extends TNumber, U extends TNumber> NonMaxSuppression create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<U> iouThreshold, Operand<U> scoreThreshold, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionV4", scope.makeOpName("NonMaxSuppression"));
+  public static <T extends TNumber> NonMaxSuppression<T> create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold, Operand<T> scoreThreshold, Operand<T> softNmsSigma, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionV5", scope.makeOpName("NonMaxSuppression"));
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(scores.asOutput());
     opBuilder.addInput(maxOutputSize.asOutput());
     opBuilder.addInput(iouThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
+    opBuilder.addInput(softNmsSigma.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -103,7 +114,7 @@ public final class NonMaxSuppression extends PrimitiveOp {
         }
       }
     }
-    return new NonMaxSuppression(opBuilder.build());
+    return new NonMaxSuppression<T>(opBuilder.build());
   }
   
   /**
@@ -123,6 +134,16 @@ public final class NonMaxSuppression extends PrimitiveOp {
   }
   
   /**
+   * A 1-D float tensor of shape `[M]` representing the corresponding
+   * scores for each selected box, where `M <= max_output_size`.  Scores only differ
+   * from corresponding input scores when using Soft NMS (i.e. when
+   * `soft_nms_sigma>0`)
+   */
+  public Output<T> selectedScores() {
+    return selectedScores;
+  }
+  
+  /**
    * A 0-D integer tensor representing the number of valid elements in
    * `selected_indices`, with the valid elements appearing first.
    */
@@ -131,12 +152,14 @@ public final class NonMaxSuppression extends PrimitiveOp {
   }
   
   private Output<TInt32> selectedIndices;
+  private Output<T> selectedScores;
   private Output<TInt32> validOutputs;
   
   private NonMaxSuppression(Operation operation) {
     super(operation);
     int outputIdx = 0;
     selectedIndices = operation.output(outputIdx++);
+    selectedScores = operation.output(outputIdx++);
     validOutputs = operation.output(outputIdx++);
   }
 }

@@ -24,9 +24,10 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TFloat;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Performs greedy decoding on the logits given in inputs.
@@ -40,9 +41,11 @@ import org.tensorflow.types.TInt64;
  * Regardless of the value of merge_repeated, if the maximum index of a given
  * time and batch corresponds to the blank, index `(num_classes - 1)`, no new
  * element is emitted.
+ * 
+ * @param <T> data type for {@code logProbability()} output
  */
 @Operator(group = "nn")
-public final class CtcGreedyDecoder extends PrimitiveOp {
+public final class CtcGreedyDecoder<T extends TNumber> extends PrimitiveOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CtcGreedyDecoder}
@@ -72,7 +75,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcGreedyDecoder
    */
-  public static CtcGreedyDecoder create(Scope scope, Operand<TFloat> inputs, Operand<TInt32> sequenceLength, Options... options) {
+  public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -84,7 +87,7 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
         }
       }
     }
-    return new CtcGreedyDecoder(opBuilder.build());
+    return new CtcGreedyDecoder<T>(opBuilder.build());
   }
   
   /**
@@ -122,14 +125,14 @@ public final class CtcGreedyDecoder extends PrimitiveOp {
    * Matrix, size `(batch_size x 1)`, containing sequence
    * log-probabilities.
    */
-  public Output<TFloat> logProbability() {
+  public Output<T> logProbability() {
     return logProbability;
   }
   
   private Output<TInt64> decodedIndices;
   private Output<TInt64> decodedValues;
   private Output<TInt64> decodedShape;
-  private Output<TFloat> logProbability;
+  private Output<T> logProbability;
   
   private CtcGreedyDecoder(Operation operation) {
     super(operation);

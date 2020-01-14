@@ -31,6 +31,17 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Dataset that returns pseudorandom numbers.
+ * <p>
+ * Creates a Dataset that returns a stream of uniformly distributed
+ * pseudorandom 64-bit signed integers.
+ * <p>
+ * In the TensorFlow Python API, you can instantiate this dataset via the 
+ * class `tf.data.experimental.RandomDataset`.
+ * <p>
+ * Instances of this dataset are also created as a result of the
+ * `hoist_random_uniform` static optimization. Whether this optimization is
+ * performed is determined by the `experimental_optimization.hoist_random_uniform`
+ * option of `tf.data.Options`.
  */
 public final class RandomDataset extends PrimitiveOp implements Operand<TType> {
   

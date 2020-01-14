@@ -5,7 +5,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.linalg.BandPart;
 import org.tensorflow.op.linalg.BatchCholesky;
 import org.tensorflow.op.linalg.BatchCholeskyGrad;
-import org.tensorflow.op.linalg.BatchMatMul;
 import org.tensorflow.op.linalg.BatchMatrixBandPart;
 import org.tensorflow.op.linalg.BatchMatrixDeterminant;
 import org.tensorflow.op.linalg.BatchMatrixDiag;
@@ -22,17 +21,21 @@ import org.tensorflow.op.linalg.CholeskyGrad;
 import org.tensorflow.op.linalg.ConjugateTranspose;
 import org.tensorflow.op.linalg.Cross;
 import org.tensorflow.op.linalg.Det;
-import org.tensorflow.op.linalg.Diag;
-import org.tensorflow.op.linalg.DiagPart;
+import org.tensorflow.op.linalg.Eig;
+import org.tensorflow.op.linalg.Einsum;
+import org.tensorflow.op.linalg.EuclideanNorm;
 import org.tensorflow.op.linalg.Inv;
 import org.tensorflow.op.linalg.LoadAndRemapMatrix;
 import org.tensorflow.op.linalg.LogMatrixDeterminant;
+import org.tensorflow.op.linalg.Lu;
 import org.tensorflow.op.linalg.MatMul;
+import org.tensorflow.op.linalg.MatrixDiag;
+import org.tensorflow.op.linalg.MatrixDiagPart;
+import org.tensorflow.op.linalg.MatrixSetDiag;
 import org.tensorflow.op.linalg.MatrixSolveLs;
 import org.tensorflow.op.linalg.Qr;
 import org.tensorflow.op.linalg.QuantizedMatMul;
 import org.tensorflow.op.linalg.SelfAdjointEig;
-import org.tensorflow.op.linalg.SetDiag;
 import org.tensorflow.op.linalg.Solve;
 import org.tensorflow.op.linalg.Sqrtm;
 import org.tensorflow.op.linalg.Svd;
@@ -42,6 +45,7 @@ import org.tensorflow.op.linalg.Transpose;
 import org.tensorflow.op.linalg.TriangularSolve;
 import org.tensorflow.types.TDouble;
 import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -53,10 +57,13 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class LinalgOps {
+  public final LinalgSparseOps sparse;
+
   private final Scope scope;
 
   LinalgOps(Scope scope) {
     this.scope = scope;
+    sparse = new LinalgSparseOps(scope);
   }
 
   /**
@@ -122,6 +129,19 @@ public final class LinalgOps {
    */
   public <T extends TType> Svd<T> svd(Operand<T> input, Svd.Options... options) {
     return Svd.create(scope, input, options);
+  }
+
+  /**
+   * Builds an {@link Lu} operation
+   *
+   * @param input A tensor of shape `[..., M, M]` whose inner-most 2 dimensions form matrices of
+   * @param outputIdxType 
+   * @return a new instance of Lu
+   * @see org.tensorflow.op.linalg.Lu
+   */
+  public <T extends TType, U extends TNumber> Lu<T, U> lu(Operand<T> input,
+      DataType<U> outputIdxType) {
+    return Lu.create(scope, input, outputIdxType);
   }
 
   /**
@@ -203,31 +223,6 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link DiagPart} operation
-   *
-   * @param input Rank `k` tensor where `k >= 2`.
-   * @return a new instance of DiagPart
-   * @see org.tensorflow.op.linalg.DiagPart
-   */
-  public <T extends TType> DiagPart<T> diagPart(Operand<T> input) {
-    return DiagPart.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link BatchMatMul} operation
-   *
-   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
-   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
-   * @param options carries optional attributes values
-   * @return a new instance of BatchMatMul
-   * @see org.tensorflow.op.linalg.BatchMatMul
-   */
-  public <T extends TType> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
-      BatchMatMul.Options... options) {
-    return BatchMatMul.create(scope, x, y, options);
-  }
-
-  /**
    * Builds an {@link CholeskyGrad} operation
    *
    * @param l Output of batch Cholesky algorithm l = cholesky(A). Shape is `[..., M, M]`.
@@ -276,26 +271,17 @@ public final class LinalgOps {
   }
 
   /**
-   * Builds an {@link SetDiag} operation
+   * Builds an {@link MatrixSetDiag} operation
    *
-   * @param input Rank `k+1`, where `k >= 1`.
-   * @param diagonal Rank `k`, where `k >= 1`.
-   * @return a new instance of SetDiag
-   * @see org.tensorflow.op.linalg.SetDiag
+   * @param input Rank `r+1`, where `r >= 1`.
+   * @param diagonal Rank `r` when `k` is an integer or `k[0] == k[1]`. Otherwise, it has rank `r+1`.
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   * @return a new instance of MatrixSetDiag
+   * @see org.tensorflow.op.linalg.MatrixSetDiag
    */
-  public <T extends TType> SetDiag<T> setDiag(Operand<T> input, Operand<T> diagonal) {
-    return SetDiag.create(scope, input, diagonal);
-  }
-
-  /**
-   * Builds an {@link Diag} operation
-   *
-   * @param diagonal Rank `k`, where `k >= 1`.
-   * @return a new instance of Diag
-   * @see org.tensorflow.op.linalg.Diag
-   */
-  public <T extends TType> Diag<T> diag(Operand<T> diagonal) {
-    return Diag.create(scope, diagonal);
+  public <T extends TType> MatrixSetDiag<T> matrixSetDiag(Operand<T> input, Operand<T> diagonal,
+      Operand<TInt32> k) {
+    return MatrixSetDiag.create(scope, input, diagonal, k);
   }
 
   /**
@@ -339,6 +325,20 @@ public final class LinalgOps {
    */
   public <T extends TType> Sqrtm<T> sqrtm(Operand<T> input) {
     return Sqrtm.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link MatrixDiagPart} operation
+   *
+   * @param input Rank `r` tensor where `r >= 2`.
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   * @param paddingValue The value to fill the area outside the specified diagonal band with.
+   * @return a new instance of MatrixDiagPart
+   * @see org.tensorflow.op.linalg.MatrixDiagPart
+   */
+  public <T extends TType> MatrixDiagPart<T> matrixDiagPart(Operand<T> input, Operand<TInt32> k,
+      Operand<T> paddingValue) {
+    return MatrixDiagPart.create(scope, input, k, paddingValue);
   }
 
   /**
@@ -389,6 +389,17 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link Lu} operation
+   *
+   * @param input A tensor of shape `[..., M, M]` whose inner-most 2 dimensions form matrices of
+   * @return a new instance of Lu
+   * @see org.tensorflow.op.linalg.Lu
+   */
+  public <T extends TType> Lu<T, TInt32> lu(Operand<T> input) {
+    return Lu.create(scope, input);
+  }
+
+  /**
    * Builds an {@link QuantizedMatMul} operation
    *
    * @param a Must be a two-dimensional tensor.
@@ -408,6 +419,20 @@ public final class LinalgOps {
       Operand<TFloat> maxB, DataType<V> Toutput, DataType<W> Tactivation,
       QuantizedMatMul.Options... options) {
     return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
+  }
+
+  /**
+   * Builds an {@link EuclideanNorm} operation
+   *
+   * @param input The tensor to reduce.
+   * @param axis The dimensions to reduce. Must be in the range
+   * @param options carries optional attributes values
+   * @return a new instance of EuclideanNorm
+   * @see org.tensorflow.op.linalg.EuclideanNorm
+   */
+  public <T extends TType, U extends TNumber> EuclideanNorm<T> euclideanNorm(Operand<T> input,
+      Operand<U> axis, EuclideanNorm.Options... options) {
+    return EuclideanNorm.create(scope, input, axis, options);
   }
 
   /**
@@ -500,6 +525,22 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link MatrixDiag} operation
+   *
+   * @param diagonal Rank `r`, where `r >= 1`
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   * @param numRows The number of rows of the output matrix. If it is not provided, the op assumes
+   * @param numCols The number of columns of the output matrix. If it is not provided, the op
+   * @param paddingValue The number to fill the area outside the specified diagonal band with.
+   * @return a new instance of MatrixDiag
+   * @see org.tensorflow.op.linalg.MatrixDiag
+   */
+  public <T extends TType> MatrixDiag<T> matrixDiag(Operand<T> diagonal, Operand<TInt32> k,
+      Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
+    return MatrixDiag.create(scope, diagonal, k, numRows, numCols, paddingValue);
+  }
+
+  /**
    * Builds an {@link BatchSvd} operation
    *
    * @param input 
@@ -536,6 +577,18 @@ public final class LinalgOps {
   }
 
   /**
+   * Builds an {@link Einsum} operation
+   *
+   * @param inputs List of 1 or 2 Tensors.
+   * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
+   * @return a new instance of Einsum
+   * @see org.tensorflow.op.linalg.Einsum
+   */
+  public <T extends TType> Einsum<T> einsum(Iterable<Operand<T>> inputs, String equation) {
+    return Einsum.create(scope, inputs, equation);
+  }
+
+  /**
    * Builds an {@link BatchMatrixTriangularSolve} operation
    *
    * @param matrix 
@@ -547,5 +600,19 @@ public final class LinalgOps {
   public <T extends TNumber> BatchMatrixTriangularSolve<T> batchMatrixTriangularSolve(
       Operand<T> matrix, Operand<T> rhs, BatchMatrixTriangularSolve.Options... options) {
     return BatchMatrixTriangularSolve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Builds an {@link Eig} operation
+   *
+   * @param input `Tensor` input of shape `[N, N]`.
+   * @param Tout 
+   * @param options carries optional attributes values
+   * @return a new instance of Eig
+   * @see org.tensorflow.op.linalg.Eig
+   */
+  public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, DataType<U> Tout,
+      Eig.Options... options) {
+    return Eig.create(scope, input, Tout, options);
   }
 }

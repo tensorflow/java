@@ -36,6 +36,25 @@ import org.tensorflow.types.family.TType;
 public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.collective.BroadcastRecv}
+   */
+  public static class Options {
+    
+    /**
+     * @param communicationHint 
+     */
+    public Options communicationHint(String communicationHint) {
+      this.communicationHint = communicationHint;
+      return this;
+    }
+    
+    private String communicationHint;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new BroadcastRecv operation.
    * 
    * @param scope current scope
@@ -44,9 +63,10 @@ public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implemen
    * @param groupKey 
    * @param instanceKey 
    * @param shape 
+   * @param options carries optional attributes values
    * @return a new instance of BroadcastRecv
    */
-  public static <T extends TNumber> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
+  public static <T extends TNumber> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("T", T);
@@ -54,7 +74,21 @@ public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implemen
     opBuilder.setAttr("group_key", groupKey);
     opBuilder.setAttr("instance_key", instanceKey);
     opBuilder.setAttr("shape", shape);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.communicationHint != null) {
+          opBuilder.setAttr("communication_hint", opts.communicationHint);
+        }
+      }
+    }
     return new BroadcastRecv<T>(opBuilder.build());
+  }
+  
+  /**
+   * @param communicationHint 
+   */
+  public static Options communicationHint(String communicationHint) {
+    return new Options().communicationHint(communicationHint);
   }
   
   /**

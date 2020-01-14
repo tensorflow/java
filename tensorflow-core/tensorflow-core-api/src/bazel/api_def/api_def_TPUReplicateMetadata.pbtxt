@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "TPUReplicateMetadata"
+  endpoint {
+    name: "tpu.TPUReplicateMetadata"
+  }
+}

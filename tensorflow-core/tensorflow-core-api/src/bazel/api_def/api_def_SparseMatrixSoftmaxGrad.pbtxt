@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseMatrixSoftmaxGrad"
+  endpoint {
+    name: "linalg.sparse.SparseMatrixSoftmaxGrad"
+  }
+}

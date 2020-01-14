@@ -336,15 +336,16 @@ ArgumentSpec CreateOutput(const OpDef_ArgDef& output_def,
 
 EndpointSpec CreateEndpoint(const OpDef& op_def, const ApiDef& api_def,
                             const ApiDef_Endpoint& endpoint_def) {
-  std::vector<string> name_tokens = str_util::Split(endpoint_def.name(), ".");
+  const string& endpoint_name = endpoint_def.name();
   string package;
   string name;
-  if (name_tokens.size() > 1) {
-    package = name_tokens.at(0);
-    name = name_tokens.at(1);
+  size_t name_pos = endpoint_name.find_last_of('.');
+  if (name_pos != string::npos) {
+    package = endpoint_name.substr(0, name_pos);
+    name = endpoint_name.substr(name_pos + 1);
   } else {
     package = "core";  // generate unclassified ops in the 'core' package
-    name = name_tokens.at(0);
+    name = endpoint_def.name();
   }
   return EndpointSpec(package, name,
                       Javadoc::Create(ParseDocumentation(api_def.summary()))

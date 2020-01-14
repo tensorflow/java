@@ -35,6 +35,25 @@ import org.tensorflow.types.family.TType;
 public final class CollectiveGather<T extends TNumber> extends PrimitiveOp implements Operand<T> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.core.CollectiveGather}
+   */
+  public static class Options {
+    
+    /**
+     * @param communicationHint 
+     */
+    public Options communicationHint(String communicationHint) {
+      this.communicationHint = communicationHint;
+      return this;
+    }
+    
+    private String communicationHint;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new CollectiveGather operation.
    * 
    * @param scope current scope
@@ -43,9 +62,10 @@ public final class CollectiveGather<T extends TNumber> extends PrimitiveOp imple
    * @param groupKey 
    * @param instanceKey 
    * @param shape 
+   * @param options carries optional attributes values
    * @return a new instance of CollectiveGather
    */
-  public static <T extends TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape) {
+  public static <T extends TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGather", scope.makeOpName("CollectiveGather"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -53,7 +73,21 @@ public final class CollectiveGather<T extends TNumber> extends PrimitiveOp imple
     opBuilder.setAttr("group_key", groupKey);
     opBuilder.setAttr("instance_key", instanceKey);
     opBuilder.setAttr("shape", shape);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.communicationHint != null) {
+          opBuilder.setAttr("communication_hint", opts.communicationHint);
+        }
+      }
+    }
     return new CollectiveGather<T>(opBuilder.build());
+  }
+  
+  /**
+   * @param communicationHint 
+   */
+  public static Options communicationHint(String communicationHint) {
+    return new Options().communicationHint(communicationHint);
   }
   
   /**

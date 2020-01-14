@@ -47,7 +47,16 @@ public final class PrefetchDataset extends PrimitiveOp implements Operand<TType>
       return this;
     }
     
+    /**
+     * @param legacyAutotune 
+     */
+    public Options legacyAutotune(Boolean legacyAutotune) {
+      this.legacyAutotune = legacyAutotune;
+      return this;
+    }
+    
     private Long slackPeriod;
+    private Boolean legacyAutotune;
     
     private Options() {
     }
@@ -85,6 +94,9 @@ public final class PrefetchDataset extends PrimitiveOp implements Operand<TType>
         if (opts.slackPeriod != null) {
           opBuilder.setAttr("slack_period", opts.slackPeriod);
         }
+        if (opts.legacyAutotune != null) {
+          opBuilder.setAttr("legacy_autotune", opts.legacyAutotune);
+        }
       }
     }
     return new PrefetchDataset(opBuilder.build());
@@ -95,6 +107,13 @@ public final class PrefetchDataset extends PrimitiveOp implements Operand<TType>
    */
   public static Options slackPeriod(Long slackPeriod) {
     return new Options().slackPeriod(slackPeriod);
+  }
+  
+  /**
+   * @param legacyAutotune 
+   */
+  public static Options legacyAutotune(Boolean legacyAutotune) {
+    return new Options().legacyAutotune(legacyAutotune);
   }
   
   /**

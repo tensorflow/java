@@ -37,14 +37,15 @@ import org.tensorflow.types.family.TType;
  * and works its way forward.
  * <p>
  * For example,
- * <pre>{@code
+ * <p>
  * >>> x = tf.constant([1, 2, 3])
  * >>> y = tf.broadcast_to(x, [3, 3])
- * >>> sess.run(y)
- * array([[1, 2, 3],
- *        [1, 2, 3],
- *        [1, 2, 3]], dtype=int32)
- * }</pre>
+ * >>> print(y)
+ * tf.Tensor(
+ *     [[1 2 3]
+ *      [1 2 3]
+ *      [1 2 3]], shape=(3, 3), dtype=int32)
+ * <p>
  * In the above example, the input Tensor with the shape of `[1, 3]`
  * is broadcasted to output Tensor with shape of `[3, 3]`.
  * 

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "InfeedDequeueTuple"
+  endpoint {
+    name: "tpu.InfeedDequeueTuple"
+  }
+}

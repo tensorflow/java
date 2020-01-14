@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "DatasetToGraphV2"
+  endpoint {
+    name: "data.DatasetToGraph"
+  }
+}

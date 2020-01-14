@@ -20,9 +20,9 @@ import org.tensorflow.op.nn.Conv3dBackpropInput;
 import org.tensorflow.op.nn.CtcBeamSearchDecoder;
 import org.tensorflow.op.nn.CtcGreedyDecoder;
 import org.tensorflow.op.nn.CtcLoss;
-import org.tensorflow.op.nn.CudnnRnnCanonicalToParams;
+import org.tensorflow.op.nn.CudnnRNNCanonicalToParams;
+import org.tensorflow.op.nn.CudnnRNNParamsToCanonical;
 import org.tensorflow.op.nn.CudnnRnnParamsSize;
-import org.tensorflow.op.nn.CudnnRnnParamsToCanonical;
 import org.tensorflow.op.nn.DataFormatDimMap;
 import org.tensorflow.op.nn.DataFormatVecPermute;
 import org.tensorflow.op.nn.DepthToSpace;
@@ -198,6 +198,20 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link CtcGreedyDecoder} operation
+   *
+   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
+   * @param sequenceLength A vector containing sequence lengths, size `(batch_size)`.
+   * @param options carries optional attributes values
+   * @return a new instance of CtcGreedyDecoder
+   * @see org.tensorflow.op.nn.CtcGreedyDecoder
+   */
+  public <T extends TNumber> CtcGreedyDecoder<T> ctcGreedyDecoder(Operand<T> inputs,
+      Operand<TInt32> sequenceLength, CtcGreedyDecoder.Options... options) {
+    return CtcGreedyDecoder.create(scope, inputs, sequenceLength, options);
+  }
+
+  /**
    * Builds an {@link SpaceToDepth} operation
    *
    * @param input 
@@ -242,24 +256,6 @@ public final class NnOps {
       Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
       Conv2dBackpropInput.Options... options) {
     return Conv2dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
-  }
-
-  /**
-   * Builds an {@link CudnnRnnParamsToCanonical} operation
-   *
-   * @param numLayers 
-   * @param numUnits 
-   * @param inputSize 
-   * @param params 
-   * @param numParams 
-   * @param options carries optional attributes values
-   * @return a new instance of CudnnRnnParamsToCanonical
-   * @see org.tensorflow.op.nn.CudnnRnnParamsToCanonical
-   */
-  public <T extends TNumber> CudnnRnnParamsToCanonical<T> cudnnRnnParamsToCanonical(
-      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
-      Operand<T> params, Long numParams, CudnnRnnParamsToCanonical.Options... options) {
-    return CudnnRnnParamsToCanonical.create(scope, numLayers, numUnits, inputSize, params, numParams, options);
   }
 
   /**
@@ -559,6 +555,25 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link FusedBatchNormGrad} operation
+   *
+   * @param yBackprop A 4D Tensor for the gradient with respect to y.
+   * @param x A 4D Tensor for input data.
+   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
+   * @param reserveSpace1 When is_training is True, a 1D Tensor for the computed batch
+   * @param reserveSpace2 When is_training is True, a 1D Tensor for the computed batch
+   * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
+   * @param options carries optional attributes values
+   * @return a new instance of FusedBatchNormGrad
+   * @see org.tensorflow.op.nn.FusedBatchNormGrad
+   */
+  public <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> fusedBatchNormGrad(
+      Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1,
+      Operand<U> reserveSpace2, Operand<U> reserveSpace3, FusedBatchNormGrad.Options... options) {
+    return FusedBatchNormGrad.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, reserveSpace3, options);
+  }
+
+  /**
    * Builds an {@link CudnnRnnParamsSize} operation
    *
    * @param numLayers 
@@ -640,19 +655,20 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link CtcLoss} operation
+   * Builds an {@link CtcBeamSearchDecoder} operation
    *
    * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
-   * @param labelsIndices The indices of a `SparseTensor<int32, 2>`.
-   * @param labelsValues The values (labels) associated with the given batch and time.
-   * @param sequenceLength A vector containing sequence lengths (batch).
+   * @param sequenceLength A vector containing sequence lengths, size `(batch)`.
+   * @param beamWidth A scalar >= 0 (beam search beam width).
+   * @param topPaths A scalar >= 0, <= beam_width (controls output size).
    * @param options carries optional attributes values
-   * @return a new instance of CtcLoss
-   * @see org.tensorflow.op.nn.CtcLoss
+   * @return a new instance of CtcBeamSearchDecoder
+   * @see org.tensorflow.op.nn.CtcBeamSearchDecoder
    */
-  public CtcLoss ctcLoss(Operand<TFloat> inputs, Operand<TInt64> labelsIndices,
-      Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, CtcLoss.Options... options) {
-    return CtcLoss.create(scope, inputs, labelsIndices, labelsValues, sequenceLength, options);
+  public <T extends TNumber> CtcBeamSearchDecoder<T> ctcBeamSearchDecoder(Operand<T> inputs,
+      Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths,
+      CtcBeamSearchDecoder.Options... options) {
+    return CtcBeamSearchDecoder.create(scope, inputs, sequenceLength, beamWidth, topPaths, options);
   }
 
   /**
@@ -918,23 +934,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link CtcBeamSearchDecoder} operation
-   *
-   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
-   * @param sequenceLength A vector containing sequence lengths, size `(batch)`.
-   * @param beamWidth A scalar >= 0 (beam search beam width).
-   * @param topPaths A scalar >= 0, <= beam_width (controls output size).
-   * @param options carries optional attributes values
-   * @return a new instance of CtcBeamSearchDecoder
-   * @see org.tensorflow.op.nn.CtcBeamSearchDecoder
-   */
-  public CtcBeamSearchDecoder ctcBeamSearchDecoder(Operand<TFloat> inputs,
-      Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths,
-      CtcBeamSearchDecoder.Options... options) {
-    return CtcBeamSearchDecoder.create(scope, inputs, sequenceLength, beamWidth, topPaths, options);
-  }
-
-  /**
    * Builds an {@link Softmax} operation
    *
    * @param logits 2-D with shape `[batch_size, num_classes]`.
@@ -974,6 +973,41 @@ public final class NnOps {
   public <T extends TNumber> Conv2d<T> conv2d(Operand<T> input, Operand<T> filter,
       List<Long> strides, String padding, Conv2d.Options... options) {
     return Conv2d.create(scope, input, filter, strides, padding, options);
+  }
+
+  /**
+   * Builds an {@link CudnnRNNCanonicalToParams} operation
+   *
+   * @param numLayers 
+   * @param numUnits 
+   * @param inputSize 
+   * @param weights 
+   * @param biases 
+   * @param options carries optional attributes values
+   * @return a new instance of CudnnRNNCanonicalToParams
+   * @see org.tensorflow.op.nn.CudnnRNNCanonicalToParams
+   */
+  public <T extends TNumber> CudnnRNNCanonicalToParams<T> cudnnRNNCanonicalToParams(
+      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
+      Iterable<Operand<T>> weights, Iterable<Operand<T>> biases,
+      CudnnRNNCanonicalToParams.Options... options) {
+    return CudnnRNNCanonicalToParams.create(scope, numLayers, numUnits, inputSize, weights, biases, options);
+  }
+
+  /**
+   * Builds an {@link CtcLoss} operation
+   *
+   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
+   * @param labelsIndices The indices of a `SparseTensor<int32, 2>`.
+   * @param labelsValues The values (labels) associated with the given batch and time.
+   * @param sequenceLength A vector containing sequence lengths (batch).
+   * @param options carries optional attributes values
+   * @return a new instance of CtcLoss
+   * @see org.tensorflow.op.nn.CtcLoss
+   */
+  public <T extends TNumber> CtcLoss<T> ctcLoss(Operand<T> inputs, Operand<TInt64> labelsIndices,
+      Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, CtcLoss.Options... options) {
+    return CtcLoss.create(scope, inputs, labelsIndices, labelsValues, sequenceLength, options);
   }
 
   /**
@@ -1127,39 +1161,6 @@ public final class NnOps {
   }
 
   /**
-   * Builds an {@link CudnnRnnCanonicalToParams} operation
-   *
-   * @param numLayers 
-   * @param numUnits 
-   * @param inputSize 
-   * @param weights 
-   * @param biases 
-   * @param options carries optional attributes values
-   * @return a new instance of CudnnRnnCanonicalToParams
-   * @see org.tensorflow.op.nn.CudnnRnnCanonicalToParams
-   */
-  public <T extends TNumber> CudnnRnnCanonicalToParams<T> cudnnRnnCanonicalToParams(
-      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
-      Iterable<Operand<T>> weights, Iterable<Operand<T>> biases,
-      CudnnRnnCanonicalToParams.Options... options) {
-    return CudnnRnnCanonicalToParams.create(scope, numLayers, numUnits, inputSize, weights, biases, options);
-  }
-
-  /**
-   * Builds an {@link CtcGreedyDecoder} operation
-   *
-   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
-   * @param sequenceLength A vector containing sequence lengths, size `(batch_size)`.
-   * @param options carries optional attributes values
-   * @return a new instance of CtcGreedyDecoder
-   * @see org.tensorflow.op.nn.CtcGreedyDecoder
-   */
-  public CtcGreedyDecoder ctcGreedyDecoder(Operand<TFloat> inputs, Operand<TInt32> sequenceLength,
-      CtcGreedyDecoder.Options... options) {
-    return CtcGreedyDecoder.create(scope, inputs, sequenceLength, options);
-  }
-
-  /**
    * Builds an {@link FusedResizeAndPadConv2d} operation
    *
    * @param input 4-D with shape `[batch, in_height, in_width, in_channels]`.
@@ -1199,6 +1200,26 @@ public final class NnOps {
   }
 
   /**
+   * Builds an {@link CudnnRNNParamsToCanonical} operation
+   *
+   * @param numLayers 
+   * @param numUnits 
+   * @param inputSize 
+   * @param params 
+   * @param numParamsWeights 
+   * @param numParamsBiases 
+   * @param options carries optional attributes values
+   * @return a new instance of CudnnRNNParamsToCanonical
+   * @see org.tensorflow.op.nn.CudnnRNNParamsToCanonical
+   */
+  public <T extends TNumber> CudnnRNNParamsToCanonical<T> cudnnRNNParamsToCanonical(
+      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
+      Operand<T> params, Long numParamsWeights, Long numParamsBiases,
+      CudnnRNNParamsToCanonical.Options... options) {
+    return CudnnRNNParamsToCanonical.create(scope, numLayers, numUnits, inputSize, params, numParamsWeights, numParamsBiases, options);
+  }
+
+  /**
    * Builds an {@link FractionalMaxPool} operation
    *
    * @param value 4-D with shape `[batch, height, width, channels]`.
@@ -1210,24 +1231,6 @@ public final class NnOps {
   public <T extends TNumber> FractionalMaxPool<T> fractionalMaxPool(Operand<T> value,
       List<Float> poolingRatio, FractionalMaxPool.Options... options) {
     return FractionalMaxPool.create(scope, value, poolingRatio, options);
-  }
-
-  /**
-   * Builds an {@link FusedBatchNormGrad} operation
-   *
-   * @param yBackprop A 4D Tensor for the gradient with respect to y.
-   * @param x A 4D Tensor for input data.
-   * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
-   * @param reserveSpace1 When is_training is True, a 1D Tensor for the computed batch
-   * @param reserveSpace2 When is_training is True, a 1D Tensor for the computed batch
-   * @param options carries optional attributes values
-   * @return a new instance of FusedBatchNormGrad
-   * @see org.tensorflow.op.nn.FusedBatchNormGrad
-   */
-  public <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> fusedBatchNormGrad(
-      Operand<T> yBackprop, Operand<T> x, Operand<TFloat> scale, Operand<U> reserveSpace1,
-      Operand<U> reserveSpace2, FusedBatchNormGrad.Options... options) {
-    return FusedBatchNormGrad.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, options);
   }
 
   /**

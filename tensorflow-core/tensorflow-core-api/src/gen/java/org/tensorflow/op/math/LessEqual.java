@@ -33,6 +33,18 @@ import org.tensorflow.types.family.TType;
  * <p>
  * <i>NOTE</i>: `math.LessEqual` supports broadcasting. More about broadcasting
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5])
+ * tf.math.less_equal(x, y) ==> [True, True, False]
+ * 
+ * x = tf.constant([5, 4, 6])
+ * y = tf.constant([5, 6, 6])
+ * tf.math.less_equal(x, y) ==> [True, True, True]
+ * }</pre>
+ * 
  */
 @Operator(group = "math")
 public final class LessEqual extends PrimitiveOp implements Operand<TBool> {

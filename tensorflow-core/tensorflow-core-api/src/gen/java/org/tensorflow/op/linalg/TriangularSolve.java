@@ -58,7 +58,7 @@ import org.tensorflow.types.family.TType;
  * 
  * x = tf.linalg.triangular_solve(a, b, lower=True)
  * x
- * # <tf.Tensor: id=257, shape=(4, 1), dtype=float32, numpy=
+ * # <tf.Tensor: shape=(4, 1), dtype=float32, numpy=
  * # array([[ 1.3333334 ],
  * #        [-0.66666675],
  * #        [ 2.6666665 ],
@@ -66,7 +66,7 @@ import org.tensorflow.types.family.TType;
  * 
  * # in python3 one can use `a@x`
  * tf.matmul(a, x)
- * # <tf.Tensor: id=263, shape=(4, 1), dtype=float32, numpy=
+ * # <tf.Tensor: shape=(4, 1), dtype=float32, numpy=
  * # array([[4.       ],
  * #        [2.       ],
  * #        [4.       ],

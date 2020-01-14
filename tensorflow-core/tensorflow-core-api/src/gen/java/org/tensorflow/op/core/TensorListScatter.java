@@ -37,7 +37,10 @@ import org.tensorflow.types.family.TType;
  * tensor: The input tensor.
  * indices: The indices used to index into the list.
  * element_shape: The shape of the elements in the list (can be less specified than
- *   the shape of the tensor).  
+ *   the shape of the tensor).
+ * num_elements: The size of the output list. Must be large enough to accommodate
+ *   the largest index in indices. If -1, the list is just large enough to include
+ *   the largest index in indices.
  * output_handle: The TensorList.
  */
 @Operator
@@ -50,13 +53,15 @@ public final class TensorListScatter extends PrimitiveOp implements Operand<TTyp
    * @param tensor 
    * @param indices 
    * @param elementShape 
+   * @param numElements 
    * @return a new instance of TensorListScatter
    */
-  public static <T extends TType, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatter", scope.makeOpName("TensorListScatter"));
+  public static <T extends TType, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatter"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());
+    opBuilder.addInput(numElements.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListScatter(opBuilder.build());
   }

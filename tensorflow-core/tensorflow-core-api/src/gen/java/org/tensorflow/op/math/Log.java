@@ -30,6 +30,13 @@ import org.tensorflow.types.family.TType;
  * Computes natural logarithm of x element-wise.
  * <p>
  * I.e., \\(y = \log_e x\\).
+ * <p>
+ * Example:
+ * <pre>{@code
+ * x = tf.constant([0, 0.5, 1, 5])
+ * tf.math.log(x) ==> [-inf, -0.6931472,  0. ,  1.609438]
+ * }</pre>
+ * 
  * 
  * @param <T> data type for {@code y()} output
  */

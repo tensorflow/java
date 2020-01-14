@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BlockLSTMV2"
+  endpoint {
+    name: "nn.BlockLSTM"
+  }
+}

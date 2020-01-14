@@ -64,7 +64,10 @@ import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.math.Minimum;
 import org.tensorflow.op.math.Mod;
 import org.tensorflow.op.math.Mul;
+import org.tensorflow.op.math.MulNoNan;
+import org.tensorflow.op.math.Ndtri;
 import org.tensorflow.op.math.Neg;
+import org.tensorflow.op.math.NextAfter;
 import org.tensorflow.op.math.NotEqual;
 import org.tensorflow.op.math.Polygamma;
 import org.tensorflow.op.math.PopulationCount;
@@ -102,6 +105,7 @@ import org.tensorflow.op.math.UnsortedSegmentSum;
 import org.tensorflow.op.math.Xdivy;
 import org.tensorflow.op.math.Xlogy;
 import org.tensorflow.op.math.Zeta;
+import org.tensorflow.op.math.erfinv;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat;
@@ -120,6 +124,18 @@ public final class MathOps {
 
   MathOps(Scope scope) {
     this.scope = scope;
+  }
+
+  /**
+   * Builds an {@link MulNoNan} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of MulNoNan
+   * @see org.tensorflow.op.math.MulNoNan
+   */
+  public <T extends TType> MulNoNan<T> mulNoNan(Operand<T> x, Operand<T> y) {
+    return MulNoNan.create(scope, x, y);
   }
 
   /**
@@ -281,6 +297,17 @@ public final class MathOps {
    */
   public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
     return Ceil.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link erfinv} operation
+   *
+   * @param x 
+   * @return a new instance of erfinv
+   * @see org.tensorflow.op.math.erfinv
+   */
+  public <T extends TNumber> erfinv<T> erfinv(Operand<T> x) {
+    return erfinv.create(scope, x);
   }
 
   /**
@@ -527,6 +554,17 @@ public final class MathOps {
    */
   public <T extends TType> Cos<T> cos(Operand<T> x) {
     return Cos.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link Ndtri} operation
+   *
+   * @param x 
+   * @return a new instance of Ndtri
+   * @see org.tensorflow.op.math.Ndtri
+   */
+  public <T extends TNumber> Ndtri<T> ndtri(Operand<T> x) {
+    return Ndtri.create(scope, x);
   }
 
   /**
@@ -880,6 +918,18 @@ public final class MathOps {
    */
   public <T extends TType> Acos<T> acos(Operand<T> x) {
     return Acos.create(scope, x);
+  }
+
+  /**
+   * Builds an {@link NextAfter} operation
+   *
+   * @param x1 
+   * @param x2 
+   * @return a new instance of NextAfter
+   * @see org.tensorflow.op.math.NextAfter
+   */
+  public <T extends TNumber> NextAfter<T> nextAfter(Operand<T> x1, Operand<T> x2) {
+    return NextAfter.create(scope, x1, x2);
   }
 
   /**

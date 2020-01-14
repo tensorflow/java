@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalParseExampleDataset"
+  endpoint {
+    name: "data.experimental.ParseExampleDataset"
+  }
+}
