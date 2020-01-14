@@ -44,11 +44,10 @@ import org.tensorflow.types.family.TType;
  * <p>
  * Example of usage:
  * <pre>{@code
- * Gradients gradients = Gradients.create(scope, Arrays.asList(loss), Arrays.asList(w, b));
- * 
- * Constant<Float> alpha = ops.constant(1.0f, Float.class);
- * ApplyGradientDescent.create(scope, w, alpha, gradients.<Float>dy(0));
- * ApplyGradientDescent.create(scope, b, alpha, gradients.<Float>dy(1));
+ * Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
+ * Scalar<TFloat32> alpha = ops.scalar(1.0f);
+ * tf.train.applyGradientDescent(w, alpha, gradients.<Float>dy(0));
+ * tf.train.applyGradientDescent(b, alpha, gradients.<Float>dy(1));
  * }</pre>
  */
 @Operator

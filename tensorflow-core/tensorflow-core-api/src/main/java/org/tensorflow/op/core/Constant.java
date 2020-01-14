@@ -28,6 +28,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -40,7 +41,9 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
-/** An operator producing a constant value. */
+/**
+ * An operator producing a constant value.
+ */
 @Operator
 public final class Constant<T extends TType> extends PrimitiveOp implements Operand<T> {
 
@@ -50,8 +53,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return an integer constant
+   * @deprecated use {@link Ops#scalar(int)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int data) {
     try (Tensor<TInt32> value = TInt32.scalarOf(data)) {
       return create(scope, value);
@@ -64,8 +69,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#vector(int...)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[] data) {
     try (Tensor<TInt32> value = TInt32.vectorOf(data)) {
       return create(scope, value);
@@ -78,8 +85,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[][] data) {
     return create(scope, data, TInt32.DTYPE);
   }
@@ -90,8 +99,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[][][] data) {
     return create(scope, data, TInt32.DTYPE);
   }
@@ -102,8 +113,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[][][][] data) {
     return create(scope, data, TInt32.DTYPE);
   }
@@ -114,8 +127,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[][][][][] data) {
     return create(scope, data, TInt32.DTYPE);
   }
@@ -126,8 +141,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, int[][][][][][] data) {
     return create(scope, data, TInt32.DTYPE);
   }
@@ -145,8 +162,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data a buffer containing the tensor data.
    * @return an integer constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt32> create(Scope scope, long[] shape, IntBuffer data) {
     try (Tensor<TInt32> value = Tensor.create(shape, data)) {
       return create(scope, value);
@@ -157,10 +176,12 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * Creates a constant containing a single {@code float} element.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data The value to put into the new constant. 
+   * @param data The value to put into the new constant.
    * @return a float constant
+   * @deprecated use {@link Ops#scalar(float)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -171,8 +192,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#vector(float...)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -183,8 +206,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[][] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -195,8 +220,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[][][] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -207,8 +234,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[][][][] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -219,8 +248,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[][][][][] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -231,8 +262,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, float[][][][][][] data) {
     return create(scope, data, TFloat32.DTYPE);
   }
@@ -250,8 +283,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data a buffer containing the tensor data.
    * @return a float constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat32> create(Scope scope, long[] shape, FloatBuffer data) {
     try (Tensor<TFloat32> value = Tensor.create(shape, data)) {
       return create(scope, value);
@@ -264,8 +299,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a double constant
+   * @deprecated use {@link Ops#scalar(double)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -276,8 +313,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#vector(double...)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -288,8 +327,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[][] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -300,8 +341,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[][][] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -312,8 +355,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[][][][] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -324,8 +369,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[][][][][] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -336,8 +383,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, double[][][][][][] data) {
     return create(scope, data, TFloat64.DTYPE);
   }
@@ -355,8 +404,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data a buffer containing the tensor data.
    * @return a double constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TFloat64> create(Scope scope, long[] shape, DoubleBuffer data) {
     try (Tensor<TFloat64> value = Tensor.create(shape, data)) {
       return create(scope, value);
@@ -369,8 +420,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a long constant
+   * @deprecated use {@link Ops#scalar(long)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -381,8 +434,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#vector(long...)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -393,8 +448,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[][] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -405,8 +462,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[][][] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -417,8 +476,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[][][][] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -429,8 +490,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[][][][][] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -441,8 +504,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[][][][][][] data) {
     return create(scope, data, TInt64.DTYPE);
   }
@@ -460,8 +525,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param data a buffer containing the tensor data.
    * @return a long constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TInt64> create(Scope scope, long[] shape, LongBuffer data) {
     try (Tensor<TInt64> value = Tensor.create(shape, data)) {
       return create(scope, value);
@@ -474,8 +541,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a boolean constant
+   * @deprecated use {@link Ops#scalar(boolean)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -486,8 +555,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#vector(boolean...)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -498,8 +569,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[][] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -510,8 +583,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[][][] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -522,8 +597,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[][][][] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -534,8 +611,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[][][][][] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -546,8 +625,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TBool> create(Scope scope, boolean[][][][][][] data) {
     return create(scope, data, TBool.DTYPE);
   }
@@ -558,8 +639,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data The string to put into the new constant.
    * @return a string constant
+   * @deprecated use {@link Ops#scalar(String)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, String data) {
     return create(scope, data, UTF_8);
   }
@@ -571,8 +654,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param charset The encoding from String to bytes.
    * @param data The string to put into the new constant.
    * @return a string constant
+   * @deprecated use {@link Ops#scalar(Charset, String)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, String data, Charset charset) {
     try (Tensor<TString> value = Tensor.create(data.getBytes(charset), TString.DTYPE)) {
       return create(scope, value);
@@ -585,8 +670,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -597,8 +684,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[][] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -609,8 +698,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[][][] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -621,8 +712,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[][][][] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -633,8 +726,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[][][][][] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -645,8 +740,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. String elements are
    *     sequences of bytes from the last array dimension.
+   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
    */
   @Endpoint
+  @Deprecated
   public static Constant<TString> create(Scope scope, byte[][][][][][] data) {
     return create(scope, data, TString.DTYPE);
   }
@@ -666,8 +763,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a constant of type `type`
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *     buffer
+   * @deprecated use {@link Ops#constant(Tensor)} instead
    */
   @Endpoint
+  @Deprecated
   public static <T extends TType> Constant<T> create(Scope scope, DataType<T> type, long[] shape, ByteBuffer data) {
     try (Tensor<T> value = Tensor.create(type, shape, data)) {
       return create(scope, value);
@@ -689,8 +788,10 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param object a Java object representing the constant.
    * @return a constant of type `type`
    * @see org.tensorflow.Tensor#create(Object) Tensor.create
+   * @deprecated use {@link Ops#constant(Tensor)} instead
    */
   @Endpoint
+  @Deprecated
   public static <T extends TType> Constant<T> create(Scope scope, Object object, DataType<T> type) {
     try (Tensor<T> value = Tensor.create(object, type)) {
       return create(scope, value);
@@ -706,13 +807,23 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    */
   @Endpoint
   public static <T extends TType> Constant<T> create(Scope scope, Tensor<T> tensor) {
-    return new Constant<>(
-        scope
-            .env()
-            .opBuilder("Const", scope.makeOpName("Const"))
-            .setAttr("value", tensor)
-            .setAttr("dtype", tensor.dataType())
-            .build());
+    return new Constant<>(buildConstOp(scope, tensor));
+  }
+
+  /**
+   * Builds a "Const" operation from a Tensor.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param tensor a Tensor holding the constant value
+   * @return a "Const" operation
+   */
+  static Operation buildConstOp(Scope scope, Tensor<?> tensor) {
+    return scope
+        .env()
+        .opBuilder("Const", scope.makeOpName("Const"))
+        .setAttr("value", tensor)
+        .setAttr("dtype", tensor.dataType())
+        .build();
   }
 
   @Override
