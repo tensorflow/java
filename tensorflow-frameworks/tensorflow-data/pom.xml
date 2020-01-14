@@ -49,6 +49,8 @@
 
   <build>
     <plugins>
+
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -56,7 +58,7 @@
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx2G -XX:MaxPermSize=256m -Djava.library.path=/home/dhruv/git/tensorflow-java/tensorflow-core/tensorflow-core-api/target/native/org/tensorflow/internal/c_api/linux-x86_64/</argLine>
+          <argLine>-Xmx2G -XX:MaxPermSize=256m -Djava.library.path=/home/dhruv/git/dhruvrajan/tensorflow-java/tensorflow-core/tensorflow-core-api/target/native/org/tensorflow/internal/c_api/linux-x86_64/</argLine>
 
           <skipTests>false</skipTests>
           <includes>
