@@ -25,7 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 /**
  * Decode a JPEG-encoded image to a uint8 tensor.
@@ -56,7 +56,7 @@ import org.tensorflow.types.TUInt8;
  * the same, though it is cleaner to use `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeJpeg extends PrimitiveOp implements Operand<TUInt8> {
+public final class DecodeJpeg extends PrimitiveOp implements Operand<TUint8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeJpeg}
@@ -218,16 +218,16 @@ public final class DecodeJpeg extends PrimitiveOp implements Operand<TUInt8> {
   /**
    * 3-D with shape `[height, width, channels]`..
    */
-  public Output<TUInt8> image() {
+  public Output<TUint8> image() {
     return image;
   }
   
   @Override
-  public Output<TUInt8> asOutput() {
+  public Output<TUint8> asOutput() {
     return image;
   }
   
-  private Output<TUInt8> image;
+  private Output<TUint8> image;
   
   private DecodeJpeg(Operation operation) {
     super(operation);

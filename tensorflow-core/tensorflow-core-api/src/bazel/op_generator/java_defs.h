@@ -113,9 +113,9 @@ class Type {
       case DataType::DT_HALF:
         return Class("TFloat16", "org.tensorflow.types");
       case DataType::DT_BFLOAT16:
-        return Class("TBFloat16", "org.tensorflow.types");
+        return Class("TBfloat16", "org.tensorflow.types");
       case DataType::DT_UINT8:
-        return Class("TUInt8", "org.tensorflow.types");
+        return Class("TUint8", "org.tensorflow.types");
       case DataType::DT_INT32:
         return Class("TInt32", "org.tensorflow.types");
       case DataType::DT_INT64:

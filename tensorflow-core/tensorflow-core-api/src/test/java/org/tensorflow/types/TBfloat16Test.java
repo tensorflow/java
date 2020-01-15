@@ -20,11 +20,11 @@ package org.tensorflow.types;
 import org.tensorflow.Tensor;
 import org.tensorflow.tools.Shape;
 
-public class TBFloat16Test extends NumericTypesTestBase<TBFloat16, Float> {
+public class TBfloat16Test extends NumericTypesTestBase<TBfloat16, Float> {
 
   @Override
-  Tensor<TBFloat16> allocateTensor(Shape shape) {
-    return TBFloat16.ofShape(shape);
+  Tensor<TBfloat16> allocateTensor(Shape shape) {
+    return TBfloat16.ofShape(shape);
   }
 
   @Override

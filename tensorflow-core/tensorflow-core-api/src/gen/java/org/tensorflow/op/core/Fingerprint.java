@@ -25,7 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -61,7 +61,7 @@ import org.tensorflow.types.family.TType;
  * Fingerprint(ReduceJoin(data))` in general.
  */
 @Operator
-public final class Fingerprint extends PrimitiveOp implements Operand<TUInt8> {
+public final class Fingerprint extends PrimitiveOp implements Operand<TUint8> {
   
   /**
    * Factory method to create a class wrapping a new Fingerprint operation.
@@ -85,16 +85,16 @@ public final class Fingerprint extends PrimitiveOp implements Operand<TUInt8> {
    * `data`'s first dimension, and the second dimension size depends on the
    * fingerprint algorithm.
    */
-  public Output<TUInt8> fingerprint() {
+  public Output<TUint8> fingerprint() {
     return fingerprint;
   }
   
   @Override
-  public Output<TUInt8> asOutput() {
+  public Output<TUint8> asOutput() {
     return fingerprint;
   }
   
-  private Output<TUInt8> fingerprint;
+  private Output<TUint8> fingerprint;
   
   private Fingerprint(Operation operation) {
     super(operation);

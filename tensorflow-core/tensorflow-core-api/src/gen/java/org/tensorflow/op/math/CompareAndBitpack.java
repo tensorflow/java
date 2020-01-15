@@ -24,7 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -53,7 +53,7 @@ import org.tensorflow.types.family.TType;
  * a `uint8` tensor shaped `[s0, s1, ..., s_n / 8]`.
  */
 @Operator(group = "math")
-public final class CompareAndBitpack extends PrimitiveOp implements Operand<TUInt8> {
+public final class CompareAndBitpack extends PrimitiveOp implements Operand<TUint8> {
   
   /**
    * Factory method to create a class wrapping a new CompareAndBitpack operation.
@@ -74,16 +74,16 @@ public final class CompareAndBitpack extends PrimitiveOp implements Operand<TUIn
   /**
    * The bitpacked comparisons.
    */
-  public Output<TUInt8> output() {
+  public Output<TUint8> output() {
     return output;
   }
   
   @Override
-  public Output<TUInt8> asOutput() {
+  public Output<TUint8> asOutput() {
     return output;
   }
   
-  private Output<TUInt8> output;
+  private Output<TUint8> output;
   
   private CompareAndBitpack(Operation operation) {
     super(operation);

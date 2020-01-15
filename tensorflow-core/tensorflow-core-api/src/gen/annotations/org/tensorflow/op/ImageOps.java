@@ -38,7 +38,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -185,6 +185,18 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link DecodePng} operation
+   *
+   * @param contents 0-D.  The PNG-encoded image.
+   * @param options carries optional attributes values
+   * @return a new instance of DecodePng
+   * @see org.tensorflow.op.image.DecodePng
+   */
+  public DecodePng<TUint8> decodePng(Operand<TString> contents, DecodePng.Options... options) {
+    return DecodePng.create(scope, contents, options);
+  }
+
+  /**
    * Builds an {@link DecodeAndCropJpeg} operation
    *
    * @param contents 0-D.  The JPEG-encoded image.
@@ -297,19 +309,6 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link EncodeJpegVariableQuality} operation
-   *
-   * @param images Images to adjust.  At least 3-D.
-   * @param quality An int quality to encode to.
-   * @return a new instance of EncodeJpegVariableQuality
-   * @see org.tensorflow.op.image.EncodeJpegVariableQuality
-   */
-  public EncodeJpegVariableQuality encodeJpegVariableQuality(Operand<TUInt8> images,
-      Operand<TInt32> quality) {
-    return EncodeJpegVariableQuality.create(scope, images, quality);
-  }
-
-  /**
    * Builds an {@link CropAndResizeGradBoxes} operation
    *
    * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
@@ -353,6 +352,19 @@ public final class ImageOps {
   }
 
   /**
+   * Builds an {@link EncodeJpegVariableQuality} operation
+   *
+   * @param images Images to adjust.  At least 3-D.
+   * @param quality An int quality to encode to.
+   * @return a new instance of EncodeJpegVariableQuality
+   * @see org.tensorflow.op.image.EncodeJpegVariableQuality
+   */
+  public EncodeJpegVariableQuality encodeJpegVariableQuality(Operand<TUint8> images,
+      Operand<TInt32> quality) {
+    return EncodeJpegVariableQuality.create(scope, images, quality);
+  }
+
+  /**
    * Builds an {@link ScaleAndTranslate} operation
    *
    * @param images 
@@ -381,18 +393,6 @@ public final class ImageOps {
   public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
       Operand<TFloat32> boxes, Operand<TFloat32> colors) {
     return DrawBoundingBoxes.create(scope, images, boxes, colors);
-  }
-
-  /**
-   * Builds an {@link DecodePng} operation
-   *
-   * @param contents 0-D.  The PNG-encoded image.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodePng
-   * @see org.tensorflow.op.image.DecodePng
-   */
-  public DecodePng<TUInt8> decodePng(Operand<TString> contents, DecodePng.Options... options) {
-    return DecodePng.create(scope, contents, options);
   }
 
   /**
@@ -468,18 +468,6 @@ public final class ImageOps {
   }
 
   /**
-   * Builds an {@link EncodeJpeg} operation
-   *
-   * @param image 3-D with shape `[height, width, channels]`.
-   * @param options carries optional attributes values
-   * @return a new instance of EncodeJpeg
-   * @see org.tensorflow.op.image.EncodeJpeg
-   */
-  public EncodeJpeg encodeJpeg(Operand<TUInt8> image, EncodeJpeg.Options... options) {
-    return EncodeJpeg.create(scope, image, options);
-  }
-
-  /**
    * Builds an {@link DecodeJpeg} operation
    *
    * @param contents 0-D.  The JPEG-encoded image.
@@ -489,6 +477,18 @@ public final class ImageOps {
    */
   public DecodeJpeg decodeJpeg(Operand<TString> contents, DecodeJpeg.Options... options) {
     return DecodeJpeg.create(scope, contents, options);
+  }
+
+  /**
+   * Builds an {@link EncodeJpeg} operation
+   *
+   * @param image 3-D with shape `[height, width, channels]`.
+   * @param options carries optional attributes values
+   * @return a new instance of EncodeJpeg
+   * @see org.tensorflow.op.image.EncodeJpeg
+   */
+  public EncodeJpeg encodeJpeg(Operand<TUint8> image, EncodeJpeg.Options... options) {
+    return EncodeJpeg.create(scope, image, options);
   }
 
   /**

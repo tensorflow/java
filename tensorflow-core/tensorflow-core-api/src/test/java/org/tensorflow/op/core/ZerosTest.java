@@ -32,7 +32,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 @RunWith(JUnit4.class)
 public class ZerosTest {
@@ -129,14 +129,14 @@ public class ZerosTest {
   }
 
   @Test
-  public void createUInt8Zeros() {
+  public void createUint8Zeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TUInt8> op = Zeros.create(scope, Constant.create(scope, shape), TUInt8.DTYPE);
+      Zeros<TUint8> op = Zeros.create(scope, Constant.create(scope, shape), TUint8.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        byte[][] actual = result.expect(TUInt8.DTYPE).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
+        byte[][] actual = result.expect(TUint8.DTYPE).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
         result.copyTo(actual);
         for (int i = 0; i < actual.length; ++i) {
           for (int j = 0; j < actual[i].length; ++j) {

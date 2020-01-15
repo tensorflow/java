@@ -26,7 +26,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -113,8 +113,8 @@ public final class DecodePng<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  public static DecodePng<TUInt8> create(Scope scope, Operand<TString> contents, Options... options) {
-    return create(scope, contents, TUInt8.DTYPE, options);
+  public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
+    return create(scope, contents, TUint8.DTYPE, options);
   }
   
   /**

@@ -19,7 +19,7 @@ package org.tensorflow.tools.buffer.layout;
 
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
-import org.tensorflow.tools.buffer.impl.layout.BFloat16Layout;
+import org.tensorflow.tools.buffer.impl.layout.Bfloat16Layout;
 import org.tensorflow.tools.buffer.impl.layout.BoolLayout;
 import org.tensorflow.tools.buffer.impl.layout.Float16Layout;
 
@@ -51,7 +51,7 @@ public final class DataLayouts {
    *
    * <p>Some CPUs support the bfloat16 format natively for better performances.
    */
-  public static final FloatDataLayout<ShortDataBuffer> BFLOAT16 = new BFloat16Layout();
+  public static final FloatDataLayout<ShortDataBuffer> BFLOAT16 = new Bfloat16Layout();
 
   /**
    * Data layout for converting 16-bit half floats to/from short values.

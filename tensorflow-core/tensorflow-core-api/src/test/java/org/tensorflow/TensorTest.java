@@ -38,7 +38,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 /** Unit tests for {@link org.tensorflow.Tensor}. */
 @RunWith(JUnit4.class)
@@ -423,10 +423,10 @@ public class TensorTest {
   }
 
   @Test
-  public void testUInt8Tensor() {
+  public void testUint8Tensor() {
     byte[] vector = new byte[] {1, 2, 3, 4};
-    try (Tensor<TUInt8> t = Tensor.create(vector, TUInt8.DTYPE)) {
-      assertEquals(TUInt8.DTYPE, t.dataType());
+    try (Tensor<TUint8> t = Tensor.create(vector, TUint8.DTYPE)) {
+      assertEquals(TUint8.DTYPE, t.dataType());
       assertEquals(1, t.shape().numDimensions());
       assertEquals(4, t.shape().size(0));
 

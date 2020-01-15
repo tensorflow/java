@@ -25,7 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 /**
  * Decode the frame(s) of a GIF-encoded image to a uint8 tensor.
@@ -40,7 +40,7 @@ import org.tensorflow.types.TUInt8;
  * `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeGif extends PrimitiveOp implements Operand<TUInt8> {
+public final class DecodeGif extends PrimitiveOp implements Operand<TUint8> {
   
   /**
    * Factory method to create a class wrapping a new DecodeGif operation.
@@ -59,16 +59,16 @@ public final class DecodeGif extends PrimitiveOp implements Operand<TUInt8> {
   /**
    * 4-D with shape `[num_frames, height, width, 3]`. RGB channel order.
    */
-  public Output<TUInt8> image() {
+  public Output<TUint8> image() {
     return image;
   }
   
   @Override
-  public Output<TUInt8> asOutput() {
+  public Output<TUint8> asOutput() {
     return image;
   }
   
-  private Output<TUInt8> image;
+  private Output<TUint8> image;
   
   private DecodeGif(Operation operation) {
     super(operation);
