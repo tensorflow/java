@@ -24,7 +24,7 @@ import org.tensorflow.tools.buffer.layout.FloatDataLayout;
  * Data layout that converts 32-bit floats from/to 16-bit, truncating their mantissa to 7 bits but
  * preserving the 8-bit exponent with the same bias.
  */
-public final class BFloat16Layout implements FloatDataLayout<ShortDataBuffer> {
+public final class Bfloat16Layout implements FloatDataLayout<ShortDataBuffer> {
 
   @Override
   public void writeFloat(ShortDataBuffer buffer, float value, long index) {

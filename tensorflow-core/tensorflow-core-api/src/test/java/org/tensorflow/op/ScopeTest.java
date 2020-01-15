@@ -36,7 +36,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
@@ -293,7 +293,7 @@ public class ScopeTest {
     zeros.put(TFloat32.DTYPE, 0.0f);
     zeros.put(TFloat64.DTYPE, 0.0);
     zeros.put(TInt32.DTYPE, 0);
-    zeros.put(TUInt8.DTYPE, (byte) 0);
+    zeros.put(TUint8.DTYPE, (byte) 0);
     zeros.put(TInt64.DTYPE, 0L);
     zeros.put(TBool.DTYPE, false);
     zeros.put(TString.DTYPE, null); // no zero value

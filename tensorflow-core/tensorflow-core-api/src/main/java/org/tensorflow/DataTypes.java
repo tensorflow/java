@@ -19,7 +19,7 @@ package org.tensorflow;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.tensorflow.types.TBFloat16;
+import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TFloat32;
@@ -27,7 +27,7 @@ import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 /**
  * Utility class for working with {@link DataType} objects.
@@ -62,8 +62,8 @@ final class DataTypes {
     register(TInt32.DTYPE);
     register(TInt64.DTYPE);
     register(TString.DTYPE);
-    register(TUInt8.DTYPE);
-    register(TBFloat16.DTYPE);
+    register(TUint8.DTYPE);
+    register(TBfloat16.DTYPE);
   }
 
   // TODO (karllessard): Right now this method is private but we might want to expose it

@@ -35,7 +35,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -771,7 +771,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     if (dto.equals(dtype)) {
       return true;
     }
-    if (dto == TString.DTYPE && dtype == TUInt8.DTYPE) {
+    if (dto == TString.DTYPE && dtype == TUint8.DTYPE) {
       return true;
     }
     return false;

@@ -25,7 +25,7 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TUInt8;
+import org.tensorflow.types.TUint8;
 
 /**
  * Decode the first frame of a BMP-encoded image to a uint8 tensor.
@@ -45,7 +45,7 @@ import org.tensorflow.types.TUInt8;
  * 4: output an RGBA image.
  */
 @Operator(group = "image")
-public final class DecodeBmp extends PrimitiveOp implements Operand<TUInt8> {
+public final class DecodeBmp extends PrimitiveOp implements Operand<TUint8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeBmp}
@@ -98,16 +98,16 @@ public final class DecodeBmp extends PrimitiveOp implements Operand<TUInt8> {
   /**
    * 3-D with shape `[height, width, channels]`. RGB order
    */
-  public Output<TUInt8> image() {
+  public Output<TUint8> image() {
     return image;
   }
   
   @Override
-  public Output<TUInt8> asOutput() {
+  public Output<TUint8> asOutput() {
     return image;
   }
   
-  private Output<TUInt8> image;
+  private Output<TUint8> image;
   
   private DecodeBmp(Operation operation) {
     super(operation);

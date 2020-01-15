@@ -20,11 +20,11 @@ package org.tensorflow.types;
 import org.tensorflow.Tensor;
 import org.tensorflow.tools.Shape;
 
-public class TUInt8Test extends NumericTypesTestBase<TUInt8, Byte> {
+public class TUint8Test extends NumericTypesTestBase<TUint8, Byte> {
 
   @Override
-  Tensor<TUInt8> allocateTensor(Shape shape) {
-    return TUInt8.ofShape(shape);
+  Tensor<TUint8> allocateTensor(Shape shape) {
+    return TUint8.ofShape(shape);
   }
 
   @Override

@@ -41,13 +41,13 @@ import org.tensorflow.types.family.TNumber;
  * the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor, performances will be
  * improved by working with {@link TFloat32} or {@link TFloat64} data types whenever possible.
  *
- * <p>Note that some CPUs support the BFloat16 format natively, which can result in faster computation
+ * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster computation
  * compared to {@link TFloat16} when GPUs are not used.
  */
-public interface TBFloat16 extends FloatNdArray, TNumber {
+public interface TBfloat16 extends FloatNdArray, TNumber {
 
   /** Type metadata */
-  DataType<TBFloat16> DTYPE = DataType.create("BFLOAT16", 14, 2, TBFloat16Impl::mapTensor);
+  DataType<TBfloat16> DTYPE = DataType.create("BFLOAT16", 14, 2, TBfloat16Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -55,8 +55,8 @@ public interface TBFloat16 extends FloatNdArray, TNumber {
    * @param value float to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TBFloat16> scalarOf(float value) {
-    Tensor<TBFloat16> t = ofShape();
+  static Tensor<TBfloat16> scalarOf(float value) {
+    Tensor<TBfloat16> t = ofShape();
     t.data().setFloat(value);
     return t;
   }
@@ -67,8 +67,8 @@ public interface TBFloat16 extends FloatNdArray, TNumber {
    * @param values floats to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TBFloat16> vectorOf(float... values) {
-    Tensor<TBFloat16> t = ofShape(values.length);
+  static Tensor<TBfloat16> vectorOf(float... values) {
+    Tensor<TBfloat16> t = ofShape(values.length);
     t.data().write(values);
     return t;
   }
@@ -79,7 +79,7 @@ public interface TBFloat16 extends FloatNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TBFloat16> ofShape(Shape shape) {
+  static Tensor<TBfloat16> ofShape(Shape shape) {
     return Tensor.allocate(DTYPE, shape);
   }
 
@@ -91,7 +91,7 @@ public interface TBFloat16 extends FloatNdArray, TNumber {
    * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TBFloat16> ofShape(long... dimensionSizes) {
+  static Tensor<TBfloat16> ofShape(long... dimensionSizes) {
     return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
   }
 
@@ -103,23 +103,23 @@ public interface TBFloat16 extends FloatNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TBFloat16> copyOf(NdArray<Float> src) {
-    Tensor<TBFloat16> t = Tensor.allocate(DTYPE, src.shape());
+  static Tensor<TBfloat16> copyOf(NdArray<Float> src) {
+    Tensor<TBfloat16> t = Tensor.allocate(DTYPE, src.shape());
     src.copyTo(t.data());
     return t;
   }
 }
 
 /**
- * Hidden implementation of a {@code TBFloat16}
+ * Hidden implementation of a {@code TBfloat16}
  */
-class TBFloat16Impl extends FloatDenseNdArray implements TBFloat16 {
+class TBfloat16Impl extends FloatDenseNdArray implements TBfloat16 {
 
-  static TBFloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TBFloat16Impl(DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
+  static TBfloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
+    return new TBfloat16Impl(DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
   }
 
-  private TBFloat16Impl(FloatDataBuffer buffer, Shape shape) {
+  private TBfloat16Impl(FloatDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 }

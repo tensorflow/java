@@ -24,7 +24,7 @@ import org.tensorflow.types.family.TType;
  *
  * <pre>{@code
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
- * Operand<TUInt8> decodeJpeg = ops.image.decodeJpeg(...);
+ * Operand<TUint8> decodeJpeg = ops.image.decodeJpeg(...);
  * ops.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation

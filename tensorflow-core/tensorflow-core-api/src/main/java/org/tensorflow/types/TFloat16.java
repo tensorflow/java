@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * improved by working with {@link TFloat32} or {@link TFloat64} data types whenever possible.
  *
  * <p>Also, {@code TFloat16} tensors normally perform better if they are located in GPU memory since most
- * CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link TBFloat16}
+ * CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link TBfloat16}
  * tensor type might be a better option.
  */
 public interface TFloat16 extends FloatNdArray, TNumber {
