@@ -59,7 +59,7 @@ class TensorRawDataBufferFactory extends RawDataBufferFactory {
 
   static StringTensorBuffer mapTensorToStrings(Pointer tensorMemory, long numElements) {
     long offsetByteSize = numElements * Long.BYTES;
-    LongDataBuffer offsets = mapNativeLongs(tensorMemory.address(), numElements, false);
+    LongDataBuffer offsets = mapNativeLongs(tensorMemory.address(), offsetByteSize, false);
     ByteDataBuffer data = mapNativeBytes(
         tensorMemory.address() + offsetByteSize,
         tensorMemory.capacity() - offsetByteSize,

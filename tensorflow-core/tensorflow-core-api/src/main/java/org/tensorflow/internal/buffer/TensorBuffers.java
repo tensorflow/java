@@ -34,8 +34,17 @@ import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.layout.DataLayouts;
 
+/**
+ * Maps native tensor memory into {@link DataBuffers}, allowing I/O operations from the JVM.
+ */
 public final class TensorBuffers {
 
+  /**
+   * Maps tensor memory as a buffer of bytes.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a byte buffer
+   */
   public static ByteDataBuffer toBytes(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -44,6 +53,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of integers.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return an int buffer
+   */
   public static IntDataBuffer toInts(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -52,6 +67,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asIntBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of longs.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a long buffer
+   */
   public static LongDataBuffer toLongs(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -60,6 +81,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asLongBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of floats.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a float buffer
+   */
   public static FloatDataBuffer toFloats(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -68,6 +95,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asFloatBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of doubles.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a double buffer
+   */
   public static DoubleDataBuffer toDoubles(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -76,6 +109,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of shorts.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a short buffer
+   */
   public static ShortDataBuffer toShorts(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -84,6 +123,12 @@ public final class TensorBuffers {
     return DataBuffers.from(tensorMemory.asByteBuffer().asShortBuffer());
   }
 
+  /**
+   * Maps tensor memory as a buffer of booleans.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a boolean buffer
+   */
   public static BooleanDataBuffer toBooleans(TF_Tensor nativeTensor) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
@@ -94,6 +139,12 @@ public final class TensorBuffers {
     return DataLayouts.BOOL.applyTo(DataBuffers.from(tensorMemory.asByteBuffer()));
   }
 
+  /**
+   * Maps tensor memory as a buffer of byte sequences, often used to store string values.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @return a string buffer
+   */
   public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {

@@ -17,8 +17,8 @@
 
 package org.tensorflow.internal.buffer;
 
-import com.google.common.base.Charsets;
 import java.nio.ReadOnlyBufferException;
+import java.util.function.Function;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.LongDataBuffer;
@@ -26,7 +26,68 @@ import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.ndarray.NdArray;
 
-public class StringTensorBuffer extends AbstractDataBuffer<String> {
+/**
+ * Buffer for storing string tensor data.
+ *
+ * <p>The values are stored a sequence of bytes, with their length and offset in the tensor.
+ * Given a string tensor of n elements, data is stored in the buffer as followed:
+ * <pre>
+ * off<sub>0</sub>, off<sub>1</sub>, ..., off<sub>n-1</sub>, len<sub>0</sub>, bytes<sub>0</sub>, len<sub>1</sub>, bytes<sub>1</sub>, ..., len<sub>n-1</sub>, bytes<sub>n-1</sub>
+ * </pre>
+ *
+ * <p>Each offset is a 64-bit integer that indicates the location of the string in the tensor, i.e.
+ * the position of the first byte of its length value.
+ *
+ * <p>The length of the string, which is the number of bytes in the sequence, is encoded as a varint
+ * and is one byte long or more depending on its value.
+ *
+ * <p>The string bytes starts right after the varint length value.
+ *
+ * <p>The data of the buffer must be initialized only once, by calling {@link #init(NdArray, Function)},
+ * and the buffer must have been allocated with enough space (use {@link #computeSize(NdArray, Function)}
+ * priory to know exactly how many bytes are required to store the data).
+ *
+ * <p>After its data has been initialized, the buffer is read-only as it is not possible to change
+ * safely a value without reinitializing the whole data.
+ */
+public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
+
+  /**
+   * Computes how many bytes are required to store the given data in a string buffer.
+   *
+   * @param data data to store eventually by calling {@link #init(NdArray, Function)}
+   * @param getBytes method that converts one value of the data into a sequence of bytes
+   * @return number of bytes required to store the data.
+   */
+  public static <T> long computeSize(NdArray<T> data, Function<T, byte[]> getBytes) {
+    // reserve space to store 64-bit offsets
+    long size = data.size() * Long.BYTES;
+
+    // reserve space to store length and data of each values
+    for (NdArray<T> scalar : data.scalars()) {
+      byte[] elementBytes = getBytes.apply(scalar.getObject());
+      size += elementBytes.length + StringTensorBuffer.varintLength(elementBytes.length);
+    }
+    return size;
+  }
+
+  /**
+   * Initialize the data of this buffer.
+   *
+   * <p>While it is not enforced programmatically, it is mandatory that this method is called only
+   * once after the creation of the buffer. The buffer must have been allocated according to the
+   * same set of data, calling {@link #computeSize(NdArray, Function)} priory to make sure there is
+   * enough space to store it.
+   *
+   * @param data data to store
+   * @param getBytes method that converts one value of the data into a sequence of bytes
+   */
+  public <T> void init(NdArray<T> data, Function<T, byte[]> getBytes) {
+    InitDataWriter writer = new InitDataWriter();
+    for (NdArray<T> scalar : data.scalars()) {
+      writer.writeNext(getBytes.apply(scalar.getObject()));
+    }
+  }
 
   @Override
   public long size() {
@@ -34,7 +95,7 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
   }
 
   @Override
-  public String getObject(long index) {
+  public byte[] getObject(long index) {
     Validator.getArgs(this, index);
     long offset = offsets.getLong(index);
 
@@ -50,12 +111,11 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
     // Read string of the given length
     byte[] bytes = new byte[length];
     data.offset(offset).read(bytes);
-
-    return new String(bytes, Charsets.UTF_8);
+    return bytes;
   }
 
   @Override
-  public DataBuffer<String> setObject(String value, long index) {
+  public DataBuffer<byte[]> setObject(byte[] values, long index) {
     throw new ReadOnlyBufferException();
   }
 
@@ -65,7 +125,7 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
   }
 
   @Override
-  public DataBuffer<String> copyTo(DataBuffer<String> dst, long size) {
+  public DataBuffer<byte[]> copyTo(DataBuffer<byte[]> dst, long size) {
     if (size == size() && dst instanceof StringTensorBuffer) {
       StringTensorBuffer tensorDst = (StringTensorBuffer) dst;
       if (offsets.size() != size || data.size() != size) {
@@ -81,18 +141,13 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
   }
 
   @Override
-  public DataBuffer<String> offset(long index) {
+  public DataBuffer<byte[]> offset(long index) {
     return new StringTensorBuffer(offsets.offset(index), data.offset(offsets.getLong(index)));
   }
 
   @Override
-  public DataBuffer<String> narrow(long size) {
+  public DataBuffer<byte[]> narrow(long size) {
     return new StringTensorBuffer(offsets.narrow(size), data.narrow(offsets.getLong(size)));
-  }
-
-  public void init(NdArray<String> src) {
-    DataWriter writer = new DataWriter();
-    src.scalars().forEach(s -> writer.writeNext(s.getObject()));
   }
 
   StringTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
@@ -100,15 +155,15 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
     this.data = data;
   }
 
-  private class DataWriter {
-    long count = 0;
+  private class InitDataWriter {
+    long offsetIndex = 0;
     long dataIndex = 0;
 
-    void writeNext(String value) {
-      offsets.setLong(dataIndex, count++);
+    public void writeNext(byte[] bytes) {
+      offsets.setLong(dataIndex, offsetIndex++);
 
       // Encode string length as a varint first
-      int v = value.length();
+      int v = bytes.length;
       while (v >= 0x80) {
         data.setByte((byte) ((v & 0x7F) | 0x80), dataIndex++);
         v >>= 7;
@@ -116,10 +171,18 @@ public class StringTensorBuffer extends AbstractDataBuffer<String> {
       data.setByte((byte) v, dataIndex++);
 
       // Then write string data bytes
-      byte[] bytes = value.getBytes(Charsets.UTF_8);
       data.offset(dataIndex).write(bytes);
       dataIndex += bytes.length;
     }
+  }
+
+  private static int varintLength(int length) {
+    int len = 1;
+    while (length >= 0x80) {
+      length >>= 7;
+      len++;
+    }
+    return len;
   }
 
   private final LongDataBuffer offsets;

@@ -17,11 +17,14 @@
 
 package org.tensorflow.tools.buffer.layout;
 
+import java.nio.charset.Charset;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.layout.Bfloat16Layout;
 import org.tensorflow.tools.buffer.impl.layout.BoolLayout;
 import org.tensorflow.tools.buffer.impl.layout.Float16Layout;
+import org.tensorflow.tools.buffer.impl.layout.StringLayout;
 
 /**
  * Exposes {@link DataLayout} instances of data formats frequently used in linear algebra computation.
@@ -76,4 +79,17 @@ public final class DataLayouts {
    * explicit type casting.
    */
   public static final BooleanDataLayout<ByteDataBuffer> BOOL = new BoolLayout();
+
+  /**
+   * Creates a data layout for converting strings to/from byte sequences.
+   *
+   * <p>This layout requires a {@code charset} in parameter to specify how the strings must be
+   * encoded/decoded as byte sequences. So a new layout instance is always returned.
+   *
+   * @param charset charset to use
+   * @return a new string layout
+   */
+  public static DataLayout<DataBuffer<byte[]>, String> ofStrings(Charset charset) {
+    return StringLayout.of(charset);
+  }
 }
