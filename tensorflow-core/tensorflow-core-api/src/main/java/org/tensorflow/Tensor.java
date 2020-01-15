@@ -26,6 +26,7 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.c_api.global.tensorflow;
 import org.tensorflow.tools.Shape;
@@ -265,6 +266,23 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     long nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
     t.nativeRef = new NativeReference(nativeHandle);
     return t;
+  }
+
+  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape,
+      Consumer<T> dataInitializer) {
+    return allocate(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
+  }
+
+  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape, long size,
+      Consumer<T> dataInitializer) {
+    Tensor<T> tensor = allocate(dtype, shape, size);
+    try {
+      dataInitializer.accept(tensor.data());
+      return tensor;
+    } catch (Throwable t) {
+      tensor.close();
+      throw new TensorFlowException("Failed to initialize data for tensor of type '" + dtype + "'", t);
+    }
   }
 
   /**

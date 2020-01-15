@@ -17,7 +17,9 @@
 
 package org.tensorflow.types;
 
-import com.google.common.base.Charsets;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.function.Function;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.StringTensorBuffer;
@@ -25,23 +27,35 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.layout.DataLayout;
+import org.tensorflow.tools.buffer.layout.DataLayouts;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
 
 /**
- * String tensor type.
+ * String type.
+ *
+ * <p>This type can be used to store any arbitrary byte sequence of variable length.
+ *
+ * <p>Since the size of a tensor is fixed, creating a tensor of this type requires to provide all of
+ * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then
+ * the data in the tensor is initialized once and cannot be modified afterwards.
  */
 public interface TString extends NdArray<String>, TType {
 
-  /** Type metadata */
+  /**
+   * Type metadata
+   */
   DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
 
   /**
-   * Allocates a new tensor for storing a single string value.
+   * Allocates a new tensor for storing a string scalar.
    *
-   * @param value string to store in the new tensor
+   * <p>The string is encoded into bytes using the UTF-8 charset.
+   *
+   * @param value scalar value to store in the new tensor
    * @return the new tensor
    */
   static Tensor<TString> scalarOf(String value) {
@@ -51,7 +65,9 @@ public interface TString extends NdArray<String>, TType {
   /**
    * Allocates a new tensor for storing a vector of strings.
    *
-   * @param values strings to store in the new tensor
+   * <p>The strings are encoded into bytes using the UTF-8 charset.
+   *
+   * @param values values to store in the new tensor
    * @return the new tensor
    */
   static Tensor<TString> vectorOf(String... values) {
@@ -59,16 +75,84 @@ public interface TString extends NdArray<String>, TType {
   }
 
   /**
-   * Allocates a new tensor which is a copy of a given array of strings.
+   * Allocates a new tensor which is a copy of a given array.
    *
-   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   * <p>The tensor will have the same shape as the source array and its data will be copied. The
+   * strings are encoded into bytes using the UTF-8 charset.
    *
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
   static Tensor<TString> copyOf(NdArray<String> src) {
-    return TStringImpl.createTensor(src);
+    return copyOf(StandardCharsets.UTF_8, src);
   }
+
+  /**
+   * Allocates a new tensor which is a copy of a given array.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied. The
+   * strings are encoded into bytes using the charset passed in parameter.
+   *
+   * <p>If charset is different than default UTF-8, then it must also be provided explicitly
+   * when reading data from the tensor, using {@link #use(Charset)}:</p>
+   *
+   * <pre>{@code
+   * // Given `originalStrings` an initialized vector of strings
+   * Tensor<TString> tensor = TString.copyOf(Charsets.UTF_16, originalStrings);
+   * ...
+   * TString tensorStrings = tensor.data().use(Charsets.UTF_16);
+   * assertEquals(originalStrings.getObject(0), tensorStrings.getObject(0));
+   * }</pre>
+   *
+   * @param charset charset to use for encoding the strings into bytes
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
+  static Tensor<TString> copyOf(Charset charset, NdArray<String> src) {
+    return TStringImpl.createTensor(src, s -> s.getBytes(charset));
+  }
+
+  /**
+   * Allocates a new tensor which is a copy of a given array of raw bytes.
+   *
+   * <p>The tensor will have the same shape as the source array and its data will be copied.
+   *
+   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by
+   * invoking {@link #asBytes()} on the returned data:</p>
+   *
+   * <pre>{@code
+   * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
+   * }</pre>
+   *
+   * @param src the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
+  static Tensor<TString> copyOfBytes(NdArray<byte[]> src) {
+    return TStringImpl.createTensor(src, Function.identity());
+  }
+
+  /**
+   * Use a specific charset for decoding data from a string tensor, instead of the default UTF-8.
+   *
+   * <p>The charset must match the one used for encoding the string values when the tensor was
+   * created. For example:
+   *
+   * <pre>{@code
+   * Tensor<TString> tensor =
+   *    TString.copyOf(StandardCharsets.UTF_16, NdArrays.scalarOfObject("TensorFlow");
+   *
+   * assertEquals("TensorFlow", tensor.data().use(StandardCharsets.UTF_16).getObject());
+   * }</pre>
+   *
+   * @param charset charset to use
+   * @return string tensor data using this charset
+   */
+  TString use(Charset charset);
+
+  /**
+   * @return the tensor data as a n-dimensional array of raw byte sequences.
+   */
+  NdArray<byte[]> asBytes();
 }
 
 /**
@@ -76,38 +160,35 @@ public interface TString extends NdArray<String>, TType {
  */
 class TStringImpl extends DenseNdArray<String> implements TString {
 
-  static Tensor<TString> createTensor(NdArray<String> src) {
+  @Override
+  public TString use(Charset charset) {
+    return new TStringImpl(tensorBuffer, DataLayouts.ofStrings(charset), shape());
+  }
 
-    // First, compute the capacity of the tensor to create
-    long size = src.size() * 8;  // reserve space to store 64-bits offsets
-    for (NdArray<String> s : src.scalars()) {
-      byte[] bytes = s.getObject().getBytes(Charsets.UTF_8);
-      size += bytes.length + varintLength(bytes.length);  // add space to store value + length
-    }
+  @Override
+  public NdArray<byte[]> asBytes() {
+    return NdArrays.wrap(tensorBuffer, shape());
+  }
 
-    // Allocate the tensor of the right capacity and init its data from source array
-    Tensor<TString> tensor = Tensor.allocate(TString.DTYPE, src.shape(), size);
-    StringTensorBuffer buffer = (StringTensorBuffer)(((TStringImpl)tensor.data()).buffer());
-    buffer.init(src);
-
-    return tensor;
+  static <T> Tensor<TString> createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
+    long size = StringTensorBuffer.computeSize(src, getBytes);
+    return Tensor.allocate(TString.DTYPE, src.shape(), size, data ->
+        ((TStringImpl)data).tensorBuffer.init(src, getBytes)
+    );
   }
 
   static TString mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TStringImpl(TensorBuffers.toStrings(nativeTensor, shape.size()), shape);
+    StringTensorBuffer buffer = TensorBuffers.toStrings(nativeTensor, shape.size());
+    return new TStringImpl(buffer, UTF_8_LAYOUT, shape);
   }
 
-  private TStringImpl(DataBuffer<String> buffer, Shape shape) {
-    super(buffer, shape);
-  }
+  private static DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT = DataLayouts.ofStrings(StandardCharsets.UTF_8);
 
-  private static int varintLength(int length) {
-    int len = 1;
-    while (length >= 0x80) {
-      length >>= 7;
-      len++;
-    }
-    return len;
+  private final StringTensorBuffer tensorBuffer;
+
+  private TStringImpl(StringTensorBuffer buffer, DataLayout<DataBuffer<byte[]>, String> layout, Shape shape) {
+    super(layout.applyTo(buffer), shape);
+    tensorBuffer = buffer;
   }
 }
 
