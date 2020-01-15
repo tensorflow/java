@@ -43,9 +43,7 @@ public interface TFloat32 extends FloatNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat32> scalarOf(float value) {
-    Tensor<TFloat32> t = ofShape();
-    t.data().setFloat(value);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setFloat(value));
   }
 
   /**
@@ -55,9 +53,7 @@ public interface TFloat32 extends FloatNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat32> vectorOf(float... values) {
-    Tensor<TFloat32> t = ofShape(values.length);
-    t.data().write(values);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
   }
 
   /**
@@ -91,9 +87,7 @@ public interface TFloat32 extends FloatNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat32> copyOf(NdArray<Float> src) {
-    Tensor<TFloat32> t = Tensor.allocate(DTYPE, src.shape());
-    src.copyTo(t.data());
-    return t;
+    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
   }
 }
 

@@ -43,9 +43,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TUint8> scalarOf(byte value) {
-    Tensor<TUint8> t = ofShape();
-    t.data().setByte(value);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setByte(value));
   }
 
   /**
@@ -55,9 +53,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TUint8> vectorOf(byte... values) {
-    Tensor<TUint8> t = ofShape(values.length);
-    t.data().write(values);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
   }
 
   /**
@@ -91,9 +87,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TUint8> copyOf(NdArray<Byte> src) {
-    Tensor<TUint8> t = Tensor.allocate(DTYPE, src.shape());
-    src.copyTo(t.data());
-    return t;
+    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
   }
 }
 
