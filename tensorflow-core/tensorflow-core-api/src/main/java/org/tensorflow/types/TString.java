@@ -59,7 +59,7 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static Tensor<TString> scalarOf(String value) {
-    return copyOf(NdArrays.ofObjects(String.class, Shape.scalar()).setObject(value));
+    return copyOf(NdArrays.scalarOfObject(value));
   }
 
   /**
@@ -71,7 +71,7 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static Tensor<TString> vectorOf(String... values) {
-    return copyOf(NdArrays.ofObjects(String.class, Shape.make(values.length)).write(values));
+    return copyOf(NdArrays.vectorOfObjects(values));
   }
 
   /**

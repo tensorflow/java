@@ -159,7 +159,7 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
     long offsetIndex = 0;
     long dataIndex = 0;
 
-    public void writeNext(byte[] bytes) {
+    void writeNext(byte[] bytes) {
       offsets.setLong(dataIndex, offsetIndex++);
 
       // Encode string length as a varint first

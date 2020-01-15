@@ -43,9 +43,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat64> scalarOf(double value) {
-    Tensor<TFloat64> t = ofShape();
-    t.data().setDouble(value);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setDouble(value));
   }
 
   /**
@@ -55,9 +53,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat64> vectorOf(double... values) {
-    Tensor<TFloat64> t = ofShape(values.length);
-    t.data().write(values);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
   }
 
   /**
@@ -91,9 +87,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat64> copyOf(NdArray<Double> src) {
-    Tensor<TFloat64> t = Tensor.allocate(DTYPE, src.shape());
-    src.copyTo(t.data());
-    return t;
+    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
   }
 }
 

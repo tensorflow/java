@@ -48,9 +48,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> scalarOf(boolean value) {
-    Tensor<TBool> t = ofShape();
-    t.data().setBoolean(value);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setBoolean(value));
   }
 
   /**
@@ -60,9 +58,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> vectorOf(boolean... values) {
-    Tensor<TBool> t = ofShape(values.length);
-    t.data().write(values);
-    return t;
+    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
   }
 
   /**
@@ -96,9 +92,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> copyOf(NdArray<Boolean> src) {
-    Tensor<TBool> t = Tensor.allocate(DTYPE, src.shape());
-    src.copyTo(t.data());
-    return t;
+    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
   }
 }
 
