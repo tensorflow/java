@@ -11,7 +11,8 @@ http_archive(
     name = "org_tensorflow",
     patches = [
         ":tensorflow-windows.patch", # https://github.com/tensorflow/tensorflow/issues/25213
-        ":tensorflow-api-def.patch"
+        ":tensorflow-api-def.patch",
+        ":tensorflow-grpc-fix-for-gettid.patch" # https://github.com/clearlinux-pkgs/tensorflow/blob/master/Add-grpc-fix-for-gettid.patch
     ],
     patch_args = ["-p1"],
     urls = [
