@@ -30,7 +30,8 @@ if [[ "${EXTENSION:-}" == *gpu* ]]; then
 fi
 
 # Build C API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --output_filter=DONT_MATCH_ANYTHING --verbose_failures @org_tensorflow//tensorflow:tensorflow :java_op_gen_sources
+bazel build $BUILD_FLAGS --python_path="$PYTHON_BIN_PATH" --config=monolithic --output_filter=DONT_MATCH_ANYTHING --verbose_failures \
+    @org_tensorflow//tensorflow:tensorflow @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate :java_op_gen_sources
 ls -l bazel-bin/external/org_tensorflow/tensorflow/
 
 # Normalize some paths with symbolic links

@@ -37,7 +37,7 @@
   </modules>
 
   <properties>
-    <native.classifier>${os.adjusted.name}-${os.arch}</native.classifier>
+    <native.classifier>${javacpp.platform}${javacpp.platform.extension}</native.classifier>
     <javacpp.build.skip>false</javacpp.build.skip>       <!-- To skip execution of build.sh: -Djavacpp.build.skip=true -->
     <javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
     <javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->

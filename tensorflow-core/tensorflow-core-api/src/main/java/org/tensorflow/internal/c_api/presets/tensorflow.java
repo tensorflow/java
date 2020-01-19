@@ -49,7 +49,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             },
             link = "tensorflow@.2",
             preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
-            preloadresource = "/org/bytedeco/mkldnn/"
+            preloadresource = "/org/bytedeco/mkldnn/",
+            resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}
         ),
         @Platform(
             value = "windows",
