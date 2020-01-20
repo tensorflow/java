@@ -55,6 +55,7 @@
             <configuration>
               <sources>
                 <source>${project.basedir}/src/gen/java</source>
+                <source>${project.basedir}/src/gen/annotations</source>
               </sources>
             </configuration>
           </execution>
