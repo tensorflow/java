@@ -100,14 +100,14 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     Operand<?> dataset = getVariant();
     AnonymousIterator anonymousIterator = tf.data.anonymousIterator(getOutputTypes(), getOutputShapes());
 
-    tf.data.makeIterator(dataset, anonymousIterator);
+    tf.data.makeIterator(dataset, anonymousIterator.handle());
 
     return new Iterator<List<Output<?>>>() {
       private List<Output<?>> tryNext = getNext();
 
       private List<Output<?>> getNext() {
         try {
-          return tf.data.iteratorGetNext(anonymousIterator, getOutputTypes(), getOutputShapes()).components();
+          return tf.data.iteratorGetNext(anonymousIterator.handle(), getOutputTypes(), getOutputShapes()).components();
         } catch (IndexOutOfBoundsException e) {
           return null;
         }
