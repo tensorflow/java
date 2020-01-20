@@ -15,6 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.*;
+
 /**
  * SavedModelBundle represents a model loaded from storage.
  *
@@ -163,8 +169,46 @@ public class SavedModelBundle implements AutoCloseable {
     return new SavedModelBundle(graph, session, metaGraphDef);
   }
 
-  private static native SavedModelBundle load(
-      String exportDir, String[] tags, byte[] config, byte[] runOptions);
+  private static SavedModelBundle load(
+      String exportDir, String[] tags, byte[] config, byte[] runOptions) {
+    SavedModelBundle bundle = null;
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+
+      // allocate parameters for TF_LoadSessionFromSavedModel
+      TF_SessionOptions opts = TF_SessionOptions.newSessionOptions();
+      if (config != null && config.length > 0) {
+        TF_SetConfig(opts, new BytePointer(config), config.length, status);
+        status.throwExceptionIfNotOK();
+      }
+      TF_Buffer crun_options = null;
+      if (runOptions != null && runOptions.length > 0) {
+        crun_options = TF_Buffer.newBufferFromString(runOptions);
+      }
+
+      // load the session
+      TF_Graph graph = TF_Graph.newGraph();
+      TF_Buffer metagraph_def = TF_Buffer.newBuffer();
+      TF_Session session = TF_Session.loadSessionFromSavedModel(
+          opts, crun_options, exportDir, tags, graph,
+          metagraph_def, status);
+      status.throwExceptionIfNotOK();
+
+      // handle the result
+      if (metagraph_def.length() > Integer.MAX_VALUE) {
+        throw new IndexOutOfBoundsException("MetaGraphDef is too large to serialize into a byte[] array");
+      } else {
+        byte[] jmetagraph_def = new byte[(int)metagraph_def.length()];
+        new BytePointer(metagraph_def.data()).get(jmetagraph_def);
+        bundle = fromHandle(graph.address(), session.address(), jmetagraph_def);
+        graph.retainReference().deallocate(false);
+        session.retainReference().deallocate(false);
+      }
+    }
+
+    return bundle;
+  }
 
   static {
     TensorFlow.init();

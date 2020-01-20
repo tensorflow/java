@@ -148,7 +148,6 @@
             <compilerOption>${project.basedir}/src/main/native/graph_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/graph_operation_builder_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/graph_operation_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/saved_model_bundle_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/server_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/session_jni.cc</compilerOption>
             <compilerOption>${project.basedir}/src/main/native/tensorflow_jni.cc</compilerOption>

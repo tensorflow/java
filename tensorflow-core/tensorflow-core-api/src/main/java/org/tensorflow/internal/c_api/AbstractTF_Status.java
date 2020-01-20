@@ -17,11 +17,11 @@
 
 package org.tensorflow.internal.c_api;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteStatus;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewStatus;
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
+import org.tensorflow.TensorFlowException;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Status extends Pointer {
@@ -49,5 +49,28 @@ public abstract class AbstractTF_Status extends Pointer {
      */
     public void delete() {
         deallocate();
+    }
+
+    /** Map TF_Code to unchecked exception, and throw if not TF_OK. */
+    public void throwExceptionIfNotOK() {
+      TF_Status s = (TF_Status)this;
+      switch (TF_GetCode(s)) {
+        case TF_OK:
+          break;
+        case TF_INVALID_ARGUMENT:
+          throw new IllegalArgumentException(TF_Message(s).getString());
+        case TF_UNAUTHENTICATED:
+        case TF_PERMISSION_DENIED:
+          throw new SecurityException(TF_Message(s).getString());
+        case TF_RESOURCE_EXHAUSTED:
+        case TF_FAILED_PRECONDITION:
+          throw new IllegalStateException(TF_Message(s).getString());
+        case TF_OUT_OF_RANGE:
+          throw new IndexOutOfBoundsException(TF_Message(s).getString());
+        case TF_UNIMPLEMENTED:
+          throw new UnsupportedOperationException(TF_Message(s).getString());
+        default:
+          throw new TensorFlowException(TF_Message(s).getString());
+      }
     }
 }
