@@ -32,7 +32,7 @@ import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.tools.ndarray.index.Indices;
 import org.tensorflow.types.family.TNumber;
 
-abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
+abstract public class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
   private static final float EPSILON_F = 1e-7f;
 
