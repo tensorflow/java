@@ -274,13 +274,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       synchronized (EagerSession.class) {
         if (defaultSession == null) {
           defaultSession = options().build();
-
-          Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-              defaultSession.doClose();
-            }
-          });
         }
       }
     }
@@ -495,7 +488,13 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       cleanupService.shutdownNow(); // returns without waiting for the thread to stop
     }
 
-    private final ExecutorService cleanupService = Executors.newSingleThreadExecutor();
+    private final ExecutorService cleanupService = Executors.newSingleThreadExecutor(r -> {
+      Thread thread = Executors.defaultThreadFactory().newThread(r);
+      thread.setDaemon(true);
+      thread.setPriority(Thread.MAX_PRIORITY);
+      thread.setContextClassLoader(null);
+      return thread;
+    });
     private final Map<NativeReference, Void> nativeRefs = new IdentityHashMap<>();
     private final ReferenceQueue<Object> garbageQueue;
     private volatile boolean cleanupInBackground = false;
