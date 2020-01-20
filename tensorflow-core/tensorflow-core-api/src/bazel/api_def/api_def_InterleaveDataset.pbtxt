@@ -1,5 +1,6 @@
 op {
   graph_op_name: "InterleaveDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.InterleaveDataset"
   }
