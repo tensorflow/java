@@ -65,11 +65,11 @@ public class DatasetOpTester {
           Shape.make(2, 3),
           Shape.make(2, 1)));
 
-      MakeIterator makeIterator = tf.data.makeIterator(batchDataset, anonymousIter);
+      MakeIterator makeIterator = tf.data.makeIterator(batchDataset, anonymousIter.handle());
 
       while (true) {
         try {
-          IteratorGetNext getNext = tf.data.iteratorGetNext(anonymousIter, outputTypes, outputShapes);
+          IteratorGetNext getNext = tf.data.iteratorGetNext(anonymousIter.handle(), outputTypes, outputShapes);
           List<Output<?>> outputs = getNext.components();
           System.out.println("BATCH: ");
           printIntTensor(outputs.get(0).tensor());
