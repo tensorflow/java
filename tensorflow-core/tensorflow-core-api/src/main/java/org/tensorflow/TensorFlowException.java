@@ -17,10 +17,10 @@ package org.tensorflow;
 
 /** Unchecked exception thrown when executing TensorFlow Graphs. */
 public final class TensorFlowException extends RuntimeException {
-  TensorFlowException(String message, Throwable cause) {
-    super(message, cause);
-  }
-  TensorFlowException(String message) {
+  public TensorFlowException(String message) {
     super(message);
+  }
+  public TensorFlowException(String message, Throwable cause) {
+    super(message, cause);
   }
 }
