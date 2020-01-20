@@ -73,18 +73,18 @@ public class TStringTest {
 
   @Test
   public void defaultCharsetIsUtf8() {
-    Tensor<TString> tensor = TString.copyOf(NdArrays.scalarOfObject("🐥"));  // a baby chick
+    Tensor<TString> tensor = TString.copyOf(NdArrays.scalarOfObject(BABY_CHICK));
     byte[] bytes = tensor.data().asBytes().getObject();
     assertArrayEquals(new byte[] { (byte)0xF0, (byte)0x9F, (byte)0x90, (byte)0xA5 }, bytes);
-    assertEquals("🐥", tensor.data().getObject());
+    assertEquals(BABY_CHICK, tensor.data().getObject());
   }
 
   @Test
   public void usingDifferentCharset() {
-    Tensor<TString> tensor = TString.copyOf(StandardCharsets.UTF_16LE, NdArrays.scalarOfObject("🐥"));  // a baby chick
+    Tensor<TString> tensor = TString.copyOf(StandardCharsets.UTF_16LE, NdArrays.scalarOfObject(BABY_CHICK));
     byte[] bytes = tensor.data().asBytes().getObject();
     assertArrayEquals(new byte[] { (byte)0x3D, (byte)0xD8, (byte)0x25, (byte)0xDC }, bytes);
-    assertEquals("🐥", tensor.data().use(StandardCharsets.UTF_16LE).getObject());
+    assertEquals(BABY_CHICK, tensor.data().use(StandardCharsets.UTF_16LE).getObject());
   }
 
   @Test
@@ -103,4 +103,6 @@ public class TStringTest {
       assertArrayEquals(bytes.getObject(i), tensorBytes.getObject(i));
     }
   }
+
+  private static final String BABY_CHICK = "\uD83D\uDC25";	  
 }
