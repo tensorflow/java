@@ -17,7 +17,18 @@
 
 package org.tensorflow.internal.c_api;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteStatus;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FAILED_PRECONDITION;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetCode;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_INVALID_ARGUMENT;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_Message;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewStatus;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OK;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OUT_OF_RANGE;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_PERMISSION_DENIED;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_RESOURCE_EXHAUSTED;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_UNAUTHENTICATED;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_UNIMPLEMENTED;
 
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;

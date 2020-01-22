@@ -15,11 +15,15 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.internal.c_api.*;
+import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_Session;
+import org.tensorflow.internal.c_api.TF_SessionOptions;
+import org.tensorflow.internal.c_api.TF_Status;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
@@ -182,29 +186,20 @@ public class SavedModelBundle implements AutoCloseable {
         TF_SetConfig(opts, new BytePointer(config), config.length, status);
         status.throwExceptionIfNotOK();
       }
-      TF_Buffer crun_options = null;
-      if (runOptions != null && runOptions.length > 0) {
-        crun_options = TF_Buffer.newBufferFromString(runOptions);
-      }
+      TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
       // load the session
       TF_Graph graph = TF_Graph.newGraph();
-      TF_Buffer metagraph_def = TF_Buffer.newBuffer();
+      TF_Buffer metagraphDef = TF_Buffer.newBuffer();
       TF_Session session = TF_Session.loadSessionFromSavedModel(
-          opts, crun_options, exportDir, tags, graph,
-          metagraph_def, status);
+          opts, runOpts, exportDir, tags, graph,
+          metagraphDef, status);
       status.throwExceptionIfNotOK();
 
       // handle the result
-      if (metagraph_def.length() > Integer.MAX_VALUE) {
-        throw new IndexOutOfBoundsException("MetaGraphDef is too large to serialize into a byte[] array");
-      } else {
-        byte[] jmetagraph_def = new byte[(int)metagraph_def.length()];
-        new BytePointer(metagraph_def.data()).get(jmetagraph_def);
-        bundle = fromHandle(graph.address(), session.address(), jmetagraph_def);
-        graph.retainReference().deallocate(false);
-        session.retainReference().deallocate(false);
-      }
+      bundle = fromHandle(graph.address(), session.address(), metagraphDef.get());
+      graph.retainReference().deallocate(false);
+      session.retainReference().deallocate(false);
     }
 
     return bundle;
