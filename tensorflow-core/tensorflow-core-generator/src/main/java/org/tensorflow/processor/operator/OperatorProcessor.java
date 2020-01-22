@@ -193,7 +193,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static final Pattern JAVADOC_TAG_PATTERN =
-      Pattern.compile("@(?:param|return|throws|exception|see)\\s+.*");
+      Pattern.compile("@(?:param|return|throws|exception|see|deprecated)\\s+.*");
   private static final TypeName T_OP = ClassName.get("org.tensorflow.op", "Op");
   private static final ClassName T_OPS = ClassName.get("org.tensorflow.op", "Ops");
   private static final TypeName T_OPERATOR =
@@ -280,17 +280,14 @@ public final class OperatorProcessor extends AbstractProcessor {
         result = false;
         continue;
       }
-      TypeElement opClass = (TypeElement) e;
-      // Skip deprecated operations for now, as we do not guarantee API stability yet
-      if (opClass.getAnnotation(Deprecated.class) == null) {
-        collectOpMethods(groupedMethods, opClass, annotation);
-      }
+      collectOpMethods(groupedMethods, (TypeElement)e, annotation);
     }
     return result;
   }
 
   private void collectOpMethods(
       Multimap<String, MethodSpec> groupedMethods, TypeElement opClass, TypeElement annotation) {
+    boolean opClassDeprecated = opClass.getAnnotation(Deprecated.class) != null;
     AnnotationMirror operatorAnnot = getAnnotationMirror(opClass, annotation.getQualifiedName());
     if (operatorAnnot == null) {
       throw new IllegalArgumentException(
@@ -331,7 +328,8 @@ public final class OperatorProcessor extends AbstractProcessor {
         }
         boolean describeByClass =
             getAnnotationElementValueAsBoolean("describeByClass", endpointAnnot, false);
-        MethodSpec method = buildOpMethod(endpointName, opClass, opMethod, describeByClass);
+        boolean deprecated = opMethod.getAnnotation(Deprecated.class) != null || opClassDeprecated;
+        MethodSpec method = buildOpMethod(endpointName, opClass, opMethod, describeByClass, deprecated);
         groupedMethods.put(endpointGroup, method);
       }
     }
@@ -339,7 +337,7 @@ public final class OperatorProcessor extends AbstractProcessor {
 
   private MethodSpec buildOpMethod(
       String methodName, TypeElement opClass, ExecutableElement endpointMethod,
-      boolean describeByClass) {
+      boolean describeByClass, boolean deprecated) {
     MethodSpec.Builder builder =
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
@@ -347,6 +345,9 @@ public final class OperatorProcessor extends AbstractProcessor {
             .varargs(endpointMethod.isVarArgs())
             .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass));
 
+    if (deprecated) {
+      builder.addAnnotation(Deprecated.class);
+    }
     for (TypeParameterElement tp : endpointMethod.getTypeParameters()) {
       TypeVariableName tvn = TypeVariableName.get((TypeVariable) tp.asType());
       builder.addTypeVariable(tvn);
