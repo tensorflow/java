@@ -46,21 +46,40 @@ public abstract class AbstractTF_Buffer extends Pointer {
         return b;
     }
 
-    /** Returns {@code newBufferFromString(new BytePointer(proto)). */
+    /** Returns {@code newBufferFromString(new BytePointer(proto)), or null if proto is null or empty. */
     public static TF_Buffer newBufferFromString(byte[] proto) {
+        if (proto == null || proto.length == 0) {
+            return null;
+        }
         return newBufferFromString(new BytePointer(proto));
     }
 
     /**
      * Calls TF_NewBufferFromString(), and registers a deallocator.
-     * @return TF_Buffer created. Do not call TF_DeleteBuffer() on it.
+     * @return TF_Buffer created, or null if proto is null or empty. Do not call TF_DeleteBuffer() on it.
      */
     public static TF_Buffer newBufferFromString(Pointer proto) {
+        if (proto == null || proto.isNull() || proto.limit() == 0) {
+            return null;
+        }
         TF_Buffer b = TF_NewBufferFromString(proto, proto.limit());
         if (b != null) {
             b.deallocator(new DeleteDeallocator(b));
         }
         return b;
+    }
+
+    /**
+     * Returns a copy of the data in a Java array, or throws IndexOutOfBoundsException if too large.
+     */
+    public byte[] get() {
+        long length = ((TF_Buffer)this).length();
+        if (length > Integer.MAX_VALUE) {
+            throw new IndexOutOfBoundsException("TF_Buffer is too large to serialize into a byte[] array");
+        }
+        byte[] data = new byte[(int)length];
+        new BytePointer(((TF_Buffer)this).data()).get(data);
+        return data;
     }
 
     /**

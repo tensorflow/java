@@ -17,7 +17,10 @@
 
 package org.tensorflow.internal.c_api;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadSessionFromSavedModel;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;

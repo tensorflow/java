@@ -22,7 +22,6 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewTensor;
 
 import org.bytedeco.javacpp.Pointer;
-import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
