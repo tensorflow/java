@@ -339,6 +339,16 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     doClose();
   }
 
+  // Cleanup default session context for unit tests
+  static void closeDefaultForTest() {
+    synchronized (EagerSession.class) {
+      if (defaultSession != null) {
+        defaultSession.doClose();
+        defaultSession = null;
+      }
+    }
+  }
+
   @Override
   public OperationBuilder opBuilder(String type, String name) {
     if (resourceCleanupStrategy == ResourceCleanupStrategy.ON_SAFE_POINTS) {
