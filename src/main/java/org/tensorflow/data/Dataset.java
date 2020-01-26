@@ -75,7 +75,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    *
    * @param count The number of elements to "take" from this dataset.
    * @return A new Dataset containing the first `count` elements from this dataset.
-   */tf
+   */
   public final Dataset take(long count) {
     return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
   }

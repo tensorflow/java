@@ -11,9 +11,6 @@ import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 
 public class DatasetTest extends DatasetTestBase {
-  private static void main(String[] args) {
-    new DatasetTest().testEagerDatasetIterator();
-  }
 
   @Test
   public void testEagerDatasetIterator() {
@@ -79,6 +76,4 @@ public class DatasetTest extends DatasetTestBase {
       }
     }
   }
-
-
 }
