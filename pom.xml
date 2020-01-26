@@ -25,16 +25,6 @@
       <artifactId>tensorflow-core-api</artifactId>
       <version>0.1.0-SNAPSHOT</version>
   </dependency>
-  <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-generator</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-  </dependency>
-  <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-platform</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
-  </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -63,7 +53,7 @@
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx2G -XX:MaxPermSize=256m -Djava.library.path=/home/dhruv/git/dhruvrajan/tensorflow-java/tensorflow-core/tensorflow-core-api/target/native/org/tensorflow/internal/c_api/linux-x86_64/</argLine>
+          <argLine>-Xmx2G -XX:MaxPermSize=256m -Djava.library.path=/home/dhruv/git/tensorflow-java/tensorflow-core/tensorflow-core-api/target/native/org/tensorflow/internal/c_api/linux-x86_64/</argLine>
 
           <skipTests>false</skipTests>
           <includes>
@@ -81,5 +71,4 @@
         </plugin>
     </plugins>
   </build>
-
 </project>
