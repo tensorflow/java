@@ -43,8 +43,7 @@ xcuserdata/**
 local.properties
 gradleBuild
 
-# VS Code
-*.classpath
-*.settings
-*.project
-
+# VSCode
+.settings/
+.project
+.classpath
