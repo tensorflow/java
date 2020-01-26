@@ -6,7 +6,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.utils.Tuple2;
 
 import java.util.Iterator;
 import java.util.List;
@@ -76,7 +75,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    *
    * @param count The number of elements to "take" from this dataset.
    * @return A new Dataset containing the first `count` elements from this dataset.
-   */
+   */tf
   public final Dataset take(long count) {
     return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
   }
