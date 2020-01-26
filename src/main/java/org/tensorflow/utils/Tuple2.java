@@ -16,8 +16,4 @@ public class Tuple2<T, S> {
   public S second() {
     return second;
   }
-
-  public static <T, S> Tuple2<T, S> of(T t, S s) {
-    return new Tuple2<>(t, s);
-  }
 }
