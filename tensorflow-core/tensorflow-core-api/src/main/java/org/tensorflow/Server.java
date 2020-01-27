@@ -15,6 +15,17 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteServer;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewServer;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_ServerJoin;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_ServerStart;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_ServerStop;
+
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TF_Server;
+import org.tensorflow.internal.c_api.TF_Status;
+
 /**
  * An in-process TensorFlow server, for use in distributed training.
  *
@@ -83,10 +94,10 @@ public final class Server implements AutoCloseable {
 
   /** Blocks until the server has been successfully stopped. */
   public void join() {
-    long handle = 0;
+    TF_Server handle = null;
     synchronized (this) {
       handle = nativeHandle;
-      if (handle != 0) {
+      if (handle != null && !handle.isNull()) {
         numJoining++;
       }
     }
@@ -94,7 +105,7 @@ public final class Server implements AutoCloseable {
       join(handle);
     } finally {
       synchronized (this) {
-        if (handle != 0) {
+        if (handle != null && !handle.isNull()) {
           numJoining--;
         }
         notifyAll();
@@ -110,20 +121,57 @@ public final class Server implements AutoCloseable {
       wait();
     }
     delete(nativeHandle);
-    nativeHandle = 0;
+    nativeHandle = null;
   }
 
-  private static native long allocate(byte[] serverDef);
+  private static void requireHandle(TF_Server handle) {
+    if (handle == null || handle.isNull()) {
+      throw new IllegalStateException("close() has been called on the Server");
+    }
+  }
 
-  private static native void start(long nativeHandle);
+  private static TF_Server allocate(byte[] serverDef) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_Server server = TF_NewServer(new BytePointer(serverDef), serverDef.length, status);
+      status.throwExceptionIfNotOK();
+      return server;
+    }
+  }
 
-  private static native void stop(long nativeHandle);
+  private static void start(TF_Server nativeHandle) {
+    requireHandle(nativeHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_ServerStart(nativeHandle, status);
+      status.throwExceptionIfNotOK();
+    }
+  }
 
-  private static native void join(long nativeHandle);
+  private static void stop(TF_Server nativeHandle) {
+    requireHandle(nativeHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_ServerStop(nativeHandle, status);
+      status.throwExceptionIfNotOK();
+    }
+  }
 
-  private static native void delete(long nativeHandle);
+  private static void join(TF_Server nativeHandle) {
+    requireHandle(nativeHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_ServerJoin(nativeHandle, status);
+      status.throwExceptionIfNotOK();
+    }
+  }
 
-  private long nativeHandle;
+  private static void delete(TF_Server nativeHandle) {
+    requireHandle(nativeHandle);
+    TF_DeleteServer(nativeHandle);
+  }
+
+  private TF_Server nativeHandle;
 
   private int numJoining;
 

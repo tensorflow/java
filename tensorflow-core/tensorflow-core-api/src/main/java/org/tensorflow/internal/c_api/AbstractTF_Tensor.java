@@ -41,11 +41,6 @@ public abstract class AbstractTF_Tensor extends Pointer {
 
     public AbstractTF_Tensor(Pointer p) { super(p); }
 
-    // WARNING: This is a temporary hack to create a `TF_Tensor` object out of the Tensor native handle
-    public void temporaryHackToSetAddressFromHandle(long tensorNativeHandle) {
-        this.address = tensorNativeHandle;
-    }
-
     /**
      * Calls TF_NewTensor(), and registers a deallocator.
      * @return TF_Tensor created. Do not call TF_DeleteTensor() on it.

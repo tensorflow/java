@@ -15,6 +15,21 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorNumDims;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorShape;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInputListLength;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOpType;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputListLength;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
+
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_Operation;
+import org.tensorflow.internal.c_api.TF_Output;
+import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.tools.Shape;
 
 /**
@@ -32,7 +47,7 @@ public final class GraphOperation extends AbstractOperation {
   // C
   // TF_Operation object.  The handle is valid only as long as g has not been closed, hence it is
   // called unsafeHandle.  Graph.ref() is used to safely use the unsafeHandle.
-  GraphOperation(Graph g, long unsafeNativeHandle) {
+  GraphOperation(Graph g, TF_Operation unsafeNativeHandle) {
     this.graph = g;
     this.unsafeNativeHandle = unsafeNativeHandle;
   }
@@ -79,7 +94,7 @@ public final class GraphOperation extends AbstractOperation {
 
   @Override
   public int hashCode() {
-    return Long.valueOf(getUnsafeNativeHandle()).hashCode();
+    return Long.valueOf(getUnsafeNativeHandle().address()).hashCode();
   }
 
   @Override
@@ -100,7 +115,7 @@ public final class GraphOperation extends AbstractOperation {
     // in both objects.
     Graph.Reference r = graph.ref();
     try {
-      return getUnsafeNativeHandle() == that.getUnsafeNativeHandle();
+      return getUnsafeNativeHandle().equals(that.getUnsafeNativeHandle());
     } finally {
       r.close();
     }
@@ -117,7 +132,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   @Override
-  long getUnsafeNativeHandle(int outputIdx) {
+  TF_Operation getUnsafeNativeHandle(int outputIdx) {
     return getUnsafeNativeHandle();
   }
 
@@ -147,25 +162,92 @@ public final class GraphOperation extends AbstractOperation {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
   }
 
-  long getUnsafeNativeHandle() {
+  TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
   }
 
   private final Graph graph;
 
-  private final long unsafeNativeHandle;
+  private final TF_Operation unsafeNativeHandle;
 
-  private static native String name(long handle);
+  private static void requireHandle(Pointer handle) {
+    if (handle == null || handle.isNull()) {
+      throw new IllegalStateException("close() has been called on the Graph this Operation was a part of");
+    }
+  }
 
-  private static native String type(long handle);
+  private static String name(TF_Operation handle) {
+    requireHandle(handle);
+    return TF_OperationName(handle).getString();
+  }
 
-  private static native int numOutputs(long handle);
+  private static String type(TF_Operation handle) {
+    requireHandle(handle);
+    return TF_OperationOpType(handle).getString();
+  }
 
-  private static native int outputListLength(long handle, String name);
+  private static int numOutputs(TF_Operation handle) {
+    requireHandle(handle);
+    return TF_OperationNumOutputs(handle);
+  }
 
-  private static native int inputListLength(long handle, String name);
+  private static int outputListLength(TF_Operation handle, String name) {
+    requireHandle(handle);
 
-  private static native long[] shape(long graphHandle, long opHandle, int output);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      int result = TF_OperationOutputListLength(handle, name, status);
+      status.throwExceptionIfNotOK();
+      return result;
+    }
+  }
 
-  private static native int dtype(long graphHandle, long opHandle, int output);
+  private static int inputListLength(TF_Operation handle, String name) {
+    requireHandle(handle);
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      int result = TF_OperationInputListLength(handle, name, status);
+      status.throwExceptionIfNotOK();
+      return result;
+    }
+  }
+
+  private static long[] shape(TF_Graph graphHandle, TF_Operation opHandle, int outputIndex) {
+    requireHandle(graphHandle);
+    requireHandle(opHandle);
+
+    int numOutputs = TF_OperationNumOutputs(opHandle);
+    if (outputIndex < 0 || outputIndex >= numOutputs) {
+      throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
+          + ") for an operation that has " + numOutputs + " outputs");
+    }
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Output output = new TF_Output().oper(opHandle).index(outputIndex);
+      TF_Status status = TF_Status.newStatus();
+      int numDims = TF_GraphGetTensorNumDims(graphHandle, output, status);
+      status.throwExceptionIfNotOK();
+      if (numDims < 0) return null;
+      long[] dims = new long[numDims];
+      TF_GraphGetTensorShape(graphHandle, output, dims, numDims, status);
+      status.throwExceptionIfNotOK();
+      return dims;
+    }
+  }
+
+  private static int dtype(TF_Graph graphHandle, TF_Operation opHandle, int outputIndex) {
+    requireHandle(graphHandle);
+    requireHandle(opHandle);
+
+    int numOutputs = TF_OperationNumOutputs(opHandle);
+    if (outputIndex < 0 || outputIndex >= numOutputs) {
+        throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
+            + ") for an operation that has " + numOutputs + " outputs");
+    }
+
+    try (PointerScope scope = new PointerScope()) {
+      return TF_OperationOutputType(new TF_Output().oper(opHandle).index(outputIndex));
+    }
+  }
 }

@@ -17,7 +17,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 //
 // TODO(ashankar): Merge with TF_Session?
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
-public class TFE_Context extends Pointer {
+public class TFE_Context extends org.tensorflow.internal.c_api.AbstractTFE_Context {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
     public TFE_Context() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */

@@ -15,6 +15,29 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AllocateTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_BOOL;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DOUBLE;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_Dim;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FLOAT;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetCode;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_INT32;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_INT64;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_INTERNAL;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NumDims;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OK;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OUT_OF_RANGE;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_STRING;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetStatus;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_StringDecode;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_StringEncode;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_StringEncodedSize;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorData;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_UINT8;
+
 import java.lang.reflect.Array;
 import java.nio.Buffer;
 import java.nio.BufferOverflowException;
@@ -27,8 +50,18 @@ import java.nio.LongBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import org.bytedeco.javacpp.BooleanPointer;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.DoublePointer;
+import org.bytedeco.javacpp.FloatPointer;
+import org.bytedeco.javacpp.IntPointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.LongPointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.bytedeco.javacpp.SizeTPointer;
+import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.c_api.global.tensorflow;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat64;
@@ -126,7 +159,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     long[] dimSizes = new long[numDimensions(obj, dtype)];
     fillShape(obj, 0, dimSizes);
     Tensor<T> t = new Tensor(dtype, Shape.make(dimSizes));
-    long nativeHandle;
+    TF_Tensor nativeHandle;
     if (t.dtype != TString.DTYPE) {
       long byteSize = elemByteSize(t.dtype) * t.shape.size();
       nativeHandle = allocate(t.dtype.nativeCode(), dimSizes, byteSize);
@@ -263,7 +296,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
 
   public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape, long size) {
     Tensor<T> t = new Tensor<>(dtype, shape);
-    long nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
+    TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
     t.nativeRef = new NativeReference(nativeHandle);
     return t;
   }
@@ -318,7 +351,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
       nbytes = nBuffered;
     }
     Tensor<T> t = new Tensor<>(dataType, Shape.make(dimSizes));
-    long nativeHandle = allocate(t.dtype.nativeCode(), dimSizes, nbytes);
+    TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), dimSizes, nbytes);
     t.nativeRef = new NativeReference(nativeHandle);
     return t;
   }
@@ -352,7 +385,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
   /** Returns the size, in bytes, of the tensor data. */
   public long numBytes() {
     if (numBytes == null) {
-      numBytes = tensorflow.TF_TensorByteSize(nativeRef.cTensor);
+      numBytes = TF_TensorByteSize(nativeRef.tensorHandle);
     }
     return numBytes;
   }
@@ -548,7 +581,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    *
    * <p>Takes ownership of the handle.
    */
-  static Tensor<?> fromHandle(long handle) {
+  static Tensor<?> fromHandle(TF_Tensor handle) {
     Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.make(shape(handle)));
     t.nativeRef = new NativeReference(handle);
     return t;
@@ -559,18 +592,14 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    *
    * <p>Takes ownership of the handle.
    */
-  static Tensor<?> fromHandle(long handle, EagerSession session) {
+  static Tensor<?> fromHandle(TF_Tensor handle, EagerSession session) {
     Tensor<?> t = fromHandle(handle);
     t.nativeRef.eager(session, t);
     return t;
   }
 
-  long getNativeHandle() {
+  TF_Tensor getNativeHandle() {
     return nativeRef.tensorHandle;
-  }
-
-  TF_Tensor getNative() {
-    return nativeRef.cTensor;
   }
 
   private NativeReference nativeRef = null;
@@ -649,7 +678,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
       }
     }
 
-    NativeReference(long tensorHandle) {
+    NativeReference(TF_Tensor tensorHandle) {
       setTensorHandle(tensorHandle);
     }
 
@@ -661,24 +690,22 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
 
     synchronized void release() {
-      if (tensorHandle != 0L) {
+      if (tensorHandle != null && !tensorHandle.isNull()) {
         // Clear any remaining eager reference to this tensor
         if (eagerRef != null) {
           eagerRef.clear();
           eagerRef = null;
         }
         Tensor.delete(tensorHandle);
-        setTensorHandle(0L);
+        setTensorHandle(null);
       }
     }
 
-    private long tensorHandle;
-    private final TF_Tensor cTensor = new TF_Tensor();
+    private TF_Tensor tensorHandle;
     private EagerReference eagerRef;
 
-    private void setTensorHandle(long tensorHandle) {
+    private void setTensorHandle(TF_Tensor tensorHandle) {
       this.tensorHandle = tensorHandle;
-      cTensor.temporaryHackToSetAddressFromHandle(tensorHandle);
     }
   }
 
@@ -821,35 +848,474 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
   }
 
-  private static native long allocate(int dtype, long[] shape, long byteSize);
+  private static void requireHandle(TF_Tensor handle) {
+    if (handle == null || handle.isNull()) {
+      throw new NullPointerException("close() was called on the Tensor");
+    }
+  }
 
-  private static native long allocateScalarBytes(byte[] value);
+  private static int elemByteSize(int dtype) {
+    // The code in this file makes the assumption that the
+    // TensorFlow TF_DataTypes and the Java primitive types
+    // have the same byte sizes. Validate that:
+    switch (dtype) {
+      case TF_BOOL:
+      case TF_UINT8:
+        assert Loader.sizeof(BooleanPointer.class) == 1 :
+               "Java boolean not compatible with TF_BOOL";
+        assert Loader.sizeof(BytePointer.class) == 1 :
+               "Java byte not compatible with TF_UINT8";
+        return 1;
+      case TF_FLOAT:
+      case TF_INT32:
+        assert Loader.sizeof(FloatPointer.class) == 4 :
+               "Java float not compatible with TF_FLOAT";
+        assert Loader.sizeof(IntPointer.class) == 4 :
+               "Java int not compatible with TF_INT32";
+        return 4;
+      case TF_DOUBLE:
+      case TF_INT64:
+        assert Loader.sizeof(DoublePointer.class) == 8 :
+               "Java double not compatible with TF_DOUBLE";
+        assert Loader.sizeof(LongPointer.class) == 8 :
+               "Java long not compatible with TF_INT64";
+        return 8;
+      default:
+        return 0;
+    }
+  }
 
-  private static native long allocateNonScalarBytes(long[] shape, Object[] value);
+  /** Write a Java scalar object (java.lang.Integer etc.) to a TF_Tensor. */
+  private static void writeScalar(Object src, int dtype, BytePointer dst, long dstSize) {
+    int sz = elemByteSize(dtype);
+    if (sz != dstSize) {
+      throw new IllegalStateException("scalar (" + sz
+          + " bytes) not compatible with allocated tensor (" + dstSize + " bytes)");
+    }
+    switch (dtype) {
+      case TF_FLOAT: dst.putFloat((Float)src); break;
+      case TF_DOUBLE: dst.putDouble((Double)src); break;
+      case TF_INT32: dst.putInt((Integer)src); break;
+      case TF_INT64: dst.putLong((Long)src); break;
+      case TF_UINT8: dst.put((Byte)src); break;
+      case TF_BOOL: dst.putBool((Boolean)src); break;
+      default: throw new IllegalStateException("invalid DataType(" + dtype + ")");
+    }
+  }
 
-  private static native void delete(long handle);
+  /** Copy a 1-D array of Java primitive types to the tensor buffer dst.
+   * Returns the number of bytes written to dst. */
+  private static long write1DArray(Object array, int dtype, BytePointer dst, long dstSize) {
+    int nelems;
+    switch (dtype) {
+      case TF_FLOAT: nelems = ((float[])array).length; break;
+      case TF_DOUBLE: nelems = ((double[])array).length; break;
+      case TF_INT32: nelems = ((int[])array).length; break;
+      case TF_INT64: nelems = ((long[])array).length; break;
+      case TF_UINT8: nelems = ((byte[])array).length; break;
+      case TF_BOOL: nelems = ((boolean[])array).length; break;
+      default: throw new IllegalStateException("invalid DataType(" + dtype + ")");
+    }
 
-  private static native ByteBuffer buffer(long handle);
+    long toCopy = nelems * elemByteSize(dtype);
+    if (toCopy > dstSize) {
+      throw new IllegalStateException(
+          "cannot write Java array of " + toCopy + " bytes to Tensor of " + dstSize + " bytes");
+    }
+    switch (dtype) {
+      case TF_FLOAT: dst.put(new FloatPointer((float[])array).capacity(nelems)); break;
+      case TF_DOUBLE: dst.put(new DoublePointer((double[])array).capacity(nelems)); break;
+      case TF_INT32: dst.put(new IntPointer((int[])array).capacity(nelems)); break;
+      case TF_INT64: dst.put(new LongPointer((long[])array).capacity(nelems)); break;
+      case TF_UINT8: dst.put(new BytePointer((byte[])array).capacity(nelems)); break;
+      case TF_BOOL: dst.put(new BooleanPointer((boolean[])array).capacity(nelems)); break;
+      default: throw new IllegalStateException("invalid DataType(" + dtype + ")");
+    }
+    return toCopy;
+  }
 
-  private static native int dtype(long handle);
+  /** Copy the elements of a 1-D array from the tensor buffer src to a 1-D array of
+   * Java primitive types. Returns the number of bytes read from src. */
+  private static long read1DArray(int dtype, BytePointer src, long srcSize, Object dst) {
+    int len;
+    switch (dtype) {
+      case TF_FLOAT: len = ((float[])dst).length; break;
+      case TF_DOUBLE: len = ((double[])dst).length; break;
+      case TF_INT32: len = ((int[])dst).length; break;
+      case TF_INT64: len = ((long[])dst).length; break;
+      case TF_UINT8: len = ((byte[])dst).length; break;
+      case TF_BOOL: len = ((boolean[])dst).length; break;
+      default: throw new IllegalStateException("invalid DataType(" + dtype + ")");
+    }
 
-  private static native long[] shape(long handle);
+    long sz = len * elemByteSize(dtype);
+    if (sz > srcSize) {
+      throw new IllegalStateException(
+          "cannot fill a Java array of " + sz + "bytes with a Tensor of " + srcSize + " bytes");
+    }
+    switch (dtype) {
+      case TF_FLOAT: new FloatPointer(src).position(src.position() / 4).get((float[])dst); break;
+      case TF_DOUBLE: new DoublePointer(src).position(src.position() / 8).get((double[])dst); break;
+      case TF_INT32: new IntPointer(src).position(src.position() / 4).get((int[])dst); break;
+      case TF_INT64: new LongPointer(src).position(src.position() / 8).get((long[])dst); break;
+      case TF_UINT8: src.get((byte[])dst); break;
+      case TF_BOOL: new BooleanPointer(src).position(src.position()).get((boolean[])dst); break;
+      default: throw new IllegalStateException("invalid DataType(" + dtype + ")");
+    }
+    return sz;
+  }
 
-  private static native void setValue(long handle, Object value);
+  private static long writeNDArray(Object src, int dtype, int dimsLeft,
+                                   BytePointer dst, long dstSize) {
+    if (dimsLeft == 1) {
+      return write1DArray(src, dtype, dst, dstSize);
+    } else {
+      Object[] ndarray = (Object[])src;
+      long sz = 0;
+      for (int i = 0; i < ndarray.length; ++i) {
+        Object row = ndarray[i];
+        sz += writeNDArray(row, dtype, dimsLeft - 1,
+            new BytePointer(dst).position(dst.position() + sz), dstSize - sz);
+      }
+      return sz;
+    }
+  }
 
-  private static native float scalarFloat(long handle);
+  private static long readNDArray(int dtype, BytePointer src, long srcSize,
+                                  int dimsLeft, Object dst) {
+    if (dimsLeft == 1) {
+      return read1DArray(dtype, src, srcSize, dst);
+    } else {
+      Object[] ndarray = (Object[])dst;
+      long sz = 0;
+      for (int i = 0; i < ndarray.length; ++i) {
+        Object row = ndarray[i];
+        sz += readNDArray(dtype, new BytePointer(src).position(src.position() + sz),
+            srcSize - sz, dimsLeft - 1, row);
+      }
+      return sz;
+    }
+  }
 
-  private static native double scalarDouble(long handle);
+  private static byte[] TF_StringDecodeToArray(BytePointer src, long srcLen, TF_Status status) {
+    try (PointerScope scope = new PointerScope()) {
+      BytePointer dst = new BytePointer((Pointer)null);
+      SizeTPointer dstLen = new SizeTPointer(1);
+      TF_StringDecode(src, srcLen, dst, dstLen, status);
+      if (TF_GetCode(status) != TF_OK) {
+        return null;
+      }
+      byte[] ret = new byte[(int)dstLen.get()];
+      dst.get(ret);
+      return ret;
+    }
+  }
 
-  private static native int scalarInt(long handle);
+  private static class StringTensorWriter {
+    StringTensorWriter(TF_Tensor t, long numElements) {
+      offset = 0;
+      poffsets = new BytePointer(TF_TensorData(t));
+      pdata = new BytePointer(poffsets).position(8 * numElements);
+      plimit = new BytePointer(poffsets).position(TF_TensorByteSize(t));
+    }
 
-  private static native long scalarLong(long handle);
+    void Add(BytePointer src, long len, TF_Status status) {
+      if (TF_GetCode(status) != TF_OK) return;
+      if (plimit.position() - poffsets.position() < 8) {
+        TF_SetStatus(status, TF_OUT_OF_RANGE,
+                     "TF_STRING tensor encoding ran out of space for offsets, "
+                   + "this is likely a bug, please file an issue at "
+                   + "https://github.com/tensorflow/tensorflow/issues/new");
+        return;
+      }
+      poffsets.putLong(offset);
+      long written =
+          TF_StringEncode(src, len, pdata, plimit.position() - pdata.position(), status);
+      offset += written;
+      poffsets.position(poffsets.position() + 8);
+      pdata.position(pdata.position() + written);
+    }
 
-  private static native boolean scalarBoolean(long handle);
+    long offset;
+    BytePointer poffsets;
+    BytePointer pdata;
+    BytePointer plimit;
+  }
 
-  private static native byte[] scalarBytes(long handle);
+  private static class StringTensorReader {
+    StringTensorReader(TF_Tensor t, long numElements) {
+      index = 0;
+      offsets = new BytePointer(TF_TensorData(t));
+      data = new BytePointer(offsets).position(8 * numElements);
+      limit = new BytePointer(offsets).position(TF_TensorByteSize(t));
+    }
 
-  private static native void readNDArray(long handle, Object value);
+    byte[] Next(TF_Status status) {
+      if (TF_GetCode(status) != TF_OK) return null;
+      long offset = 0;
+      BytePointer poffset = new BytePointer(offsets).position(8 * index);
+      if (poffset.position() >= limit.position()) {
+        TF_SetStatus(status, TF_INTERNAL,
+            "Invalid TF_STRING tensor, offsets table seems to be too small");
+        return null;
+      }
+      offset = poffset.getLong();
+      BytePointer pdata = new BytePointer(data).position(data.position() + offset);
+      if (pdata.position() >= limit.position()) {
+        TF_SetStatus(status, TF_INTERNAL,
+            "Invalid TF_STRING tensor, invalid entry in offset table");
+        return null;
+      }
+      ++index;
+      return TF_StringDecodeToArray(pdata, limit.position() - pdata.position(), status);
+    }
+
+    int index;
+    BytePointer offsets;
+    BytePointer data;
+    BytePointer limit;
+  }
+
+  private static void readNDStringArray(StringTensorReader reader, int dimsLeft,
+                                        Object[] dst, TF_Status status) {
+    if (dimsLeft == 1) {
+      for (int i = 0; i < dst.length; ++i) {
+        byte[] elem = reader.Next(status);
+        if (TF_GetCode(status) != TF_OK) return;
+        dst[i] = elem;
+      }
+      return;
+    }
+    for (int i = 0; i < dst.length; ++i) {
+      readNDStringArray(reader, dimsLeft - 1, (Object[])dst[i], status);
+      if (TF_GetCode(status) != TF_OK) return;
+    }
+  }
+
+  private static TF_Tensor allocate(int dtype, long[] shape, long byteSize) {
+    TF_Tensor t = TF_AllocateTensor(dtype, shape, shape.length, byteSize);
+    if (t == null || t.isNull()) {
+      throw new NullPointerException("unable to allocate memory for the Tensor");
+    }
+    return t;
+  }
+
+  private static TF_Tensor allocateScalarBytes(byte[] value) {
+    // TF_STRING tensors are encoded with a table of 8-byte offsets followed by
+    // TF_StringEncode-encoded bytes.
+    long dstLen = TF_StringEncodedSize(value.length);
+    TF_Tensor t = TF_AllocateTensor(TF_STRING, (long[])null, 0, 8 + dstLen);
+    BytePointer dst = new BytePointer(TF_TensorData(t));
+    dst.putLong(0);  // The offset table
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_StringEncode(new BytePointer(value), value.length, dst.position(8), dstLen, status);
+      status.throwExceptionIfNotOK();
+      return t;
+    }
+  }
+
+  private static long nonScalarStringTensorSize(Object value, int numDims) {
+    if (numDims == 0) {
+      // This is the last dimension, i.e., value should correspond to a jbyteArray
+      // encoding the string.
+      return TF_StringEncodedSize(((byte[])value).length);
+    }
+    Object[] array = (Object[])value;
+    long ret = 0;
+    for (int i = 0; i < array.length; ++i) {
+      Object elem = array[i];
+      if (elem == null) {
+        throw new NullPointerException("null entries in provided array");
+      }
+      ret += nonScalarStringTensorSize(elem, numDims - 1);
+    }
+    return ret;
+  }
+
+  private static void fillNonScalarStringTensorData(Object value, int numDims,
+      StringTensorWriter writer, TF_Status status) {
+    if (numDims == 0) {
+      byte[] src = (byte[])value;
+      writer.Add(new BytePointer(src), src.length, status);
+      return;
+    }
+    Object[] array = (Object[])value;
+    for (int i = 0; i < array.length; ++i) {
+      Object elem = array[i];
+      if (elem == null) {
+        throw new NullPointerException("null entries in provided array");
+      }
+      fillNonScalarStringTensorData(elem, numDims - 1, writer, status);
+      if (TF_GetCode(status) != TF_OK) return;
+    }
+  }
+
+  private static TF_Tensor allocateNonScalarBytes(long[] shape, Object[] value) {
+    // TF_STRING tensors are encoded with a table of 8-byte offsets following by
+    // TF_StringEncode-encoded bytes.
+    int numDims = shape.length;
+    long numElements = 1;
+    for (int i = 0; i < numDims; ++i) {
+      numElements *= shape[i];
+    }
+    long encodedSize = nonScalarStringTensorSize(value, numDims);
+    TF_Tensor t = TF_AllocateTensor(TF_STRING, shape, numDims,
+                                    8 * numElements + encodedSize);
+    if (t == null || t.isNull()) {
+      throw new NullPointerException("unable to allocate memory for the Tensor");
+    }
+    TF_Status status = TF_Status.newStatus();
+    try (PointerScope scope = new PointerScope()) {
+      StringTensorWriter writer = new StringTensorWriter(t, numElements);
+      fillNonScalarStringTensorData(value, numDims, writer, status);
+      status.throwExceptionIfNotOK();
+      return t;
+    }
+  }
+
+  private static void delete(TF_Tensor handle) {
+    if (handle == null || handle.isNull()) return;
+    TF_DeleteTensor(handle);
+  }
+
+  private static ByteBuffer buffer(TF_Tensor handle) {
+    requireHandle(handle);
+    return TF_TensorData(handle).capacity(TF_TensorByteSize(handle)).asByteBuffer();
+  }
+
+  private static int dtype(TF_Tensor handle) {
+    requireHandle(handle);
+    return TF_TensorType(handle);
+  }
+
+  private static long[] shape(TF_Tensor handle) {
+    requireHandle(handle);
+    int numDims = TF_NumDims(handle);
+    long[] dims = new long[numDims];
+    for (int i = 0; i < numDims; ++i) {
+      dims[i] = TF_Dim(handle, i);
+    }
+    return dims;
+  }
+
+  private static void setValue(TF_Tensor handle, Object value) {
+    requireHandle(handle);
+    int numDims = TF_NumDims(handle);
+    int dtype = TF_TensorType(handle);
+    BytePointer data = new BytePointer(TF_TensorData(handle));
+    long sz = TF_TensorByteSize(handle);
+    if (numDims == 0) {
+      writeScalar(value, dtype, data, sz);
+    } else {
+      writeNDArray(value, dtype, numDims, data, sz);
+    }
+  }
+
+  private static float scalarFloat(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    } else if (TF_TensorType(handle) != TF_FLOAT) {
+      throw new IllegalStateException("Tensor is not a float scalar");
+    } else {
+      return new FloatPointer(TF_TensorData(handle)).get();
+    }
+  }
+
+  private static double scalarDouble(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    } else if (TF_TensorType(handle) != TF_DOUBLE) {
+      throw new IllegalStateException("Tensor is not a double scalar");
+    } else {
+      return new DoublePointer(TF_TensorData(handle)).get();
+    }
+  }
+
+  private static int scalarInt(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    } else if (TF_TensorType(handle) != TF_INT32) {
+      throw new IllegalStateException("Tensor is not a int scalar");
+    } else {
+      return new IntPointer(TF_TensorData(handle)).get();
+    }
+  }
+
+  private static long scalarLong(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    } else if (TF_TensorType(handle) != TF_INT64) {
+      throw new IllegalStateException("Tensor is not a long scalar");
+    } else {
+      return new LongPointer(TF_TensorData(handle)).get();
+    }
+  }
+
+  private static boolean scalarBoolean(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    } else if (TF_TensorType(handle) != TF_BOOL) {
+      throw new IllegalStateException("Tensor is not a boolean scalar");
+    } else {
+      return new BooleanPointer(TF_TensorData(handle)).get();
+    }
+  }
+
+  private static byte[] scalarBytes(TF_Tensor handle) {
+    requireHandle(handle);
+    if (TF_NumDims(handle) != 0) {
+      throw new IllegalStateException("Tensor is not a scalar");
+    }
+    if (TF_TensorType(handle) != TF_STRING) {
+      throw new IllegalArgumentException("Tensor is not a string/bytes scalar");
+    }
+    BytePointer data = new BytePointer(TF_TensorData(handle));
+    BytePointer src = new BytePointer(data).position(8);
+    long srcLen = TF_TensorByteSize(handle) - 8;
+    long offset = data.getLong();
+    if (offset >= srcLen) {
+      throw new IllegalArgumentException("invalid tensor encoding: bad offsets");
+    }
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      byte[] ret = TF_StringDecodeToArray(src, srcLen, status);
+      status.throwExceptionIfNotOK();
+      return ret;
+    }
+  }
+
+  private static void readNDArray(TF_Tensor handle, Object value) {
+    requireHandle(handle);
+    int numDims = TF_NumDims(handle);
+    int dtype = TF_TensorType(handle);
+    Pointer data = TF_TensorData(handle);
+    long sz = TF_TensorByteSize(handle);
+    if (numDims == 0) {
+      throw new IllegalArgumentException(
+          "copyTo() is not meant for scalar Tensors, use the scalar "
+        + "accessor (floatValue(), intValue() etc.) instead");
+    }
+    if (dtype == TF_STRING) {
+      long numElements = 1;
+      for (int i = 0; i < numDims; ++i) {
+        numElements *= TF_Dim(handle, i);
+      }
+      try (PointerScope scope = new PointerScope()) {
+        StringTensorReader reader = new StringTensorReader(handle, numElements);
+        TF_Status status = TF_Status.newStatus();
+        readNDStringArray(reader, numDims, (Object[])value, status);
+        status.throwExceptionIfNotOK();
+        return;
+      }
+    }
+    readNDArray(dtype, new BytePointer(data), sz, numDims, value);
+  }
 
   static {
     TensorFlow.init();

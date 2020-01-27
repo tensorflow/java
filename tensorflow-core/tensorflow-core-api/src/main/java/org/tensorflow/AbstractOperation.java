@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -59,7 +60,7 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output in this operation
    * @return a native handle, see method description for more details
    */
-  abstract long getUnsafeNativeHandle(int outputIdx);
+  abstract Pointer getUnsafeNativeHandle(int outputIdx);
 
   /**
    * Returns the shape of the tensor of the {@code outputIdx}th output of this operation.

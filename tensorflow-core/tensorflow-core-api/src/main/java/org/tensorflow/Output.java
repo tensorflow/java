@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.Objects;
+import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -105,7 +106,7 @@ public final class Output<T extends TType> implements Operand<T> {
     index = idx;
   }
 
-  long getUnsafeNativeHandle() {
+  Pointer getUnsafeNativeHandle() {
     return operation.getUnsafeNativeHandle(index);
   }
 
