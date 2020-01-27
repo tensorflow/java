@@ -15,10 +15,24 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
+
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Library;
+import org.tensorflow.internal.c_api.TF_Status;
+
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {
   /** Returns the version of the underlying TensorFlow runtime. */
-  public static native String version();
+  public static String version() {
+    return TF_Version().getString();
+  }
 
   /**
    * All the TensorFlow operations available in this address space.
@@ -27,7 +41,12 @@ public final class TensorFlow {
    *     href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a>
    *     protocol buffer, which lists all the available TensorFlow operations.
    */
-  public static native byte[] registeredOpList();
+  public static byte[] registeredOpList() {
+    TF_Buffer buf = TF_GetAllOpList();
+    byte[] ret = buf.get();
+    TF_DeleteBuffer(buf);
+    return ret;
+  }
 
   /**
    * Load the dynamic library in filename and register the operations and kernels present in that
@@ -40,7 +59,7 @@ public final class TensorFlow {
    * @throws UnsatisfiedLinkError if filename cannot be loaded.
    */
   public static byte[] loadLibrary(String filename) {
-    long h = 0;
+    TF_Library h = null;
     try {
       h = libraryLoad(filename);
     } catch (RuntimeException e) {
@@ -53,11 +72,25 @@ public final class TensorFlow {
     }
   }
 
-  private static native long libraryLoad(String filename);
+  private static TF_Library libraryLoad(String filename) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_Library h = TF_LoadLibrary(filename, status);
+      status.throwExceptionIfNotOK();
+      return h;
+    }
+  }
 
-  private static native void libraryDelete(long handle);
+  private static void libraryDelete(TF_Library handle) {
+    if (handle != null && !handle.isNull()) {
+      TF_DeleteLibraryHandle(handle);
+    }
+  }
 
-  private static native byte[] libraryOpList(long handle);
+  private static byte[] libraryOpList(TF_Library handle) {
+    TF_Buffer buf = TF_GetOpList(handle);
+    return buf.get();
+  }
 
   private TensorFlow() {}
 

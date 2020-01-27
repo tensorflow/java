@@ -15,7 +15,29 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
+
 import java.util.Iterator;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.bytedeco.javacpp.SizeTPointer;
+import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_ImportGraphDefOptions;
+import org.tensorflow.internal.c_api.TF_Operation;
+import org.tensorflow.internal.c_api.TF_Output;
+import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.TF_WhileParams;
 
 /**
  * A data flow graph representing a TensorFlow computation.
@@ -33,7 +55,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /** Create a Graph from an existing handle (takes ownership). */
-  Graph(long nativeHandle) {
+  Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
   }
 
@@ -46,7 +68,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   @Override
   public void close() {
     synchronized (nativeHandleLock) {
-      if (nativeHandle == 0) {
+      if (nativeHandle == null || nativeHandle.isNull()) {
         return;
       }
       while (refcount > 0) {
@@ -59,7 +81,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         }
       }
       delete(nativeHandle);
-      nativeHandle = 0;
+      nativeHandle = null;
     }
   }
 
@@ -70,8 +92,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public GraphOperation operation(String name) {
     synchronized (nativeHandleLock) {
-      long oph = operation(nativeHandle, name);
-      if (oph == 0) {
+      TF_Operation oph = operation(nativeHandle, name);
+      if (oph == null || oph.isNull()) {
         return null;
       }
       return new GraphOperation(this, oph);
@@ -169,28 +191,28 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public Output<?>[] addGradients(String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
     Output<?>[] dy = new Output<?>[x.length];
-    final long[] yHandles = new long[y.length];
+    final TF_Operation[] yHandles = new TF_Operation[y.length];
     final int[] yIndices = new int[y.length];
-    final long[] xHandles = new long[x.length];
+    final TF_Operation[] xHandles = new TF_Operation[x.length];
     final int[] xIndices = new int[x.length];
-    long[] dxHandles = null;
+    TF_Operation[] dxHandles = null;
     int[] dxIndices = null;
 
     try (Reference ref = ref()) {
       for (int i = 0; i < y.length; ++i) {
-        yHandles[i] = y[i].getUnsafeNativeHandle();
+        yHandles[i] = (TF_Operation)y[i].getUnsafeNativeHandle();
         yIndices[i] = y[i].index();
       }
       for (int i = 0; i < x.length; ++i) {
-        xHandles[i] = x[i].getUnsafeNativeHandle();
+        xHandles[i] = (TF_Operation)x[i].getUnsafeNativeHandle();
         xIndices[i] = x[i].index();
       }
       if (dx != null && dx.length > 0) {
-        dxHandles = new long[dx.length];
+        dxHandles = new TF_Operation[dx.length];
         dxIndices = new int[dx.length];
 
         for (int i = 0; i < dx.length; ++i) {
-          dxHandles[i] = dx[i].getUnsafeNativeHandle();
+          dxHandles[i] = (TF_Operation)dx[i].getUnsafeNativeHandle();
           dxIndices[i] = dx[i].index();
         }
       }
@@ -199,7 +221,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       // their output e.g. given
       // xHandles = [x0Handle, x1Handle, ...] and xIndices = [x0Index, x1Index, ..], we obtain
       // dy = [dy0Handle, dy1Handle, ..., dy0Index, dy1Index, ...]
-      long[] dyHandlesAndIndices =
+      Object[] dyHandlesAndIndices =
           addGradients(
               ref.nativeHandle(),
               prefix,
@@ -215,7 +237,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
             + " were expected");
       }
       for (int i = 0, j = ndy; i < ndy; ++i, ++j) {
-        GraphOperation op = new GraphOperation(this, dyHandlesAndIndices[i]);
+        GraphOperation op = new GraphOperation(this, (TF_Operation)dyHandlesAndIndices[i]);
         dy[i] = new Output<>(op, (int) dyHandlesAndIndices[j]);
       }
     }
@@ -274,12 +296,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   // called by while loop code in graph_jni.cc to construct conditional/body subgraphs
-  private static long[] buildSubgraph(
+  private static Object[] buildSubgraph(
       WhileSubgraphBuilder subgraphBuilder,
-      long subgraphHandle,
-      long[] inputHandles,
+      TF_Graph subgraphHandle,
+      TF_Operation[] inputHandles,
       int[] inputIndices,
-      long[] outputHandles,
+      TF_Operation[] outputHandles,
       int[] outputIndices) {
     Graph subgraph = new Graph(subgraphHandle);
 
@@ -287,7 +309,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     int noutputs = outputHandles.length;
     Output<?>[] inputs = new Output<?>[ninputs];
     Output<?>[] outputs = new Output<?>[noutputs];
-    long[] outputHandlesAndIndices = new long[noutputs * 2];
+    Object[] outputHandlesAndIndices = new Object[noutputs * 2];
 
     synchronized (subgraph.nativeHandleLock) {
       try (Reference ref = subgraph.ref()) {
@@ -306,7 +328,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
         for (int i = 0, j = noutputs; i < noutputs; i++, j++) {
           outputHandlesAndIndices[i] = outputs[i].getUnsafeNativeHandle();
-          outputHandlesAndIndices[j] = (long) outputs[i].index();
+          outputHandlesAndIndices[j] = (int) outputs[i].index();
         }
       }
       return outputHandlesAndIndices;
@@ -328,7 +350,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       WhileSubgraphBuilder bgBuilder,
       String name) {
     int ninputs = inputs.length;
-    long[] inputHandles = new long[ninputs];
+    TF_Operation[] inputHandles = new TF_Operation[ninputs];
     int[] inputIndices = new int[ninputs];
     Output<?>[] outputs = new Output<?>[ninputs];
 
@@ -336,15 +358,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       try (Reference ref = ref()) {
 
         for (int i = 0; i < ninputs; i++) {
-          inputHandles[i] = inputs[i].getUnsafeNativeHandle();
+          inputHandles[i] = (TF_Operation)inputs[i].getUnsafeNativeHandle();
           inputIndices[i] = inputs[i].index();
         }
 
-        long[] outputHandlesAndIndices =
+        Object[] outputHandlesAndIndices =
             whileLoop(nativeHandle, inputHandles, inputIndices, name, cgBuilder, bgBuilder);
 
         for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
-          Operation op = new GraphOperation(this, outputHandlesAndIndices[i]);
+          Operation op = new GraphOperation(this, (TF_Operation)outputHandlesAndIndices[i]);
           outputs[i] = op.output((int) outputHandlesAndIndices[j]);
         }
       }
@@ -353,7 +375,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   private final Object nativeHandleLock = new Object();
-  private long nativeHandle;
+  private TF_Graph nativeHandle;
   private int refcount = 0;
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
@@ -365,7 +387,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   class Reference implements AutoCloseable {
     private Reference() {
       synchronized (Graph.this.nativeHandleLock) {
-        active = Graph.this.nativeHandle != 0;
+        active = Graph.this.nativeHandle != null && !Graph.this.nativeHandle.isNull();
         if (!active) {
           throw new IllegalStateException("close() has been called on the Graph");
         }
@@ -387,9 +409,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
     }
 
-    public long nativeHandle() {
+    public TF_Graph nativeHandle() {
       synchronized (Graph.this.nativeHandleLock) {
-        return active ? Graph.this.nativeHandle : 0;
+        return active ? Graph.this.nativeHandle : null;
       }
     }
 
@@ -415,11 +437,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       this.operation = null;
 
       try {
-        long[] nativeReturn = nextOperation(reference.nativeHandle(), this.position);
+        Object[] nativeReturn = nextOperation(reference.nativeHandle(), this.position);
 
-        if ((nativeReturn != null) && (nativeReturn[0] != 0)) {
-          this.operation = new GraphOperation(this.graph, nativeReturn[0]);
-          this.position = (int) nativeReturn[1];
+        if (nativeReturn != null && nativeReturn[0] != null && !((TF_Operation)nativeReturn[0]).isNull()) {
+          this.operation = new GraphOperation(this.graph, (TF_Operation)nativeReturn[0]);
+          this.position = (Integer)nativeReturn[1];
         }
       } finally {
         reference.close();
@@ -448,38 +470,227 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     private int position;
   }
 
-  private static native long allocate();
+  private static TF_Graph allocate() {
+      return TF_NewGraph();
+  }
 
-  private static native void delete(long handle);
+  private static void delete(TF_Graph handle) {
+    if (handle == null || handle.isNull()) return;
+    TF_DeleteGraph(handle);
+  }
 
-  private static native long operation(long handle, String name);
+  private static void requireHandle(Pointer handle) {
+    if (handle == null || handle.isNull()) {
+      throw new IllegalStateException("close() has been called on the Graph");
+    }
+  }
+
+  private static TF_Operation operation(TF_Graph handle, String name) {
+    requireHandle(handle);
+    return TF_GraphOperationByName(handle, name);
+  }
 
   // This method returns the Operation native handle at index 0 and the new value for pos at index 1
   // (see TF_GraphNextOperation)
-  private static native long[] nextOperation(long handle, int position);
+  private static Object[] nextOperation(TF_Graph handle, int position) {
+    requireHandle(handle);
 
-  private static native void importGraphDef(long handle, byte[] graphDef, String prefix)
-      throws IllegalArgumentException;
+    try (PointerScope scope = new PointerScope()) {
+      SizeTPointer pos = new SizeTPointer(1).put(position);
+      TF_Operation operation = TF_GraphNextOperation(handle, pos);
+      if (operation == null || operation.isNull()) return null;
 
-  private static native byte[] toGraphDef(long handle);
+      Object[] handleAndPosition = new Object[2];
+      handleAndPosition[0] = operation;
+      handleAndPosition[1] = (int)pos.get();
+      return handleAndPosition;
+    }
+  }
 
-  private static native long[] addGradients(
-      long handle,
+  private static void importGraphDef(TF_Graph handle, byte[] graphDef, String prefix)
+      throws IllegalArgumentException {
+    requireHandle(handle);
+
+    // Continue cleaning up resources even if an exception was thrown.
+    try (PointerScope scope = new PointerScope()) {
+      TF_ImportGraphDefOptions opts = TF_ImportGraphDefOptions.newImportGraphDefOptions();
+
+      TF_ImportGraphDefOptionsSetPrefix(opts, prefix);
+
+      TF_Buffer buf = TF_Buffer.newBufferFromString(graphDef);
+      TF_Status status = TF_Status.newStatus();
+
+      TF_GraphImportGraphDef(handle, buf, opts, status);
+      status.throwExceptionIfNotOK();
+    }
+  }
+
+  private static byte[] toGraphDef(TF_Graph handle) {
+    requireHandle(handle);
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Buffer buf = TF_Buffer.newBuffer();
+      TF_Status status = TF_Status.newStatus();
+      TF_GraphToGraphDef(handle, buf, status);
+      status.throwExceptionIfNotOK();
+      return buf.get();
+    }
+  }
+
+  static void resolveOutputs(String type, TF_Operation[] srcOps,
+                             int[] srcIndices, TF_Output dst, int n) {
+    if (srcOps.length != n) {
+      throw new IllegalArgumentException("expected " + n + ", got " + srcOps.length + " " + type + " Operations");
+    }
+    if (srcIndices.length != n) {
+      throw new IllegalArgumentException("expected " + n + ", got " + srcIndices.length + " " + type + " Operation output indices");
+    }
+    for (int i = 0; i < n; ++i) {
+      if (srcOps[i] == null || srcOps[i].isNull()) {
+        throw new NullPointerException("invalid " + type + " (#" + i + " of " + n + ")");
+      }
+      dst.position(i).oper(srcOps[i]).index(srcIndices[i]);
+    }
+    dst.position(0);
+  }
+
+  private static Object[] addGradients(
+      TF_Graph handle,
       String prefix,
-      long[] inputHandles,
+      TF_Operation[] inputHandles,
       int[] inputIndices,
-      long[] outputHandles,
+      TF_Operation[] outputHandles,
       int[] outputIndices,
-      long[] gradInputHandles,
-      int[] gradInputIndices);
+      TF_Operation[] gradInputHandles,
+      int[] gradInputIndices) {
+    requireHandle(handle);
 
-  private static native long[] whileLoop(
-      long handle,
-      long[] inputHandles,
+    try (PointerScope scope = new PointerScope()) {
+      int ny = inputHandles.length;
+      int nx = outputHandles.length;
+
+      TF_Output y = new TF_Output(ny);
+      TF_Output x = new TF_Output(nx);
+      TF_Output dx = null;
+      TF_Output dy = new TF_Output(nx);
+
+      resolveOutputs("y", inputHandles, inputIndices, y, ny);
+      resolveOutputs("x", outputHandles, outputIndices, x, nx);
+      if (gradInputHandles != null) {
+        if (gradInputHandles.length != ny) {
+          throw new IllegalArgumentException("expected " + ny + ", got " + gradInputHandles.length + " handles");
+        }
+        dx = new TF_Output(ny);
+        resolveOutputs("dx", gradInputHandles, gradInputIndices, dx, ny);
+      }
+
+      TF_Status status = TF_Status.newStatus();
+      TF_AddGradientsWithPrefix(handle, prefix, y, ny, x, nx, dx, status, dy);
+      status.throwExceptionIfNotOK();
+
+      // returned array contains both op handles and output indices, in pair
+      Object[] gradOutputHandlesAndIndices = new Object[nx * 2];
+      for (int i = 0, j = nx; i < nx; ++i, ++j) {
+        TF_Output gradOutput = dy.position(i);
+        gradOutputHandlesAndIndices[i] = gradOutput.oper();
+        gradOutputHandlesAndIndices[j] = gradOutput.index();
+      }
+      return gradOutputHandlesAndIndices;
+    }
+  }
+
+  private static Object[] whileLoop(
+      TF_Graph handle,
+      TF_Operation[] inputHandles,
       int[] inputIndices,
       String name,
       WhileSubgraphBuilder condGraphBuilder,
-      WhileSubgraphBuilder bodyGraphBuilder);
+      WhileSubgraphBuilder bodyGraphBuilder) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+
+      int ninputs = inputHandles.length;
+
+      TF_Output inputs = new TF_Output(ninputs);
+      resolveOutputs("inputs", inputHandles, inputIndices, inputs, ninputs);
+
+      // initialize while params
+      TF_WhileParams params = TF_NewWhile(handle, inputs, ninputs, status);
+      status.throwExceptionIfNotOK();
+
+      // build conditional subgraph
+      TF_Output condInputsOutput = params.cond_inputs();
+      TF_Output condOutputOutput = params.cond_output();
+      TF_Operation[] condInputHandles = new TF_Operation[ninputs];
+      int[] condInputIndices = new int[ninputs];
+      TF_Operation[] condOutputHandles = new TF_Operation[1];
+      int[] condOutputIndices = new int[1];
+      for (int i = 0; i < ninputs; i++) {
+          condInputHandles[i] = condInputsOutput.position(i).oper();
+          condInputIndices[i] = condInputsOutput.position(i).index();
+      }
+      condOutputHandles[0] = condOutputOutput.oper();
+      condOutputIndices[0] = condOutputOutput.index();
+
+      Object[] cond_output_handles_and_indices =
+          buildSubgraph(condGraphBuilder, params.cond_graph(),
+                        condInputHandles, condInputIndices,
+                        condOutputHandles, condOutputIndices);
+
+      // build body subgraph
+      TF_Output bodyInputsOutput = params.body_inputs();
+      TF_Output bodyOutputsOutput = params.body_outputs();
+      TF_Operation[] bodyInputHandles = new TF_Operation[ninputs];
+      int[] bodyInputIndices = new int[ninputs];
+      TF_Operation[] bodyOutputHandles = new TF_Operation[ninputs];
+      int[] bodyOutputIndices = new int[ninputs];
+      for (int i = 0; i < ninputs; i++) {
+          bodyInputHandles[i] = bodyInputsOutput.position(i).oper();
+          bodyInputIndices[i] = bodyInputsOutput.position(i).index();
+          bodyOutputHandles[i] = bodyOutputsOutput.position(i).oper();
+          bodyOutputIndices[i] = bodyOutputsOutput.position(i).index();
+      }
+
+      Object[] body_output_handles_and_indices =
+          buildSubgraph(bodyGraphBuilder, params.body_graph(),
+                        bodyInputHandles, bodyInputIndices,
+                        bodyOutputHandles, bodyOutputIndices);
+
+      if (cond_output_handles_and_indices == null ||
+          body_output_handles_and_indices == null)
+        return null;
+
+      // set cond_output param to output of the conditional subgraph
+      condOutputOutput.oper((TF_Operation)cond_output_handles_and_indices[0])
+                      .index((Integer)cond_output_handles_and_indices[1]);
+
+      // set body_outputs param to outputs of the body subgraph
+      for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
+        bodyOutputsOutput.position(i).oper((TF_Operation)body_output_handles_and_indices[i])
+                                     .index((Integer)body_output_handles_and_indices[j]);
+      }
+
+      // set loop name param
+      params.name(new BytePointer(name));
+
+      // build the while loop, storing loop outputs in `outputs`
+      TF_Output outputs = new TF_Output(ninputs);
+      TF_FinishWhile(params, status, outputs);
+
+      status.throwExceptionIfNotOK();
+
+      // returned array contains both op handles and output indices, in pair
+      Object[] output_handles_and_indices = new Object[ninputs * 2];
+      for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
+        TF_Output output = outputs.position(i);
+        output_handles_and_indices[i] = output.oper();
+        output_handles_and_indices[j] = output.index();
+      }
+
+      return output_handles_and_indices;
+    }
+  }
 
   static {
     TensorFlow.init();

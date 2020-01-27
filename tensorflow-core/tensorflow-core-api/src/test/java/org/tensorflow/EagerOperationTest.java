@@ -33,7 +33,7 @@ public class EagerOperationTest {
     EagerSession session = EagerSession.create();
     session.close();
     try {
-      new EagerOperation(session, 1L, new long[] {1L}, "Add", "add");
+      new EagerOperation(session, null, null, "Add", "add");
       fail();
     } catch (IllegalStateException e) {
       // expected

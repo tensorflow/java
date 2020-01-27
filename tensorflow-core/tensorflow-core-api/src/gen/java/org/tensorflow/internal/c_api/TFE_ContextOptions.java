@@ -11,7 +11,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 // #endif
 
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
-public class TFE_ContextOptions extends Pointer {
+public class TFE_ContextOptions extends org.tensorflow.internal.c_api.AbstractTFE_ContextOptions {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
     public TFE_ContextOptions() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */

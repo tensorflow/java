@@ -15,9 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadSessionFromSavedModel;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -167,7 +170,7 @@ public class SavedModelBundle implements AutoCloseable {
    * <p>Invoked from the native load method. Takes ownership of the handles.
    */
   private static SavedModelBundle fromHandle(
-      long graphHandle, long sessionHandle, byte[] metaGraphDef) {
+      TF_Graph graphHandle, TF_Session sessionHandle, byte[] metaGraphDef) {
     Graph graph = new Graph(graphHandle);
     Session session = new Session(graph, sessionHandle);
     return new SavedModelBundle(graph, session, metaGraphDef);
@@ -189,17 +192,15 @@ public class SavedModelBundle implements AutoCloseable {
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
       // load the session
-      TF_Graph graph = TF_Graph.newGraph();
+      TF_Graph graph = TF_NewGraph();
       TF_Buffer metagraphDef = TF_Buffer.newBuffer();
-      TF_Session session = TF_Session.loadSessionFromSavedModel(
-          opts, runOpts, exportDir, tags, graph,
-          metagraphDef, status);
+      TF_Session session = TF_LoadSessionFromSavedModel(
+          opts, runOpts, new BytePointer(exportDir), new PointerPointer(tags),
+          tags.length, graph, metagraphDef, status);
       status.throwExceptionIfNotOK();
 
       // handle the result
-      bundle = fromHandle(graph.address(), session.address(), metagraphDef.get());
-      graph.retainReference().deallocate(false);
-      session.retainReference().deallocate(false);
+      bundle = fromHandle(graph, session, metagraphDef.get());
     }
 
     return bundle;

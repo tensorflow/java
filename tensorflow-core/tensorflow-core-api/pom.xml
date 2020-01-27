@@ -140,20 +140,6 @@
             <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_darwin/lib/</preloadPath>
             <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_windows/lib/</preloadPath>
           </preloadPaths>
-          <compilerOptions>
-            <compilerOption>${project.basedir}/src/main/native/eager_operation_builder_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/eager_operation_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/eager_session_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/exception_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/graph_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/graph_operation_builder_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/graph_operation_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/server_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/session_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/tensorflow_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/tensor_jni.cc</compilerOption>
-            <compilerOption>${project.basedir}/src/main/native/utils_jni.cc</compilerOption>
-          </compilerOptions>
         </configuration>
         <executions>
           <execution>

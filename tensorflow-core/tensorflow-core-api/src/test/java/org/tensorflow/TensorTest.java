@@ -535,10 +535,10 @@ public class TensorTest {
       Output<?> x = TestUtil.constant(session, "Const1", 10);
       Output<?> y = TestUtil.constant(session, "Const2", 20);
       sum = TestUtil.<TInt32>addN(session, x, y).tensor();
-      assertNotEquals(0L, sum.getNativeHandle());
+      assertNotEquals(null, sum.getNativeHandle());
       assertEquals(30, sum.intValue());
     }
-    assertEquals(0L, sum.getNativeHandle());
+    assertEquals(null, sum.getNativeHandle());
     try {
       sum.intValue();
       fail();

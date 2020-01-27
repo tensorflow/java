@@ -80,7 +80,7 @@ public final class DataType<T extends TType> {
    * @return data structure of elements of this type
    */
   T map(Tensor<T> tensor) {
-    return tensorMapper.apply(tensor.getNative(), tensor.shape());
+    return tensorMapper.apply(tensor.getNativeHandle(), tensor.shape());
   }
 
   private final int nativeCode;

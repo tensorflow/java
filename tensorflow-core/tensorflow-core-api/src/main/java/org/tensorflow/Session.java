@@ -15,8 +15,27 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import java.util.ArrayList;
 import java.util.List;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_Operation;
+import org.tensorflow.internal.c_api.TF_Output;
+import org.tensorflow.internal.c_api.TF_Session;
+import org.tensorflow.internal.c_api.TF_SessionOptions;
+import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.TF_Tensor;
 
 /**
  * Driver for {@link Graph} execution.
@@ -49,7 +68,7 @@ public final class Session implements AutoCloseable {
 
   /** Construct a new session with the associated {@link Graph}. */
   public Session(Graph g) {
-    this(g, null);
+    this(g, (byte[])null);
   }
 
   /**
@@ -75,7 +94,7 @@ public final class Session implements AutoCloseable {
   }
 
   /** Wrap an existing session with the associated {@link Graph}. */
-  Session(Graph g, long nativeHandle) {
+  Session(Graph g, TF_Session nativeHandle) {
     graph = g;
     this.nativeHandle = nativeHandle;
     graphRef = g.ref();
@@ -91,7 +110,7 @@ public final class Session implements AutoCloseable {
   public void close() {
     graphRef.close();
     synchronized (nativeHandleLock) {
-      if (nativeHandle == 0) {
+      if (nativeHandle == null || nativeHandle.isNull()) {
         return;
       }
       while (numActiveRuns > 0) {
@@ -104,7 +123,7 @@ public final class Session implements AutoCloseable {
         }
       }
       delete(nativeHandle);
-      nativeHandle = 0;
+      nativeHandle = null;
     }
   }
 
@@ -289,13 +308,13 @@ public final class Session implements AutoCloseable {
     }
 
     private Run runHelper(boolean wantMetadata) {
-      long[] inputTensorHandles = new long[inputTensors.size()];
-      long[] inputOpHandles = new long[inputs.size()];
+      TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
+      TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
-      long[] outputOpHandles = new long[outputs.size()];
+      TF_Operation[] outputOpHandles = new TF_Operation[outputs.size()];
       int[] outputOpIndices = new int[outputs.size()];
-      long[] targetOpHandles = new long[targets.size()];
-      long[] outputTensorHandles = new long[outputs.size()];
+      TF_Operation[] targetOpHandles = new TF_Operation[targets.size()];
+      TF_Tensor[] outputTensorHandles = new TF_Tensor[outputs.size()];
 
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
@@ -305,13 +324,13 @@ public final class Session implements AutoCloseable {
       }
       idx = 0;
       for (Output<?> o : inputs) {
-        inputOpHandles[idx] = o.getUnsafeNativeHandle();
+        inputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
         inputOpIndices[idx] = o.index();
         idx++;
       }
       idx = 0;
       for (Output<?> o : outputs) {
-        outputOpHandles[idx] = o.getUnsafeNativeHandle();
+        outputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
         outputOpIndices[idx] = o.index();
         idx++;
       }
@@ -338,7 +357,7 @@ public final class Session implements AutoCloseable {
         runRef.close();
       }
       List<Tensor<?>> outputs = new ArrayList<>();
-      for (long h : outputTensorHandles) {
+      for (TF_Tensor h : outputTensorHandles) {
         try {
           outputs.add(Tensor.fromHandle(h));
         } catch (Exception e) {
@@ -358,7 +377,7 @@ public final class Session implements AutoCloseable {
     private class Reference implements AutoCloseable {
       public Reference() {
         synchronized (nativeHandleLock) {
-          if (nativeHandle == 0) {
+          if (nativeHandle == null || nativeHandle.isNull()) {
             throw new IllegalStateException("run() cannot be called on the Session after close()");
           }
           ++numActiveRuns;
@@ -368,7 +387,7 @@ public final class Session implements AutoCloseable {
       @Override
       public void close() {
         synchronized (nativeHandleLock) {
-          if (nativeHandle == 0) {
+          if (nativeHandle == null || nativeHandle.isNull()) {
             return;
           }
           if (--numActiveRuns == 0) {
@@ -440,15 +459,63 @@ public final class Session implements AutoCloseable {
   private final Graph.Reference graphRef;
 
   private final Object nativeHandleLock = new Object();
-  private long nativeHandle;
+  private TF_Session nativeHandle;
   private int numActiveRuns;
 
+  private static void requireHandle(Pointer handle) {
+    if (handle == null || handle.isNull()) {
+      throw new IllegalStateException("close() has been called on the Session");
+    }
+  }
+
+  private static void resolveHandles(String type, Pointer[] src, PointerPointer dst, int n) {
+    if (src.length != n) {
+      throw new IllegalArgumentException("expected " + n + ", got " + src.length + " " + type);
+    }
+    for (int i = 0; i < n; ++i) {
+      if (src[i] == null || src[i].isNull()) {
+        throw new NullPointerException("invalid " + type + " (#" + i + " of " + n + ")");
+      }
+      dst.put(i, src[i]);
+    }
+  }
+
   // TODO(ashankar): Remove after TensorFlow 1.2 has been released with allocate2().
-  private static native long allocate(long graphHandle);
+  private static TF_Session allocate(TF_Graph graphHandle) {
+    return allocate2(graphHandle, null, null);
+  }
 
-  private static native long allocate2(long graphHandle, String target, byte[] config);
+  private static TF_Session allocate2(TF_Graph graphHandle, String target, byte[] config) {
+    if (graphHandle == null || graphHandle.isNull()) {
+      throw new NullPointerException("Graph has been close()d");
+    }
 
-  private static native void delete(long handle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_SessionOptions opts = TF_SessionOptions.newSessionOptions();
+      if (config != null && config.length > 0) {
+        TF_SetConfig(opts, new BytePointer(config), config.length, status);
+        status.throwExceptionIfNotOK();
+      }
+
+      TF_Session session = TF_NewSession(graphHandle, opts, status);
+      status.throwExceptionIfNotOK();
+
+      return session;
+    }
+  }
+
+  private static void delete(TF_Session handle) {
+    requireHandle(handle);
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_CloseSession(handle, status);
+      // Result of close is ignored, delete anyway.
+      TF_DeleteSession(handle, status);
+      status.throwExceptionIfNotOK();
+    }
+  }
 
   /**
    * Execute a session.
@@ -477,15 +544,49 @@ public final class Session implements AutoCloseable {
    * @return if wantRunMetadata is true, serialized representation of the RunMetadata protocol
    *     buffer, false otherwise.
    */
-  private static native byte[] run(
-      long handle,
+  private static byte[] run(
+      TF_Session handle,
       byte[] runOptions,
-      long[] inputTensorHandles,
-      long[] inputOpHandles,
+      TF_Tensor[] inputTensorHandles,
+      TF_Operation[] inputOpHandles,
       int[] inputOpIndices,
-      long[] outputOpHandles,
+      TF_Operation[] outputOpHandles,
       int[] outputOpIndices,
-      long[] targetOpHandles,
+      TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      long[] outputTensorHandles);
+      TF_Tensor[] outputTensorHandles) {
+    requireHandle(handle);
+
+    int ninputs = inputTensorHandles.length;
+    int noutputs = outputTensorHandles.length;
+    int ntargets = targetOpHandles.length;
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Output inputs = new TF_Output(ninputs);
+      PointerPointer<TF_Tensor> inputValues = new PointerPointer<TF_Tensor>(ninputs);
+      TF_Output outputs = new TF_Output(noutputs);
+      PointerPointer<TF_Tensor> outputValues = new PointerPointer<TF_Tensor>(noutputs);
+      PointerPointer<TF_Operation> targets = new PointerPointer<TF_Operation>(ntargets);
+      TF_Buffer runMetadata = wantRunMetadata ? TF_Buffer.newBuffer() : null;
+
+      resolveHandles("input Tensors", inputTensorHandles, inputValues, ninputs);
+      resolveOutputs("input", inputOpHandles, inputOpIndices, inputs, ninputs);
+      resolveOutputs("output", outputOpHandles, outputOpIndices, outputs, noutputs);
+      resolveHandles("target Operations", targetOpHandles, targets, ntargets);
+
+      TF_Status status = TF_Status.newStatus();
+      TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
+
+      TF_SessionRun(handle, runOpts, inputs, inputValues, ninputs,
+                    outputs, outputValues, noutputs, targets, ntargets,
+                    runMetadata, status);
+      status.throwExceptionIfNotOK();
+
+      for (int i = 0; i < noutputs; ++i) {
+        outputTensorHandles[i] = outputValues.get(TF_Tensor.class, i);
+      }
+
+      return runMetadata != null ? runMetadata.get() : null;
+    }
+  }
 }

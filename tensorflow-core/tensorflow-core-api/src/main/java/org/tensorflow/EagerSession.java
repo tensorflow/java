@@ -15,6 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetAsync;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetConfig;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetDevicePlacementPolicy;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteContext;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewContext;
+
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -22,6 +28,11 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TFE_Context;
+import org.tensorflow.internal.c_api.TFE_ContextOptions;
+import org.tensorflow.internal.c_api.TF_Status;
 
 /**
  * An environment for executing TensorFlow operations eagerly.
@@ -337,7 +348,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     return new EagerOperationBuilder(this, type, name);
   }
 
-  long nativeHandle() {
+  TFE_Context nativeHandle() {
     checkSession();
     return nativeHandle;
   }
@@ -504,7 +515,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private final NativeResourceCollector nativeResources;
   private final ResourceCleanupStrategy resourceCleanupStrategy;
-  private long nativeHandle;
+  private TFE_Context nativeHandle;
 
   private EagerSession(Options options, ReferenceQueue<Object> garbageQueue) {
     this.nativeResources = new NativeResourceCollector(garbageQueue);
@@ -517,25 +528,42 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   private void checkSession() {
-    if (nativeHandle == 0L) {
+    if (nativeHandle == null || nativeHandle.isNull()) {
       throw new IllegalStateException("Eager session has been closed");
     }
   }
 
   private synchronized void doClose() {
-    if (nativeHandle != 0L) {
+    if (nativeHandle != null && !nativeHandle.isNull()) {
       if (resourceCleanupStrategy == ResourceCleanupStrategy.IN_BACKGROUND) {
         nativeResources.stopCleanupThread();
       }
       nativeResources.deleteAll();
       delete(nativeHandle);
-      nativeHandle = 0L;
+      nativeHandle = null;
     }
   }
 
-  private static native long allocate(boolean async, int devicePlacementPolicy, byte[] config);
+  private static TFE_Context allocate(boolean async, int devicePlacementPolicy, byte[] config) {
+    try (PointerScope scope = new PointerScope()) {
+      TFE_ContextOptions opts = TFE_ContextOptions.newContextOptions();
+      TF_Status status = TF_Status.newStatus();
+      if (config != null && config.length > 0) {
+        TFE_ContextOptionsSetConfig(opts, new BytePointer(config), config.length, status);
+        status.throwExceptionIfNotOK();
+      }
+      TFE_ContextOptionsSetAsync(opts, (byte)(async ? 1 : 0));
+      TFE_ContextOptionsSetDevicePlacementPolicy(opts, devicePlacementPolicy);
+      TFE_Context context = TFE_NewContext(opts, status);
+      status.throwExceptionIfNotOK();
+      return context;
+    }
+  }
 
-  private static native void delete(long handle);
+  private static void delete(TFE_Context handle) {
+    if (handle == null || handle.isNull()) return;
+    TFE_DeleteContext(handle);
+  }
 
   static {
     TensorFlow.init();
