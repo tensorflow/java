@@ -939,22 +939,22 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
     switch (dtype) {
       case TF_FLOAT:
-        dst.put(new FloatPointer((float[])array).capacity(nelems));
+        new FloatPointer(dst).position(dst.position() / 4).put((float[])array);
         break;
       case TF_DOUBLE:
-        dst.put(new DoublePointer((double[])array).capacity(nelems));
+        new DoublePointer(dst).position(dst.position() / 8).put((double[])array);
         break;
       case TF_INT32:
-        dst.put(new IntPointer((int[])array).capacity(nelems));
+        new IntPointer(dst).position(dst.position() / 4).put((int[])array);
         break;
       case TF_INT64:
-        dst.put(new LongPointer((long[])array).capacity(nelems));
+        new LongPointer(dst).position(dst.position() / 8).put((long[])array);
         break;
       case TF_UINT8:
-        dst.put(new BytePointer((byte[])array).capacity(nelems));
+        dst.put((byte[])array);
         break;
       case TF_BOOL:
-        dst.put(new BooleanPointer((boolean[])array).capacity(nelems));
+        new BooleanPointer(dst).position(dst.position()).put((boolean[])array);
         break;
       default:
         throw new IllegalStateException("invalid DataType(" + dtype + ")");
