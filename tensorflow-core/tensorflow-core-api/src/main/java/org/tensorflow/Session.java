@@ -474,7 +474,7 @@ public final class Session implements AutoCloseable {
     }
     for (int i = 0; i < n; ++i) {
       if (src[i] == null || src[i].isNull()) {
-        throw new NullPointerException("invalid " + type + " (#" + i + " of " + n + ")");
+        throw new IllegalStateException("invalid " + type + " (#" + i + " of " + n + ")");
       }
       dst.put(i, src[i]);
     }
@@ -487,7 +487,7 @@ public final class Session implements AutoCloseable {
 
   private static TF_Session allocate2(TF_Graph graphHandle, String target, byte[] config) {
     if (graphHandle == null || graphHandle.isNull()) {
-      throw new NullPointerException("Graph has been close()d");
+      throw new IllegalStateException("Graph has been close()d");
     }
 
     try (PointerScope scope = new PointerScope()) {

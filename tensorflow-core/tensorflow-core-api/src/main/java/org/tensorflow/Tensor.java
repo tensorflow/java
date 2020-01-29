@@ -850,7 +850,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
 
   private static void requireHandle(TF_Tensor handle) {
     if (handle == null || handle.isNull()) {
-      throw new NullPointerException("close() was called on the Tensor");
+      throw new IllegalStateException("close() was called on the Tensor");
     }
   }
 
@@ -1000,32 +1000,30 @@ public final class Tensor<T extends TType> implements AutoCloseable {
                                    BytePointer dst, long dstSize) {
     if (dimsLeft == 1) {
       return write1DArray(src, dtype, dst, dstSize);
-    } else {
-      Object[] ndarray = (Object[])src;
-      long sz = 0;
-      for (int i = 0; i < ndarray.length; ++i) {
-        Object row = ndarray[i];
-        sz += writeNDArray(row, dtype, dimsLeft - 1,
-            new BytePointer(dst).position(dst.position() + sz), dstSize - sz);
-      }
-      return sz;
     }
+    Object[] ndarray = (Object[])src;
+    long sz = 0;
+    for (int i = 0; i < ndarray.length; ++i) {
+      Object row = ndarray[i];
+      sz += writeNDArray(row, dtype, dimsLeft - 1,
+          new BytePointer(dst).position(dst.position() + sz), dstSize - sz);
+    }
+    return sz;
   }
 
   private static long readNDArray(int dtype, BytePointer src, long srcSize,
                                   int dimsLeft, Object dst) {
     if (dimsLeft == 1) {
       return read1DArray(dtype, src, srcSize, dst);
-    } else {
-      Object[] ndarray = (Object[])dst;
-      long sz = 0;
-      for (int i = 0; i < ndarray.length; ++i) {
-        Object row = ndarray[i];
-        sz += readNDArray(dtype, new BytePointer(src).position(src.position() + sz),
-            srcSize - sz, dimsLeft - 1, row);
-      }
-      return sz;
     }
+    Object[] ndarray = (Object[])dst;
+    long sz = 0;
+    for (int i = 0; i < ndarray.length; ++i) {
+      Object row = ndarray[i];
+      sz += readNDArray(dtype, new BytePointer(src).position(src.position() + sz),
+          srcSize - sz, dimsLeft - 1, row);
+    }
+    return sz;
   }
 
   private static byte[] TF_StringDecodeToArray(BytePointer src, long srcLen, TF_Status status) {
@@ -1126,7 +1124,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
   private static TF_Tensor allocate(int dtype, long[] shape, long byteSize) {
     TF_Tensor t = TF_AllocateTensor(dtype, shape, shape.length, byteSize);
     if (t == null || t.isNull()) {
-      throw new NullPointerException("unable to allocate memory for the Tensor");
+      throw new IllegalStateException("unable to allocate memory for the Tensor");
     }
     return t;
   }
@@ -1157,7 +1155,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     for (int i = 0; i < array.length; ++i) {
       Object elem = array[i];
       if (elem == null) {
-        throw new NullPointerException("null entries in provided array");
+        throw new IllegalStateException("null entries in provided array");
       }
       ret += nonScalarStringTensorSize(elem, numDims - 1);
     }
@@ -1175,7 +1173,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     for (int i = 0; i < array.length; ++i) {
       Object elem = array[i];
       if (elem == null) {
-        throw new NullPointerException("null entries in provided array");
+        throw new IllegalStateException("null entries in provided array");
       }
       fillNonScalarStringTensorData(elem, numDims - 1, writer, status);
       if (TF_GetCode(status) != TF_OK) return;
@@ -1194,7 +1192,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     TF_Tensor t = TF_AllocateTensor(TF_STRING, shape, numDims,
                                     8 * numElements + encodedSize);
     if (t == null || t.isNull()) {
-      throw new NullPointerException("unable to allocate memory for the Tensor");
+      throw new IllegalStateException("unable to allocate memory for the Tensor");
     }
     TF_Status status = TF_Status.newStatus();
     try (PointerScope scope = new PointerScope()) {
@@ -1247,55 +1245,55 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     requireHandle(handle);
     if (TF_NumDims(handle) != 0) {
       throw new IllegalStateException("Tensor is not a scalar");
-    } else if (TF_TensorType(handle) != TF_FLOAT) {
-      throw new IllegalStateException("Tensor is not a float scalar");
-    } else {
-      return new FloatPointer(TF_TensorData(handle)).get();
     }
+    if (TF_TensorType(handle) != TF_FLOAT) {
+      throw new IllegalStateException("Tensor is not a float scalar");
+    }
+    return new FloatPointer(TF_TensorData(handle)).get();
   }
 
   private static double scalarDouble(TF_Tensor handle) {
     requireHandle(handle);
     if (TF_NumDims(handle) != 0) {
       throw new IllegalStateException("Tensor is not a scalar");
-    } else if (TF_TensorType(handle) != TF_DOUBLE) {
-      throw new IllegalStateException("Tensor is not a double scalar");
-    } else {
-      return new DoublePointer(TF_TensorData(handle)).get();
     }
+    if (TF_TensorType(handle) != TF_DOUBLE) {
+      throw new IllegalStateException("Tensor is not a double scalar");
+    }
+    return new DoublePointer(TF_TensorData(handle)).get();
   }
 
   private static int scalarInt(TF_Tensor handle) {
     requireHandle(handle);
     if (TF_NumDims(handle) != 0) {
       throw new IllegalStateException("Tensor is not a scalar");
-    } else if (TF_TensorType(handle) != TF_INT32) {
-      throw new IllegalStateException("Tensor is not a int scalar");
-    } else {
-      return new IntPointer(TF_TensorData(handle)).get();
     }
+    if (TF_TensorType(handle) != TF_INT32) {
+      throw new IllegalStateException("Tensor is not a int scalar");
+    }
+    return new IntPointer(TF_TensorData(handle)).get();
   }
 
   private static long scalarLong(TF_Tensor handle) {
     requireHandle(handle);
     if (TF_NumDims(handle) != 0) {
       throw new IllegalStateException("Tensor is not a scalar");
-    } else if (TF_TensorType(handle) != TF_INT64) {
-      throw new IllegalStateException("Tensor is not a long scalar");
-    } else {
-      return new LongPointer(TF_TensorData(handle)).get();
     }
+    if (TF_TensorType(handle) != TF_INT64) {
+      throw new IllegalStateException("Tensor is not a long scalar");
+    }
+    return new LongPointer(TF_TensorData(handle)).get();
   }
 
   private static boolean scalarBoolean(TF_Tensor handle) {
     requireHandle(handle);
     if (TF_NumDims(handle) != 0) {
       throw new IllegalStateException("Tensor is not a scalar");
-    } else if (TF_TensorType(handle) != TF_BOOL) {
-      throw new IllegalStateException("Tensor is not a boolean scalar");
-    } else {
-      return new BooleanPointer(TF_TensorData(handle)).get();
     }
+    if (TF_TensorType(handle) != TF_BOOL) {
+      throw new IllegalStateException("Tensor is not a boolean scalar");
+    }
+    return new BooleanPointer(TF_TensorData(handle)).get();
   }
 
   private static byte[] scalarBytes(TF_Tensor handle) {

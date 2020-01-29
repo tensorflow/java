@@ -18,7 +18,8 @@ package org.tensorflow;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -523,7 +524,7 @@ public class TensorTest {
     t.close();
     try {
       t.intValue();
-    } catch (NullPointerException e) {
+    } catch (IllegalStateException e) {
       // The expected exception.
     }
   }
@@ -535,14 +536,14 @@ public class TensorTest {
       Output<?> x = TestUtil.constant(session, "Const1", 10);
       Output<?> y = TestUtil.constant(session, "Const2", 20);
       sum = TestUtil.<TInt32>addN(session, x, y).tensor();
-      assertNotEquals(null, sum.getNativeHandle());
+      assertNotNull(sum.getNativeHandle());
       assertEquals(30, sum.intValue());
     }
-    assertEquals(null, sum.getNativeHandle());
+    assertNull(sum.getNativeHandle());
     try {
       sum.intValue();
       fail();
-    } catch (NullPointerException e) {
+    } catch (IllegalStateException e) {
       // expected.
     }
   }
@@ -571,7 +572,7 @@ public class TensorTest {
     byte[][] array = new byte[1][];
     try {
       Tensors.create(array);
-    } catch (NullPointerException e) {
+    } catch (IllegalStateException e) {
       // expected.
     }
   }

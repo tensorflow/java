@@ -177,7 +177,7 @@ class EagerOperation extends AbstractOperation {
 
   private static void requireTensorHandle(TFE_TensorHandle handle) {
     if (handle == null || handle.isNull()) {
-      throw new IllegalStateException("EagerSession has been closed");
+      throw new IllegalStateException("Eager session has been closed");
     }
   }
 

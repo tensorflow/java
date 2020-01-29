@@ -547,7 +547,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
     for (int i = 0; i < n; ++i) {
       if (srcOps[i] == null || srcOps[i].isNull()) {
-        throw new NullPointerException("invalid " + type + " (#" + i + " of " + n + ")");
+        throw new IllegalStateException("invalid " + type + " (#" + i + " of " + n + ")");
       }
       dst.position(i).oper(srcOps[i]).index(srcIndices[i]);
     }
@@ -633,7 +633,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       condOutputHandles[0] = condOutputOutput.oper();
       condOutputIndices[0] = condOutputOutput.index();
 
-      Object[] cond_output_handles_and_indices =
+      Object[] condOutputHandlesAndIndices =
           buildSubgraph(condGraphBuilder, params.cond_graph(),
                         condInputHandles, condInputIndices,
                         condOutputHandles, condOutputIndices);
@@ -652,23 +652,23 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
           bodyOutputIndices[i] = bodyOutputsOutput.position(i).index();
       }
 
-      Object[] body_output_handles_and_indices =
+      Object[] bodyOutputHandlesAndIndices =
           buildSubgraph(bodyGraphBuilder, params.body_graph(),
                         bodyInputHandles, bodyInputIndices,
                         bodyOutputHandles, bodyOutputIndices);
 
-      if (cond_output_handles_and_indices == null ||
-          body_output_handles_and_indices == null)
+      if (condOutputHandlesAndIndices == null ||
+          bodyOutputHandlesAndIndices == null)
         return null;
 
       // set cond_output param to output of the conditional subgraph
-      condOutputOutput.oper((TF_Operation)cond_output_handles_and_indices[0])
-                      .index((Integer)cond_output_handles_and_indices[1]);
+      condOutputOutput.oper((TF_Operation)condOutputHandlesAndIndices[0])
+                      .index((Integer)condOutputHandlesAndIndices[1]);
 
       // set body_outputs param to outputs of the body subgraph
       for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
-        bodyOutputsOutput.position(i).oper((TF_Operation)body_output_handles_and_indices[i])
-                                     .index((Integer)body_output_handles_and_indices[j]);
+        bodyOutputsOutput.position(i).oper((TF_Operation)bodyOutputHandlesAndIndices[i])
+                                     .index((Integer)bodyOutputHandlesAndIndices[j]);
       }
 
       // set loop name param
@@ -681,14 +681,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       status.throwExceptionIfNotOK();
 
       // returned array contains both op handles and output indices, in pair
-      Object[] output_handles_and_indices = new Object[ninputs * 2];
+      Object[] outputHandlesAndIndices = new Object[ninputs * 2];
       for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
         TF_Output output = outputs.position(i);
-        output_handles_and_indices[i] = output.oper();
-        output_handles_and_indices[j] = output.index();
+        outputHandlesAndIndices[i] = output.oper();
+        outputHandlesAndIndices[j] = output.index();
       }
 
-      return output_handles_and_indices;
+      return outputHandlesAndIndices;
     }
   }
 
