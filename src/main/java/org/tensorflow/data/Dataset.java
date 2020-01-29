@@ -142,7 +142,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    */
   public OneShotIterator makeOneShotIterator() {
     if (!(tf.scope().env() instanceof Graph)) {
-      throw new UnsupportedOperationException("One shot iterator should only be used in Graph mode.");
+      throw new UnsupportedOperationException("OneShotIterator should only be used in Graph mode.");
     }
     List<DataType<?>> outputTypes = getOutputTypes();
     List<Shape> outputShapes = getOutputShapes();
