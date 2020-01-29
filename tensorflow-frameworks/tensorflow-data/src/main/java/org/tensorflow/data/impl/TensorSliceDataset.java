@@ -1,14 +1,13 @@
 package org.tensorflow.data.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.data.Dataset;
 import org.tensorflow.data.Utils;
 import org.tensorflow.op.Ops;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TensorSliceDataset extends Dataset {
   private org.tensorflow.op.data.TensorSliceDataset dataset;
