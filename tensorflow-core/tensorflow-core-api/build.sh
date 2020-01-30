@@ -8,7 +8,7 @@ export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 export BAZEL_VC="${VCINSTALLDIR:-}"
 if [[ -d $BAZEL_VC ]]; then
     # Work around compiler issues on Windows documented mainly in configure.py but also elsewhere
-    export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --copt=-DWIN32_LEAN_AND_MEAN --host_copt=-DWIN32_LEAN_AND_MEAN --copt=-DNOGDI --host_copt=-DNOGDI --define=override_eigen_strong_inline=true"
+    export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --copt=-DWIN32_LEAN_AND_MEAN --host_copt=-DWIN32_LEAN_AND_MEAN --copt=-DNOGDI --host_copt=-DNOGDI --copt=-D_USE_MATH_DEFINES --host_copt=-D_USE_MATH_DEFINES --define=override_eigen_strong_inline=true"
     # https://software.intel.com/en-us/articles/intel-optimization-for-tensorflow-installation-guide#wind_B_S
     export PATH=$PATH:$(pwd)/bazel-tensorflow-core-api/external/mkl_windows/lib/
     export PYTHON_BIN_PATH=$(which python.exe)
