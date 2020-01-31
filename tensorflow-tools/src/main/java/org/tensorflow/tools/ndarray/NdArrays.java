@@ -456,8 +456,8 @@ public final class NdArrays {
    */
   @SafeVarargs
   public static <T> NdArray<T> vectorOfObjects(T... values) {
-    if (values == null) {
-      throw new IllegalArgumentException();
+    if (values == null || values.length == 0) {
+      throw new IllegalArgumentException("Null or zero length input supplied to vectorOfObjects.");
     }
     return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }

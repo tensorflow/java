@@ -146,7 +146,6 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @throws IllegalArgumentException if {@code obj} is not compatible with the TensorFlow type
    *     system.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends TType> Tensor<T> create(Object obj, DataType<T> dtype) {
     if (!objectCompatWithType(obj, dtype)) {
       throw new IllegalArgumentException(
@@ -158,7 +157,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
     long[] dimSizes = new long[numDimensions(obj, dtype)];
     fillShape(obj, 0, dimSizes);
-    Tensor<T> t = new Tensor(dtype, Shape.of(dimSizes));
+    Tensor<T> t = new Tensor<>(dtype, Shape.make(dimSizes));
     TF_Tensor nativeHandle;
     if (t.dtype != TString.DTYPE) {
       long byteSize = elemByteSize(t.dtype) * t.shape.size();
