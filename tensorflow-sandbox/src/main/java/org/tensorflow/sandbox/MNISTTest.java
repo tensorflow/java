@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
@@ -44,7 +43,8 @@ import org.tensorflow.sandbox.optimizers.GradientDescent;
 import org.tensorflow.sandbox.optimizers.Momentum;
 import org.tensorflow.sandbox.optimizers.Optimizer;
 import org.tensorflow.sandbox.optimizers.RMSProp;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 import java.io.BufferedInputStream;
@@ -84,71 +84,71 @@ public class MNISTTest {
     Ops tf = Ops.create(graph);
 
     // Inputs
-    Placeholder<TFloat> input = tf.withName(INPUT_NAME).placeholder(TFloat.DTYPE, Placeholder.shape(Shape.make(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
+    Placeholder<TFloat32> input = tf.withName(INPUT_NAME).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.make(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
     Placeholder<TInt32> labels = tf.withName(TARGET).placeholder(TInt32.DTYPE);
 
     // Scaling the features
-    Constant<TFloat> centeringFactor = tf.constant(PIXEL_DEPTH / 2.0f);
-    Constant<TFloat> scalingFactor = tf.constant((float) PIXEL_DEPTH);
-    Operand<TFloat> scaledInput = tf.math.div(tf.math.sub(input, centeringFactor), scalingFactor);
+    Constant<TFloat32> centeringFactor = tf.constant(PIXEL_DEPTH / 2.0f);
+    Constant<TFloat32> scalingFactor = tf.constant((float) PIXEL_DEPTH);
+    Operand<TFloat32> scaledInput = tf.math.div(tf.math.sub(input, centeringFactor), scalingFactor);
 
     // First conv layer
-    Variable<TFloat> conv1Weights = tf.variable(Shape.make(5, 5, NUM_CHANNELS, 32), TFloat.DTYPE);
-    Assign<TFloat> weights1Init = tf.assign(conv1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv1Weights), TFloat.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> conv1Weights = tf.variable(Shape.make(5, 5, NUM_CHANNELS, 32), TFloat32.DTYPE);
+    Assign<TFloat32> weights1Init = tf.assign(conv1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv1Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
     graph.addInitializer(weights1Init);
-    Conv2d<TFloat> conv1 = tf.nn.conv2d(scaledInput, conv1Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
-    Variable<TFloat> conv1Biases = tf.variable(Shape.make(32), TFloat.DTYPE);
-    Assign<TFloat> biases1Init = tf.assign(conv1Biases, tf.fill(tf.shape(conv1Biases), tf.constant(0.0f)));
+    Conv2d<TFloat32> conv1 = tf.nn.conv2d(scaledInput, conv1Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
+    Variable<TFloat32> conv1Biases = tf.variable(Shape.make(32), TFloat32.DTYPE);
+    Assign<TFloat32> biases1Init = tf.assign(conv1Biases, tf.fill(tf.shape(conv1Biases), tf.constant(0.0f)));
     graph.addInitializer(biases1Init);
-    Relu<TFloat> relu1 = tf.nn.relu(tf.nn.biasAdd(conv1, conv1Biases));
+    Relu<TFloat32> relu1 = tf.nn.relu(tf.nn.biasAdd(conv1, conv1Biases));
 
     // First pooling layer
-    MaxPool<TFloat> pool1 = tf.nn.maxPool(relu1, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
+    MaxPool<TFloat32> pool1 = tf.nn.maxPool(relu1, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
 
     // Second conv layer
-    Variable<TFloat> conv2Weights = tf.variable(Shape.make(5, 5, 32, 64), TFloat.DTYPE);
-    Assign<TFloat> weights2Init = tf.assign(conv2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv2Weights), TFloat.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> conv2Weights = tf.variable(Shape.make(5, 5, 32, 64), TFloat32.DTYPE);
+    Assign<TFloat32> weights2Init = tf.assign(conv2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv2Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
     graph.addInitializer(weights2Init);
-    Conv2d<TFloat> conv2 = tf.nn.conv2d(pool1, conv2Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
-    Variable<TFloat> conv2Biases = tf.variable(Shape.make(64), TFloat.DTYPE);
-    Assign<TFloat> biases2Init = tf.assign(conv2Biases, tf.fill(tf.shape(conv2Biases), tf.constant(0.1f)));
+    Conv2d<TFloat32> conv2 = tf.nn.conv2d(pool1, conv2Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
+    Variable<TFloat32> conv2Biases = tf.variable(Shape.make(64), TFloat32.DTYPE);
+    Assign<TFloat32> biases2Init = tf.assign(conv2Biases, tf.fill(tf.shape(conv2Biases), tf.constant(0.1f)));
     graph.addInitializer(biases2Init);
-    Relu<TFloat> relu2 = tf.nn.relu(tf.nn.biasAdd(conv2, conv2Biases));
+    Relu<TFloat32> relu2 = tf.nn.relu(tf.nn.biasAdd(conv2, conv2Biases));
 
     // Second pooling layer
-    MaxPool<TFloat> pool2 = tf.nn.maxPool(relu2, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
+    MaxPool<TFloat32> pool2 = tf.nn.maxPool(relu2, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
 
     // Flatten inputs
-    Reshape<TFloat> flatten = tf.reshape(pool2, tf.concat(Arrays.asList(tf.slice(tf.shape(pool2), tf.constant(new int[]{0}), tf.constant(new int[]{1})), tf.constant(new int[]{-1})), tf.constant(0)));
+    Reshape<TFloat32> flatten = tf.reshape(pool2, tf.concat(Arrays.asList(tf.slice(tf.shape(pool2), tf.constant(new int[]{0}), tf.constant(new int[]{1})), tf.constant(new int[]{-1})), tf.constant(0)));
 
     // Fully connected layer
-    Variable<TFloat> fc1Weights = tf.variable(Shape.make(IMAGE_SIZE * IMAGE_SIZE * 4, 512), TFloat.DTYPE);
-    Assign<TFloat> weights3Init = tf.assign(fc1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc1Weights), TFloat.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc1Weights = tf.variable(Shape.make(IMAGE_SIZE * IMAGE_SIZE * 4, 512), TFloat32.DTYPE);
+    Assign<TFloat32> weights3Init = tf.assign(fc1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc1Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
     graph.addInitializer(weights3Init);
-    Variable<TFloat> fc1Biases = tf.variable(Shape.make(512), TFloat.DTYPE);
-    Assign<TFloat> biases3Init = tf.assign(fc1Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc1Biases)));
+    Variable<TFloat32> fc1Biases = tf.variable(Shape.make(512), TFloat32.DTYPE);
+    Assign<TFloat32> biases3Init = tf.assign(fc1Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc1Biases)));
     graph.addInitializer(biases3Init);
-    Relu<TFloat> relu3 = tf.nn.relu(tf.math.add(tf.linalg.matMul(flatten, fc1Weights), fc1Biases));
+    Relu<TFloat32> relu3 = tf.nn.relu(tf.math.add(tf.linalg.matMul(flatten, fc1Weights), fc1Biases));
 
     // Softmax layer
-    Variable<TFloat> fc2Weights = tf.variable(Shape.make(512, NUM_LABELS), TFloat.DTYPE);
-    Assign<TFloat> weights4Init = tf.assign(fc2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc2Weights), TFloat.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc2Weights = tf.variable(Shape.make(512, NUM_LABELS), TFloat32.DTYPE);
+    Assign<TFloat32> weights4Init = tf.assign(fc2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc2Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
     graph.addInitializer(weights4Init);
-    Variable<TFloat> fc2Biases = tf.variable(Shape.make(NUM_LABELS), TFloat.DTYPE);
-    Assign<TFloat> biases4Init = tf.assign(fc2Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc2Biases)));
+    Variable<TFloat32> fc2Biases = tf.variable(Shape.make(NUM_LABELS), TFloat32.DTYPE);
+    Assign<TFloat32> biases4Init = tf.assign(fc2Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc2Biases)));
     graph.addInitializer(biases4Init);
 
-    Add<TFloat> logits = tf.math.add(tf.linalg.matMul(relu3, fc2Weights), fc2Biases);
+    Add<TFloat32> logits = tf.math.add(tf.linalg.matMul(relu3, fc2Weights), fc2Biases);
 
     // Predicted outputs
-    Softmax<TFloat> prediction = tf.withName(OUTPUT_NAME).nn.softmax(logits);
+    Softmax<TFloat32> prediction = tf.withName(OUTPUT_NAME).nn.softmax(logits);
 
     // Loss function & regularization
-    OneHot<TFloat> oneHot = tf.oneHot(labels, tf.constant(10), tf.constant(1.0f), tf.constant(0.0f));
-    SoftmaxCrossEntropyWithLogits<TFloat> batchLoss = tf.nn.softmaxCrossEntropyWithLogits(logits, oneHot);
-    Mean<TFloat> labelLoss = tf.math.mean(batchLoss.loss(), tf.constant(0));
-    Add<TFloat> regularizers = tf.math.add(tf.nn.l2Loss(fc1Weights), tf.math.add(tf.nn.l2Loss(fc1Biases), tf.math.add(tf.nn.l2Loss(fc2Weights), tf.nn.l2Loss(fc2Biases))));
-    Add<TFloat> loss = tf.withName(TRAINING_LOSS).math.add(labelLoss, tf.math.mul(regularizers, tf.constant(5e-4f)));
+    OneHot<TFloat32> oneHot = tf.oneHot(labels, tf.constant(10), tf.constant(1.0f), tf.constant(0.0f));
+    SoftmaxCrossEntropyWithLogits<TFloat32> batchLoss = tf.nn.softmaxCrossEntropyWithLogits(logits, oneHot);
+    Mean<TFloat32> labelLoss = tf.math.mean(batchLoss.loss(), tf.constant(0));
+    Add<TFloat32> regularizers = tf.math.add(tf.nn.l2Loss(fc1Weights), tf.math.add(tf.nn.l2Loss(fc1Biases), tf.math.add(tf.nn.l2Loss(fc2Weights), tf.nn.l2Loss(fc2Biases))));
+    Add<TFloat32> loss = tf.withName(TRAINING_LOSS).math.add(labelLoss, tf.math.mul(regularizers, tf.constant(5e-4f)));
 
     // Optimizer
     Optimizer optimizer;
