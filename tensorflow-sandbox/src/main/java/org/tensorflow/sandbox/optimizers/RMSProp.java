@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -64,12 +64,12 @@ public class RMSProp extends Optimizer {
   }
 
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(1.0f, TFloat.DTYPE));//v.dataType()));
+    Operand<T> rmsInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(1.0f, TFloat32.DTYPE));//v.dataType()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
-    Operand<T> momentumInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat.DTYPE));//v.dataType()));
+    Operand<T> momentumInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat.DTYPE));//v.dataType()));
+      Operand<T> mgInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }

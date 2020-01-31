@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 import org.tensorflow.sandbox.util.Pair;
 
@@ -44,7 +44,7 @@ public abstract class Optimizer {
   public static final String VARIABLE_V2 = "VariableV2";
 
   /**
-   * Top level map is variable name, bottom map is slot name.
+   * Top level map key is the variable name, lower level map key is the slot name.
    */
   private final Map<String, Map<String, Variable<?>>> slots;
 
@@ -101,7 +101,7 @@ public abstract class Optimizer {
     List<Pair<Output<?>, Output<? extends TType>>> gradVarPairs = new ArrayList<>();
 
     for (int i = 0; i < variableOutputArray.length; i++) {
-      gradVarPairs.add(new Pair<>(gradients[i], (Output<? extends TType>)variableOutputArray[i]));
+      gradVarPairs.add(new Pair<>(gradients[i], variableOutputArray[i]));
     }
 
     return gradVarPairs;
@@ -162,7 +162,7 @@ public abstract class Optimizer {
    * @param <T> The type of the variable.
    */
   protected <T extends TType> void createSlot(Output<T> variable, String slotName, Operand<T> initializer) {
-    Variable<T> slot = (Variable<T>) tf.withName(createName(variable, slotName)).variable(variable.shape(), TFloat.DTYPE);
+    Variable<T> slot = (Variable<T>) tf.withName(createName(variable, slotName)).variable(variable.shape(), TFloat32.DTYPE);
     Assign<T> slotInit = tf.assign(slot, initializer);
     graph.addInitializer(slotInit);
     String varName = variable.op().name();
@@ -186,11 +186,11 @@ public abstract class Optimizer {
   protected void createSlots(List<Output<? extends TType>> variables) { }
 
   /**
-   * Generates
-   * @param gradient
-   * @param variable
-   * @param <T>
-   * @return
+   * Generates the gradient update operations for the specific variable and gradient.
+   * @param gradient The gradient to use.
+   * @param variable The variable to update.
+   * @param <T> The type of the variable.
+   * @return An operand which applies the desired optimizer update to the variable.
    */
   protected abstract <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable);
 

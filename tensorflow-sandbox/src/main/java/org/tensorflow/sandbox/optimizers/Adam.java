@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package org.tensorflow.sandbox.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.nio.nd.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -47,12 +47,12 @@ public class Adam extends Optimizer {
 
   private final float epsilon;
 
-  private Constant<TFloat> learningRateConst;
-  private Constant<TFloat> epsilonConst;
-  private Constant<TFloat> betaOneConst;
-  private Constant<TFloat> betaTwoConst;
-  private Variable<TFloat> betaOnePower;
-  private Variable<TFloat> betaTwoPower;
+  private Constant<TFloat32> learningRateConst;
+  private Constant<TFloat32> epsilonConst;
+  private Constant<TFloat32> betaOneConst;
+  private Constant<TFloat32> betaTwoConst;
+  private Variable<TFloat32> betaOnePower;
+  private Variable<TFloat32> betaTwoPower;
 
   public Adam(Graph graph, float learningRate) {
     this(graph, learningRate, 0.9f, 0.999f, 1e-8f);
@@ -71,11 +71,11 @@ public class Adam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamSlot(v);
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.make(),TFloat.DTYPE);
-    Assign<TFloat> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne, TFloat.DTYPE));
+    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(),TFloat32.DTYPE);
+    Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne, TFloat32.DTYPE));
     graph.addInitializer(betaOnePowerInit);
-    betaTwoPower = tf.withName("beta2_power").variable(Shape.make(),TFloat.DTYPE);
-    Assign<TFloat> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo, TFloat.DTYPE));
+    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(),TFloat32.DTYPE);
+    Assign<TFloat32> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo, TFloat32.DTYPE));
     graph.addInitializer(betaTwoPowerInit);
   }
 
@@ -89,9 +89,9 @@ public class Adam extends Optimizer {
   }
 
   private <T extends TType> void createAdamSlot(Output<T> v) {
-    Operand<T> firstMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat.DTYPE));//v.dataType()));
+    Operand<T> firstMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
-    Operand<T> secondMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat.DTYPE));//v.dataType()));
+    Operand<T> secondMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
