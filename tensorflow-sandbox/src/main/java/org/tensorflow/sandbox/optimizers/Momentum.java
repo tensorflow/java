@@ -18,7 +18,6 @@ package org.tensorflow.sandbox.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyMomentum;
 import org.tensorflow.types.TFloat32;
@@ -57,14 +56,13 @@ public class Momentum extends Optimizer {
   }
 
   private <T extends TType> void createMomentumSlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, initializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> slot = (Variable<T>) getSlot(variable,MOMENTUM).get();
+    Variable<T> slot = getSlot(variable,MOMENTUM).get();
     return tf.train.applyMomentum(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient, tf.constant(momentum, gradient.dataType()), ApplyMomentum.useNesterov(useNesterov));
   }
 

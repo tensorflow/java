@@ -20,7 +20,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
@@ -63,7 +62,7 @@ public class AdaGradDA extends Optimizer {
   }
 
   @Override
-  protected Optional<Operand> prepare(String name) {
+  protected Optional<Operand<?>> prepare(String name) {
     return Optional.of(tf.assignAdd(globalStep,tf.constant(1L)));
   }
 
@@ -78,18 +77,16 @@ public class AdaGradDA extends Optimizer {
   }
 
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
-    Operand<T> sqInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(initialAccumulatorValue, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> sqInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> gradSlot = (Variable<T>) getSlot(variable,ACCUMULATOR).get();
-    @SuppressWarnings("unchecked")
-    Variable<T> gradSquaredSlot = (Variable<T>) getSlot(variable,SQUARED_ACCUMULATOR).get();
+    Variable<T> gradSlot = getSlot(variable,ACCUMULATOR).get();
+    Variable<T> gradSquaredSlot = getSlot(variable,SQUARED_ACCUMULATOR).get();
     return tf.train.applyAdagradDa(variable, gradSlot, gradSquaredSlot, gradient,
         tf.constant(learningRate, gradient.dataType()),
         tf.constant(l1Strength, gradient.dataType()),

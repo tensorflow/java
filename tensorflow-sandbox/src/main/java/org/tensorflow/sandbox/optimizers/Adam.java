@@ -69,7 +69,7 @@ public class Adam extends Optimizer {
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {
-      createAdamSlot(v);
+      createAdamSlot(v.asOutput());
     }
     betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(),TFloat32.DTYPE);
     Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne, TFloat32.DTYPE));
@@ -80,7 +80,7 @@ public class Adam extends Optimizer {
   }
 
   @Override
-  protected Optional<Operand> prepare(String scopeName) {
+  protected Optional<Operand<?>> prepare(String scopeName) {
     betaOneConst = tf.constant(betaOne);
     betaTwoConst = tf.constant(betaTwo);
     learningRateConst = tf.constant(learningRate);
@@ -89,18 +89,16 @@ public class Adam extends Optimizer {
   }
 
   private <T extends TType> void createAdamSlot(Output<T> v) {
-    Operand<T> firstMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> firstMomentInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
-    Operand<T> secondMomentInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> secondMomentInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> firstMomentSlot = (Variable<T>) getSlot(variable,FIRST_MOMENT).get();
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> secondMomentSlot = (Variable<T>) getSlot(variable,SECOND_MOMENT).get();
+    Variable<T> firstMomentSlot = getSlot(variable,FIRST_MOMENT).get();
+    Variable<T> secondMomentSlot = getSlot(variable,SECOND_MOMENT).get();
     return tf.train.applyAdam(variable, firstMomentSlot, secondMomentSlot,
         tf.dtypes.cast(betaOnePower,gradient.dataType()),
         tf.dtypes.cast(betaTwoPower,gradient.dataType()),

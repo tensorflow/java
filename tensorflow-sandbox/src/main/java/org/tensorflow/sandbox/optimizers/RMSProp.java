@@ -18,7 +18,6 @@ package org.tensorflow.sandbox.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -64,25 +63,22 @@ public class RMSProp extends Optimizer {
   }
 
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(1.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> rmsInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
-    Operand<T> momentumInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> momentumInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+      Operand<T> mgInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> rmsSlot = (Variable<T>) getSlot(variable,RMS).get();
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> momentumSlot = (Variable<T>) getSlot(variable,MOMENTUM).get();
+    Variable<T> rmsSlot = getSlot(variable,RMS).get();
+    Variable<T> momentumSlot = getSlot(variable,MOMENTUM).get();
     if (centered) {
-      @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-      Variable<T> mgSlot = (Variable<T>) getSlot(variable, MG).get();
+      Variable<T> mgSlot = getSlot(variable, MG).get();
       return tf.train.applyCenteredRmsProp(variable, mgSlot, rmsSlot, momentumSlot,
           tf.constant(learningRate, gradient.dataType()),
           tf.constant(decay, gradient.dataType()),

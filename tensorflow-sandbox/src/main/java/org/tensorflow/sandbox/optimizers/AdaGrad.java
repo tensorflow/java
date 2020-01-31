@@ -18,7 +18,6 @@ package org.tensorflow.sandbox.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -57,14 +56,13 @@ public class AdaGrad extends Optimizer {
   }
 
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(initialAccumulatorValue, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> slot = (Variable<T>) getSlot(variable,ACCUMULATOR).get();
+    Variable<T> slot = getSlot(variable,ACCUMULATOR).get();
     return tf.train.applyAdagrad(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient);
   }
 

@@ -25,9 +25,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-import org.tensorflow.sandbox.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +50,7 @@ public abstract class Optimizer {
    * Global state variables
    */
   //TODO make this be used.
-  protected final List<Variable> globals;
+  protected final List<Variable<?>> globals;
 
   /**
    * The Graph this optimizer is operating on.
@@ -76,12 +74,12 @@ public abstract class Optimizer {
   }
 
   public Op minimize(Operand<?> loss, String name) {
-    List<Pair<Output<?>, Output<? extends TType>>> gradsAndVars = computeGradients(loss);
+    List<GradAndVar<?>> gradsAndVars = computeGradients(loss);
 
     return applyGradients(gradsAndVars, name);
   }
 
-  public List<Pair<Output<?>, Output<? extends TType>>> computeGradients(Operand<?> loss) {
+  public <T extends TType> List<GradAndVar<?>> computeGradients(Operand<?> loss) {
     List<Operation> variables = new ArrayList<>();
     Iterator<Operation> opItr = graph.operations();
     while (opItr.hasNext()) {
@@ -98,26 +96,30 @@ public abstract class Optimizer {
     }
 
     Output<?>[] gradients = graph.addGradients(loss.asOutput(), variableOutputArray);
-    List<Pair<Output<?>, Output<? extends TType>>> gradVarPairs = new ArrayList<>();
+    List<GradAndVar<? extends TType>> gradVarPairs = new ArrayList<>();
 
     for (int i = 0; i < variableOutputArray.length; i++) {
-      gradVarPairs.add(new Pair<>(gradients[i], variableOutputArray[i]));
+      @SuppressWarnings("unchecked")
+      Output<T> typedGrad = (Output<T>) gradients[i];
+      @SuppressWarnings("unchecked")
+      Output<T> typedVar = (Output<T>) variableOutputArray[i];
+      gradVarPairs.add(new GradAndVar<>(typedGrad, typedVar));
     }
 
     return gradVarPairs;
   }
 
-  public Op applyGradients(List<Pair<Output<?>, Output<? extends TType>>> gradsAndVars, String name) {
-    List<Output<? extends TType>> variables = gradsAndVars.stream().map(Pair::getB).collect(Collectors.toList());
+  public Op applyGradients(List<GradAndVar<? extends TType>> gradsAndVars, String name) {
+    List<Output<? extends TType>> variables = gradsAndVars.stream().map(GradAndVar::getVariable).collect(Collectors.toList());
 
     createSlots(variables);
 
-    Optional<Operand> prepOp = prepare(name+"/prepare");
+    Optional<Operand<? extends TType>> prepOp = prepare(name+"/prepare");
 
-    List<Operand<?>> updateOps = new ArrayList<>();
+    List<Operand<? extends TType>> updateOps = new ArrayList<>();
     prepOp.ifPresent(updateOps::add);
-    for (Pair pair : gradsAndVars) {
-      updateOps.add(applyDense((Output)pair.getA(),(Output)pair.getB()));
+    for (GradAndVar<? extends TType> pair : gradsAndVars) {
+      updateOps.add(applyDense(pair));
     }
 
     return finish(updateOps,name);
@@ -129,7 +131,7 @@ public abstract class Optimizer {
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
-  public Optional<Variable<?>> getSlot(Output<?> var, String slotName) {
+  public <T extends TType> Optional<Variable<T>> getSlot(Output<T> var, String slotName) {
     return getSlot(var.op().name(),slotName);
   }
 
@@ -139,12 +141,14 @@ public abstract class Optimizer {
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
-  public Optional<Variable<?>> getSlot(String varName, String slotName) {
-    Map<String,Variable<?>> variables = slots.get(slotName);
+  private <T extends TType> Optional<Variable<T>> getSlot(String varName, String slotName) {
+    Map<String,Variable<? extends TType>> variables = slots.get(slotName);
     if (variables != null) {
-      Variable<?> slot = variables.get(varName);
+      Variable<? extends TType> slot = variables.get(varName);
       if (slot != null) {
-        return Optional.of(slot);
+        @SuppressWarnings("unchecked") // This method should only be called when the type is known.
+        Optional<Variable<T>> opt = Optional.of((Variable<T>)slot);
+        return opt;
       } else {
         return Optional.empty();
       }
@@ -162,11 +166,11 @@ public abstract class Optimizer {
    * @param <T> The type of the variable.
    */
   protected <T extends TType> void createSlot(Output<T> variable, String slotName, Operand<T> initializer) {
-    Variable<T> slot = (Variable<T>) tf.withName(createName(variable, slotName)).variable(variable.shape(), TFloat32.DTYPE);
+    Variable<T> slot = tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.dataType());
     Assign<T> slotInit = tf.assign(slot, initializer);
     graph.addInitializer(slotInit);
     String varName = variable.op().name();
-    Map<String,Variable<?>> variables = slots.computeIfAbsent(slotName,(k) -> new HashMap<>());
+    Map<String,Variable<? extends TType>> variables = slots.computeIfAbsent(slotName,(k) -> new HashMap<>());
     variables.put(varName,slot);
   }
 
@@ -175,7 +179,7 @@ public abstract class Optimizer {
    *
    * @param scopeName The scope name to use for any variable creations.
    */
-  protected Optional<Operand> prepare(String scopeName) {
+  protected Optional<Operand<? extends TType>> prepare(String scopeName) {
     return Optional.empty();
   }
 
@@ -184,6 +188,10 @@ public abstract class Optimizer {
    * @param variables The variables to create slots for.
    */
   protected void createSlots(List<Output<? extends TType>> variables) { }
+
+  private <T extends TType> Operand<T> applyDense(GradAndVar<T> gradVarPair) {
+    return applyDense(gradVarPair.getGradient(),gradVarPair.getVariable());
+  }
 
   /**
    * Generates the gradient update operations for the specific variable and gradient.
@@ -213,7 +221,25 @@ public abstract class Optimizer {
    */
   public abstract String getOptimizerName();
 
-  public static String createName(Output<?> variable, String slotName) {
+  public static String createName(Output<? extends TType> variable, String slotName) {
     return variable.op().name() + "-" + slotName;
+  }
+
+  public static class GradAndVar<T extends TType> {
+    private final Output<T> gradient;
+    private final Output<T> variable;
+
+    public GradAndVar(Output<T> gradient, Output<T> variable) {
+      this.gradient = gradient;
+      this.variable = variable;
+    }
+
+    public Output<T> getGradient() {
+      return gradient;
+    }
+
+    public Output<T> getVariable() {
+        return variable;
+    }
   }
 }

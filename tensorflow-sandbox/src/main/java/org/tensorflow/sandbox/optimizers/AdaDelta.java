@@ -18,7 +18,6 @@ package org.tensorflow.sandbox.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -60,18 +59,16 @@ public class AdaDelta extends Optimizer {
   }
 
   private <T extends TType> void createAdaDeltaSlot(Output<T> v) {
-    Operand<T> accumulatorInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> accumulatorInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, accumulatorInitializer);
-    Operand<T> updateInitializer = tf.fill(tf.shape(v), (Constant<T>) tf.constant(0.0f, TFloat32.DTYPE));//v.dataType()));
+    Operand<T> updateInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR_UPDATE, updateInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    @SuppressWarnings("unchecked") // suppressed as the slots are created to have the dtype of the variable.
-    Variable<T> accumSlot = (Variable<T>) getSlot(variable,ACCUMULATOR).get();
-    @SuppressWarnings("unchecked")
-    Variable<T> accumUpdateSlot = (Variable<T>) getSlot(variable,ACCUMULATOR_UPDATE).get();
+    Variable<T> accumSlot = getSlot(variable,ACCUMULATOR).get();
+    Variable<T> accumUpdateSlot = getSlot(variable,ACCUMULATOR_UPDATE).get();
     return tf.train.applyAdadelta(variable, accumSlot, accumUpdateSlot,
         tf.constant(learningRate, gradient.dataType()),
         tf.constant(rho, gradient.dataType()),
