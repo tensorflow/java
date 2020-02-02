@@ -11,8 +11,7 @@ Usage
 --
 
 A `Dataset` is an abstraction representing a sequence of elements. 
-Each element in the sequence is a collection (`List`) of tensors (or, "components"). 
-Individual elements are retrieved though the dataset retrieves these elements.
+Each element in the sequence is a collection (`List`) of tensors (or, "components").
 
 Creation
 -
@@ -50,7 +49,7 @@ Iteration
 --
 
 In eager mode, the dataset can be iterated through using a standard 
-"for-each" loop:
+"for-each" loop, to receive the tensor values of each component:
 
 ```java
 int BATCH_SIZE = 2;
