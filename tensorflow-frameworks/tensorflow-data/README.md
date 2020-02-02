@@ -65,17 +65,37 @@ In graph mode, the dataset is iterated through using a while-loop,
 using the `OneShotIterator` abstraction.
 
 ```java
-while (true) {
-    try {
-        IteratorGetNext getNext = tf.data.iteratorGetNext(anonymousIter.handle(), outputTypes, outputShapes);
-        List<Output<?>> outputs = getNext.components();
-        System.out.println("BATCH: ");
-        printIntTensor(outputs.get(0).tensor());
-        printIntTensor(outputs.get(1).tensor());
-        System.out.println();
-    } catch (IndexOutOfBoundsException e) {
-        System.out.println("finished iterating.");
-        break;
+OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
+Operation makeIterator = oneShotIterator.getMakeIteratorOp();
+List<Output<?>> components = oneShotIterator.getComponents();
+
+try (Session session = new Session(graph)) {
+    // Run MakeIterator Op to set iterator position
+    session.runner()
+        .addTarget(makeIterator)
+        .run();
+
+    int count = 0;
+    
+    while (true) {
+        try {
+            List<Tensor<?>> outputs = session.runner()
+                .fetch(components.get(0))
+                .fetch(components.get(1))
+                .run();
+
+            Tensor<TInt32> matrix1 = outputs.get(0).expect(TInt32.DTYPE);
+            Tensor<TInt32> matrix2 = outputs.get(1).expect(TInt32.DTYPE);
+
+            assertArrayEquals(testMatrix1[count], getIntTensorAsArray(matrix1));
+            assertArrayEquals(testMatrix2[count], getIntTensorAsArray(matrix2));
+
+            count++;
+        } catch (IndexOutOfBoundsException e) {
+            // Finished iterating
+            break;
+        }
     }
 }
 ```
+
