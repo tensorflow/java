@@ -18,13 +18,6 @@ public class BatchDatasetTest extends DatasetTestBase {
   public void testEagerBatchDataset() {
     Ops tf = Ops.create();
 
-Ops tf = // ... TensorFlow Ops Accessor (either graph or eager).
-
-// Construct dataset with two components, batchSize=2.
-Dataset dataset = Dataset.fromTensorSlices(tf,
-    // List of array components
-    Arrays.asList(tf.constant(m1), tf.constant(m2)),
-    // List of 
     // EVEN BATCH SIZES
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
