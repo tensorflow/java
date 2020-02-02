@@ -17,6 +17,14 @@ Creation
 -
 A dataset can be constructed from a list of constant tensors
 using `Dataset.fromTensorSlices( ... )` as follows:
+A `Dataset` is an abstraction representing a sequence of elements. 
+Each element in the sequence is a collection (`List`) of tensors (or, "components"). 
+Individual elements are retrieved though the dataset retrieves these elements.
+
+Creation
+-
+A dataset can be constructed from a list of constant tensors as in
+the following example:
 
 ```java
 // Declare dataset components as arrays.
@@ -43,6 +51,7 @@ Dataset dataset = Dataset.fromTensorSlices(tf,
     // List of each component's dtype
     Arrays.asList(TInt32.DTYPE, TInt32.DTYPE)
 )
+).batch(2);
 ```
 
 Iteration
@@ -50,6 +59,7 @@ Iteration
 
 In eager mode, the dataset can be iterated through using a standard 
 "for-each" loop, to receive the tensor values of each component:
+"for-each" loop:
 
 ```java
 int BATCH_SIZE = 2;
@@ -88,6 +98,24 @@ try (Session session = new Session(graph)) {
             // Finished iterating
             break;
         }
+    }
+}
+```
+In graph mode, the dataset is iterated through using a while-loop, 
+using the `OneShotIterator` abstraction.
+
+```java
+while (true) {
+    try {
+        IteratorGetNext getNext = tf.data.iteratorGetNext(anonymousIter.handle(), outputTypes, outputShapes);
+        List<Output<?>> outputs = getNext.components();
+        System.out.println("BATCH: ");
+        printIntTensor(outputs.get(0).tensor());
+        printIntTensor(outputs.get(1).tensor());
+        System.out.println();
+    } catch (IndexOutOfBoundsException e) {
+        System.out.println("finished iterating.");
+        break;
     }
 }
 ```
