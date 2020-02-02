@@ -15,7 +15,9 @@
   <description>Parent POM for TensorFlow Framework artifacts</description>
 
   <modules>
+    <module>tensorflow-keras</module>
     <module>tensorflow-data</module>
+    <module>tensorflow-utils</module>
   </modules>
 
 </project>
