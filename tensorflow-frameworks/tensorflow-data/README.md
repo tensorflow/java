@@ -18,8 +18,7 @@ Creation
 A dataset can be constructed from a list of constant tensors
 using `Dataset.fromTensorSlices( ... )` as follows:
 A `Dataset` is an abstraction representing a sequence of elements. 
-Each element in the sequence is a collection (`List`) of tensors (or, "components"). 
-Individual elements are retrieved though the dataset retrieves these elements.
+Each element in the sequence is a collection (`List`) of tensors (or, "components").
 
 Creation
 -
