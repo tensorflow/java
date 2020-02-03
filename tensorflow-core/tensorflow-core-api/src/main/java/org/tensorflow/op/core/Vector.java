@@ -154,7 +154,7 @@ public final class Vector<T extends TType> extends PrimitiveOp implements Operan
    * @return the rank-1 constant
    */
   public static Vector<TString> create(Scope scope, Charset charset, String... data) {
-    try (Tensor<TString> value = TString.copyOf(charset, NdArrays.vectorOfObjects(data))) {
+    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.vectorOfObjects(data))) {
       return create(scope, value);
     }
   }

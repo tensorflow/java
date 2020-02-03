@@ -91,6 +91,6 @@ public class ScalarTest {
     String value = "Cincinnati";
     Charset charset = StandardCharsets.UTF_16;
     Scalar<TString> op = tf.scalar(charset, value);
-    assertEquals(value, op.data().use(charset).getObject());
+    assertEquals(value, op.data().using(charset).getObject());
   }
 }

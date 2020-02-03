@@ -107,7 +107,7 @@ public class VectorTest {
     Charset charset = StandardCharsets.UTF_16LE;
     Vector<TString> op = tf.vector(charset, values);
     String[] data = new String[values.length];
-    op.data().use(charset).read(data);
+    op.data().using(charset).read(data);
     assertArrayEquals(values, data);
   }
 

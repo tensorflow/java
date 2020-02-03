@@ -17,6 +17,7 @@
 
 package org.tensorflow.types;
 
+import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -70,28 +71,6 @@ public interface TBfloat16 extends FloatNdArray, TNumber {
   }
 
   /**
-   * Allocates a new tensor of the given shape.
-   *
-   * @param shape shape of the tensor to allocate
-   * @return the new tensor
-   */
-  static Tensor<TBfloat16> ofShape(Shape shape) {
-    return Tensor.of(DTYPE, shape);
-  }
-
-  /**
-   * Allocates a new tensor of the given shape.
-   *
-   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
-   *
-   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
-   * @return the new tensor
-   */
-  static Tensor<TBfloat16> ofShape(long... dimensionSizes) {
-    return Tensor.of(DTYPE, Shape.of(dimensionSizes));
-  }
-
-  /**
    * Allocates a new tensor which is a copy of a given array of floats.
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
@@ -99,8 +78,30 @@ public interface TBfloat16 extends FloatNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TBfloat16> copyOf(NdArray<Float> src) {
+  static Tensor<TBfloat16> tensorOf(NdArray<Float> src) {
     return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  }
+
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
+  static Tensor<TBfloat16> tensorOf(Shape shape) {
+    return Tensor.of(DTYPE, shape);
+  }
+
+  /**
+   * Allocates a new tensor of the given shape and initialize its data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param dataInit tensor data initializer
+   * @return the new tensor
+   * @throws org.tensorflow.TensorFlowException if the tensor cannot be allocated or initialized
+   */
+  static Tensor<TBfloat16> tensorOf(Shape shape, Consumer<TBfloat16> dataInit) {
+    return Tensor.of(DTYPE, shape, dataInit);
   }
 }
 

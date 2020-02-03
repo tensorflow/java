@@ -67,7 +67,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
     IntNdArray heapData = NdArrays.vectorOf(0, 1, 2, 3);
 
     // Creates a 2x2 matrix
-    try (Tensor<TInt32> tensor = TInt32.ofShape(2, 2)) {
+    try (Tensor<TInt32> tensor = TInt32.tensorOf(Shape.of(2, 2))) {
       IntNdArray tensorData = tensor.data();
 
       // Copy first 2 values of the vector to the first row of the matrix

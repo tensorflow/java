@@ -141,7 +141,7 @@ public final class Scalar<T extends TType> extends PrimitiveOp implements Operan
    * @return a scalar constant
    */
   public static Scalar<TString> create(Scope scope, Charset charset, String data) {
-    try (Tensor<TString> value = TString.copyOf(charset, NdArrays.scalarOfObject(data))) {
+    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
       return create(scope, value);
     }
   }

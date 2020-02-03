@@ -37,6 +37,6 @@
  * <p>Note that while it is always possible to allocate a tensor using the
  * {@link org.tensorflow.Tensor#of(org.tensorflow.DataType, org.tensorflow.tools.Shape) Tensor.of(...)}
  * method, most tensor types expose factory methods that simplify the creation process, like
- * {@code scalarOf(...)}, {@code vectorOf(...)}, {@code ofShape(...)}, etc.
+ * {@code scalarOf(...)}, {@code vectorOf(...)}, {@code tensorOf(...)}, etc.
  */
 package org.tensorflow.types;

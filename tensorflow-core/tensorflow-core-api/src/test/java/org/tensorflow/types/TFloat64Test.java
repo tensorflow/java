@@ -24,7 +24,7 @@ public class TFloat64Test extends NumericTypesTestBase<TFloat64, Double> {
 
   @Override
   Tensor<TFloat64> allocateTensor(Shape shape) {
-    return TFloat64.ofShape(shape);
+    return TFloat64.tensorOf(shape);
   }
 
   @Override
