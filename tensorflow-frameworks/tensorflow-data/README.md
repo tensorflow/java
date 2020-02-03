@@ -10,13 +10,13 @@ a simple API for configuring and iterating over datasets in both "graph" and "ea
 Usage
 --
 
-A `Dataset` is an abstraction representing a sequence of elements. 
-Each element in the sequence is a collection (`List`) of tensors (or, "components").
+The `Dataset` abstraction represents a sequence of elements, where each element in the sequence is a collection (`List`) of tensors (or, "components").
+
 
 Creation
 -
-A dataset can be constructed from a list of constant tensors as in
-the following example:
+A dataset can be constructed from a list of constant tensors
+using `Dataset.fromTensorSlices( ... )` as follows:
 
 ```java
 // Declare dataset components as arrays.
@@ -42,7 +42,7 @@ Dataset dataset = Dataset.fromTensorSlices(tf,
     Arrays.asList(tf.constant(m1), tf.constant(m2)),
     // List of each component's dtype
     Arrays.asList(TInt32.DTYPE, TInt32.DTYPE)
-).batch(2);
+)
 ```
 
 Iteration
@@ -61,8 +61,7 @@ for (List<Output<?>> components : dataset.batch(BATCH_SIZE)) {
 }
 ```
 
-In graph mode, the dataset is iterated through using a while-loop, 
-using the `OneShotIterator` abstraction.
+In graph mode, the dataset can be iterated through using the `OneShotIterator` abstraction, and a while loop, as follows:
 
 ```java
 OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
@@ -74,8 +73,6 @@ try (Session session = new Session(graph)) {
     session.runner()
         .addTarget(makeIterator)
         .run();
-
-    int count = 0;
     
     while (true) {
         try {
@@ -87,10 +84,6 @@ try (Session session = new Session(graph)) {
             Tensor<TInt32> matrix1 = outputs.get(0).expect(TInt32.DTYPE);
             Tensor<TInt32> matrix2 = outputs.get(1).expect(TInt32.DTYPE);
 
-            assertArrayEquals(testMatrix1[count], getIntTensorAsArray(matrix1));
-            assertArrayEquals(testMatrix2[count], getIntTensorAsArray(matrix2));
-
-            count++;
         } catch (IndexOutOfBoundsException e) {
             // Finished iterating
             break;
@@ -98,4 +91,3 @@ try (Session session = new Session(graph)) {
     }
 }
 ```
-
