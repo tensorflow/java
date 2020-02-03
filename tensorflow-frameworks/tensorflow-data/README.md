@@ -22,8 +22,8 @@ Each element in the sequence is a collection (`List`) of tensors (or, "component
 
 Creation
 -
-A dataset can be constructed from a list of constant tensors as in
-the following example:
+A dataset can be constructed from a list of constant tensors
+using `Dataset.fromTensorSlices( ... )` as follows:
 
 ```java
 // Declare dataset components as arrays.
