@@ -37,7 +37,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
   @Test
   public void initializeTensorsWithZeros() {
     // Allocate a tensor of 32-bits integer of the shape (2, 3, 2)
-    Tensor<T> tensor = allocateTensor(Shape.make(2, 3, 2));
+    Tensor<T> tensor = allocateTensor(Shape.of(2, 3, 2));
     NdArray<U> tensorData = tensor.data();
 
     assertEquals(3, tensorData.rank());

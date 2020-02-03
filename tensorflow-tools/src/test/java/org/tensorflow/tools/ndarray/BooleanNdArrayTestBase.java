@@ -38,7 +38,7 @@ public abstract class BooleanNdArrayTestBase extends NdArrayTestBase<Boolean> {
 
     @Test
     public void iteratePrimitiveElements() {
-        BooleanNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        BooleanNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setBoolean(coords[2] > 0);
@@ -63,7 +63,7 @@ public abstract class BooleanNdArrayTestBase extends NdArrayTestBase<Boolean> {
     public void writeAndReadWithPrimitiveArrays() {
         boolean[] values = new boolean[] { true, true, false, false, true, true, false, true, false, false, true, false, true, false, true, true };
 
-        BooleanNdArray matrix = allocate(Shape.make(3, 4));
+        BooleanNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertTrue(matrix.getBoolean(0, 0));
         assertFalse(matrix.getBoolean(0, 3));

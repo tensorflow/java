@@ -42,12 +42,12 @@ import org.tensorflow.tools.ndarray.index.Index;
  *    FloatNdArray matrix3d = ndArrayOfFloats(shape(2, 3, 2));
  *
  *    // Initialize sub-matrices data with vectors
- *    matrix.set(vector(1.0f, 2.0f), 0, 0)
- *          .set(vector(3.0f, 4.0f), 0, 1)
- *          .set(vector(5.0f, 6.0f), 0, 2)
- *          .set(vector(7.0f, 8.0f), 1, 0)
- *          .set(vector(9.0f, 10.0f), 1, 1)
- *          .set(vector(11.0f, 12.0f), 1, 2);
+ *    matrix.set(vectorOf(1.0f, 2.0f), 0, 0)
+ *          .set(vectorOf(3.0f, 4.0f), 0, 1)
+ *          .set(vectorOf(5.0f, 6.0f), 0, 2)
+ *          .set(vectorOf(7.0f, 8.0f), 1, 0)
+ *          .set(vectorOf(9.0f, 10.0f), 1, 1)
+ *          .set(vectorOf(11.0f, 12.0f), 1, 2);
  *
  *    // Access the second 3x2 matrix (of rank 2)
  *    FloatNdArray matrix = matrix3d.get(1);
@@ -297,14 +297,13 @@ public interface NdArray<T> {
   /**
    * Reads the content of this N-dimensional array into the destination array.
    *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this
+   * <p>The length of the destination array must be equal or greater to the {@link #size()} of this
    * array, or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param dst the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
-   * this array
+   * @throws IndexOutOfBoundsException if the preconditions on the array length do not hold
    */
   NdArray<T> read(T[] dst);
 
@@ -318,8 +317,8 @@ public interface NdArray<T> {
    * @param dst the destination array
    * @param offset the index of the first element to write in the destination array
    * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of
-   * this array
+   * @throws IndexOutOfBoundsException if the preconditions on the array offset and length do
+   *                                   not hold
    * @throws IllegalArgumentException if offset is greater than dst length or is negative
    */
   NdArray<T> read(T[] dst, int offset);
@@ -327,14 +326,13 @@ public interface NdArray<T> {
   /**
    * Writes the content of this N-dimensional array from the source array.
    *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
+   * <p>The length of the source array must be equal or greater to the {@link #size()} of this array,
    * or an exception is thrown. After the copy, content of the both arrays can be altered
    * independently, without affecting each other.
    *
    * @param src the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
-   * of this array
+   * @throws IndexOutOfBoundsException if the preconditions on the array length do not hold
    */
   NdArray<T> write(T[] src);
 
@@ -348,8 +346,8 @@ public interface NdArray<T> {
    * @param src the source array
    * @param offset the index of the first byte to read from the source array
    * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size
-   * of this array
+   * @throws IndexOutOfBoundsException if the preconditions on the offset and length parameters do
+   *                                   not hold
    * @throws IllegalArgumentException if offset is greater than src length or is negative
    */
   NdArray<T> write(T[] src, int offset);

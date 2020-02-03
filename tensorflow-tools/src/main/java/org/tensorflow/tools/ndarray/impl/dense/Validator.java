@@ -18,8 +18,18 @@ package org.tensorflow.tools.ndarray.impl.dense;
 
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.ndarray.NdArray;
 
 final class Validator extends org.tensorflow.tools.ndarray.impl.Validator {
+
+  static int arrayDataLength(NdArray<?> array) {
+    long size = array.size();
+    // Just validate that the size fits in a 32-bit value, other validations are handled by the buffers
+    if (size > Integer.MAX_VALUE) {
+      throw new IndexOutOfBoundsException("The data of this N-dimensional array does not fit in a standard array");
+    }
+    return (int)size;
+  }
 
   static void denseShape(DataBuffer<?> buffer, Shape shape) {
     if (shape == null) {

@@ -36,7 +36,7 @@ public abstract class DoubleNdArrayTestBase extends NdArrayTestBase<Double> {
 
     @Test
     public void iteratePrimitiveElements() {
-        DoubleNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        DoubleNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setDouble((double)coords[2]);
@@ -61,7 +61,7 @@ public abstract class DoubleNdArrayTestBase extends NdArrayTestBase<Double> {
     public void writeAndReadWithPrimitiveArrays() {
         double[] values = new double[] { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5 };
 
-        DoubleNdArray matrix = allocate(Shape.make(3, 4));
+        DoubleNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertEquals(0.0, matrix.getDouble(0, 0), 0.0);
         assertEquals(0.3, matrix.getDouble(0, 3), 0.0);

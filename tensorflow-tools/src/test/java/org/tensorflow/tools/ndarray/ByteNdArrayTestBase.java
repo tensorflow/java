@@ -36,7 +36,7 @@ public abstract class ByteNdArrayTestBase extends NdArrayTestBase<Byte> {
 
     @Test
     public void iteratePrimitiveElements() {
-        ByteNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        ByteNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setByte((byte)coords[2]);
@@ -61,7 +61,7 @@ public abstract class ByteNdArrayTestBase extends NdArrayTestBase<Byte> {
     public void writeAndReadWithPrimitiveArrays() {
         byte[] values = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-        ByteNdArray matrix = allocate(Shape.make(3, 4));
+        ByteNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertEquals(0, matrix.getByte(0, 0));
         assertEquals(3, matrix.getByte(0, 3));

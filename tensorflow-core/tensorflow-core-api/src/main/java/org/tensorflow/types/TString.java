@@ -172,7 +172,7 @@ class TStringImpl extends DenseNdArray<String> implements TString {
 
   static <T> Tensor<TString> createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
     long size = StringTensorBuffer.computeSize(src, getBytes);
-    return Tensor.allocate(TString.DTYPE, src.shape(), size, data ->
+    return Tensor.of(TString.DTYPE, src.shape(), size, data ->
         ((TStringImpl)data).tensorBuffer.init(src, getBytes)
     );
   }

@@ -36,7 +36,7 @@ public abstract class IntNdArrayTestBase extends NdArrayTestBase<Integer> {
 
     @Test
     public void iteratePrimitiveElements() {
-        IntNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        IntNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setInt((int)coords[2]);
@@ -61,7 +61,7 @@ public abstract class IntNdArrayTestBase extends NdArrayTestBase<Integer> {
     public void writeAndReadWithPrimitiveArrays() {
         int[] values = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-        IntNdArray matrix = allocate(Shape.make(3, 4));
+        IntNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertEquals(0, matrix.getInt(0, 0));
         assertEquals(3, matrix.getInt(0, 3));

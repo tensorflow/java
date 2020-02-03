@@ -113,7 +113,7 @@ public class VectorTest {
 
   @Test
   public void createShapeVector() {
-    Shape shape = Shape.make(2, 3, 2);
+    Shape shape = Shape.of(2, 3, 2);
     Vector<TInt64> op = tf.vector(shape);
     long[] data = new long[shape.numDimensions()];
     op.data().read(data);

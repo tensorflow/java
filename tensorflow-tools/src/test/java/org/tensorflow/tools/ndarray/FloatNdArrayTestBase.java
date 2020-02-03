@@ -36,7 +36,7 @@ public abstract class FloatNdArrayTestBase extends NdArrayTestBase<Float> {
 
     @Test
     public void iteratePrimitiveElements() {
-        FloatNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        FloatNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setFloat((float)coords[2]);
@@ -61,7 +61,7 @@ public abstract class FloatNdArrayTestBase extends NdArrayTestBase<Float> {
     public void writeAndReadWithPrimitiveArrays() {
         float[] values = new float[] { 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f };
 
-        FloatNdArray matrix = allocate(Shape.make(3, 4));
+        FloatNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertEquals(0.0f, matrix.getFloat(0, 0), 0.0f);
         assertEquals(0.3f, matrix.getFloat(0, 3), 0.0f);

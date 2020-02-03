@@ -36,7 +36,7 @@ public abstract class ShortNdArrayTestBase extends NdArrayTestBase<Short> {
 
     @Test
     public void iteratePrimitiveElements() {
-        ShortNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        ShortNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
         matrix3d.scalars().forEachIndexed((coords, scalar) -> {
             scalar.setShort((short)coords[2]);
@@ -61,7 +61,7 @@ public abstract class ShortNdArrayTestBase extends NdArrayTestBase<Short> {
     public void writeAndReadWithPrimitiveArrays() {
         short[] values = new short[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-        ShortNdArray matrix = allocate(Shape.make(3, 4));
+        ShortNdArray matrix = allocate(Shape.of(3, 4));
         matrix.write(values);
         assertEquals(0, matrix.getShort(0, 0));
         assertEquals(3, matrix.getShort(0, 3));

@@ -63,7 +63,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException("Values cannot be null");
     }
-    return ofBytes(Shape.make(values.length)).write(values);
+    return ofBytes(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -118,7 +118,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofLongs(Shape.make(values.length)).write(values);
+    return ofLongs(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -170,7 +170,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofInts(Shape.make(values.length)).write(values);
+    return ofInts(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -222,7 +222,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofShorts(Shape.make(values.length)).write(values);
+    return ofShorts(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -274,7 +274,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofFloats(Shape.make(values.length)).write(values);
+    return ofFloats(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -326,7 +326,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofDoubles(Shape.make(values.length)).write(values);
+    return ofDoubles(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -378,7 +378,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofBooleans(Shape.make(values.length)).write(values);
+    return ofBooleans(Shape.of(values.length)).write(values);
   }
 
   /**
@@ -430,12 +430,13 @@ public final class NdArrays {
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
+  @SafeVarargs
   @SuppressWarnings("unchecked")
   public static <T> NdArray<T> vectorOfObjects(T... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofObjects((Class<T>)values[0].getClass(), Shape.make(values.length)).write(values);
+    return ((NdArray<T>)ofObjects(values[0].getClass(), Shape.of(values.length))).write(values);
   }
 
   /**

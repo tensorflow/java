@@ -43,7 +43,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt32> scalarOf(int value) {
-    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setInt(value));
+    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setInt(value));
   }
 
   /**
@@ -53,7 +53,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt32> vectorOf(int... values) {
-    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
   }
 
   /**
@@ -63,7 +63,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt32> ofShape(Shape shape) {
-    return Tensor.allocate(DTYPE, shape);
+    return Tensor.of(DTYPE, shape);
   }
 
   /**
@@ -75,7 +75,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt32> ofShape(long... dimensionSizes) {
-    return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
+    return Tensor.of(DTYPE, Shape.of(dimensionSizes));
   }
 
   /**
@@ -87,7 +87,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt32> copyOf(NdArray<Integer> src) {
-    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
+    return Tensor.of(DTYPE, src.shape(), src::copyTo);
   }
 }
 

@@ -49,10 +49,25 @@ public interface Operand<T extends TType> {
   Output<T> asOutput();
 
   /**
-   * Returns the data of the tensor.
+   * Returns this operand as a tensor.
    *
-   * <i>This only works when running in an eager execution</i>
+   * <i>Only works when running in an eager execution</i>
+   * <p>This helper method is equivalent to {@code asOutput().tensor()}
    *
+   * @return the tensor
+   * @throws IllegalStateException if this is an operand of a graph
+   */
+  default Tensor<T> asTensor() {
+    return asOutput().tensor();
+  }
+
+  /**
+   * Returns the data of the tensor of this operand.
+   *
+   * <i>Only works when running in an eager execution</i>
+   * <p>This helper method is equivalent to {@code toTensor().data()}
+   *
+   * @return the tensor data
    * @throws IllegalStateException if this is an operand of a graph
    */
   default T data() {

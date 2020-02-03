@@ -517,6 +517,7 @@ public interface StaticApi {
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
+  @SafeVarargs
   static <T> NdArray<T> vectorOfObjects(T... values) {
     return NdArrays.vectorOfObjects(values);
   }
@@ -602,10 +603,10 @@ public interface StaticApi {
    * Create a Shape representing an N-dimensional value.
    *
    * @param dimensionSize size of each dimension in the shape, {@link Shape#UNKNOWN_SIZE} if unknown
-   * @see Shape#make(long...)
+   * @see Shape#of(long...)
    */
   static Shape shapeOf(long... dimensionSize) {
-    return Shape.make(dimensionSize);
+    return Shape.of(dimensionSize);
   }
 
   /**

@@ -164,6 +164,6 @@ public class DimensionalSpace {
     for (Dimension dimension : dimensions) {
       shapeDimSizes[i++] = dimension.numElements();
     }
-    return Shape.make(shapeDimSizes);
+    return Shape.of(shapeDimSizes);
   }
 }

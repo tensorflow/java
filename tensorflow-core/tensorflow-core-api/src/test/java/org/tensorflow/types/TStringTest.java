@@ -48,14 +48,14 @@ public class TStringTest {
 
     TString data = tensor.data();
     assertNotNull(data);
-    assertEquals(Shape.make(2), data.shape());
+    assertEquals(Shape.of(2), data.shape());
     assertEquals("Pretty", data.getObject(0));
     assertEquals("vacant", data.getObject(1));
   }
 
   @Test
   public void createCopy() {
-    NdArray<String> strings = NdArrays.ofObjects(String.class, Shape.make(2, 2))
+    NdArray<String> strings = NdArrays.ofObjects(String.class, Shape.of(2, 2))
         .setObject("Pretty", 0, 0)
         .setObject("vacant", 0, 1)
         .setObject("New", 1, 0)
@@ -90,7 +90,7 @@ public class TStringTest {
   @Test
   public void initializingTensorWithRawBytes() {
     String[] strings = new String[] { "TensorFlow", "For", "Java", "Rocks", "!" };
-    NdArray<byte[]> bytes = NdArrays.ofObjects(byte[].class, Shape.make(strings.length));
+    NdArray<byte[]> bytes = NdArrays.ofObjects(byte[].class, Shape.of(strings.length));
     for (int i = 0; i < strings.length; ++i) {
       bytes.setObject(strings[i].getBytes(), i);
     }

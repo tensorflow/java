@@ -57,8 +57,8 @@ public class NdArrayBenchmark {
 		BufferedImage image = ImageIO.read(getClass().getClassLoader().getResourceAsStream(TEST_IMAGE));
 
 		int numPixels = image.getWidth() * image.getHeight();
-		pixels = NdArrays.ofFloats(Shape.make(numPixels, 3));
-		channels = NdArrays.ofFloats(Shape.make(3, numPixels));
+		pixels = NdArrays.ofFloats(Shape.of(numPixels, 3));
+		channels = NdArrays.ofFloats(Shape.of(3, numPixels));
 
 		Raster imageData = image.getData();
 		float[] pixel = new float[3];
@@ -69,7 +69,7 @@ public class NdArrayBenchmark {
 				channels.slice(all(), at(pixelIdx)).write(pixel);
 			}
 		}
-		batches = NdArrays.ofFloats(Shape.make(BATCH_SIZE, 3, numPixels));
+		batches = NdArrays.ofFloats(Shape.of(BATCH_SIZE, 3, numPixels));
 		firstBatch = batches.get(0);
 	}
 

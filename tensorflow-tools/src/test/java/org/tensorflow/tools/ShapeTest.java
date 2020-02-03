@@ -27,7 +27,7 @@ public class ShapeTest {
 
     @Test
     public void allKnownDimensions() {
-        Shape shape = Shape.make(5, 4, 5);
+        Shape shape = Shape.of(5, 4, 5);
         assertEquals(3, shape.numDimensions());
         assertEquals(5, shape.size(0));
         assertEquals(4, shape.size(1));
@@ -50,10 +50,10 @@ public class ShapeTest {
 
     @Test
     public void hashCodeEquals() {
-        Shape shape1 = Shape.make(5, 4, 5);
-        Shape shape2 = Shape.make(5, 4, 5);
-        Shape shape3 = Shape.make(5, 4, 5, 6);
-        Shape shape4 = Shape.make(5, 4, 1);
+        Shape shape1 = Shape.of(5, 4, 5);
+        Shape shape2 = Shape.of(5, 4, 5);
+        Shape shape3 = Shape.of(5, 4, 5, 6);
+        Shape shape4 = Shape.of(5, 4, 1);
 
         assertEquals(shape1, shape2);
         assertEquals(shape1.hashCode(), shape2.hashCode());
@@ -62,13 +62,13 @@ public class ShapeTest {
         assertNotEquals(shape1, shape4);
         assertNotEquals(shape1.hashCode(), shape4.hashCode());
 
-        Shape scalar1 = Shape.make();
-        Shape scalar2 = Shape.make();
+        Shape scalar1 = Shape.of();
+        Shape scalar2 = Shape.of();
         assertEquals(scalar1, scalar2);
         assertNotEquals(scalar1, shape1);
 
-        Shape unknown1 = Shape.make(-1, 4, 5);
-        Shape unknown2 = Shape.make(-1, 4, 5);
+        Shape unknown1 = Shape.of(-1, 4, 5);
+        Shape unknown2 = Shape.of(-1, 4, 5);
         assertNotEquals(unknown1, unknown2);
         assertNotEquals(unknown1, shape1);
     }

@@ -64,6 +64,18 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
   }
 
   @Override
+  public U read(T[] dst, int offset) {
+    buffer().read(dst, offset, Validator.arrayDataLength(this));
+    return (U)this;
+  }
+
+  @Override
+  public U write(T[] src, int offset) {
+    buffer().write(src, offset, Validator.arrayDataLength(this));
+    return (U)this;
+  }
+
+  @Override
   public U read(DataBuffer<T> dst) {
     Validator.readToBufferArgs(this, dst);
     DataTransfer.execute(buffer(), dimensions(), dst, DataTransfer::ofValue);

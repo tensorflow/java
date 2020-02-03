@@ -42,19 +42,19 @@ public final class Shape {
    *
    * <pre>{@code
    * // A 2-element vector.
-   * Shape vector = Shape.create(2);
+   * Shape vector = Shape.of(2);
    *
    * // A 2x3 matrix.
-   * Shape matrix = Shape.create(2, 3);
+   * Shape matrix = Shape.of(2, 3);
    *
    * // A matrix with 4 columns but an unknown number of rows.
    * // This is typically used to indicate the shape of tensors that represent
    * // a variable-sized batch of values. The Shape below might represent a
    * // variable-sized batch of 4-element vectors.
-   * Shape batch = Shape.create(-1, 4);
+   * Shape batch = Shape.of(-1, 4);
    * }</pre>
    */
-  public static Shape make(long... dimensionSizes) {
+  public static Shape of(long... dimensionSizes) {
     if (dimensionSizes == null || dimensionSizes.length == 0) {
       return scalar();
     }
