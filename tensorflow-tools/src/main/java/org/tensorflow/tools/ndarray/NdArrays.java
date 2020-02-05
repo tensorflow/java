@@ -179,7 +179,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -192,19 +192,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static IntNdArray ofInts(Shape shape) {
-    return wrap(DataBuffers.ofInts(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofInts(shape.size()));
   }
 
   /**
    * Wraps a buffer in an int N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new int N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static IntNdArray wrap(IntDataBuffer buffer, Shape shape) {
+  public static IntNdArray wrap(Shape shape, IntDataBuffer buffer) {
     return IntDenseNdArray.create(buffer, shape);
   }
 
@@ -234,7 +234,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -247,19 +247,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static ShortNdArray ofShorts(Shape shape) {
-    return wrap(DataBuffers.ofShorts(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofShorts(shape.size()));
   }
 
   /**
    * Wraps a buffer in a short N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new short N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static ShortNdArray wrap(ShortDataBuffer buffer, Shape shape) {
+  public static ShortNdArray wrap(Shape shape, ShortDataBuffer buffer) {
     return ShortDenseNdArray.create(buffer, shape);
   }
 
@@ -289,7 +289,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -302,19 +302,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static FloatNdArray ofFloats(Shape shape) {
-    return wrap(DataBuffers.ofFloats(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofFloats(shape.size()));
   }
 
   /**
    * Wraps a buffer in a float N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new float N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static FloatNdArray wrap(FloatDataBuffer buffer, Shape shape) {
+  public static FloatNdArray wrap(Shape shape, FloatDataBuffer buffer) {
     return FloatDenseNdArray.create(buffer, shape);
   }
 
@@ -344,7 +344,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -357,19 +357,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static DoubleNdArray ofDoubles(Shape shape) {
-    return wrap(DataBuffers.ofDoubles(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofDoubles(shape.size()));
   }
 
   /**
    * Wraps a buffer in a double N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new double N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static DoubleNdArray wrap(DoubleDataBuffer buffer, Shape shape) {
+  public static DoubleNdArray wrap(Shape shape, DoubleDataBuffer buffer) {
     return DoubleDenseNdArray.create(buffer, shape);
   }
 
@@ -399,7 +399,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -412,19 +412,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static BooleanNdArray ofBooleans(Shape shape) {
-    return wrap(DataBuffers.ofBooleans(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofBooleans(shape.size()));
   }
 
   /**
    * Wraps a buffer in a boolean N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new boolean N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static BooleanNdArray wrap(BooleanDataBuffer buffer, Shape shape) {
+  public static BooleanNdArray wrap(Shape shape, BooleanDataBuffer buffer) {
     return BooleanDenseNdArray.create(buffer, shape);
   }
 
@@ -459,7 +459,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
   }
 
   /**
@@ -473,19 +473,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static <T> NdArray<T> ofObjects(Class<T> clazz, Shape shape) {
-    return wrap(DataBuffers.ofObjects(clazz, shape.size()), shape);
+    return wrap(shape, DataBuffers.ofObjects(clazz, shape.size()));
   }
 
   /**
    * Wraps a buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static <T> NdArray<T> wrap(DataBuffer<T> buffer, Shape shape) {
+  public static <T> NdArray<T> wrap(Shape shape, DataBuffer<T> buffer) {
     return DenseNdArray.wrap(buffer, shape);
   }
 }

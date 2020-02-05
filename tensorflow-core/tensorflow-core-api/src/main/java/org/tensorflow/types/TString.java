@@ -170,7 +170,7 @@ class TStringImpl extends DenseNdArray<String> implements TString {
 
   @Override
   public NdArray<byte[]> asBytes() {
-    return NdArrays.wrap(tensorBuffer, shape());
+    return NdArrays.wrap(shape(), tensorBuffer);
   }
 
   static <T> Tensor<TString> createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {

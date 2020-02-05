@@ -329,105 +329,105 @@ public interface StaticApi {
   /**
    * Wraps a buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static <T> NdArray<T> ndArrayOf(DataBuffer<T> buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static <T> NdArray<T> ndArrayOf(Shape shape, DataBuffer<T> buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**
    * Wraps a byte buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new byte N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static ByteNdArray ndArrayOf(ByteDataBuffer buffer, Shape shape) {
+  static ByteNdArray ndArrayOf(Shape shape, ByteDataBuffer buffer) {
     return NdArrays.wrap(buffer, shape);
   }
 
   /**
    * Wraps a short buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new short N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static ShortNdArray ndArrayOf(ShortDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static ShortNdArray ndArrayOf(Shape shape, ShortDataBuffer buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**
    * Wraps an int buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new int N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static IntNdArray ndArrayOf(IntDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static IntNdArray ndArrayOf(Shape shape, IntDataBuffer buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**
    * Wraps a long buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new long N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static LongNdArray ndArrayOf(LongDataBuffer buffer, Shape shape) {
+  static LongNdArray ndArrayOf(Shape shape, LongDataBuffer buffer) {
     return NdArrays.wrap(buffer, shape);
   }
 
   /**
    * Wraps a float buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new float N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static FloatNdArray ndArrayOf(FloatDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static FloatNdArray ndArrayOf(Shape shape, FloatDataBuffer buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**
    * Wraps a double buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new double N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static DoubleNdArray ndArrayOf(DoubleDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static DoubleNdArray ndArrayOf(Shape shape, DoubleDataBuffer buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**
    * Wraps a boolean buffer in an N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new boolean N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  static BooleanNdArray ndArrayOf(BooleanDataBuffer buffer, Shape shape) {
-    return NdArrays.wrap(buffer, shape);
+  static BooleanNdArray ndArrayOf(Shape shape, BooleanDataBuffer buffer) {
+    return NdArrays.wrap(shape, buffer);
   }
 
   /**

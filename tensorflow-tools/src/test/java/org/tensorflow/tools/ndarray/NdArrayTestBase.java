@@ -29,11 +29,11 @@ import static org.tensorflow.tools.ndarray.index.Indices.range;
 import static org.tensorflow.tools.ndarray.index.Indices.seq;
 import static org.tensorflow.tools.ndarray.index.Indices.to;
 
-import java.util.stream.LongStream;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
 
 public abstract class NdArrayTestBase<T> {
 
@@ -270,6 +270,19 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(100L), buffer.getObject(5));
     assertEquals(valueOf(10L), buffer.getObject(10));
     assertEquals(valueOf(14L), buffer.getObject(14));
+
+    try {
+      matrix.write(buffer.narrow(10));
+      fail();
+    } catch (BufferUnderflowException e) {
+      // as expected
+    }
+    try {
+      matrix.read(buffer.narrow(10));
+      fail();
+    } catch (BufferOverflowException e) {
+      // as expected
+    }
   }
 
   @Test
@@ -293,41 +306,6 @@ public abstract class NdArrayTestBase<T> {
       matrixA.copyTo(matrixC);
       fail();
     } catch (IllegalArgumentException e) {
-      // as expected
-    }
-  }
-
-  @Test
-  @SuppressWarnings("unchecked")
-  public void writeAndReadWithArrays() {
-    T[] values = (T[])LongStream.range(0L, 12L).boxed().map(this::valueOf).toArray();
-    DataBuffer<T> buffer = DataBuffers.from(values, false, false);
-
-    NdArray<T> matrix = allocate(Shape.of(3, 4));
-    matrix.write(buffer);
-    assertEquals(valueOf(0L), matrix.getObject(0, 0));
-    assertEquals(valueOf(3L), matrix.getObject(0, 3));
-    assertEquals(valueOf(4L), matrix.getObject(1, 0));
-    assertEquals(valueOf(11L), matrix.getObject(2, 3));
-
-    matrix.setObject(valueOf(100L), 1, 0);
-
-    matrix.read(buffer);
-    assertEquals(valueOf(0L), buffer.getObject(0));
-    assertEquals(valueOf(3L), buffer.getObject(3));
-    assertEquals(valueOf(100L), buffer.getObject(4));
-    assertEquals(valueOf(11L), buffer.getObject(11));
-
-    try {
-      matrix.write(buffer.narrow(10));
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.read(buffer.narrow(10));
-      fail();
-    } catch (IndexOutOfBoundsException e) {
       // as expected
     }
   }

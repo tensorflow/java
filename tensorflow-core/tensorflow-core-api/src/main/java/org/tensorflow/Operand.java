@@ -62,10 +62,10 @@ public interface Operand<T extends TType> {
   }
 
   /**
-   * Returns the data of the tensor of this operand.
+   * Returns the data of this operand.
    *
    * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code toTensor().data()}
+   * <p>This helper method is equivalent to {@code asTensor().data()}
    *
    * @return the tensor data
    * @throws IllegalStateException if this is an operand of a graph

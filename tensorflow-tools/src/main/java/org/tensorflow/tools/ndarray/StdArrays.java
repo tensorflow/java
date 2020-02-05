@@ -1,6 +1,7 @@
 package org.tensorflow.tools.ndarray;
 
 import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
+import static org.tensorflow.tools.ndarray.NdArrays.vectorOfObjects;
 
 import org.tensorflow.tools.Shape;
 
@@ -584,6 +585,88 @@ public final class StdArrays {
   }
 
   /**
+   * Copy a single-dimension array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[] array) {
+    vectorOfObjects(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOfObjects(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOfObjects(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOfObjects(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOfObjects(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of objects into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static <T> void copyTo(NdArray<T> dst, T[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOfObjects(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
    * Compute the shape of a single-dimension int array.
    *
    * @param array 1D array
@@ -1003,6 +1086,66 @@ public final class StdArrays {
     return Shape.of(computeShape(array, new long[6]));
   }
 
+  /**
+   * Compute the shape of a single-dimension object array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions object array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions object array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions object array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions object array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions object array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static <T> Shape shapeOf(T[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
   private static void dimSize(int arrayLength, long[] shape, int dimIdx) {
     if (shape[dimIdx] == 0) {
       shape[dimIdx] = arrayLength;
@@ -1284,6 +1427,46 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(boolean[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static <T> long[] computeShape(T[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static <T> long[] computeShape(T[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static <T> long[] computeShape(T[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static <T> long[] computeShape(T[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static <T> long[] computeShape(T[][][][][][] array, long[] shape) {
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);

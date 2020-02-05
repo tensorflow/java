@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -34,7 +33,6 @@ import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
-import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -44,20 +42,6 @@ import org.tensorflow.types.TString;
 @RunWith(JUnit4.class)
 public class ConstantTest {
   private static final float EPSILON = 1e-7f;
-  
-  @Test
-  public void createInt() {
-    int value = 1;
-    
-    try (Graph g = new Graph();
-        Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
-      Constant<TInt32> op = Constant.create(scope, value);
-      try (Tensor<TInt32> result = sess.runner().fetch(op).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(value, result.intValue());
-      }
-    }
-  }
 
   @Test
   public void createIntBuffer() {
@@ -71,20 +55,6 @@ public class ConstantTest {
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
         int[] actual = new int[ints.length];
         assertArrayEquals(ints, result.expect(TInt32.DTYPE).copyTo(actual));
-      }
-    }
-  }
-
-  @Test
-  public void createTFloat() {
-    float value = 1;
-    
-    try (Graph g = new Graph();
-        Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
-      Constant<TFloat32> op = Constant.create(scope, value);
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TFloat32.DTYPE).floatValue(), 0.0f);
       }
     }
   }
@@ -106,20 +76,6 @@ public class ConstantTest {
   }
 
   @Test
-  public void createTDouble() {
-    double value = 1;
-    
-    try (Graph g = new Graph();
-        Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
-      Constant<TFloat64> op = Constant.create(scope, value);
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TFloat64.DTYPE).doubleValue(), 0.0);
-      }
-    }
-  }
-
-  @Test
   public void createTDoubleBuffer() {
     double[] doubles = {1, 2, 3, 4};
     long[] shape = {4};
@@ -136,20 +92,6 @@ public class ConstantTest {
   }
 
   @Test
-  public void createLong() {
-    long value = 1;
-    
-    try (Graph g = new Graph();
-        Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
-      Constant<TInt64> op = Constant.create(scope, value);
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TInt64.DTYPE).longValue());
-      }
-    }
-  }
-
-  @Test
   public void createLongBuffer() {
     long[] longs = {1, 2, 3, 4};
     long[] shape = {4};
@@ -161,20 +103,6 @@ public class ConstantTest {
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
         long[] actual = new long[longs.length];
         assertArrayEquals(longs, result.expect(TInt64.DTYPE).copyTo(actual));
-      }
-    }
-  }
-
-  @Test
-  public void createBoolean() {
-    boolean value = true;
-    
-    try (Graph g = new Graph();
-        Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
-      Constant<TBool> op = Constant.create(scope, value);
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertEquals(value, result.expect(TBool.DTYPE).booleanValue());
       }
     }
   }

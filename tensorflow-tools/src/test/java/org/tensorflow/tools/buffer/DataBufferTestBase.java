@@ -155,4 +155,13 @@ public abstract class DataBufferTestBase<T> {
       // as expected
     }
   }
+
+  @Test
+  public void createFromVarargs() {
+    DataBuffer<T> buffer = DataBuffers.ofObjects(valueOf(1L), valueOf(2L), valueOf(3L));
+    assertEquals(3, buffer.size());
+    assertEquals(valueOf(1L), buffer.getObject(0));
+    assertEquals(valueOf(2L), buffer.getObject(1));
+    assertEquals(valueOf(3L), buffer.getObject(2));
+  }
 }

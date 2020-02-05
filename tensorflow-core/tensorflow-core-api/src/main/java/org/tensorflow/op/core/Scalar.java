@@ -33,10 +33,10 @@ import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
- * An operator producing a constant scalar value.
+ * An operator producing a scalar (rank-0) constant value.
  */
 @Operator
-public final class Scalar<T extends TType> extends Const<T> {
+public final class Scalar<T extends TType> extends Constant<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -47,7 +47,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TInt32> create(Scope scope, int data) {
     try (Tensor<TInt32> value = TInt32.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -60,7 +60,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TFloat32> create(Scope scope, float data) {
     try (Tensor<TFloat32> value = TFloat32.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -73,7 +73,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TFloat64> create(Scope scope, double data) {
     try (Tensor<TFloat64> value = TFloat64.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -86,7 +86,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TInt64> create(Scope scope, long data) {
     try (Tensor<TInt64> value = TInt64.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -99,7 +99,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TBool> create(Scope scope, boolean data) {
     try (Tensor<TBool> value = TBool.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -112,7 +112,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TUint8> create(Scope scope, byte data) {
     try (Tensor<TUint8> value = TUint8.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -125,7 +125,7 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TString> create(Scope scope, String data) {
     try (Tensor<TString> value = TString.scalarOf(data)) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
@@ -139,11 +139,11 @@ public final class Scalar<T extends TType> extends Const<T> {
    */
   public static Scalar<TString> create(Scope scope, Charset charset, String data) {
     try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
-      return create(scope, value);
+      return createFromTensor(scope, value);
     }
   }
 
-  private static <T extends TType> Scalar<T> create(Scope scope, Tensor<T> tensor) {
+  private static <T extends TType> Scalar<T> createFromTensor(Scope scope, Tensor<T> tensor) {
     return new Scalar<>(buildConstOp(scope, tensor));
   }
 
