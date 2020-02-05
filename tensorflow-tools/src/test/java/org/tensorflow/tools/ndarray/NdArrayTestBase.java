@@ -33,6 +33,7 @@ import java.util.stream.LongStream;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataBuffers;
 
 public abstract class NdArrayTestBase<T> {
 
@@ -299,81 +300,32 @@ public abstract class NdArrayTestBase<T> {
   @Test
   @SuppressWarnings("unchecked")
   public void writeAndReadWithArrays() {
-    T[] values = (T[])LongStream.range(0L, 16L).boxed().map(this::valueOf).toArray();
+    T[] values = (T[])LongStream.range(0L, 12L).boxed().map(this::valueOf).toArray();
+    DataBuffer<T> buffer = DataBuffers.from(values, false, false);
 
     NdArray<T> matrix = allocate(Shape.of(3, 4));
-    matrix.write(values);
+    matrix.write(buffer);
     assertEquals(valueOf(0L), matrix.getObject(0, 0));
     assertEquals(valueOf(3L), matrix.getObject(0, 3));
     assertEquals(valueOf(4L), matrix.getObject(1, 0));
     assertEquals(valueOf(11L), matrix.getObject(2, 3));
 
-    matrix.write(values, 4);
-    assertEquals(valueOf(4L), matrix.getObject(0, 0));
-    assertEquals(valueOf(7L), matrix.getObject(0, 3));
-    assertEquals(valueOf(8L), matrix.getObject(1, 0));
-    assertEquals(valueOf(15L), matrix.getObject(2, 3));
-
     matrix.setObject(valueOf(100L), 1, 0);
-    matrix.read(values, 2);
-    assertEquals(valueOf(4L), values[2]);
-    assertEquals(valueOf(7L), values[5]);
-    assertEquals(valueOf(100L), values[6]);
-    assertEquals(valueOf(15L), values[13]);
-    assertEquals(valueOf(15L), values[15]);
 
-    matrix.read(values);
-    assertEquals(valueOf(4L), values[0]);
-    assertEquals(valueOf(7L), values[3]);
-    assertEquals(valueOf(100L), values[4]);
-    assertEquals(valueOf(15L), values[11]);
-    assertEquals(valueOf(15L), values[13]);
-    assertEquals(valueOf(15L), values[15]);
+    matrix.read(buffer);
+    assertEquals(valueOf(0L), buffer.getObject(0));
+    assertEquals(valueOf(3L), buffer.getObject(3));
+    assertEquals(valueOf(100L), buffer.getObject(4));
+    assertEquals(valueOf(11L), buffer.getObject(11));
 
     try {
-      matrix.write((T[])LongStream.range(0L, 4L).boxed().map(this::valueOf).toArray());
+      matrix.write(buffer.narrow(10));
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected
     }
     try {
-      matrix.write(values, values.length);
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.write(values, -1);
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.write(values, values.length + 1);
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.read((T[])LongStream.range(0L, 4L).boxed().map(this::valueOf).toArray());
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.read(values, values.length);
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.read(values, -1);
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // as expected
-    }
-    try {
-      matrix.read(values, values.length + 1);
+      matrix.read(buffer.narrow(10));
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected

@@ -18,7 +18,6 @@ package org.tensorflow.tools.ndarray.impl.dense;
 
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
@@ -41,18 +40,6 @@ public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray>
   public IntNdArray setInt(int value, long... indices) {
     buffer.setInt(value, positionOf(indices, true));
     return this;
-  }
-
-  @Override
-  public IntNdArray read(int[] dst, int offset) {
-    Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.from(dst, false, false).offset(offset));
-  }
-
-  @Override
-  public IntNdArray write(int[] src, int offset) {
-    Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

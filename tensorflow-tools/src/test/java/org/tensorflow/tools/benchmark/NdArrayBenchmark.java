@@ -36,6 +36,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.FloatNdArray;
 import org.tensorflow.tools.ndarray.NdArrays;
+import org.tensorflow.tools.ndarray.StdArrays;
 
 @Fork(value = 1, jvmArgs = {"-Xms4G", "-Xmx4G"})
 @BenchmarkMode(Mode.AverageTime)
@@ -44,13 +45,9 @@ import org.tensorflow.tools.ndarray.NdArrays;
 @State(Scope.Benchmark)
 public class NdArrayBenchmark {
 
-	static final String TEST_IMAGE = "castle.jpg";
-	static final int BATCH_SIZE = 60;
-
-	private FloatNdArray pixels;
-	private FloatNdArray channels;
-	private FloatNdArray batches;
-	private FloatNdArray firstBatch;
+	public static void main(String[] args) throws IOException, RunnerException {
+		org.openjdk.jmh.Main.main(args);
+	}
 
 	@Setup
 	public void setUp() throws IOException {
@@ -65,8 +62,8 @@ public class NdArrayBenchmark {
 		for (int y = 0, pixelIdx = 0; y < image.getHeight(); ++y) {
 			for (int x = 0; x < image.getWidth(); ++x, ++pixelIdx) {
 				imageData.getPixel(x, y, pixel);
-				pixels.get(pixelIdx).write(pixel);
-				channels.slice(all(), at(pixelIdx)).write(pixel);
+				StdArrays.copyTo(pixels.get(pixelIdx), pixel);
+				StdArrays.copyTo(channels.slice(all(), at(pixelIdx)), pixel);
 			}
 		}
 		batches = NdArrays.ofFloats(Shape.of(BATCH_SIZE, 3, numPixels));
@@ -140,7 +137,11 @@ public class NdArrayBenchmark {
 		);
 	}
 
-	public static void main(String[] args) throws IOException, RunnerException {
-		org.openjdk.jmh.Main.main(args);
-	}
+	private static final String TEST_IMAGE = "castle.jpg";
+	private static final int BATCH_SIZE = 60;
+
+	private FloatNdArray pixels;
+	private FloatNdArray channels;
+	private FloatNdArray batches;
+	private FloatNdArray firstBatch;
 }

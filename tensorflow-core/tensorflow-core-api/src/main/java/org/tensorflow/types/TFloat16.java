@@ -27,6 +27,7 @@ import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.layout.DataLayouts;
 import org.tensorflow.tools.ndarray.FloatNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
@@ -64,7 +65,10 @@ public interface TFloat16 extends FloatNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat16> vectorOf(float... values) {
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**

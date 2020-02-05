@@ -15,7 +15,7 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.nio.charset.Charset;
@@ -42,63 +42,69 @@ public class VectorTest {
   public void createIntVector() {
     int[] values = {1, 2, 3, 4};
     Vector<TInt32> op = tf.vector(values);
-    int[] data = new int[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data);
+    assertEquals(values[0], op.data().getInt(0));
+    assertEquals(values[1], op.data().getInt(1));
+    assertEquals(values[2], op.data().getInt(2));
+    assertEquals(values[3], op.data().getInt(3));
   }
 
   @Test
   public void createLongVector() {
     long[] values = {1L, 2L, 3L, 4L};
     Vector<TInt64> op = tf.vector(values);
-    long[] data = new long[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data);
+    assertEquals(values[0], op.data().getLong(0));
+    assertEquals(values[1], op.data().getLong(1));
+    assertEquals(values[2], op.data().getLong(2));
+    assertEquals(values[3], op.data().getLong(3));
   }
 
   @Test
   public void createFloatVector() {
     float[] values = {1.5f, 2.5f, 3.5f, 4.5f};
     Vector<TFloat32> op = tf.vector(values);
-    float[] data = new float[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data, 0);
+    assertEquals(values[0], op.data().getFloat(0), 0);
+    assertEquals(values[1], op.data().getFloat(1), 0);
+    assertEquals(values[2], op.data().getFloat(2), 0);
+    assertEquals(values[3], op.data().getFloat(3), 0);
   }
 
   @Test
   public void createDoubleVector() {
     double[] values = {1.5, 2.5, 3.5, 4.5};
     Vector<TFloat64> op = tf.vector(values);
-    double[] data = new double[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data, 0);
+    assertEquals(values[0], op.data().getDouble(0), 0);
+    assertEquals(values[1], op.data().getDouble(1), 0);
+    assertEquals(values[2], op.data().getDouble(2), 0);
+    assertEquals(values[3], op.data().getDouble(3), 0);
   }
 
   @Test
   public void createBooleanVector() {
     boolean[] values = {true, true, false, true};
     Vector<TBool> op = tf.vector(values);
-    boolean[] data = new boolean[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data);
+    assertEquals(values[0], op.data().getBoolean(0));
+    assertEquals(values[1], op.data().getBoolean(1));
+    assertEquals(values[2], op.data().getBoolean(2));
+    assertEquals(values[3], op.data().getBoolean(3));
   }
 
   @Test
   public void createByteVector() {
     byte[] values = {1, 2, 3, 4};
     Vector<TUint8> op = tf.vector(values);
-    byte[] data = new byte[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data);
+    assertEquals(values[0], op.data().getByte(0));
+    assertEquals(values[1], op.data().getByte(1));
+    assertEquals(values[2], op.data().getByte(2));
+    assertEquals(values[3], op.data().getByte(3));
   }
 
   @Test
   public void createStringVector() {
     String[] values = {"Cincinnati", "Coaticook", "Chibougamau"};
     Vector<TString> op = tf.vector(values);
-    String[] data = new String[values.length];
-    op.data().read(data);
-    assertArrayEquals(values, data);
+    assertEquals(values[0], op.data().getObject(0));
+    assertEquals(values[1], op.data().getObject(1));
+    assertEquals(values[2], op.data().getObject(2));
   }
 
   @Test
@@ -106,27 +112,26 @@ public class VectorTest {
     String[] values = {"Cincinnati", "Coaticook", "Chibougamau"};
     Charset charset = StandardCharsets.UTF_16LE;
     Vector<TString> op = tf.vector(charset, values);
-    String[] data = new String[values.length];
-    op.data().using(charset).read(data);
-    assertArrayEquals(values, data);
+    TString data = op.data().using(charset);
+    assertEquals(values[0], data.getObject(0));
+    assertEquals(values[1], data.getObject(1));
+    assertEquals(values[2], data.getObject(2));
   }
 
   @Test
   public void createShapeVector() {
     Shape shape = Shape.of(2, 3, 2);
     Vector<TInt64> op = tf.vector(shape);
-    long[] data = new long[shape.numDimensions()];
-    op.data().read(data);
-    assertArrayEquals(data, shape.asArray());
+    assertEquals(shape.size(0), op.data().getLong(0));
+    assertEquals(shape.size(1), op.data().getLong(1));
+    assertEquals(shape.size(2), op.data().getLong(2));
   }
 
   @Test
   public void createScalarShapeVector() {
     Shape shape = Shape.scalar();
     Vector<TInt64> op = tf.vector(shape);
-    long[] data = new long[shape.numDimensions()];
-    op.data().read(data);
-    assertArrayEquals(data, shape.asArray());
+    assertEquals(0, op.data().size());
   }
 
   @Test

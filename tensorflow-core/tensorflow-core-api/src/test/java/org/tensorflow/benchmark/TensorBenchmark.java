@@ -12,7 +12,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.RunnerException;
-import org.tensorflow.Tensors;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
@@ -31,7 +30,7 @@ public class TensorBenchmark {
   @Benchmark
   @Measurement(batchSize = 1000)
   public void initTensorByStdArrays() {
-    TInt32.tensorOf(Shape.of(3, 3, 3, 3), d -> StdArrays.writeTo(d, new int[][][][]{
+    int[][][][] data = new int[][][][] {
         {
             {
                 {0, 0, 0}, {0, 0, 1}, {0, 0, 2}
@@ -63,22 +62,75 @@ public class TensorBenchmark {
                 {2, 2, 0}, {2, 2, 1}, {2, 2, 2}
             }
         }
-    }));
+    };
+    TInt32.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data));
   }
 
   @Benchmark
   @Measurement(batchSize = 1000)
   public void initTensorByVectors() {
     TInt32.tensorOf(Shape.of(3, 3, 3, 3), d -> d
-        .set(vectorOf(0, 0, 0), 0, 0, 0).set(vectorOf(0, 0, 1), 0, 0, 1).set(vectorOf(0, 0, 2), 0, 0, 2)
-        .set(vectorOf(0, 1, 0), 0, 1, 0).set(vectorOf(0, 1, 1), 0, 1, 1).set(vectorOf(0, 1, 2), 0, 1, 2)
-        .set(vectorOf(0, 2, 0), 0, 2, 0).set(vectorOf(0, 2, 1), 0, 2, 1).set(vectorOf(0, 2, 2), 0, 2, 2)
-        .set(vectorOf(1, 0, 0), 1, 0, 0).set(vectorOf(1, 0, 1), 1, 0, 1).set(vectorOf(1, 0, 2), 1, 0, 2)
-        .set(vectorOf(1, 1, 0), 1, 1, 0).set(vectorOf(1, 1, 1), 1, 1, 1).set(vectorOf(1, 1, 2), 1, 1, 2)
-        .set(vectorOf(1, 2, 0), 1, 2, 0).set(vectorOf(1, 2, 1), 1, 2, 1).set(vectorOf(1, 2, 2), 1, 2, 2)
-        .set(vectorOf(2, 0, 0), 2, 0, 0).set(vectorOf(2, 0, 1), 2, 0, 1).set(vectorOf(2, 0, 2), 2, 0, 2)
-        .set(vectorOf(2, 1, 0), 2, 1, 0).set(vectorOf(2, 1, 1), 2, 1, 1).set(vectorOf(2, 1, 2), 2, 1, 2)
-        .set(vectorOf(2, 2, 0), 2, 2, 0).set(vectorOf(2, 2, 1), 2, 2, 1).set(vectorOf(2, 2, 2), 2, 2, 2)
+        .set(vectorOf(0, 0, 0), 0, 0, 0)
+        .set(vectorOf(0, 0, 1), 0, 0, 1)
+        .set(vectorOf(0, 0, 2), 0, 0, 2)
+        .set(vectorOf(0, 1, 0), 0, 1, 0)
+        .set(vectorOf(0, 1, 1), 0, 1, 1)
+        .set(vectorOf(0, 1, 2), 0, 1, 2)
+        .set(vectorOf(0, 2, 0), 0, 2, 0)
+        .set(vectorOf(0, 2, 1), 0, 2, 1)
+        .set(vectorOf(0, 2, 2), 0, 2, 2)
+        .set(vectorOf(1, 0, 0), 1, 0, 0)
+        .set(vectorOf(1, 0, 1), 1, 0, 1)
+        .set(vectorOf(1, 0, 2), 1, 0, 2)
+        .set(vectorOf(1, 1, 0), 1, 1, 0)
+        .set(vectorOf(1, 1, 1), 1, 1, 1)
+        .set(vectorOf(1, 1, 2), 1, 1, 2)
+        .set(vectorOf(1, 2, 0), 1, 2, 0)
+        .set(vectorOf(1, 2, 1), 1, 2, 1)
+        .set(vectorOf(1, 2, 2), 1, 2, 2)
+        .set(vectorOf(2, 0, 0), 2, 0, 0)
+        .set(vectorOf(2, 0, 1), 2, 0, 1)
+        .set(vectorOf(2, 0, 2), 2, 0, 2)
+        .set(vectorOf(2, 1, 0), 2, 1, 0)
+        .set(vectorOf(2, 1, 1), 2, 1, 1)
+        .set(vectorOf(2, 1, 2), 2, 1, 2)
+        .set(vectorOf(2, 2, 0), 2, 2, 0)
+        .set(vectorOf(2, 2, 1), 2, 2, 1)
+        .set(vectorOf(2, 2, 2), 2, 2, 2)
     );
+  }
+
+  @Benchmark
+  @Measurement(batchSize = 1000)
+  public void initTensorByFlatArray() {
+    TInt32.tensorOf(Shape.of(3, 3, 3, 3), d -> StdArrays.copyTo(d, new int[]{
+        0, 0, 0,
+        0, 0, 1,
+        0, 0, 2,
+        0, 1, 0,
+        0, 1, 1,
+        0, 1, 2,
+        0, 2, 0,
+        0, 2, 1,
+        0, 2, 2,
+        1, 0, 0,
+        1, 0, 1,
+        1, 0, 2,
+        1, 1, 0,
+        1, 1, 1,
+        1, 1, 2,
+        1, 2, 0,
+        1, 2, 1,
+        1, 2, 2,
+        2, 0, 0,
+        2, 0, 1,
+        2, 0, 2,
+        2, 1, 0,
+        2, 1, 1,
+        2, 1, 2,
+        2, 2, 0,
+        2, 2, 1,
+        2, 2, 2
+    }));
   }
 }

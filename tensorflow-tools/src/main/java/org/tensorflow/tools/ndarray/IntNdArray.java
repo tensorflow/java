@@ -67,66 +67,6 @@ public interface IntNdArray extends NdArray<Integer> {
    */
   IntNdArray setInt(int value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination int array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default IntNdArray read(int[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination int array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first integer to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  IntNdArray read(int[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source int array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default IntNdArray write(int[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source int array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first integer to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  IntNdArray write(int[] src, int offset);
-
   @Override
   IntNdArray slice(Index... indices);
 
@@ -164,16 +104,4 @@ public interface IntNdArray extends NdArray<Integer> {
   IntNdArray write(DataBuffer<Integer> src);
 
   IntNdArray write(IntDataBuffer src);
-
-  @Override
-  IntNdArray read(Integer[] dst);
-
-  @Override
-  IntNdArray read(Integer[] dst, int offset);
-
-  @Override
-  IntNdArray write(Integer[] src);
-
-  @Override
-  IntNdArray write(Integer[] src, int offset);
 }

@@ -36,7 +36,7 @@ import org.tensorflow.tools.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.tools.ndarray.impl.dense.ShortDenseNdArray;
 
 /**
- * Helper class for instantiating {@link NdArray} objects.
+ * Utility class for instantiating {@link NdArray} objects.
  */
 public final class NdArrays {
 
@@ -55,6 +55,9 @@ public final class NdArrays {
   /**
    * Creates a byte vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new byte vector
    * @throws IllegalArgumentException if values is null
@@ -63,7 +66,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException("Values cannot be null");
     }
-    return ofBytes(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -110,6 +113,9 @@ public final class NdArrays {
   /**
    * Creates a long vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new long vector
    * @throws IllegalArgumentException if values is null
@@ -118,7 +124,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofLongs(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -162,6 +168,9 @@ public final class NdArrays {
   /**
    * Creates a int vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new int vector
    * @throws IllegalArgumentException if values is null
@@ -170,7 +179,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofInts(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -214,6 +223,9 @@ public final class NdArrays {
   /**
    * Creates a short vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new short vector
    * @throws IllegalArgumentException if values is null
@@ -222,7 +234,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofShorts(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -266,6 +278,9 @@ public final class NdArrays {
   /**
    * Creates a float vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new float vector
    * @throws IllegalArgumentException if values is null
@@ -274,7 +289,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofFloats(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -318,6 +333,9 @@ public final class NdArrays {
   /**
    * Creates a double vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new double vector
    * @throws IllegalArgumentException if values is null
@@ -326,7 +344,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofDoubles(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -370,6 +388,9 @@ public final class NdArrays {
   /**
    * Creates a boolean vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new boolean vector
    * @throws IllegalArgumentException if values is null
@@ -378,7 +399,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ofBooleans(Shape.of(values.length)).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -426,17 +447,19 @@ public final class NdArrays {
   /**
    * Creates a vector (rank 1) initialized with the given values.
    *
+   * <p>Modifying the data of the returned vector will also impact the values in the array
+   * passed in parameter.
+   *
    * @param values vector values
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
   @SafeVarargs
-  @SuppressWarnings("unchecked")
   public static <T> NdArray<T> vectorOfObjects(T... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return ((NdArray<T>)ofObjects(values[0].getClass(), Shape.of(values.length))).write(values);
+    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
   }
 
   /**

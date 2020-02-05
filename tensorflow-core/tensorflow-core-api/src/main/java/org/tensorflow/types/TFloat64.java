@@ -26,6 +26,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
@@ -54,7 +55,10 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TFloat64> vectorOf(double... values) {
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**

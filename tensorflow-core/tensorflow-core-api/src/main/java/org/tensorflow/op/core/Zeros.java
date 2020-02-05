@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> constant type
  */
 @Operator
-public class Zeros<T extends TType> implements Op, Operand<T> {
+public final class Zeros<T extends TType> implements Op, Operand<T> {
 
   /**
    * Creates a zeroed tensor given its type and shape.

@@ -26,6 +26,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.ndarray.LongNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
@@ -54,7 +55,10 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @return the new tensor
    */
   static Tensor<TInt64> vectorOf(long... values) {
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**

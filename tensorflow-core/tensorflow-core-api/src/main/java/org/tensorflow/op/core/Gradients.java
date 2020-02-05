@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 @Operator
-public class Gradients implements Op, Iterable<Operand<?>> {
+public final class Gradients implements Op, Iterable<Operand<?>> {
 
   /**
    * Optional attributes for {@link Gradients}

@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * An operator producing a constant value.
  */
 @Operator
-public final class Constant<T extends TType> extends PrimitiveOp implements Operand<T> {
+public final class Constant<T extends TType> extends Const<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -810,31 +810,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
     return new Constant<>(buildConstOp(scope, tensor));
   }
 
-  /**
-   * Builds a "Const" operation from a Tensor.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param tensor a Tensor holding the constant value
-   * @return a "Const" operation
-   */
-  static Operation buildConstOp(Scope scope, Tensor<?> tensor) {
-    return scope
-        .env()
-        .opBuilder("Const", scope.makeOpName("Const"))
-        .setAttr("value", tensor)
-        .setAttr("dtype", tensor.dataType())
-        .build();
-  }
-
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-
   private Constant(Operation operation) {
     super(operation);
-    output = operation.output(0);
   }
-
-  private final Output<T> output;
 }

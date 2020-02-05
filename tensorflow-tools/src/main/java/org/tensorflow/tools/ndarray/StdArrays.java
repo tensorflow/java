@@ -1,0 +1,1293 @@
+package org.tensorflow.tools.ndarray;
+
+import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
+
+import org.tensorflow.tools.Shape;
+
+/**
+ * Utility class for working with {@link NdArray} instances mixed with standard Java arrays.
+ */
+public final class StdArrays {
+
+  /**
+   * Copy a single-dimension array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of ints into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(IntNdArray dst, int[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of longs into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(LongNdArray dst, long[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of floats into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(FloatNdArray dst, float[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of doubles into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(DoubleNdArray dst, double[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of bytes into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ByteNdArray dst, byte[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of shorts into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(ShortNdArray dst, short[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a single-dimension array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-1 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[] array) {
+    vectorOf(array).copyTo(dst);
+  }
+
+  /**
+   * Copy a 2-dimensions array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-2 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[][] array) {
+    dst.elements(0).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 3-dimensions array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-3 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[][][] array) {
+    dst.elements(1).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 4-dimensions array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-4 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[][][][] array) {
+    dst.elements(2).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 5-dimensions array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-5 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[][][][][] array) {
+    dst.elements(3).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Copy a 6-dimensions array of booleans into the {@code dst} {@link NdArray}
+   *
+   * @param dst destination rank-6 array
+   * @param array source array
+   * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
+   *                                  with the source array
+   */
+  public static void copyTo(BooleanNdArray dst, boolean[][][][][][] array) {
+    dst.elements(4).forEachIndexed((idx, e) ->
+        vectorOf(array[(int)idx[0]][(int)idx[1]][(int)idx[2]][(int)idx[3]][(int)idx[4]]).copyTo(e)
+    );
+  }
+
+  /**
+   * Compute the shape of a single-dimension int array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions int array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions int array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions int array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions int array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions int array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(int[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension long array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions long array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions long array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions long array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions long array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions long array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(long[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension float array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions float array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions float array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions float array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions float array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions float array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(float[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension double array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions double array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions double array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions double array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions double array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions double array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(double[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension byte array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions byte array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions byte array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions byte array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions byte array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions byte array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(byte[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension short array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions short array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions short array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions short array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions short array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions short array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(short[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  /**
+   * Compute the shape of a single-dimension boolean array.
+   *
+   * @param array 1D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[] array) {
+    return Shape.of(array.length);
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions boolean array.
+   *
+   * @param array 2D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[][] array) {
+    return Shape.of(computeShape(array, new long[2]));
+  }
+
+  /**
+   * Compute the shape of a 3-dimensions boolean array.
+   *
+   * @param array 3D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[][][] array) {
+    return Shape.of(computeShape(array, new long[3]));
+  }
+
+  /**
+   * Compute the shape of a 4-dimensions boolean array.
+   *
+   * @param array 4D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[][][][] array) {
+    return Shape.of(computeShape(array, new long[4]));
+  }
+
+  /**
+   * Compute the shape of a 5-dimensions boolean array.
+   *
+   * @param array 5D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[][][][][] array) {
+    return Shape.of(computeShape(array, new long[5]));
+  }
+
+  /**
+   * Compute the shape of a 6-dimensions boolean array.
+   *
+   * @param array 6D array
+   * @return shape of the array
+   */
+  public static Shape shapeOf(boolean[][][][][][] array) {
+    return Shape.of(computeShape(array, new long[6]));
+  }
+
+  private static void dimSize(int arrayLength, long[] shape, int dimIdx) {
+    if (shape[dimIdx] == 0) {
+      shape[dimIdx] = arrayLength;
+    } else if (shape[dimIdx] != arrayLength) {
+      shape[dimIdx] = Shape.UNKNOWN_SIZE;
+    }
+  }
+
+  private static long[] computeShape(int[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(int[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(int[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(int[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(int[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(long[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(long[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(long[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(long[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(long[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(float[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(float[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(float[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(float[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(float[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(double[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(double[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(double[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(double[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(double[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(byte[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(byte[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(byte[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(byte[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(byte[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(short[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(short[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(short[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(short[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(short[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(boolean[][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 2);
+    for (int i = 0; i < array.length; ++i) {
+      dimSize(array[i].length, shape, shape.length - 1);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(boolean[][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 3);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(boolean[][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 4);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(boolean[][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 5);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+
+  private static long[] computeShape(boolean[][][][][][] array, long[] shape) {
+    dimSize(array.length, shape, shape.length - 6);
+    for (int i = 0; i < array.length; ++i) {
+      computeShape(array[i], shape);
+    }
+    return shape;
+  }
+}

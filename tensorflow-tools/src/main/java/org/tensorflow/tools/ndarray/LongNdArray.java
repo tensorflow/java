@@ -67,66 +67,6 @@ public interface LongNdArray extends NdArray<Long> {
    */
   LongNdArray setLong(long value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination long array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default LongNdArray read(long[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination long array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first long to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  LongNdArray read(long[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source long array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default LongNdArray write(long[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source long array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first long to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  LongNdArray write(long[] src, int offset);
-
   @Override
   LongNdArray slice(Index... indices);
 
@@ -164,16 +104,4 @@ public interface LongNdArray extends NdArray<Long> {
   LongNdArray write(DataBuffer<Long> src);
 
   LongNdArray write(LongDataBuffer src);
-
-  @Override
-  LongNdArray read(Long[] dst);
-
-  @Override
-  LongNdArray read(Long[] dst, int offset);
-
-  @Override
-  LongNdArray write(Long[] src);
-
-  @Override
-  LongNdArray write(Long[] src, int offset);
 }

@@ -26,6 +26,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 
@@ -59,7 +60,10 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> vectorOf(boolean... values) {
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**

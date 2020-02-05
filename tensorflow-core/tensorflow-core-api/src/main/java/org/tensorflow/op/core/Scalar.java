@@ -18,11 +18,8 @@
 package org.tensorflow.op.core;
 
 import java.nio.charset.Charset;
-import org.tensorflow.Operand;
 import org.tensorflow.Operation;
-import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.ndarray.NdArrays;
@@ -39,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * An operator producing a constant scalar value.
  */
 @Operator
-public final class Scalar<T extends TType> extends PrimitiveOp implements Operand<T> {
+public final class Scalar<T extends TType> extends Const<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -147,18 +144,10 @@ public final class Scalar<T extends TType> extends PrimitiveOp implements Operan
   }
 
   private static <T extends TType> Scalar<T> create(Scope scope, Tensor<T> tensor) {
-    return new Scalar<>(Constant.buildConstOp(scope, tensor));
-  }
-
-  @Override
-  public Output<T> asOutput() {
-    return output;
+    return new Scalar<>(buildConstOp(scope, tensor));
   }
 
   private Scalar(Operation operation) {
     super(operation);
-    output = operation.output(0);
   }
-
-  private final Output<T> output;
 }

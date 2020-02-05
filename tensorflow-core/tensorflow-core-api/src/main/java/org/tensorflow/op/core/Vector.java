@@ -18,11 +18,8 @@
 package org.tensorflow.op.core;
 
 import java.nio.charset.Charset;
-import org.tensorflow.Operand;
 import org.tensorflow.Operation;
-import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
@@ -40,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * An operator producing a rank-1 constant value.
  */
 @Operator
-public final class Vector<T extends TType> extends PrimitiveOp implements Operand<T> {
+public final class Vector<T extends TType> extends Const<T> {
 
   /**
    * Creates a constant of {@code int} elements.
@@ -181,18 +178,10 @@ public final class Vector<T extends TType> extends PrimitiveOp implements Operan
   }
 
   private static <T extends TType> Vector<T> create(Scope scope, Tensor<T> tensor) {
-    return new Vector<>(Constant.buildConstOp(scope, tensor));
-  }
-
-  @Override
-  public Output<T> asOutput() {
-    return output;
+    return new Vector<>(buildConstOp(scope, tensor));
   }
 
   private Vector(Operation operation) {
     super(operation);
-    output = operation.output(0);
   }
-
-  private final Output<T> output;
 }

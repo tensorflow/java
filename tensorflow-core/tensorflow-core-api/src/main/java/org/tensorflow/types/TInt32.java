@@ -26,6 +26,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
@@ -52,9 +53,13 @@ public interface TInt32 extends IntNdArray, TNumber {
    *
    * @param values ints to store in the new tensor
    * @return the new tensor
+   * @throws IllegalArgumentException if no values are provided
    */
   static Tensor<TInt32> vectorOf(int... values) {
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> data.write(values));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**

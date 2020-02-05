@@ -67,66 +67,6 @@ public interface FloatNdArray extends NdArray<Float> {
    */
   FloatNdArray setFloat(float value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination float array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default FloatNdArray read(float[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination float array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first float to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  FloatNdArray read(float[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source float array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default FloatNdArray write(float[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source float array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first float to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  FloatNdArray write(float[] src, int offset);
-
   @Override
   FloatNdArray slice(Index... coordinates);
 
@@ -164,16 +104,4 @@ public interface FloatNdArray extends NdArray<Float> {
   FloatNdArray write(DataBuffer<Float> src);
 
   FloatNdArray write(FloatDataBuffer src);
-
-  @Override
-  FloatNdArray read(Float[] dst);
-
-  @Override
-  FloatNdArray read(Float[] dst, int offset);
-
-  @Override
-  FloatNdArray write(Float[] src);
-
-  @Override
-  FloatNdArray write(Float[] src, int offset);
 }

@@ -71,6 +71,9 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static Tensor<TString> vectorOf(String... values) {
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
     return tensorOf(NdArrays.vectorOfObjects(values));
   }
 

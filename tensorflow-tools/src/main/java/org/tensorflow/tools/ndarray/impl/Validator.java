@@ -23,20 +23,6 @@ import org.tensorflow.tools.ndarray.NdArray;
 
 public class Validator {
 
-  public static void getArrayArgs(NdArray<?> ndArray, int arrayLength, int arrayOffset) {
-    copyArrayArgs(arrayLength, arrayOffset);
-    if (arrayLength - arrayOffset < ndArray.size()) {
-      throw new BufferOverflowException();
-    }
-  }
-
-  public static void putArrayArgs(NdArray<?> ndArray, int arrayLength, int arrayOffset) {
-    copyArrayArgs(arrayLength, arrayOffset);
-    if (arrayLength - arrayOffset < ndArray.size()) {
-      throw new BufferUnderflowException();
-    }
-  }
-
   public static void copyToNdArrayArgs(NdArray<?> ndArray, NdArray<?> otherNdArray) {
     if (!ndArray.shape().equals(otherNdArray.shape())) {
       throw new IllegalArgumentException("Can only copy to arrays of the same shape (" +
