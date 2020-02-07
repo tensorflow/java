@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,17 +155,39 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static class OpsSpec {
+    private static final Comparator<MethodSpec> PARAMETER_SPEC_COMPARATOR = (o1, o2) -> {
+      if (o1.parameters.size() > o2.parameters.size()) {
+        return 1;
+      }
+      if (o1.parameters.size() < o2.parameters.size()) {
+        return -1;
+      }
+      List<ParameterSpec> firstParams = o1.parameters;
+      List<ParameterSpec> secondParams = o2.parameters;
+      for (int i = 0; i < firstParams.size(); i++) {
+        ParameterSpec first = firstParams.get(i);
+        ParameterSpec second = secondParams.get(i);
+        int compare = first.name.compareTo(second.name);
+        if (compare != 0) {
+          return compare;
+        }
+      }
+      return 0;
+    };
+    private static final Comparator<MethodSpec> METHOD_SPEC_COMPARATOR = Comparator.comparing((MethodSpec m) -> m.name).thenComparing(PARAMETER_SPEC_COMPARATOR);
+
     final String groupName;
     final String fieldName;
     final ClassName className;
-    final Collection<MethodSpec> methods;
+    final List<MethodSpec> methods;
     final List<OpsSpec> subGroups = new ArrayList<>();
 
     OpsSpec(String groupName, String fieldName, ClassName className, Collection<MethodSpec> methods) {
       this.groupName = groupName;
       this.fieldName = fieldName;
       this.className = className;
-      this.methods = methods;
+      this.methods = new ArrayList<>(methods);
+      this.methods.sort(METHOD_SPEC_COMPARATOR);
     }
   }
 

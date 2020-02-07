@@ -22,6 +22,18 @@ public final class BitwiseOps {
   }
 
   /**
+   * Builds an {@link BitwiseAnd} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of BitwiseAnd
+   * @see org.tensorflow.op.bitwise.BitwiseAnd
+   */
+  public <T extends TNumber> BitwiseAnd<T> bitwiseAnd(Operand<T> x, Operand<T> y) {
+    return BitwiseAnd.create(scope, x, y);
+  }
+
+  /**
    * Builds an {@link BitwiseOr} operation
    *
    * @param x 
@@ -46,18 +58,6 @@ public final class BitwiseOps {
   }
 
   /**
-   * Builds an {@link BitwiseAnd} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of BitwiseAnd
-   * @see org.tensorflow.op.bitwise.BitwiseAnd
-   */
-  public <T extends TNumber> BitwiseAnd<T> bitwiseAnd(Operand<T> x, Operand<T> y) {
-    return BitwiseAnd.create(scope, x, y);
-  }
-
-  /**
    * Builds an {@link Invert} operation
    *
    * @param x 
@@ -66,18 +66,6 @@ public final class BitwiseOps {
    */
   public <T extends TNumber> Invert<T> invert(Operand<T> x) {
     return Invert.create(scope, x);
-  }
-
-  /**
-   * Builds an {@link RightShift} operation
-   *
-   * @param x 
-   * @param y 
-   * @return a new instance of RightShift
-   * @see org.tensorflow.op.bitwise.RightShift
-   */
-  public <T extends TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {
-    return RightShift.create(scope, x, y);
   }
 
   /**
@@ -90,5 +78,17 @@ public final class BitwiseOps {
    */
   public <T extends TNumber> LeftShift<T> leftShift(Operand<T> x, Operand<T> y) {
     return LeftShift.create(scope, x, y);
+  }
+
+  /**
+   * Builds an {@link RightShift} operation
+   *
+   * @param x 
+   * @param y 
+   * @return a new instance of RightShift
+   * @see org.tensorflow.op.bitwise.RightShift
+   */
+  public <T extends TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {
+    return RightShift.create(scope, x, y);
   }
 }
