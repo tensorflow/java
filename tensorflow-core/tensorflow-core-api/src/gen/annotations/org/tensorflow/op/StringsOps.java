@@ -40,21 +40,6 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link Substr} operation
-   *
-   * @param input Tensor of strings
-   * @param pos Scalar defining the position of first character in each substring
-   * @param len Scalar defining the number of characters to include in each substring
-   * @param options carries optional attributes values
-   * @return a new instance of Substr
-   * @see org.tensorflow.op.strings.Substr
-   */
-  public <T extends TNumber> Substr substr(Operand<TString> input, Operand<T> pos, Operand<T> len,
-      Substr.Options... options) {
-    return Substr.create(scope, input, pos, len, options);
-  }
-
-  /**
    * Builds an {@link Join} operation
    *
    * @param inputs A list of string tensors.  The tensors must all have the same shape,
@@ -67,54 +52,29 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link StringFormat} operation
+   * Builds an {@link Lower} operation
    *
-   * @param inputs The list of tensors to format into the placeholder string.
+   * @param input 
    * @param options carries optional attributes values
-   * @return a new instance of StringFormat
-   * @see org.tensorflow.op.strings.StringFormat
+   * @return a new instance of Lower
+   * @see org.tensorflow.op.strings.Lower
    */
-  public StringFormat stringFormat(Iterable<Operand<?>> inputs, StringFormat.Options... options) {
-    return StringFormat.create(scope, inputs, options);
+  public Lower lower(Operand<TString> input, Lower.Options... options) {
+    return Lower.create(scope, input, options);
   }
 
   /**
-   * Builds an {@link ToHashBucketFast} operation
+   * Builds an {@link ReduceJoin} operation
    *
-   * @param input The strings to assign a hash bucket.
-   * @param numBuckets The number of buckets.
-   * @return a new instance of ToHashBucketFast
-   * @see org.tensorflow.op.strings.ToHashBucketFast
-   */
-  public ToHashBucketFast toHashBucketFast(Operand<TString> input, Long numBuckets) {
-    return ToHashBucketFast.create(scope, input, numBuckets);
-  }
-
-  /**
-   * Builds an {@link Strip} operation
-   *
-   * @param input A string `Tensor` of any shape.
-   * @return a new instance of Strip
-   * @see org.tensorflow.op.strings.Strip
-   */
-  public Strip strip(Operand<TString> input) {
-    return Strip.create(scope, input);
-  }
-
-  /**
-   * Builds an {@link UnsortedSegmentJoin} operation
-   *
-   * @param inputs The input to be joined.
-   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
-   * @param numSegments A scalar.
+   * @param inputs The input to be joined.  All reduced indices must have non-zero size.
+   * @param reductionIndices The dimensions to reduce over.  Dimensions are reduced in the
    * @param options carries optional attributes values
-   * @return a new instance of UnsortedSegmentJoin
-   * @see org.tensorflow.op.strings.UnsortedSegmentJoin
+   * @return a new instance of ReduceJoin
+   * @see org.tensorflow.op.strings.ReduceJoin
    */
-  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
-      Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
-      UnsortedSegmentJoin.Options... options) {
-    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
+  public ReduceJoin reduceJoin(Operand<TString> inputs, Operand<TInt32> reductionIndices,
+      ReduceJoin.Options... options) {
+    return ReduceJoin.create(scope, inputs, reductionIndices, options);
   }
 
   /**
@@ -130,18 +90,42 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link UnicodeTranscode} operation
+   * Builds an {@link RegexReplace} operation
    *
-   * @param input The text to be processed. Can have any shape.
-   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
-   * @param outputEncoding The unicode encoding to use in the output. Must be one of
+   * @param input The text to be processed.
+   * @param pattern The regular expression to be matched in the `input` strings.
+   * @param rewrite The rewrite string to be substituted for the `pattern` expression where it is
    * @param options carries optional attributes values
-   * @return a new instance of UnicodeTranscode
-   * @see org.tensorflow.op.strings.UnicodeTranscode
+   * @return a new instance of RegexReplace
+   * @see org.tensorflow.op.strings.RegexReplace
    */
-  public UnicodeTranscode unicodeTranscode(Operand<TString> input, String inputEncoding,
-      String outputEncoding, UnicodeTranscode.Options... options) {
-    return UnicodeTranscode.create(scope, input, inputEncoding, outputEncoding, options);
+  public RegexReplace regexReplace(Operand<TString> input, Operand<TString> pattern,
+      Operand<TString> rewrite, RegexReplace.Options... options) {
+    return RegexReplace.create(scope, input, pattern, rewrite, options);
+  }
+
+  /**
+   * Builds an {@link StringFormat} operation
+   *
+   * @param inputs The list of tensors to format into the placeholder string.
+   * @param options carries optional attributes values
+   * @return a new instance of StringFormat
+   * @see org.tensorflow.op.strings.StringFormat
+   */
+  public StringFormat stringFormat(Iterable<Operand<?>> inputs, StringFormat.Options... options) {
+    return StringFormat.create(scope, inputs, options);
+  }
+
+  /**
+   * Builds an {@link StringLength} operation
+   *
+   * @param input The string for which to compute the length.
+   * @param options carries optional attributes values
+   * @return a new instance of StringLength
+   * @see org.tensorflow.op.strings.StringLength
+   */
+  public StringLength stringLength(Operand<TString> input, StringLength.Options... options) {
+    return StringLength.create(scope, input, options);
   }
 
   /**
@@ -165,18 +149,43 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link RegexReplace} operation
+   * Builds an {@link StringSplit} operation
    *
-   * @param input The text to be processed.
-   * @param pattern The regular expression to be matched in the `input` strings.
-   * @param rewrite The rewrite string to be substituted for the `pattern` expression where it is
+   * @param input `1-D` string `Tensor`, the strings to split.
+   * @param sep `0-D` string `Tensor`, the delimiter character.
    * @param options carries optional attributes values
-   * @return a new instance of RegexReplace
-   * @see org.tensorflow.op.strings.RegexReplace
+   * @return a new instance of StringSplit
+   * @see org.tensorflow.op.strings.StringSplit
    */
-  public RegexReplace regexReplace(Operand<TString> input, Operand<TString> pattern,
-      Operand<TString> rewrite, RegexReplace.Options... options) {
-    return RegexReplace.create(scope, input, pattern, rewrite, options);
+  public StringSplit stringSplit(Operand<TString> input, Operand<TString> sep,
+      StringSplit.Options... options) {
+    return StringSplit.create(scope, input, sep, options);
+  }
+
+  /**
+   * Builds an {@link Strip} operation
+   *
+   * @param input A string `Tensor` of any shape.
+   * @return a new instance of Strip
+   * @see org.tensorflow.op.strings.Strip
+   */
+  public Strip strip(Operand<TString> input) {
+    return Strip.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link Substr} operation
+   *
+   * @param input Tensor of strings
+   * @param pos Scalar defining the position of first character in each substring
+   * @param len Scalar defining the number of characters to include in each substring
+   * @param options carries optional attributes values
+   * @return a new instance of Substr
+   * @see org.tensorflow.op.strings.Substr
+   */
+  public <T extends TNumber> Substr substr(Operand<TString> input, Operand<T> pos, Operand<T> len,
+      Substr.Options... options) {
+    return Substr.create(scope, input, pos, len, options);
   }
 
   /**
@@ -192,51 +201,15 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link StringSplit} operation
+   * Builds an {@link ToHashBucketFast} operation
    *
-   * @param input `1-D` string `Tensor`, the strings to split.
-   * @param sep `0-D` string `Tensor`, the delimiter character.
-   * @param options carries optional attributes values
-   * @return a new instance of StringSplit
-   * @see org.tensorflow.op.strings.StringSplit
+   * @param input The strings to assign a hash bucket.
+   * @param numBuckets The number of buckets.
+   * @return a new instance of ToHashBucketFast
+   * @see org.tensorflow.op.strings.ToHashBucketFast
    */
-  public StringSplit stringSplit(Operand<TString> input, Operand<TString> sep,
-      StringSplit.Options... options) {
-    return StringSplit.create(scope, input, sep, options);
-  }
-
-  /**
-   * Builds an {@link Lower} operation
-   *
-   * @param input 
-   * @param options carries optional attributes values
-   * @return a new instance of Lower
-   * @see org.tensorflow.op.strings.Lower
-   */
-  public Lower lower(Operand<TString> input, Lower.Options... options) {
-    return Lower.create(scope, input, options);
-  }
-
-  /**
-   * Builds an {@link ToNumber} operation
-   *
-   * @param stringTensor 
-   * @return a new instance of ToNumber
-   * @see org.tensorflow.op.strings.ToNumber
-   */
-  public ToNumber<TFloat32> toNumber(Operand<TString> stringTensor) {
-    return ToNumber.create(scope, stringTensor);
-  }
-
-  /**
-   * Builds an {@link UnicodeScript} operation
-   *
-   * @param input A Tensor of int32 Unicode code points.
-   * @return a new instance of UnicodeScript
-   * @see org.tensorflow.op.strings.UnicodeScript
-   */
-  public UnicodeScript unicodeScript(Operand<TInt32> input) {
-    return UnicodeScript.create(scope, input);
+  public ToHashBucketFast toHashBucketFast(Operand<TString> input, Long numBuckets) {
+    return ToHashBucketFast.create(scope, input, numBuckets);
   }
 
   /**
@@ -257,6 +230,17 @@ public final class StringsOps {
    * Builds an {@link ToNumber} operation
    *
    * @param stringTensor 
+   * @return a new instance of ToNumber
+   * @see org.tensorflow.op.strings.ToNumber
+   */
+  public ToNumber<TFloat32> toNumber(Operand<TString> stringTensor) {
+    return ToNumber.create(scope, stringTensor);
+  }
+
+  /**
+   * Builds an {@link ToNumber} operation
+   *
+   * @param stringTensor 
    * @param outType The numeric type to interpret each string in `string_tensor` as.
    * @return a new instance of ToNumber
    * @see org.tensorflow.op.strings.ToNumber
@@ -267,17 +251,45 @@ public final class StringsOps {
   }
 
   /**
-   * Builds an {@link ReduceJoin} operation
+   * Builds an {@link UnicodeScript} operation
    *
-   * @param inputs The input to be joined.  All reduced indices must have non-zero size.
-   * @param reductionIndices The dimensions to reduce over.  Dimensions are reduced in the
-   * @param options carries optional attributes values
-   * @return a new instance of ReduceJoin
-   * @see org.tensorflow.op.strings.ReduceJoin
+   * @param input A Tensor of int32 Unicode code points.
+   * @return a new instance of UnicodeScript
+   * @see org.tensorflow.op.strings.UnicodeScript
    */
-  public ReduceJoin reduceJoin(Operand<TString> inputs, Operand<TInt32> reductionIndices,
-      ReduceJoin.Options... options) {
-    return ReduceJoin.create(scope, inputs, reductionIndices, options);
+  public UnicodeScript unicodeScript(Operand<TInt32> input) {
+    return UnicodeScript.create(scope, input);
+  }
+
+  /**
+   * Builds an {@link UnicodeTranscode} operation
+   *
+   * @param input The text to be processed. Can have any shape.
+   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
+   * @param outputEncoding The unicode encoding to use in the output. Must be one of
+   * @param options carries optional attributes values
+   * @return a new instance of UnicodeTranscode
+   * @see org.tensorflow.op.strings.UnicodeTranscode
+   */
+  public UnicodeTranscode unicodeTranscode(Operand<TString> input, String inputEncoding,
+      String outputEncoding, UnicodeTranscode.Options... options) {
+    return UnicodeTranscode.create(scope, input, inputEncoding, outputEncoding, options);
+  }
+
+  /**
+   * Builds an {@link UnsortedSegmentJoin} operation
+   *
+   * @param inputs The input to be joined.
+   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
+   * @param numSegments A scalar.
+   * @param options carries optional attributes values
+   * @return a new instance of UnsortedSegmentJoin
+   * @see org.tensorflow.op.strings.UnsortedSegmentJoin
+   */
+  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
+      Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
+      UnsortedSegmentJoin.Options... options) {
+    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
   }
 
   /**
@@ -290,17 +302,5 @@ public final class StringsOps {
    */
   public Upper upper(Operand<TString> input, Upper.Options... options) {
     return Upper.create(scope, input, options);
-  }
-
-  /**
-   * Builds an {@link StringLength} operation
-   *
-   * @param input The string for which to compute the length.
-   * @param options carries optional attributes values
-   * @return a new instance of StringLength
-   * @see org.tensorflow.op.strings.StringLength
-   */
-  public StringLength stringLength(Operand<TString> input, StringLength.Options... options) {
-    return StringLength.create(scope, input, options);
   }
 }

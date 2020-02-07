@@ -22,6 +22,21 @@ public final class AudioOps {
   }
 
   /**
+   * Builds an {@link AudioSpectrogram} operation
+   *
+   * @param input Float representation of audio data.
+   * @param windowSize How wide the input window is in samples. For the highest efficiency
+   * @param stride How widely apart the center of adjacent sample windows should be.
+   * @param options carries optional attributes values
+   * @return a new instance of AudioSpectrogram
+   * @see org.tensorflow.op.audio.AudioSpectrogram
+   */
+  public AudioSpectrogram audioSpectrogram(Operand<TFloat32> input, Long windowSize, Long stride,
+      AudioSpectrogram.Options... options) {
+    return AudioSpectrogram.create(scope, input, windowSize, stride, options);
+  }
+
+  /**
    * Builds an {@link DecodeWav} operation
    *
    * @param contents The WAV-encoded audio, usually from a file.
@@ -57,20 +72,5 @@ public final class AudioOps {
   public Mfcc mfcc(Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate,
       Mfcc.Options... options) {
     return Mfcc.create(scope, spectrogram, sampleRate, options);
-  }
-
-  /**
-   * Builds an {@link AudioSpectrogram} operation
-   *
-   * @param input Float representation of audio data.
-   * @param windowSize How wide the input window is in samples. For the highest efficiency
-   * @param stride How widely apart the center of adjacent sample windows should be.
-   * @param options carries optional attributes values
-   * @return a new instance of AudioSpectrogram
-   * @see org.tensorflow.op.audio.AudioSpectrogram
-   */
-  public AudioSpectrogram audioSpectrogram(Operand<TFloat32> input, Long windowSize, Long stride,
-      AudioSpectrogram.Options... options) {
-    return AudioSpectrogram.create(scope, input, windowSize, stride, options);
   }
 }

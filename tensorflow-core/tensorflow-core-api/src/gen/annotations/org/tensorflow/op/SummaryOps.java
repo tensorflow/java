@@ -25,17 +25,31 @@ public final class SummaryOps {
   }
 
   /**
-   * Builds an {@link TensorSummary} operation
+   * Builds an {@link AudioSummary} operation
    *
-   * @param tag A string attached to this summary. Used for organization in TensorBoard.
-   * @param tensor A tensor to serialize.
-   * @param serializedSummaryMetadata A serialized SummaryMetadata proto. Contains plugin
-   * @return a new instance of TensorSummary
-   * @see org.tensorflow.op.summary.TensorSummary
+   * @param tag Scalar. Used to build the `tag` attribute of the summary values.
+   * @param tensor 2-D of shape `[batch_size, frames]`.
+   * @param sampleRate The sample rate of the signal in hertz.
+   * @param options carries optional attributes values
+   * @return a new instance of AudioSummary
+   * @see org.tensorflow.op.summary.AudioSummary
    */
-  public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
-      Operand<TString> serializedSummaryMetadata) {
-    return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
+  public AudioSummary audioSummary(Operand<TString> tag, Operand<TFloat32> tensor,
+      Operand<TFloat32> sampleRate, AudioSummary.Options... options) {
+    return AudioSummary.create(scope, tag, tensor, sampleRate, options);
+  }
+
+  /**
+   * Builds an {@link HistogramSummary} operation
+   *
+   * @param tag Scalar.  Tag to use for the `Summary.Value`.
+   * @param values Any shape. Values to use to build the histogram.
+   * @return a new instance of HistogramSummary
+   * @see org.tensorflow.op.summary.HistogramSummary
+   */
+  public <T extends TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
+      Operand<T> values) {
+    return HistogramSummary.create(scope, tag, values);
   }
 
   /**
@@ -53,31 +67,14 @@ public final class SummaryOps {
   }
 
   /**
-   * Builds an {@link HistogramSummary} operation
+   * Builds an {@link MergeSummary} operation
    *
-   * @param tag Scalar.  Tag to use for the `Summary.Value`.
-   * @param values Any shape. Values to use to build the histogram.
-   * @return a new instance of HistogramSummary
-   * @see org.tensorflow.op.summary.HistogramSummary
+   * @param inputs Can be of any shape.  Each must contain serialized `Summary` protocol
+   * @return a new instance of MergeSummary
+   * @see org.tensorflow.op.summary.MergeSummary
    */
-  public <T extends TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
-      Operand<T> values) {
-    return HistogramSummary.create(scope, tag, values);
-  }
-
-  /**
-   * Builds an {@link AudioSummary} operation
-   *
-   * @param tag Scalar. Used to build the `tag` attribute of the summary values.
-   * @param tensor 2-D of shape `[batch_size, frames]`.
-   * @param sampleRate The sample rate of the signal in hertz.
-   * @param options carries optional attributes values
-   * @return a new instance of AudioSummary
-   * @see org.tensorflow.op.summary.AudioSummary
-   */
-  public AudioSummary audioSummary(Operand<TString> tag, Operand<TFloat32> tensor,
-      Operand<TFloat32> sampleRate, AudioSummary.Options... options) {
-    return AudioSummary.create(scope, tag, tensor, sampleRate, options);
+  public MergeSummary mergeSummary(Iterable<Operand<TString>> inputs) {
+    return MergeSummary.create(scope, inputs);
   }
 
   /**
@@ -93,13 +90,16 @@ public final class SummaryOps {
   }
 
   /**
-   * Builds an {@link MergeSummary} operation
+   * Builds an {@link TensorSummary} operation
    *
-   * @param inputs Can be of any shape.  Each must contain serialized `Summary` protocol
-   * @return a new instance of MergeSummary
-   * @see org.tensorflow.op.summary.MergeSummary
+   * @param tag A string attached to this summary. Used for organization in TensorBoard.
+   * @param tensor A tensor to serialize.
+   * @param serializedSummaryMetadata A serialized SummaryMetadata proto. Contains plugin
+   * @return a new instance of TensorSummary
+   * @see org.tensorflow.op.summary.TensorSummary
    */
-  public MergeSummary mergeSummary(Iterable<Operand<TString>> inputs) {
-    return MergeSummary.create(scope, inputs);
+  public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
+      Operand<TString> serializedSummaryMetadata) {
+    return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
   }
 }

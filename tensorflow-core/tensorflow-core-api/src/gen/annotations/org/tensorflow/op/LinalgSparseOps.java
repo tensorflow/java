@@ -34,42 +34,44 @@ public final class LinalgSparseOps {
   }
 
   /**
-   * Builds an {@link SparseMatrixMul} operation
+   * Builds an {@link CSRSparseMatrixToSparseTensor} operation
+   *
+   * @param sparseMatrix A (possibly batched) CSRSparseMatrix.
+   * @param type 
+   * @return a new instance of CSRSparseMatrixToSparseTensor
+   * @see org.tensorflow.op.linalg.sparse.CSRSparseMatrixToSparseTensor
+   */
+  public <T extends TType> CSRSparseMatrixToSparseTensor<T> cSRSparseMatrixToSparseTensor(
+      Operand<?> sparseMatrix, DataType<T> type) {
+    return CSRSparseMatrixToSparseTensor.create(scope, sparseMatrix, type);
+  }
+
+  /**
+   * Builds an {@link DenseToCSRSparseMatrix} operation
+   *
+   * @param denseInput A Dense tensor.
+   * @param indices Indices of nonzero elements.
+   * @return a new instance of DenseToCSRSparseMatrix
+   * @see org.tensorflow.op.linalg.sparse.DenseToCSRSparseMatrix
+   */
+  public <T extends TType> DenseToCSRSparseMatrix denseToCSRSparseMatrix(Operand<T> denseInput,
+      Operand<TInt64> indices) {
+    return DenseToCSRSparseMatrix.create(scope, denseInput, indices);
+  }
+
+  /**
+   * Builds an {@link SparseMatrixAdd} operation
    *
    * @param a A CSRSparseMatrix.
-   * @param b A dense tensor.
-   * @return a new instance of SparseMatrixMul
-   * @see org.tensorflow.op.linalg.sparse.SparseMatrixMul
+   * @param b A CSRSparseMatrix.
+   * @param alpha A constant scalar.
+   * @param beta A constant scalar.
+   * @return a new instance of SparseMatrixAdd
+   * @see org.tensorflow.op.linalg.sparse.SparseMatrixAdd
    */
-  public <T extends TType> SparseMatrixMul sparseMatrixMul(Operand<?> a, Operand<T> b) {
-    return SparseMatrixMul.create(scope, a, b);
-  }
-
-  /**
-   * Builds an {@link SparseMatrixSoftmaxGrad} operation
-   *
-   * @param softmax A CSRSparseMatrix.
-   * @param gradSoftmax The gradient of `softmax`.
-   * @param type 
-   * @return a new instance of SparseMatrixSoftmaxGrad
-   * @see org.tensorflow.op.linalg.sparse.SparseMatrixSoftmaxGrad
-   */
-  public <T extends TNumber> SparseMatrixSoftmaxGrad sparseMatrixSoftmaxGrad(Operand<?> softmax,
-      Operand<?> gradSoftmax, DataType<T> type) {
-    return SparseMatrixSoftmaxGrad.create(scope, softmax, gradSoftmax, type);
-  }
-
-  /**
-   * Builds an {@link SparseMatrixZeros} operation
-   *
-   * @param denseShape The desired matrix shape.
-   * @param type 
-   * @return a new instance of SparseMatrixZeros
-   * @see org.tensorflow.op.linalg.sparse.SparseMatrixZeros
-   */
-  public <T extends TType> SparseMatrixZeros sparseMatrixZeros(Operand<TInt64> denseShape,
-      DataType<T> type) {
-    return SparseMatrixZeros.create(scope, denseShape, type);
+  public <T extends TType> SparseMatrixAdd sparseMatrixAdd(Operand<?> a, Operand<?> b,
+      Operand<T> alpha, Operand<T> beta) {
+    return SparseMatrixAdd.create(scope, a, b, alpha, beta);
   }
 
   /**
@@ -87,6 +89,18 @@ public final class LinalgSparseOps {
   }
 
   /**
+   * Builds an {@link SparseMatrixMul} operation
+   *
+   * @param a A CSRSparseMatrix.
+   * @param b A dense tensor.
+   * @return a new instance of SparseMatrixMul
+   * @see org.tensorflow.op.linalg.sparse.SparseMatrixMul
+   */
+  public <T extends TType> SparseMatrixMul sparseMatrixMul(Operand<?> a, Operand<T> b) {
+    return SparseMatrixMul.create(scope, a, b);
+  }
+
+  /**
    * Builds an {@link SparseMatrixNNZ} operation
    *
    * @param sparseMatrix A CSRSparseMatrix.
@@ -95,47 +109,6 @@ public final class LinalgSparseOps {
    */
   public SparseMatrixNNZ sparseMatrixNNZ(Operand<?> sparseMatrix) {
     return SparseMatrixNNZ.create(scope, sparseMatrix);
-  }
-
-  /**
-   * Builds an {@link DenseToCSRSparseMatrix} operation
-   *
-   * @param denseInput A Dense tensor.
-   * @param indices Indices of nonzero elements.
-   * @return a new instance of DenseToCSRSparseMatrix
-   * @see org.tensorflow.op.linalg.sparse.DenseToCSRSparseMatrix
-   */
-  public <T extends TType> DenseToCSRSparseMatrix denseToCSRSparseMatrix(Operand<T> denseInput,
-      Operand<TInt64> indices) {
-    return DenseToCSRSparseMatrix.create(scope, denseInput, indices);
-  }
-
-  /**
-   * Builds an {@link SparseMatrixSparseCholesky} operation
-   *
-   * @param input A `CSRSparseMatrix`.
-   * @param permutation A fill-in reducing permutation matrix.
-   * @param type 
-   * @return a new instance of SparseMatrixSparseCholesky
-   * @see org.tensorflow.op.linalg.sparse.SparseMatrixSparseCholesky
-   */
-  public <T extends TType> SparseMatrixSparseCholesky sparseMatrixSparseCholesky(Operand<?> input,
-      Operand<TInt32> permutation, DataType<T> type) {
-    return SparseMatrixSparseCholesky.create(scope, input, permutation, type);
-  }
-
-  /**
-   * Builds an {@link SparseTensorToCSRSparseMatrix} operation
-   *
-   * @param indices SparseTensor indices.
-   * @param values SparseTensor values.
-   * @param denseShape SparseTensor dense shape.
-   * @return a new instance of SparseTensorToCSRSparseMatrix
-   * @see org.tensorflow.op.linalg.sparse.SparseTensorToCSRSparseMatrix
-   */
-  public <T extends TType> SparseTensorToCSRSparseMatrix sparseTensorToCSRSparseMatrix(
-      Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
-    return SparseTensorToCSRSparseMatrix.create(scope, indices, values, denseShape);
   }
 
   /**
@@ -163,6 +136,34 @@ public final class LinalgSparseOps {
   }
 
   /**
+   * Builds an {@link SparseMatrixSoftmaxGrad} operation
+   *
+   * @param softmax A CSRSparseMatrix.
+   * @param gradSoftmax The gradient of `softmax`.
+   * @param type 
+   * @return a new instance of SparseMatrixSoftmaxGrad
+   * @see org.tensorflow.op.linalg.sparse.SparseMatrixSoftmaxGrad
+   */
+  public <T extends TNumber> SparseMatrixSoftmaxGrad sparseMatrixSoftmaxGrad(Operand<?> softmax,
+      Operand<?> gradSoftmax, DataType<T> type) {
+    return SparseMatrixSoftmaxGrad.create(scope, softmax, gradSoftmax, type);
+  }
+
+  /**
+   * Builds an {@link SparseMatrixSparseCholesky} operation
+   *
+   * @param input A `CSRSparseMatrix`.
+   * @param permutation A fill-in reducing permutation matrix.
+   * @param type 
+   * @return a new instance of SparseMatrixSparseCholesky
+   * @see org.tensorflow.op.linalg.sparse.SparseMatrixSparseCholesky
+   */
+  public <T extends TType> SparseMatrixSparseCholesky sparseMatrixSparseCholesky(Operand<?> input,
+      Operand<TInt32> permutation, DataType<T> type) {
+    return SparseMatrixSparseCholesky.create(scope, input, permutation, type);
+  }
+
+  /**
    * Builds an {@link SparseMatrixSparseMatMul} operation
    *
    * @param a A CSRSparseMatrix.
@@ -175,21 +176,6 @@ public final class LinalgSparseOps {
   public <T extends TType> SparseMatrixSparseMatMul sparseMatrixSparseMatMul(Operand<?> a,
       Operand<?> b, DataType<T> type, SparseMatrixSparseMatMul.Options... options) {
     return SparseMatrixSparseMatMul.create(scope, a, b, type, options);
-  }
-
-  /**
-   * Builds an {@link SparseMatrixAdd} operation
-   *
-   * @param a A CSRSparseMatrix.
-   * @param b A CSRSparseMatrix.
-   * @param alpha A constant scalar.
-   * @param beta A constant scalar.
-   * @return a new instance of SparseMatrixAdd
-   * @see org.tensorflow.op.linalg.sparse.SparseMatrixAdd
-   */
-  public <T extends TType> SparseMatrixAdd sparseMatrixAdd(Operand<?> a, Operand<?> b,
-      Operand<T> alpha, Operand<T> beta) {
-    return SparseMatrixAdd.create(scope, a, b, alpha, beta);
   }
 
   /**
@@ -207,15 +193,29 @@ public final class LinalgSparseOps {
   }
 
   /**
-   * Builds an {@link CSRSparseMatrixToSparseTensor} operation
+   * Builds an {@link SparseMatrixZeros} operation
    *
-   * @param sparseMatrix A (possibly batched) CSRSparseMatrix.
+   * @param denseShape The desired matrix shape.
    * @param type 
-   * @return a new instance of CSRSparseMatrixToSparseTensor
-   * @see org.tensorflow.op.linalg.sparse.CSRSparseMatrixToSparseTensor
+   * @return a new instance of SparseMatrixZeros
+   * @see org.tensorflow.op.linalg.sparse.SparseMatrixZeros
    */
-  public <T extends TType> CSRSparseMatrixToSparseTensor<T> cSRSparseMatrixToSparseTensor(
-      Operand<?> sparseMatrix, DataType<T> type) {
-    return CSRSparseMatrixToSparseTensor.create(scope, sparseMatrix, type);
+  public <T extends TType> SparseMatrixZeros sparseMatrixZeros(Operand<TInt64> denseShape,
+      DataType<T> type) {
+    return SparseMatrixZeros.create(scope, denseShape, type);
+  }
+
+  /**
+   * Builds an {@link SparseTensorToCSRSparseMatrix} operation
+   *
+   * @param indices SparseTensor indices.
+   * @param values SparseTensor values.
+   * @param denseShape SparseTensor dense shape.
+   * @return a new instance of SparseTensorToCSRSparseMatrix
+   * @see org.tensorflow.op.linalg.sparse.SparseTensorToCSRSparseMatrix
+   */
+  public <T extends TType> SparseTensorToCSRSparseMatrix sparseTensorToCSRSparseMatrix(
+      Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
+    return SparseTensorToCSRSparseMatrix.create(scope, indices, values, denseShape);
   }
 }

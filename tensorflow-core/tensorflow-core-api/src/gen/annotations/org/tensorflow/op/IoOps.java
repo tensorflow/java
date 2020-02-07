@@ -70,150 +70,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link QueueEnqueueMany} operation
-   *
-   * @param handle The handle to a queue.
-   * @param components One or more tensors from which the enqueued tensors should
-   * @param options carries optional attributes values
-   * @return a new instance of QueueEnqueueMany
-   * @see org.tensorflow.op.io.QueueEnqueueMany
-   */
-  public QueueEnqueueMany queueEnqueueMany(Operand<?> handle, Iterable<Operand<?>> components,
-      QueueEnqueueMany.Options... options) {
-    return QueueEnqueueMany.create(scope, handle, components, options);
-  }
-
-  /**
-   * Builds an {@link SerializeManySparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-   * @return a new instance of SerializeManySparse
-   * @see org.tensorflow.op.io.SerializeManySparse
-   */
-  public <T extends TType> SerializeManySparse<TString> serializeManySparse(
-      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape);
-  }
-
-  /**
-   * Builds an {@link ShardedFilename} operation
-   *
-   * @param basename 
-   * @param shard 
-   * @param numShards 
-   * @return a new instance of ShardedFilename
-   * @see org.tensorflow.op.io.ShardedFilename
-   */
-  public ShardedFilename shardedFilename(Operand<TString> basename, Operand<TInt32> shard,
-      Operand<TInt32> numShards) {
-    return ShardedFilename.create(scope, basename, shard, numShards);
-  }
-
-  /**
-   * Builds an {@link FifoQueue} operation
-   *
-   * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
-   * @return a new instance of FifoQueue
-   * @see org.tensorflow.op.io.FifoQueue
-   */
-  public FifoQueue fifoQueue(List<DataType<?>> componentTypes, FifoQueue.Options... options) {
-    return FifoQueue.create(scope, componentTypes, options);
-  }
-
-  /**
-   * Builds an {@link ReaderReset} operation
-   *
-   * @param readerHandle Handle to a Reader.
-   * @return a new instance of ReaderReset
-   * @see org.tensorflow.op.io.ReaderReset
-   */
-  public ReaderReset readerReset(Operand<?> readerHandle) {
-    return ReaderReset.create(scope, readerHandle);
-  }
-
-  /**
-   * Builds an {@link ParseTensor} operation
-   *
-   * @param serialized A scalar string containing a serialized TensorProto proto.
-   * @param outType The type of the serialized tensor.  The provided type must match the
-   * @return a new instance of ParseTensor
-   * @see org.tensorflow.op.io.ParseTensor
-   */
-  public <T extends TType> ParseTensor<T> parseTensor(Operand<TString> serialized,
-      DataType<T> outType) {
-    return ParseTensor.create(scope, serialized, outType);
-  }
-
-  /**
-   * Builds an {@link SerializeSparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-   * @param outType The `dtype` to use for serialization; the supported types are `string`
-   * @return a new instance of SerializeSparse
-   * @see org.tensorflow.op.io.SerializeSparse
-   */
-  public <U extends TType, T extends TType> SerializeSparse<U> serializeSparse(
-      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
-      DataType<U> outType) {
-    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
-  }
-
-  /**
-   * Builds an {@link ReaderReadUpTo} operation
-   *
-   * @param readerHandle Handle to a `Reader`.
-   * @param queueHandle Handle to a `Queue`, with string work items.
-   * @param numRecords number of records to read from `Reader`.
-   * @return a new instance of ReaderReadUpTo
-   * @see org.tensorflow.op.io.ReaderReadUpTo
-   */
-  public ReaderReadUpTo readerReadUpTo(Operand<?> readerHandle, Operand<?> queueHandle,
-      Operand<TInt64> numRecords) {
-    return ReaderReadUpTo.create(scope, readerHandle, queueHandle, numRecords);
-  }
-
-  /**
-   * Builds an {@link IdentityReader} operation
-   *
-   * @param options carries optional attributes values
-   * @return a new instance of IdentityReader
-   * @see org.tensorflow.op.io.IdentityReader
-   */
-  public IdentityReader identityReader(IdentityReader.Options... options) {
-    return IdentityReader.create(scope, options);
-  }
-
-  /**
-   * Builds an {@link SerializeTensor} operation
-   *
-   * @param tensor A Tensor of type `T`.
-   * @return a new instance of SerializeTensor
-   * @see org.tensorflow.op.io.SerializeTensor
-   */
-  public <T extends TType> SerializeTensor serializeTensor(Operand<T> tensor) {
-    return SerializeTensor.create(scope, tensor);
-  }
-
-  /**
-   * Builds an {@link SerializeSparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-   * @return a new instance of SerializeSparse
-   * @see org.tensorflow.op.io.SerializeSparse
-   */
-  public <T extends TType> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
-      Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape);
-  }
-
-  /**
    * Builds an {@link DecodeBase64} operation
    *
    * @param input Base64 strings to decode.
@@ -225,14 +81,56 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link MatchingFiles} operation
+   * Builds an {@link DecodeCompressed} operation
    *
-   * @param pattern Shell wildcard pattern(s). Scalar or vector of type string.
-   * @return a new instance of MatchingFiles
-   * @see org.tensorflow.op.io.MatchingFiles
+   * @param bytes A Tensor of string which is compressed.
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeCompressed
+   * @see org.tensorflow.op.io.DecodeCompressed
    */
-  public MatchingFiles matchingFiles(Operand<TString> pattern) {
-    return MatchingFiles.create(scope, pattern);
+  public DecodeCompressed decodeCompressed(Operand<TString> bytes,
+      DecodeCompressed.Options... options) {
+    return DecodeCompressed.create(scope, bytes, options);
+  }
+
+  /**
+   * Builds an {@link DecodeCsv} operation
+   *
+   * @param records Each string is a record/row in the csv and all records should have
+   * @param recordDefaults One tensor per column of the input record, with either a
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeCsv
+   * @see org.tensorflow.op.io.DecodeCsv
+   */
+  public DecodeCsv decodeCsv(Operand<TString> records, Iterable<Operand<?>> recordDefaults,
+      DecodeCsv.Options... options) {
+    return DecodeCsv.create(scope, records, recordDefaults, options);
+  }
+
+  /**
+   * Builds an {@link DecodeJsonExample} operation
+   *
+   * @param jsonExamples Each string is a JSON object serialized according to the JSON
+   * @return a new instance of DecodeJsonExample
+   * @see org.tensorflow.op.io.DecodeJsonExample
+   */
+  public DecodeJsonExample decodeJsonExample(Operand<TString> jsonExamples) {
+    return DecodeJsonExample.create(scope, jsonExamples);
+  }
+
+  /**
+   * Builds an {@link DecodePaddedRaw} operation
+   *
+   * @param inputBytes Tensor of string to be decoded.
+   * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
+   * @param outType 
+   * @param options carries optional attributes values
+   * @return a new instance of DecodePaddedRaw
+   * @see org.tensorflow.op.io.DecodePaddedRaw
+   */
+  public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
+      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
+    return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
   }
 
   /**
@@ -250,99 +148,99 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link WholeFileReader} operation
+   * Builds an {@link DeserializeManySparse} operation
    *
+   * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
+   * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+   * @return a new instance of DeserializeManySparse
+   * @see org.tensorflow.op.io.DeserializeManySparse
+   */
+  public <T extends TType> DeserializeManySparse<T> deserializeManySparse(
+      Operand<TString> serializedSparse, DataType<T> dtype) {
+    return DeserializeManySparse.create(scope, serializedSparse, dtype);
+  }
+
+  /**
+   * Builds an {@link EncodeBase64} operation
+   *
+   * @param input Strings to be encoded.
    * @param options carries optional attributes values
-   * @return a new instance of WholeFileReader
-   * @see org.tensorflow.op.io.WholeFileReader
+   * @return a new instance of EncodeBase64
+   * @see org.tensorflow.op.io.EncodeBase64
    */
-  public WholeFileReader wholeFileReader(WholeFileReader.Options... options) {
-    return WholeFileReader.create(scope, options);
+  public EncodeBase64 encodeBase64(Operand<TString> input, EncodeBase64.Options... options) {
+    return EncodeBase64.create(scope, input, options);
   }
 
   /**
-   * Builds an {@link WriteFile} operation
-   *
-   * @param filename scalar. The name of the file to which we write the contents.
-   * @param contents scalar. The content to be written to the output file.
-   * @return a new instance of WriteFile
-   * @see org.tensorflow.op.io.WriteFile
-   */
-  public WriteFile writeFile(Operand<TString> filename, Operand<TString> contents) {
-    return WriteFile.create(scope, filename, contents);
-  }
-
-  /**
-   * Builds an {@link ReaderNumRecordsProduced} operation
-   *
-   * @param readerHandle Handle to a Reader.
-   * @return a new instance of ReaderNumRecordsProduced
-   * @see org.tensorflow.op.io.ReaderNumRecordsProduced
-   */
-  public ReaderNumRecordsProduced readerNumRecordsProduced(Operand<?> readerHandle) {
-    return ReaderNumRecordsProduced.create(scope, readerHandle);
-  }
-
-  /**
-   * Builds an {@link QueueEnqueue} operation
-   *
-   * @param handle The handle to a queue.
-   * @param components One or more tensors from which the enqueued tensors should be taken.
-   * @param options carries optional attributes values
-   * @return a new instance of QueueEnqueue
-   * @see org.tensorflow.op.io.QueueEnqueue
-   */
-  public QueueEnqueue queueEnqueue(Operand<?> handle, Iterable<Operand<?>> components,
-      QueueEnqueue.Options... options) {
-    return QueueEnqueue.create(scope, handle, components, options);
-  }
-
-  /**
-   * Builds an {@link ReaderSerializeState} operation
-   *
-   * @param readerHandle Handle to a Reader.
-   * @return a new instance of ReaderSerializeState
-   * @see org.tensorflow.op.io.ReaderSerializeState
-   */
-  public ReaderSerializeState readerSerializeState(Operand<?> readerHandle) {
-    return ReaderSerializeState.create(scope, readerHandle);
-  }
-
-  /**
-   * Builds an {@link PriorityQueue} operation
+   * Builds an {@link FifoQueue} operation
    *
    * @param componentTypes The type of each component in a value.
-   * @param shapes The shape of each component in a value. The length of this attr must
    * @param options carries optional attributes values
-   * @return a new instance of PriorityQueue
-   * @see org.tensorflow.op.io.PriorityQueue
+   * @return a new instance of FifoQueue
+   * @see org.tensorflow.op.io.FifoQueue
    */
-  public PriorityQueue priorityQueue(List<DataType<?>> componentTypes, List<Shape> shapes,
-      PriorityQueue.Options... options) {
-    return PriorityQueue.create(scope, componentTypes, shapes, options);
+  public FifoQueue fifoQueue(List<DataType<?>> componentTypes, FifoQueue.Options... options) {
+    return FifoQueue.create(scope, componentTypes, options);
   }
 
   /**
-   * Builds an {@link QueueClose} operation
+   * Builds an {@link FixedLengthRecordReader} operation
    *
-   * @param handle The handle to a queue.
+   * @param recordBytes Number of bytes in the record.
    * @param options carries optional attributes values
-   * @return a new instance of QueueClose
-   * @see org.tensorflow.op.io.QueueClose
+   * @return a new instance of FixedLengthRecordReader
+   * @see org.tensorflow.op.io.FixedLengthRecordReader
    */
-  public QueueClose queueClose(Operand<?> handle, QueueClose.Options... options) {
-    return QueueClose.create(scope, handle, options);
+  public FixedLengthRecordReader fixedLengthRecordReader(Long recordBytes,
+      FixedLengthRecordReader.Options... options) {
+    return FixedLengthRecordReader.create(scope, recordBytes, options);
   }
 
   /**
-   * Builds an {@link ReadFile} operation
+   * Builds an {@link IdentityReader} operation
    *
-   * @param filename 
-   * @return a new instance of ReadFile
-   * @see org.tensorflow.op.io.ReadFile
+   * @param options carries optional attributes values
+   * @return a new instance of IdentityReader
+   * @see org.tensorflow.op.io.IdentityReader
    */
-  public ReadFile readFile(Operand<TString> filename) {
-    return ReadFile.create(scope, filename);
+  public IdentityReader identityReader(IdentityReader.Options... options) {
+    return IdentityReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link LmdbReader} operation
+   *
+   * @param options carries optional attributes values
+   * @return a new instance of LmdbReader
+   * @see org.tensorflow.op.io.LmdbReader
+   */
+  public LmdbReader lmdbReader(LmdbReader.Options... options) {
+    return LmdbReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link MatchingFiles} operation
+   *
+   * @param pattern Shell wildcard pattern(s). Scalar or vector of type string.
+   * @return a new instance of MatchingFiles
+   * @see org.tensorflow.op.io.MatchingFiles
+   */
+  public MatchingFiles matchingFiles(Operand<TString> pattern) {
+    return MatchingFiles.create(scope, pattern);
+  }
+
+  /**
+   * Builds an {@link PaddingFifoQueue} operation
+   *
+   * @param componentTypes The type of each component in a value.
+   * @param options carries optional attributes values
+   * @return a new instance of PaddingFifoQueue
+   * @see org.tensorflow.op.io.PaddingFifoQueue
+   */
+  public PaddingFifoQueue paddingFifoQueue(List<DataType<?>> componentTypes,
+      PaddingFifoQueue.Options... options) {
+    return PaddingFifoQueue.create(scope, componentTypes, options);
   }
 
   /**
@@ -368,73 +266,6 @@ public final class IoOps {
       List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes,
       List<Shape> denseShapes) {
     return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, raggedKeys, denseDefaults, numSparse, sparseTypes, raggedValueTypes, raggedSplitTypes, denseShapes);
-  }
-
-  /**
-   * Builds an {@link QueueDequeueUpTo} operation
-   *
-   * @param handle The handle to a queue.
-   * @param n The number of tuples to dequeue.
-   * @param componentTypes The type of each component in a tuple.
-   * @param options carries optional attributes values
-   * @return a new instance of QueueDequeueUpTo
-   * @see org.tensorflow.op.io.QueueDequeueUpTo
-   */
-  public QueueDequeueUpTo queueDequeueUpTo(Operand<?> handle, Operand<TInt32> n,
-      List<DataType<?>> componentTypes, QueueDequeueUpTo.Options... options) {
-    return QueueDequeueUpTo.create(scope, handle, n, componentTypes, options);
-  }
-
-  /**
-   * Builds an {@link ParseSingleSequenceExample} operation
-   *
-   * @param serialized A scalar containing a binary serialized SequenceExample proto.
-   * @param featureListDenseMissingAssumedEmpty A vector listing the
-   * @param contextSparseKeys A list of Ncontext_sparse string Tensors (scalars).
-   * @param contextDenseKeys A list of Ncontext_dense string Tensors (scalars).
-   * @param featureListSparseKeys A list of Nfeature_list_sparse string Tensors
-   * @param featureListDenseKeys A list of Nfeature_list_dense string Tensors (scalars).
-   * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
-   * @param debugName A scalar containing the name of the serialized proto.
-   * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
-   * @param featureListDenseTypes 
-   * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
-   * @param options carries optional attributes values
-   * @return a new instance of ParseSingleSequenceExample
-   * @see org.tensorflow.op.io.ParseSingleSequenceExample
-   */
-  public ParseSingleSequenceExample parseSingleSequenceExample(Operand<TString> serialized,
-      Operand<TString> featureListDenseMissingAssumedEmpty,
-      Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys,
-      Iterable<Operand<TString>> featureListSparseKeys,
-      Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults,
-      Operand<TString> debugName, List<DataType<?>> contextSparseTypes,
-      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
-      ParseSingleSequenceExample.Options... options) {
-    return ParseSingleSequenceExample.create(scope, serialized, featureListDenseMissingAssumedEmpty, contextSparseKeys, contextDenseKeys, featureListSparseKeys, featureListDenseKeys, contextDenseDefaults, debugName, contextSparseTypes, featureListDenseTypes, featureListSparseTypes, options);
-  }
-
-  /**
-   * Builds an {@link ShardedFilespec} operation
-   *
-   * @param basename 
-   * @param numShards 
-   * @return a new instance of ShardedFilespec
-   * @see org.tensorflow.op.io.ShardedFilespec
-   */
-  public ShardedFilespec shardedFilespec(Operand<TString> basename, Operand<TInt32> numShards) {
-    return ShardedFilespec.create(scope, basename, numShards);
-  }
-
-  /**
-   * Builds an {@link TfRecordReader} operation
-   *
-   * @param options carries optional attributes values
-   * @return a new instance of TfRecordReader
-   * @see org.tensorflow.op.io.TfRecordReader
-   */
-  public TfRecordReader tfRecordReader(TfRecordReader.Options... options) {
-    return TfRecordReader.create(scope, options);
   }
 
   /**
@@ -475,33 +306,6 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link SerializeManySparse} operation
-   *
-   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-   * @param outType The `dtype` to use for serialization; the supported types are `string`
-   * @return a new instance of SerializeManySparse
-   * @see org.tensorflow.op.io.SerializeManySparse
-   */
-  public <U extends TType, T extends TType> SerializeManySparse<U> serializeManySparse(
-      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
-      DataType<U> outType) {
-    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
-  }
-
-  /**
-   * Builds an {@link DecodeJsonExample} operation
-   *
-   * @param jsonExamples Each string is a JSON object serialized according to the JSON
-   * @return a new instance of DecodeJsonExample
-   * @see org.tensorflow.op.io.DecodeJsonExample
-   */
-  public DecodeJsonExample decodeJsonExample(Operand<TString> jsonExamples) {
-    return DecodeJsonExample.create(scope, jsonExamples);
-  }
-
-  /**
    * Builds an {@link ParseSingleExample} operation
    *
    * @param serialized A vector containing a batch of binary serialized Example protos.
@@ -521,29 +325,85 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link EncodeBase64} operation
+   * Builds an {@link ParseSingleSequenceExample} operation
    *
-   * @param input Strings to be encoded.
+   * @param serialized A scalar containing a binary serialized SequenceExample proto.
+   * @param featureListDenseMissingAssumedEmpty A vector listing the
+   * @param contextSparseKeys A list of Ncontext_sparse string Tensors (scalars).
+   * @param contextDenseKeys A list of Ncontext_dense string Tensors (scalars).
+   * @param featureListSparseKeys A list of Nfeature_list_sparse string Tensors
+   * @param featureListDenseKeys A list of Nfeature_list_dense string Tensors (scalars).
+   * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
+   * @param debugName A scalar containing the name of the serialized proto.
+   * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
+   * @param featureListDenseTypes 
+   * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
    * @param options carries optional attributes values
-   * @return a new instance of EncodeBase64
-   * @see org.tensorflow.op.io.EncodeBase64
+   * @return a new instance of ParseSingleSequenceExample
+   * @see org.tensorflow.op.io.ParseSingleSequenceExample
    */
-  public EncodeBase64 encodeBase64(Operand<TString> input, EncodeBase64.Options... options) {
-    return EncodeBase64.create(scope, input, options);
+  public ParseSingleSequenceExample parseSingleSequenceExample(Operand<TString> serialized,
+      Operand<TString> featureListDenseMissingAssumedEmpty,
+      Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys,
+      Iterable<Operand<TString>> featureListSparseKeys,
+      Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults,
+      Operand<TString> debugName, List<DataType<?>> contextSparseTypes,
+      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
+      ParseSingleSequenceExample.Options... options) {
+    return ParseSingleSequenceExample.create(scope, serialized, featureListDenseMissingAssumedEmpty, contextSparseKeys, contextDenseKeys, featureListSparseKeys, featureListDenseKeys, contextDenseDefaults, debugName, contextSparseTypes, featureListDenseTypes, featureListSparseTypes, options);
   }
 
   /**
-   * Builds an {@link DecodeCsv} operation
+   * Builds an {@link ParseTensor} operation
    *
-   * @param records Each string is a record/row in the csv and all records should have
-   * @param recordDefaults One tensor per column of the input record, with either a
-   * @param options carries optional attributes values
-   * @return a new instance of DecodeCsv
-   * @see org.tensorflow.op.io.DecodeCsv
+   * @param serialized A scalar string containing a serialized TensorProto proto.
+   * @param outType The type of the serialized tensor.  The provided type must match the
+   * @return a new instance of ParseTensor
+   * @see org.tensorflow.op.io.ParseTensor
    */
-  public DecodeCsv decodeCsv(Operand<TString> records, Iterable<Operand<?>> recordDefaults,
-      DecodeCsv.Options... options) {
-    return DecodeCsv.create(scope, records, recordDefaults, options);
+  public <T extends TType> ParseTensor<T> parseTensor(Operand<TString> serialized,
+      DataType<T> outType) {
+    return ParseTensor.create(scope, serialized, outType);
+  }
+
+  /**
+   * Builds an {@link PriorityQueue} operation
+   *
+   * @param componentTypes The type of each component in a value.
+   * @param shapes The shape of each component in a value. The length of this attr must
+   * @param options carries optional attributes values
+   * @return a new instance of PriorityQueue
+   * @see org.tensorflow.op.io.PriorityQueue
+   */
+  public PriorityQueue priorityQueue(List<DataType<?>> componentTypes, List<Shape> shapes,
+      PriorityQueue.Options... options) {
+    return PriorityQueue.create(scope, componentTypes, shapes, options);
+  }
+
+  /**
+   * Builds an {@link QueueClose} operation
+   *
+   * @param handle The handle to a queue.
+   * @param options carries optional attributes values
+   * @return a new instance of QueueClose
+   * @see org.tensorflow.op.io.QueueClose
+   */
+  public QueueClose queueClose(Operand<?> handle, QueueClose.Options... options) {
+    return QueueClose.create(scope, handle, options);
+  }
+
+  /**
+   * Builds an {@link QueueDequeue} operation
+   *
+   * @param handle The handle to a queue.
+   * @param componentTypes The type of each component in a tuple.
+   * @param options carries optional attributes values
+   * @return a new instance of QueueDequeue
+   * @see org.tensorflow.op.io.QueueDequeue
+   */
+  public QueueDequeue queueDequeue(Operand<?> handle, List<DataType<?>> componentTypes,
+      QueueDequeue.Options... options) {
+    return QueueDequeue.create(scope, handle, componentTypes, options);
   }
 
   /**
@@ -562,50 +422,46 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link DeserializeManySparse} operation
+   * Builds an {@link QueueDequeueUpTo} operation
    *
-   * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
-   * @param dtype The `dtype` of the serialized `SparseTensor` objects.
-   * @return a new instance of DeserializeManySparse
-   * @see org.tensorflow.op.io.DeserializeManySparse
-   */
-  public <T extends TType> DeserializeManySparse<T> deserializeManySparse(
-      Operand<TString> serializedSparse, DataType<T> dtype) {
-    return DeserializeManySparse.create(scope, serializedSparse, dtype);
-  }
-
-  /**
-   * Builds an {@link LmdbReader} operation
-   *
+   * @param handle The handle to a queue.
+   * @param n The number of tuples to dequeue.
+   * @param componentTypes The type of each component in a tuple.
    * @param options carries optional attributes values
-   * @return a new instance of LmdbReader
-   * @see org.tensorflow.op.io.LmdbReader
+   * @return a new instance of QueueDequeueUpTo
+   * @see org.tensorflow.op.io.QueueDequeueUpTo
    */
-  public LmdbReader lmdbReader(LmdbReader.Options... options) {
-    return LmdbReader.create(scope, options);
+  public QueueDequeueUpTo queueDequeueUpTo(Operand<?> handle, Operand<TInt32> n,
+      List<DataType<?>> componentTypes, QueueDequeueUpTo.Options... options) {
+    return QueueDequeueUpTo.create(scope, handle, n, componentTypes, options);
   }
 
   /**
-   * Builds an {@link ReaderNumWorkUnitsCompleted} operation
+   * Builds an {@link QueueEnqueue} operation
    *
-   * @param readerHandle Handle to a Reader.
-   * @return a new instance of ReaderNumWorkUnitsCompleted
-   * @see org.tensorflow.op.io.ReaderNumWorkUnitsCompleted
+   * @param handle The handle to a queue.
+   * @param components One or more tensors from which the enqueued tensors should be taken.
+   * @param options carries optional attributes values
+   * @return a new instance of QueueEnqueue
+   * @see org.tensorflow.op.io.QueueEnqueue
    */
-  public ReaderNumWorkUnitsCompleted readerNumWorkUnitsCompleted(Operand<?> readerHandle) {
-    return ReaderNumWorkUnitsCompleted.create(scope, readerHandle);
+  public QueueEnqueue queueEnqueue(Operand<?> handle, Iterable<Operand<?>> components,
+      QueueEnqueue.Options... options) {
+    return QueueEnqueue.create(scope, handle, components, options);
   }
 
   /**
-   * Builds an {@link ReaderRead} operation
+   * Builds an {@link QueueEnqueueMany} operation
    *
-   * @param readerHandle Handle to a Reader.
-   * @param queueHandle Handle to a Queue, with string work items.
-   * @return a new instance of ReaderRead
-   * @see org.tensorflow.op.io.ReaderRead
+   * @param handle The handle to a queue.
+   * @param components One or more tensors from which the enqueued tensors should
+   * @param options carries optional attributes values
+   * @return a new instance of QueueEnqueueMany
+   * @see org.tensorflow.op.io.QueueEnqueueMany
    */
-  public ReaderRead readerRead(Operand<?> readerHandle, Operand<?> queueHandle) {
-    return ReaderRead.create(scope, readerHandle, queueHandle);
+  public QueueEnqueueMany queueEnqueueMany(Operand<?> handle, Iterable<Operand<?>> components,
+      QueueEnqueueMany.Options... options) {
+    return QueueEnqueueMany.create(scope, handle, components, options);
   }
 
   /**
@@ -617,19 +473,6 @@ public final class IoOps {
    */
   public QueueIsClosed queueIsClosed(Operand<?> handle) {
     return QueueIsClosed.create(scope, handle);
-  }
-
-  /**
-   * Builds an {@link DecodeCompressed} operation
-   *
-   * @param bytes A Tensor of string which is compressed.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodeCompressed
-   * @see org.tensorflow.op.io.DecodeCompressed
-   */
-  public DecodeCompressed decodeCompressed(Operand<TString> bytes,
-      DecodeCompressed.Options... options) {
-    return DecodeCompressed.create(scope, bytes, options);
   }
 
   /**
@@ -657,56 +500,73 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link QueueDequeue} operation
+   * Builds an {@link ReadFile} operation
    *
-   * @param handle The handle to a queue.
-   * @param componentTypes The type of each component in a tuple.
-   * @param options carries optional attributes values
-   * @return a new instance of QueueDequeue
-   * @see org.tensorflow.op.io.QueueDequeue
+   * @param filename 
+   * @return a new instance of ReadFile
+   * @see org.tensorflow.op.io.ReadFile
    */
-  public QueueDequeue queueDequeue(Operand<?> handle, List<DataType<?>> componentTypes,
-      QueueDequeue.Options... options) {
-    return QueueDequeue.create(scope, handle, componentTypes, options);
+  public ReadFile readFile(Operand<TString> filename) {
+    return ReadFile.create(scope, filename);
   }
 
   /**
-   * Builds an {@link TextLineReader} operation
+   * Builds an {@link ReaderNumRecordsProduced} operation
    *
-   * @param options carries optional attributes values
-   * @return a new instance of TextLineReader
-   * @see org.tensorflow.op.io.TextLineReader
+   * @param readerHandle Handle to a Reader.
+   * @return a new instance of ReaderNumRecordsProduced
+   * @see org.tensorflow.op.io.ReaderNumRecordsProduced
    */
-  public TextLineReader textLineReader(TextLineReader.Options... options) {
-    return TextLineReader.create(scope, options);
+  public ReaderNumRecordsProduced readerNumRecordsProduced(Operand<?> readerHandle) {
+    return ReaderNumRecordsProduced.create(scope, readerHandle);
   }
 
   /**
-   * Builds an {@link FixedLengthRecordReader} operation
+   * Builds an {@link ReaderNumWorkUnitsCompleted} operation
    *
-   * @param recordBytes Number of bytes in the record.
-   * @param options carries optional attributes values
-   * @return a new instance of FixedLengthRecordReader
-   * @see org.tensorflow.op.io.FixedLengthRecordReader
+   * @param readerHandle Handle to a Reader.
+   * @return a new instance of ReaderNumWorkUnitsCompleted
+   * @see org.tensorflow.op.io.ReaderNumWorkUnitsCompleted
    */
-  public FixedLengthRecordReader fixedLengthRecordReader(Long recordBytes,
-      FixedLengthRecordReader.Options... options) {
-    return FixedLengthRecordReader.create(scope, recordBytes, options);
+  public ReaderNumWorkUnitsCompleted readerNumWorkUnitsCompleted(Operand<?> readerHandle) {
+    return ReaderNumWorkUnitsCompleted.create(scope, readerHandle);
   }
 
   /**
-   * Builds an {@link DecodePaddedRaw} operation
+   * Builds an {@link ReaderRead} operation
    *
-   * @param inputBytes Tensor of string to be decoded.
-   * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
-   * @param outType 
-   * @param options carries optional attributes values
-   * @return a new instance of DecodePaddedRaw
-   * @see org.tensorflow.op.io.DecodePaddedRaw
+   * @param readerHandle Handle to a Reader.
+   * @param queueHandle Handle to a Queue, with string work items.
+   * @return a new instance of ReaderRead
+   * @see org.tensorflow.op.io.ReaderRead
    */
-  public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
-      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
-    return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
+  public ReaderRead readerRead(Operand<?> readerHandle, Operand<?> queueHandle) {
+    return ReaderRead.create(scope, readerHandle, queueHandle);
+  }
+
+  /**
+   * Builds an {@link ReaderReadUpTo} operation
+   *
+   * @param readerHandle Handle to a `Reader`.
+   * @param queueHandle Handle to a `Queue`, with string work items.
+   * @param numRecords number of records to read from `Reader`.
+   * @return a new instance of ReaderReadUpTo
+   * @see org.tensorflow.op.io.ReaderReadUpTo
+   */
+  public ReaderReadUpTo readerReadUpTo(Operand<?> readerHandle, Operand<?> queueHandle,
+      Operand<TInt64> numRecords) {
+    return ReaderReadUpTo.create(scope, readerHandle, queueHandle, numRecords);
+  }
+
+  /**
+   * Builds an {@link ReaderReset} operation
+   *
+   * @param readerHandle Handle to a Reader.
+   * @return a new instance of ReaderReset
+   * @see org.tensorflow.op.io.ReaderReset
+   */
+  public ReaderReset readerReset(Operand<?> readerHandle) {
+    return ReaderReset.create(scope, readerHandle);
   }
 
   /**
@@ -722,15 +582,155 @@ public final class IoOps {
   }
 
   /**
-   * Builds an {@link PaddingFifoQueue} operation
+   * Builds an {@link ReaderSerializeState} operation
    *
-   * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
-   * @return a new instance of PaddingFifoQueue
-   * @see org.tensorflow.op.io.PaddingFifoQueue
+   * @param readerHandle Handle to a Reader.
+   * @return a new instance of ReaderSerializeState
+   * @see org.tensorflow.op.io.ReaderSerializeState
    */
-  public PaddingFifoQueue paddingFifoQueue(List<DataType<?>> componentTypes,
-      PaddingFifoQueue.Options... options) {
-    return PaddingFifoQueue.create(scope, componentTypes, options);
+  public ReaderSerializeState readerSerializeState(Operand<?> readerHandle) {
+    return ReaderSerializeState.create(scope, readerHandle);
+  }
+
+  /**
+   * Builds an {@link SerializeManySparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+   * @return a new instance of SerializeManySparse
+   * @see org.tensorflow.op.io.SerializeManySparse
+   */
+  public <T extends TType> SerializeManySparse<TString> serializeManySparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape);
+  }
+
+  /**
+   * Builds an {@link SerializeManySparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+   * @param outType The `dtype` to use for serialization; the supported types are `string`
+   * @return a new instance of SerializeManySparse
+   * @see org.tensorflow.op.io.SerializeManySparse
+   */
+  public <U extends TType, T extends TType> SerializeManySparse<U> serializeManySparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
+      DataType<U> outType) {
+    return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
+  }
+
+  /**
+   * Builds an {@link SerializeSparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+   * @return a new instance of SerializeSparse
+   * @see org.tensorflow.op.io.SerializeSparse
+   */
+  public <T extends TType> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
+      Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape);
+  }
+
+  /**
+   * Builds an {@link SerializeSparse} operation
+   *
+   * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+   * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+   * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+   * @param outType The `dtype` to use for serialization; the supported types are `string`
+   * @return a new instance of SerializeSparse
+   * @see org.tensorflow.op.io.SerializeSparse
+   */
+  public <U extends TType, T extends TType> SerializeSparse<U> serializeSparse(
+      Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
+      DataType<U> outType) {
+    return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
+  }
+
+  /**
+   * Builds an {@link SerializeTensor} operation
+   *
+   * @param tensor A Tensor of type `T`.
+   * @return a new instance of SerializeTensor
+   * @see org.tensorflow.op.io.SerializeTensor
+   */
+  public <T extends TType> SerializeTensor serializeTensor(Operand<T> tensor) {
+    return SerializeTensor.create(scope, tensor);
+  }
+
+  /**
+   * Builds an {@link ShardedFilename} operation
+   *
+   * @param basename 
+   * @param shard 
+   * @param numShards 
+   * @return a new instance of ShardedFilename
+   * @see org.tensorflow.op.io.ShardedFilename
+   */
+  public ShardedFilename shardedFilename(Operand<TString> basename, Operand<TInt32> shard,
+      Operand<TInt32> numShards) {
+    return ShardedFilename.create(scope, basename, shard, numShards);
+  }
+
+  /**
+   * Builds an {@link ShardedFilespec} operation
+   *
+   * @param basename 
+   * @param numShards 
+   * @return a new instance of ShardedFilespec
+   * @see org.tensorflow.op.io.ShardedFilespec
+   */
+  public ShardedFilespec shardedFilespec(Operand<TString> basename, Operand<TInt32> numShards) {
+    return ShardedFilespec.create(scope, basename, numShards);
+  }
+
+  /**
+   * Builds an {@link TextLineReader} operation
+   *
+   * @param options carries optional attributes values
+   * @return a new instance of TextLineReader
+   * @see org.tensorflow.op.io.TextLineReader
+   */
+  public TextLineReader textLineReader(TextLineReader.Options... options) {
+    return TextLineReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link TfRecordReader} operation
+   *
+   * @param options carries optional attributes values
+   * @return a new instance of TfRecordReader
+   * @see org.tensorflow.op.io.TfRecordReader
+   */
+  public TfRecordReader tfRecordReader(TfRecordReader.Options... options) {
+    return TfRecordReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link WholeFileReader} operation
+   *
+   * @param options carries optional attributes values
+   * @return a new instance of WholeFileReader
+   * @see org.tensorflow.op.io.WholeFileReader
+   */
+  public WholeFileReader wholeFileReader(WholeFileReader.Options... options) {
+    return WholeFileReader.create(scope, options);
+  }
+
+  /**
+   * Builds an {@link WriteFile} operation
+   *
+   * @param filename scalar. The name of the file to which we write the contents.
+   * @param contents scalar. The content to be written to the output file.
+   * @return a new instance of WriteFile
+   * @see org.tensorflow.op.io.WriteFile
+   */
+  public WriteFile writeFile(Operand<TString> filename, Operand<TString> contents) {
+    return WriteFile.create(scope, filename, contents);
   }
 }
