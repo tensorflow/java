@@ -158,7 +158,8 @@ public final class OperatorProcessor extends AbstractProcessor {
     private static final Comparator<MethodSpec> PARAMETER_SPEC_COMPARATOR = (o1, o2) -> {
       if (o1.parameters.size() > o2.parameters.size()) {
         return 1;
-      } else if (o1.parameters.size() < o2.parameters.size()) {
+      }
+      if (o1.parameters.size() < o2.parameters.size()) {
         return -1;
       }
       List<ParameterSpec> firstParams = o1.parameters;
