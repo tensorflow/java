@@ -31,7 +31,7 @@
   <modules>
     <module>tensorflow-tools</module>
     <module>tensorflow-core</module>
-    <module>tensorflow-sandbox</module>
+    <module>tensorflow-training</module>
   </modules>
 
   <properties>

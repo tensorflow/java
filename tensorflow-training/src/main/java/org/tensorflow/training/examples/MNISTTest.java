@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.tensorflow.sandbox;
+package org.tensorflow.training.examples;
 
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
@@ -35,14 +35,14 @@ import org.tensorflow.op.nn.Relu;
 import org.tensorflow.op.nn.Softmax;
 import org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.random.TruncatedNormal;
-import org.tensorflow.sandbox.optimizers.AdaDelta;
-import org.tensorflow.sandbox.optimizers.AdaGrad;
-import org.tensorflow.sandbox.optimizers.AdaGradDA;
-import org.tensorflow.sandbox.optimizers.Adam;
-import org.tensorflow.sandbox.optimizers.GradientDescent;
-import org.tensorflow.sandbox.optimizers.Momentum;
-import org.tensorflow.sandbox.optimizers.Optimizer;
-import org.tensorflow.sandbox.optimizers.RMSProp;
+import org.tensorflow.training.optimizers.AdaDelta;
+import org.tensorflow.training.optimizers.AdaGrad;
+import org.tensorflow.training.optimizers.AdaGradDA;
+import org.tensorflow.training.optimizers.Adam;
+import org.tensorflow.training.optimizers.GradientDescent;
+import org.tensorflow.training.optimizers.Momentum;
+import org.tensorflow.training.optimizers.Optimizer;
+import org.tensorflow.training.optimizers.RMSProp;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
