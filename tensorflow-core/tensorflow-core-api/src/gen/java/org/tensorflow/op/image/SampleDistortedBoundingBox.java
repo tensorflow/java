@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -160,6 +161,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of SampleDistortedBoundingBox
    */
+  @Endpoint
   public static <T extends TNumber> SampleDistortedBoundingBox<T> create(Scope scope, Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SampleDistortedBoundingBoxV2", scope.makeOpName("SampleDistortedBoundingBox"));
     opBuilder.addInput(imageSize.asOutput());

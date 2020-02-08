@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -109,6 +111,7 @@ public final class DebugIdentityV2<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of DebugIdentityV2
    */
+  @Endpoint
   public static <T extends TType> DebugIdentityV2<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugIdentityV2", scope.makeOpName("DebugIdentityV2"));
     opBuilder.addInput(input.asOutput());

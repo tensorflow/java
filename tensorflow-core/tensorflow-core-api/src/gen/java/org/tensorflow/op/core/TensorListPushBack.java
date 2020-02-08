@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -46,6 +47,7 @@ public final class TensorListPushBack extends PrimitiveOp implements Operand<TTy
    * @param tensor 
    * @return a new instance of TensorListPushBack
    */
+  @Endpoint
   public static <T extends TType> TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBack", scope.makeOpName("TensorListPushBack"));
     opBuilder.addInput(inputHandle.asOutput());

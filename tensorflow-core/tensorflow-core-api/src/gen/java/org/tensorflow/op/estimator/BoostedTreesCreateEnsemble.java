@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
@@ -39,6 +41,7 @@ public final class BoostedTreesCreateEnsemble extends PrimitiveOp {
    * @param treeEnsembleSerialized Serialized proto of the tree ensemble.
    * @return a new instance of BoostedTreesCreateEnsemble
    */
+  @Endpoint
   public static BoostedTreesCreateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt64> stampToken, Operand<TString> treeEnsembleSerialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCreateEnsemble", scope.makeOpName("BoostedTreesCreateEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

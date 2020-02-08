@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -40,6 +42,7 @@ public final class TPUOrdinalSelector extends PrimitiveOp implements Operand<TIn
    * @param scope current scope
    * @return a new instance of TPUOrdinalSelector
    */
+  @Endpoint
   public static TPUOrdinalSelector create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUOrdinalSelector", scope.makeOpName("TPUOrdinalSelector"));
     opBuilder = scope.applyControlDependencies(opBuilder);

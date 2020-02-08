@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -93,6 +94,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNativeBackpropFilter
    */
+  @Endpoint
   public static <T extends TNumber> DepthwiseConv2dNativeBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNativeBackpropFilter", scope.makeOpName("DepthwiseConv2dNativeBackpropFilter"));
     opBuilder.addInput(input.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -42,6 +44,7 @@ public final class InfeedDequeue<T extends TType> extends PrimitiveOp implements
    * @param shape The shape of the tensor.
    * @return a new instance of InfeedDequeue
    */
+  @Endpoint
   public static <T extends TType> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

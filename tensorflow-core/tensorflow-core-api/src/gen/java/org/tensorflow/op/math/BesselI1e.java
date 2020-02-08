@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -47,6 +48,7 @@ public final class BesselI1e<T extends TNumber> extends PrimitiveOp implements O
    * @param x 
    * @return a new instance of BesselI1e
    */
+  @Endpoint
   public static <T extends TNumber> BesselI1e<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("BesselI1e", scope.makeOpName("BesselI1e"));
     opBuilder.addInput(x.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -79,6 +80,7 @@ public final class Unstack<T extends TType> extends PrimitiveOp implements Itera
    * @param options carries optional attributes values
    * @return a new instance of Unstack
    */
+  @Endpoint
   public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
     opBuilder.addInput(value.asOutput());

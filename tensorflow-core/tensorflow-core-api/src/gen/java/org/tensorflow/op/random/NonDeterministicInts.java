@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -44,6 +46,7 @@ public final class NonDeterministicInts<U extends TType> extends PrimitiveOp imp
    * @param dtype The type of the output.
    * @return a new instance of NonDeterministicInts
    */
+  @Endpoint
   public static <U extends TType, T extends TType> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonDeterministicInts", scope.makeOpName("NonDeterministicInts"));
     opBuilder.addInput(shape.asOutput());
@@ -59,6 +62,7 @@ public final class NonDeterministicInts<U extends TType> extends PrimitiveOp imp
    * @param shape The shape of the output tensor.
    * @return a new instance of NonDeterministicInts
    */
+  @Endpoint
   public static <T extends TType> NonDeterministicInts<TInt64> create(Scope scope, Operand<T> shape) {
     return create(scope, shape, TInt64.DTYPE);
   }

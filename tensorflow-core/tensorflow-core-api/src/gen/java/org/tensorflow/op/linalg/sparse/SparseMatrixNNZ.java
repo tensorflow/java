@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -39,6 +40,7 @@ public final class SparseMatrixNNZ extends PrimitiveOp implements Operand<TInt32
    * @param sparseMatrix A CSRSparseMatrix.
    * @return a new instance of SparseMatrixNNZ
    */
+  @Endpoint
   public static SparseMatrixNNZ create(Scope scope, Operand<?> sparseMatrix) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixNNZ", scope.makeOpName("SparseMatrixNNZ"));
     opBuilder.addInput(sparseMatrix.asOutput());

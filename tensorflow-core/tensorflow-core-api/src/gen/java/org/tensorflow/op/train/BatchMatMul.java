@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -95,6 +96,7 @@ public final class BatchMatMul<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of BatchMatMul
    */
+  @Endpoint
   public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatMulV2", scope.makeOpName("BatchMatMul"));
     opBuilder.addInput(x.asOutput());

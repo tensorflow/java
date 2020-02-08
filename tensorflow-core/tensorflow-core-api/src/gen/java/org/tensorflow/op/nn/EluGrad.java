@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +43,7 @@ public final class EluGrad<T extends TNumber> extends PrimitiveOp implements Ope
    * @param outputs The outputs of the corresponding Elu operation.
    * @return a new instance of EluGrad
    */
+  @Endpoint
   public static <T extends TNumber> EluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("EluGrad", scope.makeOpName("EluGrad"));
     opBuilder.addInput(gradients.asOutput());

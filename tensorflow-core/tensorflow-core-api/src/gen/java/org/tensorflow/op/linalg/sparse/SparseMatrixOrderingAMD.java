@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -87,6 +88,7 @@ public final class SparseMatrixOrderingAMD extends PrimitiveOp implements Operan
    * @param input A `CSRSparseMatrix`.
    * @return a new instance of SparseMatrixOrderingAMD
    */
+  @Endpoint
   public static SparseMatrixOrderingAMD create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixOrderingAMD", scope.makeOpName("SparseMatrixOrderingAMD"));
     opBuilder.addInput(input.asOutput());

@@ -22,11 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to mark a method of a class annotated with {@link Operator} that should generate
- * an endpoint into {@link org.tensorflow.op.Ops Ops} or one of its groups.
+ * Annotation used to mark a method of a class annotated with {@link Operator @Operator} that should
+ * generate an endpoint into {@link org.tensorflow.op.Ops Ops} or one of its groups.
  *
- * <p>It is mandatory for the annotated method to be static and to take as its first parameter an
- * instance of {@link org.tensorflow.op.Scope}. For example:
+ * <p>It is mandatory for the annotated method to be public, static and to take as its first
+ * parameter an instance of {@link org.tensorflow.op.Scope}. For example:
  *
  * <pre>{@code
  * @Operator
@@ -45,4 +45,24 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Endpoint {
+
+  /**
+   * Specify an optional group within the {@code Ops} class.
+   *
+   * <p>This value overrides the group selected at class level with the {@link Operator @Operator}
+   * annotation for this specific endpoint.
+   *
+   * @see Operator#group()
+   */
+  String group() default "";
+
+  /**
+   * Name for the wrapper method used in the {@code Ops} class.
+   *
+   * <p>This value overrides the name selected at class level with the {@link Operator @Operator}
+   * annotation for this specific endpoint.
+   *
+   * @see Operator#name()
+   */
+  String name() default "";
 }

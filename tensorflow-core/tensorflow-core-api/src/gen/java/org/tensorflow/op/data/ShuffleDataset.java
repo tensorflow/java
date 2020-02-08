@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -44,6 +46,7 @@ public final class ShuffleDataset extends PrimitiveOp implements Operand<TType> 
    * @param outputShapes 
    * @return a new instance of ShuffleDataset
    */
+  @Endpoint
   public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV2", scope.makeOpName("ShuffleDataset"));
     opBuilder.addInput(inputDataset.asOutput());

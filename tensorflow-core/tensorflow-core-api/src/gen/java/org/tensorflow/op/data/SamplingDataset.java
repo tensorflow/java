@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -54,6 +56,7 @@ public final class SamplingDataset extends PrimitiveOp implements Operand<TType>
    * @param outputShapes 
    * @return a new instance of SamplingDataset
    */
+  @Endpoint
   public static SamplingDataset create(Scope scope, Operand<?> inputDataset, Operand<TFloat32> rate, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SamplingDataset", scope.makeOpName("SamplingDataset"));
     opBuilder.addInput(inputDataset.asOutput());

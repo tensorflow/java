@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -77,6 +79,7 @@ public final class GenerateBoundingBoxProposals extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of GenerateBoundingBoxProposals
    */
+  @Endpoint
   public static GenerateBoundingBoxProposals create(Scope scope, Operand<TFloat32> scores, Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors, Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateBoundingBoxProposals", scope.makeOpName("GenerateBoundingBoxProposals"));
     opBuilder.addInput(scores.asOutput());

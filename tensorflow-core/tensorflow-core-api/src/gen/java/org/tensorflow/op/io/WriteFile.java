@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -41,6 +42,7 @@ public final class WriteFile extends PrimitiveOp {
    * @param contents scalar. The content to be written to the output file.
    * @return a new instance of WriteFile
    */
+  @Endpoint
   public static WriteFile create(Scope scope, Operand<TString> filename, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
     opBuilder.addInput(filename.asOutput());

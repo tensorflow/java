@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -100,6 +101,7 @@ public final class SparseToSparseSetOperation<T extends TType> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of SparseToSparseSetOperation
    */
+  @Endpoint
   public static <T extends TType> SparseToSparseSetOperation<T> create(Scope scope, Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToSparseSetOperation", scope.makeOpName("SparseToSparseSetOperation"));
     opBuilder.addInput(set1Indices.asOutput());

@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -82,6 +83,7 @@ public final class InitializeTableFromTextFile extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InitializeTableFromTextFile
    */
+  @Endpoint
   public static InitializeTableFromTextFile create(Scope scope, Operand<?> tableHandle, Operand<TString> filename, Long keyIndex, Long valueIndex, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromTextFileV2", scope.makeOpName("InitializeTableFromTextFile"));
     opBuilder.addInput(tableHandle.asOutput());

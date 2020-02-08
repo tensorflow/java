@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -59,6 +61,7 @@ public final class BoostedTreesCreateQuantileStreamResource extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesCreateQuantileStreamResource
    */
+  @Endpoint
   public static BoostedTreesCreateQuantileStreamResource create(Scope scope, Operand<?> quantileStreamResourceHandle, Operand<TFloat32> epsilon, Operand<TInt64> numStreams, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCreateQuantileStreamResource", scope.makeOpName("BoostedTreesCreateQuantileStreamResource"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

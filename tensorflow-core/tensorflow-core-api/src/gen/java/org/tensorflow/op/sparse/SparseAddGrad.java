@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -52,6 +53,7 @@ public final class SparseAddGrad<T extends TType> extends PrimitiveOp {
    * `[nnz(sum), ndims]`.
    * @return a new instance of SparseAddGrad
    */
+  @Endpoint
   public static <T extends TType> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAddGrad", scope.makeOpName("SparseAddGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());

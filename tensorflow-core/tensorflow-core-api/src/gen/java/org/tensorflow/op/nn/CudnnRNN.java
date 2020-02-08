@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -175,6 +177,7 @@ public final class CudnnRNN<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNN
    */
+  @Endpoint
   public static <T extends TNumber> CudnnRNN<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNV3", scope.makeOpName("CudnnRNN"));
     opBuilder.addInput(input.asOutput());

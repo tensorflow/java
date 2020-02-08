@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -50,6 +51,7 @@ public final class Log<T extends TType> extends PrimitiveOp implements Operand<T
    * @param x 
    * @return a new instance of Log
    */
+  @Endpoint
   public static <T extends TType> Log<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Log", scope.makeOpName("Log"));
     opBuilder.addInput(x.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -64,6 +65,7 @@ public final class SparseMatrixTranspose extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of SparseMatrixTranspose
    */
+  @Endpoint
   public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixTranspose", scope.makeOpName("SparseMatrixTranspose"));
     opBuilder.addInput(input.asOutput());

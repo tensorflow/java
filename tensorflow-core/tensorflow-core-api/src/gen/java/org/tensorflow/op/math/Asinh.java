@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -51,6 +52,7 @@ public final class Asinh<T extends TType> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Asinh
    */
+  @Endpoint
   public static <T extends TType> Asinh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Asinh", scope.makeOpName("Asinh"));
     opBuilder.addInput(x.asOutput());

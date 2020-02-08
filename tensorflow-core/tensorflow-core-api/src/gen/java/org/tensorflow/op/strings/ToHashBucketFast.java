@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -48,6 +49,7 @@ public final class ToHashBucketFast extends PrimitiveOp implements Operand<TInt6
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucketFast
    */
+  @Endpoint
   public static ToHashBucketFast create(Scope scope, Operand<TString> input, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketFast", scope.makeOpName("ToHashBucketFast"));
     opBuilder.addInput(input.asOutput());

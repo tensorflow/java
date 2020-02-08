@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -54,6 +55,7 @@ public final class ExtractVolumePatches<T extends TNumber> extends PrimitiveOp i
    * 
    * @return a new instance of ExtractVolumePatches
    */
+  @Endpoint
   public static <T extends TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractVolumePatches", scope.makeOpName("ExtractVolumePatches"));
     opBuilder.addInput(input.asOutput());

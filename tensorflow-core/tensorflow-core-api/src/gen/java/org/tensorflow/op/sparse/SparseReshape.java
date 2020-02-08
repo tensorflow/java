@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -58,6 +59,7 @@ public final class SparseReshape extends PrimitiveOp {
    * @param newShape 1-D.  `R_out` vector with the requested new dense shape.
    * @return a new instance of SparseReshape
    */
+  @Endpoint
   public static SparseReshape create(Scope scope, Operand<TInt64> inputIndices, Operand<TInt64> inputShape, Operand<TInt64> newShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReshape", scope.makeOpName("SparseReshape"));
     opBuilder.addInput(inputIndices.asOutput());

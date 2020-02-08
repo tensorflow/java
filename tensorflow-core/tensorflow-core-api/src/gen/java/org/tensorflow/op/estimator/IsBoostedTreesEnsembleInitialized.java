@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
@@ -37,6 +39,7 @@ public final class IsBoostedTreesEnsembleInitialized extends PrimitiveOp impleme
    * @param treeEnsembleHandle Handle to the tree ensemble resouce.
    * @return a new instance of IsBoostedTreesEnsembleInitialized
    */
+  @Endpoint
   public static IsBoostedTreesEnsembleInitialized create(Scope scope, Operand<?> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesEnsembleInitialized", scope.makeOpName("IsBoostedTreesEnsembleInitialized"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

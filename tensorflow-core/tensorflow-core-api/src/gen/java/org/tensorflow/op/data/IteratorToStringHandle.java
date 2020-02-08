@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -39,6 +40,7 @@ public final class IteratorToStringHandle extends PrimitiveOp implements Operand
    * @param resourceHandle A handle to an iterator resource.
    * @return a new instance of IteratorToStringHandle
    */
+  @Endpoint
   public static IteratorToStringHandle create(Scope scope, Operand<?> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorToStringHandle", scope.makeOpName("IteratorToStringHandle"));
     opBuilder.addInput(resourceHandle.asOutput());

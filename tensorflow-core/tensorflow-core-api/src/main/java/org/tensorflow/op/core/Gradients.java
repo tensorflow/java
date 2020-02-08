@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.Graph;
@@ -24,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -81,6 +83,7 @@ public class Gradients implements Op, Iterable<Operand<?>> {
    * @return a new instance of {@code Gradients}
    * @throws IllegalArgumentException if execution environment is not a graph
    */
+  @Endpoint
   public static Gradients create(
       Scope scope,
       Iterable<? extends Operand<?>> y,
@@ -118,10 +121,10 @@ public class Gradients implements Op, Iterable<Operand<?>> {
    * @return a new instance of {@code Gradients}
    * @throws IllegalArgumentException if execution environment is not a graph
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Endpoint
   public static Gradients create(
       Scope scope, Operand<?> y, Iterable<? extends Operand<?>> x, Options... options) {
-    return create(scope, (Iterable) Arrays.asList(y), x, options);
+    return create(scope, Collections.singletonList(y), x, options);
   }
 
   /**

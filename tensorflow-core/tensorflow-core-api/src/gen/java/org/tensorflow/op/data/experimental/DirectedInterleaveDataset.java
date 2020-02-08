@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -46,6 +48,7 @@ public final class DirectedInterleaveDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of DirectedInterleaveDataset
    */
+  @Endpoint
   public static DirectedInterleaveDataset create(Scope scope, Operand<?> selectorInputDataset, Iterable<Operand<?>> dataInputDatasets, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDirectedInterleaveDataset", scope.makeOpName("DirectedInterleaveDataset"));
     opBuilder.addInput(selectorInputDataset.asOutput());

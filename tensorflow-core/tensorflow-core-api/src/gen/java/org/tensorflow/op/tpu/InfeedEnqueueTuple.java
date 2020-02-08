@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 
 /**
@@ -73,6 +75,7 @@ public final class InfeedEnqueueTuple extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InfeedEnqueueTuple
    */
+  @Endpoint
   public static InfeedEnqueueTuple create(Scope scope, Iterable<Operand<?>> inputs, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueueTuple", scope.makeOpName("InfeedEnqueueTuple"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

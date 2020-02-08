@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -48,6 +50,7 @@ public final class TPUEmbeddingActivations extends PrimitiveOp implements Operan
    * activations.
    * @return a new instance of TPUEmbeddingActivations
    */
+  @Endpoint
   public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable, Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUEmbeddingActivations", scope.makeOpName("TPUEmbeddingActivations"));
     opBuilder.addInput(embeddingVariable.asOutput());

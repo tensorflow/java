@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat64;
 
@@ -43,6 +44,7 @@ public final class Timestamp extends PrimitiveOp implements Operand<TFloat64> {
    * @param scope current scope
    * @return a new instance of Timestamp
    */
+  @Endpoint
   public static Timestamp create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Timestamp", scope.makeOpName("Timestamp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

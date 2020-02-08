@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -118,6 +119,7 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFl
    * @param options carries optional attributes values
    * @return a new instance of LoadAndRemapMatrix
    */
+  @Endpoint
   public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat32> initializingValues, Long numRows, Long numCols, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
     opBuilder.addInput(ckptPath.asOutput());

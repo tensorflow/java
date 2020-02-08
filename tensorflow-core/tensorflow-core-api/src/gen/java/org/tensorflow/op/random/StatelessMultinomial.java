@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -49,6 +50,7 @@ public final class StatelessMultinomial<V extends TNumber> extends PrimitiveOp i
    * @param outputDtype 
    * @return a new instance of StatelessMultinomial
    */
+  @Endpoint
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput());
@@ -69,6 +71,7 @@ public final class StatelessMultinomial<V extends TNumber> extends PrimitiveOp i
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessMultinomial
    */
+  @Endpoint
   public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
     return create(scope, logits, numSamples, seed, TInt64.DTYPE);
   }

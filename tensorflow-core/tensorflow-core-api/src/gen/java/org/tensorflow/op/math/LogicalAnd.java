@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -43,6 +44,7 @@ public final class LogicalAnd extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of LogicalAnd
    */
+  @Endpoint
   public static LogicalAnd create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalAnd", scope.makeOpName("LogicalAnd"));
     opBuilder.addInput(x.asOutput());

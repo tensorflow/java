@@ -26,6 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -139,6 +140,7 @@ public final class Batch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Batch
    */
+  @Endpoint
   public static Batch create(Scope scope, Iterable<Operand<?>> inTensors, Long numBatchThreads, Long maxBatchSize, Long batchTimeoutMicros, Long gradTimeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Batch", scope.makeOpName("Batch"));
     opBuilder.addInputList(Operands.asOutputs(inTensors));

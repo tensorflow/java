@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -51,6 +52,7 @@ public final class DestroyTemporaryVariable<T extends TType> extends PrimitiveOp
    * 'TemporaryVariable' op.
    * @return a new instance of DestroyTemporaryVariable
    */
+  @Endpoint
   public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref, String varName) {
     OperationBuilder opBuilder = scope.env().opBuilder("DestroyTemporaryVariable", scope.makeOpName("DestroyTemporaryVariable"));
     opBuilder.addInput(ref.asOutput());

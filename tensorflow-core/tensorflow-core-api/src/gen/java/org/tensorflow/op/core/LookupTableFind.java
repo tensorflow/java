@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -49,6 +50,7 @@ public final class LookupTableFind<U extends TType> extends PrimitiveOp implemen
    * @param defaultValue 
    * @return a new instance of LookupTableFind
    */
+  @Endpoint
   public static <U extends TType, T extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
     opBuilder.addInput(tableHandle.asOutput());

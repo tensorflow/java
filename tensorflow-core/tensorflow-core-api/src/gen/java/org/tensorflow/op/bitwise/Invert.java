@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -83,6 +84,7 @@ public final class Invert<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Invert
    */
+  @Endpoint
   public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
     opBuilder.addInput(x.asOutput());

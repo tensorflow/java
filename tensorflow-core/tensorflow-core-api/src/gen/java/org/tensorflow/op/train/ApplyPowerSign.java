@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -73,6 +74,7 @@ public final class ApplyPowerSign<T extends TType> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of ApplyPowerSign
    */
+  @Endpoint
   public static <T extends TType> ApplyPowerSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyPowerSign", scope.makeOpName("ApplyPowerSign"));
     opBuilder.addInput(var.asOutput());

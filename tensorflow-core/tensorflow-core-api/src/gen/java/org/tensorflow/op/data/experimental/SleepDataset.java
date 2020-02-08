@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -43,6 +45,7 @@ public final class SleepDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of SleepDataset
    */
+  @Endpoint
   public static SleepDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> sleepMicroseconds, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSleepDataset", scope.makeOpName("SleepDataset"));
     opBuilder.addInput(inputDataset.asOutput());

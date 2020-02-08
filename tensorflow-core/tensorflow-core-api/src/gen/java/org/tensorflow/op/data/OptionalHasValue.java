@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -39,6 +40,7 @@ public final class OptionalHasValue extends PrimitiveOp implements Operand<TBool
    * @param optional 
    * @return a new instance of OptionalHasValue
    */
+  @Endpoint
   public static OptionalHasValue create(Scope scope, Operand<?> optional) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalHasValue", scope.makeOpName("OptionalHasValue"));
     opBuilder.addInput(optional.asOutput());

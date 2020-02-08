@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
@@ -93,6 +94,7 @@ public final class PriorityQueue extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of PriorityQueue
    */
+  @Endpoint
   public static PriorityQueue create(Scope scope, List<DataType<?>> componentTypes, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PriorityQueueV2", scope.makeOpName("PriorityQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

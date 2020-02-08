@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -44,6 +45,7 @@ public final class ReaderRead extends PrimitiveOp {
    * @param queueHandle Handle to a Queue, with string work items.
    * @return a new instance of ReaderRead
    */
+  @Endpoint
   public static ReaderRead create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadV2", scope.makeOpName("ReaderRead"));
     opBuilder.addInput(readerHandle.asOutput());

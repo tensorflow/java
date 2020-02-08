@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -52,6 +53,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends Primitive
    * @param dtype The type of the output.
    * @return a new instance of StatelessTruncatedNormal
    */
+  @Endpoint
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessTruncatedNormal", scope.makeOpName("StatelessTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
@@ -69,6 +71,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends Primitive
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessTruncatedNormal
    */
+  @Endpoint
   public static <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }

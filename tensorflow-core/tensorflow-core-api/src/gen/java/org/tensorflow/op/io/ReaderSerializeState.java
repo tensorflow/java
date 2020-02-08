@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -42,6 +43,7 @@ public final class ReaderSerializeState extends PrimitiveOp implements Operand<T
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderSerializeState
    */
+  @Endpoint
   public static ReaderSerializeState create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderSerializeStateV2", scope.makeOpName("ReaderSerializeState"));
     opBuilder.addInput(readerHandle.asOutput());

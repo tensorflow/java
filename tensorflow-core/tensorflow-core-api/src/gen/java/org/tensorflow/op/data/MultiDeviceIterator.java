@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -46,6 +48,7 @@ public final class MultiDeviceIterator extends PrimitiveOp implements Operand<TT
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIterator
    */
+  @Endpoint
   public static MultiDeviceIterator create(Scope scope, List<String> devices, String sharedName, String container, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIterator", scope.makeOpName("MultiDeviceIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

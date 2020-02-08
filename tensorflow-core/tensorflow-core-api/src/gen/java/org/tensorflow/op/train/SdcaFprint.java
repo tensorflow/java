@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -40,6 +41,7 @@ public final class SdcaFprint extends PrimitiveOp implements Operand<TInt64> {
    * @param input vector of strings to compute fingerprints on.
    * @return a new instance of SdcaFprint
    */
+  @Endpoint
   public static SdcaFprint create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaFprint", scope.makeOpName("SdcaFprint"));
     opBuilder.addInput(input.asOutput());

@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -82,6 +84,7 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends P
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingStochasticGradientDescentParameters
    */
+  @Endpoint
   public static LoadTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Operand<TFloat32> parameters, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParameters"));
     opBuilder.addInput(parameters.asOutput());

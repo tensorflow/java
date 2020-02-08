@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,7 @@ public final class ZerosLike<T extends TType> extends PrimitiveOp implements Ope
    * @param x a tensor of type T.
    * @return a new instance of ZerosLike
    */
+  @Endpoint
   public static <T extends TType> ZerosLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZerosLike", scope.makeOpName("ZerosLike"));
     opBuilder.addInput(x.asOutput());

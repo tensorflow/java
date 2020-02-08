@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -39,6 +40,7 @@ public final class ReadFile extends PrimitiveOp implements Operand<TString> {
    * @param filename 
    * @return a new instance of ReadFile
    */
+  @Endpoint
   public static ReadFile create(Scope scope, Operand<TString> filename) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadFile", scope.makeOpName("ReadFile"));
     opBuilder.addInput(filename.asOutput());

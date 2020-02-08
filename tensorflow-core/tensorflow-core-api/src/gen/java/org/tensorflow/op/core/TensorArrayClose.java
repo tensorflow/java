@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -40,6 +41,7 @@ public final class TensorArrayClose extends PrimitiveOp {
    * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
    * @return a new instance of TensorArrayClose
    */
+  @Endpoint
   public static TensorArrayClose create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayCloseV3", scope.makeOpName("TensorArrayClose"));
     opBuilder.addInput(handle.asOutput());

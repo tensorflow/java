@@ -21,6 +21,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -37,6 +38,7 @@ public final class ControlTrigger extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of ControlTrigger
    */
+  @Endpoint
   public static ControlTrigger create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ControlTrigger", scope.makeOpName("ControlTrigger"));
     opBuilder = scope.applyControlDependencies(opBuilder);

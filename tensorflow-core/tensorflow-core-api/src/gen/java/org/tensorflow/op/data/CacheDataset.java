@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -50,6 +52,7 @@ public final class CacheDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of CacheDataset
    */
+  @Endpoint
   public static CacheDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDataset", scope.makeOpName("CacheDataset"));
     opBuilder.addInput(inputDataset.asOutput());

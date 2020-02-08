@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -159,6 +160,7 @@ public final class EncodeJpeg extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeJpeg
    */
+  @Endpoint
   public static EncodeJpeg create(Scope scope, Operand<TUint8> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpeg", scope.makeOpName("EncodeJpeg"));
     opBuilder.addInput(image.asOutput());

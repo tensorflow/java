@@ -80,6 +80,8 @@ void CollectOpDependencies(const OpSpec& op, RenderMode mode,
   out->push_back(Type::Class("Operation", "org.tensorflow"));
   out->push_back(Type::Class("OperationBuilder", "org.tensorflow"));
   out->push_back(Type::Class("Scope", "org.tensorflow.op"));
+  out->push_back(Annotation::Create("Operator", "org.tensorflow.op.annotation"));
+  out->push_back(Annotation::Create("Endpoint", "org.tensorflow.op.annotation"));
   if (mode == OPERAND) {
     out->push_back(Type::Class("Output", "org.tensorflow"));
   } else if (mode == LIST_OPERAND) {
@@ -197,7 +199,7 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
                           SourceWriter* writer) {
   Method factory = Method::Create("create", op_class);
   factory.add_annotation(
-      Annotation::Create("Endpoint", "org.tensorflow.op.annotation");
+    Annotation::Create("Endpoint", "org.tensorflow.op.annotation")
   );
   Javadoc factory_doc =
       Javadoc::Create("Factory method to create a class wrapping a new " +

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -150,6 +151,7 @@ public final class FractionalMaxPool<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FractionalMaxPool
    */
+  @Endpoint
   public static <T extends TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPool", scope.makeOpName("FractionalMaxPool"));
     opBuilder.addInput(value.asOutput());

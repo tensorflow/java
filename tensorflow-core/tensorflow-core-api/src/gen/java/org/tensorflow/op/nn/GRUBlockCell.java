@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -90,6 +92,7 @@ public final class GRUBlockCell<T extends TNumber> extends PrimitiveOp {
    * @param bC 
    * @return a new instance of GRUBlockCell
    */
+  @Endpoint
   public static <T extends TNumber> GRUBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCell", scope.makeOpName("GRUBlockCell"));
     opBuilder.addInput(x.asOutput());

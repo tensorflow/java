@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -82,6 +83,7 @@ public final class CropAndResizeGradImage<T extends TNumber> extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradImage
    */
+  @Endpoint
   public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradImage", scope.makeOpName("CropAndResizeGradImage"));
     opBuilder.addInput(grads.asOutput());

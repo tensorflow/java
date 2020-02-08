@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -46,6 +47,7 @@ public final class L2Loss<T extends TNumber> extends PrimitiveOp implements Oper
    * @param t Typically 2-D, but may have any dimensions.
    * @return a new instance of L2Loss
    */
+  @Endpoint
   public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
     OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
     opBuilder.addInput(t.asOutput());

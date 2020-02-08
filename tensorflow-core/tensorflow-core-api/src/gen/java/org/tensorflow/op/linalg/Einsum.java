@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -120,6 +121,7 @@ public final class Einsum<T extends TType> extends PrimitiveOp implements Operan
    * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
    * @return a new instance of Einsum
    */
+  @Endpoint
   public static <T extends TType> Einsum<T> create(Scope scope, Iterable<Operand<T>> inputs, String equation) {
     OperationBuilder opBuilder = scope.env().opBuilder("Einsum", scope.makeOpName("Einsum"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

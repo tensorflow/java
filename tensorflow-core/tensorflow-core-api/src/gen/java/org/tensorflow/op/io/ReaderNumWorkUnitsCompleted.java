@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -39,6 +40,7 @@ public final class ReaderNumWorkUnitsCompleted extends PrimitiveOp implements Op
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderNumWorkUnitsCompleted
    */
+  @Endpoint
   public static ReaderNumWorkUnitsCompleted create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumWorkUnitsCompletedV2", scope.makeOpName("ReaderNumWorkUnitsCompleted"));
     opBuilder.addInput(readerHandle.asOutput());

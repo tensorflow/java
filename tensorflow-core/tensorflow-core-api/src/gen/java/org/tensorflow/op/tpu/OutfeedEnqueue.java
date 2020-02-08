@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,6 +38,7 @@ public final class OutfeedEnqueue extends PrimitiveOp {
    * @param input A tensor that will be inserted into the outfeed queue.
    * @return a new instance of OutfeedEnqueue
    */
+  @Endpoint
   public static <T extends TType> OutfeedEnqueue create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueue", scope.makeOpName("OutfeedEnqueue"));
     opBuilder.addInput(input.asOutput());

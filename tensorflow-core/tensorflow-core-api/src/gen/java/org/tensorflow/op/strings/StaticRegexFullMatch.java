@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
 
@@ -46,6 +48,7 @@ public final class StaticRegexFullMatch extends PrimitiveOp implements Operand<T
    * @param pattern The regular expression to match the input.
    * @return a new instance of StaticRegexFullMatch
    */
+  @Endpoint
   public static StaticRegexFullMatch create(Scope scope, Operand<TString> input, String pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexFullMatch", scope.makeOpName("StaticRegexFullMatch"));
     opBuilder.addInput(input.asOutput());

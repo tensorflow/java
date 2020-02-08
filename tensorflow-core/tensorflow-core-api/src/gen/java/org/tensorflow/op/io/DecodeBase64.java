@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -42,6 +43,7 @@ public final class DecodeBase64 extends PrimitiveOp implements Operand<TString> 
    * @param input Base64 strings to decode.
    * @return a new instance of DecodeBase64
    */
+  @Endpoint
   public static DecodeBase64 create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBase64", scope.makeOpName("DecodeBase64"));
     opBuilder.addInput(input.asOutput());

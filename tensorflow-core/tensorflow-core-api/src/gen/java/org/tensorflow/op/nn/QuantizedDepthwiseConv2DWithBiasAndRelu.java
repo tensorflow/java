@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -71,6 +73,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TType> exte
    * @param options carries optional attributes values
    * @return a new instance of QuantizedDepthwiseConv2DWithBiasAndRelu
    */
+  @Endpoint
   public static <V extends TType, T extends TType, U extends TType> QuantizedDepthwiseConv2DWithBiasAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2DWithBiasAndRelu", scope.makeOpName("QuantizedDepthwiseConv2DWithBiasAndRelu"));
     opBuilder.addInput(input.asOutput());

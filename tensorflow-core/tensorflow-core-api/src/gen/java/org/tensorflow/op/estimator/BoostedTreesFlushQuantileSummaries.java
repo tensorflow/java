@@ -26,6 +26,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -45,6 +47,7 @@ public final class BoostedTreesFlushQuantileSummaries extends PrimitiveOp implem
    * @param numFeatures 
    * @return a new instance of BoostedTreesFlushQuantileSummaries
    */
+  @Endpoint
   public static BoostedTreesFlushQuantileSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesFlushQuantileSummaries", scope.makeOpName("BoostedTreesFlushQuantileSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

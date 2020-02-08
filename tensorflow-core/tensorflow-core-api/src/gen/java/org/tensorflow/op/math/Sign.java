@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -49,6 +50,7 @@ public final class Sign<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Sign
    */
+  @Endpoint
   public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
     opBuilder.addInput(x.asOutput());

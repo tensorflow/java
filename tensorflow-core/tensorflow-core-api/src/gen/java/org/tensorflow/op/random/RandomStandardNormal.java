@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -77,6 +78,7 @@ public final class RandomStandardNormal<U extends TNumber> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of RandomStandardNormal
    */
+  @Endpoint
   public static <U extends TNumber, T extends TNumber> RandomStandardNormal<U> create(Scope scope, Operand<T> shape, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomStandardNormal", scope.makeOpName("RandomStandardNormal"));
     opBuilder.addInput(shape.asOutput());

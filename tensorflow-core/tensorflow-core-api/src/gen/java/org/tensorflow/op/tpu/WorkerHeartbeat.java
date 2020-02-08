@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -40,6 +42,7 @@ public final class WorkerHeartbeat extends PrimitiveOp implements Operand<TStrin
    * @param request A string tensor containing a serialized WorkerHeartbeatRequest
    * @return a new instance of WorkerHeartbeat
    */
+  @Endpoint
   public static WorkerHeartbeat create(Scope scope, Operand<TString> request) {
     OperationBuilder opBuilder = scope.env().opBuilder("WorkerHeartbeat", scope.makeOpName("WorkerHeartbeat"));
     opBuilder.addInput(request.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -89,6 +90,7 @@ public final class RandomPoisson<V extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
+  @Endpoint
   public static <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, DataType<V> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
@@ -119,6 +121,7 @@ public final class RandomPoisson<V extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
+  @Endpoint
   public static <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
     return create(scope, shape, rate, TInt64.DTYPE, options);
   }

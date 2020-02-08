@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -88,6 +89,7 @@ public final class Unique<T extends TType, V extends TNumber> extends PrimitiveO
    * @param outIdx 
    * @return a new instance of Unique
    */
+  @Endpoint
   public static <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput());
@@ -106,6 +108,7 @@ public final class Unique<T extends TType, V extends TNumber> extends PrimitiveO
    * find the unique elements.
    * @return a new instance of Unique
    */
+  @Endpoint
   public static <T extends TType, U extends TNumber> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
     return create(scope, x, axis, TInt32.DTYPE);
   }

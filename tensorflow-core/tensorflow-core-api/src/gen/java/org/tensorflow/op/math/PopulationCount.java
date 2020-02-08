@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
@@ -48,6 +49,7 @@ public final class PopulationCount extends PrimitiveOp implements Operand<TUint8
    * @param x 
    * @return a new instance of PopulationCount
    */
+  @Endpoint
   public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());

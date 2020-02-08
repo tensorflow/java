@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -70,6 +71,7 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixTriangularSolve
    */
+  @Endpoint
   public static <T extends TNumber> BatchMatrixTriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixTriangularSolve", scope.makeOpName("BatchMatrixTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());

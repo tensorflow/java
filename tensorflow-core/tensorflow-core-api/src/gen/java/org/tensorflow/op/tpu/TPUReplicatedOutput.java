@@ -26,6 +26,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -43,6 +45,7 @@ public final class TPUReplicatedOutput<T extends TType> extends PrimitiveOp impl
    * @param numReplicas 
    * @return a new instance of TPUReplicatedOutput
    */
+  @Endpoint
   public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
     opBuilder.addInput(input.asOutput());

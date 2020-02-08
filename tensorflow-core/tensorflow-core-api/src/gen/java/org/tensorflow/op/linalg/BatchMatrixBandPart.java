@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -42,6 +43,7 @@ public final class BatchMatrixBandPart<T extends TType> extends PrimitiveOp impl
    * @param numUpper 
    * @return a new instance of BatchMatrixBandPart
    */
+  @Endpoint
   public static <T extends TType> BatchMatrixBandPart<T> create(Scope scope, Operand<T> input, Operand<TInt64> numLower, Operand<TInt64> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixBandPart", scope.makeOpName("BatchMatrixBandPart"));
     opBuilder.addInput(input.asOutput());

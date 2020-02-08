@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -48,6 +49,7 @@ public final class Save extends PrimitiveOp {
    * @param tensors `N` tensors to save.
    * @return a new instance of Save
    */
+  @Endpoint
   public static Save create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
     OperationBuilder opBuilder = scope.env().opBuilder("SaveV2", scope.makeOpName("Save"));
     opBuilder.addInput(prefix.asOutput());

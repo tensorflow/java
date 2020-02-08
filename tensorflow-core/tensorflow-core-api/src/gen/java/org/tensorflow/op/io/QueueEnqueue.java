@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -67,6 +68,7 @@ public final class QueueEnqueue extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QueueEnqueue
    */
+  @Endpoint
   public static QueueEnqueue create(Scope scope, Operand<?> handle, Iterable<Operand<?>> components, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueEnqueueV2", scope.makeOpName("QueueEnqueue"));
     opBuilder.addInput(handle.asOutput());

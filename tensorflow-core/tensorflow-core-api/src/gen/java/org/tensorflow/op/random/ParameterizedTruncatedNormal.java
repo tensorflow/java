@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -81,6 +82,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends Primi
    * @param options carries optional attributes values
    * @return a new instance of ParameterizedTruncatedNormal
    */
+  @Endpoint
   public static <U extends TNumber, T extends TNumber> ParameterizedTruncatedNormal<U> create(Scope scope, Operand<T> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParameterizedTruncatedNormal", scope.makeOpName("ParameterizedTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());

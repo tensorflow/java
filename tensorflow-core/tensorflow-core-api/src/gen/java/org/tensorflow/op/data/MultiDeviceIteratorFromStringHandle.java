@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -62,6 +64,7 @@ public final class MultiDeviceIteratorFromStringHandle extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of MultiDeviceIteratorFromStringHandle
    */
+  @Endpoint
   public static MultiDeviceIteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorFromStringHandle", scope.makeOpName("MultiDeviceIteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());

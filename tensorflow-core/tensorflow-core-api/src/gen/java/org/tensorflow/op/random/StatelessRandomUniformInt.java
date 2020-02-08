@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -47,6 +49,7 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends Primitiv
    * @param maxval Maximum value (exclusive, scalar).
    * @return a new instance of StatelessRandomUniformInt
    */
+  @Endpoint
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformInt", scope.makeOpName("StatelessRandomUniformInt"));
     opBuilder.addInput(shape.asOutput());

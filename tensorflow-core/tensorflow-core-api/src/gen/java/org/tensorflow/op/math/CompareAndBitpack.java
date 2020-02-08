@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
@@ -63,6 +64,7 @@ public final class CompareAndBitpack extends PrimitiveOp implements Operand<TUin
    * @param threshold Threshold to compare against.
    * @return a new instance of CompareAndBitpack
    */
+  @Endpoint
   public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input, Operand<T> threshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
     opBuilder.addInput(input.asOutput());

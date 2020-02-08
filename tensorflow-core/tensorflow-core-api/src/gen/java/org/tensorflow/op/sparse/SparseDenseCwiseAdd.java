@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -55,6 +56,7 @@ public final class SparseDenseCwiseAdd<T extends TType> extends PrimitiveOp impl
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseAdd
    */
+  @Endpoint
   public static <T extends TType> SparseDenseCwiseAdd<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseAdd", scope.makeOpName("SparseDenseCwiseAdd"));
     opBuilder.addInput(spIndices.asOutput());

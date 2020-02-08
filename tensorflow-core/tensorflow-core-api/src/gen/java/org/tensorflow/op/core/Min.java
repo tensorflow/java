@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -69,6 +70,7 @@ public final class Min<T extends TType> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of Min
    */
+  @Endpoint
   public static <T extends TType, U extends TNumber> Min<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("Min"));
     opBuilder.addInput(input.asOutput());

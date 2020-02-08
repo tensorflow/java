@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -78,6 +79,7 @@ public final class TfRecordReader extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of TfRecordReader
    */
+  @Endpoint
   public static TfRecordReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordReaderV2", scope.makeOpName("TfRecordReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

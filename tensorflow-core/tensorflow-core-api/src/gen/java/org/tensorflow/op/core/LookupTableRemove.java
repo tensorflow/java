@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -40,6 +42,7 @@ public final class LookupTableRemove extends PrimitiveOp {
    * @param keys Any shape.  Keys of the elements to remove.
    * @return a new instance of LookupTableRemove
    */
+  @Endpoint
   public static <T extends TType> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());

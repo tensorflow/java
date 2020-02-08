@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -37,6 +39,7 @@ public final class TensorForestTreeSerialize extends PrimitiveOp implements Oper
    * @param treeHandle Handle to the tree resource to be serialized.
    * @return a new instance of TensorForestTreeSerialize
    */
+  @Endpoint
   public static TensorForestTreeSerialize create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSerialize", scope.makeOpName("TensorForestTreeSerialize"));
     opBuilder.addInput(treeHandle.asOutput());

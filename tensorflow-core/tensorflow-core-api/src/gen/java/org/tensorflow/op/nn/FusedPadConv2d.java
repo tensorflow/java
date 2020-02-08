@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -64,6 +65,7 @@ public final class FusedPadConv2d<T extends TNumber> extends PrimitiveOp impleme
    * @param padding The type of padding algorithm to use.
    * @return a new instance of FusedPadConv2d
    */
+  @Endpoint
   public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
     opBuilder.addInput(input.asOutput());

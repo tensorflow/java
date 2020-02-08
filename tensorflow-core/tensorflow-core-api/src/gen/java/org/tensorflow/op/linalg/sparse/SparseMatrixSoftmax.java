@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -48,6 +49,7 @@ public final class SparseMatrixSoftmax extends PrimitiveOp implements Operand<TT
    * @param type 
    * @return a new instance of SparseMatrixSoftmax
    */
+  @Endpoint
   public static <T extends TNumber> SparseMatrixSoftmax create(Scope scope, Operand<?> logits, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmax", scope.makeOpName("SparseMatrixSoftmax"));
     opBuilder.addInput(logits.asOutput());

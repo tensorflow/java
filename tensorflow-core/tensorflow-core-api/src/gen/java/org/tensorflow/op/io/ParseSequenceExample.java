@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
@@ -151,6 +152,7 @@ public final class ParseSequenceExample extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ParseSequenceExample
    */
+  @Endpoint
   public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Operand<TString> contextSparseKeys, Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys, Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys, Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty, Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes, List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExampleV2", scope.makeOpName("ParseSequenceExample"));
     opBuilder.addInput(serialized.asOutput());

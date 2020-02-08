@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,7 @@ public final class TensorListGetItem<T extends TType> extends PrimitiveOp implem
    * @param elementDtype 
    * @return a new instance of TensorListGetItem
    */
+  @Endpoint
   public static <T extends TType> TensorListGetItem<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGetItem", scope.makeOpName("TensorListGetItem"));
     opBuilder.addInput(inputHandle.asOutput());

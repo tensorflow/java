@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -67,6 +68,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends Primiti
    * @param outIdx 
    * @return a new instance of SetDiff1d
    */
+  @Endpoint
   public static <T extends TType, U extends TNumber> SetDiff1d<T, U> create(Scope scope, Operand<T> x, Operand<T> y, DataType<U> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("ListDiff", scope.makeOpName("SetDiff1d"));
     opBuilder.addInput(x.asOutput());
@@ -84,6 +86,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends Primiti
    * @param y 1-D. Values to remove.
    * @return a new instance of SetDiff1d
    */
+  @Endpoint
   public static <T extends TType> SetDiff1d<T, TInt32> create(Scope scope, Operand<T> x, Operand<T> y) {
     return create(scope, x, y, TInt32.DTYPE);
   }

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,7 @@ public final class NextIteration<T extends TType> extends PrimitiveOp implements
    * @param data The tensor to be made available to the next iteration.
    * @return a new instance of NextIteration
    */
+  @Endpoint
   public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
     opBuilder.addInput(data.asOutput());

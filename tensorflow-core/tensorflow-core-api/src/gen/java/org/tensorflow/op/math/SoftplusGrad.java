@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +43,7 @@ public final class SoftplusGrad<T extends TNumber> extends PrimitiveOp implement
    * @param features The features passed as input to the corresponding softplus operation.
    * @return a new instance of SoftplusGrad
    */
+  @Endpoint
   public static <T extends TNumber> SoftplusGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftplusGrad", scope.makeOpName("SoftplusGrad"));
     opBuilder.addInput(gradients.asOutput());

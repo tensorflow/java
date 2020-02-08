@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -55,6 +56,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param outType 
    * @return a new instance of Size
    */
+  @Endpoint
   public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
@@ -70,6 +72,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Size
    */
+  @Endpoint
   public static <T extends TType> Size<TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }

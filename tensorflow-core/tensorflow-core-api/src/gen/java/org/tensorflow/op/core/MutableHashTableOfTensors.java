@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
@@ -95,6 +96,7 @@ public final class MutableHashTableOfTensors extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of MutableHashTableOfTensors
    */
+  @Endpoint
   public static <T extends TType, U extends TType> MutableHashTableOfTensors create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableOfTensorsV2", scope.makeOpName("MutableHashTableOfTensors"));
     opBuilder = scope.applyControlDependencies(opBuilder);

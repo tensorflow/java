@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -88,6 +89,7 @@ public final class UniformCandidateSampler extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UniformCandidateSampler
    */
+  @Endpoint
   public static UniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniformCandidateSampler", scope.makeOpName("UniformCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());

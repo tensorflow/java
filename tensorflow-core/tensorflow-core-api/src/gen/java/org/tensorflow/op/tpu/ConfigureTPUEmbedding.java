@@ -21,6 +21,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Sets up TPUEmbedding in a distributed TPU system.
@@ -35,6 +37,7 @@ public final class ConfigureTPUEmbedding extends PrimitiveOp {
    * describes the embedding lookups of the program.
    * @return a new instance of ConfigureTPUEmbedding
    */
+  @Endpoint
   public static ConfigureTPUEmbedding create(Scope scope, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureTPUEmbedding", scope.makeOpName("ConfigureTPUEmbedding"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -58,6 +59,7 @@ public final class Rfft3d<U extends TType> extends PrimitiveOp implements Operan
    * @param Tcomplex 
    * @return a new instance of Rfft3d
    */
+  @Endpoint
   public static <U extends TType, T extends TNumber> Rfft3d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT3D", scope.makeOpName("Rfft3d"));
     opBuilder.addInput(input.asOutput());

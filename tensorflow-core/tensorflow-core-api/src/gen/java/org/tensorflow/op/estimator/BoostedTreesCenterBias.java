@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 
@@ -42,6 +44,7 @@ public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand
    * @param l2 l2 regularization factor on leaf weights, per instance based.
    * @return a new instance of BoostedTreesCenterBias
    */
+  @Endpoint
   public static BoostedTreesCenterBias create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TFloat32> meanGradients, Operand<TFloat32> meanHessians, Operand<TFloat32> l1, Operand<TFloat32> l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCenterBias", scope.makeOpName("BoostedTreesCenterBias"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

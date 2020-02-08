@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -46,6 +48,7 @@ public final class RandomDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of RandomDataset
    */
+  @Endpoint
   public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalRandomDataset", scope.makeOpName("RandomDataset"));
     opBuilder.addInput(seed.asOutput());

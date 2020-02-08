@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -68,6 +70,7 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradWithArgmax
    */
+  @Endpoint
   public static <T extends TNumber, U extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradWithArgmax", scope.makeOpName("MaxPoolGradWithArgmax"));
     opBuilder.addInput(input.asOutput());

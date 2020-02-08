@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -39,6 +40,7 @@ public final class QueueSize extends PrimitiveOp implements Operand<TInt32> {
    * @param handle The handle to a queue.
    * @return a new instance of QueueSize
    */
+  @Endpoint
   public static QueueSize create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueSizeV2", scope.makeOpName("QueueSize"));
     opBuilder.addInput(handle.asOutput());

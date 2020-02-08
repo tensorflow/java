@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
@@ -120,6 +121,7 @@ public final class ParseSingleSequenceExample extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ParseSingleSequenceExample
    */
+  @Endpoint
   public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> featureListDenseMissingAssumedEmpty, Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys, Iterable<Operand<TString>> featureListSparseKeys, Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults, Operand<TString> debugName, List<DataType<?>> contextSparseTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleSequenceExample", scope.makeOpName("ParseSingleSequenceExample"));
     opBuilder.addInput(serialized.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -87,6 +88,7 @@ public final class SparseToDense<U extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of SparseToDense
    */
+  @Endpoint
   public static <U extends TType, T extends TNumber> SparseToDense<U> create(Scope scope, Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues, Operand<U> defaultValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToDense", scope.makeOpName("SparseToDense"));
     opBuilder.addInput(sparseIndices.asOutput());

@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -43,6 +45,7 @@ public final class ChooseFastestDataset extends PrimitiveOp implements Operand<T
    * @param outputShapes 
    * @return a new instance of ChooseFastestDataset
    */
+  @Endpoint
   public static ChooseFastestDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, Long numExperiments, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalChooseFastestDataset", scope.makeOpName("ChooseFastestDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));

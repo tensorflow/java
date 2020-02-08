@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -101,6 +102,7 @@ public final class DepthwiseConv2dNative<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNative
    */
+  @Endpoint
   public static <T extends TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
     opBuilder.addInput(input.asOutput());

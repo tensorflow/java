@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -37,6 +39,7 @@ public final class AnonymousRandomSeedGenerator extends PrimitiveOp {
    * @param seed2 
    * @return a new instance of AnonymousRandomSeedGenerator
    */
+  @Endpoint
   public static AnonymousRandomSeedGenerator create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousRandomSeedGenerator", scope.makeOpName("AnonymousRandomSeedGenerator"));
     opBuilder.addInput(seed.asOutput());

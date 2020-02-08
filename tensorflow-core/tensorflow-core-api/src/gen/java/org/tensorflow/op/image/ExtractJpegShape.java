@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -49,6 +50,7 @@ public final class ExtractJpegShape<T extends TNumber> extends PrimitiveOp imple
    * Defaults to int32.
    * @return a new instance of ExtractJpegShape
    */
+  @Endpoint
   public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput());
@@ -64,6 +66,7 @@ public final class ExtractJpegShape<T extends TNumber> extends PrimitiveOp imple
    * @param contents 0-D. The JPEG-encoded image.
    * @return a new instance of ExtractJpegShape
    */
+  @Endpoint
   public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
     return create(scope, contents, TInt32.DTYPE);
   }

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -74,6 +75,7 @@ public final class ExpandDims<T extends TType> extends PrimitiveOp implements Op
    * `[-rank(input) - 1, rank(input)]`.
    * @return a new instance of ExpandDims
    */
+  @Endpoint
   public static <T extends TType, U extends TNumber> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
     opBuilder.addInput(input.asOutput());

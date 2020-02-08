@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -39,6 +40,7 @@ public final class Strip extends PrimitiveOp implements Operand<TString> {
    * @param input A string `Tensor` of any shape.
    * @return a new instance of Strip
    */
+  @Endpoint
   public static Strip create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringStrip", scope.makeOpName("Strip"));
     opBuilder.addInput(input.asOutput());

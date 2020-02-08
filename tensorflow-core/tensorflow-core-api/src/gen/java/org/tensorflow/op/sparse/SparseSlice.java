@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -64,6 +65,7 @@ public final class SparseSlice<T extends TType> extends PrimitiveOp {
    * sparse tensors.
    * @return a new instance of SparseSlice
    */
+  @Endpoint
   public static <T extends TType> SparseSlice<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSlice", scope.makeOpName("SparseSlice"));
     opBuilder.addInput(indices.asOutput());

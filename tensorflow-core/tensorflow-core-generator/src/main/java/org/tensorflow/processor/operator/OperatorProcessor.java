@@ -16,38 +16,6 @@ limitations under the License.
 
 package org.tensorflow.processor.operator;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic.Kind;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
@@ -62,6 +30,39 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import javax.tools.Diagnostic.Kind;
 
 /**
  * A compile-time Processor that aggregates classes annotated with {@link
@@ -89,6 +90,7 @@ public final class OperatorProcessor extends AbstractProcessor {
     messager = processingEnv.getMessager();
     filer = processingEnv.getFiler();
     elements = processingEnv.getElementUtils();
+    types = processingEnv.getTypeUtils();
   }
 
   @Override
@@ -197,6 +199,8 @@ public final class OperatorProcessor extends AbstractProcessor {
   private static final ClassName T_OPS = ClassName.get("org.tensorflow.op", "Ops");
   private static final TypeName T_OPERATOR =
       ClassName.get("org.tensorflow.op.annotation", "Operator");
+  private static final TypeName T_ENDPOINT =
+      ClassName.get("org.tensorflow.op.annotation", "Endpoint");
   private static final TypeName T_SCOPE = ClassName.get("org.tensorflow.op", "Scope");
   private static final TypeName T_EXEC_ENV =
       ClassName.get("org.tensorflow", "ExecutionEnvironment");
@@ -213,6 +217,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   private Filer filer;
   private Messager messager;
   private Elements elements;
+  private Types types;
   private boolean hasRun = false;
 
   private void error(Element e, String message, Object... args) {
@@ -266,21 +271,47 @@ public final class OperatorProcessor extends AbstractProcessor {
 
   private void collectOpMethods(
       Multimap<String, MethodSpec> groupedMethods, TypeElement opClass, TypeElement annotation) {
-    AnnotationMirror am = getAnnotationMirror(opClass, annotation);
-    String groupName = getAnnotationElementValueAsString("group", am);
-    String methodName = getAnnotationElementValueAsString("name", am);
-    ClassName opClassName = ClassName.get(opClass);
-    if (Strings.isNullOrEmpty(methodName)) {
-      methodName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, opClassName.simpleName());
+    AnnotationMirror operatorAnnot = getAnnotationMirror(opClass, annotation.getQualifiedName());
+    if (operatorAnnot == null) {
+      throw new IllegalArgumentException(
+          "Annotation "
+              + annotation.getSimpleName()
+              + " not present on element "
+              + opClass.getSimpleName());
     }
-    // Build a method for each @Operator found in the class path. There should be one method per
-    // operation factory called
-    // "create", which takes in parameter a scope and, optionally, a list of arguments
+    String opGroup = getAnnotationElementValueAsString("group", operatorAnnot);
+    String opName = getAnnotationElementValueAsString("name", operatorAnnot);
+    ClassName opClassName = ClassName.get(opClass);
+    if (Strings.isNullOrEmpty(opName)) {
+      opName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, opClassName.simpleName());
+    }
+    // Build an endpoint for each method annotated with @Endpoint, which takes in parameter a scope
+    // and, optionally, a list of arguments
     for (ExecutableElement opMethod : ElementFilter.methodsIn(opClass.getEnclosedElements())) {
-      if (opMethod.getModifiers().contains(Modifier.STATIC)
-          && opMethod.getSimpleName().contentEquals("create")) {
-        MethodSpec method = buildOpMethod(methodName, opClassName, opMethod);
-        groupedMethods.put(groupName, method);
+      AnnotationMirror endpointAnnot =
+          getAnnotationMirror(opMethod, elements.getName(T_ENDPOINT.toString()));
+      if (endpointAnnot != null) {
+        if (!opMethod.getModifiers().containsAll(Arrays.asList(Modifier.STATIC, Modifier.PUBLIC))) {
+          throw new IllegalArgumentException(
+              "Endpoint " + opMethod + " of class " + opClass + " must be static and public");
+        }
+        if (opMethod.getParameters().isEmpty() ||
+            !((TypeElement)types.asElement(opMethod.getParameters().get(0).asType())).getQualifiedName()
+                .equals(elements.getName(T_SCOPE.toString()))) {
+          throw new IllegalArgumentException(
+              "Endpoint " + opMethod + " of class " + opClass + " must take an instance of " + T_SCOPE
+                  + " as its first parameter");
+        }
+        String endpointGroup = getAnnotationElementValueAsString("group", endpointAnnot);
+        if (endpointGroup.isEmpty()) {
+          endpointGroup = opGroup;
+        }
+        String endpointName = getAnnotationElementValueAsString("name", endpointAnnot);
+        if (endpointName.isEmpty()) {
+          endpointName = opName;
+        }
+        MethodSpec method = buildOpMethod(endpointName, opClassName, opMethod);
+        groupedMethods.put(endpointGroup, method);
       }
     }
   }
@@ -301,7 +332,9 @@ public final class OperatorProcessor extends AbstractProcessor {
     for (TypeMirror thrownType : factoryMethod.getThrownTypes()) {
       builder.addException(TypeName.get(thrownType));
     }
-    StringBuilder call = new StringBuilder("return $T.create(scope");
+    StringBuilder call = new StringBuilder("return $T.")
+      .append(factoryMethod.getSimpleName())
+      .append("(scope");
     boolean first = true;
     for (VariableElement param : factoryMethod.getParameters()) {
       ParameterSpec p = ParameterSpec.get(param);
@@ -323,17 +356,19 @@ public final class OperatorProcessor extends AbstractProcessor {
     javadoc.append("Builds an {@link ").append(opClassName.simpleName()).append("} operation\n\n");
 
     // Add all javadoc tags found in the operator factory method but the first one, which should be
-    // in all cases the
-    // 'scope' parameter that is implicitly passed by this API
-    Matcher tagMatcher = JAVADOC_TAG_PATTERN.matcher(elements.getDocComment(factoryMethod));
-    boolean firstParam = true;
+    // in all cases the 'scope' parameter that is implicitly passed by this API
+    String docComment = elements.getDocComment(factoryMethod);
+    if (docComment != null && !docComment.isEmpty()) {
+      Matcher tagMatcher = JAVADOC_TAG_PATTERN.matcher(docComment);
+      boolean firstParam = true;
 
-    while (tagMatcher.find()) {
-      String tag = tagMatcher.group();
-      if (tag.startsWith("@param") && firstParam) {
-        firstParam = false;
-      } else {
-        javadoc.append(tag).append('\n');
+      while (tagMatcher.find()) {
+        String tag = tagMatcher.group();
+        if (tag.startsWith("@param") && firstParam) {
+          firstParam = false;
+        } else {
+          javadoc.append(tag).append('\n');
+        }
       }
     }
     javadoc.append("@see ").append(opClassName).append("\n");
@@ -533,17 +568,13 @@ public final class OperatorProcessor extends AbstractProcessor {
     });
   }
 
-  private static AnnotationMirror getAnnotationMirror(Element element, TypeElement annotation) {
+  private static AnnotationMirror getAnnotationMirror(Element element, Name annotationName) {
     for (AnnotationMirror am : element.getAnnotationMirrors()) {
-      if (am.getAnnotationType().asElement().equals(annotation)) {
+      if (((TypeElement)am.getAnnotationType().asElement()).getQualifiedName().equals(annotationName)) {
         return am;
       }
     }
-    throw new IllegalArgumentException(
-        "Annotation "
-            + annotation.getSimpleName()
-            + " not present on element "
-            + element.getSimpleName());
+    return null;
   }
 
   private static String getAnnotationElementValueAsString(String elementName, AnnotationMirror am) {

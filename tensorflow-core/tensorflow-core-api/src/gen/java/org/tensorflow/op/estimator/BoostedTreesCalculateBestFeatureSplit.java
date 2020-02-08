@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -74,6 +76,7 @@ public final class BoostedTreesCalculateBestFeatureSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesCalculateBestFeatureSplit
    */
+  @Endpoint
   public static BoostedTreesCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TFloat32> statsSummary, Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight, Long logitsDimension, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestFeatureSplit", scope.makeOpName("BoostedTreesCalculateBestFeatureSplit"));
     opBuilder.addInput(nodeIdRange.asOutput());

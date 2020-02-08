@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -49,6 +50,7 @@ public final class Split<T extends TType> extends PrimitiveOp implements Iterabl
    * `value.shape[split_dim]`.
    * @return a new instance of Split
    */
+  @Endpoint
   public static <T extends TType> Split<T> create(Scope scope, Operand<TInt32> axis, Operand<T> value, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("Split", scope.makeOpName("Split"));
     opBuilder.addInput(axis.asOutput());

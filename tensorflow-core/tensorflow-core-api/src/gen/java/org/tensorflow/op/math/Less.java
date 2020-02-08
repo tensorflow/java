@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
@@ -57,6 +58,7 @@ public final class Less extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of Less
    */
+  @Endpoint
   public static <T extends TNumber> Less create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Less", scope.makeOpName("Less"));
     opBuilder.addInput(x.asOutput());

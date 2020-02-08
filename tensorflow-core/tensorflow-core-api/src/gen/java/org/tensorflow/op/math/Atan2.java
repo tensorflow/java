@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -49,6 +50,7 @@ public final class Atan2<T extends TNumber> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Atan2
    */
+  @Endpoint
   public static <T extends TNumber> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());

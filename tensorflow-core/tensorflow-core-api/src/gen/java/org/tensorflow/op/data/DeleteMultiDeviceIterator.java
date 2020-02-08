@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * A container for an iterator resource.
@@ -38,6 +40,7 @@ public final class DeleteMultiDeviceIterator extends PrimitiveOp {
    * @param deleter A variant deleter.
    * @return a new instance of DeleteMultiDeviceIterator
    */
+  @Endpoint
   public static DeleteMultiDeviceIterator create(Scope scope, Operand<?> multiDeviceIterator, Iterable<Operand<?>> iterators, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMultiDeviceIterator", scope.makeOpName("DeleteMultiDeviceIterator"));
     opBuilder.addInput(multiDeviceIterator.asOutput());

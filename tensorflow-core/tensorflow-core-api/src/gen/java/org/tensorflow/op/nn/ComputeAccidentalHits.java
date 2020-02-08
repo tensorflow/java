@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -79,6 +80,7 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ComputeAccidentalHits
    */
+  @Endpoint
   public static ComputeAccidentalHits create(Scope scope, Operand<TInt64> trueClasses, Operand<TInt64> sampledCandidates, Long numTrue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComputeAccidentalHits", scope.makeOpName("ComputeAccidentalHits"));
     opBuilder.addInput(trueClasses.asOutput());

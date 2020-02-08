@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -43,6 +44,7 @@ public final class ReaderRestoreState extends PrimitiveOp {
    * matching reader_handle.
    * @return a new instance of ReaderRestoreState
    */
+  @Endpoint
   public static ReaderRestoreState create(Scope scope, Operand<?> readerHandle, Operand<TString> state) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderRestoreStateV2", scope.makeOpName("ReaderRestoreState"));
     opBuilder.addInput(readerHandle.asOutput());

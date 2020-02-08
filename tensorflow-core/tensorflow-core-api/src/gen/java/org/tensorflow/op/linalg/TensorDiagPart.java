@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -60,6 +61,7 @@ public final class TensorDiagPart<T extends TType> extends PrimitiveOp implement
    * @param input Rank k tensor where k is even and not zero.
    * @return a new instance of TensorDiagPart
    */
+  @Endpoint
   public static <T extends TType> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DiagPart", scope.makeOpName("TensorDiagPart"));
     opBuilder.addInput(input.asOutput());

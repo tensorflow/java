@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -52,6 +53,7 @@ public final class Lgamma<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Lgamma
    */
+  @Endpoint
   public static <T extends TNumber> Lgamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lgamma", scope.makeOpName("Lgamma"));
     opBuilder.addInput(x.asOutput());

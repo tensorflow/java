@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -42,6 +44,7 @@ public final class FilterByLastComponentDataset extends PrimitiveOp implements O
    * @param outputShapes 
    * @return a new instance of FilterByLastComponentDataset
    */
+  @Endpoint
   public static FilterByLastComponentDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("FilterByLastComponentDataset", scope.makeOpName("FilterByLastComponentDataset"));
     opBuilder.addInput(inputDataset.asOutput());

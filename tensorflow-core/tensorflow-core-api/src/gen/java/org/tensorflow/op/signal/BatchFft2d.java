@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -38,6 +39,7 @@ public final class BatchFft2d extends PrimitiveOp implements Operand<TType> {
    * @param input 
    * @return a new instance of BatchFft2d
    */
+  @Endpoint
   public static BatchFft2d create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchFFT2D", scope.makeOpName("BatchFft2d"));
     opBuilder.addInput(input.asOutput());

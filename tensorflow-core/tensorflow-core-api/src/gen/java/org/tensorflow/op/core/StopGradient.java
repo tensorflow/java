@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -66,6 +67,7 @@ public final class StopGradient<T extends TType> extends PrimitiveOp implements 
    * @param input 
    * @return a new instance of StopGradient
    */
+  @Endpoint
   public static <T extends TType> StopGradient<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StopGradient", scope.makeOpName("StopGradient"));
     opBuilder.addInput(input.asOutput());

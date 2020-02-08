@@ -114,7 +114,6 @@ import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
-import org.tensorflow.op.core.QuantizedConcat;
 import org.tensorflow.op.core.QuantizedReshape;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
@@ -2223,22 +2222,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> Prod<T> prod(Operand<T> input, Operand<U> axis,
       Prod.Options... options) {
     return Prod.create(scope, input, axis, options);
-  }
-
-  /**
-   * Builds an {@link QuantizedConcat} operation
-   *
-   * @param concatDim 0-D.  The dimension along which to concatenate.  Must be in the
-   * @param values The `N` Tensors to concatenate. Their ranks and types must match,
-   * @param inputMins The minimum scalar values for each of the input tensors.
-   * @param inputMaxes The maximum scalar values for each of the input tensors.
-   * @return a new instance of QuantizedConcat
-   * @see org.tensorflow.op.core.QuantizedConcat
-   */
-  public <T extends TType> QuantizedConcat<T> quantizedConcat(Operand<TInt32> concatDim,
-      Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins,
-      Iterable<Operand<TFloat32>> inputMaxes) {
-    return QuantizedConcat.create(scope, concatDim, values, inputMins, inputMaxes);
   }
 
   /**

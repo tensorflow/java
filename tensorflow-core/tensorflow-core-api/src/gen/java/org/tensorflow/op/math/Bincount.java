@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -55,6 +56,7 @@ public final class Bincount<T extends TNumber> extends PrimitiveOp implements Op
    * equal to 1.
    * @return a new instance of Bincount
    */
+  @Endpoint
   public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr, Operand<TInt32> size, Operand<T> weights) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
     opBuilder.addInput(arr.asOutput());

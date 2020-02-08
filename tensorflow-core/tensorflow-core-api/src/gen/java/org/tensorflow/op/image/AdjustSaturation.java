@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -51,6 +52,7 @@ public final class AdjustSaturation<T extends TNumber> extends PrimitiveOp imple
    * @param scale A float scale to add to the saturation.
    * @return a new instance of AdjustSaturation
    */
+  @Endpoint
   public static <T extends TNumber> AdjustSaturation<T> create(Scope scope, Operand<T> images, Operand<TFloat32> scale) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustSaturation", scope.makeOpName("AdjustSaturation"));
     opBuilder.addInput(images.asOutput());

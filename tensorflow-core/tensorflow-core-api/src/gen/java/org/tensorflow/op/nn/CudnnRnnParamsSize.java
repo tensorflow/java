@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -144,6 +145,7 @@ public final class CudnnRnnParamsSize<U extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnParamsSize
    */
+  @Endpoint
   public static <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T, DataType<U> S, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsSize", scope.makeOpName("CudnnRnnParamsSize"));
     opBuilder.addInput(numLayers.asOutput());

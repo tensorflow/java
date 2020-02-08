@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -62,6 +64,7 @@ public final class MirrorPadGrad<T extends TType> extends PrimitiveOp implements
    * @param mode The mode used in the `MirrorPad` op.
    * @return a new instance of MirrorPadGrad
    */
+  @Endpoint
   public static <T extends TType, U extends TNumber> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPadGrad", scope.makeOpName("MirrorPadGrad"));
     opBuilder.addInput(input.asOutput());

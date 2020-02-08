@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -61,6 +63,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Pri
    * @param Tsplits 
    * @return a new instance of RaggedRange
    */
+  @Endpoint
   public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput());
@@ -80,6 +83,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Pri
    * @param deltas The deltas of each range.
    * @return a new instance of RaggedRange
    */
+  @Endpoint
   public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
     return create(scope, starts, limits, deltas, TInt64.DTYPE);
   }

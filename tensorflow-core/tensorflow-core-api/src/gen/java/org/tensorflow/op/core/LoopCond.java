@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -42,6 +43,7 @@ public final class LoopCond extends PrimitiveOp implements Operand<TBool> {
    * @param input A boolean scalar, representing the branch predicate of the Switch op.
    * @return a new instance of LoopCond
    */
+  @Endpoint
   public static LoopCond create(Scope scope, Operand<TBool> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoopCond", scope.makeOpName("LoopCond"));
     opBuilder.addInput(input.asOutput());

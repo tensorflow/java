@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,6 +38,7 @@ public final class UnwrapDatasetVariant extends PrimitiveOp implements Operand<T
    * @param inputHandle 
    * @return a new instance of UnwrapDatasetVariant
    */
+  @Endpoint
   public static UnwrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnwrapDatasetVariant", scope.makeOpName("UnwrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());

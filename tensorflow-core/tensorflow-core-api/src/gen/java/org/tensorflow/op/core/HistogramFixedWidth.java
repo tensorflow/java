@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -65,6 +66,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends PrimitiveOp im
    * @param dtype 
    * @return a new instance of HistogramFixedWidth
    */
+  @Endpoint
   public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramFixedWidth", scope.makeOpName("HistogramFixedWidth"));
     opBuilder.addInput(values.asOutput());
@@ -86,6 +88,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends PrimitiveOp im
    * @param nbins Scalar `int32 Tensor`.  Number of histogram bins.
    * @return a new instance of HistogramFixedWidth
    */
+  @Endpoint
   public static <T extends TNumber> HistogramFixedWidth<TInt32> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins) {
     return create(scope, values, valueRange, nbins, TInt32.DTYPE);
   }

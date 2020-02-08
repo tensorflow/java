@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -45,6 +46,7 @@ public final class LookupTableExport<T extends TType, U extends TType> extends P
    * @param Tvalues 
    * @return a new instance of LookupTableExport
    */
+  @Endpoint
   public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());

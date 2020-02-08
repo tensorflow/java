@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -45,6 +47,7 @@ public final class RangeDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of RangeDataset
    */
+  @Endpoint
   public static RangeDataset create(Scope scope, Operand<TInt64> start, Operand<TInt64> stop, Operand<TInt64> step, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RangeDataset", scope.makeOpName("RangeDataset"));
     opBuilder.addInput(start.asOutput());

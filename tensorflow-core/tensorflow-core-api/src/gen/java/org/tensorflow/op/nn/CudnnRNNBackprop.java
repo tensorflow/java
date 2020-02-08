@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -184,6 +186,7 @@ public final class CudnnRNNBackprop<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNBackprop
    */
+  @Endpoint
   public static <T extends TNumber> CudnnRNNBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNBackpropV3", scope.makeOpName("CudnnRNNBackprop"));
     opBuilder.addInput(input.asOutput());

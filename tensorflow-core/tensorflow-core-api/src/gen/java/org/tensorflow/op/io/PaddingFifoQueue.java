@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
@@ -103,6 +104,7 @@ public final class PaddingFifoQueue extends PrimitiveOp implements Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of PaddingFifoQueue
    */
+  @Endpoint
   public static PaddingFifoQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddingFIFOQueueV2", scope.makeOpName("PaddingFifoQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

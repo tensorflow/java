@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -51,6 +52,7 @@ public final class SparseSparseMaximum<T extends TNumber> extends PrimitiveOp {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMaximum
    */
+  @Endpoint
   public static <T extends TNumber> SparseSparseMaximum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMaximum", scope.makeOpName("SparseSparseMaximum"));
     opBuilder.addInput(aIndices.asOutput());

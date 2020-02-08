@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -49,6 +50,7 @@ public final class QuantizedConcat<T extends TType> extends PrimitiveOp {
    * @param inputMaxes The maximum scalar values for each of the input tensors.
    * @return a new instance of QuantizedConcat
    */
+  @Endpoint
   public static <T extends TType> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim, Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins, Iterable<Operand<TFloat32>> inputMaxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcat", scope.makeOpName("QuantizedConcat"));
     opBuilder.addInput(concatDim.asOutput());

@@ -21,6 +21,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Shuts down a running distributed TPU system.
@@ -35,6 +37,7 @@ public final class ShutdownDistributedTPU extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of ShutdownDistributedTPU
    */
+  @Endpoint
   public static ShutdownDistributedTPU create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShutdownDistributedTPU", scope.makeOpName("ShutdownDistributedTPU"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -69,6 +70,7 @@ public final class LmdbReader extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of LmdbReader
    */
+  @Endpoint
   public static LmdbReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LMDBReader", scope.makeOpName("LmdbReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

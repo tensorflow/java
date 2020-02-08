@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -59,6 +60,7 @@ public final class TensorDiag<T extends TType> extends PrimitiveOp implements Op
    * @param diagonal Rank k tensor where k is at most 1.
    * @return a new instance of TensorDiag
    */
+  @Endpoint
   public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
     opBuilder.addInput(diagonal.asOutput());

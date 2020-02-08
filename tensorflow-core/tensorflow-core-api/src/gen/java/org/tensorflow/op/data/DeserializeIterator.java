@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -39,6 +40,7 @@ public final class DeserializeIterator extends PrimitiveOp {
    * resource.
    * @return a new instance of DeserializeIterator
    */
+  @Endpoint
   public static DeserializeIterator create(Scope scope, Operand<?> resourceHandle, Operand<?> serialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeIterator", scope.makeOpName("DeserializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());

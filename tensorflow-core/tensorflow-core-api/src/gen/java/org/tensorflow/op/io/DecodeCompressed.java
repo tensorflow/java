@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -67,6 +68,7 @@ public final class DecodeCompressed extends PrimitiveOp implements Operand<TStri
    * @param options carries optional attributes values
    * @return a new instance of DecodeCompressed
    */
+  @Endpoint
   public static DecodeCompressed create(Scope scope, Operand<TString> bytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCompressed", scope.makeOpName("DecodeCompressed"));
     opBuilder.addInput(bytes.asOutput());

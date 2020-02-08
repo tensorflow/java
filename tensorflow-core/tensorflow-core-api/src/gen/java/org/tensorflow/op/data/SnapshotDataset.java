@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -168,6 +170,7 @@ public final class SnapshotDataset extends PrimitiveOp implements Operand<TType>
    * @param options carries optional attributes values
    * @return a new instance of SnapshotDataset
    */
+  @Endpoint
   public static SnapshotDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> path, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SnapshotDataset", scope.makeOpName("SnapshotDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -64,6 +65,7 @@ public final class UnravelIndex<T extends TNumber> extends PrimitiveOp implement
    * indices.
    * @return a new instance of UnravelIndex
    */
+  @Endpoint
   public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
     opBuilder.addInput(indices.asOutput());

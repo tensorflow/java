@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -108,6 +109,7 @@ public final class FixedLengthRecordReader extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of FixedLengthRecordReader
    */
+  @Endpoint
   public static FixedLengthRecordReader create(Scope scope, Long recordBytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordReaderV2", scope.makeOpName("FixedLengthRecordReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +40,7 @@ public final class BatchMatrixDiag<T extends TType> extends PrimitiveOp implemen
    * @param diagonal 
    * @return a new instance of BatchMatrixDiag
    */
+  @Endpoint
   public static <T extends TType> BatchMatrixDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiag", scope.makeOpName("BatchMatrixDiag"));
     opBuilder.addInput(diagonal.asOutput());

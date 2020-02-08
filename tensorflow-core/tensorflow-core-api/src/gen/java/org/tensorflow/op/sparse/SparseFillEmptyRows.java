@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
@@ -85,6 +86,7 @@ public final class SparseFillEmptyRows<T extends TType> extends PrimitiveOp {
    * output indices: 2-D. the indices of the filled sparse tensor.
    * @return a new instance of SparseFillEmptyRows
    */
+  @Endpoint
   public static <T extends TType> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRows", scope.makeOpName("SparseFillEmptyRows"));
     opBuilder.addInput(indices.asOutput());
