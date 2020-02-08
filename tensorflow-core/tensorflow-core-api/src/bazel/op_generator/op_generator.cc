@@ -152,6 +152,9 @@ void RenderSecondaryFactoryMethod(const OpSpec& op, const Type& op_class,
     }
   }
   Method factory = Method::Create("create", return_type);
+  factory.add_annotation(
+    Annotation::Create("Endpoint", "org.tensorflow.op.annotation")
+  );
   Javadoc factory_doc = Javadoc::Create(
       "Factory method to create a class wrapping a new " + op_class.name() +
       " operation using default output types.");
@@ -193,6 +196,9 @@ void RenderSecondaryFactoryMethod(const OpSpec& op, const Type& op_class,
 void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
                           SourceWriter* writer) {
   Method factory = Method::Create("create", op_class);
+  factory.add_annotation(
+      Annotation::Create("Endpoint", "org.tensorflow.op.annotation");
+  );
   Javadoc factory_doc =
       Javadoc::Create("Factory method to create a class wrapping a new " +
                       op_class.name() + " operation.");
