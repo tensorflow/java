@@ -1,5 +1,11 @@
 name: CI jobs
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   linux-x86_64:
@@ -13,7 +19,11 @@ jobs:
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 rh-maven35 patch python36-devel python36-pip python36-six
+          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch python36-devel python36-pip python36-six
+          echo Downloading Maven
+          curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
+          tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
+          ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
           echo Downloading Bazel
           curl -L https://github.com/bazelbuild/bazel/releases/download/0.29.1/bazel-0.29.1-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
@@ -21,14 +31,19 @@ jobs:
         uses: actions/checkout@v1
       - name: Build project
         run: |
-          source scl_source enable devtoolset-7 rh-git218 rh-maven35 || true
+          source scl_source enable devtoolset-7 rh-git218 || true
           git --version
           gcc --version
           mvn -version
           bazel version
           df -h
-          echo Executing Maven without Wagon HTTP pool that fails under Docker
-          mvn clean install -B -U -e -Dmaven.wagon.http.pool=false -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          echo "Fixing HOME to /root (was '$HOME')"
+          export HOME=/root
+          mkdir -p $HOME/.m2
+          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          echo Executing Maven $MAVEN_PHASE
+          mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   macosx-x86_64:
     runs-on: macos-latest
@@ -50,9 +65,12 @@ jobs:
           clang --version
           mvn -version
           bazel version
+          mkdir -p $HOME/.m2
+          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           df -h
-          echo Executing Maven
-          mvn clean install -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          echo Executing Maven $MAVEN_PHASE
+          mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   windows-x86_64:
     runs-on: windows-latest
@@ -97,9 +115,12 @@ jobs:
           cl
           call mvn -version
           bazel version
+          mkdir %USERPROFILE%\.m2
+          if "${{ github.event_name }}"=="push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
+          echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           df -h
           wmic pagefile list /format:list
-          echo Executing Maven
-          call mvn clean install -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          echo Executing Maven %MAVEN_PHASE%
+          call mvn clean %MAVEN_PHASE% -Possrh -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
           wmic pagefile list /format:list
