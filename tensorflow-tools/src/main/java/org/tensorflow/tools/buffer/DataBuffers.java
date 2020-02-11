@@ -152,105 +152,105 @@ public final class DataBuffers {
    * Create a buffer from an array of floats into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(float[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(float[], boolean, boolean) of(values, false, false}}
    *
    * @param values float values
    * @return a new buffer
    */
   public static FloatDataBuffer of(float... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of bytes into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(byte[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(byte[], boolean, boolean) of(values, false, false}}
    *
    * @param values byte values
    * @return a new buffer
    */
   public static ByteDataBuffer of(byte... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of longs into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(long[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(long[], boolean, boolean) of(values, false, false}}
    *
    * @param values long values
    * @return a new buffer
    */
   public static LongDataBuffer of(long... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of ints into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(int[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(int[], boolean, boolean) of(values, false, false}}
    *
    * @param values int values
    * @return a new buffer
    */
   public static IntDataBuffer of(int... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of shorts into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(short[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(short[], boolean, boolean) of(values, false, false}}
    *
    * @param values short values
    * @return a new buffer
    */
   public static ShortDataBuffer of(short... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of doubles into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(double[], boolean, boolean) from(array, false, false}}
+   * array, which is equivalent to call {@link #of(double[], boolean, boolean) of(array, false, false}}
    *
    * @param values double values
    * @return a new buffer
    */
   public static DoubleDataBuffer of(double... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of booleans into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(boolean[], boolean, boolean) from(values, false, false}}
+   * array, which is equivalent to call {@link #of(boolean[], boolean, boolean) of(values, false, false}}
    *
    * @param values booleans values
    * @return a new buffer
    */
   public static BooleanDataBuffer of(boolean... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
    * Create a buffer from an array of objects into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #from(T[], boolean, boolean)} from(values, false, false}}
+   * array, which is equivalent to call {@link #of(T[], boolean, boolean)} of(values, false, false}}
    *
    * @param values objects values
    * @return a new buffer
    */
   @SafeVarargs
   public static <T> DataBuffer<T> ofObjects(T... values) {
-    return from(values, false, false);
+    return of(values, false, false);
   }
 
   /**
@@ -261,7 +261,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static FloatDataBuffer from(float[] array, boolean readOnly, boolean makeCopy) {
+  public static FloatDataBuffer of(float[] array, boolean readOnly, boolean makeCopy) {
     float[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -278,7 +278,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static ByteDataBuffer from(byte[] array, boolean readOnly, boolean makeCopy) {
+  public static ByteDataBuffer of(byte[] array, boolean readOnly, boolean makeCopy) {
     byte[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -295,7 +295,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static LongDataBuffer from(long[] array, boolean readOnly, boolean makeCopy) {
+  public static LongDataBuffer of(long[] array, boolean readOnly, boolean makeCopy) {
     long[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -312,7 +312,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static IntDataBuffer from(int[] array, boolean readOnly, boolean makeCopy) {
+  public static IntDataBuffer of(int[] array, boolean readOnly, boolean makeCopy) {
     int[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -329,7 +329,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static ShortDataBuffer from(short[] array, boolean readOnly, boolean makeCopy) {
+  public static ShortDataBuffer of(short[] array, boolean readOnly, boolean makeCopy) {
     short[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -346,7 +346,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static DoubleDataBuffer from(double[] array, boolean readOnly, boolean makeCopy) {
+  public static DoubleDataBuffer of(double[] array, boolean readOnly, boolean makeCopy) {
     double[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -363,7 +363,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static BooleanDataBuffer from(boolean[] array, boolean readOnly, boolean makeCopy) {
+  public static BooleanDataBuffer of(boolean[] array, boolean readOnly, boolean makeCopy) {
     boolean[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     if (RawDataBufferFactory.canBeUsed()) {
       return RawDataBufferFactory.create(bufferArray, readOnly);
@@ -379,7 +379,7 @@ public final class DataBuffers {
    * @param makeCopy true if the array must be copied, false will wrap the provided array
    * @return a new buffer
    */
-  public static <T> DataBuffer<T> from(T[] array, boolean readOnly, boolean makeCopy) {
+  public static <T> DataBuffer<T> of(T[] array, boolean readOnly, boolean makeCopy) {
     T[] bufferArray = makeCopy ? Arrays.copyOf(array, array.length) : array;
     return MiscDataBufferFactory.create(bufferArray, readOnly);
   }
@@ -390,7 +390,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static ByteDataBuffer from(ByteBuffer buf) {
+  public static ByteDataBuffer of(ByteBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 
@@ -400,7 +400,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static IntDataBuffer from(IntBuffer buf) {
+  public static IntDataBuffer of(IntBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 
@@ -410,7 +410,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static ShortDataBuffer from(ShortBuffer buf) {
+  public static ShortDataBuffer of(ShortBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 
@@ -420,7 +420,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static LongDataBuffer from(LongBuffer buf) {
+  public static LongDataBuffer of(LongBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 
@@ -430,7 +430,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static FloatDataBuffer from(FloatBuffer buf) {
+  public static FloatDataBuffer of(FloatBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 
@@ -440,7 +440,7 @@ public final class DataBuffers {
    * @param buf buffer to wrap
    * @return a new buffer
    */
-  public static DoubleDataBuffer from(DoubleBuffer buf) {
+  public static DoubleDataBuffer of(DoubleBuffer buf) {
     return NioDataBufferFactory.create(buf.duplicate());
   }
 

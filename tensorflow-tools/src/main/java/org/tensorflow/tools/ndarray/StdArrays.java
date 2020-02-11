@@ -11,6 +11,588 @@ import org.tensorflow.tools.Shape;
 public final class StdArrays {
 
   /**
+   * Copy a single-dimension array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[][] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[][][] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[][][][] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[][][][][] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of ints in a new {@link IntNdArray}
+   *
+   * @param array source array
+   * @return the {@code IntNdArray} copy
+   */
+  public static IntNdArray ndCopyOf(int[][][][][][] array) {
+    IntNdArray ndArray = NdArrays.ofInts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[][] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[][][] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[][][][] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[][][][][] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of longs in a new {@link LongNdArray}
+   *
+   * @param array source array
+   * @return the {@code LongNdArray} copy
+   */
+  public static LongNdArray ndCopyOf(long[][][][][][] array) {
+    LongNdArray ndArray = NdArrays.ofLongs(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[][] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[][][] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[][][][] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[][][][][] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of floats in a new {@link FloatNdArray}
+   *
+   * @param array source array
+   * @return the {@code FloatNdArray} copy
+   */
+  public static FloatNdArray ndCopyOf(float[][][][][][] array) {
+    FloatNdArray ndArray = NdArrays.ofFloats(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[][] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[][][] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[][][][] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[][][][][] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of doubles in a new {@link DoubleNdArray}
+   *
+   * @param array source array
+   * @return the {@code DoubleNdArray} copy
+   */
+  public static DoubleNdArray ndCopyOf(double[][][][][][] array) {
+    DoubleNdArray ndArray = NdArrays.ofDoubles(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[][] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[][][] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[][][][] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[][][][][] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of bytes in a new {@link ByteNdArray}
+   *
+   * @param array source array
+   * @return the {@code ByteNdArray} copy
+   */
+  public static ByteNdArray ndCopyOf(byte[][][][][][] array) {
+    ByteNdArray ndArray = NdArrays.ofBytes(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[][] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[][][] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[][][][] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[][][][][] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of shorts in a new {@link ShortNdArray}
+   *
+   * @param array source array
+   * @return the {@code ShortNdArray} copy
+   */
+  public static ShortNdArray ndCopyOf(short[][][][][][] array) {
+    ShortNdArray ndArray = NdArrays.ofShorts(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[][] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[][][] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[][][][] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[][][][][] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of booleans in a new {@link BooleanNdArray}
+   *
+   * @param array source array
+   * @return the {@code BooleanNdArray} copy
+   */
+  public static BooleanNdArray ndCopyOf(boolean[][][][][][] array) {
+    BooleanNdArray ndArray = NdArrays.ofBooleans(shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a single-dimension array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 2-dimensions array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[][] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 3-dimensions array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[][][] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 4-dimensions array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[][][][] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 5-dimensions array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[][][][][] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
+   * Copy a 6-dimensions array of objects in a new {@link NdArray}
+   *
+   * @param array source array
+   * @return the {@code NdArray} copy
+   */
+  public static <T> NdArray<T> ndCopyOf(T[][][][][][] array) {
+    @SuppressWarnings("unchecked")
+    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    copyTo(ndArray, array);
+    return ndArray;
+  }
+
+  /**
    * Copy a single-dimension array of ints into the {@code dst} {@link NdArray}
    *
    * @param dst destination rank-1 array
@@ -1155,14 +1737,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(int[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(int[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1171,6 +1762,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(int[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1179,6 +1773,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(int[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1187,6 +1784,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(int[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1195,14 +1795,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(long[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(long[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1211,6 +1820,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(long[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1219,6 +1831,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(long[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1227,6 +1842,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(long[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1235,14 +1853,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(float[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(float[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1251,6 +1878,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(float[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1259,6 +1889,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(float[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1267,6 +1900,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(float[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1275,14 +1911,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(double[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(double[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1291,6 +1936,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(double[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1299,6 +1947,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(double[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1307,6 +1958,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(double[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1315,14 +1969,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(byte[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(byte[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1331,6 +1994,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(byte[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1339,6 +2005,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(byte[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1347,6 +2016,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(byte[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1355,14 +2027,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(short[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(short[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1371,6 +2052,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(short[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1379,6 +2063,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(short[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1387,6 +2074,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(short[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1395,14 +2085,23 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(boolean[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static long[] computeShape(boolean[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1411,6 +2110,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(boolean[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1419,6 +2121,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(boolean[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1427,6 +2132,9 @@ public final class StdArrays {
   }
 
   private static long[] computeShape(boolean[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1435,14 +2143,23 @@ public final class StdArrays {
   }
 
   private static <T> long[] computeShape(T[][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 2);
     for (int i = 0; i < array.length; ++i) {
+      if (array[i] == null) {
+        throw new IllegalStateException("One of the subarray is null");
+      }
       dimSize(array[i].length, shape, shape.length - 1);
     }
     return shape;
   }
 
   private static <T> long[] computeShape(T[][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 3);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1451,6 +2168,9 @@ public final class StdArrays {
   }
 
   private static <T> long[] computeShape(T[][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 4);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1459,6 +2179,9 @@ public final class StdArrays {
   }
 
   private static <T> long[] computeShape(T[][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 5);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);
@@ -1467,6 +2190,9 @@ public final class StdArrays {
   }
 
   private static <T> long[] computeShape(T[][][][][][] array, long[] shape) {
+    if (array == null) {
+      throw new IllegalStateException("The array or one of its subarray is null");
+    }
     dimSize(array.length, shape, shape.length - 6);
     for (int i = 0; i < array.length; ++i) {
       computeShape(array[i], shape);

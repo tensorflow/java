@@ -57,15 +57,47 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
   }
 
   @Override
+  public DoubleDataBuffer copyTo(DataBuffer<Double> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof DoubleDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((DoubleDataBuffer)dst).setDouble(getDouble(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public DoubleDataBuffer offset(long index) {
-    return new DoubleDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new DoubleDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DoubleDataBuffer narrow(long size) {
-    return new DoubleDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new DoubleDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof DoubleDataBuffer)) {
+      return super.equals(obj);
+    }
+    DoubleDataBuffer other = (DoubleDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getDouble(idx) != getDouble(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   DoubleDataBufferAdapter(S buffer, DoubleDataLayout<S> layout) {

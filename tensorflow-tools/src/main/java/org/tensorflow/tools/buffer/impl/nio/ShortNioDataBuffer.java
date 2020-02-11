@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer.impl.nio;
 
 import java.nio.ShortBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,14 +55,25 @@ final class ShortNioDataBuffer extends AbstractNioDataBuffer<Short>
   @Override
   public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof ShortNioDataBuffer) {
-      ShortBuffer dstBuf = ((ShortNioDataBuffer)dst).buf.duplicate();
-      ShortBuffer srcBuf = (ShortBuffer)buf.duplicate().limit((int)size);
-      dstBuf.put(srcBuf);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<ShortDataBuffer>() {
+
+      @Override
+      public ShortDataBuffer visit(ShortBuffer buffer) {
+        buffer.duplicate().put((ShortBuffer)buf.duplicate().limit((int)size));
+        return ShortNioDataBuffer.this;
+      }
+
+      @Override
+      public ShortDataBuffer otherwise() {
+        if (dst instanceof ShortDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+          }
+          return ShortNioDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
   }
 
   @Override
@@ -74,6 +86,42 @@ final class ShortNioDataBuffer extends AbstractNioDataBuffer<Short>
   public ShortDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new ShortNioDataBuffer(((ShortBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(buf);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof ShortDataBuffer)) {
+      return super.equals(obj);
+    }
+    ShortDataBuffer other = (ShortDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(ShortBuffer buffer) {
+        return buf.equals(buffer);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getShort(idx) != getShort(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

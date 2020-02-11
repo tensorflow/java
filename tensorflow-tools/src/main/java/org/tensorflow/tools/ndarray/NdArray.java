@@ -36,18 +36,16 @@ import org.tensorflow.tools.ndarray.index.Index;
  *
  * <p>Example of usage:
  * <pre>{@code
- *    import static org.tensorflow.nio.StaticApi.*;
- *
  *    // Creates a 2x3x2 matrix (of rank 3)
- *    FloatNdArray matrix3d = ndArrayOfFloats(shape(2, 3, 2));
+ *    FloatNdArray matrix3d = NdArrays.ofFloats(shape(2, 3, 2));
  *
  *    // Initialize sub-matrices data with vectors
- *    matrix.set(vectorOf(1.0f, 2.0f), 0, 0)
- *          .set(vectorOf(3.0f, 4.0f), 0, 1)
- *          .set(vectorOf(5.0f, 6.0f), 0, 2)
- *          .set(vectorOf(7.0f, 8.0f), 1, 0)
- *          .set(vectorOf(9.0f, 10.0f), 1, 1)
- *          .set(vectorOf(11.0f, 12.0f), 1, 2);
+ *    matrix.set(NdArrays.vectorOf(1.0f, 2.0f), 0, 0)
+ *          .set(NdArrays.vectorOf(3.0f, 4.0f), 0, 1)
+ *          .set(NdArrays.vectorOf(5.0f, 6.0f), 0, 2)
+ *          .set(NdArrays.vectorOf(7.0f, 8.0f), 1, 0)
+ *          .set(NdArrays.vectorOf(9.0f, 10.0f), 1, 1)
+ *          .set(NdArrays.vectorOf(11.0f, 12.0f), 1, 2);
  *
  *    // Access the second 3x2 matrix (of rank 2)
  *    FloatNdArray matrix = matrix3d.get(1);
@@ -135,7 +133,7 @@ public interface NdArray<T> {
    *
    * <p>Example of usage:
    * <pre>{@code
-   *    FloatNdArray matrix3d = ndArrayOfFloats(shape(3, 2, 4));  // with [x, y, z] axes
+   *    FloatNdArray matrix3d = NdArrays.ofFloats(shape(3, 2, 4));  // with [x, y, z] axes
    *
    *    // Iterates elements on the x axis by preserving only the 3rd value on the z axis,
    *    // (i.e. [x, y, 2])
@@ -187,7 +185,7 @@ public interface NdArray<T> {
    *
    * <p>The number of coordinates provided can be anywhere between 0 and rank - 1. For example:
    * <pre>{@code
-   *  FloatNdArray matrix = ndArrayOfFloats(shape(2, 2));  // matrix rank = 2
+   *  FloatNdArray matrix = NdArrays.ofFloats(shape(2, 2));  // matrix rank = 2
    *  matrix.set(vector(10.0f, 20.0f), 0);  // success
    *  matrix.set(scalar(10.0f), 1, 0); // success
    * }</pre>
@@ -205,7 +203,7 @@ public interface NdArray<T> {
    * <p>To access the scalar element, the number of coordinates provided must be equal to the number
    * of dimensions of this array (i.e. its rank). For example:
    * <pre>{@code
-   *  FloatNdArray matrix = ndArrayOfFloats(shape(2, 2));  // matrix rank = 2
+   *  FloatNdArray matrix = NdArrays.ofFloats(shape(2, 2));  // matrix rank = 2
    *  matrix.getObject(0, 1);  // succeeds, returns 0.0f
    *  matrix.getObject(0);  // throws IllegalRankException
    *
@@ -231,7 +229,7 @@ public interface NdArray<T> {
    * <p>To access the scalar element, the number of coordinates provided must be equal to the number
    * of dimensions of this array (i.e. its rank). For example:
    * <pre>{@code
-   *  FloatNdArray matrix = ndArrayOfFloats(shape(2, 2));  // matrix rank = 2
+   *  FloatNdArray matrix = NdArrays.ofFloats(shape(2, 2));  // matrix rank = 2
    *  matrix.setObject(10.0f, 0, 1);  // succeeds
    *  matrix.setObject(10.0f, 0);  // throws IllegalRankException
    *
@@ -293,4 +291,20 @@ public interface NdArray<T> {
    * @see DataBuffer#size()
    */
   NdArray<T> write(DataBuffer<T> src);
+
+  /**
+   * Checks equality between n-dimensional arrays.
+   *
+   * <p>An array is equal to another object if this object is another {@link NdArray} of the
+   * same shape and each elements are equal and in the same order.
+   *
+   * <p>Note that the computation required to verify equality between two arrays can be expensive
+   * in some cases and therefore, it is recommended to not use this method in a critical path
+   * where performances matter.
+   *
+   * @param obj object to compare this array with
+   * @return true if this array is equal to the provided object
+   */
+  @Override
+  boolean equals(Object obj);
 }

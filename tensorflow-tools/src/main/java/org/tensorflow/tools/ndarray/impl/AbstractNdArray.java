@@ -16,6 +16,7 @@
  */
 package org.tensorflow.tools.ndarray.impl;
 
+import java.util.Iterator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
@@ -50,12 +51,46 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
     return ElementSequence.create(this, shape().numDimensions() - 1);  // negative if this array is a scalar
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    for (NdArray<T> scalar : scalars()) {
+      result = prime * result + scalar.getObject().hashCode();
+    }
+    result = prime * result + shape().hashCode();
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof NdArray)) {
+      return false;
+    }
+    return slowEquals((NdArray<?>)obj);
+  }
+
   protected AbstractNdArray(DimensionalSpace dimensions) {
     this.dimensions = dimensions;
   }
 
   protected void slowCopyTo(NdArray<T> array) {
     scalars().forEachIndexed((coords, e) -> array.setObject(e.getObject(), coords));
+  }
+
+  protected boolean slowEquals(NdArray<?> array) {
+    if (!shape().equals(array.shape())) {  // this guarantees also that we have the same number of scalar values
+      return false;
+    }
+    for (Iterator<? extends NdArray<?>> thisIter = scalars().iterator(), otherIter = array.scalars().iterator(); thisIter.hasNext();) {
+      if (!thisIter.next().getObject().equals(otherIter.next().getObject())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private DimensionalSpace dimensions;

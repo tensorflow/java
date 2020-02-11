@@ -17,6 +17,9 @@
 package org.tensorflow.tools.buffer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.nio.BufferOverflowException;
@@ -163,5 +166,41 @@ public abstract class DataBufferTestBase<T> {
     assertEquals(valueOf(1L), buffer.getObject(0));
     assertEquals(valueOf(2L), buffer.getObject(1));
     assertEquals(valueOf(3L), buffer.getObject(2));
+  }
+
+  @Test
+  public void equalWithObjectBuffer() {
+    DataBuffer<T> buffer1 = allocate(2)
+        .setObject(valueOf(0L), 0)
+        .setObject(valueOf(1L), 1);
+    DataBuffer<T> buffer2 = allocate(2)
+        .setObject(valueOf(0L), 0)
+        .setObject(valueOf(1L), 1);
+    DataBuffer<T> buffer3 = allocate(2)
+        .setObject(valueOf(1L), 0)
+        .setObject(valueOf(0L), 1);
+    DataBuffer<T> buffer4 = allocate(1)
+        .setObject(valueOf(0L), 0);
+    DataBuffer<T> buffer5 = allocate(3)
+        .setObject(valueOf(0L), 0)
+        .setObject(valueOf(1L), 1)
+        .setObject(valueOf(2L), 2);
+
+    assertTrue(buffer1.equals(buffer2));
+    assertTrue(buffer2.equals(buffer1));
+    assertEquals(buffer1.hashCode(), buffer1.hashCode());
+    assertEquals(buffer1.hashCode(), buffer2.hashCode());
+
+    assertFalse(buffer3.equals(buffer1));
+    assertFalse(buffer1.equals(buffer3));
+    assertNotEquals(buffer3.hashCode(), buffer1.hashCode());
+
+    assertFalse(buffer4.equals(buffer1));
+    assertFalse(buffer1.equals(buffer4));
+    assertNotEquals(buffer4.hashCode(), buffer1.hashCode());
+
+    assertFalse(buffer5.equals(buffer1));
+    assertFalse(buffer1.equals(buffer5));
+    assertNotEquals(buffer5.hashCode(), buffer1.hashCode());
   }
 }

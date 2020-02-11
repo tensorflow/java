@@ -17,11 +17,22 @@
 
 package org.tensorflow.tools.buffer.impl.raw;
 
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
+
 final class UnsafeMemoryHandle {
 
   static UnsafeMemoryHandle fromArray(Object array, int length) {
-    long byteOffset = UnsafeReference.UNSAFE.arrayBaseOffset(array.getClass());
+    return fromArray(array, 0, length);
+  }
+
+  static UnsafeMemoryHandle fromArray(Object array, int offset, int length) {
     long scale = UnsafeReference.UNSAFE.arrayIndexScale(array.getClass());
+    long byteOffset = UnsafeReference.UNSAFE.arrayBaseOffset(array.getClass()) + (offset * scale);
     return new UnsafeMemoryHandle(array, byteOffset, length * scale, scale);
   }
 
@@ -102,10 +113,54 @@ final class UnsafeMemoryHandle {
     return new UnsafeMemoryHandle(object, byteOffset, scale(size), scale);
   }
 
-  private final Object object;
-  private final long byteOffset;
-  private final long byteSize;
-  private final long scale;
+  UnsafeMemoryHandle rescale(long scale) {
+    if (object != null) {
+      throw new IllegalStateException("Raw heap memory can be rescaled");
+    }
+    return new UnsafeMemoryHandle(null, byteOffset, byteSize, scale);
+  }
+
+  boolean isArray() {
+    return object != null;
+  }
+
+  @SuppressWarnings("unchecked")
+  <A> A array() {
+    return (A)object;
+  }
+
+  int arrayOffset(Class<?> arrayClass) {
+    return (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(arrayClass)) / scale);
+  }
+
+  ByteBuffer toArrayByteBuffer() {
+    return ByteBuffer.wrap((byte[])object, (int)byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(byte[].class), (int)size());
+  }
+
+  ShortBuffer toArrayShortBuffer() {
+    return ShortBuffer.wrap((short[])object, (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(short[].class)) / scale), (int)size());
+  }
+
+  IntBuffer toArrayIntBuffer() {
+    return IntBuffer.wrap((int[])object, (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(int[].class)) / scale), (int)size());
+  }
+
+  LongBuffer toArrayLongBuffer() {
+    return LongBuffer.wrap((long[])object, (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(long[].class)) / scale), (int)size());
+  }
+
+  FloatBuffer toArrayFloatBuffer() {
+    return FloatBuffer.wrap((float[])object, (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(float[].class)) / scale), (int)size());
+  }
+
+  DoubleBuffer toArrayDoubleBuffer() {
+    return DoubleBuffer.wrap((double[])object, (int)((byteOffset - UnsafeReference.UNSAFE.arrayBaseOffset(double[].class)) / scale), (int)size());
+  }
+
+  final Object object;
+  final long byteOffset;
+  final long byteSize;
+  final long scale;
 
   private UnsafeMemoryHandle(Object object, long byteOffset, long byteSize, long scale) {
     this.object = object;

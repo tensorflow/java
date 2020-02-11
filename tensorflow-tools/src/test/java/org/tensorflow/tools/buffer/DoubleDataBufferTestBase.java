@@ -18,9 +18,16 @@ package org.tensorflow.tools.buffer;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.nio.DoubleBuffer;
 import java.util.Arrays;
 import org.junit.Test;
+import org.tensorflow.tools.buffer.impl.misc.MiscDataBufferFactory;
+import org.tensorflow.tools.buffer.impl.nio.NioDataBufferFactory;
+import org.tensorflow.tools.buffer.impl.raw.RawDataBufferFactory;
 
 public abstract class DoubleDataBufferTestBase extends DataBufferTestBase<Double> {
 
@@ -59,5 +66,59 @@ public abstract class DoubleDataBufferTestBase extends DataBufferTestBase<Double
     assertEquals(3.0, read[1], 0.0);
     assertEquals(4.0, read[2], 0.0);
     assertEquals(0.0, read[3], 0.0);
+  }
+
+  @Test
+  public void equalWithDoubleNioBuffer() {
+    DoubleDataBuffer nioBuffer1 = NioDataBufferFactory.create(DoubleBuffer.wrap(new double[] { 1.0, 16.0 }));
+    DoubleDataBuffer nioBuffer2 = NioDataBufferFactory.create(DoubleBuffer.wrap(new double[] { 1.0, 25.0 }));
+
+    DoubleDataBuffer buffer = allocate(2)
+        .setDouble(1.0, 0)
+        .setDouble(16.0, 1);
+
+    assertTrue(nioBuffer1.equals(buffer));
+    assertTrue(buffer.equals(nioBuffer1));
+    assertEquals(nioBuffer1.hashCode(), buffer.hashCode());
+
+    assertFalse(nioBuffer2.equals(buffer));
+    assertFalse(buffer.equals(nioBuffer2));
+    assertNotEquals(nioBuffer2.hashCode(), buffer.hashCode());
+  }
+
+  @Test
+  public void equalWithDoubleRawBuffer() {
+    DoubleDataBuffer rawBuffer1 = RawDataBufferFactory.create(new double[] { 1.0, 16.0 }, true);
+    DoubleDataBuffer rawBuffer2 = RawDataBufferFactory.create(new double[] { 1.0, 25.0 }, true);
+
+    DoubleDataBuffer buffer = allocate(2)
+        .setDouble(1.0, 0)
+        .setDouble(16.0, 1);
+
+    assertTrue(rawBuffer1.equals(buffer));
+    assertTrue(buffer.equals(rawBuffer1));
+    assertEquals(rawBuffer1.hashCode(), buffer.hashCode());
+
+    assertFalse(rawBuffer2.equals(buffer));
+    assertFalse(buffer.equals(rawBuffer2));
+    assertNotEquals(rawBuffer2.hashCode(), buffer.hashCode());
+  }
+
+  @Test
+  public void equalWithDoubleObjectBuffer() {
+    DataBuffer<Double> objBuffer1 = MiscDataBufferFactory.create(new Double[] { 1.0, 16.0 }, true);
+    DataBuffer<Double> objBuffer2 = MiscDataBufferFactory.create(new Double[] { 1.0, 25.0 }, true);
+
+    DoubleDataBuffer buffer = allocate(2)
+        .setDouble(1.0, 0)
+        .setDouble(16.0, 1);
+
+    assertTrue(objBuffer1.equals(buffer));
+    assertTrue(buffer.equals(objBuffer1));
+    assertEquals(objBuffer1.hashCode(), buffer.hashCode());
+
+    assertFalse(objBuffer2.equals(buffer));
+    assertFalse(buffer.equals(objBuffer2));
+    assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
 }

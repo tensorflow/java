@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer.impl.nio;
 
 import java.nio.DoubleBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,14 +55,25 @@ final class DoubleNioDataBuffer extends AbstractNioDataBuffer<Double>
   @Override
   public DoubleDataBuffer copyTo(DataBuffer<Double> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof DoubleNioDataBuffer) {
-      DoubleBuffer dstBuf = ((DoubleNioDataBuffer)dst).buf.duplicate();
-      DoubleBuffer srcBuf = (DoubleBuffer)buf.duplicate().limit((int)size);
-      dstBuf.put(srcBuf);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<DoubleDataBuffer>() {
+
+      @Override
+      public DoubleDataBuffer visit(DoubleBuffer buffer) {
+        buffer.duplicate().put((DoubleBuffer)buf.duplicate().limit((int)size));
+        return DoubleNioDataBuffer.this;
+      }
+
+      @Override
+      public DoubleDataBuffer otherwise() {
+        if (dst instanceof DoubleDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((DoubleDataBuffer)dst).setDouble(getDouble(idx), idx);
+          }
+          return DoubleNioDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
   }
 
   @Override
@@ -74,6 +86,42 @@ final class DoubleNioDataBuffer extends AbstractNioDataBuffer<Double>
   public DoubleDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new DoubleNioDataBuffer(((DoubleBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(buf);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof DoubleDataBuffer)) {
+      return super.equals(obj);
+    }
+    DoubleDataBuffer other = (DoubleDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(DoubleBuffer buffer) {
+        return buf.equals(buffer);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getDouble(idx) != getDouble(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

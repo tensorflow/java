@@ -17,16 +17,6 @@ To import TensorFlow Tools in your project, simply add the following dependency:
 </dependency>
 ```
 
-## Usage
-
-Note: For convenience, the helper interface `StaticApi` is providing access to most of the important
-features of this library in a more readable fashion. It is suggested to import static helpers of
-this interface in every class working with TensorFlow Tools as follow.
-```java
-import static org.tensorflow.tools.StaticApi.*;
-```
-All examples of this README page are based on this import statement. 
-
 ### Data Buffers
 
 Instances of `DataBuffer` map contiguous segments of memory with 64-bits indexing and supports 
@@ -36,7 +26,7 @@ deserialize data of any type (and not only primitive types, as with `java.util.n
 
 ```java
 // Allocate a buffer of 4K int values
-IntDataBuffer bufferA = bufferOfInts(4096L);
+IntDataBuffer bufferA = DataBuffers.ofInts(4096L);
 assertEquals(4096L, bufferA.size());
 
 // Write an int array at the beginning of the buffer
@@ -64,17 +54,17 @@ storage of their data and the multiple dereferences required to access their val
 
 ```java
 // Allocating a 3D matrix of 2x3x2
-IntNdArray matrix3d = ndArrayOfInts(shape(2, 3, 2));
+IntNdArray matrix3d = NdArrays.ofInts(Shape.of(2, 3, 2));
 assertEquals(3, matrix3d.rank());
 
 // Initializing 3D matrix data with vectors from the first dimension (index 0)
 matrix3d.elements(0).forEach(matrix -> {
     assertEquals(2, matrix.rank());
-    assertEquals(shapeOf(3, 2), matrix.shape());
+    assertEquals(Shape.of(3, 2), matrix.shape());
     matrix
-      .set(vectorOf(1, 2), 0)
-      .set(vectorOf(3, 4), 1)
-      .set(vectorOf(5, 6), 2);
+      .set(NdArrays.vectorOf(1, 2), 0)
+      .set(NdArrays.vectorOf(3, 4), 1)
+      .set(NdArrays.vectorOf(5, 6), 2);
 });
 
 // Visit all scalars of 3D matrix, printing their coordinates and value
@@ -94,7 +84,7 @@ assertEquals(8, matrix3d.getInt(0, 1, 1));
 // Slicing the 3D matrix so we only keep the second element of the second dimension
 IntNdArray slice = matrix3d.slice(all(), at(1));
 assertEquals(2, slice.rank());
-assertEquals(shapeOf(2, 2), slice.shape());
+assertEquals(Shape.of(2, 2), slice.shape());
 assertEquals(7, slice.getInt(0, 0));  // (0, 1, 0) in the original matrix
 assertEquals(3, slice.getInt(1, 0));  // (1, 1, 0) in the original matrix
 ```

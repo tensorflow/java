@@ -17,6 +17,9 @@
 
 package org.tensorflow.tools.buffer.impl.raw;
 
+import java.nio.ShortBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,6 +57,84 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
   @Override
   public ShortDataBuffer write(short[] src, int offset, int length) {
     return write(src, src.length, offset, length);
+  }
+
+  @Override
+  public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    return dst.accept(new DataStorageVisitor<ShortDataBuffer>() {
+
+      @Override
+      public ShortDataBuffer visit(ShortBuffer buffer) {
+        if (buffer.hasArray()) {
+          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.capacity()), size);
+        } else if (memory.isArray()) {
+          buffer.put(memory.toArrayShortBuffer());
+        } else {
+          slowCopyTo(dst, size);
+        }
+        return ShortRawDataBuffer.this;
+      }
+
+      @Override
+      public ShortDataBuffer visit(long address, long length, long scale) {
+        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+        return ShortRawDataBuffer.this;
+      }
+
+      @Override
+      public ShortDataBuffer otherwise() {
+        if (dst instanceof ShortDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+          }
+          return ShortRawDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    if (memory.isArray()) {
+      return visitor.visit(memory.toArrayShortBuffer());
+    }
+    return visitor.visit(memory.byteOffset, memory.byteSize, memory.scale);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof ShortDataBuffer)) {
+      return super.equals(obj);
+    }
+    ShortDataBuffer other = (ShortDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(ShortBuffer buffer) {
+        if (memory.isArray()) {
+          return buffer.equals(memory.toArrayShortBuffer());
+        }
+        return otherwise();
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (long idx = 0L; idx < size(); ++idx) {
+          if (other.getShort(idx) != getShort(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

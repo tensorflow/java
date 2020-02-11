@@ -64,7 +64,7 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
       AbstractRawDataBuffer<?, ?> unsafeDst = (AbstractRawDataBuffer<?, ?>)dst;
       memory.copyTo(unsafeDst.memory, size);
     } else {
-      slowCopyTo(dst, size);
+      super.copyTo(dst, size);
     }
     return (B)this;
   }

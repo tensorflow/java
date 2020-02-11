@@ -19,9 +19,7 @@ package org.tensorflow.tools.buffer.impl.layout;
 
 import java.nio.charset.Charset;
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.layout.DataLayout;
-import org.tensorflow.tools.buffer.layout.FloatDataLayout;
 
 /**
  * Data layout that converts a String to/from a sequence of bytes applying a given charset.

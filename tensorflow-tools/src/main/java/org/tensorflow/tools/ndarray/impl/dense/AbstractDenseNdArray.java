@@ -77,6 +77,33 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
     return (U)this;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + buffer().hashCode();
+    result = prime * result + shape().hashCode();
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof AbstractDenseNdArray)) {
+      return super.equals(obj);
+    }
+    AbstractDenseNdArray<?, ?> other = (AbstractDenseNdArray<?, ?>)obj;
+    if (dimensions().isSegmented() || other.dimensions().isSegmented()) {
+      return slowEquals(other);
+    }
+    if (!shape().equals(other.shape())) {
+      return false;
+    }
+    return buffer().equals(other.buffer());
+  }
+
   protected AbstractDenseNdArray(DimensionalSpace dimensions) {
     super(dimensions);
   }

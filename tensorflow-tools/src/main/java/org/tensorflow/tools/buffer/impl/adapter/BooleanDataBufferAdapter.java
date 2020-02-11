@@ -57,15 +57,47 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
   }
 
   @Override
+  public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof BooleanDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((BooleanDataBuffer)dst).setBoolean(getBoolean(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public BooleanDataBuffer offset(long index) {
-    return new BooleanDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new BooleanDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public BooleanDataBuffer narrow(long size) {
-    return new BooleanDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new BooleanDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof BooleanDataBuffer)) {
+      return super.equals(obj);
+    }
+    BooleanDataBuffer other = (BooleanDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getBoolean(idx) != getBoolean(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   BooleanDataBufferAdapter(S buffer, BooleanDataLayout<S> layout) {
