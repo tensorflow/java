@@ -26,9 +26,9 @@ import java.util.List;
 
 /**
  * Optimizer that implements the RMSProp algorithm.
- *
- * See the <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">lecture notes</a>
- * that is inexplicably the canonical reference.
+ * <p>
+ * See the <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">lecture
+ * notes</a> that is inexplicably the canonical reference.
  */
 public class RMSProp extends Optimizer {
 
@@ -46,7 +46,8 @@ public class RMSProp extends Optimizer {
     this(graph, learningRate, 0.9f, 0.0f, 1e-10f, false);
   }
 
-  public RMSProp(Graph graph, float learningRate, float decay, float momentum, float epsilon, boolean centered) {
+  public RMSProp(Graph graph, float learningRate, float decay, float momentum, float epsilon,
+      boolean centered) {
     super(graph);
     this.learningRate = learningRate;
     this.decay = decay;
@@ -63,20 +64,23 @@ public class RMSProp extends Optimizer {
   }
 
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> rmsInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
-    Operand<T> momentumInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> momentumInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+      Operand<T> mgInitializer = tf
+          .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    Variable<T> rmsSlot = getSlot(variable,RMS).get();
-    Variable<T> momentumSlot = getSlot(variable,MOMENTUM).get();
+    Variable<T> rmsSlot = getSlot(variable, RMS).get();
+    Variable<T> momentumSlot = getSlot(variable, MOMENTUM).get();
     if (centered) {
       Variable<T> mgSlot = getSlot(variable, MG).get();
       return tf.train.applyCenteredRmsProp(variable, mgSlot, rmsSlot, momentumSlot,

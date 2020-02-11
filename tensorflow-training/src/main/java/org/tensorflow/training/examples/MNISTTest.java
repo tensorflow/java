@@ -84,7 +84,8 @@ public class MNISTTest {
     Ops tf = Ops.create(graph);
 
     // Inputs
-    Placeholder<TFloat32> input = tf.withName(INPUT_NAME).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.make(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
+    Placeholder<TFloat32> input = tf.withName(INPUT_NAME).placeholder(TFloat32.DTYPE,
+        Placeholder.shape(Shape.make(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
     Placeholder<TInt32> labels = tf.withName(TARGET).placeholder(TInt32.DTYPE);
 
     // Scaling the features
@@ -93,50 +94,55 @@ public class MNISTTest {
     Operand<TFloat32> scaledInput = tf.math.div(tf.math.sub(input, centeringFactor), scalingFactor);
 
     // First conv layer
-    Variable<TFloat32> conv1Weights = tf.variable(Shape.make(5, 5, NUM_CHANNELS, 32), TFloat32.DTYPE);
-    Assign<TFloat32> weights1Init = tf.assign(conv1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv1Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
-    graph.addInitializer(weights1Init);
-    Conv2d<TFloat32> conv1 = tf.nn.conv2d(scaledInput, conv1Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
-    Variable<TFloat32> conv1Biases = tf.variable(Shape.make(32), TFloat32.DTYPE);
-    Assign<TFloat32> biases1Init = tf.assign(conv1Biases, tf.fill(tf.shape(conv1Biases), tf.constant(0.0f)));
-    graph.addInitializer(biases1Init);
+    Variable<TFloat32> conv1Weights = tf.variableWithInit(tf.math.mul(tf.random
+        .truncatedNormal(tf.constant(new int[]{5, 5, NUM_CHANNELS, 32}), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Conv2d<TFloat32> conv1 = tf.nn
+        .conv2d(scaledInput, conv1Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
+    Variable<TFloat32> conv1Biases = tf
+        .variableWithInit(tf.fill(tf.constant(new int[]{32}), tf.constant(0.0f)));
     Relu<TFloat32> relu1 = tf.nn.relu(tf.nn.biasAdd(conv1, conv1Biases));
 
     // First pooling layer
-    MaxPool<TFloat32> pool1 = tf.nn.maxPool(relu1, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
+    MaxPool<TFloat32> pool1 = tf.nn
+        .maxPool(relu1, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}),
+            PADDING_TYPE);
 
     // Second conv layer
-    Variable<TFloat32> conv2Weights = tf.variable(Shape.make(5, 5, 32, 64), TFloat32.DTYPE);
-    Assign<TFloat32> weights2Init = tf.assign(conv2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(conv2Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
-    graph.addInitializer(weights2Init);
-    Conv2d<TFloat32> conv2 = tf.nn.conv2d(pool1, conv2Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
-    Variable<TFloat32> conv2Biases = tf.variable(Shape.make(64), TFloat32.DTYPE);
-    Assign<TFloat32> biases2Init = tf.assign(conv2Biases, tf.fill(tf.shape(conv2Biases), tf.constant(0.1f)));
-    graph.addInitializer(biases2Init);
+    Variable<TFloat32> conv2Weights = tf.variableWithInit(tf.math.mul(tf.random
+        .truncatedNormal(tf.constant(new int[]{5, 5, 32, 64}), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Conv2d<TFloat32> conv2 = tf.nn
+        .conv2d(pool1, conv2Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
+    Variable<TFloat32> conv2Biases = tf
+        .variableWithInit(tf.fill(tf.constant(new int[]{64}), tf.constant(0.1f)));
     Relu<TFloat32> relu2 = tf.nn.relu(tf.nn.biasAdd(conv2, conv2Biases));
 
     // Second pooling layer
-    MaxPool<TFloat32> pool2 = tf.nn.maxPool(relu2, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}), PADDING_TYPE);
+    MaxPool<TFloat32> pool2 = tf.nn
+        .maxPool(relu2, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}),
+            PADDING_TYPE);
 
     // Flatten inputs
-    Reshape<TFloat32> flatten = tf.reshape(pool2, tf.concat(Arrays.asList(tf.slice(tf.shape(pool2), tf.constant(new int[]{0}), tf.constant(new int[]{1})), tf.constant(new int[]{-1})), tf.constant(0)));
+    Reshape<TFloat32> flatten = tf.reshape(pool2, tf.concat(Arrays
+        .asList(tf.slice(tf.shape(pool2), tf.constant(new int[]{0}), tf.constant(new int[]{1})),
+            tf.constant(new int[]{-1})), tf.constant(0)));
 
     // Fully connected layer
-    Variable<TFloat32> fc1Weights = tf.variable(Shape.make(IMAGE_SIZE * IMAGE_SIZE * 4, 512), TFloat32.DTYPE);
-    Assign<TFloat32> weights3Init = tf.assign(fc1Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc1Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
-    graph.addInitializer(weights3Init);
-    Variable<TFloat32> fc1Biases = tf.variable(Shape.make(512), TFloat32.DTYPE);
-    Assign<TFloat32> biases3Init = tf.assign(fc1Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc1Biases)));
-    graph.addInitializer(biases3Init);
-    Relu<TFloat32> relu3 = tf.nn.relu(tf.math.add(tf.linalg.matMul(flatten, fc1Weights), fc1Biases));
+    Variable<TFloat32> fc1Weights = tf.variableWithInit(tf.math.mul(tf.random
+        .truncatedNormal(tf.constant(new int[]{IMAGE_SIZE * IMAGE_SIZE * 4, 512}), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc1Biases = tf
+        .variableWithInit(tf.fill(tf.constant(new int[]{512}), tf.constant(0.1f)));
+    Relu<TFloat32> relu3 = tf.nn
+        .relu(tf.math.add(tf.linalg.matMul(flatten, fc1Weights), fc1Biases));
 
     // Softmax layer
-    Variable<TFloat32> fc2Weights = tf.variable(Shape.make(512, NUM_LABELS), TFloat32.DTYPE);
-    Assign<TFloat32> weights4Init = tf.assign(fc2Weights, tf.math.mul(tf.random.truncatedNormal(tf.shape(fc2Weights), TFloat32.DTYPE, TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
-    graph.addInitializer(weights4Init);
-    Variable<TFloat32> fc2Biases = tf.variable(Shape.make(NUM_LABELS), TFloat32.DTYPE);
-    Assign<TFloat32> biases4Init = tf.assign(fc2Biases, tf.broadcastTo(tf.constant(0.1f), tf.shape(fc2Biases)));
-    graph.addInitializer(biases4Init);
+    Variable<TFloat32> fc2Weights = tf.variableWithInit(tf.math.mul(tf.random
+        .truncatedNormal(tf.constant(new int[]{512, NUM_LABELS}), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc2Biases = tf
+        .variableWithInit(tf.fill(tf.constant(new int[]{NUM_LABELS}), tf.constant(0.1f)));
 
     Add<TFloat32> logits = tf.math.add(tf.linalg.matMul(relu3, fc2Weights), fc2Biases);
 
@@ -144,11 +150,16 @@ public class MNISTTest {
     Softmax<TFloat32> prediction = tf.withName(OUTPUT_NAME).nn.softmax(logits);
 
     // Loss function & regularization
-    OneHot<TFloat32> oneHot = tf.oneHot(labels, tf.constant(10), tf.constant(1.0f), tf.constant(0.0f));
-    SoftmaxCrossEntropyWithLogits<TFloat32> batchLoss = tf.nn.softmaxCrossEntropyWithLogits(logits, oneHot);
+    OneHot<TFloat32> oneHot = tf
+        .oneHot(labels, tf.constant(10), tf.constant(1.0f), tf.constant(0.0f));
+    SoftmaxCrossEntropyWithLogits<TFloat32> batchLoss = tf.nn
+        .softmaxCrossEntropyWithLogits(logits, oneHot);
     Mean<TFloat32> labelLoss = tf.math.mean(batchLoss.loss(), tf.constant(0));
-    Add<TFloat32> regularizers = tf.math.add(tf.nn.l2Loss(fc1Weights), tf.math.add(tf.nn.l2Loss(fc1Biases), tf.math.add(tf.nn.l2Loss(fc2Weights), tf.nn.l2Loss(fc2Biases))));
-    Add<TFloat32> loss = tf.withName(TRAINING_LOSS).math.add(labelLoss, tf.math.mul(regularizers, tf.constant(5e-4f)));
+    Add<TFloat32> regularizers = tf.math.add(tf.nn.l2Loss(fc1Weights), tf.math
+        .add(tf.nn.l2Loss(fc1Biases),
+            tf.math.add(tf.nn.l2Loss(fc2Weights), tf.nn.l2Loss(fc2Biases))));
+    Add<TFloat32> loss = tf.withName(TRAINING_LOSS).math
+        .add(labelLoss, tf.math.mul(regularizers, tf.constant(5e-4f)));
 
     // Optimizer
     Optimizer optimizer;
@@ -170,11 +181,11 @@ public class MNISTTest {
         break;
       case "Adam":
       case "adam":
-        optimizer = new Adam(graph,0.001f,0.9f,0.999f,1e-8f);
+        optimizer = new Adam(graph, 0.001f, 0.9f, 0.999f, 1e-8f);
         break;
       case "SGD":
       case "sgd":
-        optimizer = new GradientDescent(graph,0.01f);
+        optimizer = new GradientDescent(graph, 0.01f);
         break;
       case "Momentum":
       case "momentum":
@@ -182,7 +193,7 @@ public class MNISTTest {
         break;
       case "RMSProp":
       case "rmsprop":
-        optimizer = new RMSProp(graph,0.01f, 0.9f, 0.0f, 1e-10f, false);
+        optimizer = new RMSProp(graph, 0.01f, 0.9f, 0.0f, 1e-10f, false);
         break;
       default:
         throw new IllegalArgumentException("Unknown optimizer " + optimizerName);
@@ -195,7 +206,8 @@ public class MNISTTest {
     return graph;
   }
 
-  public static void train(Session session, int epochs, int minibatchSize, float[][][][] data, int[] labels) {
+  public static void train(Session session, int epochs, int minibatchSize, float[][][][] data,
+      int[] labels) {
     // Initialises the parameters.
     session.runner().addTarget(INIT).run();
     logger.info("Initialised the model parameters");
@@ -222,7 +234,8 @@ public class MNISTTest {
             .fetch(TRAINING_LOSS)
             .run().get(0);
         if (interval % 100 == 0) {
-          logger.log(Level.INFO, "Iteration = " + interval + ", training loss = " + loss.floatValue());
+          logger.log(Level.INFO,
+              "Iteration = " + interval + ", training loss = " + loss.floatValue());
         }
         input.close();
         target.close();
@@ -252,7 +265,8 @@ public class MNISTTest {
   }
 
   public static DataTuple loadData(String path) throws IOException, ClassNotFoundException {
-    try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path)))) {
+    try (ObjectInputStream ois = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream(path)))) {
       float[][][][] data = (float[][][][]) ois.readObject();
       int[] labels = (int[]) ois.readObject();
       return new DataTuple(data, labels);
@@ -260,6 +274,7 @@ public class MNISTTest {
   }
 
   private static class DataTuple {
+
     public final float[][][][] features;
     public final int[] labels;
 
@@ -270,7 +285,8 @@ public class MNISTTest {
   }
 
   public static void main(String[] args) throws IOException, ClassNotFoundException {
-    logger.info("Usage: MNISTTest <num-epochs> <minibatch-size> <optimizer-name> <train-data-path> <test-data-path>");
+    logger.info(
+        "Usage: MNISTTest <num-epochs> <minibatch-size> <optimizer-name> <train-data-path> <test-data-path>");
 
     logger.info("Loading training data");
     DataTuple train = loadData(args[3]);
@@ -311,9 +327,9 @@ public class MNISTTest {
           labelBatch[m] = testLabels[k];
         }
         try (Tensor<?> transformedInput = Tensor.create(featureBatch);
-             Tensor<?> outputTensor = session.runner()
-                 .feed(INPUT_NAME, transformedInput)
-                 .fetch(OUTPUT_NAME).run().get(0)) {
+            Tensor<?> outputTensor = session.runner()
+                .feed(INPUT_NAME, transformedInput)
+                .fetch(OUTPUT_NAME).run().get(0)) {
           prediction = outputTensor.copyTo(new float[minibatchSize][NUM_LABELS]);
         }
 

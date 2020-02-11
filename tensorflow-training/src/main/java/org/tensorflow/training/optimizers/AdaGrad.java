@@ -26,9 +26,9 @@ import java.util.List;
 
 /**
  * Optimizer that implements the Adagrad algorithm.
- *
- * See the <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">paper</a>
- * or this <a href="https://ppasupat.github.io/a9online/uploads/proximal_notes.pdf">intro</a>.
+ * <p>
+ * See the <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">paper</a> or this <a
+ * href="https://ppasupat.github.io/a9online/uploads/proximal_notes.pdf">intro</a>.
  */
 public class AdaGrad extends Optimizer {
 
@@ -56,14 +56,16 @@ public class AdaGrad extends Optimizer {
   }
 
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE),v.dataType()));
+    Operand<T> initializer = tf.fill(tf.shape(v),
+        tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    Variable<T> slot = getSlot(variable,ACCUMULATOR).get();
-    return tf.train.applyAdagrad(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient);
+    Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
+    return tf.train
+        .applyAdagrad(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient);
   }
 
   @Override

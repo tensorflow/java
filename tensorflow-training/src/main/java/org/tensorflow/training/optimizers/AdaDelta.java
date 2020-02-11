@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Optimizer that implements the Adadelta algorithm.
- *
+ * <p>
  * See the <a href="http://arxiv.org/abs/1212.5701">paper</a>.
  */
 public class AdaDelta extends Optimizer {
@@ -59,16 +59,18 @@ public class AdaDelta extends Optimizer {
   }
 
   private <T extends TType> void createAdaDeltaSlot(Output<T> v) {
-    Operand<T> accumulatorInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> accumulatorInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, accumulatorInitializer);
-    Operand<T> updateInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> updateInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR_UPDATE, updateInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    Variable<T> accumSlot = getSlot(variable,ACCUMULATOR).get();
-    Variable<T> accumUpdateSlot = getSlot(variable,ACCUMULATOR_UPDATE).get();
+    Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
+    Variable<T> accumUpdateSlot = getSlot(variable, ACCUMULATOR_UPDATE).get();
     return tf.train.applyAdadelta(variable, accumSlot, accumUpdateSlot,
         tf.constant(learningRate, gradient.dataType()),
         tf.constant(rho, gradient.dataType()),

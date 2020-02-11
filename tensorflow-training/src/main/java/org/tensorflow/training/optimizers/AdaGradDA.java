@@ -31,7 +31,7 @@ import java.util.Optional;
 
 /**
  * Optimizer that implements the Adagrad Dual-Averaging algorithm.
- *
+ * <p>
  * See the <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">paper</a>.
  */
 public class AdaGradDA extends Optimizer {
@@ -53,7 +53,8 @@ public class AdaGradDA extends Optimizer {
     this(graph, learningRate, 0.1f, 0.0f, 0.0f);
   }
 
-  public AdaGradDA(Graph graph, float learningRate, float initialAccumulatorValue, float l1Strength, float l2Strength) {
+  public AdaGradDA(Graph graph, float learningRate, float initialAccumulatorValue, float l1Strength,
+      float l2Strength) {
     super(graph);
     this.learningRate = learningRate;
     this.initialAccumulatorValue = initialAccumulatorValue;
@@ -63,7 +64,7 @@ public class AdaGradDA extends Optimizer {
 
   @Override
   protected Optional<Operand<?>> prepare(String name) {
-    return Optional.of(tf.assignAdd(globalStep,tf.constant(1L)));
+    return Optional.of(tf.assignAdd(globalStep, tf.constant(1L)));
   }
 
   @Override
@@ -71,22 +72,24 @@ public class AdaGradDA extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdaGradDASlot(v);
     }
-    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(),TInt64.DTYPE);
+    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.DTYPE);
     Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
     graph.addInitializer(globalStepInitializer);
   }
 
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> initializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
-    Operand<T> sqInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE),v.dataType()));
+    Operand<T> sqInitializer = tf.fill(tf.shape(v),
+        tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    Variable<T> gradSlot = getSlot(variable,ACCUMULATOR).get();
-    Variable<T> gradSquaredSlot = getSlot(variable,SQUARED_ACCUMULATOR).get();
+    Variable<T> gradSlot = getSlot(variable, ACCUMULATOR).get();
+    Variable<T> gradSquaredSlot = getSlot(variable, SQUARED_ACCUMULATOR).get();
     return tf.train.applyAdagradDa(variable, gradSlot, gradSquaredSlot, gradient,
         tf.constant(learningRate, gradient.dataType()),
         tf.constant(l1Strength, gradient.dataType()),
@@ -98,14 +101,15 @@ public class AdaGradDA extends Optimizer {
    * Gathers up the update operations into a single op that can be used as a run target.
    * <p>
    * Adds the global step update to the end of the updates list.
+   *
    * @param updateOperations The update operations.
-   * @param name The name of the run target.
+   * @param name             The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
   @Override
   protected Op finish(List<Operand<?>> updateOperations, String name) {
-    updateOperations.add(tf.assignAdd(globalStep,tf.constant(1L)));
-    return super.finish(updateOperations,name);
+    updateOperations.add(tf.assignAdd(globalStep, tf.constant(1L)));
+    return super.finish(updateOperations, name);
   }
 
   @Override

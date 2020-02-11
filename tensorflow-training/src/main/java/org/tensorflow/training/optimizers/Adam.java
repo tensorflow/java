@@ -31,7 +31,7 @@ import java.util.Optional;
 
 /**
  * Optimizer that implements the Adam algorithm.
- *
+ * <p>
  * See the <a href="http://arxiv.org/abs/1412.6980">paper</a>.
  */
 public class Adam extends Optimizer {
@@ -71,11 +71,13 @@ public class Adam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamSlot(v.asOutput());
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(),TFloat32.DTYPE);
-    Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne, TFloat32.DTYPE));
+    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.DTYPE);
+    Assign<TFloat32> betaOnePowerInit = tf
+        .assign(betaOnePower, tf.constant(betaOne, TFloat32.DTYPE));
     graph.addInitializer(betaOnePowerInit);
-    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(),TFloat32.DTYPE);
-    Assign<TFloat32> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo, TFloat32.DTYPE));
+    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.DTYPE);
+    Assign<TFloat32> betaTwoPowerInit = tf
+        .assign(betaTwoPower, tf.constant(betaTwo, TFloat32.DTYPE));
     graph.addInitializer(betaTwoPowerInit);
   }
 
@@ -89,23 +91,25 @@ public class Adam extends Optimizer {
   }
 
   private <T extends TType> void createAdamSlot(Output<T> v) {
-    Operand<T> firstMomentInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> firstMomentInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
-    Operand<T> secondMomentInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE),v.dataType()));
+    Operand<T> secondMomentInitializer = tf
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    Variable<T> firstMomentSlot = getSlot(variable,FIRST_MOMENT).get();
-    Variable<T> secondMomentSlot = getSlot(variable,SECOND_MOMENT).get();
+    Variable<T> firstMomentSlot = getSlot(variable, FIRST_MOMENT).get();
+    Variable<T> secondMomentSlot = getSlot(variable, SECOND_MOMENT).get();
     return tf.train.applyAdam(variable, firstMomentSlot, secondMomentSlot,
-        tf.dtypes.cast(betaOnePower,gradient.dataType()),
-        tf.dtypes.cast(betaTwoPower,gradient.dataType()),
-        tf.dtypes.cast(learningRateConst,gradient.dataType()),
-        tf.dtypes.cast(betaOneConst,gradient.dataType()),
-        tf.dtypes.cast(betaTwoConst,gradient.dataType()),
-        tf.dtypes.cast(epsilonConst,gradient.dataType()),
+        tf.dtypes.cast(betaOnePower, gradient.dataType()),
+        tf.dtypes.cast(betaTwoPower, gradient.dataType()),
+        tf.dtypes.cast(learningRateConst, gradient.dataType()),
+        tf.dtypes.cast(betaOneConst, gradient.dataType()),
+        tf.dtypes.cast(betaTwoConst, gradient.dataType()),
+        tf.dtypes.cast(epsilonConst, gradient.dataType()),
         gradient);
   }
 
@@ -113,15 +117,16 @@ public class Adam extends Optimizer {
    * Gathers up the update operations into a single op that can be used as a run target.
    * <p>
    * Adds the betaOne and betaTwo updates to the end of the updates list.
+   *
    * @param updateOperations The update operations.
-   * @param name The name of the run target.
+   * @param name             The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
   @Override
   protected Op finish(List<Operand<?>> updateOperations, String name) {
-    updateOperations.add(tf.assign(betaOnePower,tf.math.mul(betaOnePower,betaOneConst)));
-    updateOperations.add(tf.assign(betaTwoPower,tf.math.mul(betaTwoPower,betaTwoConst)));
-    return super.finish(updateOperations,name);
+    updateOperations.add(tf.assign(betaOnePower, tf.math.mul(betaOnePower, betaOneConst)));
+    updateOperations.add(tf.assign(betaTwoPower, tf.math.mul(betaTwoPower, betaTwoConst)));
+    return super.finish(updateOperations, name);
   }
 
   @Override

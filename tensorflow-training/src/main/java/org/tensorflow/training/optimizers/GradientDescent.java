@@ -36,7 +36,8 @@ public class GradientDescent extends Optimizer {
 
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
-    return tf.train.applyGradientDescent(variable, tf.dtypes.cast(tf.constant(learningRate, TFloat32.DTYPE), gradient.dataType()), gradient);
+    return tf.train.applyGradientDescent(variable,
+        tf.dtypes.cast(tf.constant(learningRate, TFloat32.DTYPE), gradient.dataType()), gradient);
   }
 
   @Override

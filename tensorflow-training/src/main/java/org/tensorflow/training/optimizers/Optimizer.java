@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
  *
  */
 public abstract class Optimizer {
+
   public static final String VARIABLE_V2 = "VariableV2";
 
   /**
@@ -70,7 +71,7 @@ public abstract class Optimizer {
   }
 
   public Op minimize(Operand<?> loss) {
-    return minimize(loss, getOptimizerName()+"-minimize");
+    return minimize(loss, getOptimizerName() + "-minimize");
   }
 
   public Op minimize(Operand<?> loss, String name) {
@@ -110,11 +111,12 @@ public abstract class Optimizer {
   }
 
   public Op applyGradients(List<GradAndVar<? extends TType>> gradsAndVars, String name) {
-    List<Output<? extends TType>> variables = gradsAndVars.stream().map(GradAndVar::getVariable).collect(Collectors.toList());
+    List<Output<? extends TType>> variables = gradsAndVars.stream().map(GradAndVar::getVariable)
+        .collect(Collectors.toList());
 
     createSlots(variables);
 
-    Optional<Operand<? extends TType>> prepOp = prepare(name+"/prepare");
+    Optional<Operand<? extends TType>> prepOp = prepare(name + "/prepare");
 
     List<Operand<? extends TType>> updateOps = new ArrayList<>();
     prepOp.ifPresent(updateOps::add);
@@ -122,32 +124,34 @@ public abstract class Optimizer {
       updateOps.add(applyDense(pair));
     }
 
-    return finish(updateOps,name);
+    return finish(updateOps, name);
   }
 
   /**
    * Gets the slot associated with the specified variable and slot name.
-   * @param var The variable to lookup.
+   *
+   * @param var      The variable to lookup.
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
   public <T extends TType> Optional<Variable<T>> getSlot(Output<T> var, String slotName) {
-    return getSlot(var.op().name(),slotName);
+    return getSlot(var.op().name(), slotName);
   }
 
   /**
    * Gets the slot associated with the specified variable and slot name.
-   * @param varName The variable to lookup.
+   *
+   * @param varName  The variable to lookup.
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
   private <T extends TType> Optional<Variable<T>> getSlot(String varName, String slotName) {
-    Map<String,Variable<? extends TType>> variables = slots.get(slotName);
+    Map<String, Variable<? extends TType>> variables = slots.get(slotName);
     if (variables != null) {
       Variable<? extends TType> slot = variables.get(varName);
       if (slot != null) {
         @SuppressWarnings("unchecked") // This method should only be called when the type is known.
-        Optional<Variable<T>> opt = Optional.of((Variable<T>)slot);
+            Optional<Variable<T>> opt = Optional.of((Variable<T>) slot);
         return opt;
       } else {
         return Optional.empty();
@@ -158,20 +162,24 @@ public abstract class Optimizer {
   }
 
   /**
-   * Creates a slot in the graph for the specified variable with the specified name. Adds the slot's initializer
-   * to the graph's initializers, and the slot to the Optimizer's slot map.
-   * @param variable The variable to create the slot for.
-   * @param slotName The name of the slot.
+   * Creates a slot in the graph for the specified variable with the specified name. Adds the slot's
+   * initializer to the graph's initializers, and the slot to the Optimizer's slot map.
+   *
+   * @param variable    The variable to create the slot for.
+   * @param slotName    The name of the slot.
    * @param initializer The initializer for the slot.
-   * @param <T> The type of the variable.
+   * @param <T>         The type of the variable.
    */
-  protected <T extends TType> void createSlot(Output<T> variable, String slotName, Operand<T> initializer) {
-    Variable<T> slot = tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.dataType());
+  protected <T extends TType> void createSlot(Output<T> variable, String slotName,
+      Operand<T> initializer) {
+    Variable<T> slot = tf.withName(createName(variable, slotName))
+        .variable(variable.shape(), variable.dataType());
     Assign<T> slotInit = tf.assign(slot, initializer);
     graph.addInitializer(slotInit);
     String varName = variable.op().name();
-    Map<String,Variable<? extends TType>> variables = slots.computeIfAbsent(slotName,(k) -> new HashMap<>());
-    variables.put(varName,slot);
+    Map<String, Variable<? extends TType>> variables = slots
+        .computeIfAbsent(slotName, (k) -> new HashMap<>());
+    variables.put(varName, slot);
   }
 
   /**
@@ -185,27 +193,32 @@ public abstract class Optimizer {
 
   /**
    * No-op slot creation method.
+   *
    * @param variables The variables to create slots for.
    */
-  protected void createSlots(List<Output<? extends TType>> variables) { }
+  protected void createSlots(List<Output<? extends TType>> variables) {
+  }
 
   private <T extends TType> Operand<T> applyDense(GradAndVar<T> gradVarPair) {
-    return applyDense(gradVarPair.getGradient(),gradVarPair.getVariable());
+    return applyDense(gradVarPair.getGradient(), gradVarPair.getVariable());
   }
 
   /**
    * Generates the gradient update operations for the specific variable and gradient.
+   *
    * @param gradient The gradient to use.
    * @param variable The variable to update.
-   * @param <T> The type of the variable.
+   * @param <T>      The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
-  protected abstract <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable);
+  protected abstract <T extends TType> Operand<T> applyDense(Output<T> gradient,
+      Output<T> variable);
 
   /**
    * Gathers up the update operations into a single op that can be used as a run target.
+   *
    * @param updateOperations The update operations.
-   * @param name The name of the run target.
+   * @param name             The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
   protected Op finish(List<Operand<?>> updateOperations, String name) {
@@ -217,6 +230,7 @@ public abstract class Optimizer {
 
   /**
    * Name of the optimizer.
+   *
    * @return The optimizer name.
    */
   public abstract String getOptimizerName();
@@ -226,6 +240,7 @@ public abstract class Optimizer {
   }
 
   public static class GradAndVar<T extends TType> {
+
     private final Output<T> gradient;
     private final Output<T> variable;
 
@@ -239,7 +254,7 @@ public abstract class Optimizer {
     }
 
     public Output<T> getVariable() {
-        return variable;
+      return variable;
     }
   }
 }
