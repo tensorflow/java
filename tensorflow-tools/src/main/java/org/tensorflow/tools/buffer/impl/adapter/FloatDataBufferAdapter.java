@@ -57,15 +57,47 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   }
 
   @Override
+  public FloatDataBuffer copyTo(DataBuffer<Float> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof FloatDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((FloatDataBuffer)dst).setFloat(getFloat(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public FloatDataBuffer offset(long index) {
-    return new FloatDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new FloatDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public FloatDataBuffer narrow(long size) {
-    return new FloatDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new FloatDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof FloatDataBuffer)) {
+      return super.equals(obj);
+    }
+    FloatDataBuffer other = (FloatDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getFloat(idx) != getFloat(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   FloatDataBufferAdapter(S buffer, FloatDataLayout<S> layout) {

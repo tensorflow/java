@@ -17,6 +17,7 @@
 package org.tensorflow.tools.ndarray;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.tensorflow.tools.ndarray.NdArrays.vectorOfObjects;
 import static org.tensorflow.tools.ndarray.index.Indices.all;
@@ -308,5 +309,31 @@ public abstract class NdArrayTestBase<T> {
     } catch (IllegalArgumentException e) {
       // as expected
     }
+  }
+
+  @Test
+  public void equalsAndHashCode() {
+    NdArray<T> array1 = allocate(Shape.of(2, 2));
+    NdArray<T> array2 = allocate(Shape.of(2, 2));
+    NdArray<T> array3 = allocate(Shape.of(2, 2));
+    NdArray<T> array4 = allocate(Shape.of(1, 2, 2));
+
+    @SuppressWarnings("unchecked")
+    T[][][] values = (T[][][])(new Object[][][] {
+        { { valueOf(0L), valueOf(1L) }, { valueOf(2L), valueOf(0L) } }
+    });
+
+    StdArrays.copyTo(array1, values[0]);
+    StdArrays.copyTo(array2, values[0]);
+    StdArrays.copyTo(array3, values[0]);
+    array3.setObject(valueOf(0L), 0, 1);
+    StdArrays.copyTo(array4, values);
+
+    assertEquals(array1, array2);
+    assertEquals(array1.hashCode(), array2.hashCode());
+    assertNotEquals(array1, array3);
+    assertNotEquals(array1.hashCode(), array3.hashCode());
+    assertNotEquals(array1, array4);
+    assertNotEquals(array1.hashCode(), array4.hashCode());
   }
 }

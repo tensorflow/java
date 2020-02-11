@@ -223,4 +223,37 @@ public interface DataBuffer<T> {
    * @throws IllegalArgumentException if size value do not pass validation checks
    */
   DataBuffer<T> narrow(long size);
+
+  /**
+   * Visits the backing storage of this buffer.
+   *
+   * <p>The buffer implementation is responsible of passing back a reference to the actual data
+   * storage to the provided visitor. The visitor does not have to handle all possible type of
+   * data storage and can override only methods for storage it is actually interested in. For any
+   * other type of storage, the call will fallback to {@link DataStorageVisitor#otherwise()} so the
+   * visitor can handle it as a general case.
+   *
+   * @param visitor visits the data storage of this buffer
+   * @param <R> type of value returned by the visitor
+   * @return the same value returned by the visitor
+   */
+  default <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.otherwise();
+  }
+
+  /**
+   * Checks equality between data buffers.
+   *
+   * <p>A data buffer is equal to another object if this object is another {@link DataBuffer} of the
+   * same size and each elements are equal and stored in the same order.
+   *
+   * <p>Note that the computation required to verify equality between two buffers can be expensive
+   * in some cases and therefore, it is recommended to not use this method in a critical path
+   * where performances matter.
+   *
+   * @param obj object to compare this buffer with
+   * @return true if this buffer is equal to the provided object
+   */
+  @Override
+  boolean equals(Object obj);
 }

@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer.impl.nio;
 
 import java.nio.IntBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.IntDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,14 +55,25 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
   @Override
   public IntDataBuffer copyTo(DataBuffer<Integer> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof IntNioDataBuffer) {
-      IntBuffer dstBuf = ((IntNioDataBuffer)dst).buf.duplicate();
-      IntBuffer srcBuf = (IntBuffer)buf.duplicate().limit((int)size);
-      dstBuf.put(srcBuf);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<IntDataBuffer>() {
+
+      @Override
+      public IntDataBuffer visit(IntBuffer buffer) {
+        buffer.duplicate().put((IntBuffer)buf.duplicate().limit((int)size));
+        return IntNioDataBuffer.this;
+      }
+
+      @Override
+      public IntDataBuffer otherwise() {
+        if (dst instanceof IntDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((IntDataBuffer)dst).setInt(getInt(idx), idx);
+          }
+          return IntNioDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
   }
 
   @Override
@@ -74,6 +86,42 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
   public IntDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new IntNioDataBuffer(((IntBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(buf);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof IntDataBuffer)) {
+      return super.equals(obj);
+    }
+    IntDataBuffer other = (IntDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(IntBuffer buffer) {
+        return buf.equals(buffer);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getInt(idx) != getInt(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

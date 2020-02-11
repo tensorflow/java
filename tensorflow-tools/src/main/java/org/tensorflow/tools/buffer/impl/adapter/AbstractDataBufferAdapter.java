@@ -18,6 +18,7 @@
 package org.tensorflow.tools.buffer.impl.adapter;
 
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.DataLayout;
@@ -49,10 +50,8 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
   }
 
   @Override
-  public U copyTo(DataBuffer<T> dst, long size) {
-    Validator.copyToArgs(this, dst, size);
-    slowCopyTo(dst, size);
-    return (U)this;
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return buffer().accept(visitor);
   }
 
   AbstractDataBufferAdapter(S buffer, DataLayout<S, T> layout) {

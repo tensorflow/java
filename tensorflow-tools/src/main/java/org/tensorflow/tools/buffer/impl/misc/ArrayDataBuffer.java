@@ -16,7 +16,9 @@
  */
 package org.tensorflow.tools.buffer.impl.misc;
 
+import java.util.Arrays;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -48,13 +50,22 @@ class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
   @Override
   public DataBuffer<T> copyTo(DataBuffer<T> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof ArrayDataBuffer) {
-      ArrayDataBuffer<T> dstBuffer = (ArrayDataBuffer<T>)dst;
-      System.arraycopy(values, offset, dstBuffer.values, dstBuffer.offset, (int)size);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<DataBuffer<T>>() {
+
+      @Override
+      public DataBuffer<T> visit(Object[] array, int arrayOffset, int arrayLength) {
+        System.arraycopy(values, offset, array, arrayOffset, (int)size);
+        return ArrayDataBuffer.this;
+      }
+
+      @Override
+      public DataBuffer<T> otherwise() {
+        for (int idx = 0; idx < size; ++idx) {
+          dst.setObject(values[idx + offset], idx);
+        }
+        return ArrayDataBuffer.this;
+      }
+    });
   }
 
   @Override
@@ -67,6 +78,40 @@ class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
   public DataBuffer<T> narrow(long size) {
     Validator.narrowArgs(this, size);
     return new ArrayDataBuffer<>(values, readOnly, offset, (int)size);
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(values, offset, length);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof DataBuffer)) {
+      return false;
+    }
+    DataBuffer<?> other = (DataBuffer<?>)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(Object[] array, int arrayOffset, int arrayLength) {
+        if (offset == 0 && values.length == length && arrayOffset == 0 && array.length == arrayLength) {
+          return Arrays.deepEquals(array, values);
+        }
+        return slowEquals(other);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        return slowEquals(other);
+      }
+    });
   }
 
   ArrayDataBuffer(T[] values, boolean readOnly) {

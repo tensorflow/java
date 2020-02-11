@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer.impl.nio;
 
 import java.nio.FloatBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,14 +55,25 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
   @Override
   public FloatDataBuffer copyTo(DataBuffer<Float> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof FloatNioDataBuffer) {
-      FloatBuffer dstBuf = ((FloatNioDataBuffer)dst).buf.duplicate();
-      FloatBuffer srcBuf = (FloatBuffer)buf.duplicate().limit((int)size);
-      dstBuf.put(srcBuf);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<FloatDataBuffer>() {
+
+      @Override
+      public FloatDataBuffer visit(FloatBuffer buffer) {
+        buffer.duplicate().put((FloatBuffer)buf.duplicate().limit((int)size));
+        return FloatNioDataBuffer.this;
+      }
+
+      @Override
+      public FloatDataBuffer otherwise() {
+        if (dst instanceof FloatDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((FloatDataBuffer)dst).setFloat(getFloat(idx), idx);
+          }
+          return FloatNioDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
   }
 
   @Override
@@ -74,6 +86,42 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
   public FloatDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new FloatNioDataBuffer(((FloatBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(buf);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof FloatDataBuffer)) {
+      return super.equals(obj);
+    }
+    FloatDataBuffer other = (FloatDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(FloatBuffer buffer) {
+        return buf.equals(buffer);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getFloat(idx) != getFloat(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

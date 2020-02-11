@@ -57,15 +57,47 @@ class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   }
 
   @Override
+  public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof ShortDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public ShortDataBuffer offset(long index) {
-    return new ShortDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new ShortDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ShortDataBuffer narrow(long size) {
-    return new ShortDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new ShortDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof ShortDataBuffer)) {
+      return super.equals(obj);
+    }
+    ShortDataBuffer other = (ShortDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getShort(idx) != getShort(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   ShortDataBufferAdapter(S buffer, ShortDataLayout<S> layout) {

@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer.impl.nio;
 
 import java.nio.LongBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -54,14 +55,25 @@ final class LongNioDataBuffer extends AbstractNioDataBuffer<Long>
   @Override
   public LongDataBuffer copyTo(DataBuffer<Long> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    if (dst instanceof LongNioDataBuffer) {
-      LongBuffer dstBuf = ((LongNioDataBuffer)dst).buf.duplicate();
-      LongBuffer srcBuf = (LongBuffer)buf.duplicate().limit((int)size);
-      dstBuf.put(srcBuf);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
+    return dst.accept(new DataStorageVisitor<LongDataBuffer>() {
+
+      @Override
+      public LongDataBuffer visit(LongBuffer buffer) {
+        buffer.duplicate().put((LongBuffer)buf.duplicate().limit((int)size));
+        return LongNioDataBuffer.this;
+      }
+
+      @Override
+      public LongDataBuffer otherwise() {
+        if (dst instanceof LongDataBuffer) {
+          for (long idx = 0L; idx < size; ++idx) {
+            ((LongDataBuffer)dst).setLong(getLong(idx), idx);
+          }
+          return LongNioDataBuffer.this;
+        }
+        return slowCopyTo(dst, size);
+      }
+    });
   }
 
   @Override
@@ -74,6 +86,42 @@ final class LongNioDataBuffer extends AbstractNioDataBuffer<Long>
   public LongDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new LongNioDataBuffer(((LongBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(buf);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof LongDataBuffer)) {
+      return super.equals(obj);
+    }
+    LongDataBuffer other = (LongDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(LongBuffer buffer) {
+        return buf.equals(buffer);
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getLong(idx) != getLong(idx)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   @Override

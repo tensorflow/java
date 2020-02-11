@@ -66,7 +66,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException("Values cannot be null");
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(DataBuffers.of(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -124,7 +124,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.from(values, false, false), Shape.of(values.length));
+    return wrap(DataBuffers.of(values, false, false), Shape.of(values.length));
   }
 
   /**
@@ -179,7 +179,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -234,7 +234,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -289,7 +289,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -344,7 +344,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -399,7 +399,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -459,7 +459,7 @@ public final class NdArrays {
     if (values == null || values.length == 0) {
       throw new IllegalArgumentException("Null or zero length input supplied to vectorOfObjects.");
     }
-    return wrap(Shape.of(values.length), DataBuffers.from(values, false, false));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**

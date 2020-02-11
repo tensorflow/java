@@ -16,8 +16,11 @@
  */
 package org.tensorflow.tools.buffer.impl.misc;
 
+import java.util.Arrays;
+import java.util.BitSet;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -48,18 +51,6 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
   }
 
   @Override
-  public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
-    Validator.copyToArgs(this, dst, size);
-    if (dst instanceof BooleanArrayDataBuffer) {
-      BooleanArrayDataBuffer dstBuffer = (BooleanArrayDataBuffer)dst;
-      System.arraycopy(values, offset, dstBuffer.values, dstBuffer.offset, length);
-    } else {
-      slowCopyTo(dst, size);
-    }
-    return this;
-  }
-
-  @Override
   public BooleanDataBuffer read(boolean[] dst, int offset, int length) {
     System.arraycopy(values, this.offset, dst, offset, length);
     return this;
@@ -72,6 +63,41 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
   }
 
   @Override
+  public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    return dst.accept(new DataStorageVisitor<BooleanDataBuffer>() {
+
+      @Override
+      public BooleanDataBuffer visit(boolean[] array, int arrayOffset, int arrayLength) {
+        System.arraycopy(values, offset, array, arrayOffset, (int)size);
+        return BooleanArrayDataBuffer.this;
+      }
+
+      @Override
+      public BooleanDataBuffer visit(BitSet bitSet, int bitSetOffset, long numBits) {
+        for (int idx = 0; idx < size; ++idx) {
+          bitSet.set(idx + bitSetOffset, values[idx + offset]);
+        }
+        return BooleanArrayDataBuffer.this;
+      }
+
+      @Override
+      public BooleanDataBuffer otherwise() {
+        if (dst instanceof BooleanDataBuffer) {
+          for (int idx = 0; idx < size; ++idx) {
+            ((BooleanDataBuffer)dst).setBoolean(values[idx + offset], idx);
+          }
+        } else {
+          for (int idx = 0; idx < size; ++idx) {
+            dst.setObject(values[idx + offset], idx);
+          }
+        }
+        return BooleanArrayDataBuffer.this;
+      }
+    });
+  }
+
+  @Override
   public BooleanDataBuffer offset(long index) {
     Validator.offsetArgs(this, index);
     return new BooleanArrayDataBuffer(values, readOnly, offset + (int)index, length - (int)index);
@@ -81,6 +107,60 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
   public BooleanDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new BooleanArrayDataBuffer(values, readOnly, offset, (int)size);
+  }
+
+  @Override
+  public <R> R accept(DataStorageVisitor<R> visitor) {
+    return visitor.visit(values, offset, length);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof BooleanDataBuffer)) {
+      return super.equals(obj);
+    }
+    BooleanDataBuffer other = (BooleanDataBuffer)obj;
+    if (size() != other.size()) {
+      return false;
+    }
+    return other.accept(new DataStorageVisitor<Boolean>() {
+
+      @Override
+      public Boolean visit(boolean[] array, int arrayOffset, int arrayLength) {
+        if (offset == 0 && values.length == length && arrayOffset == 0 && array.length == arrayLength) {
+          return Arrays.equals(array, values);
+        }
+        for (int idx = 0; idx < size(); ++idx) {
+          if (array[idx + arrayOffset] != values[idx + offset]) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      @Override
+      public Boolean visit(BitSet bitSet, int bitSetOffset, long numBits) {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (bitSet.get(idx + bitSetOffset) != values[idx + offset]) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      @Override
+      public Boolean otherwise() {
+        for (int idx = 0; idx < size(); ++idx) {
+          if (other.getBoolean(idx) != values[idx + offset]) {
+            return false;
+          }
+        }
+        return true;
+      }
+    });
   }
 
   BooleanArrayDataBuffer(boolean[] values, boolean readOnly) {

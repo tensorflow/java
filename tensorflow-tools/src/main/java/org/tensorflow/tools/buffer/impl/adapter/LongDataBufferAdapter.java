@@ -57,15 +57,47 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   }
 
   @Override
+  public LongDataBuffer copyTo(DataBuffer<Long> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof LongDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((LongDataBuffer)dst).setLong(getLong(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public LongDataBuffer offset(long index) {
-    return new LongDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new LongDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public LongDataBuffer narrow(long size) {
-    return new LongDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new LongDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof LongDataBuffer)) {
+      return super.equals(obj);
+    }
+    LongDataBuffer other = (LongDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getLong(idx) != getLong(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   LongDataBufferAdapter(S buffer, LongDataLayout<S> layout) {

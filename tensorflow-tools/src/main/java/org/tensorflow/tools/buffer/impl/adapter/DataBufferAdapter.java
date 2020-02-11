@@ -26,13 +26,13 @@ class DataBufferAdapter<S extends DataBuffer<?>, T> extends AbstractDataBufferAd
   @Override
   @SuppressWarnings("unchecked")
   public DataBuffer<T> offset(long index) {
-    return new DataBufferAdapter(buffer().offset(index * layout().scale()), layout());
+    return new DataBufferAdapter<>((S)buffer().offset(index * layout().scale()), layout());
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DataBuffer<T> narrow(long size) {
-    return new DataBufferAdapter(buffer().narrow(size * layout().scale()), layout());
+    return new DataBufferAdapter<>((S)buffer().narrow(size * layout().scale()), layout());
   }
 
   DataBufferAdapter(S buffer, DataLayout<S, T> layout) {

@@ -27,14 +27,6 @@ import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
  */
 abstract class AbstractNioDataBuffer<T> extends AbstractDataBuffer<T> {
 
-  /**
-   * The maximum size for a buffer of this type, i.e. the maximum number of bytes it can store.
-   * <p>
-   * As the maximum size may vary depending on the JVM implementation and on the platform, this
-   * property returns a value that is safe for most of them.
-   */
-  public static long MAX_SIZE = Integer.MAX_VALUE - 10;
-
   @Override
   public long size() {
     return buf().capacity();

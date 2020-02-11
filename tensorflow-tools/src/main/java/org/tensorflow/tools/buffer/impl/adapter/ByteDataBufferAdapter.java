@@ -1,7 +1,13 @@
 package org.tensorflow.tools.buffer.impl.adapter;
 
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.buffer.ByteDataBuffer;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.IntDataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.buffer.ShortDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.ByteDataLayout;
 
@@ -40,15 +46,77 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   }
 
   @Override
+  public ByteDataBuffer copyTo(DataBuffer<Byte> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof ByteDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((ByteDataBuffer)dst).setByte(getByte(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
+  public IntDataBuffer asInts() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
+  public ShortDataBuffer asShorts() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
+  public LongDataBuffer asLongs() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
+  public FloatDataBuffer asFloats() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
+  public DoubleDataBuffer asDoubles() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
+  public BooleanDataBuffer asBooleans() {
+    throw new IllegalStateException("Byte buffers with layout cannot be converted");
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public ByteDataBuffer offset(long index) {
-    return new ByteDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new ByteDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ByteDataBuffer narrow(long size) {
-    return new ByteDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new ByteDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof ByteDataBuffer)) {
+      return super.equals(obj);
+    }
+    ByteDataBuffer other = (ByteDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getByte(idx) != getByte(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   ByteDataBufferAdapter(S buffer, ByteDataLayout<S> layout) {

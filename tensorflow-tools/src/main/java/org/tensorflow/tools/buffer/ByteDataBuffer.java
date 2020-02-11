@@ -132,6 +132,72 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
    */
   ByteDataBuffer write(byte[] src, int offset, int length);
 
+  /**
+   * Return this byte buffer as a buffer of ints.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link IntDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  IntDataBuffer asInts();
+
+  /**
+   * Return this byte buffer as a buffer of shorts.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link ShortDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  ShortDataBuffer asShorts();
+
+  /**
+   * Return this byte buffer as a buffer of longs.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link LongDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  LongDataBuffer asLongs();
+
+  /**
+   * Return this byte buffer as a buffer of floats.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link FloatDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  FloatDataBuffer asFloats();
+
+  /**
+   * Return this byte buffer as a buffer of doubles.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link DoubleDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  DoubleDataBuffer asDoubles();
+
+  /**
+   * Return this byte buffer as a buffer of booleans.
+   *
+   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
+   * in one will affect the other.
+   *
+   * @return this buffer as a {@link BooleanDataBuffer}
+   * @throws IllegalStateException if this buffer cannot be converted
+   */
+  BooleanDataBuffer asBooleans();
+
   @Override
   default Byte getObject(long index) {
     return getByte(index);

@@ -38,7 +38,7 @@ import org.tensorflow.tools.buffer.impl.adapter.DataBufferAdapterFactory;
  * class BigIntegerBufferAllocator {
  *
  *     public DataBuffer<BigInteger> allocate(long size) {
- *         return LAYOUT.applyTo(bufferOfLongs(size * LAYOUT.scale()));  // scale is 1 by default
+ *         return LAYOUT.applyTo(DataBuffers.ofLongs(size * LAYOUT.scale()));  // scale is 1 by default
  *     }
  *
  *     private static final DataLayout<LongDataBuffer, BigInteger> LAYOUT = new DataLayout<LongDataBuffer, BigInteger>() {

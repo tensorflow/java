@@ -57,15 +57,47 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
   }
 
   @Override
+  public IntDataBuffer copyTo(DataBuffer<Integer> dst, long size) {
+    Validator.copyToArgs(this, dst, size);
+    if (dst instanceof IntDataBuffer) {
+      for (long idx = 0L; idx < size; ++idx) {
+        ((IntDataBuffer)dst).setInt(getInt(idx), idx);
+      }
+      return this;
+    }
+    return slowCopyTo(dst, size);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public IntDataBuffer offset(long index) {
-    return new IntDataBufferAdapter(buffer().offset(index * layout.scale()), layout);
+    return new IntDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public IntDataBuffer narrow(long size) {
-    return new IntDataBufferAdapter(buffer().narrow(size * layout.scale()), layout);
+    return new IntDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof IntDataBuffer)) {
+      return super.equals(obj);
+    }
+    IntDataBuffer other = (IntDataBuffer)obj;
+    if (other.size() != size()) {
+      return false;
+    }
+    for (long idx = 0L; idx < size(); ++idx) {
+      if (other.getInt(idx) != getInt(idx)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   IntDataBufferAdapter(S buffer, IntDataLayout<S> layout) {

@@ -50,7 +50,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer());
   }
 
   /**
@@ -64,7 +64,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToInts(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer().asIntBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asIntBuffer());
   }
 
   /**
@@ -78,7 +78,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToLongs(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer().asLongBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asLongBuffer());
   }
 
   /**
@@ -92,7 +92,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToFloats(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer().asFloatBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asFloatBuffer());
   }
 
   /**
@@ -106,7 +106,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToDoubles(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer().asDoubleBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asDoubleBuffer());
   }
 
   /**
@@ -120,7 +120,7 @@ public final class TensorBuffers {
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToShorts(tensorMemory);
     }
-    return DataBuffers.from(tensorMemory.asByteBuffer().asShortBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asShortBuffer());
   }
 
   /**
@@ -136,7 +136,7 @@ public final class TensorBuffers {
     }
     // There is no boolean buffers in Java NIO, so apply a layout that converts booleans
     // from/to bytes when raw memory mapping is not available.
-    return DataLayouts.BOOL.applyTo(DataBuffers.from(tensorMemory.asByteBuffer()));
+    return DataLayouts.BOOL.applyTo(DataBuffers.of(tensorMemory.asByteBuffer()));
   }
 
   /**
@@ -157,10 +157,10 @@ public final class TensorBuffers {
 
     LongBuffer offsetBuffer = dataBuffer.asLongBuffer();
     offsetBuffer.limit((int)numElements);
-    LongDataBuffer offsets = DataBuffers.from(offsetBuffer.slice());
+    LongDataBuffer offsets = DataBuffers.of(offsetBuffer.slice());
 
     dataBuffer.position((int)numElements * Long.BYTES);
-    ByteDataBuffer data = DataBuffers.from(dataBuffer.slice());
+    ByteDataBuffer data = DataBuffers.of(dataBuffer.slice());
 
     return new StringTensorBuffer(offsets, data);
   }

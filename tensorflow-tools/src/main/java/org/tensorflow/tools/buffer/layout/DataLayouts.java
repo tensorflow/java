@@ -35,7 +35,7 @@ import org.tensorflow.tools.buffer.impl.layout.StringLayout;
  * BooleanDataBuffer boolBuffer = DataLayouts.BOOL.applyTo(byteDataBuffer);
  *
  * // Allocating a new buffer of 256 half floats
- * FloatDataBuffer halfBuffer = DataLayouts.FLOAT16.applyTo(bufferOfShorts(256 * DataLayouts.FLOAT16.scale());
+ * FloatDataBuffer halfBuffer = DataLayouts.FLOAT16.applyTo(DataBuffers.ofShorts(256 * DataLayouts.FLOAT16.scale());
  * }</pre>
  */
 public final class DataLayouts {
