@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
@@ -33,19 +31,41 @@ import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.BooleanNdArray;
+import org.tensorflow.tools.ndarray.ByteNdArray;
+import org.tensorflow.tools.ndarray.DoubleNdArray;
+import org.tensorflow.tools.ndarray.FloatNdArray;
+import org.tensorflow.tools.ndarray.IntNdArray;
+import org.tensorflow.tools.ndarray.LongNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.NdArrays;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
  * An operator producing a constant value.
+ *
+ * <p>All endpoints of this operator are named `val`, except those accepting vararg
+ * elements in parameter, which are named `array`. For example:
+ *
+ * <pre>{@code
+ * Ops tf = Ops.create();
+ * tf.val(1.0f);  // mapped to Constant.scalarOf(scope, float);
+ * tf.val(new float[] {1.0f, 2.0f});  // mapped to Constant.vectorOf(scope, float[])
+ * tf.val(new float[][] { {1.0f, 2.0f}, {3.0f, 4.0f} });  //mapped to Constant.tensorOf(scope, float[][])
+ * tf.array(1.0f, 2.0f, 3.0f);  // mapped to Constant.arrayOf(scope, float...)
+ * }</pre>
  */
 @Operator
-public final class Constant<T extends TType> extends Const<T> {
+public final class Constant<T extends TType> extends PrimitiveOp implements Operand<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -53,11 +73,9 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return an integer constant
-   * @deprecated use {@link Ops#scalar(int)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int data) {
+  @Endpoint(name = "val")
+  public static Constant<TInt32> scalarOf(Scope scope, int data) {
     try (Tensor<TInt32> value = TInt32.scalarOf(data)) {
       return create(scope, value);
     }
@@ -69,14 +87,28 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#vector(int...)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[] data) {
+  @Endpoint(name = "val")
+  public static Constant<TInt32> vectorOf(Scope scope, int[] data) {
     try (Tensor<TInt32> value = TInt32.vectorOf(data)) {
       return create(scope, value);
     }
+  }
+
+  /**
+   * Creates a constant of {@code int} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a float constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TInt32> arrayOf(Scope scope, int... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
@@ -85,12 +117,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[][] data) {
-    return create(scope, data, TInt32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, int[][] data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -99,12 +132,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[][][] data) {
-    return create(scope, data, TInt32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, int[][][] data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -113,12 +147,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[][][][] data) {
-    return create(scope, data, TInt32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, int[][][][] data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -127,12 +162,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[][][][][] data) {
-    return create(scope, data, TInt32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, int[][][][][] data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -141,12 +177,27 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @return an integer constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, int[][][][][][] data) {
-    return create(scope, data, TInt32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, int[][][][][][] data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code int} elements that is a copy of a given n-dimensional array.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code int} elements.
+   * @return an integer constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, IntNdArray data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -162,7 +213,7 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param data a buffer containing the tensor data.
    * @return an integer constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
+   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
   @Endpoint
   @Deprecated
@@ -178,12 +229,12 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a float constant
-   * @deprecated use {@link Ops#scalar(float)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> scalarOf(Scope scope, float data) {
+    try (Tensor<TFloat32> value = TFloat32.scalarOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -192,12 +243,28 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#vector(float...)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> vectorOf(Scope scope, float[] data) {
+    try (Tensor<TFloat32> value = TFloat32.vectorOf(data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code float} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a float constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TFloat32> arrayOf(Scope scope, float... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
@@ -206,12 +273,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[][] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, float[][] data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -220,12 +288,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[][][] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, float[][][] data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -234,12 +303,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[][][][] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, float[][][][] data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -248,12 +318,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[][][][][] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][] data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -262,12 +333,27 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @return a float constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, float[][][][][][] data) {
-    return create(scope, data, TFloat32.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][][] data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code float} elements that is a copy of a given n-dimensional array.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code float} elements.
+   * @return a float constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, FloatNdArray data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -283,7 +369,7 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param data a buffer containing the tensor data.
    * @return a float constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
+   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
   @Endpoint
   @Deprecated
@@ -299,12 +385,12 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a double constant
-   * @deprecated use {@link Ops#scalar(double)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> scalarOf(Scope scope, double data) {
+    try (Tensor<TFloat64> value = TFloat64.scalarOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -313,12 +399,28 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#vector(double...)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> vectorOf(Scope scope, double[] data) {
+    try (Tensor<TFloat64> value = TFloat64.vectorOf(data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code double} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a double constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TFloat64> arrayOf(Scope scope, double... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
@@ -327,12 +429,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[][] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, double[][] data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -341,12 +444,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[][][] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, double[][][] data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -355,12 +459,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[][][][] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, double[][][][] data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -369,12 +474,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[][][][][] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][] data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -383,12 +489,27 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @return a double constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, double[][][][][][] data) {
-    return create(scope, data, TFloat64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][][] data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code double} elements that is a copy of a given n-dimensional array.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code double} elements.
+   * @return a double constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TFloat64> tensorOf(Scope scope, DoubleNdArray data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -404,7 +525,7 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param data a buffer containing the tensor data.
    * @return a double constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
+   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
   @Deprecated
@@ -420,12 +541,12 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a long constant
-   * @deprecated use {@link Ops#scalar(long)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> scalarOf(Scope scope, long data) {
+    try (Tensor<TInt64> value = TInt64.scalarOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -434,12 +555,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#vector(long...)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> vectorOf(Scope scope, long[] data) {
+    try (Tensor<TInt64> value = TInt64.vectorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -448,12 +570,28 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[][] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, long[][] data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code long} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a long constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TInt64> arrayOf(Scope scope, long... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
@@ -462,12 +600,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[][][] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, long[][][] data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -476,12 +615,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[][][][] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, long[][][][] data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -490,12 +630,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[][][][][] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, long[][][][][] data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -504,12 +645,27 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @return a long constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[][][][][][] data) {
-    return create(scope, data, TInt64.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, long[][][][][][] data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code long} elements that is a copy of a given n-dimensional array.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code long} elements.
+   * @return a long constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, LongNdArray data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -525,7 +681,7 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param data a buffer containing the tensor data.
    * @return a long constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
+   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
   @Endpoint
   @Deprecated
@@ -541,12 +697,12 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data The value to put into the new constant.
    * @return a boolean constant
-   * @deprecated use {@link Ops#scalar(boolean)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> scalarOf(Scope scope, boolean data) {
+    try (Tensor<TBool> value = TBool.scalarOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -555,12 +711,28 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#vector(boolean...)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[] data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> vectorOf(Scope scope, boolean[] data) {
+    try (Tensor<TBool> value = TBool.vectorOf(data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code boolean} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a boolean constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TBool> arrayOf(Scope scope, boolean... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
@@ -569,12 +741,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[][] data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, boolean[][] data) {
+    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -583,12 +756,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[][][] data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, boolean[][][] data) {
+    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -597,12 +771,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[][][][] data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, boolean[][][][] data) {
+    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -611,12 +786,13 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[][][][][] data) {
-    return create(scope, data, TBool.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][] data) {
+    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -625,127 +801,160 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param scope is a scope used to add the underlying operation.
    * @param data An array containing the values to put into the new constant. The dimensions of the
    *     new constant will match those of the array.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TBool>)} instead
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TBool> create(Scope scope, boolean[][][][][][] data) {
-    return create(scope, data, TBool.DTYPE);
-  }
-
-  /**
-   * Creates a {@code String} constant using the default, UTF-8 encoding.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param data The string to put into the new constant.
-   * @return a string constant
-   * @deprecated use {@link Ops#scalar(String)} instead
-   */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, String data) {
-    return create(scope, data, UTF_8);
-  }
-
-  /**
-   * Creates a {@code String} constant using a specified encoding.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param charset The encoding from String to bytes.
-   * @param data The string to put into the new constant.
-   * @return a string constant
-   * @deprecated use {@link Ops#scalar(Charset, String)} instead
-   */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, String data, Charset charset) {
-    try (Tensor<TString> value = Tensor.create(data.getBytes(charset), TString.DTYPE)) {
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][][] data) {
+    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(t, data))) {
       return create(scope, value);
     }
   }
 
   /**
-   * Creates a constant containing a single {@code String} element, represented as an array of {@code byte}s.
+   * Creates a constant of {@code boolean} elements that is a copy of a given n-dimensional array.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data an n-dimensional array of {@code boolean} elements.
+   * @return a boolean constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, BooleanNdArray data) {
+    try (Tensor<TBool> value = TBool.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
-   * Creates a rank-1 constant of {@code String} elements, each represented as an array of {@code byte}s.
+   * Creates a constant containing a single {@code byte} element.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data The value to put into the new constant.
+   * @return a byte constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[][] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TUint8> scalarOf(Scope scope, byte data) {
+    try (Tensor<TUint8> value = TUint8.scalarOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
-   * Creates a rank-2 constant of {@code String} elements, each represented as an array of {@code byte}s.
+   * Creates a rank-1 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[][][] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TUint8> vectorOf(Scope scope, byte[] data) {
+    try (Tensor<TUint8> value = TUint8.vectorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
-   * Creates a rank-3 constant of {@code String} elements, each represented as an array of {@code byte}s.
+   * Creates a constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data An array containing the values to put into the new constant.
+   * @return a byte constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[][][][] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "array")
+  public static Constant<TUint8> arrayOf(Scope scope, byte... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
   }
 
   /**
-   * Creates a rank-4 constant of {@code String} elements, each represented as an array of {@code byte}s.
+   * Creates a rank-2 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[][][][][] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, byte[][] data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data))) {
+      return create(scope, value);
+    }
   }
 
   /**
-   * Creates a rank-5 constant of {@code String} elements, each represented as an array of {@code byte}s.
+   * Creates a rank-3 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
-   * @deprecated use {@link Ops#constant(Tensor) Ops.constant(Tensor&lt;TString>)} instead
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TString> create(Scope scope, byte[][][][][][] data) {
-    return create(scope, data, TString.DTYPE);
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, byte[][][] data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-4 constant of {@code byte} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, byte[][][][] data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-5 constant of {@code byte} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][] data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-6 constant of {@code byte} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *     new constant will match those of the array.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][][] data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code byte} elements that is a copy of a given n-dimensional array.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code byte} elements.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, ByteNdArray data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(data)) {
+      return create(scope, value);
+    }
   }
 
   /**
@@ -763,12 +972,209 @@ public final class Constant<T extends TType> extends Const<T> {
    * @return a constant of type `type`
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *     buffer
-   * @deprecated use {@link Ops#constant(Tensor)} instead
+   * @deprecated use {@link Ops#val(Tensor)} instead
    */
   @Endpoint
   @Deprecated
   public static <T extends TType> Constant<T> create(Scope scope, DataType<T> type, long[] shape, ByteBuffer data) {
     try (Tensor<T> value = Tensor.create(type, shape, data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a {@code String} constant using the default, UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data The string to put into the new constant.
+   * @return a string constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> scalarOf(Scope scope, String data) {
+    try (Tensor<TString> value = TString.scalarOf(data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a {@code String} constant using a specified encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param charset The encoding from String to bytes.
+   * @param data The string to put into the new constant.
+   * @return a string constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> scalarOf(Scope scope, Charset charset, String data) {
+    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-1 constant of {@code String} elements.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> vectorOf(Scope scope, String[] data) {
+    NdArray<String> src = NdArrays.vectorOfObjects(data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code String} elements, using the given charset.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param charset charset for encoding/decoding strings bytes.
+   * @param data An array containing the values to put into the new constant. String elements are
+   *     sequences of bytes from the last array dimension.
+   * @return the {@code String} constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> vectorOf(Scope scope, Charset charset, String[] data) {
+    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.vectorOfObjects(data))) {
+      return Constant.create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code String} elements, using the default UTF-8 charset.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return the {@code String} constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TString> arrayOf(Scope scope, String... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, data);
+  }
+
+  /**
+   * Creates a constant of {@code String} elements, using the given charset.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param charset charset for encoding/decoding strings bytes.
+   * @param data An array containing the values to put into the new constant. String elements are
+   *     sequences of bytes from the last array dimension.
+   * @return the {@code String} constant
+   */
+  @Endpoint(name = "array")
+  public static Constant<TString> arrayOf(Scope scope, Charset charset, String... data) {
+    if (data == null) {
+      throw new IllegalArgumentException("data cannot be null");
+    }
+    return vectorOf(scope, charset, data);
+  }
+
+  /**
+   * Creates a rank-2 constant of {@code String} elements, using default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> tensorOf(Scope scope, String[][] data) {
+    NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
+    StdArrays.copyTo(src, data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-3 constant of {@code String} elements, using default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> tensorOf(Scope scope, String[][][] data) {
+    NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
+    StdArrays.copyTo(src, data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-4 constant of {@code String} elements, using default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> tensorOf(Scope scope, String[][][][] data) {
+    NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
+    StdArrays.copyTo(src, data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-5 constant of {@code String} elements, using default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> tensorOf(Scope scope, String[][][][][] data) {
+    NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
+    StdArrays.copyTo(src, data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a rank-6 constant of {@code String} elements, using default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data An array containing the values to put into the new constant.
+   * @return a {@link TString} constant matrix
+   */
+  public static Constant<TString> tensorOf(Scope scope, String[][][][][][] data) {
+    NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
+    StdArrays.copyTo(src, data);
+    try (Tensor<TString> value = TString.tensorOf(src)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
+   * using the default UTF-8 encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param data an n-dimensional array of {@code String} elements.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> tensorOf(Scope scope, NdArray<String> data) {
+    try (Tensor<TString> value = TString.tensorOf(data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
+   * using the given encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param charset charset used to encode/decode string bytes.
+   * @param data an n-dimensional array of {@code String} elements.
+   * @return a byte constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> tensorOf(Scope scope, Charset charset, NdArray<String> data) {
+    try (Tensor<TString> value = TString.tensorOf(charset, data)) {
       return create(scope, value);
     }
   }
@@ -788,7 +1194,7 @@ public final class Constant<T extends TType> extends Const<T> {
    * @param object a Java object representing the constant.
    * @return a constant of type `type`
    * @see org.tensorflow.Tensor#create(Object) Tensor.create
-   * @deprecated use {@link Ops#constant(Tensor)} instead
+   * @deprecated use {@link Ops#val(Tensor)} instead
    */
   @Endpoint
   @Deprecated
@@ -799,18 +1205,45 @@ public final class Constant<T extends TType> extends Const<T> {
   }
 
   /**
+   * Creates a rank-1 constant of {@code long} elements representing the size of each dimensions of
+   * the given shape.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param shape a shape
+   * @return a long constant
+   */
+  @Endpoint(name = "val")
+  public static Constant<TInt64> create(Scope scope, Shape shape) {
+    return vectorOf(scope, shape.asArray());
+  }
+
+  /**
    * Create a constant from a Tensor.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  @Endpoint
+  @Endpoint(name = "val")
   public static <T extends TType> Constant<T> create(Scope scope, Tensor<T> tensor) {
-    return new Constant<>(buildConstOp(scope, tensor));
+    return new Constant<>(
+        scope
+            .env()
+            .opBuilder("Const", scope.makeOpName("Const"))
+            .setAttr("value", tensor)
+            .setAttr("dtype", tensor.dataType())
+            .build());
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 
   private Constant(Operation operation) {
     super(operation);
+    output = operation.output(0);
   }
+
+  private final Output<T> output;
 }

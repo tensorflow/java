@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * Example of usage:
  * <pre>{@code
  * Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
- * Scalar<TFloat32> alpha = ops.scalar(1.0f);
+ * Constant<TFloat32> alpha = tf.val(1.0f);
  * tf.train.applyGradientDescent(w, alpha, gradients.<Float>dy(0));
  * tf.train.applyGradientDescent(b, alpha, gradients.<Float>dy(1));
  * }</pre>

@@ -44,7 +44,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt32> op = Zeros.create(scope, Vector.create(scope, shape), TInt32.DTYPE);
+      Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
         int[][] actual = result.expect(TInt32.DTYPE).copyTo(new int[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
@@ -62,7 +62,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> op = Zeros.create(scope, Vector.create(scope, shape), TFloat32.DTYPE);
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
         float[][] actual = result.expect(TFloat32.DTYPE).copyTo(new float[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
@@ -80,7 +80,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat64> op = Zeros.create(scope, Vector.create(scope, shape), TFloat64.DTYPE);
+      Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
         double[][] actual = result.expect(TFloat64.DTYPE).copyTo(new double[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
@@ -98,7 +98,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt64> op = Zeros.create(scope, Vector.create(scope, shape), TInt64.DTYPE);
+      Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
         long[][] actual = result.expect(TInt64.DTYPE).copyTo(new long[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
@@ -116,7 +116,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TBool> op = Zeros.create(scope, Vector.create(scope, shape), TBool.DTYPE);
+      Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
         boolean[][] actual = result.expect(TBool.DTYPE).copyTo(new boolean[(int)shape[0]][(int)shape[1]]);
         for (int i = 0; i < actual.length; ++i) {
@@ -134,7 +134,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TUint8> op = Zeros.create(scope, Vector.create(scope, shape), TUint8.DTYPE);
+      Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.DTYPE);
       try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
         byte[][] actual = result.expect(TUint8.DTYPE).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
         result.copyTo(actual);
@@ -153,7 +153,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros.create(scope, Vector.create(scope, shape), TString.DTYPE);
+      Zeros.create(scope, Constant.vectorOf(scope, shape), TString.DTYPE);
     }
   }
   
@@ -163,7 +163,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Vector.create(scope, shape), TFloat32.DTYPE);
+      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.DTYPE);
       List<Tensor<?>> results = sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }
