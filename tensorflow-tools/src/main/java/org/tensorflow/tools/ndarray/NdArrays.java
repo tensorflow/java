@@ -124,7 +124,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return wrap(DataBuffers.of(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -137,19 +137,19 @@ public final class NdArrays {
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
   public static LongNdArray ofLongs(Shape shape) {
-    return wrap(DataBuffers.ofLongs(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofLongs(shape.size()));
   }
 
   /**
    * Wraps a buffer in a long N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new long N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static LongNdArray wrap(LongDataBuffer buffer, Shape shape) {
+  public static LongNdArray wrap(Shape shape, LongDataBuffer buffer) {
     return LongDenseNdArray.create(buffer, shape);
   }
 

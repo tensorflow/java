@@ -63,7 +63,7 @@ public final class DataType<T extends TType> {
 
   @Override
   public String toString() {
-    return name + "(" + nativeCode + ")";
+    return name + " (" + nativeCode + ")";
   }
 
   /**
@@ -80,7 +80,7 @@ public final class DataType<T extends TType> {
    * @return data structure of elements of this type
    */
   T map(Tensor<T> tensor) {
-    return tensorMapper.apply(tensor.getNativeHandle(), tensor.shape());
+    return tensorMapper.apply(tensor.nativeHandle(), tensor.shape());
   }
 
   private final int nativeCode;

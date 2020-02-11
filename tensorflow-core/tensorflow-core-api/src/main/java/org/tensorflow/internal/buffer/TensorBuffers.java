@@ -46,11 +46,22 @@ public final class TensorBuffers {
    * @return a byte buffer
    */
   public static ByteDataBuffer toBytes(TF_Tensor nativeTensor) {
+    return toBytes(nativeTensor, false);
+  }
+
+  /**
+   * Maps tensor memory as a buffer of bytes.
+   *
+   * @param nativeTensor native reference to the tensor
+   * @param readOnly true to return a read-only buffer
+   * @return a byte buffer
+   */
+  public static ByteDataBuffer toBytes(TF_Tensor nativeTensor, boolean readOnly) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
-      return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory);
+      return TensorRawDataBufferFactory.mapTensorToBytes(tensorMemory, readOnly);
     }
-    return DataBuffers.of(tensorMemory.asByteBuffer());
+    return DataBuffers.of(tensorMemory.asByteBuffer().asReadOnlyBuffer());
   }
 
   /**

@@ -17,6 +17,7 @@ package org.tensorflow.op.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import org.junit.Test;
@@ -36,8 +37,7 @@ import org.tensorflow.types.TUint8;
 
 @RunWith(JUnit4.class)
 public class ZerosTest {
-  private static final float EPSILON = 1e-7f;
-  
+
   @Test
   public void createIntZeros() {
     try (Graph g = new Graph();
@@ -45,13 +45,8 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        int[][] actual = result.expect(TInt32.DTYPE).copyTo(new int[(int)shape[0]][(int)shape[1]]);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertEquals(0, actual[i][j]);
-          }
-        }
+      try (Tensor<TInt32> result = sess.runner().fetch(op).run().get(0).expect(TInt32.DTYPE)) {
+        result.data().scalars().forEach(s -> assertEquals(0, s.getInt()));
       }
     }
   }
@@ -63,13 +58,8 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        float[][] actual = result.expect(TFloat32.DTYPE).copyTo(new float[(int)shape[0]][(int)shape[1]]);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertEquals(0.0f, actual[i][j], EPSILON);
-          }
-        }
+      try (Tensor<TFloat32> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
+        result.data().scalars().forEach(s -> assertEquals(0.0f, s.getFloat(), 0));
       }
     }
   }
@@ -81,13 +71,8 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        double[][] actual = result.expect(TFloat64.DTYPE).copyTo(new double[(int)shape[0]][(int)shape[1]]);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertEquals(0.0, actual[i][j], EPSILON);
-          }
-        }
+      try (Tensor<TFloat64> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat64.DTYPE)) {
+        result.data().scalars().forEach(s -> assertEquals(0.0f, s.getDouble(), 0));
       }
     }
   }
@@ -99,13 +84,8 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        long[][] actual = result.expect(TInt64.DTYPE).copyTo(new long[(int)shape[0]][(int)shape[1]]);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertEquals(0L, actual[i][j]);
-          }
-        }
+      try (Tensor<TInt64> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+        result.data().scalars().forEach(s -> assertEquals(0L, s.getLong()));
       }
     }
   }
@@ -117,15 +97,10 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        boolean[][] actual = result.expect(TBool.DTYPE).copyTo(new boolean[(int)shape[0]][(int)shape[1]]);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertFalse(actual[i][j]);
-          }
-        }
+      try (Tensor<TBool> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TBool.DTYPE)) {
+        result.data().scalars().forEach(s -> assertFalse(s.getBoolean()));
       }
-    }
+   }
   }
 
   @Test
@@ -135,28 +110,25 @@ public class ZerosTest {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
       Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.DTYPE);
-      try (Tensor<?> result = sess.runner().fetch(op.asOutput()).run().get(0)) {
-        byte[][] actual = result.expect(TUint8.DTYPE).copyTo(new byte[(int)shape[0]][(int)shape[1]]);
-        result.copyTo(actual);
-        for (int i = 0; i < actual.length; ++i) {
-          for (int j = 0; j < actual[i].length; ++j) {
-            assertEquals(0, actual[i][j]);
-          }
-        }
+      try (Tensor<TUint8> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TUint8.DTYPE)) {
+        result.data().scalars().forEach(s -> assertEquals(0, s.getByte()));
       }
     }
   }
-  
-  @Test(expected = IllegalArgumentException.class)
-  public void cannotCreateStringZeros() {
+
+  @Test
+  public void createStringZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros.create(scope, Constant.vectorOf(scope, shape), TString.DTYPE);
+      Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.DTYPE);
+      try (Tensor<TString> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TString.DTYPE)) {
+        result.data().scalars().forEach(s -> assertTrue(s.getObject().isEmpty()));
+      }
     }
   }
-  
+
   @Test
   public void operationsComposingZerosAreCorrectlyNamed() {
     try (Graph g = new Graph();

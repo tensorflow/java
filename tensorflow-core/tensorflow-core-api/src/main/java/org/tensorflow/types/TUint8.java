@@ -84,6 +84,17 @@ public interface TUint8 extends ByteNdArray, TNumber {
   }
 
   /**
+   * Allocates a new tensor of the given shape, initialized with the provided data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param data buffer of bytes to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TUint8> tensorOf(Shape shape, ByteDataBuffer data) {
+    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  }
+
+  /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
    * @param shape shape of the tensor to allocate

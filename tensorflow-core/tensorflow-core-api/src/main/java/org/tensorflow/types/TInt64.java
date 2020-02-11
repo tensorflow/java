@@ -84,6 +84,17 @@ public interface TInt64 extends LongNdArray, TNumber {
   }
 
   /**
+   * Allocates a new tensor of the given shape, initialized with the provided data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param data buffer of longs to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TInt64> tensorOf(Shape shape, LongDataBuffer data) {
+    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  }
+
+  /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
    * @param shape shape of the tensor to allocate

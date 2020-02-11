@@ -39,7 +39,7 @@ public final class GeneratedOperationsTest {
       Ops ops = Ops.create(g);
       Operand<TInt32> x = ops.math.add(ops.val(1), ops.val(2));
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(3, result.intValue());
+        assertEquals(3, result.data().getInt());
       }
     }
   }
@@ -55,7 +55,7 @@ public final class GeneratedOperationsTest {
       inputs.add(ops.val(3));
       Operand<TInt32> x = ops.math.addN(inputs);
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(6, result.intValue());
+        assertEquals(6, result.data().getInt());
       }
     }
   }
@@ -80,7 +80,7 @@ public final class GeneratedOperationsTest {
           ops.withControlDependencies(controls).math.add(variable, ops.val(0));
       sess.runner().addTarget(initVariable).run();
       try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(3, result.intValue());
+        assertEquals(3, result.data().getInt());
       }
     }
   }

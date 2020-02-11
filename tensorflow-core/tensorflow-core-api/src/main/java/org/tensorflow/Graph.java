@@ -19,8 +19,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWit
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;

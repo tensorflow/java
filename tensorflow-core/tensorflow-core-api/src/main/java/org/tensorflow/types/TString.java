@@ -116,6 +116,47 @@ public interface TString extends NdArray<String>, TType {
   }
 
   /**
+   * Allocates a new tensor with the given shape and data.
+   *
+   * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
+   * strings are encoded into bytes using the UTF-8 charset.
+   *
+   * @param shape shape of the tensor
+   * @param data buffer of strings to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TString> tensorOf(Shape shape, DataBuffer<String> data) {
+    return tensorOf(NdArrays.wrap(shape, data));
+  }
+
+  /**
+   * Allocates a new tensor with the given shape and data.
+   *
+   * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
+   * strings are encoded into bytes using the charset passed in parameter.
+   *
+   * <p>If charset is different than default UTF-8, then it must also be provided explicitly
+   * when reading data from the tensor, using {@link #using(Charset)}:</p>
+   *
+   * <pre>{@code
+   * // Given `originalStrings` an initialized buffer of strings
+   * Tensor<TString> tensor =
+   *    TString.tensorOf(Charsets.UTF_16, Shape.of(originalString.size()), originalStrings);
+   * ...
+   * TString tensorStrings = tensor.data().using(Charsets.UTF_16);
+   * assertEquals(originalStrings.getObject(0), tensorStrings.getObject(0));
+   * }</pre>
+   *
+   * @param charset charset to use for encoding the strings into bytes
+   * @param shape shape of the tensor
+   * @param data buffer of strings to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TString> tensorOf(Charset charset, Shape shape, DataBuffer<String> data) {
+    return tensorOf(charset, NdArrays.wrap(shape, data));
+  }
+
+  /**
    * Allocates a new tensor which is a copy of a given array of raw bytes.
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
@@ -132,6 +173,25 @@ public interface TString extends NdArray<String>, TType {
    */
   static Tensor<TString> tensorOfBytes(NdArray<byte[]> src) {
     return TStringImpl.createTensor(src, Function.identity());
+  }
+
+  /**
+   * Allocates a new tensor with the given shape and raw bytes.
+   *
+   * <p>The data will be copied from the provided buffer to the tensor after it has been allocated.
+   *
+   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by
+   * invoking {@link #asBytes()} on the returned data:</p>
+   *
+   * <pre>{@code
+   * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
+   * }</pre>
+   *
+   * @param data the source array giving the shape and data to the new tensor
+   * @return the new tensor
+   */
+  static Tensor<TString> tensorOfBytes(Shape shape, DataBuffer<byte[]> data) {
+    return tensorOfBytes(NdArrays.wrap(shape, data));
   }
 
   /**

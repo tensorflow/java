@@ -18,16 +18,12 @@ package org.tensorflow.op;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.util.Arrays;
-import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.tensorflow.Graph;
-import org.tensorflow.Operation;
 import org.tensorflow.Output;
-import org.tensorflow.TestUtil;
-import org.tensorflow.types.TInt32;
+import org.tensorflow.op.core.Split;
 
 /** Unit tests for {@link org.tensorflow.op.Operands}. */
 @RunWith(JUnit4.class)
@@ -36,12 +32,12 @@ public class OperandsTest {
   @Test
   public void createOutputArrayFromOperandList() {
     try (Graph g = new Graph()) {
-      Operation split = TestUtil.split(g, "split", new int[] {0, 1, 2}, 3);
-      List<Output<TInt32>> list = Arrays.asList(split.output(0), split.output(2));
-      Output<?>[] array = Operands.asOutputs(list);
-      assertEquals(list.size(), array.length);
-      assertSame(array[0], list.get(0));
-      assertSame(array[1], list.get(1));
+      Ops tf = Ops.create(g);
+      Split<?> split = tf.split(tf.val(0), tf.array(0, 1, 2), 3L);
+      Output<?>[] array = Operands.asOutputs(split.output());
+      assertEquals(split.output().size(), array.length);
+      assertSame(array[0], split.output().get(0));
+      assertSame(array[1], split.output().get(1));
     }
   }
 }

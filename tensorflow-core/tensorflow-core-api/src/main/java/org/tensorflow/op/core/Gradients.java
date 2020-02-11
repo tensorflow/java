@@ -15,7 +15,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;

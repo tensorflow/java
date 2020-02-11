@@ -19,24 +19,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.Tensors;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
-import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
@@ -164,7 +154,7 @@ public class ScopeTest {
           Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
 
       // Create a composite op with a customized name
-      Variance<TInt32> var1 = Variance.create(s.withName("example"), data, TInt32.DTYPE);
+      Variance<TInt32> var1 = Variance.create(s.withName("example"), data);
       assertEquals("example/variance", var1.output().op().name());
 
       // Confirm internally added ops have the right names.
@@ -173,7 +163,7 @@ public class ScopeTest {
       // assertNotNull(g.operation("example/zero"));
 
       // Same composite op with a default name
-      Variance<TInt32> var2 = Variance.create(s, data, TInt32.DTYPE);
+      Variance<TInt32> var2 = Variance.create(s, data);
       assertEquals("variance/variance", var2.output().op().name());
 
       // Confirm internally added ops have the right names.
@@ -184,9 +174,9 @@ public class ScopeTest {
       // Verify correct results as well.
       Tensor<TInt32> result =
           sess.runner().fetch(var1.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.intValue());
+      assertEquals(21704, result.data().getInt());
       result = sess.runner().fetch(var2.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.intValue());
+      assertEquals(21704, result.data().getInt());
     }
   }
 
@@ -195,11 +185,11 @@ public class ScopeTest {
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
-      return create(s, Tensors.create(v));
+      return create(s, TInt32.scalarOf(v));
     }
 
     static Const<TInt32> create(Scope s, int[] v) {
-      return create(s, Tensors.create(v));
+      return create(s, TInt32.vectorOf(v));
     }
 
     static <T extends TType> Const<T> create(Scope s, Tensor<T> value) {
@@ -210,18 +200,6 @@ public class ScopeTest {
               .setAttr("value", value)
               .build()
               .output(0));
-    }
-
-    static <T extends TType> Const<T> create(Scope s, Object v, DataType<T> type) {
-      try (Tensor<T> value = Tensor.create(v, type)) {
-        return new Const<>(
-            s.env()
-                .opBuilder("Const", s.makeOpName("Const"))
-                .setAttr("dtype", value.dataType())
-                .setAttr("value", value)
-                .build()
-                .output(0));
-      }
     }
 
     Const(Output<T> o) {
@@ -277,35 +255,13 @@ public class ScopeTest {
     }
   }
 
-  /**
-   * Returns the zero value of type described by {@code c}, or null if the type (e.g., string) is
-   * not numeric and therefore has no zero value.
-   *
-   * @param type The TensorFlow type of interest.
-   */
-  public static Object zeroValue(DataType<?> type) {
-    return zeros.get(type);
-  }
-
-  private static final Map<DataType<?>, Object> zeros = new HashMap<>();
-
-  static {
-    zeros.put(TFloat32.DTYPE, 0.0f);
-    zeros.put(TFloat64.DTYPE, 0.0);
-    zeros.put(TInt32.DTYPE, 0);
-    zeros.put(TUint8.DTYPE, (byte) 0);
-    zeros.put(TInt64.DTYPE, 0L);
-    zeros.put(TBool.DTYPE, false);
-    zeros.put(TString.DTYPE, null); // no zero value
-  }
-
   private static final class Variance<T extends TType> {
     private final Output<T> output;
 
-    static <T extends TType> Variance<T> create(Scope base, Output<T> x, DataType<T> type) {
+    static Variance<TInt32> create(Scope base, Output<TInt32> x) {
       Scope s = base.withSubScope("variance");
-      Output<T> zero = Const.create(base, zeroValue(type), type).output();
-      Output<T> sqdiff =
+      Output<TInt32> zero = Const.create(base, TInt32.scalarOf(0)).output();
+      Output<TInt32> sqdiff =
           SquaredDifference.create(
                   s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
               .output();

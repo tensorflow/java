@@ -250,7 +250,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, Tensor<?> value) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrTensor(unsafeNativeHandle, name, value.getNativeHandle());
+      setAttrTensor(unsafeNativeHandle, name, value.nativeHandle());
     } finally {
       r.close();
     }
@@ -262,7 +262,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
     TF_Tensor[] handles = new TF_Tensor[value.length];
     int idx = 0;
     for (Tensor<?> t : value) {
-      handles[idx++] = t.getNativeHandle();
+      handles[idx++] = t.nativeHandle();
     }
     Graph.Reference r = graph.ref();
     try {
