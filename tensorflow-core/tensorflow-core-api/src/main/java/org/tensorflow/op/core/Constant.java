@@ -15,23 +15,24 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
 import java.nio.charset.Charset;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.buffer.BooleanDataBuffer;
+import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.IntDataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.ByteNdArray;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
@@ -203,22 +204,15 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   /**
    * Create a {@link TInt32} constant with data from the given buffer.
    *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
    * @param scope is a scope used to add the underlying operation.
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return an integer constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TInt32>)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt32> create(Scope scope, long[] shape, IntBuffer data) {
-    try (Tensor<TInt32> value = Tensor.create(shape, data)) {
+  @Endpoint(name = "val")
+  public static Constant<TInt32> tensorOf(Scope scope, Shape shape, IntDataBuffer data) {
+    try (Tensor<TInt32> value = TInt32.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -359,22 +353,15 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   /**
    * Create a {@link TFloat32} constant with data from the given buffer.
    *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
    * @param scope is a scope used to add the underlying operation.
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a float constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TFloat32>)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TFloat32> create(Scope scope, long[] shape, FloatBuffer data) {
-    try (Tensor<TFloat32> value = Tensor.create(shape, data)) {
+  @Endpoint(name = "val")
+  public static Constant<TFloat32> tensorOf(Scope scope, Shape shape, FloatDataBuffer data) {
+    try (Tensor<TFloat32> value = TFloat32.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -515,22 +502,15 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   /**
    * Create a {@link TFloat64} constant with data from the given buffer.
    *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
    * @param scope is a scope used to add the underlying operation.
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a double constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TFloat64>)} instead
    */
   @Endpoint
-  @Deprecated
-  public static Constant<TFloat64> create(Scope scope, long[] shape, DoubleBuffer data) {
-    try (Tensor<TFloat64> value = Tensor.create(shape, data)) {
+  public static Constant<TFloat64> tensorOf(Scope scope, Shape shape, DoubleDataBuffer data) {
+    try (Tensor<TFloat64> value = TFloat64.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -671,22 +651,15 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   /**
    * Create a {@link TInt64} constant with data from the given buffer.
    *
-   * <p>Creates a constant with the given shape by copying elements from the buffer (starting from
-   * its current position) into the tensor. For example, if {@code shape = {2,3} } (which represents
-   * a 2x3 matrix) then the buffer must have 6 elements remaining, which will be consumed by this
-   * method.
-   *
    * @param scope is a scope used to add the underlying operation.
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a long constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   * @deprecated use {@link Ops#val(Tensor) Ops.constant(Tensor&lt;TInt64>)} instead
    */
-  @Endpoint
-  @Deprecated
-  public static Constant<TInt64> create(Scope scope, long[] shape, LongBuffer data) {
-    try (Tensor<TInt64> value = Tensor.create(shape, data)) {
+  @Endpoint(name = "val")
+  public static Constant<TInt64> tensorOf(Scope scope, Shape shape, LongDataBuffer data) {
+    try (Tensor<TInt64> value = TInt64.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -825,6 +798,22 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   }
 
   /**
+   * Create a {@link TBool} constant with data from the given buffer.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return an boolean constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   */
+  @Endpoint(name = "val")
+  public static Constant<TBool> tensorOf(Scope scope, Shape shape, BooleanDataBuffer data) {
+    try (Tensor<TBool> value = TBool.tensorOf(shape, data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
    * Creates a constant containing a single {@code byte} element.
    *
    * @param scope is a scope used to add the underlying operation.
@@ -958,12 +947,23 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   }
 
   /**
-   * Create a constant with data from the given buffer.
+   * Create a {@link TUint8} constant with data from the given buffer.
    *
-   * <p>Creates a Constant with the provided shape of any type where the constant data has been
-   * encoded into {@code data} as per the specification of the TensorFlow <a
-   * href="https://www.tensorflow.org/code/tensorflow/c/c_api.h">C
-   * API</a>.
+   * @param scope is a scope used to add the underlying operation.
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a byte constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   */
+  @Endpoint(name = "val")
+  public static Constant<TUint8> tensorOf(Scope scope, Shape shape, ByteDataBuffer data) {
+    try (Tensor<TUint8> value = TUint8.tensorOf(shape, data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Create a constant with data from the given buffer.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param type the tensor datatype.
@@ -972,12 +972,11 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a constant of type `type`
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *     buffer
-   * @deprecated use {@link Ops#val(Tensor)} instead
    */
   @Endpoint
-  @Deprecated
-  public static <T extends TType> Constant<T> create(Scope scope, DataType<T> type, long[] shape, ByteBuffer data) {
-    try (Tensor<T> value = Tensor.create(type, shape, data)) {
+  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+      ByteDataBuffer data) {
+    try (Tensor<T> value = Tensor.of(type, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1154,7 +1153,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    *
    * @param scope is a scope used to add the underlying operation.
    * @param data an n-dimensional array of {@code String} elements.
-   * @return a byte constant
+   * @return a string constant
    */
   @Endpoint(name = "val")
   public static Constant<TString> tensorOf(Scope scope, NdArray<String> data) {
@@ -1170,7 +1169,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @param scope is a scope used to add the underlying operation.
    * @param charset charset used to encode/decode string bytes.
    * @param data an n-dimensional array of {@code String} elements.
-   * @return a byte constant
+   * @return a string constant
    */
   @Endpoint(name = "val")
   public static Constant<TString> tensorOf(Scope scope, Charset charset, NdArray<String> data) {
@@ -1180,26 +1179,36 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
   }
 
   /**
-   * Create a constant from a Java object.
-   *
-   * <p>The argument {@code object} is first converted into a Tensor using {@link
-   * org.tensorflow.Tensor#create(Object)}, so only Objects supported by this method must be
-   * provided. For example:
-   *
-   * <pre>{@code
-   * Constant.create(scope, new int[]{{1, 2}, {3, 4}}, TInt32.DTYPE); // returns a 2x2 integer matrix
-   * }</pre>
+   * Create a {@link TString} constant with data from the given buffer, using the default UTF-8
+   * encoding.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param object a Java object representing the constant.
-   * @return a constant of type `type`
-   * @see org.tensorflow.Tensor#create(Object) Tensor.create
-   * @deprecated use {@link Ops#val(Tensor)} instead
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a string constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  @Endpoint
-  @Deprecated
-  public static <T extends TType> Constant<T> create(Scope scope, Object object, DataType<T> type) {
-    try (Tensor<T> value = Tensor.create(object, type)) {
+  @Endpoint(name = "val")
+  public static Constant<TString> tensorOf(Scope scope, Shape shape, DataBuffer<String> data) {
+    try (Tensor<TString> value = TString.tensorOf(shape, data)) {
+      return create(scope, value);
+    }
+  }
+
+  /**
+   * Create a {@link TString} constant with data from the given buffer, using the given encoding.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param charset charset used to encode/decode string bytes.
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a string constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   */
+  @Endpoint(name = "val")
+  public static Constant<TString> tensorOf(Scope scope, Charset charset, Shape shape,
+      DataBuffer<String> data) {
+    try (Tensor<TString> value = TString.tensorOf(charset, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1213,7 +1222,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a long constant
    */
   @Endpoint(name = "val")
-  public static Constant<TInt64> create(Scope scope, Shape shape) {
+  public static Constant<TInt64> tensorOf(Scope scope, Shape shape) {
     return vectorOf(scope, shape.asArray());
   }
 

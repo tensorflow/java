@@ -29,8 +29,8 @@ import org.tensorflow.tools.buffer.impl.raw.RawDataBufferFactory;
 
 class TensorRawDataBufferFactory extends RawDataBufferFactory {
 
-  static ByteDataBuffer mapTensorToBytes(Pointer tensorMemory) {
-    return mapNativeBytes(tensorMemory.address(), tensorMemory.capacity(), false);
+  static ByteDataBuffer mapTensorToBytes(Pointer tensorMemory, boolean readOnly) {
+    return mapNativeBytes(tensorMemory.address(), tensorMemory.capacity(), readOnly);
   }
 
   static IntDataBuffer mapTensorToInts(Pointer tensorMemory) {

@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperation}. */
@@ -36,11 +37,8 @@ public class GraphOperationTest {
   @Test
   public void outputListLengthFailsOnInvalidName() {
     try (Graph g = new Graph()) {
-      Operation op =
-          g.opBuilder("Add", "Add")
-              .addInput(TestUtil.constant(g, "x", 1))
-              .addInput(TestUtil.constant(g, "y", 2))
-              .build();
+      Ops tf = Ops.create(g);
+      Operation op = tf.math.add(tf.val(1), tf.val(2)).op();
       assertEquals(1, op.outputListLength("z"));
 
       try {
@@ -56,8 +54,9 @@ public class GraphOperationTest {
   public void operationEquality() {
     GraphOperation op1;
     try (Graph g = new Graph()) {
-      op1 = TestUtil.constantOp(g, "op1", 1);
-      GraphOperation op2 = TestUtil.constantOp(g, "op2", 2);
+      Ops tf = Ops.create(g);
+      op1 = (GraphOperation)tf.withName("op1").val(1).op();
+      GraphOperation op2 = (GraphOperation)tf.withName("op2").val(2).op();
       GraphOperation op3 = new GraphOperation(g, op1.getUnsafeNativeHandle());
       GraphOperation op4 = g.operation("op1");
       assertEquals(op1, op1);
@@ -71,7 +70,8 @@ public class GraphOperationTest {
       assertNotEquals(op2, op4);
     }
     try (Graph g = new Graph()) {
-      Operation newOp1 = TestUtil.constant(g, "op1", 1).op();
+      Ops tf = Ops.create(g);
+      Operation newOp1 = tf.withName("op1").val(1).op();
       assertNotEquals(op1, newOp1);
     }
   }
@@ -79,8 +79,9 @@ public class GraphOperationTest {
   @Test
   public void operationCollection() {
     try (Graph g = new Graph()) {
-      GraphOperation op1 = TestUtil.constantOp(g, "op1", 1);
-      GraphOperation op2 = TestUtil.constantOp(g, "op2", 2);
+      Ops tf = Ops.create(g);
+      GraphOperation op1 = (GraphOperation)tf.withName("op1").val(1).op();
+      GraphOperation op2 = (GraphOperation)tf.withName("op2").val(2).op();
       GraphOperation op3 = new GraphOperation(g, op1.getUnsafeNativeHandle());
       GraphOperation op4 = g.operation("op1");
       Set<Operation> ops = new HashSet<>();
@@ -96,7 +97,8 @@ public class GraphOperationTest {
   @Test
   public void operationToString() {
     try (Graph g = new Graph()) {
-      Operation op = TestUtil.constant(g, "c", new int[] {1}).op();
+      Ops tf = Ops.create(g);
+      Operation op = tf.withName("c").array(1).op();
       assertNotNull(op.toString());
     }
   }
@@ -104,7 +106,8 @@ public class GraphOperationTest {
   @Test
   public void outputEquality() {
     try (Graph g = new Graph()) {
-      Output<TInt32> output = TestUtil.constant(g, "c", 1);
+      Ops tf = Ops.create(g);
+      Output<TInt32> output = tf.withName("c").val(1).asOutput();
       Output<TInt32> output1 = output.op().output(0);
       Output<TInt32> output2 = g.operation("c").output(0);
       assertEquals(output, output1);
@@ -117,7 +120,8 @@ public class GraphOperationTest {
   @Test
   public void outputCollection() {
     try (Graph g = new Graph()) {
-      Output<TInt32> output = TestUtil.constant(g, "c", 1);
+      Ops tf = Ops.create(g);
+      Output<TInt32> output = tf.withName("c").val(1).asOutput();
       Output<TInt32> output1 = output.op().output(0);
       Output<TInt32> output2 = g.operation("c").output(0);
       Set<Output<TInt32>> ops = new HashSet<>();
@@ -132,32 +136,40 @@ public class GraphOperationTest {
   @Test
   public void outputToString() {
     try (Graph g = new Graph()) {
-      Output<TInt32> output = TestUtil.constant(g, "c", new int[] {1});
+      Ops tf = Ops.create(g);
+      Output<TInt32> output = tf.withName("c").val(1).asOutput();
       assertNotNull(output.toString());
     }
   }
 
   @Test
   public void outputListLength() {
-    assertEquals(1, split(new int[] {0, 1}, 1));
-    assertEquals(2, split(new int[] {0, 1}, 2));
-    assertEquals(3, split(new int[] {0, 1, 2}, 3));
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      assertEquals(1, tf.split(tf.val(0), tf.array(0, 1), 1L).op().outputListLength("output"));
+      assertEquals(2, tf.split(tf.val(0), tf.array(0, 1), 2L).op().outputListLength("output"));
+      assertEquals(3, tf.split(tf.val(0), tf.array(0, 1, 2), 3L).op().outputListLength("output"));
+    }
   }
 
   @Test
   public void inputListLength() {
-    assertEquals(1, splitWithInputList(new int[] {0, 1}, 1, "split_dim"));
-    try {
-      splitWithInputList(new int[] {0, 1}, 2, "inputs");
-    } catch (IllegalArgumentException iae) {
-      // expected
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      assertEquals(1, tf.split(tf.val(0), tf.array(0, 1), 1L).op().inputListLength("split_dim"));
+      try {
+        tf.split(tf.val(0), tf.array(0, 1), 2L).op().inputListLength("inputs");
+      } catch (IllegalArgumentException iae) {
+        // expected
+      }
     }
   }
 
   @Test
   public void outputList() {
     try (Graph g = new Graph()) {
-      Operation split = TestUtil.split(g, "split", new int[] {0, 1, 2}, 3);
+      Ops tf = Ops.create(g);
+      Operation split = tf.split(tf.val(0), tf.array(0, 1, 2), 3L).op();
       Output<?>[] outputs = split.outputList(1, 2);
       assertNotNull(outputs);
       assertEquals(2, outputs.length);
@@ -170,34 +182,13 @@ public class GraphOperationTest {
   @Test
   public void outputTensorNotSupported() {
     try (Graph g = new Graph()) {
-      Operation split = TestUtil.split(g, "split", new int[] {0, 1, 2}, 3);
+      Ops tf = Ops.create(g);
+      Operation split = tf.split(tf.val(0), tf.array(0, 1, 2), 3L).op();
       try {
         split.output(0).tensor();
         fail();
       } catch (IllegalStateException e) {
       }
-    }
-  }
-
-  private static int split(int[] values, int num_split) {
-    try (Graph g = new Graph()) {
-      return g.opBuilder("Split", "Split")
-          .addInput(TestUtil.constant(g, "split_dim", 0))
-          .addInput(TestUtil.constant(g, "values", values))
-          .setAttr("num_split", num_split)
-          .build()
-          .outputListLength("output");
-    }
-  }
-
-  private static int splitWithInputList(int[] values, int num_split, String name) {
-    try (Graph g = new Graph()) {
-      return g.opBuilder("Split", "Split")
-          .addInput(TestUtil.constant(g, "split_dim", 0))
-          .addInput(TestUtil.constant(g, "values", values))
-          .setAttr("num_split", num_split)
-          .build()
-          .inputListLength(name);
     }
   }
 }

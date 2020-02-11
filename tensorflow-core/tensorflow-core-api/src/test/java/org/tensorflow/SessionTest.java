@@ -15,7 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -23,6 +22,12 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Split;
+import org.tensorflow.op.linalg.MatMul;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.NdArrays;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.Session}. */
@@ -33,13 +38,13 @@ public class SessionTest {
   public void runUsingOperationNames() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
-      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}});
-          TestUtil.AutoCloseableList<Tensor<?>> outputs =
-              new TestUtil.AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
+      Ops tf = Ops.create(g);
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      try (Tensor<TInt32> x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
+          AutoCloseableList<Tensor<?>> outputs =
+              new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
         assertEquals(1, outputs.size());
-        final int[][] expected = {{31}};
-        assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
+        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).data().getInt(0, 0));
       }
     }
   }
@@ -48,15 +53,15 @@ public class SessionTest {
   public void runUsingOperationHandles() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
+      Ops tf = Ops.create(g);
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
-      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}});
-          TestUtil.AutoCloseableList<Tensor<?>> outputs =
-              new TestUtil.AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
+      try (Tensor<TInt32> x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
+          AutoCloseableList<Tensor<?>> outputs =
+              new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
         assertEquals(1, outputs.size());
-        final int[][] expected = {{31}};
-        assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
+        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).data().getInt(0, 0));
       }
     }
   }
@@ -65,25 +70,18 @@ public class SessionTest {
   public void runUsingColonSeparatedNames() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      Operation split =
-          g.opBuilder("Split", "Split")
-              .addInput(TestUtil.constant(g, "split_dim", 0))
-              .addInput(TestUtil.constant(g, "value", new int[] {1, 2, 3, 4}))
-              .setAttr("num_split", 2)
-              .build();
-      g.opBuilder("Add", "Add")
-          .addInput(split.output(0))
-          .addInput(split.output(1))
-          .build()
-          .output(0);
+      Ops tf = Ops.create(g);
+      Split<TInt32> split = tf.split(tf.val(0), tf.array(1, 2, 3, 4), 2L);
+      tf.math.add(split.output().get(0), split.output().get(1));
+
       // Fetch using colon separated names.
       try (Tensor<TInt32> fetched =
           s.runner().fetch("Split:1").run().get(0).expect(TInt32.DTYPE)) {
-        final int[] expected = {3, 4};
-        assertArrayEquals(expected, fetched.copyTo(new int[2]));
+        assertEquals(3, fetched.data().getInt(0));
+        assertEquals(4, fetched.data().getInt(1));
       }
       // Feed using colon separated names.
-      try (Tensor<TInt32> fed = Tensors.create(new int[] {4, 3, 2, 1});
+      try (Tensor<TInt32> fed = TInt32.vectorOf(4, 3, 2, 1);
           Tensor<TInt32> fetched =
               s.runner()
                   .feed("Split:0", fed)
@@ -92,8 +90,7 @@ public class SessionTest {
                   .run()
                   .get(0)
                   .expect(TInt32.DTYPE)) {
-        final int[] expected = {8, 6, 4, 2};
-        assertArrayEquals(expected, fetched.copyTo(new int[4]));
+        assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched.data());
       }
     }
   }
@@ -102,8 +99,9 @@ public class SessionTest {
   public void runWithMetadata() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      TestUtil.transpose_A_times_X(g, new int[][] {{2}, {3}});
-      try (Tensor<TInt32> x = Tensors.create(new int[][] {{5}, {7}})) {
+      Ops tf = Ops.create(g);
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      try (Tensor<TInt32> x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
         Session.Run result =
             s.runner()
                 .feed("X", x)
@@ -111,10 +109,9 @@ public class SessionTest {
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        TestUtil.AutoCloseableList<Tensor<?>> outputs = new TestUtil.AutoCloseableList<>(result.outputs);
+        AutoCloseableList<Tensor<?>> outputs = new AutoCloseableList<>(result.outputs);
         assertEquals(1, outputs.size());
-        final int[][] expected = {{31}};
-        assertArrayEquals(expected, outputs.get(0).copyTo(new int[1][1]));
+        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).data().getInt(0, 0));
         // Sanity check on metadata
         // See comments in fullTraceRunOptions() for an explanation about
         // why this check is really silly. Ideally, this would be:
@@ -132,13 +129,14 @@ public class SessionTest {
   public void runMultipleOutputs() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      TestUtil.constant(g, "c1", 2718);
-      TestUtil.constant(g, "c2", 31415);
-      TestUtil.AutoCloseableList<Tensor<?>> outputs =
-          new TestUtil.AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
+      Ops tf = Ops.create(g);
+      tf.withName("c1").val(2718);
+      tf.withName("c2").val(31415);
+      AutoCloseableList<Tensor<?>> outputs =
+          new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
       assertEquals(2, outputs.size());
-      assertEquals(31415, outputs.get(0).intValue());
-      assertEquals(2718, outputs.get(1).intValue());
+      assertEquals(31415, outputs.get(0).expect(TInt32.DTYPE).data().getInt());
+      assertEquals(2718, outputs.get(1).expect(TInt32.DTYPE).data().getInt());
       outputs.close();
     }
   }
@@ -183,7 +181,7 @@ public class SessionTest {
     */
   }
 
-  public static byte[] singleThreadConfigProto() {
+  private static byte[] singleThreadConfigProto() {
     // Ideally this would use the generated Java sources for protocol buffers
     // and end up with something like the snippet below. However, generating
     // the Java files for the .proto files in tensorflow/core:protos_all is
@@ -202,5 +200,13 @@ public class SessionTest {
         .build()
         .toByteArray();
      */
+  }
+
+  private static void transpose_A_times_X(Ops tf, int[][] a) {
+    tf.withName("Y").linalg.matMul(
+        tf.withName("A").val(a),
+        tf.withName("X").placeholder(TInt32.DTYPE),
+        MatMul.transposeA(true).transposeB(false)
+    );
   }
 }

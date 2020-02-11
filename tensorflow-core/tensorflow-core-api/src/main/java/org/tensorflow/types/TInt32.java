@@ -85,12 +85,22 @@ public interface TInt32 extends IntNdArray, TNumber {
   }
 
   /**
+   * Allocates a new tensor of the given shape, initialized with the provided data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param data buffer of ints to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TInt32> tensorOf(Shape shape, IntDataBuffer data) {
+    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  }
+
+  /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
-   * @throws org.tensorflow.TensorFlowException if the tensor cannot be allocated or initialized
    */
   static Tensor<TInt32> tensorOf(Shape shape, Consumer<TInt32> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);

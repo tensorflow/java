@@ -19,10 +19,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Constant;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
@@ -31,18 +32,17 @@ import org.tensorflow.types.TInt32;
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
 @RunWith(JUnit4.class)
 public class GraphOperationBuilderTest {
-  // TODO(ashankar): Restore this test once the C API gracefully handles mixing graphs and
-  // operations instead of segfaulting.
+
   @Test
-  @Ignore
   public void failWhenMixingOperationsOnDifferentGraphs() {
     try (Graph g1 = new Graph();
         Graph g2 = new Graph()) {
-      Output<TInt32> c1 = TestUtil.constant(g1, "C1", 3);
-      Output<TInt32> c2 = TestUtil.constant(g2, "C2", 3);
-      TestUtil.addN(g1, c1, c1);
+      Ops tf = Ops.create(g1);
+      Constant<TInt32> c1 = tf.val(3);
+      tf.math.add(c1, c1);
       try {
-        TestUtil.addN(g2, c1, c2);
+        Ops tf2 = Ops.create(g2);
+        tf2.math.add(c1, c1);
       } catch (Exception e) {
         fail(e.toString());
       }
@@ -52,7 +52,7 @@ public class GraphOperationBuilderTest {
   @Test
   public void failOnUseAfterBuild() {
     try (Graph g = new Graph();
-        Tensor<TInt32> t = Tensors.create(1)) {
+        Tensor<TInt32> t = TInt32.scalarOf(1)) {
       OperationBuilder b =
           g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
       b.build();
@@ -68,7 +68,7 @@ public class GraphOperationBuilderTest {
   public void failOnUseAfterGraphClose() {
     OperationBuilder b = null;
     try (Graph g = new Graph();
-        Tensor<TInt32> t = Tensors.create(1)) {
+        Tensor<TInt32> t = TInt32.scalarOf(1)) {
       b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
     }
     try {
@@ -88,8 +88,9 @@ public class GraphOperationBuilderTest {
     // This is a bit of an awkward test since it has to find operations with attributes of specific
     // types that aren't inferred from the input arguments.
     try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
       // dtype, tensor attributes.
-      try (Tensor<TInt32> t = Tensors.create(1)) {
+      try (Tensor<TInt32> t = TInt32.scalarOf(1)) {
         g.opBuilder("Const", "DataTypeAndTensor")
             .setAttr("dtype", TInt32.DTYPE)
             .setAttr("value", t)
@@ -105,14 +106,14 @@ public class GraphOperationBuilderTest {
       assertTrue(hasNode(g, "StringAndBool"));
       // int (TF "int" attributes are 64-bit signed, so a Java long).
       g.opBuilder("RandomUniform", "Int")
-          .addInput(TestUtil.constant(g, "RandomUniformShape", new int[] {1}))
+          .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
           .setAttr("dtype", TFloat32.DTYPE)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
       g.opBuilder("MaxPool", "IntList")
-          .addInput(TestUtil.constant(g, "MaxPoolInput", new float[2][2][2][2]))
+          .addInput(tf.val(new float[2][2][2][2]).asOutput())
           .setAttr("ksize", new long[] {1, 1, 1, 1})
           .setAttr("strides", new long[] {1, 1, 1, 1})
           .setAttr("padding", "SAME")
@@ -120,7 +121,7 @@ public class GraphOperationBuilderTest {
       assertTrue(hasNode(g, "IntList"));
       // list(float)
       g.opBuilder("FractionalMaxPool", "FloatList")
-          .addInput(TestUtil.constant(g, "FractionalMaxPoolInput", new float[2][2][2][2]))
+          .addInput(tf.val(new float[2][2][2][2]).asOutput())
           .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
           .build();
       assertTrue(hasNode(g, "FloatList"));
@@ -170,9 +171,10 @@ public class GraphOperationBuilderTest {
   public void addControlInput() {
     try (Graph g = new Graph();
         Session s = new Session(g);
-        Tensor<TBool> yes = Tensors.create(true);
-        Tensor<TBool> no = Tensors.create(false)) {
-      Output<TBool> placeholder = TestUtil.placeholder(g, "boolean", TBool.DTYPE);
+        Tensor<TBool> yes = TBool.scalarOf(true);
+        Tensor<TBool> no = TBool.scalarOf(false)) {
+      Ops tf = Ops.create(g);
+      Output<TBool> placeholder = tf.placeholder(TBool.DTYPE).asOutput();
       GraphOperation check =
           g.opBuilder("Assert", "assert")
               .addInput(placeholder)
@@ -196,6 +198,7 @@ public class GraphOperationBuilderTest {
   private static void testSetAttrShapeList(Shape[] shapes) {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
+      Ops tf = Ops.create(g);
       int[][] matrix = new int[][] {{0, 0}, {0, 0}};
       Output<?> queue =
           g.opBuilder("FIFOQueue", "queue")
@@ -204,8 +207,8 @@ public class GraphOperationBuilderTest {
               .build()
               .output(0);
       assertTrue(hasNode(g, "queue"));
-      Output<TInt32> c1 = TestUtil.constant(g, "const1", matrix);
-      Output<TInt32> c2 = TestUtil.constant(g, "const2", new int[][][] {matrix, matrix});
+      Output<TInt32> c1 = tf.val(matrix).asOutput();
+      Output<TInt32> c2 = tf.val(new int[][][] {matrix, matrix}).asOutput();
       Operation enqueue =
           g.opBuilder("QueueEnqueue", "enqueue")
               .addInput(queue)

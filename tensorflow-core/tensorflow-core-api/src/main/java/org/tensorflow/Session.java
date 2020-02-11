@@ -320,7 +320,7 @@ public final class Session implements AutoCloseable {
       // validity of the Graph and graphRef ensures that.
       int idx = 0;
       for (Tensor<?> t : inputTensors) {
-        inputTensorHandles[idx++] = t.getNativeHandle();
+        inputTensorHandles[idx++] = t.nativeHandle();
       }
       idx = 0;
       for (Output<?> o : inputs) {

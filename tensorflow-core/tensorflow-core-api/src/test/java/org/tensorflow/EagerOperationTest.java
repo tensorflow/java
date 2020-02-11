@@ -21,6 +21,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.op.Ops;
+import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -43,7 +45,7 @@ public class EagerOperationTest {
   @Test
   public void outputDataTypeAndShape() {
     try (EagerSession session = EagerSession.create();
-        Tensor<TInt32> t = Tensors.create(new int[2][3])) {
+        Tensor<TInt32> t = TInt32.tensorOf(Shape.of(2, 3))) {
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
               .setAttr("dtype", TInt32.DTYPE)
@@ -58,12 +60,13 @@ public class EagerOperationTest {
   @Test
   public void outputTensor() {
     try (EagerSession session = EagerSession.create()) {
+      Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "CompareResult")
-              .addInput(TestUtil.constant(session, "Const1", 2))
-              .addInput(TestUtil.constant(session, "Const2", 4))
+              .addInput(tf.val(2).asOutput())
+              .addInput(tf.val(4).asOutput())
               .build();
-      assertEquals(6, add.tensor(0).intValue());
+      assertEquals(6, add.tensor(0).expect(TInt32.DTYPE).data().getInt());
 
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved
@@ -75,8 +78,9 @@ public class EagerOperationTest {
   @Test
   public void inputAndOutputListLengths() {
     try (EagerSession session = EagerSession.create()) {
-      Output<TFloat32> c1 = TestUtil.constant(session, "Const1", new float[] {1f, 2f});
-      Output<TFloat32> c2 = TestUtil.constant(session, "Const2", new float[] {3f, 4f});
+      Ops tf = Ops.create(session);
+      Output<TFloat32> c1 = tf.val(new float[] {1f, 2f}).asOutput();
+      Output<TFloat32> c2 = tf.val(new float[] {3f, 4f}).asOutput();
 
       EagerOperation acc =
           opBuilder(session, "AddN", "InputListLength")
@@ -87,7 +91,7 @@ public class EagerOperationTest {
 
       EagerOperation split =
           opBuilder(session, "Split", "OutputListLength")
-              .addInput(TestUtil.constant(session, "Axis", 0))
+              .addInput(tf.val(0).asOutput())
               .addInput(c1)
               .setAttr("num_split", 2)
               .build();
@@ -113,10 +117,11 @@ public class EagerOperationTest {
   @Test
   public void numOutputs() {
     try (EagerSession session = EagerSession.create()) {
+      Ops tf = Ops.create(session);
       EagerOperation op =
           opBuilder(session, "UniqueWithCountsV2", "unq")
-              .addInput(TestUtil.constant(session, "Const1", new int[] {1, 2, 1}))
-              .addInput(TestUtil.constant(session, "Axis", new int[] {0}))
+              .addInput(tf.val(new int[] {1, 2, 1}).asOutput())
+              .addInput(tf.val(new int[] {0}).asOutput())
               .setAttr("out_idx", TInt32.DTYPE)
               .build();
       assertEquals(3, op.numOutputs());
@@ -126,10 +131,11 @@ public class EagerOperationTest {
   @Test
   public void opNotAccessibleIfSessionIsClosed() {
     EagerSession session = EagerSession.create();
+    Ops tf = Ops.create(session);
     EagerOperation add =
         opBuilder(session, "Add", "SessionClosed")
-            .addInput(TestUtil.constant(session, "Const1", 2))
-            .addInput(TestUtil.constant(session, "Const2", 4))
+            .addInput(tf.val(2).asOutput())
+            .addInput(tf.val(4).asOutput())
             .build();
     assertEquals(1, add.outputListLength("z"));
     session.close();
@@ -144,10 +150,11 @@ public class EagerOperationTest {
   @Test
   public void outputIndexOutOfBounds() {
     try (EagerSession session = EagerSession.create()) {
+      Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "OutOfRange")
-              .addInput(TestUtil.constant(session, "Const1", 2))
-              .addInput(TestUtil.constant(session, "Const2", 4))
+              .addInput(tf.val(2).asOutput())
+              .addInput(tf.val(4).asOutput())
               .build();
       try {
         add.getUnsafeNativeHandle(1);

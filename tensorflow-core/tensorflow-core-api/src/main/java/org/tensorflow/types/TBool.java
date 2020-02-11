@@ -89,6 +89,17 @@ public interface TBool extends BooleanNdArray, TType {
   }
 
   /**
+   * Allocates a new tensor of the given shape, initialized with the provided data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param data buffer of booleans to initialize the tensor with
+   * @return the new tensor
+   */
+  static Tensor<TBool> tensorOf(Shape shape, BooleanDataBuffer data) {
+    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  }
+
+  /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
    * @param shape shape of the tensor to allocate

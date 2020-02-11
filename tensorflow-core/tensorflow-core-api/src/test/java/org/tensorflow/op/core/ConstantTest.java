@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -29,10 +30,24 @@ import java.nio.LongBuffer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataBuffers;
+import org.tensorflow.tools.buffer.DoubleDataBuffer;
+import org.tensorflow.tools.buffer.FloatDataBuffer;
+import org.tensorflow.tools.buffer.IntDataBuffer;
+import org.tensorflow.tools.buffer.LongDataBuffer;
+import org.tensorflow.tools.ndarray.DoubleNdArray;
+import org.tensorflow.tools.ndarray.FloatNdArray;
+import org.tensorflow.tools.ndarray.IntNdArray;
+import org.tensorflow.tools.ndarray.LongNdArray;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -44,95 +59,96 @@ public class ConstantTest {
   private static final float EPSILON = 1e-7f;
 
   @Test
-  public void createIntBuffer() {
-    int[] ints = {1, 2, 3, 4};
-    long[] shape = {4};
+  public void createInts() {
+    IntDataBuffer buffer = DataBuffers.of(1, 2, 3, 4);
+    Shape shape = Shape.of(4);
+    IntNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TInt32> op = Constant.create(scope, shape, IntBuffer.wrap(ints));
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        int[] actual = new int[ints.length];
-        assertArrayEquals(ints, result.expect(TInt32.DTYPE).copyTo(actual));
+      Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
+      Constant<TInt32> op2 = Constant.tensorOf(scope, array);
+      try (AutoCloseableList<Tensor<?>> t =
+          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+        assertEquals(array, t.get(0).expect(TInt32.DTYPE).data());
+        assertEquals(array, t.get(1).expect(TInt32.DTYPE).data());
       }
     }
   }
 
   @Test
-  public void createTFloatBuffer() {
-    float[] floats = {1, 2, 3, 4};
-    long[] shape = {4};
+  public void createFloats() {
+    FloatDataBuffer buffer = DataBuffers.of(1.0f, 2.0f, 3.0f, 4.0f);
+    Shape shape = Shape.of(4);
+    FloatNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TFloat32> op = Constant.create(scope, shape, FloatBuffer.wrap(floats));
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        float[] actual = new float[floats.length];
-        assertArrayEquals(floats, result.expect(TFloat32.DTYPE).copyTo(actual), EPSILON);
+      Constant<TFloat32> op1 = Constant.tensorOf(scope, shape, buffer);
+      Constant<TFloat32> op2 = Constant.tensorOf(scope, array);
+      try (AutoCloseableList<Tensor<?>> t =
+          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+        assertEquals(array, t.get(0).expect(TFloat32.DTYPE).data());
+        assertEquals(array, t.get(1).expect(TFloat32.DTYPE).data());
       }
     }
   }
 
   @Test
-  public void createTDoubleBuffer() {
-    double[] doubles = {1, 2, 3, 4};
-    long[] shape = {4};
+  public void createDoubles() {
+    DoubleDataBuffer buffer = DataBuffers.of(1.0, 2.0, 3.0, 4.0);
+    Shape shape = Shape.of(4);
+    DoubleNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TFloat64> op = Constant.create(scope, shape, DoubleBuffer.wrap(doubles));
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        double[] actual = new double[doubles.length];
-        assertArrayEquals(doubles, result.expect(TFloat64.DTYPE).copyTo(actual), EPSILON);
+      Constant<TFloat64> op1 = Constant.tensorOf(scope, shape, buffer);
+      Constant<TFloat64> op2 = Constant.tensorOf(scope, array);
+      try (AutoCloseableList<Tensor<?>> t =
+          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+        assertEquals(array, t.get(0).expect(TFloat64.DTYPE).data());
+        assertEquals(array, t.get(1).expect(TFloat64.DTYPE).data());
       }
     }
   }
 
   @Test
-  public void createLongBuffer() {
-    long[] longs = {1, 2, 3, 4};
-    long[] shape = {4};
+  public void createLongs() {
+    LongDataBuffer buffer = DataBuffers.of(1L, 2L, 3L, 4L);
+    Shape shape = Shape.of(4);
+    LongNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TInt64> op = Constant.create(scope, shape, LongBuffer.wrap(longs));
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        long[] actual = new long[longs.length];
-        assertArrayEquals(longs, result.expect(TInt64.DTYPE).copyTo(actual));
+      Constant<TInt64> op1 = Constant.tensorOf(scope, shape, buffer);
+      Constant<TInt64> op2 = Constant.tensorOf(scope, array);
+      try (AutoCloseableList<Tensor<?>> t =
+          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+        assertEquals(array, t.get(0).expect(TInt64.DTYPE).data());
+        assertEquals(array, t.get(1).expect(TInt64.DTYPE).data());
       }
     }
   }
 
   @Test
-  public void createStringBuffer() throws IOException {
-    byte[] data = {(byte) 1, (byte) 2, (byte) 3, (byte) 4};
-    long[] shape = {};
-
-    // byte arrays (DataType.STRING in Tensorflow) are encoded as an offset in the data buffer,
-    // followed by a varint encoded size, followed by the data.
-    ByteArrayOutputStream baout = new ByteArrayOutputStream();
-    DataOutputStream out = new DataOutputStream(baout);
-    // Offset in array.
-    out.writeLong(0L);
-    // Varint encoded length of buffer.
-    // For any number < 0x80, the varint encoding is simply the number itself.
-    // https://developers.google.com/protocol-buffers/docs/encoding#varints
-    assertTrue(data.length < 0x80);
-    out.write(data.length);
-    out.write(data);
-    out.close();
-    byte[] content = baout.toByteArray();
+  public void createStrings() throws IOException {
+    DataBuffer<String> buffer = DataBuffers.ofObjects("1", "2", "3", "4");
+    Shape shape = Shape.of(4);
+    NdArray<String> array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
-      Constant<TString> op = Constant.create(scope, TString.DTYPE, shape, ByteBuffer.wrap(content));
-      try (Tensor<?> result = sess.runner().fetch(op).run().get(0)) {
-        assertArrayEquals(data, result.expect(TString.DTYPE).bytesValue());
+      Constant<TString> op1 = Constant.tensorOf(scope, shape, buffer);
+      Constant<TString> op2 = Constant.tensorOf(scope, array);
+      try (AutoCloseableList<Tensor<?>> t =
+          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+        assertEquals(array, t.get(0).expect(TString.DTYPE).data());
+        assertEquals(array, t.get(1).expect(TString.DTYPE).data());
       }
     }
   }
