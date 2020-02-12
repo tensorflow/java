@@ -86,7 +86,7 @@ public final class MapClear extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapClear
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapClear create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapClear", scope.makeOpName("MapClear"));
     opBuilder = scope.applyControlDependencies(opBuilder);

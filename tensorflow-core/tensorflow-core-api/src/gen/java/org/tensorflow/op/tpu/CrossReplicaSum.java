@@ -53,7 +53,7 @@ public final class CrossReplicaSum<T extends TNumber> extends PrimitiveOp implem
    * replica ids in the ith subgroup.
    * @return a new instance of CrossReplicaSum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
     opBuilder.addInput(input.asOutput());

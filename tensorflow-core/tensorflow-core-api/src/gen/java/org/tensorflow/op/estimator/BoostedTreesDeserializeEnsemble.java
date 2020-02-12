@@ -43,7 +43,7 @@ public final class BoostedTreesDeserializeEnsemble extends PrimitiveOp {
    * @param treeEnsembleSerialized Serialized proto of the ensemble.
    * @return a new instance of BoostedTreesDeserializeEnsemble
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesDeserializeEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt64> stampToken, Operand<TString> treeEnsembleSerialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesDeserializeEnsemble", scope.makeOpName("BoostedTreesDeserializeEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

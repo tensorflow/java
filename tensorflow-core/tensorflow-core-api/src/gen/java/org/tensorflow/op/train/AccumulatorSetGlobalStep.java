@@ -44,7 +44,7 @@ public final class AccumulatorSetGlobalStep extends PrimitiveOp {
    * @param newGlobalStep The new global_step value to set.
    * @return a new instance of AccumulatorSetGlobalStep
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AccumulatorSetGlobalStep create(Scope scope, Operand<TString> handle, Operand<TInt64> newGlobalStep) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorSetGlobalStep", scope.makeOpName("AccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());

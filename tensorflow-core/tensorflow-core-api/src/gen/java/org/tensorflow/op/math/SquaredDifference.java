@@ -46,7 +46,7 @@ public final class SquaredDifference<T extends TType> extends PrimitiveOp implem
    * @param y 
    * @return a new instance of SquaredDifference
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SquaredDifference<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("SquaredDifference", scope.makeOpName("SquaredDifference"));
     opBuilder.addInput(x.asOutput());

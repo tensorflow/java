@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingMDLAdagradLightParameters extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingMDLAdagradLightParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingMDLAdagradLightParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingMDLAdagradLightParameters", scope.makeOpName("RetrieveTPUEmbeddingMDLAdagradLightParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

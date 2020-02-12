@@ -44,7 +44,7 @@ public final class Square<T extends TType> extends PrimitiveOp implements Operan
    * @param x 
    * @return a new instance of Square
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Square<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Square", scope.makeOpName("Square"));
     opBuilder.addInput(x.asOutput());

@@ -106,7 +106,7 @@ public final class EncodeProto extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeProto
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values, List<String> fieldNames, String messageType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());

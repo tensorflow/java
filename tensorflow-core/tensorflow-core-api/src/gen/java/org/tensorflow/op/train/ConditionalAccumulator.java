@@ -91,7 +91,7 @@ public final class ConditionalAccumulator extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of ConditionalAccumulator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConditionalAccumulator", scope.makeOpName("ConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

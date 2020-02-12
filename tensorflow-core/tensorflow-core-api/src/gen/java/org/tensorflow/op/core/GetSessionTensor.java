@@ -45,7 +45,7 @@ public final class GetSessionTensor<T extends TType> extends PrimitiveOp impleme
    * @param dtype The type of the output value.
    * @return a new instance of GetSessionTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
     opBuilder.addInput(handle.asOutput());

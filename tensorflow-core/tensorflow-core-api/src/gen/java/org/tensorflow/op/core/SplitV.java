@@ -53,7 +53,7 @@ public final class SplitV<T extends TType> extends PrimitiveOp implements Iterab
    * @param numSplit 
    * @return a new instance of SplitV
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SplitV<T> create(Scope scope, Operand<T> value, Operand<U> sizeSplits, Operand<TInt32> axis, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SplitV", scope.makeOpName("SplitV"));
     opBuilder.addInput(value.asOutput());

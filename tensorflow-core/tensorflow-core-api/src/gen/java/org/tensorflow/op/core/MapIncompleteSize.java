@@ -89,7 +89,7 @@ public final class MapIncompleteSize extends PrimitiveOp implements Operand<TInt
    * @param options carries optional attributes values
    * @return a new instance of MapIncompleteSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapIncompleteSize", scope.makeOpName("MapIncompleteSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

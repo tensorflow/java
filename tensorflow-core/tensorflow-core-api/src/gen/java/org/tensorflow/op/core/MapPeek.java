@@ -98,7 +98,7 @@ public final class MapPeek extends PrimitiveOp implements Iterable<Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of MapPeek
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapPeek create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapPeek", scope.makeOpName("MapPeek"));
     opBuilder.addInput(key.asOutput());

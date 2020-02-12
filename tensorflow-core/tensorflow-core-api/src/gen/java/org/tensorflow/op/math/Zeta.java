@@ -48,7 +48,7 @@ public final class Zeta<T extends TNumber> extends PrimitiveOp implements Operan
    * @param q 
    * @return a new instance of Zeta
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Zeta<T> create(Scope scope, Operand<T> x, Operand<T> q) {
     OperationBuilder opBuilder = scope.env().opBuilder("Zeta", scope.makeOpName("Zeta"));
     opBuilder.addInput(x.asOutput());

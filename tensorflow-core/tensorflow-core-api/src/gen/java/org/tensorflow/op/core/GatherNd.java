@@ -137,7 +137,7 @@ public final class GatherNd<T extends TType> extends PrimitiveOp implements Oper
    * @param indices Index tensor.
    * @return a new instance of GatherNd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> GatherNd<T> create(Scope scope, Operand<T> params, Operand<U> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
     opBuilder.addInput(params.asOutput());

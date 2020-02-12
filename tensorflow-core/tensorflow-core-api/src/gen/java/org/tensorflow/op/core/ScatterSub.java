@@ -88,7 +88,7 @@ public final class ScatterSub<T extends TType> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of ScatterSub
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ScatterSub<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterSub", scope.makeOpName("ScatterSub"));
     opBuilder.addInput(ref.asOutput());

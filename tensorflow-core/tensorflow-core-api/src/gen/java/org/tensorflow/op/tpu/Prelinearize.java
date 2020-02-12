@@ -72,7 +72,7 @@ public final class Prelinearize extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of Prelinearize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prelinearize", scope.makeOpName("Prelinearize"));
     opBuilder.addInput(input.asOutput());

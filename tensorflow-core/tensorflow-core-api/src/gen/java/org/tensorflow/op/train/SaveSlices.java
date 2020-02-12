@@ -75,7 +75,7 @@ public final class SaveSlices extends PrimitiveOp {
    * @param data `N` tensors to save.
    * @return a new instance of SaveSlices
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SaveSlices create(Scope scope, Operand<TString> filename, Operand<TString> tensorNames, Operand<TString> shapesAndSlices, Iterable<Operand<?>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("SaveSlices", scope.makeOpName("SaveSlices"));
     opBuilder.addInput(filename.asOutput());

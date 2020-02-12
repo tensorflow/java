@@ -42,7 +42,7 @@ public final class LookupTableRemove extends PrimitiveOp {
    * @param keys Any shape.  Keys of the elements to remove.
    * @return a new instance of LookupTableRemove
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());

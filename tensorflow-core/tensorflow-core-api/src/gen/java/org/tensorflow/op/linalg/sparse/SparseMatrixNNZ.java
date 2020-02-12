@@ -40,7 +40,7 @@ public final class SparseMatrixNNZ extends PrimitiveOp implements Operand<TInt32
    * @param sparseMatrix A CSRSparseMatrix.
    * @return a new instance of SparseMatrixNNZ
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SparseMatrixNNZ create(Scope scope, Operand<?> sparseMatrix) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixNNZ", scope.makeOpName("SparseMatrixNNZ"));
     opBuilder.addInput(sparseMatrix.asOutput());

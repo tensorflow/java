@@ -48,7 +48,7 @@ public final class RequantizationRange extends PrimitiveOp {
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRange", scope.makeOpName("RequantizationRange"));
     opBuilder.addInput(input.asOutput());

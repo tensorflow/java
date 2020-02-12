@@ -61,7 +61,7 @@ public final class BatchMatrixInverse<T extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixInverse
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BatchMatrixInverse<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixInverse", scope.makeOpName("BatchMatrixInverse"));
     opBuilder.addInput(input.asOutput());

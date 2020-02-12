@@ -91,7 +91,7 @@ public final class SparseConditionalAccumulator extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of SparseConditionalAccumulator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConditionalAccumulator", scope.makeOpName("SparseConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

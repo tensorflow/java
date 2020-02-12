@@ -78,7 +78,7 @@ public final class AudioSummary extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of AudioSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AudioSummary create(Scope scope, Operand<TString> tag, Operand<TFloat32> tensor, Operand<TFloat32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AudioSummaryV2", scope.makeOpName("AudioSummary"));
     opBuilder.addInput(tag.asOutput());

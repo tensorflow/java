@@ -78,7 +78,7 @@ public final class AllReduce<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of AllReduce
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AllReduce<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, String mergeOp, String finalOp, List<Long> subdivOffsets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveReduce", scope.makeOpName("AllReduce"));
     opBuilder.addInput(input.asOutput());

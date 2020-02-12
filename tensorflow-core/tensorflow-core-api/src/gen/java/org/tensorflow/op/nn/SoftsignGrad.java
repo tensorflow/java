@@ -43,7 +43,7 @@ public final class SoftsignGrad<T extends TNumber> extends PrimitiveOp implement
    * @param features The features passed as input to the corresponding softsign operation.
    * @return a new instance of SoftsignGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SoftsignGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftsignGrad", scope.makeOpName("SoftsignGrad"));
     opBuilder.addInput(gradients.asOutput());

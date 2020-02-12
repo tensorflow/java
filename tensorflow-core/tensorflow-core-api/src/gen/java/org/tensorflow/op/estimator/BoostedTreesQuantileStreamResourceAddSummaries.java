@@ -44,7 +44,7 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends Primit
    * @param summaries string; List of Rank 2 Tensor each containing the summaries for a single feature.
    * @return a new instance of BoostedTreesQuantileStreamResourceAddSummaries
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceAddSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> summaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceAddSummaries", scope.makeOpName("BoostedTreesQuantileStreamResourceAddSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

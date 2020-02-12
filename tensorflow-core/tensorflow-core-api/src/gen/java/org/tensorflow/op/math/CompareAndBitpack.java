@@ -64,7 +64,7 @@ public final class CompareAndBitpack extends PrimitiveOp implements Operand<TUin
    * @param threshold Threshold to compare against.
    * @return a new instance of CompareAndBitpack
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input, Operand<T> threshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
     opBuilder.addInput(input.asOutput());

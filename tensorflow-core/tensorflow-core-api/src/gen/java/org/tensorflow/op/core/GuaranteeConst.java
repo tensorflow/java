@@ -49,7 +49,7 @@ public final class GuaranteeConst<T extends TType> extends PrimitiveOp implement
    * @param input 
    * @return a new instance of GuaranteeConst
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("GuaranteeConst", scope.makeOpName("GuaranteeConst"));
     opBuilder.addInput(input.asOutput());

@@ -46,7 +46,7 @@ public final class ParseTensor<T extends TType> extends PrimitiveOp implements O
    * type of the serialized tensor and no implicit conversion will take place.
    * @return a new instance of ParseTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ParseTensor<T> create(Scope scope, Operand<TString> serialized, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseTensor", scope.makeOpName("ParseTensor"));
     opBuilder.addInput(serialized.asOutput());

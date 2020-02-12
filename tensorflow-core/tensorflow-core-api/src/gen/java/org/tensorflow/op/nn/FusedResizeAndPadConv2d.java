@@ -87,7 +87,7 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of FusedResizeAndPadConv2d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FusedResizeAndPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> size, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedResizeAndPadConv2D", scope.makeOpName("FusedResizeAndPadConv2d"));
     opBuilder.addInput(input.asOutput());

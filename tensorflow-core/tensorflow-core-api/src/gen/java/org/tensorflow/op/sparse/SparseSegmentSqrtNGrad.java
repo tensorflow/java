@@ -50,7 +50,7 @@ public final class SparseSegmentSqrtNGrad<T extends TNumber> extends PrimitiveOp
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentSqrtN op.
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNGrad", scope.makeOpName("SparseSegmentSqrtNGrad"));
     opBuilder.addInput(grad.asOutput());

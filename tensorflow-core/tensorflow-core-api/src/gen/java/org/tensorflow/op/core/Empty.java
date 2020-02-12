@@ -67,7 +67,7 @@ public final class Empty<T extends TType> extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of Empty
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Empty", scope.makeOpName("Empty"));
     opBuilder.addInput(shape.asOutput());

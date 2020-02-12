@@ -45,7 +45,7 @@ public final class Ifft3d<T extends TType> extends PrimitiveOp implements Operan
    * @param input A complex tensor.
    * @return a new instance of Ifft3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Ifft3d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IFFT3D", scope.makeOpName("Ifft3d"));
     opBuilder.addInput(input.asOutput());

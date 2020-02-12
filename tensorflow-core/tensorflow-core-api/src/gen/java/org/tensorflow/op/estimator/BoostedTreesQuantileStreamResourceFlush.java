@@ -66,7 +66,7 @@ public final class BoostedTreesQuantileStreamResourceFlush extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesQuantileStreamResourceFlush
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceFlush create(Scope scope, Operand<?> quantileStreamResourceHandle, Operand<TInt64> numBuckets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceFlush", scope.makeOpName("BoostedTreesQuantileStreamResourceFlush"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

@@ -56,7 +56,7 @@ public final class Conj<T extends TType> extends PrimitiveOp implements Operand<
    * @param input 
    * @return a new instance of Conj
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Conj<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conj", scope.makeOpName("Conj"));
     opBuilder.addInput(input.asOutput());

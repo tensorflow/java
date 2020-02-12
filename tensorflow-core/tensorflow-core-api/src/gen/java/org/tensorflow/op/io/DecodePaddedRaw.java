@@ -70,7 +70,7 @@ public final class DecodePaddedRaw<T extends TNumber> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of DecodePaddedRaw
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());

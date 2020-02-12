@@ -81,7 +81,7 @@ public final class StringFormat extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of StringFormat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StringFormat create(Scope scope, Iterable<Operand<?>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringFormat", scope.makeOpName("StringFormat"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

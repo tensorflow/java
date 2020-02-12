@@ -76,7 +76,7 @@ public final class PrefetchDataset extends PrimitiveOp implements Operand<TType>
    * @param options carries optional attributes values
    * @return a new instance of PrefetchDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static PrefetchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrefetchDataset", scope.makeOpName("PrefetchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

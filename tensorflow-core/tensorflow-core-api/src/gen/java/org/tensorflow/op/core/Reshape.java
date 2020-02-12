@@ -104,7 +104,7 @@ public final class Reshape<T extends TType> extends PrimitiveOp implements Opera
    * @param shape Defines the shape of the output tensor.
    * @return a new instance of Reshape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Reshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("Reshape", scope.makeOpName("Reshape"));
     opBuilder.addInput(tensor.asOutput());

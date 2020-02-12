@@ -126,7 +126,7 @@ public final class RandomShuffleQueue extends PrimitiveOp implements Operand<TTy
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffleQueue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RandomShuffleQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffleQueueV2", scope.makeOpName("RandomShuffleQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

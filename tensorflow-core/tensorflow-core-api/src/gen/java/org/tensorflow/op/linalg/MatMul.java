@@ -80,7 +80,7 @@ public final class MatMul<T extends TType> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of MatMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatMul<T> create(Scope scope, Operand<T> a, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatMul", scope.makeOpName("MatMul"));
     opBuilder.addInput(a.asOutput());

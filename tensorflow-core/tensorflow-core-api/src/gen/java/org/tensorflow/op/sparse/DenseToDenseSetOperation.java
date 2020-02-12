@@ -75,7 +75,7 @@ public final class DenseToDenseSetOperation<T extends TType> extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of DenseToDenseSetOperation
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToDenseSetOperation", scope.makeOpName("DenseToDenseSetOperation"));
     opBuilder.addInput(set1.asOutput());

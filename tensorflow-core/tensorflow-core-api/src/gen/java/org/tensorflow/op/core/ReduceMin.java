@@ -70,7 +70,7 @@ public final class ReduceMin<T extends TType> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of ReduceMin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ReduceMin<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("ReduceMin"));
     opBuilder.addInput(input.asOutput());

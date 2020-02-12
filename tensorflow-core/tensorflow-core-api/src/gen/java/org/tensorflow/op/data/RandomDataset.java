@@ -59,7 +59,7 @@ public final class RandomDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of RandomDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomDataset", scope.makeOpName("RandomDataset"));
     opBuilder.addInput(seed.asOutput());

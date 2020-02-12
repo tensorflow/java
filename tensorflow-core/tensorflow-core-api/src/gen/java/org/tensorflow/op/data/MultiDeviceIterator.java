@@ -48,7 +48,7 @@ public final class MultiDeviceIterator extends PrimitiveOp implements Operand<TT
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIterator create(Scope scope, List<String> devices, String sharedName, String container, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIterator", scope.makeOpName("MultiDeviceIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

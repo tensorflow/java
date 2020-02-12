@@ -46,7 +46,7 @@ public final class LatencyStatsDataset extends PrimitiveOp implements Operand<TT
    * @param outputShapes 
    * @return a new instance of LatencyStatsDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LatencyStatsDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> tag, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("LatencyStatsDataset", scope.makeOpName("LatencyStatsDataset"));
     opBuilder.addInput(inputDataset.asOutput());

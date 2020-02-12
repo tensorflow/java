@@ -46,7 +46,7 @@ public final class Add<T extends TType> extends PrimitiveOp implements Operand<T
    * @param y 
    * @return a new instance of Add
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Add<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Add", scope.makeOpName("Add"));
     opBuilder.addInput(x.asOutput());

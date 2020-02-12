@@ -68,7 +68,7 @@ public final class RegexReplace extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of RegexReplace
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern, Operand<TString> rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexReplace", scope.makeOpName("RegexReplace"));
     opBuilder.addInput(input.asOutput());

@@ -43,7 +43,7 @@ public final class BatchMatrixBandPart<T extends TType> extends PrimitiveOp impl
    * @param numUpper 
    * @return a new instance of BatchMatrixBandPart
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchMatrixBandPart<T> create(Scope scope, Operand<T> input, Operand<TInt64> numLower, Operand<TInt64> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixBandPart", scope.makeOpName("BatchMatrixBandPart"));
     opBuilder.addInput(input.asOutput());

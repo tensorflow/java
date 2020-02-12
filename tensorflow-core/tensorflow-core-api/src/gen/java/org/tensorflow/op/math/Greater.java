@@ -58,7 +58,7 @@ public final class Greater extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of Greater
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Greater create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Greater", scope.makeOpName("Greater"));
     opBuilder.addInput(x.asOutput());

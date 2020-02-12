@@ -47,7 +47,7 @@ public final class ResourceCountUpTo<T extends TNumber> extends PrimitiveOp impl
    * @param T 
    * @return a new instance of ResourceCountUpTo
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
     opBuilder.addInput(resource.asOutput());

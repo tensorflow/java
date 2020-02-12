@@ -45,7 +45,7 @@ public final class TanhGrad<T extends TType> extends PrimitiveOp implements Oper
    * @param dy 
    * @return a new instance of TanhGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TanhGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("TanhGrad", scope.makeOpName("TanhGrad"));
     opBuilder.addInput(y.asOutput());

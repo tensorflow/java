@@ -42,7 +42,7 @@ public final class OnesLike<T extends TType> extends PrimitiveOp implements Oper
    * @param x a tensor of type T.
    * @return a new instance of OnesLike
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> OnesLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("OnesLike", scope.makeOpName("OnesLike"));
     opBuilder.addInput(x.asOutput());

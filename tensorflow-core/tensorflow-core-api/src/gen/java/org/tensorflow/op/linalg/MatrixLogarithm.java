@@ -57,7 +57,7 @@ public final class MatrixLogarithm<T extends TType> extends PrimitiveOp implemen
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of MatrixLogarithm
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixLogarithm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixLogarithm", scope.makeOpName("MatrixLogarithm"));
     opBuilder.addInput(input.asOutput());

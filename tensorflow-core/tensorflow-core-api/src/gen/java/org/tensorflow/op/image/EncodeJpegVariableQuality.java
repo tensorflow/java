@@ -47,7 +47,7 @@ public final class EncodeJpegVariableQuality extends PrimitiveOp implements Oper
    * @param quality An int quality to encode to.
    * @return a new instance of EncodeJpegVariableQuality
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EncodeJpegVariableQuality create(Scope scope, Operand<TUint8> images, Operand<TInt32> quality) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpegVariableQuality", scope.makeOpName("EncodeJpegVariableQuality"));
     opBuilder.addInput(images.asOutput());

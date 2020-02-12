@@ -80,7 +80,7 @@ public final class ApplyFtrl<T extends TType> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of ApplyFtrl
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyFtrlV2", scope.makeOpName("ApplyFtrl"));
     opBuilder.addInput(var.asOutput());

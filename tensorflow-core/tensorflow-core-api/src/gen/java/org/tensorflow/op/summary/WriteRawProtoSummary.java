@@ -40,7 +40,7 @@ public final class WriteRawProtoSummary extends PrimitiveOp {
    * @param tensor 
    * @return a new instance of WriteRawProtoSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WriteRawProtoSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteRawProtoSummary", scope.makeOpName("WriteRawProtoSummary"));
     opBuilder.addInput(writer.asOutput());

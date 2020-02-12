@@ -46,7 +46,7 @@ public final class Mul<T extends TType> extends PrimitiveOp implements Operand<T
    * @param y 
    * @return a new instance of Mul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Mul<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mul", scope.makeOpName("Mul"));
     opBuilder.addInput(x.asOutput());

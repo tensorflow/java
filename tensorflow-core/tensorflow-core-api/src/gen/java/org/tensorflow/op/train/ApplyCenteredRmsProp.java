@@ -91,7 +91,7 @@ public final class ApplyCenteredRmsProp<T extends TType> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of ApplyCenteredRmsProp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyCenteredRMSProp", scope.makeOpName("ApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());

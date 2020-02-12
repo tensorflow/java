@@ -87,7 +87,7 @@ public final class HashTable extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of HashTable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> HashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("HashTableV2", scope.makeOpName("HashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);

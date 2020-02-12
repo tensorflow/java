@@ -46,7 +46,7 @@ public final class ShuffleDataset extends PrimitiveOp implements Operand<TType> 
    * @param outputShapes 
    * @return a new instance of ShuffleDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV2", scope.makeOpName("ShuffleDataset"));
     opBuilder.addInput(inputDataset.asOutput());

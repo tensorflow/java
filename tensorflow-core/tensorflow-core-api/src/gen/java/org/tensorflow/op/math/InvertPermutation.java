@@ -59,7 +59,7 @@ public final class InvertPermutation<T extends TNumber> extends PrimitiveOp impl
    * @param x 1-D.
    * @return a new instance of InvertPermutation
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvertPermutation", scope.makeOpName("InvertPermutation"));
     opBuilder.addInput(x.asOutput());

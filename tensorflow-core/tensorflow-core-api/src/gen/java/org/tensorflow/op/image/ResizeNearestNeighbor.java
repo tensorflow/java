@@ -76,7 +76,7 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of ResizeNearestNeighbor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighbor", scope.makeOpName("ResizeNearestNeighbor"));
     opBuilder.addInput(images.asOutput());

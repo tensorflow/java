@@ -89,7 +89,7 @@ public final class ResourceGather<U extends TType> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of ResourceGather
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> ResourceGather<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGather", scope.makeOpName("ResourceGather"));
     opBuilder.addInput(resource.asOutput());

@@ -83,7 +83,7 @@ public final class QueueDequeueMany extends PrimitiveOp implements Iterable<Oper
    * @param options carries optional attributes values
    * @return a new instance of QueueDequeueMany
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static QueueDequeueMany create(Scope scope, Operand<?> handle, Operand<TInt32> n, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueManyV2", scope.makeOpName("QueueDequeueMany"));
     opBuilder.addInput(handle.asOutput());

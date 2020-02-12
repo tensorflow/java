@@ -77,7 +77,7 @@ public final class ResourceApplyFtrl extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyFtrl
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceApplyFtrl create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyFtrlV2", scope.makeOpName("ResourceApplyFtrl"));
     opBuilder.addInput(var.asOutput());

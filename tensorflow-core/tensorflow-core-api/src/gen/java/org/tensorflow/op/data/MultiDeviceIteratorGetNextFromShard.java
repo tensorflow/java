@@ -50,7 +50,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends PrimitiveOp imple
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIteratorGetNextFromShard
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorGetNextFromShard create(Scope scope, Operand<?> multiDeviceIterator, Operand<TInt32> shardNum, Operand<TInt64> incarnationId, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorGetNextFromShard", scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
     opBuilder.addInput(multiDeviceIterator.asOutput());

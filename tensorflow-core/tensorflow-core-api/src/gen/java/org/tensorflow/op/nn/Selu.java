@@ -51,7 +51,7 @@ public final class Selu<T extends TNumber> extends PrimitiveOp implements Operan
    * @param features 
    * @return a new instance of Selu
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
     opBuilder.addInput(features.asOutput());

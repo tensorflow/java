@@ -62,7 +62,7 @@ public final class ArgMax<V extends TNumber> extends PrimitiveOp implements Oper
    * @param outputType 
    * @return a new instance of ArgMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
@@ -82,7 +82,7 @@ public final class ArgMax<V extends TNumber> extends PrimitiveOp implements Oper
    * use dimension = 0.
    * @return a new instance of ArgMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
     return create(scope, input, dimension, TInt64.DTYPE);
   }

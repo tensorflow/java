@@ -69,7 +69,7 @@ public final class BatchDataset extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of BatchDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchDatasetV2", scope.makeOpName("BatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

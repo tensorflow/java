@@ -41,7 +41,7 @@ public final class SdcaFprint extends PrimitiveOp implements Operand<TInt64> {
    * @param input vector of strings to compute fingerprints on.
    * @return a new instance of SdcaFprint
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SdcaFprint create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaFprint", scope.makeOpName("SdcaFprint"));
     opBuilder.addInput(input.asOutput());

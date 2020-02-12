@@ -54,7 +54,7 @@ public final class Atanh<T extends TType> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Atanh
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Atanh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Atanh", scope.makeOpName("Atanh"));
     opBuilder.addInput(x.asOutput());

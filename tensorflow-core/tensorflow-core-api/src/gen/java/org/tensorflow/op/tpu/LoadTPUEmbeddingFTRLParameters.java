@@ -86,7 +86,7 @@ public final class LoadTPUEmbeddingFTRLParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingFTRLParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingFTRLParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> linears, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingFTRLParameters", scope.makeOpName("LoadTPUEmbeddingFTRLParameters"));
     opBuilder.addInput(parameters.asOutput());

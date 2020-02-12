@@ -73,7 +73,7 @@ public final class QueueEnqueueMany extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QueueEnqueueMany
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static QueueEnqueueMany create(Scope scope, Operand<?> handle, Iterable<Operand<?>> components, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueEnqueueManyV2", scope.makeOpName("QueueEnqueueMany"));
     opBuilder.addInput(handle.asOutput());

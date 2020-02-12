@@ -50,7 +50,7 @@ public final class TruncateMod<T extends TNumber> extends PrimitiveOp implements
    * @param y 
    * @return a new instance of TruncateMod
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> TruncateMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateMod", scope.makeOpName("TruncateMod"));
     opBuilder.addInput(x.asOutput());

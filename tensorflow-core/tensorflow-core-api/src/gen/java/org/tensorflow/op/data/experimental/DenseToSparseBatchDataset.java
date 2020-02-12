@@ -50,7 +50,7 @@ public final class DenseToSparseBatchDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of DenseToSparseBatchDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DenseToSparseBatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TInt64> rowShape, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDenseToSparseBatchDataset", scope.makeOpName("DenseToSparseBatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

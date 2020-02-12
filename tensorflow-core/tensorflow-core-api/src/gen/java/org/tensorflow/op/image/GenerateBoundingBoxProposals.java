@@ -79,7 +79,7 @@ public final class GenerateBoundingBoxProposals extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of GenerateBoundingBoxProposals
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static GenerateBoundingBoxProposals create(Scope scope, Operand<TFloat32> scores, Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors, Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateBoundingBoxProposals", scope.makeOpName("GenerateBoundingBoxProposals"));
     opBuilder.addInput(scores.asOutput());

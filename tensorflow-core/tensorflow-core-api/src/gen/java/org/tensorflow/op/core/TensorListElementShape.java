@@ -48,7 +48,7 @@ public final class TensorListElementShape<T extends TNumber> extends PrimitiveOp
    * @param shapeType 
    * @return a new instance of TensorListElementShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
     opBuilder.addInput(inputHandle.asOutput());

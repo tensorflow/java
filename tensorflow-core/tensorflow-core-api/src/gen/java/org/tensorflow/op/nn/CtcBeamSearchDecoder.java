@@ -76,7 +76,7 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcBeamSearchDecoder
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CtcBeamSearchDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());

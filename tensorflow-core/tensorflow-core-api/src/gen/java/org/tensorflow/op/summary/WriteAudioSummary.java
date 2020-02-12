@@ -63,7 +63,7 @@ public final class WriteAudioSummary extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of WriteAudioSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WriteAudioSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<TFloat32> tensor, Operand<TFloat32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteAudioSummary", scope.makeOpName("WriteAudioSummary"));
     opBuilder.addInput(writer.asOutput());

@@ -44,7 +44,7 @@ public final class SparseMatrixSoftmaxGrad extends PrimitiveOp implements Operan
    * @param type 
    * @return a new instance of SparseMatrixSoftmaxGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SparseMatrixSoftmaxGrad create(Scope scope, Operand<?> softmax, Operand<?> gradSoftmax, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmaxGrad", scope.makeOpName("SparseMatrixSoftmaxGrad"));
     opBuilder.addInput(softmax.asOutput());

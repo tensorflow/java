@@ -86,7 +86,7 @@ public final class SparseFillEmptyRows<T extends TType> extends PrimitiveOp {
    * output indices: 2-D. the indices of the filled sparse tensor.
    * @return a new instance of SparseFillEmptyRows
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRows", scope.makeOpName("SparseFillEmptyRows"));
     opBuilder.addInput(indices.asOutput());

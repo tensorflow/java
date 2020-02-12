@@ -42,7 +42,7 @@ public final class BatchCholeskyGrad<T extends TNumber> extends PrimitiveOp impl
    * @param grad 
    * @return a new instance of BatchCholeskyGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchCholeskyGrad", scope.makeOpName("BatchCholeskyGrad"));
     opBuilder.addInput(l.asOutput());

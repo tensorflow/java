@@ -61,7 +61,7 @@ public final class TensorListConcat<U extends TType> extends PrimitiveOp {
    * @param elementDtype 
    * @return a new instance of TensorListConcat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());

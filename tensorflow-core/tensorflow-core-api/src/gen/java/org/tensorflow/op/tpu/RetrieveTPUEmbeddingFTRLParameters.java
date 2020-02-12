@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingFTRLParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingFTRLParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingFTRLParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingFTRLParameters", scope.makeOpName("RetrieveTPUEmbeddingFTRLParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

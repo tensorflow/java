@@ -145,7 +145,7 @@ public final class CudnnRnnParamsSize<U extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnParamsSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T, DataType<U> S, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsSize", scope.makeOpName("CudnnRnnParamsSize"));
     opBuilder.addInput(numLayers.asOutput());

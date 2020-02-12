@@ -80,7 +80,7 @@ public final class Unstack<T extends TType> extends PrimitiveOp implements Itera
    * @param options carries optional attributes values
    * @return a new instance of Unstack
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
     opBuilder.addInput(value.asOutput());

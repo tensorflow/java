@@ -83,7 +83,7 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters exten
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingStochasticGradientDescentParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("RetrieveTPUEmbeddingStochasticGradientDescentParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

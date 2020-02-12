@@ -75,7 +75,7 @@ public final class AutoShardDataset extends PrimitiveOp implements Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of AutoShardDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AutoShardDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numWorkers, Operand<TInt64> index, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AutoShardDataset", scope.makeOpName("AutoShardDataset"));
     opBuilder.addInput(inputDataset.asOutput());

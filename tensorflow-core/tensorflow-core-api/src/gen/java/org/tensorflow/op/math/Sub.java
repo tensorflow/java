@@ -46,7 +46,7 @@ public final class Sub<T extends TType> extends PrimitiveOp implements Operand<T
    * @param y 
    * @return a new instance of Sub
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sub<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sub", scope.makeOpName("Sub"));
     opBuilder.addInput(x.asOutput());

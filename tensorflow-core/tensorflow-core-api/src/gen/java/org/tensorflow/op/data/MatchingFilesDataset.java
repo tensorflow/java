@@ -39,7 +39,7 @@ public final class MatchingFilesDataset extends PrimitiveOp implements Operand<T
    * @param patterns 
    * @return a new instance of MatchingFilesDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFilesDataset", scope.makeOpName("MatchingFilesDataset"));
     opBuilder.addInput(patterns.asOutput());

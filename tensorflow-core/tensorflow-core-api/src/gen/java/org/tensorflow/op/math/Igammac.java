@@ -57,7 +57,7 @@ public final class Igammac<T extends TNumber> extends PrimitiveOp implements Ope
    * @param x 
    * @return a new instance of Igammac
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Igammac<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Igammac", scope.makeOpName("Igammac"));
     opBuilder.addInput(a.asOutput());

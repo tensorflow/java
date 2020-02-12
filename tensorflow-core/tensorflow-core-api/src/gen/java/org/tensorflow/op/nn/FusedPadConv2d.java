@@ -65,7 +65,7 @@ public final class FusedPadConv2d<T extends TNumber> extends PrimitiveOp impleme
    * @param padding The type of padding algorithm to use.
    * @return a new instance of FusedPadConv2d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
     opBuilder.addInput(input.asOutput());

@@ -79,7 +79,7 @@ public final class TextLineReader extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of TextLineReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TextLineReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TextLineReaderV2", scope.makeOpName("TextLineReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

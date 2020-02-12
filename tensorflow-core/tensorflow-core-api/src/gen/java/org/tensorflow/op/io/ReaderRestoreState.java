@@ -44,7 +44,7 @@ public final class ReaderRestoreState extends PrimitiveOp {
    * matching reader_handle.
    * @return a new instance of ReaderRestoreState
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReaderRestoreState create(Scope scope, Operand<?> readerHandle, Operand<TString> state) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderRestoreStateV2", scope.makeOpName("ReaderRestoreState"));
     opBuilder.addInput(readerHandle.asOutput());

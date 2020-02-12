@@ -43,7 +43,7 @@ public final class Exit<T extends TType> extends PrimitiveOp implements Operand<
    * @param data The tensor to be made available to the parent frame.
    * @return a new instance of Exit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Exit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("Exit", scope.makeOpName("Exit"));
     opBuilder.addInput(data.asOutput());

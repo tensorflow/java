@@ -90,7 +90,7 @@ public final class AudioSpectrogram extends PrimitiveOp implements Operand<TFloa
    * @param options carries optional attributes values
    * @return a new instance of AudioSpectrogram
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AudioSpectrogram create(Scope scope, Operand<TFloat32> input, Long windowSize, Long stride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AudioSpectrogram", scope.makeOpName("AudioSpectrogram"));
     opBuilder.addInput(input.asOutput());

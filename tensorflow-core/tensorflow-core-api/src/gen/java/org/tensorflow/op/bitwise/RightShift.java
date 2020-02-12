@@ -78,7 +78,7 @@ public final class RightShift<T extends TNumber> extends PrimitiveOp implements 
    * @param y 
    * @return a new instance of RightShift
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> RightShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("RightShift", scope.makeOpName("RightShift"));
     opBuilder.addInput(x.asOutput());

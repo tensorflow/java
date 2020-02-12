@@ -72,7 +72,7 @@ public final class ResourceApplyAdaMax extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyAdaMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceApplyAdaMax create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdaMax", scope.makeOpName("ResourceApplyAdaMax"));
     opBuilder.addInput(var.asOutput());

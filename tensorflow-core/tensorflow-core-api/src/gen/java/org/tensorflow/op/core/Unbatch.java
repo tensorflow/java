@@ -94,7 +94,7 @@ public final class Unbatch<T extends TType> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of Unbatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Unbatch<T> create(Scope scope, Operand<T> batchedTensor, Operand<TInt64> batchIndex, Operand<TInt64> id, Long timeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unbatch", scope.makeOpName("Unbatch"));
     opBuilder.addInput(batchedTensor.asOutput());

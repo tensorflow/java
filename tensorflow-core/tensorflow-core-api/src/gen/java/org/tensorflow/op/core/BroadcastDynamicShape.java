@@ -47,7 +47,7 @@ public final class BroadcastDynamicShape<T extends TNumber> extends PrimitiveOp 
    * @param s1 
    * @return a new instance of BroadcastDynamicShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastArgs", scope.makeOpName("BroadcastDynamicShape"));
     opBuilder.addInput(s0.asOutput());

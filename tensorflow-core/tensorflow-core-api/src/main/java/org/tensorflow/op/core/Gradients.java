@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -121,7 +122,7 @@ public class Gradients implements Op, Iterable<Operand<?>> {
    * @return a new instance of {@code Gradients}
    * @throws IllegalArgumentException if execution environment is not a graph
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Gradients create(
       Scope scope, Operand<?> y, Iterable<? extends Operand<?>> x, Options... options) {
     return create(scope, Collections.singletonList(y), x, options);

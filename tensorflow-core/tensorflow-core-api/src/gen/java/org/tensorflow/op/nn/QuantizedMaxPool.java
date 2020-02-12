@@ -51,7 +51,7 @@ public final class QuantizedMaxPool<T extends TType> extends PrimitiveOp {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedMaxPool
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> QuantizedMaxPool<T> create(Scope scope, Operand<T> input, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMaxPool", scope.makeOpName("QuantizedMaxPool"));
     opBuilder.addInput(input.asOutput());

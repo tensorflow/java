@@ -92,7 +92,7 @@ public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<TS
    * @param options carries optional attributes values
    * @return a new instance of UnsortedSegmentJoin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
     opBuilder.addInput(inputs.asOutput());

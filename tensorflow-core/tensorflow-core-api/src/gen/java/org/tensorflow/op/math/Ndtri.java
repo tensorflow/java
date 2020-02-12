@@ -41,7 +41,7 @@ public final class Ndtri<T extends TNumber> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Ndtri
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Ndtri<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Ndtri", scope.makeOpName("Ndtri"));
     opBuilder.addInput(x.asOutput());

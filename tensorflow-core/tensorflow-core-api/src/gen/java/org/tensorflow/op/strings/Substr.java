@@ -138,7 +138,7 @@ public final class Substr extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Substr
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Substr", scope.makeOpName("Substr"));
     opBuilder.addInput(input.asOutput());

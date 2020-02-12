@@ -45,7 +45,7 @@ public final class TextLineDataset extends PrimitiveOp implements Operand<TType>
    * @param bufferSize A scalar containing the number of bytes to buffer.
    * @return a new instance of TextLineDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TextLineDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TextLineDataset", scope.makeOpName("TextLineDataset"));
     opBuilder.addInput(filenames.asOutput());

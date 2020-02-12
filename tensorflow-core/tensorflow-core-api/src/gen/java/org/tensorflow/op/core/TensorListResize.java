@@ -47,7 +47,7 @@ public final class TensorListResize extends PrimitiveOp implements Operand<TType
    * @param size 
    * @return a new instance of TensorListResize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorListResize create(Scope scope, Operand<?> inputHandle, Operand<TInt32> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListResize", scope.makeOpName("TensorListResize"));
     opBuilder.addInput(inputHandle.asOutput());

@@ -51,7 +51,7 @@ public final class EncodeWav extends PrimitiveOp implements Operand<TString> {
    * @param sampleRate Scalar containing the sample frequency.
    * @return a new instance of EncodeWav
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EncodeWav create(Scope scope, Operand<TFloat32> audio, Operand<TInt32> sampleRate) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeWav", scope.makeOpName("EncodeWav"));
     opBuilder.addInput(audio.asOutput());

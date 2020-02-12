@@ -71,7 +71,7 @@ public final class RebatchDataset extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of RebatchDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RebatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numReplicas, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RebatchDataset", scope.makeOpName("RebatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -52,7 +52,7 @@ public final class Pow<T extends TType> extends PrimitiveOp implements Operand<T
    * @param y 
    * @return a new instance of Pow
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Pow<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Pow", scope.makeOpName("Pow"));
     opBuilder.addInput(x.asOutput());

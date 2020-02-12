@@ -134,7 +134,7 @@ public final class DecodeProto extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DecodeProto
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeProto create(Scope scope, Operand<TString> bytes, String messageType, List<String> fieldNames, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeProtoV2", scope.makeOpName("DecodeProto"));
     opBuilder.addInput(bytes.asOutput());

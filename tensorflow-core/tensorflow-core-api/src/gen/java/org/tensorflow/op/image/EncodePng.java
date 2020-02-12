@@ -82,7 +82,7 @@ public final class EncodePng extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of EncodePng
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
     opBuilder.addInput(image.asOutput());

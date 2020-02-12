@@ -135,7 +135,7 @@ public final class Rpc extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Rpc
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Rpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rpc", scope.makeOpName("Rpc"));
     opBuilder.addInput(address.asOutput());

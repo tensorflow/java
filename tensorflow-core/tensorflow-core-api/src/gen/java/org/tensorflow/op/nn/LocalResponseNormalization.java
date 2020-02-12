@@ -102,7 +102,7 @@ public final class LocalResponseNormalization<T extends TNumber> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of LocalResponseNormalization
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LocalResponseNormalization<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRN", scope.makeOpName("LocalResponseNormalization"));
     opBuilder.addInput(input.asOutput());

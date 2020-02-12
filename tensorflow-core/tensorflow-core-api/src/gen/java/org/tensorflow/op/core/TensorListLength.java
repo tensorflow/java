@@ -43,7 +43,7 @@ public final class TensorListLength extends PrimitiveOp implements Operand<TInt3
    * @param inputHandle 
    * @return a new instance of TensorListLength
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorListLength create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListLength", scope.makeOpName("TensorListLength"));
     opBuilder.addInput(inputHandle.asOutput());

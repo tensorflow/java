@@ -38,7 +38,7 @@ public final class UnwrapDatasetVariant extends PrimitiveOp implements Operand<T
    * @param inputHandle 
    * @return a new instance of UnwrapDatasetVariant
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnwrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnwrapDatasetVariant", scope.makeOpName("UnwrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());

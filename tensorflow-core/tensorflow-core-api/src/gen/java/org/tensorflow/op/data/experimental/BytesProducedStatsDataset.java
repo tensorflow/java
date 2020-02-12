@@ -46,7 +46,7 @@ public final class BytesProducedStatsDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of BytesProducedStatsDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BytesProducedStatsDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> tag, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalBytesProducedStatsDataset", scope.makeOpName("BytesProducedStatsDataset"));
     opBuilder.addInput(inputDataset.asOutput());

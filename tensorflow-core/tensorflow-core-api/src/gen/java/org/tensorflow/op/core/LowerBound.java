@@ -65,7 +65,7 @@ public final class LowerBound<U extends TNumber> extends PrimitiveOp implements 
    * @param outType 
    * @return a new instance of LowerBound
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> LowerBound<U> create(Scope scope, Operand<T> sortedInputs, Operand<T> values, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("LowerBound", scope.makeOpName("LowerBound"));
     opBuilder.addInput(sortedInputs.asOutput());
@@ -84,7 +84,7 @@ public final class LowerBound<U extends TNumber> extends PrimitiveOp implements 
    * the values that will be searched for in `sorted_search_values`.
    * @return a new instance of LowerBound
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> LowerBound<TInt32> create(Scope scope, Operand<T> sortedInputs, Operand<T> values) {
     return create(scope, sortedInputs, values, TInt32.DTYPE);
   }

@@ -56,7 +56,7 @@ public final class Bincount<T extends TNumber> extends PrimitiveOp implements Op
    * equal to 1.
    * @return a new instance of Bincount
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr, Operand<TInt32> size, Operand<T> weights) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
     opBuilder.addInput(arr.asOutput());

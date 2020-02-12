@@ -74,7 +74,7 @@ public final class ScaleAndTranslate extends PrimitiveOp implements Operand<TFlo
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslate
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslate", scope.makeOpName("ScaleAndTranslate"));
     opBuilder.addInput(images.asOutput());

@@ -73,7 +73,7 @@ public final class Fingerprint extends PrimitiveOp implements Operand<TUint8> {
    * `farmhash::fingerprint64`.
    * @return a new instance of Fingerprint
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());

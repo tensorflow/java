@@ -43,7 +43,7 @@ public final class Xdivy<T extends TType> extends PrimitiveOp implements Operand
    * @param y 
    * @return a new instance of Xdivy
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Xdivy<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Xdivy", scope.makeOpName("Xdivy"));
     opBuilder.addInput(x.asOutput());

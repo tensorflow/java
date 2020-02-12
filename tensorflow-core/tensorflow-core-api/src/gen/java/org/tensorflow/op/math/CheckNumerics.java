@@ -47,7 +47,7 @@ public final class CheckNumerics<T extends TNumber> extends PrimitiveOp implemen
    * @param message Prefix of the error message.
    * @return a new instance of CheckNumerics
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
     OperationBuilder opBuilder = scope.env().opBuilder("CheckNumerics", scope.makeOpName("CheckNumerics"));
     opBuilder.addInput(tensor.asOutput());

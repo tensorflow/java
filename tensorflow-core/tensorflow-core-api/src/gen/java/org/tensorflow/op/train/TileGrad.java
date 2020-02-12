@@ -48,7 +48,7 @@ public final class TileGrad<T extends TType> extends PrimitiveOp implements Oper
    * @param multiples 
    * @return a new instance of TileGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
     opBuilder.addInput(input.asOutput());

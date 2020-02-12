@@ -88,7 +88,7 @@ public final class Svd<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Svd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Svd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Svd", scope.makeOpName("Svd"));
     opBuilder.addInput(input.asOutput());

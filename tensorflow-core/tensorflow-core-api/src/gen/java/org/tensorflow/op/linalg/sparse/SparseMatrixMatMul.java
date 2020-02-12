@@ -133,7 +133,7 @@ public final class SparseMatrixMatMul<T extends TType> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of SparseMatrixMatMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixMatMul<T> create(Scope scope, Operand<?> a, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixMatMul", scope.makeOpName("SparseMatrixMatMul"));
     opBuilder.addInput(a.asOutput());

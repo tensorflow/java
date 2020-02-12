@@ -45,7 +45,7 @@ public final class BroadcastGradientArgs<T extends TNumber> extends PrimitiveOp 
    * @param s1 
    * @return a new instance of BroadcastGradientArgs
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
     opBuilder.addInput(s0.asOutput());

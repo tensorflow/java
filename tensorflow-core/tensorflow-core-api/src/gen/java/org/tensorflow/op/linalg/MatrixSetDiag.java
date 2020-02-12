@@ -118,7 +118,7 @@ public final class MatrixSetDiag<T extends TType> extends PrimitiveOp implements
    * of a matrix band. `k[0]` must not be larger than `k[1]`.
    * @return a new instance of MatrixSetDiag
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV2", scope.makeOpName("MatrixSetDiag"));
     opBuilder.addInput(input.asOutput());

@@ -64,7 +64,7 @@ public final class Restore extends PrimitiveOp implements Iterable<Operand<TType
    * those stored in the checkpoint.
    * @return a new instance of Restore
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<DataType<?>> dtypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreV2", scope.makeOpName("Restore"));
     opBuilder.addInput(prefix.asOutput());

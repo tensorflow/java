@@ -44,7 +44,7 @@ public final class Sqrt<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Sqrt
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sqrt<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sqrt", scope.makeOpName("Sqrt"));
     opBuilder.addInput(x.asOutput());

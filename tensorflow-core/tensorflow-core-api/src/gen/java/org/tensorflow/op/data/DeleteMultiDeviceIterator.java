@@ -40,7 +40,7 @@ public final class DeleteMultiDeviceIterator extends PrimitiveOp {
    * @param deleter A variant deleter.
    * @return a new instance of DeleteMultiDeviceIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeleteMultiDeviceIterator create(Scope scope, Operand<?> multiDeviceIterator, Iterable<Operand<?>> iterators, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMultiDeviceIterator", scope.makeOpName("DeleteMultiDeviceIterator"));
     opBuilder.addInput(multiDeviceIterator.asOutput());

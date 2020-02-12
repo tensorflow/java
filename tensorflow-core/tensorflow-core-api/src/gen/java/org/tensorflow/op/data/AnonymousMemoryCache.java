@@ -35,7 +35,7 @@ public final class AnonymousMemoryCache extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of AnonymousMemoryCache
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AnonymousMemoryCache create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousMemoryCache", scope.makeOpName("AnonymousMemoryCache"));
     opBuilder = scope.applyControlDependencies(opBuilder);

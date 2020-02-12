@@ -41,7 +41,7 @@ public final class TensorForestTreePredict extends PrimitiveOp implements Operan
    * @param logitsDimension Scalar, dimension of the logits.
    * @return a new instance of TensorForestTreePredict
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestTreePredict create(Scope scope, Operand<?> treeHandle, Operand<TFloat32> denseFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreePredict", scope.makeOpName("TensorForestTreePredict"));
     opBuilder.addInput(treeHandle.asOutput());

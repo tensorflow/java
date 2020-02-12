@@ -122,7 +122,7 @@ public final class ScatterNd<U extends TType> extends PrimitiveOp implements Ope
    * @param shape 1-D. The shape of the resulting tensor.
    * @return a new instance of ScatterNd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> ScatterNd<U> create(Scope scope, Operand<T> indices, Operand<U> updates, Operand<T> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNd", scope.makeOpName("ScatterNd"));
     opBuilder.addInput(indices.asOutput());

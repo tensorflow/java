@@ -46,7 +46,7 @@ public final class ConsumeMutexLock extends PrimitiveOp {
    * @param mutexLock A tensor returned by `MutexLock`.
    * @return a new instance of ConsumeMutexLock
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ConsumeMutexLock create(Scope scope, Operand<?> mutexLock) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConsumeMutexLock", scope.makeOpName("ConsumeMutexLock"));
     opBuilder.addInput(mutexLock.asOutput());

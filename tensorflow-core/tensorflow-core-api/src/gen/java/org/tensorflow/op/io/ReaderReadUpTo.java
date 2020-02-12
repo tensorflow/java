@@ -48,7 +48,7 @@ public final class ReaderReadUpTo extends PrimitiveOp {
    * @param numRecords number of records to read from `Reader`.
    * @return a new instance of ReaderReadUpTo
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReaderReadUpTo create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle, Operand<TInt64> numRecords) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadUpToV2", scope.makeOpName("ReaderReadUpTo"));
     opBuilder.addInput(readerHandle.asOutput());

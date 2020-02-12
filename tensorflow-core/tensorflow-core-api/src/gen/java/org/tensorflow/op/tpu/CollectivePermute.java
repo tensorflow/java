@@ -50,7 +50,7 @@ public final class CollectivePermute<T extends TType> extends PrimitiveOp implem
    * @param sourceTargetPairs A tensor with shape [num_pairs, 2].
    * @return a new instance of CollectivePermute
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
     opBuilder.addInput(input.asOutput());

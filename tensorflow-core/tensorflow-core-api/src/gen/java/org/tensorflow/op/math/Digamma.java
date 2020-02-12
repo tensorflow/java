@@ -45,7 +45,7 @@ public final class Digamma<T extends TNumber> extends PrimitiveOp implements Ope
    * @param x 
    * @return a new instance of Digamma
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Digamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Digamma", scope.makeOpName("Digamma"));
     opBuilder.addInput(x.asOutput());

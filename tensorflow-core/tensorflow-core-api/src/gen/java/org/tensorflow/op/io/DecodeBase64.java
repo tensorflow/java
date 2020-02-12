@@ -43,7 +43,7 @@ public final class DecodeBase64 extends PrimitiveOp implements Operand<TString> 
    * @param input Base64 strings to decode.
    * @return a new instance of DecodeBase64
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeBase64 create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBase64", scope.makeOpName("DecodeBase64"));
     opBuilder.addInput(input.asOutput());

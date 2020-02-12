@@ -89,7 +89,7 @@ public final class ScatterMax<T extends TNumber> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of ScatterMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> ScatterMax<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMax", scope.makeOpName("ScatterMax"));
     opBuilder.addInput(ref.asOutput());

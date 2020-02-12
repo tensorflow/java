@@ -88,7 +88,7 @@ public final class SparseTensorDenseMatMul<U extends TType> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of SparseTensorDenseMatMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseMatMul", scope.makeOpName("SparseTensorDenseMatMul"));
     opBuilder.addInput(aIndices.asOutput());

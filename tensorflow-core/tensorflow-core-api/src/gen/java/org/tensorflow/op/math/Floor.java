@@ -43,7 +43,7 @@ public final class Floor<T extends TNumber> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Floor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Floor<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Floor", scope.makeOpName("Floor"));
     opBuilder.addInput(x.asOutput());

@@ -38,7 +38,7 @@ public final class ImportEvent extends PrimitiveOp {
    * @param event 
    * @return a new instance of ImportEvent
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ImportEvent create(Scope scope, Operand<?> writer, Operand<TString> event) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImportEvent", scope.makeOpName("ImportEvent"));
     opBuilder.addInput(writer.asOutput());

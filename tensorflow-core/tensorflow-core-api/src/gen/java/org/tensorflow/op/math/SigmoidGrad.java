@@ -45,7 +45,7 @@ public final class SigmoidGrad<T extends TType> extends PrimitiveOp implements O
    * @param dy 
    * @return a new instance of SigmoidGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SigmoidGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("SigmoidGrad", scope.makeOpName("SigmoidGrad"));
     opBuilder.addInput(y.asOutput());

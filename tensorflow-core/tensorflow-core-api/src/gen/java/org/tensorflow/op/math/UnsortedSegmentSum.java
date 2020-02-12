@@ -72,7 +72,7 @@ public final class UnsortedSegmentSum<T extends TType> extends PrimitiveOp imple
    * @param numSegments 
    * @return a new instance of UnsortedSegmentSum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentSum", scope.makeOpName("UnsortedSegmentSum"));
     opBuilder.addInput(data.asOutput());

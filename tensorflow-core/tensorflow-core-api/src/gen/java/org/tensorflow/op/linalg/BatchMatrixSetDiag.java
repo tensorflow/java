@@ -41,7 +41,7 @@ public final class BatchMatrixSetDiag<T extends TType> extends PrimitiveOp imple
    * @param diagonal 
    * @return a new instance of BatchMatrixSetDiag
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSetDiag", scope.makeOpName("BatchMatrixSetDiag"));
     opBuilder.addInput(input.asOutput());

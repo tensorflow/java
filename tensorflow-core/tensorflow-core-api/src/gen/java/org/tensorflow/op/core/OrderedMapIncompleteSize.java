@@ -89,7 +89,7 @@ public final class OrderedMapIncompleteSize extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapIncompleteSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OrderedMapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapIncompleteSize", scope.makeOpName("OrderedMapIncompleteSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

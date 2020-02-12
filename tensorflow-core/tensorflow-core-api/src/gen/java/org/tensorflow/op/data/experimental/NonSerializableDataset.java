@@ -43,7 +43,7 @@ public final class NonSerializableDataset extends PrimitiveOp implements Operand
    * @param outputShapes 
    * @return a new instance of NonSerializableDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static NonSerializableDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalNonSerializableDataset", scope.makeOpName("NonSerializableDataset"));
     opBuilder.addInput(inputDataset.asOutput());

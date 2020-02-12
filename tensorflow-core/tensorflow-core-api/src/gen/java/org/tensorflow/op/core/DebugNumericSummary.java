@@ -156,7 +156,7 @@ public final class DebugNumericSummary extends PrimitiveOp implements Operand<TF
    * @param options carries optional attributes values
    * @return a new instance of DebugNumericSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugNumericSummary create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummary", scope.makeOpName("DebugNumericSummary"));
     opBuilder.addInput(input.asOutput());

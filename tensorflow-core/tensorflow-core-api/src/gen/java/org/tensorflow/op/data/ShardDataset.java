@@ -67,7 +67,7 @@ public final class ShardDataset extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of ShardDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ShardDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numShards, Operand<TInt64> index, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardDataset", scope.makeOpName("ShardDataset"));
     opBuilder.addInput(inputDataset.asOutput());

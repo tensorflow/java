@@ -51,7 +51,7 @@ public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements It
    * @param config Serialized TPUEmbeddingConfiguration proto.
    * @return a new instance of RecvTPUEmbeddingActivations
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RecvTPUEmbeddingActivations create(Scope scope, Long numOutputs, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecvTPUEmbeddingActivations", scope.makeOpName("RecvTPUEmbeddingActivations"));
     opBuilder = scope.applyControlDependencies(opBuilder);

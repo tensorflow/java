@@ -78,7 +78,7 @@ public final class Assign<T extends TType> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of Assign
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Assign<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Assign", scope.makeOpName("Assign"));
     opBuilder.addInput(ref.asOutput());

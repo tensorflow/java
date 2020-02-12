@@ -170,7 +170,7 @@ public final class SnapshotDataset extends PrimitiveOp implements Operand<TType>
    * @param options carries optional attributes values
    * @return a new instance of SnapshotDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SnapshotDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> path, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SnapshotDataset", scope.makeOpName("SnapshotDataset"));
     opBuilder.addInput(inputDataset.asOutput());

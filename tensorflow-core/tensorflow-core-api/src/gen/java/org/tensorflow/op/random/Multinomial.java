@@ -79,7 +79,7 @@ public final class Multinomial<U extends TNumber> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, DataType<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
@@ -109,7 +109,7 @@ public final class Multinomial<U extends TNumber> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Multinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Options... options) {
     return create(scope, logits, numSamples, TInt64.DTYPE, options);
   }

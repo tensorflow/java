@@ -62,7 +62,7 @@ public final class ApproximateEqual extends PrimitiveOp implements Operand<TBool
    * @param options carries optional attributes values
    * @return a new instance of ApproximateEqual
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApproximateEqual", scope.makeOpName("ApproximateEqual"));
     opBuilder.addInput(x.asOutput());

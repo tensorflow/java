@@ -40,7 +40,7 @@ public final class BoostedTreesGetEnsembleStates extends PrimitiveOp {
    * @param treeEnsembleHandle Handle to the tree ensemble.
    * @return a new instance of BoostedTreesGetEnsembleStates
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesGetEnsembleStates create(Scope scope, Operand<?> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesGetEnsembleStates", scope.makeOpName("BoostedTreesGetEnsembleStates"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

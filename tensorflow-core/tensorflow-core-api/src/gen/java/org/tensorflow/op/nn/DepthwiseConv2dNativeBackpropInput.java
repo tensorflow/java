@@ -93,7 +93,7 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNativeBackpropInput
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DepthwiseConv2dNativeBackpropInput<T> create(Scope scope, Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNativeBackpropInput", scope.makeOpName("DepthwiseConv2dNativeBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());

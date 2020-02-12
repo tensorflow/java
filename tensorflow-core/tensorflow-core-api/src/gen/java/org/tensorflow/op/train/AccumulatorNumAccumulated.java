@@ -41,7 +41,7 @@ public final class AccumulatorNumAccumulated extends PrimitiveOp implements Oper
    * @param handle The handle to an accumulator.
    * @return a new instance of AccumulatorNumAccumulated
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AccumulatorNumAccumulated create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorNumAccumulated", scope.makeOpName("AccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());

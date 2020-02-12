@@ -58,7 +58,7 @@ public final class LessEqual extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of LessEqual
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LessEqual create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LessEqual", scope.makeOpName("LessEqual"));
     opBuilder.addInput(x.asOutput());

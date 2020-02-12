@@ -166,7 +166,7 @@ public final class FixedUnigramCandidateSampler extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FixedUnigramCandidateSampler
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FixedUnigramCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedUnigramCandidateSampler", scope.makeOpName("FixedUnigramCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());

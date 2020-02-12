@@ -42,7 +42,7 @@ public final class TPUOrdinalSelector extends PrimitiveOp implements Operand<TIn
    * @param scope current scope
    * @return a new instance of TPUOrdinalSelector
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TPUOrdinalSelector create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUOrdinalSelector", scope.makeOpName("TPUOrdinalSelector"));
     opBuilder = scope.applyControlDependencies(opBuilder);

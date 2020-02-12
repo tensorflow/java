@@ -52,7 +52,7 @@ public final class SparseSparseMaximum<T extends TNumber> extends PrimitiveOp {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMaximum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SparseSparseMaximum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMaximum", scope.makeOpName("SparseSparseMaximum"));
     opBuilder.addInput(aIndices.asOutput());

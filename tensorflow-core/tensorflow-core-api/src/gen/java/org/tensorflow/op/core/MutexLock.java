@@ -76,7 +76,7 @@ public final class MutexLock extends PrimitiveOp implements Operand<TType> {
    * @param mutex The mutex resource to lock.
    * @return a new instance of MutexLock
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MutexLock create(Scope scope, Operand<?> mutex) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutexLock", scope.makeOpName("MutexLock"));
     opBuilder.addInput(mutex.asOutput());

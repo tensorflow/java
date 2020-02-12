@@ -101,7 +101,7 @@ public final class SparseToSparseSetOperation<T extends TType> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of SparseToSparseSetOperation
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseToSparseSetOperation<T> create(Scope scope, Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToSparseSetOperation", scope.makeOpName("SparseToSparseSetOperation"));
     opBuilder.addInput(set1Indices.asOutput());

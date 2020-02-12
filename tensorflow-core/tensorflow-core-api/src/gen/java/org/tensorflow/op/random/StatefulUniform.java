@@ -50,7 +50,7 @@ public final class StatefulUniform<U extends TType> extends PrimitiveOp implemen
    * @param dtype The type of the output.
    * @return a new instance of StatefulUniform
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput());
@@ -70,7 +70,7 @@ public final class StatefulUniform<U extends TType> extends PrimitiveOp implemen
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulUniform
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> StatefulUniform<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
   }

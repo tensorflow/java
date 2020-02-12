@@ -40,7 +40,7 @@ public final class WriteGraphSummary extends PrimitiveOp {
    * @param tensor 
    * @return a new instance of WriteGraphSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WriteGraphSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteGraphSummary", scope.makeOpName("WriteGraphSummary"));
     opBuilder.addInput(writer.asOutput());

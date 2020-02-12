@@ -38,7 +38,7 @@ public final class ReaderReset extends PrimitiveOp {
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderReset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReaderReset create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderResetV2", scope.makeOpName("ReaderReset"));
     opBuilder.addInput(readerHandle.asOutput());

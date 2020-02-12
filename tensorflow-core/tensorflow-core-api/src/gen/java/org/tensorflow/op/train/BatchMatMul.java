@@ -96,7 +96,7 @@ public final class BatchMatMul<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of BatchMatMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatMulV2", scope.makeOpName("BatchMatMul"));
     opBuilder.addInput(x.asOutput());

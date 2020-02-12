@@ -112,7 +112,7 @@ public final class LSTMBlockCell<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LSTMBlockCell
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());

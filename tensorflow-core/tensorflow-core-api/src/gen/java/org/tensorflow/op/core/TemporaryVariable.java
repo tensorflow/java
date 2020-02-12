@@ -81,7 +81,7 @@ public final class TemporaryVariable<T extends TType> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of TemporaryVariable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.applyControlDependencies(opBuilder);

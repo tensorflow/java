@@ -46,7 +46,7 @@ public final class Div<T extends TType> extends PrimitiveOp implements Operand<T
    * @param y 
    * @return a new instance of Div
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Div<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Div", scope.makeOpName("Div"));
     opBuilder.addInput(x.asOutput());

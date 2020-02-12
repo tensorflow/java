@@ -65,7 +65,7 @@ public final class UpperBound<U extends TNumber> extends PrimitiveOp implements 
    * @param outType 
    * @return a new instance of UpperBound
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> UpperBound<U> create(Scope scope, Operand<T> sortedInputs, Operand<T> values, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("UpperBound", scope.makeOpName("UpperBound"));
     opBuilder.addInput(sortedInputs.asOutput());
@@ -84,7 +84,7 @@ public final class UpperBound<U extends TNumber> extends PrimitiveOp implements 
    * the values that will be searched for in `sorted_search_values`.
    * @return a new instance of UpperBound
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> UpperBound<TInt32> create(Scope scope, Operand<T> sortedInputs, Operand<T> values) {
     return create(scope, sortedInputs, values, TInt32.DTYPE);
   }

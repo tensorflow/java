@@ -47,7 +47,7 @@ public final class NegTrain extends PrimitiveOp {
    * @param numNegativeSamples Number of negative samples per example.
    * @return a new instance of NegTrain
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static NegTrain create(Scope scope, Operand<TFloat32> wIn, Operand<TFloat32> wOut, Operand<TInt32> examples, Operand<TInt32> labels, Operand<TFloat32> lr, List<Long> vocabCount, Long numNegativeSamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("NegTrain", scope.makeOpName("NegTrain"));
     opBuilder.addInput(wIn.asOutput());

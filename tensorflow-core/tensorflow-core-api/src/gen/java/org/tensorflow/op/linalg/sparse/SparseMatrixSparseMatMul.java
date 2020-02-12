@@ -163,7 +163,7 @@ public final class SparseMatrixSparseMatMul extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of SparseMatrixSparseMatMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseMatMul", scope.makeOpName("SparseMatrixSparseMatMul"));
     opBuilder.addInput(a.asOutput());

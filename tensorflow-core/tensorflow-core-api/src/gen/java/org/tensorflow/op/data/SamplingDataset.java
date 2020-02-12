@@ -56,7 +56,7 @@ public final class SamplingDataset extends PrimitiveOp implements Operand<TType>
    * @param outputShapes 
    * @return a new instance of SamplingDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SamplingDataset create(Scope scope, Operand<?> inputDataset, Operand<TFloat32> rate, Operand<TInt64> seed, Operand<TInt64> seed2, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SamplingDataset", scope.makeOpName("SamplingDataset"));
     opBuilder.addInput(inputDataset.asOutput());

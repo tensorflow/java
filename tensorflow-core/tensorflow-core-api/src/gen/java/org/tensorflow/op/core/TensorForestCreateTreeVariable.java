@@ -39,7 +39,7 @@ public final class TensorForestCreateTreeVariable extends PrimitiveOp {
    * @param treeConfig Serialized proto string of the boosted_trees.Tree.
    * @return a new instance of TensorForestCreateTreeVariable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestCreateTreeVariable create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestCreateTreeVariable", scope.makeOpName("TensorForestCreateTreeVariable"));
     opBuilder.addInput(treeHandle.asOutput());

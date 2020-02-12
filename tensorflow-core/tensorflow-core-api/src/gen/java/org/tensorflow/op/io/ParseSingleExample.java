@@ -75,7 +75,7 @@ public final class ParseSingleExample extends PrimitiveOp {
    * D1 * .... * DN, in the input.
    * @return a new instance of ParseSingleExample
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleExample", scope.makeOpName("ParseSingleExample"));
     opBuilder.addInput(serialized.asOutput());

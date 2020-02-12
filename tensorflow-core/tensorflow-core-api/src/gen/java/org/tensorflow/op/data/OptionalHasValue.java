@@ -40,7 +40,7 @@ public final class OptionalHasValue extends PrimitiveOp implements Operand<TBool
    * @param optional 
    * @return a new instance of OptionalHasValue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OptionalHasValue create(Scope scope, Operand<?> optional) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalHasValue", scope.makeOpName("OptionalHasValue"));
     opBuilder.addInput(optional.asOutput());

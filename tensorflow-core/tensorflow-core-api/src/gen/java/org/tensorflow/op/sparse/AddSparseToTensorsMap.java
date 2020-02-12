@@ -88,7 +88,7 @@ public final class AddSparseToTensorsMap extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of AddSparseToTensorsMap
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddSparseToTensorsMap", scope.makeOpName("AddSparseToTensorsMap"));
     opBuilder.addInput(sparseIndices.asOutput());

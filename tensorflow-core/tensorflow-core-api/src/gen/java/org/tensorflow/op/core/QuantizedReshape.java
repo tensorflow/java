@@ -49,7 +49,7 @@ public final class QuantizedReshape<T extends TType> extends PrimitiveOp {
    * @param inputMax The maximum value of the input.
    * @return a new instance of QuantizedReshape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
     opBuilder.addInput(tensor.asOutput());

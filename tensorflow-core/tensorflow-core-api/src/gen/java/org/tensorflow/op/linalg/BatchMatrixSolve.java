@@ -62,7 +62,7 @@ public final class BatchMatrixSolve<T extends TNumber> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixSolve
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolve", scope.makeOpName("BatchMatrixSolve"));
     opBuilder.addInput(matrix.asOutput());

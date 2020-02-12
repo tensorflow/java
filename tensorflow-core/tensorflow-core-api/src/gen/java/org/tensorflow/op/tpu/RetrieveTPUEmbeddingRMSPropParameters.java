@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingRMSPropParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingRMSPropParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingRMSPropParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingRMSPropParameters", scope.makeOpName("RetrieveTPUEmbeddingRMSPropParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

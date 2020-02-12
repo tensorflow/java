@@ -54,7 +54,7 @@ public final class SparseDenseCwiseMul<T extends TType> extends PrimitiveOp impl
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseMul
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseDenseCwiseMul<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseMul", scope.makeOpName("SparseDenseCwiseMul"));
     opBuilder.addInput(spIndices.asOutput());

@@ -39,7 +39,7 @@ public final class TensorForestTreeSize extends PrimitiveOp implements Operand<T
    * @param treeHandle Handle to the tree resource.
    * @return a new instance of TensorForestTreeSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeSize create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSize", scope.makeOpName("TensorForestTreeSize"));
     opBuilder.addInput(treeHandle.asOutput());

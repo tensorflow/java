@@ -57,7 +57,7 @@ public final class Igamma<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Igamma
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Igamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Igamma", scope.makeOpName("Igamma"));
     opBuilder.addInput(a.asOutput());

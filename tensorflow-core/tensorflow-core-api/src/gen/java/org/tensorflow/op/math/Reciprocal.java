@@ -44,7 +44,7 @@ public final class Reciprocal<T extends TType> extends PrimitiveOp implements Op
    * @param x 
    * @return a new instance of Reciprocal
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Reciprocal<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Reciprocal", scope.makeOpName("Reciprocal"));
     opBuilder.addInput(x.asOutput());

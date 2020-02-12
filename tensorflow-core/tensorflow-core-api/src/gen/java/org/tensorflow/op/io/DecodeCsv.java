@@ -102,7 +102,7 @@ public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<TTy
    * @param options carries optional attributes values
    * @return a new instance of DecodeCsv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeCsv create(Scope scope, Operand<TString> records, Iterable<Operand<?>> recordDefaults, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());

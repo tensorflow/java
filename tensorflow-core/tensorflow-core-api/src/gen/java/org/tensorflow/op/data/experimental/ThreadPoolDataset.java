@@ -45,7 +45,7 @@ public final class ThreadPoolDataset extends PrimitiveOp implements Operand<TTyp
    * @param outputShapes 
    * @return a new instance of ThreadPoolDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<?> threadPool, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalThreadPoolDataset", scope.makeOpName("ThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput());

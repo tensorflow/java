@@ -43,7 +43,7 @@ public final class IsVariableInitialized extends PrimitiveOp implements Operand<
    * @param ref Should be from a `Variable` node. May be uninitialized.
    * @return a new instance of IsVariableInitialized
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> IsVariableInitialized create(Scope scope, Operand<T> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());

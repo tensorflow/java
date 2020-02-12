@@ -69,7 +69,7 @@ public final class BatchSvd<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BatchSvd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSvd", scope.makeOpName("BatchSvd"));
     opBuilder.addInput(input.asOutput());

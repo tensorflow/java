@@ -44,7 +44,7 @@ public final class FilterByLastComponentDataset extends PrimitiveOp implements O
    * @param outputShapes 
    * @return a new instance of FilterByLastComponentDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FilterByLastComponentDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("FilterByLastComponentDataset", scope.makeOpName("FilterByLastComponentDataset"));
     opBuilder.addInput(inputDataset.asOutput());

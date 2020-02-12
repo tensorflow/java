@@ -92,7 +92,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNorm
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> FusedBatchNorm<T, U> create(Scope scope, Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormV3", scope.makeOpName("FusedBatchNorm"));
     opBuilder.addInput(x.asOutput());

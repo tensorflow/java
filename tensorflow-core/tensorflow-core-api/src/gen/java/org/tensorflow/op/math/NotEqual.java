@@ -65,7 +65,7 @@ public final class NotEqual extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of NotEqual
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> NotEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NotEqual", scope.makeOpName("NotEqual"));
     opBuilder.addInput(x.asOutput());

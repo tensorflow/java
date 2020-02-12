@@ -82,7 +82,7 @@ public final class Stack<T extends TType> extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of Stack
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Stack<T> create(Scope scope, Iterable<Operand<T>> values, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Pack", scope.makeOpName("Stack"));
     opBuilder.addInputList(Operands.asOutputs(values));

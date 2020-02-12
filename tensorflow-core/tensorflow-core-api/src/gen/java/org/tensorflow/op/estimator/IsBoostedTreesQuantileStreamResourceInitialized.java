@@ -41,7 +41,7 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends Primi
    * @param quantileStreamResourceHandle resource; The reference to quantile stream resource handle.
    * @return a new instance of IsBoostedTreesQuantileStreamResourceInitialized
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IsBoostedTreesQuantileStreamResourceInitialized create(Scope scope, Operand<?> quantileStreamResourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesQuantileStreamResourceInitialized", scope.makeOpName("IsBoostedTreesQuantileStreamResourceInitialized"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

@@ -140,7 +140,7 @@ public final class MatrixDiag<T extends TType> extends PrimitiveOp implements Op
    * Default is 0.
    * @return a new instance of MatrixDiag
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixDiag<T> create(Scope scope, Operand<T> diagonal, Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagV2", scope.makeOpName("MatrixDiag"));
     opBuilder.addInput(diagonal.asOutput());

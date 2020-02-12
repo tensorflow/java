@@ -59,7 +59,7 @@ public final class ToHashBucketStrong extends PrimitiveOp implements Operand<TIn
    * elements.
    * @return a new instance of ToHashBucketStrong
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ToHashBucketStrong create(Scope scope, Operand<TString> input, Long numBuckets, List<Long> key) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketStrong", scope.makeOpName("ToHashBucketStrong"));
     opBuilder.addInput(input.asOutput());

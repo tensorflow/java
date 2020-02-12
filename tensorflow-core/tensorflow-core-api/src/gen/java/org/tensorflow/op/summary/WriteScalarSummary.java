@@ -43,7 +43,7 @@ public final class WriteScalarSummary extends PrimitiveOp {
    * @param value 
    * @return a new instance of WriteScalarSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> WriteScalarSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteScalarSummary", scope.makeOpName("WriteScalarSummary"));
     opBuilder.addInput(writer.asOutput());

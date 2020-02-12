@@ -55,7 +55,7 @@ public final class ExtractVolumePatches<T extends TNumber> extends PrimitiveOp i
    * 
    * @return a new instance of ExtractVolumePatches
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractVolumePatches", scope.makeOpName("ExtractVolumePatches"));
     opBuilder.addInput(input.asOutput());

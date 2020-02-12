@@ -103,7 +103,7 @@ public final class QuantizedInstanceNorm<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedInstanceNorm
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat32> xMin, Operand<TFloat32> xMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedInstanceNorm", scope.makeOpName("QuantizedInstanceNorm"));
     opBuilder.addInput(x.asOutput());

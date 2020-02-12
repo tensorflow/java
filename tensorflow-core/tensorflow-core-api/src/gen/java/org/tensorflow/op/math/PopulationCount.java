@@ -49,7 +49,7 @@ public final class PopulationCount extends PrimitiveOp implements Operand<TUint8
    * @param x 
    * @return a new instance of PopulationCount
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());

@@ -45,7 +45,7 @@ public final class DebugGradientIdentity<T extends TType> extends PrimitiveOp im
    * @param input 
    * @return a new instance of DebugGradientIdentity
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugGradientIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientIdentity", scope.makeOpName("DebugGradientIdentity"));
     opBuilder.addInput(input.asOutput());

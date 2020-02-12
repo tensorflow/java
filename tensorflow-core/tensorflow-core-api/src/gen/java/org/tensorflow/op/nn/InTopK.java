@@ -60,7 +60,7 @@ public final class InTopK extends PrimitiveOp implements Operand<TBool> {
    * @param k Number of top elements to look at for computing precision.
    * @return a new instance of InTopK
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions, Operand<T> targets, Operand<T> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("InTopKV2", scope.makeOpName("InTopK"));
     opBuilder.addInput(predictions.asOutput());

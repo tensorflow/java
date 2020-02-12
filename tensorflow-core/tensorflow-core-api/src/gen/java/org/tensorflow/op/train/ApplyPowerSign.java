@@ -74,7 +74,7 @@ public final class ApplyPowerSign<T extends TType> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of ApplyPowerSign
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyPowerSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyPowerSign", scope.makeOpName("ApplyPowerSign"));
     opBuilder.addInput(var.asOutput());

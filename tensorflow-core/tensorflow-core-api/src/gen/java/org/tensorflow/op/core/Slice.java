@@ -56,7 +56,7 @@ public final class Slice<T extends TType> extends PrimitiveOp implements Operand
    * size[i] = input.dim_size(i) - begin[i]).
    * @return a new instance of Slice
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("Slice", scope.makeOpName("Slice"));
     opBuilder.addInput(input.asOutput());

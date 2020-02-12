@@ -82,7 +82,7 @@ public final class DynamicPartition<T extends TType> extends PrimitiveOp impleme
    * @param numPartitions The number of partitions to output.
    * @return a new instance of DynamicPartition
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DynamicPartition<T> create(Scope scope, Operand<T> data, Operand<TInt32> partitions, Long numPartitions) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicPartition", scope.makeOpName("DynamicPartition"));
     opBuilder.addInput(data.asOutput());

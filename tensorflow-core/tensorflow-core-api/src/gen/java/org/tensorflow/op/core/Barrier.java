@@ -104,7 +104,7 @@ public final class Barrier extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Barrier
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Barrier create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -58,7 +58,7 @@ public final class NcclAllReduce<T extends TNumber> extends PrimitiveOp implemen
    * @param sharedName 
    * @return a new instance of NcclAllReduce
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NcclAllReduce<T> create(Scope scope, Operand<T> input, String reduction, Long numDevices, String sharedName) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclAllReduce", scope.makeOpName("NcclAllReduce"));
     opBuilder.addInput(input.asOutput());

@@ -82,7 +82,7 @@ public final class InfeedEnqueue extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InfeedEnqueue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueue", scope.makeOpName("InfeedEnqueue"));
     opBuilder.addInput(input.asOutput());

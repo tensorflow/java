@@ -47,7 +47,7 @@ public final class Transpose<T extends TType> extends PrimitiveOp implements Ope
    * @param perm 
    * @return a new instance of Transpose
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Transpose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
     opBuilder.addInput(x.asOutput());

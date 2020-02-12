@@ -43,7 +43,7 @@ public final class ReaderNumRecordsProduced extends PrimitiveOp implements Opera
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderNumRecordsProduced
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReaderNumRecordsProduced create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumRecordsProducedV2", scope.makeOpName("ReaderNumRecordsProduced"));
     opBuilder.addInput(readerHandle.asOutput());

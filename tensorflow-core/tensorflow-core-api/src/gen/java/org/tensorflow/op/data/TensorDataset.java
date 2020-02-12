@@ -43,7 +43,7 @@ public final class TensorDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of TensorDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorDataset", scope.makeOpName("TensorDataset"));
     opBuilder.addInputList(Operands.asOutputs(components));

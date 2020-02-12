@@ -96,7 +96,7 @@ public final class ResourceScatterNdAdd extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> ResourceScatterNdAdd create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdAdd", scope.makeOpName("ResourceScatterNdAdd"));
     opBuilder.addInput(ref.asOutput());

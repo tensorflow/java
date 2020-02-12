@@ -74,7 +74,7 @@ public final class Inv<T extends TType> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of Inv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Inv<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixInverse", scope.makeOpName("Inv"));
     opBuilder.addInput(input.asOutput());

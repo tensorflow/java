@@ -61,7 +61,7 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BatchSelfAdjointEig
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BatchSelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSelfAdjointEigV2", scope.makeOpName("BatchSelfAdjointEig"));
     opBuilder.addInput(input.asOutput());

@@ -83,7 +83,7 @@ public final class CropAndResizeGradImage<T extends TNumber> extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradImage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradImage", scope.makeOpName("CropAndResizeGradImage"));
     opBuilder.addInput(grads.asOutput());

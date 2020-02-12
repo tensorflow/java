@@ -98,7 +98,7 @@ public final class OrderedMapUnstage extends PrimitiveOp implements Iterable<Ope
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapUnstage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OrderedMapUnstage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapUnstage", scope.makeOpName("OrderedMapUnstage"));
     opBuilder.addInput(key.asOutput());

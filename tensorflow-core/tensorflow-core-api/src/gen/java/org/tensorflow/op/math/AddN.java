@@ -51,7 +51,7 @@ public final class AddN<T extends TType> extends PrimitiveOp implements Operand<
    * @param inputs 
    * @return a new instance of AddN
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

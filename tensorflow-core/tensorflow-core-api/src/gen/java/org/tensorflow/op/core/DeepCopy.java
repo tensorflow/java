@@ -42,7 +42,7 @@ public final class DeepCopy<T extends TType> extends PrimitiveOp implements Oper
    * @param x The source tensor of type `T`.
    * @return a new instance of DeepCopy
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
     opBuilder.addInput(x.asOutput());

@@ -52,7 +52,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends PrimitiveOp
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomUniform
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
@@ -70,7 +70,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends PrimitiveOp
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomUniform
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }

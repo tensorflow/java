@@ -109,7 +109,7 @@ public final class FixedLengthRecordReader extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of FixedLengthRecordReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FixedLengthRecordReader create(Scope scope, Long recordBytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordReaderV2", scope.makeOpName("FixedLengthRecordReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

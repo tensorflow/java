@@ -70,7 +70,7 @@ public final class LmdbReader extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of LmdbReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LmdbReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LMDBReader", scope.makeOpName("LmdbReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

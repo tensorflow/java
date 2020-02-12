@@ -65,7 +65,7 @@ public final class SparseSlice<T extends TType> extends PrimitiveOp {
    * sparse tensors.
    * @return a new instance of SparseSlice
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseSlice<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSlice", scope.makeOpName("SparseSlice"));
     opBuilder.addInput(indices.asOutput());

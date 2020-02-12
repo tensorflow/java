@@ -73,7 +73,7 @@ public final class VarHandleOp extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of VarHandleOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -49,7 +49,7 @@ public final class BarrierInsertMany extends PrimitiveOp {
    * @param componentIndex The component of the barrier elements that is being assigned.
    * @return a new instance of BarrierInsertMany
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<T> values, Long componentIndex) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierInsertMany", scope.makeOpName("BarrierInsertMany"));
     opBuilder.addInput(handle.asOutput());

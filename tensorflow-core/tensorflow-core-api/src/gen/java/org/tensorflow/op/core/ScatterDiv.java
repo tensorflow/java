@@ -85,7 +85,7 @@ public final class ScatterDiv<T extends TType> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of ScatterDiv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ScatterDiv<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterDiv", scope.makeOpName("ScatterDiv"));
     opBuilder.addInput(ref.asOutput());

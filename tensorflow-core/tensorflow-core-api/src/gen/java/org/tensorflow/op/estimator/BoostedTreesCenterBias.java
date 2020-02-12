@@ -44,7 +44,7 @@ public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand
    * @param l2 l2 regularization factor on leaf weights, per instance based.
    * @return a new instance of BoostedTreesCenterBias
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesCenterBias create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TFloat32> meanGradients, Operand<TFloat32> meanHessians, Operand<TFloat32> l1, Operand<TFloat32> l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCenterBias", scope.makeOpName("BoostedTreesCenterBias"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

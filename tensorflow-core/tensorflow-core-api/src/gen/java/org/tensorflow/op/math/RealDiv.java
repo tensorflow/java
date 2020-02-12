@@ -48,7 +48,7 @@ public final class RealDiv<T extends TType> extends PrimitiveOp implements Opera
    * @param y 
    * @return a new instance of RealDiv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RealDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("RealDiv", scope.makeOpName("RealDiv"));
     opBuilder.addInput(x.asOutput());

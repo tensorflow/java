@@ -38,7 +38,7 @@ public final class WrapDatasetVariant extends PrimitiveOp implements Operand<TTy
    * @param inputHandle 
    * @return a new instance of WrapDatasetVariant
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("WrapDatasetVariant", scope.makeOpName("WrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());

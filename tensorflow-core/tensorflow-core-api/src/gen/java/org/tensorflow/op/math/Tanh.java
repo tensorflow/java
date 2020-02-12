@@ -52,7 +52,7 @@ public final class Tanh<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Tanh
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Tanh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Tanh", scope.makeOpName("Tanh"));
     opBuilder.addInput(x.asOutput());

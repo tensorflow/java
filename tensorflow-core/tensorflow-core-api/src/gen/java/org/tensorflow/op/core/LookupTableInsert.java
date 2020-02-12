@@ -44,7 +44,7 @@ public final class LookupTableInsert extends PrimitiveOp {
    * @param values Values to associate with keys.
    * @return a new instance of LookupTableInsert
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> LookupTableInsert create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableInsertV2", scope.makeOpName("LookupTableInsert"));
     opBuilder.addInput(tableHandle.asOutput());

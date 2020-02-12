@@ -88,7 +88,7 @@ public final class AllCandidateSampler extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of AllCandidateSampler
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AllCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AllCandidateSampler", scope.makeOpName("AllCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());

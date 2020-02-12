@@ -43,7 +43,7 @@ public final class SdcaShrinkL1 extends PrimitiveOp {
    * @param l2 Symmetric l2 regularization strength. Should be a positive float.
    * @return a new instance of SdcaShrinkL1
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat32>> weights, Float l1, Float l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaShrinkL1", scope.makeOpName("SdcaShrinkL1"));
     opBuilder.addInputList(Operands.asOutputs(weights));

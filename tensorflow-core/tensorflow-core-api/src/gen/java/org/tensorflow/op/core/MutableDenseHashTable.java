@@ -121,7 +121,7 @@ public final class MutableDenseHashTable extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of MutableDenseHashTable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput());

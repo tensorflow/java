@@ -50,7 +50,7 @@ public final class Mod<T extends TNumber> extends PrimitiveOp implements Operand
    * @param y 
    * @return a new instance of Mod
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Mod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mod", scope.makeOpName("Mod"));
     opBuilder.addInput(x.asOutput());

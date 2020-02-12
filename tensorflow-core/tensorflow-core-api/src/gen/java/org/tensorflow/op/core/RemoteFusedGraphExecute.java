@@ -56,7 +56,7 @@ public final class RemoteFusedGraphExecute extends PrimitiveOp implements Iterab
    * of RemoteFusedGraphExecuteInfo which contains graph specifications.
    * @return a new instance of RemoteFusedGraphExecute
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

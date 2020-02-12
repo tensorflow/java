@@ -56,7 +56,7 @@ public final class Betainc<T extends TNumber> extends PrimitiveOp implements Ope
    * @param x 
    * @return a new instance of Betainc
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Betainc<T> create(Scope scope, Operand<T> a, Operand<T> b, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Betainc", scope.makeOpName("Betainc"));
     opBuilder.addInput(a.asOutput());

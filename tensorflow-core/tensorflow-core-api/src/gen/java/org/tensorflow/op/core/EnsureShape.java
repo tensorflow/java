@@ -47,7 +47,7 @@ public final class EnsureShape<T extends TType> extends PrimitiveOp implements O
    * @param shape The expected (possibly partially specified) shape of the input tensor.
    * @return a new instance of EnsureShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
     opBuilder.addInput(input.asOutput());

@@ -45,7 +45,7 @@ public final class SleepDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of SleepDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SleepDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> sleepMicroseconds, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SleepDataset", scope.makeOpName("SleepDataset"));
     opBuilder.addInput(inputDataset.asOutput());

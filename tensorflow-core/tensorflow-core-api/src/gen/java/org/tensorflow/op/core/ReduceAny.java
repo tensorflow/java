@@ -69,7 +69,7 @@ public final class ReduceAny extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceAny
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ReduceAny create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("ReduceAny"));
     opBuilder.addInput(input.asOutput());

@@ -80,7 +80,7 @@ public final class TensorArrayGrad extends PrimitiveOp {
    * to return.
    * @return a new instance of TensorArrayGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorArrayGrad create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradV3", scope.makeOpName("TensorArrayGrad"));
     opBuilder.addInput(handle.asOutput());

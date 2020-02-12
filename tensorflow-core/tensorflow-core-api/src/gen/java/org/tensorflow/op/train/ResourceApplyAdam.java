@@ -84,7 +84,7 @@ public final class ResourceApplyAdam extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyAdam
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceApplyAdam create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdam", scope.makeOpName("ResourceApplyAdam"));
     opBuilder.addInput(var.asOutput());

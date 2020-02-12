@@ -70,7 +70,7 @@ public final class ApplyProximalGradientDescent<T extends TType> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of ApplyProximalGradientDescent
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalGradientDescent", scope.makeOpName("ApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());

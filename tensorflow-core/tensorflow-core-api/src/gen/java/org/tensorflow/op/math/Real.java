@@ -58,7 +58,7 @@ public final class Real<U extends TNumber> extends PrimitiveOp implements Operan
    * @param Tout 
    * @return a new instance of Real
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Real<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Real", scope.makeOpName("Real"));
     opBuilder.addInput(input.asOutput());
@@ -74,7 +74,7 @@ public final class Real<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Real
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Real<TFloat32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat32.DTYPE);
   }

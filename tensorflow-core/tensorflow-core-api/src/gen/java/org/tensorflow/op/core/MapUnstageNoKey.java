@@ -95,7 +95,7 @@ public final class MapUnstageNoKey extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapUnstageNoKey
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());

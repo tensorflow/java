@@ -79,7 +79,7 @@ public final class TfRecordReader extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of TfRecordReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TfRecordReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordReaderV2", scope.makeOpName("TfRecordReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

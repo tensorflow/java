@@ -53,7 +53,7 @@ public final class IsInf extends PrimitiveOp implements Operand<TBool> {
    * @param x 
    * @return a new instance of IsInf
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> IsInf create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsInf", scope.makeOpName("IsInf"));
     opBuilder.addInput(x.asOutput());

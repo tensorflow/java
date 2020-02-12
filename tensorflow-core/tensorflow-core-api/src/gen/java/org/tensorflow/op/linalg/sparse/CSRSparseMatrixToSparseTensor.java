@@ -45,7 +45,7 @@ public final class CSRSparseMatrixToSparseTensor<T extends TType> extends Primit
    * @param type 
    * @return a new instance of CSRSparseMatrixToSparseTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
     opBuilder.addInput(sparseMatrix.asOutput());

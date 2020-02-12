@@ -138,7 +138,7 @@ public final class TryRpc extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TryRpc
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TryRpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TryRpc", scope.makeOpName("TryRpc"));
     opBuilder.addInput(address.asOutput());

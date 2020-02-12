@@ -78,7 +78,7 @@ public final class FractionalMaxPoolGrad<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of FractionalMaxPoolGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FractionalMaxPoolGrad<T> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPoolGrad", scope.makeOpName("FractionalMaxPoolGrad"));
     opBuilder.addInput(origInput.asOutput());

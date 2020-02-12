@@ -48,7 +48,7 @@ public final class StaticRegexFullMatch extends PrimitiveOp implements Operand<T
    * @param pattern The regular expression to match the input.
    * @return a new instance of StaticRegexFullMatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StaticRegexFullMatch create(Scope scope, Operand<TString> input, String pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexFullMatch", scope.makeOpName("StaticRegexFullMatch"));
     opBuilder.addInput(input.asOutput());

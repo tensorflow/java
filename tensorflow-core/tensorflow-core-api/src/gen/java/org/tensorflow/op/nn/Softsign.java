@@ -43,7 +43,7 @@ public final class Softsign<T extends TNumber> extends PrimitiveOp implements Op
    * @param features 
    * @return a new instance of Softsign
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Softsign<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softsign", scope.makeOpName("Softsign"));
     opBuilder.addInput(features.asOutput());

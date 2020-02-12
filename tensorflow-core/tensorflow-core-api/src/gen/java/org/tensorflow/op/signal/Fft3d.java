@@ -45,7 +45,7 @@ public final class Fft3d<T extends TType> extends PrimitiveOp implements Operand
    * @param input A complex tensor.
    * @return a new instance of Fft3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Fft3d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("FFT3D", scope.makeOpName("Fft3d"));
     opBuilder.addInput(input.asOutput());

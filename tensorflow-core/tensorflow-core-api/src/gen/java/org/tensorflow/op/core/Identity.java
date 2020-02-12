@@ -42,7 +42,7 @@ public final class Identity<T extends TType> extends PrimitiveOp implements Oper
    * @param input 
    * @return a new instance of Identity
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
     opBuilder.addInput(input.asOutput());

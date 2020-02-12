@@ -51,7 +51,7 @@ public final class KmeansPlusPlusInitialization extends PrimitiveOp implements O
    * heuristic is used to sample O(log(num_to_sample)) additional points.
    * @return a new instance of KmeansPlusPlusInitialization
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static KmeansPlusPlusInitialization create(Scope scope, Operand<TFloat32> points, Operand<TInt64> numToSample, Operand<TInt64> seed, Operand<TInt64> numRetriesPerSample) {
     OperationBuilder opBuilder = scope.env().opBuilder("KmeansPlusPlusInitialization", scope.makeOpName("KmeansPlusPlusInitialization"));
     opBuilder.addInput(points.asOutput());

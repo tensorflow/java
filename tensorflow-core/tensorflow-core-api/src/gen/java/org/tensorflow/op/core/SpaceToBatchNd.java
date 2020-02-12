@@ -146,7 +146,7 @@ public final class SpaceToBatchNd<T extends TType> extends PrimitiveOp implement
    * regular convolution.
    * @return a new instance of SpaceToBatchNd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> SpaceToBatchNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatchND", scope.makeOpName("SpaceToBatchNd"));
     opBuilder.addInput(input.asOutput());

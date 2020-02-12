@@ -67,7 +67,7 @@ public final class EncodeBase64 extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of EncodeBase64
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EncodeBase64 create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeBase64", scope.makeOpName("EncodeBase64"));
     opBuilder.addInput(input.asOutput());

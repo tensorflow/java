@@ -42,7 +42,7 @@ public final class TensorListSetItem extends PrimitiveOp implements Operand<TTyp
    * @param item 
    * @return a new instance of TensorListSetItem
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSetItem", scope.makeOpName("TensorListSetItem"));
     opBuilder.addInput(inputHandle.asOutput());

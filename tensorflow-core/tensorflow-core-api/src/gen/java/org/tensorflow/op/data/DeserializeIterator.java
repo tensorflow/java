@@ -40,7 +40,7 @@ public final class DeserializeIterator extends PrimitiveOp {
    * resource.
    * @return a new instance of DeserializeIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeserializeIterator create(Scope scope, Operand<?> resourceHandle, Operand<?> serialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeIterator", scope.makeOpName("DeserializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());

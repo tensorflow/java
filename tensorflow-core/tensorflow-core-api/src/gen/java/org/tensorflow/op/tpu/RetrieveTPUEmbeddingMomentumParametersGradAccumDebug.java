@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingMomentumParametersGradAccumDebug extends 
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingMomentumParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingMomentumParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingMomentumParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingMomentumParametersGradAccumDebug"));
     opBuilder = scope.applyControlDependencies(opBuilder);

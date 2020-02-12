@@ -52,7 +52,7 @@ public final class NextAfter<T extends TNumber> extends PrimitiveOp implements O
    * @param x2 
    * @return a new instance of NextAfter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
     opBuilder.addInput(x1.asOutput());

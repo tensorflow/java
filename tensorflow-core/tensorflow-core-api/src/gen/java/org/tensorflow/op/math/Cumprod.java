@@ -99,7 +99,7 @@ public final class Cumprod<T extends TType> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of Cumprod
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumprod", scope.makeOpName("Cumprod"));
     opBuilder.addInput(x.asOutput());

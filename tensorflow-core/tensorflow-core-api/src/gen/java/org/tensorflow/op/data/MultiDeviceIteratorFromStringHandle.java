@@ -64,7 +64,7 @@ public final class MultiDeviceIteratorFromStringHandle extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of MultiDeviceIteratorFromStringHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorFromStringHandle", scope.makeOpName("MultiDeviceIteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());

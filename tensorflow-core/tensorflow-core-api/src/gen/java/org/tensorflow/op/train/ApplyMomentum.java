@@ -84,7 +84,7 @@ public final class ApplyMomentum<T extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of ApplyMomentum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyMomentum", scope.makeOpName("ApplyMomentum"));
     opBuilder.addInput(var.asOutput());

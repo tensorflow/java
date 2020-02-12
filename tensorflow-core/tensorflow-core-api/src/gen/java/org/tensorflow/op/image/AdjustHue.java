@@ -52,7 +52,7 @@ public final class AdjustHue<T extends TNumber> extends PrimitiveOp implements O
    * @param delta A float delta to add to the hue.
    * @return a new instance of AdjustHue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<TFloat32> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
     opBuilder.addInput(images.asOutput());

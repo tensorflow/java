@@ -42,7 +42,7 @@ public final class ResourceAccumulatorSetGlobalStep extends PrimitiveOp {
    * @param newGlobalStep The new global_step value to set.
    * @return a new instance of ResourceAccumulatorSetGlobalStep
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ResourceAccumulatorSetGlobalStep create(Scope scope, Operand<?> handle, Operand<TInt64> newGlobalStep) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorSetGlobalStep", scope.makeOpName("ResourceAccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());

@@ -58,7 +58,7 @@ public final class GreaterEqual extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of GreaterEqual
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> GreaterEqual create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("GreaterEqual", scope.makeOpName("GreaterEqual"));
     opBuilder.addInput(x.asOutput());

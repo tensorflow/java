@@ -77,7 +77,7 @@ public final class ResizeBilinear extends PrimitiveOp implements Operand<TFloat3
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinear
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ResizeBilinear create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinear", scope.makeOpName("ResizeBilinear"));
     opBuilder.addInput(images.asOutput());

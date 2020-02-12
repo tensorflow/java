@@ -43,7 +43,7 @@ public final class Ceil<T extends TNumber> extends PrimitiveOp implements Operan
    * @param x 
    * @return a new instance of Ceil
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Ceil<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Ceil", scope.makeOpName("Ceil"));
     opBuilder.addInput(x.asOutput());

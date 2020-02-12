@@ -53,7 +53,7 @@ public final class Lgamma<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Lgamma
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Lgamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lgamma", scope.makeOpName("Lgamma"));
     opBuilder.addInput(x.asOutput());

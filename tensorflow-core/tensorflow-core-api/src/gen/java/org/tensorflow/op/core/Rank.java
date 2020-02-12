@@ -53,7 +53,7 @@ public final class Rank extends PrimitiveOp implements Operand<TInt32> {
    * @param input 
    * @return a new instance of Rank
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Rank create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rank", scope.makeOpName("Rank"));
     opBuilder.addInput(input.asOutput());

@@ -46,7 +46,7 @@ public final class DatasetToSingleElement extends PrimitiveOp implements Iterabl
    * @param outputShapes 
    * @return a new instance of DatasetToSingleElement
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DatasetToSingleElement create(Scope scope, Operand<?> dataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToSingleElement", scope.makeOpName("DatasetToSingleElement"));
     opBuilder.addInput(dataset.asOutput());

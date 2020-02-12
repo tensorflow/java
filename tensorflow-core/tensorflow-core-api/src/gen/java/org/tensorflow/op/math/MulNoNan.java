@@ -46,7 +46,7 @@ public final class MulNoNan<T extends TType> extends PrimitiveOp implements Oper
    * @param y 
    * @return a new instance of MulNoNan
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MulNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("MulNoNan", scope.makeOpName("MulNoNan"));
     opBuilder.addInput(x.asOutput());

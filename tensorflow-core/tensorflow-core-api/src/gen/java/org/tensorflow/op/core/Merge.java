@@ -50,7 +50,7 @@ public final class Merge<T extends TType> extends PrimitiveOp {
    * @param inputs The input tensors, exactly one of which will become available.
    * @return a new instance of Merge
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Merge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("Merge", scope.makeOpName("Merge"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

@@ -62,7 +62,7 @@ public final class ResourceScatterDiv extends PrimitiveOp {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterDiv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> ResourceScatterDiv create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterDiv", scope.makeOpName("ResourceScatterDiv"));
     opBuilder.addInput(resource.asOutput());

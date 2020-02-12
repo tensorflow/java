@@ -65,7 +65,7 @@ public final class ApplyGradientDescent<T extends TType> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of ApplyGradientDescent
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyGradientDescent", scope.makeOpName("ApplyGradientDescent"));
     opBuilder.addInput(var.asOutput());

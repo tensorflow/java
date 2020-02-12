@@ -75,7 +75,7 @@ public final class SelfAdjointEig<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of SelfAdjointEig
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelfAdjointEigV2", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(input.asOutput());

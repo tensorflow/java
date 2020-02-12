@@ -43,7 +43,7 @@ public final class AssignAddVariableOp extends PrimitiveOp {
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignAddVariableOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AssignAddVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignAddVariableOp", scope.makeOpName("AssignAddVariableOp"));
     opBuilder.addInput(resource.asOutput());

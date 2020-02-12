@@ -66,7 +66,7 @@ public final class AllToAll<T extends TType> extends PrimitiveOp implements Oper
    * size(group_assignment.get_shape()[1])
    * @return a new instance of AllToAll
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AllToAll<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
     OperationBuilder opBuilder = scope.env().opBuilder("AllToAll", scope.makeOpName("AllToAll"));
     opBuilder.addInput(input.asOutput());

@@ -47,7 +47,7 @@ public final class Abs<T extends TNumber> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Abs
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Abs<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abs", scope.makeOpName("Abs"));
     opBuilder.addInput(x.asOutput());

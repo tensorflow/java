@@ -40,7 +40,7 @@ public final class TensorListPushBackBatch extends PrimitiveOp implements Operan
    * @param tensor 
    * @return a new instance of TensorListPushBackBatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
     opBuilder.addInput(inputHandles.asOutput());

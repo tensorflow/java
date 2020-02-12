@@ -42,7 +42,7 @@ public final class TensorArraySize extends PrimitiveOp implements Operand<TInt32
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
     opBuilder.addInput(handle.asOutput());

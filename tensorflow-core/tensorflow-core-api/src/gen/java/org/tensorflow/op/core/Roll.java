@@ -72,7 +72,7 @@ public final class Roll<T extends TType> extends PrimitiveOp implements Operand<
    * axis.
    * @return a new instance of Roll
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> Roll<T> create(Scope scope, Operand<T> input, Operand<U> shift, Operand<V> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("Roll", scope.makeOpName("Roll"));
     opBuilder.addInput(input.asOutput());

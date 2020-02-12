@@ -115,7 +115,7 @@ public final class TensorScatterNdUpdate<T extends TType> extends PrimitiveOp im
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdUpdate
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorScatterNdUpdate<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterUpdate", scope.makeOpName("TensorScatterNdUpdate"));
     opBuilder.addInput(tensor.asOutput());

@@ -51,7 +51,7 @@ public final class Polygamma<T extends TNumber> extends PrimitiveOp implements O
    * @param x 
    * @return a new instance of Polygamma
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Polygamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());

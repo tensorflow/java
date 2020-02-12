@@ -56,7 +56,7 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends Primit
    * of the accumulator.
    * @return a new instance of SparseAccumulatorTakeGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());

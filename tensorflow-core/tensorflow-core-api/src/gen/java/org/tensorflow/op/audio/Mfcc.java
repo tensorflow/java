@@ -99,7 +99,7 @@ public final class Mfcc extends PrimitiveOp implements Operand<TFloat32> {
    * @param options carries optional attributes values
    * @return a new instance of Mfcc
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mfcc", scope.makeOpName("Mfcc"));
     opBuilder.addInput(spectrogram.asOutput());

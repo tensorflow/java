@@ -99,7 +99,7 @@ public final class ParallelDynamicStitch<T extends TType> extends PrimitiveOp im
    * @param data 
    * @return a new instance of ParallelDynamicStitch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ParallelDynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParallelDynamicStitch", scope.makeOpName("ParallelDynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));

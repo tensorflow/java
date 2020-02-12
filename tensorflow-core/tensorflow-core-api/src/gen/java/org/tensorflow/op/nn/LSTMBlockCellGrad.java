@@ -60,7 +60,7 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends PrimitiveOp {
    * @param usePeephole Whether the cell uses peephole connections.
    * @return a new instance of LSTMBlockCellGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LSTMBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCellGrad", scope.makeOpName("LSTMBlockCellGrad"));
     opBuilder.addInput(x.asOutput());

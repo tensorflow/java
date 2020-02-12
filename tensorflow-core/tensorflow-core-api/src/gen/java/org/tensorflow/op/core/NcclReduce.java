@@ -53,7 +53,7 @@ public final class NcclReduce<T extends TNumber> extends PrimitiveOp implements 
    * @param reduction 
    * @return a new instance of NcclReduce
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));

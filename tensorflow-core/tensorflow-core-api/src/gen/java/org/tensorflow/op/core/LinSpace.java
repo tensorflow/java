@@ -55,7 +55,7 @@ public final class LinSpace<T extends TNumber> extends PrimitiveOp implements Op
    * @param num 0-D tensor. Number of values to generate.
    * @return a new instance of LinSpace
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
     OperationBuilder opBuilder = scope.env().opBuilder("LinSpace", scope.makeOpName("LinSpace"));
     opBuilder.addInput(start.asOutput());

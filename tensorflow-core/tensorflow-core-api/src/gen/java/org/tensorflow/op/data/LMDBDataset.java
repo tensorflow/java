@@ -57,7 +57,7 @@ public final class LMDBDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of LMDBDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LMDBDataset create(Scope scope, Operand<TString> filenames, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("LMDBDataset", scope.makeOpName("LMDBDataset"));
     opBuilder.addInput(filenames.asOutput());

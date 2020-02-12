@@ -54,7 +54,7 @@ public final class AccumulatorTakeGradient<T extends TType> extends PrimitiveOp 
    * of the accumulator.
    * @return a new instance of AccumulatorTakeGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorTakeGradient", scope.makeOpName("AccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());

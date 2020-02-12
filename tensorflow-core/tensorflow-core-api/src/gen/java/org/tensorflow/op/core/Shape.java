@@ -55,7 +55,7 @@ public final class Shape<U extends TNumber> extends PrimitiveOp implements Opera
    * @param outType 
    * @return a new instance of Shape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Shape<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Shape", scope.makeOpName("Shape"));
     opBuilder.addInput(input.asOutput());
@@ -71,7 +71,7 @@ public final class Shape<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Shape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Shape<TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }

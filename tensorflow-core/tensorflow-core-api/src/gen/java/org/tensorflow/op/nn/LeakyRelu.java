@@ -62,7 +62,7 @@ public final class LeakyRelu<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of LeakyRelu
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
     opBuilder.addInput(features.asOutput());

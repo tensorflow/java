@@ -73,7 +73,7 @@ public final class AvgPool3d<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of AvgPool3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AvgPool3d<T> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPool3D", scope.makeOpName("AvgPool3d"));
     opBuilder.addInput(input.asOutput());

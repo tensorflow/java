@@ -51,7 +51,7 @@ public final class TensorListScatterIntoExistingList extends PrimitiveOp impleme
    * @param indices 
    * @return a new instance of TensorListScatterIntoExistingList
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());

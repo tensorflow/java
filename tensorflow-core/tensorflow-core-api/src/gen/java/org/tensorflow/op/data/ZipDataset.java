@@ -51,7 +51,7 @@ public final class ZipDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of ZipDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ZipDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZipDataset", scope.makeOpName("ZipDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));

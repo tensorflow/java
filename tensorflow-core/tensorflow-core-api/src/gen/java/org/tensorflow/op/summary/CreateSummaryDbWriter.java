@@ -41,7 +41,7 @@ public final class CreateSummaryDbWriter extends PrimitiveOp {
    * @param userName 
    * @return a new instance of CreateSummaryDbWriter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static CreateSummaryDbWriter create(Scope scope, Operand<?> writer, Operand<TString> dbUri, Operand<TString> experimentName, Operand<TString> runName, Operand<TString> userName) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryDbWriter", scope.makeOpName("CreateSummaryDbWriter"));
     opBuilder.addInput(writer.asOutput());

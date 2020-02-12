@@ -76,7 +76,7 @@ public final class BoostedTreesCalculateBestFeatureSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesCalculateBestFeatureSplit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TFloat32> statsSummary, Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight, Long logitsDimension, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestFeatureSplit", scope.makeOpName("BoostedTreesCalculateBestFeatureSplit"));
     opBuilder.addInput(nodeIdRange.asOutput());

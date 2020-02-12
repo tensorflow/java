@@ -92,7 +92,7 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannel", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
     opBuilder.addInput(inputs.asOutput());

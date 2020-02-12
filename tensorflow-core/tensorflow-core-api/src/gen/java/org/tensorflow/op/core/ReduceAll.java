@@ -69,7 +69,7 @@ public final class ReduceAll extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceAll
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ReduceAll create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("ReduceAll"));
     opBuilder.addInput(input.asOutput());

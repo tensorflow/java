@@ -95,7 +95,7 @@ public final class OrderedMapUnstageNoKey extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapUnstageNoKey
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OrderedMapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapUnstageNoKey", scope.makeOpName("OrderedMapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());

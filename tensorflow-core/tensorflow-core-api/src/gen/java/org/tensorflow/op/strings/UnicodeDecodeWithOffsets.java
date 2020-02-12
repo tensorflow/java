@@ -121,7 +121,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecodeWithOffsets
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecodeWithOffsets", scope.makeOpName("UnicodeDecodeWithOffsets"));
     opBuilder.addInput(input.asOutput());
@@ -155,7 +155,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends Primitive
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecodeWithOffsets
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnicodeDecodeWithOffsets<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
     return create(scope, input, inputEncoding, TInt64.DTYPE, options);
   }

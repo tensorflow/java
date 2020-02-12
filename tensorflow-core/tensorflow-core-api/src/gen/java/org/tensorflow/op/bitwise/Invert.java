@@ -84,7 +84,7 @@ public final class Invert<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of Invert
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
     opBuilder.addInput(x.asOutput());

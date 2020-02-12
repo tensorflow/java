@@ -41,7 +41,7 @@ public final class DatasetToTFRecord extends PrimitiveOp {
    * compression), (ii) "ZLIB", or (iii) "GZIP".
    * @return a new instance of DatasetToTFRecord
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DatasetToTFRecord create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDatasetToTFRecord", scope.makeOpName("DatasetToTFRecord"));
     opBuilder.addInput(inputDataset.asOutput());

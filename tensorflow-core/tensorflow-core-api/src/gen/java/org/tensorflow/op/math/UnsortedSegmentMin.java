@@ -70,7 +70,7 @@ public final class UnsortedSegmentMin<T extends TNumber> extends PrimitiveOp imp
    * @param numSegments 
    * @return a new instance of UnsortedSegmentMin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMin<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentMin", scope.makeOpName("UnsortedSegmentMin"));
     opBuilder.addInput(data.asOutput());

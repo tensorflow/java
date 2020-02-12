@@ -67,7 +67,7 @@ public final class DecodeRaw<T extends TType> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of DecodeRaw
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeRaw", scope.makeOpName("DecodeRaw"));
     opBuilder.addInput(bytes.asOutput());

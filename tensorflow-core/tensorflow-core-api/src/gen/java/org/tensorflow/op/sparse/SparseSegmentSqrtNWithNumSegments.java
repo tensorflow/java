@@ -56,7 +56,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
     opBuilder.addInput(data.asOutput());

@@ -67,7 +67,7 @@ public final class TensorForestTreeResourceHandleOp extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of TensorForestTreeResourceHandleOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeResourceHandleOp", scope.makeOpName("TensorForestTreeResourceHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

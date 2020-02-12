@@ -96,7 +96,7 @@ public final class MapStage extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapStage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
     opBuilder.addInput(key.asOutput());

@@ -64,7 +64,7 @@ public final class StaticRegexReplace extends PrimitiveOp implements Operand<TSt
    * @param options carries optional attributes values
    * @return a new instance of StaticRegexReplace
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern, String rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexReplace", scope.makeOpName("StaticRegexReplace"));
     opBuilder.addInput(input.asOutput());

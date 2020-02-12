@@ -41,7 +41,7 @@ public final class DatasetCardinality extends PrimitiveOp implements Operand<TIn
    * @param inputDataset A variant tensor representing the dataset to return cardinality for.
    * @return a new instance of DatasetCardinality
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DatasetCardinality create(Scope scope, Operand<?> inputDataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetCardinality", scope.makeOpName("DatasetCardinality"));
     opBuilder.addInput(inputDataset.asOutput());

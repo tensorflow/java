@@ -115,7 +115,7 @@ public final class SparseMatrixSparseCholesky extends PrimitiveOp implements Ope
    * @param type 
    * @return a new instance of SparseMatrixSparseCholesky
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput());

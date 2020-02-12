@@ -103,7 +103,7 @@ public final class BlockLSTM<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BlockLSTM
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BlockLSTM<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMV2", scope.makeOpName("BlockLSTM"));
     opBuilder.addInput(seqLenMax.asOutput());

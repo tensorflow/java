@@ -84,7 +84,7 @@ public final class RandomUniformInt<U extends TNumber> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of RandomUniformInt
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> RandomUniformInt<U> create(Scope scope, Operand<T> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomUniformInt", scope.makeOpName("RandomUniformInt"));
     opBuilder.addInput(shape.asOutput());

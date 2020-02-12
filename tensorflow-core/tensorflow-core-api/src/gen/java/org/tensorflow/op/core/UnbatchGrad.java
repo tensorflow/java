@@ -90,7 +90,7 @@ public final class UnbatchGrad<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of UnbatchGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnbatchGrad", scope.makeOpName("UnbatchGrad"));
     opBuilder.addInput(originalInput.asOutput());

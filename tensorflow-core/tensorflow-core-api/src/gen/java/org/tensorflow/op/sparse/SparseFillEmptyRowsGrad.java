@@ -53,7 +53,7 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends PrimitiveOp 
    * @param gradValues 1-D.  The gradients from backprop.
    * @return a new instance of SparseFillEmptyRowsGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseFillEmptyRowsGrad<T> create(Scope scope, Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRowsGrad", scope.makeOpName("SparseFillEmptyRowsGrad"));
     opBuilder.addInput(reverseIndexMap.asOutput());

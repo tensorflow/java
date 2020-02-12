@@ -45,7 +45,7 @@ public final class ReciprocalGrad<T extends TType> extends PrimitiveOp implement
    * @param dy 
    * @return a new instance of ReciprocalGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ReciprocalGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReciprocalGrad", scope.makeOpName("ReciprocalGrad"));
     opBuilder.addInput(y.asOutput());

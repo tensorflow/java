@@ -97,7 +97,7 @@ public final class ReduceJoin extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceJoin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReduceJoin create(Scope scope, Operand<TString> inputs, Operand<TInt32> reductionIndices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReduceJoin", scope.makeOpName("ReduceJoin"));
     opBuilder.addInput(inputs.asOutput());

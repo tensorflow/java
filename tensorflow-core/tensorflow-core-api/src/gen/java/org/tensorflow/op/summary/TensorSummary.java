@@ -44,7 +44,7 @@ public final class TensorSummary extends PrimitiveOp implements Operand<TString>
    * data.
    * @return a new instance of TensorSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Operand<TString> serializedSummaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSummaryV2", scope.makeOpName("TensorSummary"));
     opBuilder.addInput(tag.asOutput());

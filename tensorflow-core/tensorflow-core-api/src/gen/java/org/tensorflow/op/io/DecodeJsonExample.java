@@ -48,7 +48,7 @@ public final class DecodeJsonExample extends PrimitiveOp implements Operand<TStr
    * mapping of the Example proto.
    * @return a new instance of DecodeJsonExample
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeJsonExample create(Scope scope, Operand<TString> jsonExamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJSONExample", scope.makeOpName("DecodeJsonExample"));
     opBuilder.addInput(jsonExamples.asOutput());

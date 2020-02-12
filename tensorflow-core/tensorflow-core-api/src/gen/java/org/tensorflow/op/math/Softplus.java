@@ -43,7 +43,7 @@ public final class Softplus<T extends TNumber> extends PrimitiveOp implements Op
    * @param features 
    * @return a new instance of Softplus
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softplus", scope.makeOpName("Softplus"));
     opBuilder.addInput(features.asOutput());

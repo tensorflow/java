@@ -112,7 +112,7 @@ public final class StridedSliceGrad<U extends TType> extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of StridedSliceGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> StridedSliceGrad<U> create(Scope scope, Operand<T> shape, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> dy, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StridedSliceGrad", scope.makeOpName("StridedSliceGrad"));
     opBuilder.addInput(shape.asOutput());

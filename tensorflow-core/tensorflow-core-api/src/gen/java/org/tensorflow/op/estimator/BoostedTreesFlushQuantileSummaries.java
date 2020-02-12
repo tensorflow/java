@@ -47,7 +47,7 @@ public final class BoostedTreesFlushQuantileSummaries extends PrimitiveOp implem
    * @param numFeatures 
    * @return a new instance of BoostedTreesFlushQuantileSummaries
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesFlushQuantileSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesFlushQuantileSummaries", scope.makeOpName("BoostedTreesFlushQuantileSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

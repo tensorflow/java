@@ -62,7 +62,7 @@ public final class Irfft<U extends TNumber> extends PrimitiveOp implements Opera
    * @param Treal 
    * @return a new instance of Irfft
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Irfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT", scope.makeOpName("Irfft"));
     opBuilder.addInput(input.asOutput());
@@ -80,7 +80,7 @@ public final class Irfft<U extends TNumber> extends PrimitiveOp implements Opera
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @return a new instance of Irfft
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Irfft<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.DTYPE);
   }

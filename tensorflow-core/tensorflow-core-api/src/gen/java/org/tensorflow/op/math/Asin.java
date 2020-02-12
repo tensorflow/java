@@ -58,7 +58,7 @@ public final class Asin<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Asin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Asin<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Asin", scope.makeOpName("Asin"));
     opBuilder.addInput(x.asOutput());

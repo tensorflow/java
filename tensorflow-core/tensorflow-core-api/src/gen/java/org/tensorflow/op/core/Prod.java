@@ -70,7 +70,7 @@ public final class Prod<T extends TType> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of Prod
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Prod<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prod", scope.makeOpName("Prod"));
     opBuilder.addInput(input.asOutput());

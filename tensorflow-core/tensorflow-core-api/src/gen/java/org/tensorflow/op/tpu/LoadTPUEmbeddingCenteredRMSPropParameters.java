@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingCenteredRMSPropParameters extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingCenteredRMSPropParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingCenteredRMSPropParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> ms, Operand<TFloat32> mom, Operand<TFloat32> mg, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingCenteredRMSPropParameters", scope.makeOpName("LoadTPUEmbeddingCenteredRMSPropParameters"));
     opBuilder.addInput(parameters.asOutput());

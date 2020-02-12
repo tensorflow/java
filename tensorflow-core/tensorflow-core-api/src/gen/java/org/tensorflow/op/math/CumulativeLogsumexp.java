@@ -91,7 +91,7 @@ public final class CumulativeLogsumexp<T extends TNumber> extends PrimitiveOp im
    * @param options carries optional attributes values
    * @return a new instance of CumulativeLogsumexp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> CumulativeLogsumexp<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CumulativeLogsumexp", scope.makeOpName("CumulativeLogsumexp"));
     opBuilder.addInput(x.asOutput());

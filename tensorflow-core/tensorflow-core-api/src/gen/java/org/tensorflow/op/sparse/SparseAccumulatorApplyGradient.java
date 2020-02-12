@@ -53,7 +53,7 @@ public final class SparseAccumulatorApplyGradient extends PrimitiveOp {
    * case the input is ignored during validation.
    * @return a new instance of SparseAccumulatorApplyGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices, Operand<T> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorApplyGradient", scope.makeOpName("SparseAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());

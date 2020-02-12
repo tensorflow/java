@@ -38,7 +38,7 @@ public final class ControlTrigger extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of ControlTrigger
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ControlTrigger create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ControlTrigger", scope.makeOpName("ControlTrigger"));
     opBuilder = scope.applyControlDependencies(opBuilder);

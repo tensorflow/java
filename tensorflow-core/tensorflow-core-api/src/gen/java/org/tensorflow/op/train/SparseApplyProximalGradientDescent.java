@@ -73,7 +73,7 @@ public final class SparseApplyProximalGradientDescent<T extends TType> extends P
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyProximalGradientDescent
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SparseApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyProximalGradientDescent", scope.makeOpName("SparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());

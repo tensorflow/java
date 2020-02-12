@@ -82,7 +82,7 @@ public final class Squeeze<T extends TType> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of Squeeze
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Squeeze<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Squeeze", scope.makeOpName("Squeeze"));
     opBuilder.addInput(input.asOutput());

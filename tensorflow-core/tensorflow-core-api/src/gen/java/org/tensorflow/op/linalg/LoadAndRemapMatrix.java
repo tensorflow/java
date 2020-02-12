@@ -119,7 +119,7 @@ public final class LoadAndRemapMatrix extends PrimitiveOp implements Operand<TFl
    * @param options carries optional attributes values
    * @return a new instance of LoadAndRemapMatrix
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat32> initializingValues, Long numRows, Long numCols, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
     opBuilder.addInput(ckptPath.asOutput());

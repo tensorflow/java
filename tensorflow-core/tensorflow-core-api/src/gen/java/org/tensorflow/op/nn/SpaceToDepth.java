@@ -137,7 +137,7 @@ public final class SpaceToDepth<T extends TType> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of SpaceToDepth
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SpaceToDepth<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToDepth", scope.makeOpName("SpaceToDepth"));
     opBuilder.addInput(input.asOutput());

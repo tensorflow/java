@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends PrimitiveOp
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingMDLAdagradLightParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingMDLAdagradLightParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> weights, Operand<TFloat32> benefits, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMDLAdagradLightParameters", scope.makeOpName("LoadTPUEmbeddingMDLAdagradLightParameters"));
     opBuilder.addInput(parameters.asOutput());

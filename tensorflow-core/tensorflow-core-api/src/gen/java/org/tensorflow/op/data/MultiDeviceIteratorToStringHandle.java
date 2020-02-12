@@ -39,7 +39,7 @@ public final class MultiDeviceIteratorToStringHandle extends PrimitiveOp impleme
    * @param multiDeviceIterator A MultiDeviceIterator resource.
    * @return a new instance of MultiDeviceIteratorToStringHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorToStringHandle create(Scope scope, Operand<?> multiDeviceIterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorToStringHandle", scope.makeOpName("MultiDeviceIteratorToStringHandle"));
     opBuilder.addInput(multiDeviceIterator.asOutput());

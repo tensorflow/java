@@ -64,7 +64,7 @@ public final class BitwiseXor<T extends TNumber> extends PrimitiveOp implements 
    * @param y 
    * @return a new instance of BitwiseXor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BitwiseXor<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseXor", scope.makeOpName("BitwiseXor"));
     opBuilder.addInput(x.asOutput());

@@ -92,7 +92,7 @@ public final class Conv3d<T extends TNumber> extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of Conv3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Conv3d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3D", scope.makeOpName("Conv3d"));
     opBuilder.addInput(input.asOutput());

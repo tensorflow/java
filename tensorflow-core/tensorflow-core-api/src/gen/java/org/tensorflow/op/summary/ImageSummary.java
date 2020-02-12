@@ -121,7 +121,7 @@ public final class ImageSummary extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of ImageSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ImageSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImageSummary", scope.makeOpName("ImageSummary"));
     opBuilder.addInput(tag.asOutput());

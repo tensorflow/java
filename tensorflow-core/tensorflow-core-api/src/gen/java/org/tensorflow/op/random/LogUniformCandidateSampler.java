@@ -89,7 +89,7 @@ public final class LogUniformCandidateSampler extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LogUniformCandidateSampler
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LogUniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogUniformCandidateSampler", scope.makeOpName("LogUniformCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());

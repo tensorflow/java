@@ -72,7 +72,7 @@ public final class BiasAddGrad<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of BiasAddGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BiasAddGrad<T> create(Scope scope, Operand<T> outBackprop, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAddGrad", scope.makeOpName("BiasAddGrad"));
     opBuilder.addInput(outBackprop.asOutput());

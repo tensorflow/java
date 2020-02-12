@@ -95,7 +95,7 @@ public final class GenerateVocabRemapping extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of GenerateVocabRemapping
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static GenerateVocabRemapping create(Scope scope, Operand<TString> newVocabFile, Operand<TString> oldVocabFile, Long newVocabOffset, Long numNewVocab, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateVocabRemapping", scope.makeOpName("GenerateVocabRemapping"));
     opBuilder.addInput(newVocabFile.asOutput());

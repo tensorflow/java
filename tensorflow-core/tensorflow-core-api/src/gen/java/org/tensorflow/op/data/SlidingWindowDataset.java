@@ -51,7 +51,7 @@ public final class SlidingWindowDataset extends PrimitiveOp implements Operand<T
    * @param outputShapes 
    * @return a new instance of SlidingWindowDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SlidingWindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SlidingWindowDataset", scope.makeOpName("SlidingWindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());

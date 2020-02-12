@@ -70,7 +70,7 @@ public final class ResourceSparseApplyProximalGradientDescent extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalGradientDescent
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalGradientDescent create(Scope scope, Operand<?> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalGradientDescent", scope.makeOpName("ResourceSparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());

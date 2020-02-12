@@ -68,7 +68,7 @@ public final class DecodeCompressed extends PrimitiveOp implements Operand<TStri
    * @param options carries optional attributes values
    * @return a new instance of DecodeCompressed
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeCompressed create(Scope scope, Operand<TString> bytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCompressed", scope.makeOpName("DecodeCompressed"));
     opBuilder.addInput(bytes.asOutput());

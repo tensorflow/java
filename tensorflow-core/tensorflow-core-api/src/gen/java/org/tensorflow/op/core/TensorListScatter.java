@@ -57,7 +57,7 @@ public final class TensorListScatter extends PrimitiveOp implements Operand<TTyp
    * @param numElements 
    * @return a new instance of TensorListScatter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatter"));
     opBuilder.addInput(tensor.asOutput());

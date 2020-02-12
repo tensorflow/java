@@ -43,7 +43,7 @@ public final class SparseMatrixZeros extends PrimitiveOp implements Operand<TTyp
    * @param type 
    * @return a new instance of SparseMatrixZeros
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixZeros", scope.makeOpName("SparseMatrixZeros"));
     opBuilder.addInput(denseShape.asOutput());

@@ -78,7 +78,7 @@ public final class RestoreSlice<T extends TType> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of RestoreSlice
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput());

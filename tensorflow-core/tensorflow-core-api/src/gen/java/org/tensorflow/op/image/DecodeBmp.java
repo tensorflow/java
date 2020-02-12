@@ -75,7 +75,7 @@ public final class DecodeBmp extends PrimitiveOp implements Operand<TUint8> {
    * @param options carries optional attributes values
    * @return a new instance of DecodeBmp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeBmp create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBmp", scope.makeOpName("DecodeBmp"));
     opBuilder.addInput(contents.asOutput());

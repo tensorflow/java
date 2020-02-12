@@ -44,7 +44,7 @@ public final class LogicalAnd extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of LogicalAnd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LogicalAnd create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalAnd", scope.makeOpName("LogicalAnd"));
     opBuilder.addInput(x.asOutput());

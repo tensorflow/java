@@ -62,7 +62,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param Tout 
    * @return a new instance of Angle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
@@ -78,7 +78,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Angle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat32.DTYPE);
   }

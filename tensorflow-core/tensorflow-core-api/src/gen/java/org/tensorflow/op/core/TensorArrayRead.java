@@ -48,7 +48,7 @@ public final class TensorArrayRead<T extends TType> extends PrimitiveOp implemen
    * @param dtype The type of the elem that is returned.
    * @return a new instance of TensorArrayRead
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
     opBuilder.addInput(handle.asOutput());

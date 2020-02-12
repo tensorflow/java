@@ -51,7 +51,7 @@ public final class SparseSegmentMean<T extends TNumber> extends PrimitiveOp impl
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentMean
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMean", scope.makeOpName("SparseSegmentMean"));
     opBuilder.addInput(data.asOutput());

@@ -90,7 +90,7 @@ public final class RandomPoisson<V extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, DataType<V> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
@@ -121,7 +121,7 @@ public final class RandomPoisson<V extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
     return create(scope, shape, rate, TInt64.DTYPE, options);
   }

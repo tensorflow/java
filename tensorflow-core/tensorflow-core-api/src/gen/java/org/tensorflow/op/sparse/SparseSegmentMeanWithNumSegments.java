@@ -54,7 +54,7 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends P
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanWithNumSegments", scope.makeOpName("SparseSegmentMeanWithNumSegments"));
     opBuilder.addInput(data.asOutput());

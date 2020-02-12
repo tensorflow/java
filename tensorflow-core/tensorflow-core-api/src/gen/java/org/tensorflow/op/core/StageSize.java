@@ -89,7 +89,7 @@ public final class StageSize extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of StageSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StageSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StageSize", scope.makeOpName("StageSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

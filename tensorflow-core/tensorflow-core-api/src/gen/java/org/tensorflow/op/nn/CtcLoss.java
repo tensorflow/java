@@ -96,7 +96,7 @@ public final class CtcLoss<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcLoss
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
     opBuilder.addInput(inputs.asOutput());

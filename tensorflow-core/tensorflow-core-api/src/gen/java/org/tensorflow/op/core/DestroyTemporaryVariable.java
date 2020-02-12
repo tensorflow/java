@@ -52,7 +52,7 @@ public final class DestroyTemporaryVariable<T extends TType> extends PrimitiveOp
    * 'TemporaryVariable' op.
    * @return a new instance of DestroyTemporaryVariable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref, String varName) {
     OperationBuilder opBuilder = scope.env().opBuilder("DestroyTemporaryVariable", scope.makeOpName("DestroyTemporaryVariable"));
     opBuilder.addInput(ref.asOutput());

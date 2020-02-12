@@ -46,7 +46,7 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
    * @param numFeatures inferred int; number of features to get bucket boundaries for.
    * @return a new instance of BoostedTreesQuantileStreamResourceGetBucketBoundaries
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceGetBucketBoundaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceGetBucketBoundaries", scope.makeOpName("BoostedTreesQuantileStreamResourceGetBucketBoundaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

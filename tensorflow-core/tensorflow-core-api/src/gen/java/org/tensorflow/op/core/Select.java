@@ -43,7 +43,7 @@ public final class Select<T extends TType> extends PrimitiveOp implements Operan
    * @param e 
    * @return a new instance of Select
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Select<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("Select"));
     opBuilder.addInput(condition.asOutput());

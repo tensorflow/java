@@ -53,7 +53,7 @@ public final class WindowDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of WindowDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> size, Operand<TInt64> shift, Operand<TInt64> stride, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("WindowDataset", scope.makeOpName("WindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());

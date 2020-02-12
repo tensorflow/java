@@ -52,7 +52,7 @@ public final class Cosh<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Cosh
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Cosh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cosh", scope.makeOpName("Cosh"));
     opBuilder.addInput(x.asOutput());

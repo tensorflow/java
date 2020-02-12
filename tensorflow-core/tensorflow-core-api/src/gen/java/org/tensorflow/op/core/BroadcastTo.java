@@ -63,7 +63,7 @@ public final class BroadcastTo<T extends TType> extends PrimitiveOp implements O
    * @param shape An 1-D `int` Tensor. The shape of the desired output.
    * @return a new instance of BroadcastTo
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> BroadcastTo<T> create(Scope scope, Operand<T> input, Operand<U> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastTo", scope.makeOpName("BroadcastTo"));
     opBuilder.addInput(input.asOutput());

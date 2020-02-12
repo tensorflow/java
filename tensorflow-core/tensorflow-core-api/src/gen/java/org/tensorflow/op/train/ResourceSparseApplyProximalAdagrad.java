@@ -73,7 +73,7 @@ public final class ResourceSparseApplyProximalAdagrad extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalAdagrad", scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());

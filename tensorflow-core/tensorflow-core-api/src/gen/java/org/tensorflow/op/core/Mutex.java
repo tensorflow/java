@@ -70,7 +70,7 @@ public final class Mutex extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of Mutex
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Mutex create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutexV2", scope.makeOpName("Mutex"));
     opBuilder = scope.applyControlDependencies(opBuilder);

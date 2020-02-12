@@ -85,7 +85,7 @@ public final class LoadTPUEmbeddingMomentumParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingMomentumParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingMomentumParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> momenta, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMomentumParameters", scope.makeOpName("LoadTPUEmbeddingMomentumParameters"));
     opBuilder.addInput(parameters.asOutput());

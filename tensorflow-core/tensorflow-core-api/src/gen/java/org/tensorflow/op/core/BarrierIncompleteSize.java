@@ -41,7 +41,7 @@ public final class BarrierIncompleteSize extends PrimitiveOp implements Operand<
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierIncompleteSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BarrierIncompleteSize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierIncompleteSize", scope.makeOpName("BarrierIncompleteSize"));
     opBuilder.addInput(handle.asOutput());

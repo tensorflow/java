@@ -81,7 +81,7 @@ public final class ThreadPoolHandle extends PrimitiveOp implements Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of ThreadPoolHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ThreadPoolHandle create(Scope scope, Long numThreads, String displayName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ThreadPoolHandle", scope.makeOpName("ThreadPoolHandle"));
     opBuilder = scope.applyControlDependencies(opBuilder);

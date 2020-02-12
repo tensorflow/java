@@ -101,7 +101,7 @@ public final class Where extends PrimitiveOp implements Operand<TInt64> {
    * @param condition 
    * @return a new instance of Where
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Where create(Scope scope, Operand<T> condition) {
     OperationBuilder opBuilder = scope.env().opBuilder("Where", scope.makeOpName("Where"));
     opBuilder.addInput(condition.asOutput());

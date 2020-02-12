@@ -50,7 +50,7 @@ public final class DecodeGif extends PrimitiveOp implements Operand<TUint8> {
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeGif create(Scope scope, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeGif", scope.makeOpName("DecodeGif"));
     opBuilder.addInput(contents.asOutput());

@@ -99,7 +99,7 @@ public final class OrderedMapPeek extends PrimitiveOp implements Iterable<Operan
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapPeek
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OrderedMapPeek create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapPeek", scope.makeOpName("OrderedMapPeek"));
     opBuilder.addInput(key.asOutput());

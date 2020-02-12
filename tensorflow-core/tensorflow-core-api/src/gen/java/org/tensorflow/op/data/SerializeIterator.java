@@ -40,7 +40,7 @@ public final class SerializeIterator extends PrimitiveOp implements Operand<TTyp
    * @param resourceHandle A handle to an iterator resource.
    * @return a new instance of SerializeIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SerializeIterator create(Scope scope, Operand<?> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeIterator", scope.makeOpName("SerializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());

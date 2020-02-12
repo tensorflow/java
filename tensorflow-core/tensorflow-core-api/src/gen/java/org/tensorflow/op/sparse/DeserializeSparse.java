@@ -88,7 +88,7 @@ public final class DeserializeSparse<U extends TType> extends PrimitiveOp {
    * @param dtype The `dtype` of the serialized `SparseTensor` objects.
    * @return a new instance of DeserializeSparse
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> DeserializeSparse<U> create(Scope scope, Operand<T> serializedSparse, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
     opBuilder.addInput(serializedSparse.asOutput());

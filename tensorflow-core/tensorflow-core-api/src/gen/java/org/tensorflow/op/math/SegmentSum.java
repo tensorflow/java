@@ -68,7 +68,7 @@ public final class SegmentSum<T extends TType> extends PrimitiveOp implements Op
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentSum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentSum", scope.makeOpName("SegmentSum"));
     opBuilder.addInput(data.asOutput());

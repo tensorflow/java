@@ -41,7 +41,7 @@ public final class BarrierReadySize extends PrimitiveOp implements Operand<TInt3
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierReadySize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BarrierReadySize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierReadySize", scope.makeOpName("BarrierReadySize"));
     opBuilder.addInput(handle.asOutput());

@@ -62,7 +62,7 @@ public final class ResourceScatterMin extends PrimitiveOp {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterMin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> ResourceScatterMin create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterMin", scope.makeOpName("ResourceScatterMin"));
     opBuilder.addInput(resource.asOutput());

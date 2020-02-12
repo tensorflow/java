@@ -43,7 +43,7 @@ public final class RefExit<T extends TType> extends PrimitiveOp implements Opera
    * @param data The tensor to be made available to the parent frame.
    * @return a new instance of RefExit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefExit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefExit", scope.makeOpName("RefExit"));
     opBuilder.addInput(data.asOutput());

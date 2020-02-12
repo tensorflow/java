@@ -41,7 +41,7 @@ public final class InitializeTable extends PrimitiveOp {
    * @param values Values of type Tval.
    * @return a new instance of InitializeTable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableV2", scope.makeOpName("InitializeTable"));
     opBuilder.addInput(tableHandle.asOutput());

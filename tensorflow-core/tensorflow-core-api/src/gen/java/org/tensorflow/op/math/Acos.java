@@ -42,7 +42,7 @@ public final class Acos<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Acos
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Acos<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Acos", scope.makeOpName("Acos"));
     opBuilder.addInput(x.asOutput());

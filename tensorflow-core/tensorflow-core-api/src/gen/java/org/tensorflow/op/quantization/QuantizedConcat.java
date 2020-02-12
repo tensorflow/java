@@ -50,7 +50,7 @@ public final class QuantizedConcat<T extends TType> extends PrimitiveOp {
    * @param inputMaxes The maximum scalar values for each of the input tensors.
    * @return a new instance of QuantizedConcat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim, Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins, Iterable<Operand<TFloat32>> inputMaxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcat", scope.makeOpName("QuantizedConcat"));
     opBuilder.addInput(concatDim.asOutput());

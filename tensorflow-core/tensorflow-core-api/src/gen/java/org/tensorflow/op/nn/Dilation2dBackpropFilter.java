@@ -51,7 +51,7 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends Primitive
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2dBackpropFilter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Dilation2dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2DBackpropFilter", scope.makeOpName("Dilation2dBackpropFilter"));
     opBuilder.addInput(input.asOutput());

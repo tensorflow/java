@@ -81,7 +81,7 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends PrimitiveOp 
    * to add to `input`.
    * @return a new instance of ScatterNdNonAliasingAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdNonAliasingAdd", scope.makeOpName("ScatterNdNonAliasingAdd"));
     opBuilder.addInput(input.asOutput());

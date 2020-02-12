@@ -148,7 +148,7 @@ public final class OneHot<U extends TType> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of OneHot
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> OneHot<U> create(Scope scope, Operand<T> indices, Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OneHot", scope.makeOpName("OneHot"));
     opBuilder.addInput(indices.asOutput());

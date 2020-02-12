@@ -42,7 +42,7 @@ public final class WorkerHeartbeat extends PrimitiveOp implements Operand<TStrin
    * @param request A string tensor containing a serialized WorkerHeartbeatRequest
    * @return a new instance of WorkerHeartbeat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WorkerHeartbeat create(Scope scope, Operand<TString> request) {
     OperationBuilder opBuilder = scope.env().opBuilder("WorkerHeartbeat", scope.makeOpName("WorkerHeartbeat"));
     opBuilder.addInput(request.asOutput());

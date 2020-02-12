@@ -75,7 +75,7 @@ public final class AvgPool3dGrad<T extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of AvgPool3dGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AvgPool3dGrad<T> create(Scope scope, Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPool3DGrad", scope.makeOpName("AvgPool3dGrad"));
     opBuilder.addInput(origInputShape.asOutput());

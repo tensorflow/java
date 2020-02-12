@@ -46,7 +46,7 @@ public final class SparseMatrixAdd extends PrimitiveOp implements Operand<TType>
    * @param beta A constant scalar.
    * @return a new instance of SparseMatrixAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixAdd create(Scope scope, Operand<?> a, Operand<?> b, Operand<T> alpha, Operand<T> beta) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixAdd", scope.makeOpName("SparseMatrixAdd"));
     opBuilder.addInput(a.asOutput());

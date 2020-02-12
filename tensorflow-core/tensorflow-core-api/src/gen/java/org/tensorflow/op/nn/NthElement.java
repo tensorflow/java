@@ -75,7 +75,7 @@ public final class NthElement<T extends TNumber> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of NthElement
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input, Operand<TInt32> n, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NthElement", scope.makeOpName("NthElement"));
     opBuilder.addInput(input.asOutput());

@@ -51,7 +51,7 @@ public final class CholeskyGrad<T extends TNumber> extends PrimitiveOp implement
    * this tensor.
    * @return a new instance of CholeskyGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
     OperationBuilder opBuilder = scope.env().opBuilder("CholeskyGrad", scope.makeOpName("CholeskyGrad"));
     opBuilder.addInput(l.asOutput());

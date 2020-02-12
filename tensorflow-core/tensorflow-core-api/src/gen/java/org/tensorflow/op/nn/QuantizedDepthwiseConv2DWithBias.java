@@ -73,7 +73,7 @@ public final class QuantizedDepthwiseConv2DWithBias<V extends TType> extends Pri
    * @param options carries optional attributes values
    * @return a new instance of QuantizedDepthwiseConv2DWithBias
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TType, T extends TType, U extends TType> QuantizedDepthwiseConv2DWithBias<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2DWithBias", scope.makeOpName("QuantizedDepthwiseConv2DWithBias"));
     opBuilder.addInput(input.asOutput());

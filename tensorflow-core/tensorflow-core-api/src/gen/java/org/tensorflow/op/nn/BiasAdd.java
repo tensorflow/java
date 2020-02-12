@@ -72,7 +72,7 @@ public final class BiasAdd<T extends TType> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of BiasAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAdd", scope.makeOpName("BiasAdd"));
     opBuilder.addInput(value.asOutput());

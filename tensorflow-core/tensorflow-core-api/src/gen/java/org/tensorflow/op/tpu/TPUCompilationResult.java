@@ -42,7 +42,7 @@ public final class TPUCompilationResult extends PrimitiveOp implements Operand<T
    * @param scope current scope
    * @return a new instance of TPUCompilationResult
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TPUCompilationResult create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUCompilationResult", scope.makeOpName("TPUCompilationResult"));
     opBuilder = scope.applyControlDependencies(opBuilder);

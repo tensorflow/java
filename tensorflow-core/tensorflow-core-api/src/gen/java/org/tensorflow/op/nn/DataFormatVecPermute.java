@@ -74,7 +74,7 @@ public final class DataFormatVecPermute<T extends TNumber> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of DataFormatVecPermute
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatVecPermute", scope.makeOpName("DataFormatVecPermute"));
     opBuilder.addInput(x.asOutput());

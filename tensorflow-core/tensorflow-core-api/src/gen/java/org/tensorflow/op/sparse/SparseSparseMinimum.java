@@ -51,7 +51,7 @@ public final class SparseSparseMinimum<T extends TType> extends PrimitiveOp {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMinimum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseSparseMinimum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMinimum", scope.makeOpName("SparseSparseMinimum"));
     opBuilder.addInput(aIndices.asOutput());

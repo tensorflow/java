@@ -43,7 +43,7 @@ public final class RandomGammaGrad<T extends TNumber> extends PrimitiveOp implem
    * @param sample 
    * @return a new instance of RandomGammaGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> RandomGammaGrad<T> create(Scope scope, Operand<T> alpha, Operand<T> sample) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGammaGrad", scope.makeOpName("RandomGammaGrad"));
     opBuilder.addInput(alpha.asOutput());

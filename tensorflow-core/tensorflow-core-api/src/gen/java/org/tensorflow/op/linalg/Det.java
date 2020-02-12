@@ -46,7 +46,7 @@ public final class Det<T extends TType> extends PrimitiveOp implements Operand<T
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Det
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Det<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDeterminant", scope.makeOpName("Det"));
     opBuilder.addInput(input.asOutput());

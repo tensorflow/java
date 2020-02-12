@@ -177,7 +177,7 @@ public final class CudnnRNN<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNN
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CudnnRNN<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNV3", scope.makeOpName("CudnnRNN"));
     opBuilder.addInput(input.asOutput());

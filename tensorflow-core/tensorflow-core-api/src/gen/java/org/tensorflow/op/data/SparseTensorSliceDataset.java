@@ -42,7 +42,7 @@ public final class SparseTensorSliceDataset extends PrimitiveOp implements Opera
    * @param denseShape 
    * @return a new instance of SparseTensorSliceDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorSliceDataset", scope.makeOpName("SparseTensorSliceDataset"));
     opBuilder.addInput(indices.asOutput());

@@ -64,7 +64,7 @@ public final class AssertThat extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of AssertThat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Assert", scope.makeOpName("AssertThat"));
     opBuilder.addInput(condition.asOutput());

@@ -80,7 +80,7 @@ public final class Variable<T extends TType> extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of Variable
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Variable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableV2", scope.makeOpName("Variable"));
     opBuilder = scope.applyControlDependencies(opBuilder);

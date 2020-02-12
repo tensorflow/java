@@ -54,7 +54,7 @@ public final class ExtractImagePatches<T extends TNumber> extends PrimitiveOp im
    * @param padding The type of padding algorithm to use.
    * @return a new instance of ExtractImagePatches
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
     opBuilder.addInput(images.asOutput());

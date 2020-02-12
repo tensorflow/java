@@ -40,7 +40,7 @@ public final class VarIsInitializedOp extends PrimitiveOp implements Operand<TBo
    * @param resource the input resource handle.
    * @return a new instance of VarIsInitializedOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static VarIsInitializedOp create(Scope scope, Operand<?> resource) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarIsInitializedOp", scope.makeOpName("VarIsInitializedOp"));
     opBuilder.addInput(resource.asOutput());

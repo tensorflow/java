@@ -63,7 +63,7 @@ public final class IteratorFromStringHandle extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of IteratorFromStringHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorFromStringHandleV2", scope.makeOpName("IteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());

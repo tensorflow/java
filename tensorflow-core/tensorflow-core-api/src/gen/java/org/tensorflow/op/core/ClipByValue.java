@@ -51,7 +51,7 @@ public final class ClipByValue<T extends TType> extends PrimitiveOp implements O
    * as `t`. The maximum value to clip by.
    * @return a new instance of ClipByValue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ClipByValue<T> create(Scope scope, Operand<T> t, Operand<T> clipValueMin, Operand<T> clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("ClipByValue", scope.makeOpName("ClipByValue"));
     opBuilder.addInput(t.asOutput());

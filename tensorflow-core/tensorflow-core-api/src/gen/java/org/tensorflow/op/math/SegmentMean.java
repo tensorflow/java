@@ -69,7 +69,7 @@ public final class SegmentMean<T extends TType> extends PrimitiveOp implements O
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMean
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
     opBuilder.addInput(data.asOutput());

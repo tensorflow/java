@@ -47,7 +47,7 @@ public final class OptionalGetValue extends PrimitiveOp implements Iterable<Oper
    * @param outputShapes 
    * @return a new instance of OptionalGetValue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OptionalGetValue create(Scope scope, Operand<?> optional, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
     opBuilder.addInput(optional.asOutput());

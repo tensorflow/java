@@ -47,7 +47,7 @@ public final class Relu<T extends TType> extends PrimitiveOp implements Operand<
    * @param features 
    * @return a new instance of Relu
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
     opBuilder.addInput(features.asOutput());

@@ -47,7 +47,7 @@ public final class IteratorGetNext extends PrimitiveOp implements Iterable<Opera
    * @param outputShapes 
    * @return a new instance of IteratorGetNext
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorGetNext create(Scope scope, Operand<?> iterator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNext", scope.makeOpName("IteratorGetNext"));
     opBuilder.addInput(iterator.asOutput());

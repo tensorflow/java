@@ -76,7 +76,7 @@ public final class UnsortedSegmentMax<T extends TNumber> extends PrimitiveOp imp
    * @param numSegments 
    * @return a new instance of UnsortedSegmentMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentMax", scope.makeOpName("UnsortedSegmentMax"));
     opBuilder.addInput(data.asOutput());

@@ -40,7 +40,7 @@ public final class ReadFile extends PrimitiveOp implements Operand<TString> {
    * @param filename 
    * @return a new instance of ReadFile
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ReadFile create(Scope scope, Operand<TString> filename) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadFile", scope.makeOpName("ReadFile"));
     opBuilder.addInput(filename.asOutput());

@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingRMSPropParametersGradAccumDebug extends Primi
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingRMSPropParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingRMSPropParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> ms, Operand<TFloat32> mom, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingRMSPropParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingRMSPropParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());

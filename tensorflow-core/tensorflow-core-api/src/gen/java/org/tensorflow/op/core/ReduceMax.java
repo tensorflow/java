@@ -70,7 +70,7 @@ public final class ReduceMax<T extends TType> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of ReduceMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ReduceMax<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Max", scope.makeOpName("ReduceMax"));
     opBuilder.addInput(input.asOutput());

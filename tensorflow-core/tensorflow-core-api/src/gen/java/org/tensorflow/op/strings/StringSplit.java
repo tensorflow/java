@@ -86,7 +86,7 @@ public final class StringSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of StringSplit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StringSplit create(Scope scope, Operand<TString> input, Operand<TString> sep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
     opBuilder.addInput(input.asOutput());

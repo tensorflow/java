@@ -51,7 +51,7 @@ public final class SendTPUEmbeddingGradients extends PrimitiveOp {
    * @param config Serialized TPUEmbeddingConfiguration proto.
    * @return a new instance of SendTPUEmbeddingGradients
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat32>> inputs, Iterable<Operand<TFloat32>> learningRates, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("SendTPUEmbeddingGradients", scope.makeOpName("SendTPUEmbeddingGradients"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

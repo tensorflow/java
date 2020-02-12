@@ -70,7 +70,7 @@ public final class SparseSplit<T extends TType> extends PrimitiveOp {
    * @param numSplit The number of ways to split.
    * @return a new instance of SparseSplit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseSplit<T> create(Scope scope, Operand<TInt64> splitDim, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSplit", scope.makeOpName("SparseSplit"));
     opBuilder.addInput(splitDim.asOutput());

@@ -66,7 +66,7 @@ public final class PrelinearizeTuple extends PrimitiveOp implements Operand<TTyp
    * @param options carries optional attributes values
    * @return a new instance of PrelinearizeTuple
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static PrelinearizeTuple create(Scope scope, Iterable<Operand<?>> inputs, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrelinearizeTuple", scope.makeOpName("PrelinearizeTuple"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

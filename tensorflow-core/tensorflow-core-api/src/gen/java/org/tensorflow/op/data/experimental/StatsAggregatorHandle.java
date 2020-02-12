@@ -66,7 +66,7 @@ public final class StatsAggregatorHandle extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of StatsAggregatorHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StatsAggregatorHandle create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorHandleV2", scope.makeOpName("StatsAggregatorHandle"));
     opBuilder = scope.applyControlDependencies(opBuilder);

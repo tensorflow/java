@@ -47,7 +47,7 @@ public final class KMC2ChainInitialization extends PrimitiveOp implements Operan
    * @param seed Scalar. Seed for initializing the random number generator.
    * @return a new instance of KMC2ChainInitialization
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static KMC2ChainInitialization create(Scope scope, Operand<TFloat32> distances, Operand<TInt64> seed) {
     OperationBuilder opBuilder = scope.env().opBuilder("KMC2ChainInitialization", scope.makeOpName("KMC2ChainInitialization"));
     opBuilder.addInput(distances.asOutput());

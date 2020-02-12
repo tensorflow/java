@@ -50,7 +50,7 @@ public final class Sign<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Sign
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
     opBuilder.addInput(x.asOutput());

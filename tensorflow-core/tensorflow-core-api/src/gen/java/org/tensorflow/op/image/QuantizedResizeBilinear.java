@@ -80,7 +80,7 @@ public final class QuantizedResizeBilinear<T extends TType> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of QuantizedResizeBilinear
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());

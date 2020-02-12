@@ -55,7 +55,7 @@ public final class SparseReorder<T extends TType> extends PrimitiveOp {
    * @param inputShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseReorder
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
     opBuilder.addInput(inputIndices.asOutput());

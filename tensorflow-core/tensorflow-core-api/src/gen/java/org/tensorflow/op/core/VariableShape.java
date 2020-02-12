@@ -55,7 +55,7 @@ public final class VariableShape<T extends TNumber> extends PrimitiveOp implemen
    * @param outType 
    * @return a new instance of VariableShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
     opBuilder.addInput(input.asOutput());
@@ -71,7 +71,7 @@ public final class VariableShape<T extends TNumber> extends PrimitiveOp implemen
    * @param input 
    * @return a new instance of VariableShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static VariableShape<TInt32> create(Scope scope, Operand<?> input) {
     return create(scope, input, TInt32.DTYPE);
   }

@@ -50,7 +50,7 @@ public final class MergeSummary extends PrimitiveOp implements Operand<TString> 
    * buffers.
    * @return a new instance of MergeSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MergeSummary create(Scope scope, Iterable<Operand<TString>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeSummary", scope.makeOpName("MergeSummary"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

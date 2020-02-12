@@ -86,7 +86,7 @@ public final class LoadTPUEmbeddingMomentumParametersGradAccumDebug extends Prim
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingMomentumParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingMomentumParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> momenta, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMomentumParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingMomentumParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());

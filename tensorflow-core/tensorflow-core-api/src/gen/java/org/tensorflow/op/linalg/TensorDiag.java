@@ -60,7 +60,7 @@ public final class TensorDiag<T extends TType> extends PrimitiveOp implements Op
    * @param diagonal Rank k tensor where k is at most 1.
    * @return a new instance of TensorDiag
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
     opBuilder.addInput(diagonal.asOutput());

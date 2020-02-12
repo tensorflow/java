@@ -96,7 +96,7 @@ public final class ParseExample extends PrimitiveOp {
    * scalar element along the second dimension.
    * @return a new instance of ParseExample
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput());

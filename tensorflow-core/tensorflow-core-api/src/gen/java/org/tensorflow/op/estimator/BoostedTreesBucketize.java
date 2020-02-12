@@ -49,7 +49,7 @@ public final class BoostedTreesBucketize extends PrimitiveOp implements Iterable
    * feature.
    * @return a new instance of BoostedTreesBucketize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesBucketize create(Scope scope, Iterable<Operand<TFloat32>> floatValues, Iterable<Operand<TFloat32>> bucketBoundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesBucketize", scope.makeOpName("BoostedTreesBucketize"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));

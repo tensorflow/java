@@ -47,7 +47,7 @@ public final class Maximum<T extends TNumber> extends PrimitiveOp implements Ope
    * @param y 
    * @return a new instance of Maximum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Maximum<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Maximum", scope.makeOpName("Maximum"));
     opBuilder.addInput(x.asOutput());

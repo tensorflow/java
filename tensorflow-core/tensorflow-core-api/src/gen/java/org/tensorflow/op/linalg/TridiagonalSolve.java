@@ -74,7 +74,7 @@ public final class TridiagonalSolve<T extends TType> extends PrimitiveOp impleme
    * @param options carries optional attributes values
    * @return a new instance of TridiagonalSolve
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalSolve", scope.makeOpName("TridiagonalSolve"));
     opBuilder.addInput(diagonals.asOutput());

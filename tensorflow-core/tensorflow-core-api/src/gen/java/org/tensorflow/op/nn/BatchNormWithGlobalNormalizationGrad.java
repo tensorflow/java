@@ -57,7 +57,7 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
    * needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalizationGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalizationGrad", scope.makeOpName("BatchNormWithGlobalNormalizationGrad"));
     opBuilder.addInput(t.asOutput());

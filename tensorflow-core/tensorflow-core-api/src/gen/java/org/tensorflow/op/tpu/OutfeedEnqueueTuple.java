@@ -39,7 +39,7 @@ public final class OutfeedEnqueueTuple extends PrimitiveOp {
    * XLA tuple.
    * @return a new instance of OutfeedEnqueueTuple
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OutfeedEnqueueTuple create(Scope scope, Iterable<Operand<?>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueueTuple", scope.makeOpName("OutfeedEnqueueTuple"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

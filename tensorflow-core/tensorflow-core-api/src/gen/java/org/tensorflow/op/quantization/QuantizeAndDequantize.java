@@ -97,7 +97,7 @@ public final class QuantizeAndDequantize<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of QuantizeAndDequantize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> QuantizeAndDequantize<T> create(Scope scope, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeAndDequantizeV3", scope.makeOpName("QuantizeAndDequantize"));
     opBuilder.addInput(input.asOutput());

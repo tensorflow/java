@@ -42,7 +42,7 @@ public final class WriteFile extends PrimitiveOp {
    * @param contents scalar. The content to be written to the output file.
    * @return a new instance of WriteFile
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WriteFile create(Scope scope, Operand<TString> filename, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
     opBuilder.addInput(filename.asOutput());

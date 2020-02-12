@@ -47,7 +47,7 @@ public final class LogSoftmax<T extends TNumber> extends PrimitiveOp implements 
    * @param logits 2-D with shape `[batch_size, num_classes]`.
    * @return a new instance of LogSoftmax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
     opBuilder.addInput(logits.asOutput());

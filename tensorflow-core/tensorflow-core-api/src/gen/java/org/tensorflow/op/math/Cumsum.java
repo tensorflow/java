@@ -99,7 +99,7 @@ public final class Cumsum<T extends TType> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of Cumsum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Cumsum<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumsum", scope.makeOpName("Cumsum"));
     opBuilder.addInput(x.asOutput());

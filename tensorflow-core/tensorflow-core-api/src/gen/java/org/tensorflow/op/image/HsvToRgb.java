@@ -49,7 +49,7 @@ public final class HsvToRgb<T extends TNumber> extends PrimitiveOp implements Op
    * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
    * @return a new instance of HsvToRgb
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> HsvToRgb<T> create(Scope scope, Operand<T> images) {
     OperationBuilder opBuilder = scope.env().opBuilder("HSVToRGB", scope.makeOpName("HsvToRgb"));
     opBuilder.addInput(images.asOutput());

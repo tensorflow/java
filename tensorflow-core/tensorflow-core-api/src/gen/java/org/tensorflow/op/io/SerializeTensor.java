@@ -41,7 +41,7 @@ public final class SerializeTensor extends PrimitiveOp implements Operand<TStrin
    * @param tensor A Tensor of type `T`.
    * @return a new instance of SerializeTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SerializeTensor create(Scope scope, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeTensor", scope.makeOpName("SerializeTensor"));
     opBuilder.addInput(tensor.asOutput());

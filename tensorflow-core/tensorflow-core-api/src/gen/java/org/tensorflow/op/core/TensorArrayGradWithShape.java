@@ -52,7 +52,7 @@ public final class TensorArrayGradWithShape extends PrimitiveOp {
    * to return.
    * @return a new instance of TensorArrayGradWithShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradWithShape", scope.makeOpName("TensorArrayGradWithShape"));
     opBuilder.addInput(handle.asOutput());

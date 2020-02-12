@@ -37,7 +37,7 @@ public final class ConfigureTPUEmbedding extends PrimitiveOp {
    * describes the embedding lookups of the program.
    * @return a new instance of ConfigureTPUEmbedding
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ConfigureTPUEmbedding create(Scope scope, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureTPUEmbedding", scope.makeOpName("ConfigureTPUEmbedding"));
     opBuilder = scope.applyControlDependencies(opBuilder);

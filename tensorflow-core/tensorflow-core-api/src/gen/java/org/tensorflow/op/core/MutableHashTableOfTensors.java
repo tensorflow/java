@@ -96,7 +96,7 @@ public final class MutableHashTableOfTensors extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of MutableHashTableOfTensors
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> MutableHashTableOfTensors create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableOfTensorsV2", scope.makeOpName("MutableHashTableOfTensors"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -68,7 +68,7 @@ public final class BarrierClose extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BarrierClose
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BarrierClose create(Scope scope, Operand<TString> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierClose", scope.makeOpName("BarrierClose"));
     opBuilder.addInput(handle.asOutput());

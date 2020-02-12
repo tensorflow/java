@@ -50,7 +50,7 @@ public final class TPUEmbeddingActivations extends PrimitiveOp implements Operan
    * activations.
    * @return a new instance of TPUEmbeddingActivations
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable, Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUEmbeddingActivations", scope.makeOpName("TPUEmbeddingActivations"));
     opBuilder.addInput(embeddingVariable.asOutput());

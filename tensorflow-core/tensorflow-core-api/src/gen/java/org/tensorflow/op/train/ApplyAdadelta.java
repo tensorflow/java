@@ -74,7 +74,7 @@ public final class ApplyAdadelta<T extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdadelta
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyAdadelta<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdadelta", scope.makeOpName("ApplyAdadelta"));
     opBuilder.addInput(var.asOutput());

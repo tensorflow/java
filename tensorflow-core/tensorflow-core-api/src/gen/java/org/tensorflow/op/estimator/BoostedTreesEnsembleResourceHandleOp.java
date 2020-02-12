@@ -67,7 +67,7 @@ public final class BoostedTreesEnsembleResourceHandleOp extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesEnsembleResourceHandleOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesEnsembleResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesEnsembleResourceHandleOp", scope.makeOpName("BoostedTreesEnsembleResourceHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

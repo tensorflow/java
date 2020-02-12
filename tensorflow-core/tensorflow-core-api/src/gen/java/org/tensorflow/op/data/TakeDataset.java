@@ -48,7 +48,7 @@ public final class TakeDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of TakeDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TakeDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeDataset", scope.makeOpName("TakeDataset"));
     opBuilder.addInput(inputDataset.asOutput());

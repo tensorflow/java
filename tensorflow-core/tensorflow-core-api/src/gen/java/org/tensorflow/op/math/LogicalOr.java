@@ -44,7 +44,7 @@ public final class LogicalOr extends PrimitiveOp implements Operand<TBool> {
    * @param y 
    * @return a new instance of LogicalOr
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LogicalOr create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalOr", scope.makeOpName("LogicalOr"));
     opBuilder.addInput(x.asOutput());

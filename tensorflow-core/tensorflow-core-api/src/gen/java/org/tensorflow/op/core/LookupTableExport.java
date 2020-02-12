@@ -46,7 +46,7 @@ public final class LookupTableExport<T extends TType, U extends TType> extends P
    * @param Tvalues 
    * @return a new instance of LookupTableExport
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());

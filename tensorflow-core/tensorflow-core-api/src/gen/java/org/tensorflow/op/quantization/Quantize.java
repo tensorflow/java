@@ -219,7 +219,7 @@ public final class Quantize<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Quantize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());

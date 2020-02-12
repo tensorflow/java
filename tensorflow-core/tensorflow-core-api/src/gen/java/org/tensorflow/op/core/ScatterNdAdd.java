@@ -99,7 +99,7 @@ public final class ScatterNdAdd<T extends TType> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ScatterNdAdd<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdAdd", scope.makeOpName("ScatterNdAdd"));
     opBuilder.addInput(ref.asOutput());

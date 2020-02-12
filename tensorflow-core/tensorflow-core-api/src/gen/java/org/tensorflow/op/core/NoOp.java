@@ -36,7 +36,7 @@ public final class NoOp extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of NoOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static NoOp create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("NoOp", scope.makeOpName("NoOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

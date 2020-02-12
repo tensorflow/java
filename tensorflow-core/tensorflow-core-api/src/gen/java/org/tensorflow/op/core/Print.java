@@ -70,7 +70,7 @@ public final class Print extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Print
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Print create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrintV2", scope.makeOpName("Print"));
     opBuilder.addInput(input.asOutput());

@@ -50,7 +50,7 @@ public final class Split<T extends TType> extends PrimitiveOp implements Iterabl
    * `value.shape[split_dim]`.
    * @return a new instance of Split
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Split<T> create(Scope scope, Operand<TInt32> axis, Operand<T> value, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("Split", scope.makeOpName("Split"));
     opBuilder.addInput(axis.asOutput());

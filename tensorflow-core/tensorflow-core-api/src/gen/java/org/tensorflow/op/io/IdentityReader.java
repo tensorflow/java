@@ -73,7 +73,7 @@ public final class IdentityReader extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of IdentityReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IdentityReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("IdentityReaderV2", scope.makeOpName("IdentityReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

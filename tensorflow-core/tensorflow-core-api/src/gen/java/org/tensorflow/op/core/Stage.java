@@ -93,7 +93,7 @@ public final class Stage extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Stage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Stage create(Scope scope, Iterable<Operand<?>> values, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Stage", scope.makeOpName("Stage"));
     opBuilder.addInputList(Operands.asOutputs(values));

@@ -127,7 +127,7 @@ public final class FractionalAvgPool<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FractionalAvgPool
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FractionalAvgPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPool", scope.makeOpName("FractionalAvgPool"));
     opBuilder.addInput(value.asOutput());

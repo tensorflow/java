@@ -71,7 +71,7 @@ public final class PreventGradient<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of PreventGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> PreventGradient<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PreventGradient", scope.makeOpName("PreventGradient"));
     opBuilder.addInput(input.asOutput());

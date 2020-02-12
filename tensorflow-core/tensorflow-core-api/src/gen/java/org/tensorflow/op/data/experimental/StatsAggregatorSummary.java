@@ -39,7 +39,7 @@ public final class StatsAggregatorSummary extends PrimitiveOp implements Operand
    * @param iterator 
    * @return a new instance of StatsAggregatorSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StatsAggregatorSummary create(Scope scope, Operand<?> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalStatsAggregatorSummary", scope.makeOpName("StatsAggregatorSummary"));
     opBuilder.addInput(iterator.asOutput());

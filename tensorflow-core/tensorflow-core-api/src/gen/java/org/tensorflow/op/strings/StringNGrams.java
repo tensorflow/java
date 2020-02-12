@@ -62,7 +62,7 @@ public final class StringNGrams<T extends TNumber> extends PrimitiveOp {
    * @param preserveShortSequences 
    * @return a new instance of StringNGrams
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringNGrams", scope.makeOpName("StringNGrams"));
     opBuilder.addInput(data.asOutput());

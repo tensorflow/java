@@ -100,7 +100,7 @@ public final class DynamicStitch<T extends TType> extends PrimitiveOp implements
    * @param data 
    * @return a new instance of DynamicStitch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicStitch", scope.makeOpName("DynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));

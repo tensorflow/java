@@ -37,7 +37,7 @@ public final class DeleteMemoryCache extends PrimitiveOp {
    * @param deleter 
    * @return a new instance of DeleteMemoryCache
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeleteMemoryCache create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMemoryCache", scope.makeOpName("DeleteMemoryCache"));
     opBuilder.addInput(handle.asOutput());

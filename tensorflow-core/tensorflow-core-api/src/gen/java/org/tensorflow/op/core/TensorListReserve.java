@@ -50,7 +50,7 @@ public final class TensorListReserve extends PrimitiveOp implements Operand<TTyp
    * @param elementDtype 
    * @return a new instance of TensorListReserve
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
     opBuilder.addInput(elementShape.asOutput());

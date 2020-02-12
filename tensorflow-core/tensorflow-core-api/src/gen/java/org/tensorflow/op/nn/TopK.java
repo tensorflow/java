@@ -78,7 +78,7 @@ public final class TopK<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TopK
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKV2", scope.makeOpName("TopK"));
     opBuilder.addInput(input.asOutput());

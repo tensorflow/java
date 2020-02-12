@@ -67,7 +67,7 @@ public final class CollectiveGather<T extends TNumber> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of CollectiveGather
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGather", scope.makeOpName("CollectiveGather"));
     opBuilder.addInput(input.asOutput());

@@ -40,7 +40,7 @@ public final class Strip extends PrimitiveOp implements Operand<TString> {
    * @param input A string `Tensor` of any shape.
    * @return a new instance of Strip
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Strip create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringStrip", scope.makeOpName("Strip"));
     opBuilder.addInput(input.asOutput());

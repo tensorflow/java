@@ -76,7 +76,7 @@ public final class CtcGreedyDecoder<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CtcGreedyDecoder
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());

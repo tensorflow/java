@@ -49,7 +49,7 @@ public final class RefSwitch<T extends TType> extends PrimitiveOp {
    * @param pred A scalar that specifies which output port will receive data.
    * @return a new instance of RefSwitch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefSwitch<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSwitch", scope.makeOpName("RefSwitch"));
     opBuilder.addInput(data.asOutput());

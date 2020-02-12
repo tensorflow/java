@@ -107,7 +107,7 @@ public final class CropAndResize extends PrimitiveOp implements Operand<TFloat32
    * @param options carries optional attributes values
    * @return a new instance of CropAndResize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResize", scope.makeOpName("CropAndResize"));
     opBuilder.addInput(image.asOutput());

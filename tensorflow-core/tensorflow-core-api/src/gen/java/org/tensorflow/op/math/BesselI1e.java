@@ -48,7 +48,7 @@ public final class BesselI1e<T extends TNumber> extends PrimitiveOp implements O
    * @param x 
    * @return a new instance of BesselI1e
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BesselI1e<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("BesselI1e", scope.makeOpName("BesselI1e"));
     opBuilder.addInput(x.asOutput());

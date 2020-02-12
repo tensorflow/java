@@ -81,7 +81,7 @@ public final class SparseReduceSum<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceSum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseReduceSum<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceSum", scope.makeOpName("SparseReduceSum"));
     opBuilder.addInput(inputIndices.asOutput());

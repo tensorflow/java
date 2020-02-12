@@ -83,7 +83,7 @@ public final class RandomCrop<T extends TNumber> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of RandomCrop
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<TInt64> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());

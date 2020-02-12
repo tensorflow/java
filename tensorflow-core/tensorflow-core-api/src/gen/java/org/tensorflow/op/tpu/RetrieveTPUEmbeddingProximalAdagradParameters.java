@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingProximalAdagradParameters extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingProximalAdagradParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingProximalAdagradParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingProximalAdagradParameters", scope.makeOpName("RetrieveTPUEmbeddingProximalAdagradParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

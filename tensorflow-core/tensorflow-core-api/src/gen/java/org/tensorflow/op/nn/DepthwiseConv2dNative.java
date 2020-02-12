@@ -102,7 +102,7 @@ public final class DepthwiseConv2dNative<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNative
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
     opBuilder.addInput(input.asOutput());

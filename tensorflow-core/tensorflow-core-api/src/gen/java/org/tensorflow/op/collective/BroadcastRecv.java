@@ -68,7 +68,7 @@ public final class BroadcastRecv<T extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of BroadcastRecv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.applyControlDependencies(opBuilder);

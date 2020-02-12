@@ -80,7 +80,7 @@ public final class ComputeAccidentalHits extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ComputeAccidentalHits
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ComputeAccidentalHits create(Scope scope, Operand<TInt64> trueClasses, Operand<TInt64> sampledCandidates, Long numTrue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComputeAccidentalHits", scope.makeOpName("ComputeAccidentalHits"));
     opBuilder.addInput(trueClasses.asOutput());

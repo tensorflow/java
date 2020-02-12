@@ -39,7 +39,7 @@ public final class TensorForestTreeDeserialize extends PrimitiveOp {
    * @param treeConfig Serialied proto string of the boosted_trees.Tree proto.
    * @return a new instance of TensorForestTreeDeserialize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
     opBuilder.addInput(treeHandle.asOutput());

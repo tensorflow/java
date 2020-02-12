@@ -67,7 +67,7 @@ public final class StringLength extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of StringLength
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StringLength create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLength", scope.makeOpName("StringLength"));
     opBuilder.addInput(input.asOutput());

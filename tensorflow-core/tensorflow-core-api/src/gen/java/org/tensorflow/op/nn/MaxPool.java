@@ -71,7 +71,7 @@ public final class MaxPool<T extends TType> extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of MaxPool
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MaxPool<T> create(Scope scope, Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolV2", scope.makeOpName("MaxPool"));
     opBuilder.addInput(input.asOutput());

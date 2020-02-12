@@ -52,7 +52,7 @@ public final class Sinh<T extends TType> extends PrimitiveOp implements Operand<
    * @param x 
    * @return a new instance of Sinh
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sinh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sinh", scope.makeOpName("Sinh"));
     opBuilder.addInput(x.asOutput());

@@ -46,7 +46,7 @@ public final class MaxIntraOpParallelismDataset extends PrimitiveOp implements O
    * @param outputShapes 
    * @return a new instance of MaxIntraOpParallelismDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MaxIntraOpParallelismDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> maxIntraOpParallelism, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalMaxIntraOpParallelismDataset", scope.makeOpName("MaxIntraOpParallelismDataset"));
     opBuilder.addInput(inputDataset.asOutput());

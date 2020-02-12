@@ -67,7 +67,7 @@ public final class AssignSub<T extends TType> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of AssignSub
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSub", scope.makeOpName("AssignSub"));
     opBuilder.addInput(ref.asOutput());

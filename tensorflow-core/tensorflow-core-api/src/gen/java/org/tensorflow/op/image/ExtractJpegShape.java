@@ -50,7 +50,7 @@ public final class ExtractJpegShape<T extends TNumber> extends PrimitiveOp imple
    * Defaults to int32.
    * @return a new instance of ExtractJpegShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput());
@@ -66,7 +66,7 @@ public final class ExtractJpegShape<T extends TNumber> extends PrimitiveOp imple
    * @param contents 0-D. The JPEG-encoded image.
    * @return a new instance of ExtractJpegShape
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
     return create(scope, contents, TInt32.DTYPE);
   }

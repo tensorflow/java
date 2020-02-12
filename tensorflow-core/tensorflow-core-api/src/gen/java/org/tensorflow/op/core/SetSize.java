@@ -71,7 +71,7 @@ public final class SetSize extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of SetSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetSize", scope.makeOpName("SetSize"));
     opBuilder.addInput(setIndices.asOutput());

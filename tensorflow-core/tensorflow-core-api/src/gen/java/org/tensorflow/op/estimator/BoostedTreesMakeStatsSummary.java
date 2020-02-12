@@ -48,7 +48,7 @@ public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements O
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesMakeStatsSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Iterable<Operand<TInt32>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeStatsSummary", scope.makeOpName("BoostedTreesMakeStatsSummary"));
     opBuilder.addInput(nodeIds.asOutput());

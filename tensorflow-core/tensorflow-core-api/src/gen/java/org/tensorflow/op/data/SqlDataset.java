@@ -47,7 +47,7 @@ public final class SqlDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of SqlDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SqlDataset create(Scope scope, Operand<TString> driverName, Operand<TString> dataSourceName, Operand<TString> query, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SqlDataset", scope.makeOpName("SqlDataset"));
     opBuilder.addInput(driverName.asOutput());

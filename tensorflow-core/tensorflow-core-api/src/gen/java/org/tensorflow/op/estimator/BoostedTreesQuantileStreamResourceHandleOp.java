@@ -67,7 +67,7 @@ public final class BoostedTreesQuantileStreamResourceHandleOp extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesQuantileStreamResourceHandleOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceHandleOp", scope.makeOpName("BoostedTreesQuantileStreamResourceHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

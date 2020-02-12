@@ -44,7 +44,7 @@ public final class MatchingFiles extends PrimitiveOp implements Operand<TString>
    * @param pattern Shell wildcard pattern(s). Scalar or vector of type string.
    * @return a new instance of MatchingFiles
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MatchingFiles create(Scope scope, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFiles", scope.makeOpName("MatchingFiles"));
     opBuilder.addInput(pattern.asOutput());

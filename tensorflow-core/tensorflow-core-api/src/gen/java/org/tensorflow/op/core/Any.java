@@ -69,7 +69,7 @@ public final class Any extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of Any
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Any create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("Any"));
     opBuilder.addInput(input.asOutput());

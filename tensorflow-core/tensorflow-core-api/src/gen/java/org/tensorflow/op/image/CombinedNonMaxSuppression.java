@@ -101,7 +101,7 @@ public final class CombinedNonMaxSuppression extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of CombinedNonMaxSuppression
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat32> boxes, Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize, Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CombinedNonMaxSuppression", scope.makeOpName("CombinedNonMaxSuppression"));
     opBuilder.addInput(boxes.asOutput());

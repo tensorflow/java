@@ -42,7 +42,7 @@ public final class ZerosLike<T extends TType> extends PrimitiveOp implements Ope
    * @param x a tensor of type T.
    * @return a new instance of ZerosLike
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ZerosLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZerosLike", scope.makeOpName("ZerosLike"));
     opBuilder.addInput(x.asOutput());

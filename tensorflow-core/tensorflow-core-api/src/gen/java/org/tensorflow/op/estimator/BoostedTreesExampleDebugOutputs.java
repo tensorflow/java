@@ -49,7 +49,7 @@ public final class BoostedTreesExampleDebugOutputs extends PrimitiveOp implement
    * examples_debug_outputs_serialized.
    * @return a new instance of BoostedTreesExampleDebugOutputs
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesExampleDebugOutputs create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesExampleDebugOutputs", scope.makeOpName("BoostedTreesExampleDebugOutputs"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

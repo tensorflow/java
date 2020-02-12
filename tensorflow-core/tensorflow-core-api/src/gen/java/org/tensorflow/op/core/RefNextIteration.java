@@ -42,7 +42,7 @@ public final class RefNextIteration<T extends TType> extends PrimitiveOp impleme
    * @param data The tensor to be made available to the next iteration.
    * @return a new instance of RefNextIteration
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefNextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefNextIteration", scope.makeOpName("RefNextIteration"));
     opBuilder.addInput(data.asOutput());

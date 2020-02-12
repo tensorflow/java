@@ -160,7 +160,7 @@ public final class EncodeJpeg extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeJpeg
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EncodeJpeg create(Scope scope, Operand<TUint8> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpeg", scope.makeOpName("EncodeJpeg"));
     opBuilder.addInput(image.asOutput());

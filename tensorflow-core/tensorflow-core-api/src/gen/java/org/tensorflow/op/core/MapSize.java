@@ -89,7 +89,7 @@ public final class MapSize extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of MapSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapSize", scope.makeOpName("MapSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

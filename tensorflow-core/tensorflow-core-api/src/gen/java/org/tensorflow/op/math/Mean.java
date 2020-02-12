@@ -70,7 +70,7 @@ public final class Mean<T extends TType> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of Mean
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Mean<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mean", scope.makeOpName("Mean"));
     opBuilder.addInput(input.asOutput());

@@ -68,7 +68,7 @@ public final class ResourceSparseApplyAdadelta extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdadelta
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdadelta", scope.makeOpName("ResourceSparseApplyAdadelta"));
     opBuilder.addInput(var.asOutput());

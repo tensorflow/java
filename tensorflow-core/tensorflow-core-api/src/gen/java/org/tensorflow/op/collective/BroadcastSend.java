@@ -67,7 +67,7 @@ public final class BroadcastSend<T extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of BroadcastSend
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSend", scope.makeOpName("BroadcastSend"));
     opBuilder.addInput(input.asOutput());

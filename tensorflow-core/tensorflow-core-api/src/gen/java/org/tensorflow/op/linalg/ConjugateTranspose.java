@@ -48,7 +48,7 @@ public final class ConjugateTranspose<T extends TType> extends PrimitiveOp imple
    * @param perm 
    * @return a new instance of ConjugateTranspose
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());

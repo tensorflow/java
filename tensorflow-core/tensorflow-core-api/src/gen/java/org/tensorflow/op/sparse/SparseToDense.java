@@ -88,7 +88,7 @@ public final class SparseToDense<U extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of SparseToDense
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> SparseToDense<U> create(Scope scope, Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues, Operand<U> defaultValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToDense", scope.makeOpName("SparseToDense"));
     opBuilder.addInput(sparseIndices.asOutput());

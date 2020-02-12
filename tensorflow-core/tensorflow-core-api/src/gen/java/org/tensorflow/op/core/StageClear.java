@@ -86,7 +86,7 @@ public final class StageClear extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of StageClear
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StageClear create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StageClear", scope.makeOpName("StageClear"));
     opBuilder = scope.applyControlDependencies(opBuilder);

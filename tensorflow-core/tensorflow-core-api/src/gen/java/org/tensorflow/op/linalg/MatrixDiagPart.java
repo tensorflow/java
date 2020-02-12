@@ -116,7 +116,7 @@ public final class MatrixDiagPart<T extends TType> extends PrimitiveOp implement
    * Default is 0.
    * @return a new instance of MatrixDiagPart
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixDiagPart<T> create(Scope scope, Operand<T> input, Operand<TInt32> k, Operand<T> paddingValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagPartV2", scope.makeOpName("MatrixDiagPart"));
     opBuilder.addInput(input.asOutput());

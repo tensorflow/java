@@ -63,7 +63,7 @@ public final class Irfft2d<U extends TNumber> extends PrimitiveOp implements Ope
    * @param Treal 
    * @return a new instance of Irfft2d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Irfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT2D", scope.makeOpName("Irfft2d"));
     opBuilder.addInput(input.asOutput());
@@ -81,7 +81,7 @@ public final class Irfft2d<U extends TNumber> extends PrimitiveOp implements Ope
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @return a new instance of Irfft2d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Irfft2d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.DTYPE);
   }

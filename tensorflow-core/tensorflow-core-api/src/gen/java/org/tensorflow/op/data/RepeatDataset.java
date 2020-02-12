@@ -47,7 +47,7 @@ public final class RepeatDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of RepeatDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RepeatDataset", scope.makeOpName("RepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());

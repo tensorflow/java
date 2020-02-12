@@ -75,7 +75,7 @@ public final class ModelDataset extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of ModelDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ModelDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ModelDataset", scope.makeOpName("ModelDataset"));
     opBuilder.addInput(inputDataset.asOutput());

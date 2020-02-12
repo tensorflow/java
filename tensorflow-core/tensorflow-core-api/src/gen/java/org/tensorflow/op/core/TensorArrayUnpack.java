@@ -43,7 +43,7 @@ public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFlo
    * @param flowIn 
    * @return a new instance of TensorArrayUnpack
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());

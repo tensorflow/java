@@ -83,7 +83,7 @@ public final class InitializeTableFromTextFile extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InitializeTableFromTextFile
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static InitializeTableFromTextFile create(Scope scope, Operand<?> tableHandle, Operand<TString> filename, Long keyIndex, Long valueIndex, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromTextFileV2", scope.makeOpName("InitializeTableFromTextFile"));
     opBuilder.addInput(tableHandle.asOutput());

@@ -50,7 +50,7 @@ public final class ToNumber<T extends TNumber> extends PrimitiveOp implements Op
    * @param outType The numeric type to interpret each string in `string_tensor` as.
    * @return a new instance of ToNumber
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToNumber", scope.makeOpName("ToNumber"));
     opBuilder.addInput(stringTensor.asOutput());
@@ -66,7 +66,7 @@ public final class ToNumber<T extends TNumber> extends PrimitiveOp implements Op
    * @param stringTensor 
    * @return a new instance of ToNumber
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ToNumber<TFloat32> create(Scope scope, Operand<TString> stringTensor) {
     return create(scope, stringTensor, TFloat32.DTYPE);
   }

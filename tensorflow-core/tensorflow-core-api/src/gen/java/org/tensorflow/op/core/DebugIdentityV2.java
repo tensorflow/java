@@ -111,7 +111,7 @@ public final class DebugIdentityV2<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of DebugIdentityV2
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugIdentityV2<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugIdentityV2", scope.makeOpName("DebugIdentityV2"));
     opBuilder.addInput(input.asOutput());

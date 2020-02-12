@@ -62,7 +62,7 @@ public final class DestroyResourceOp extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DestroyResourceOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DestroyResourceOp create(Scope scope, Operand<?> resource, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DestroyResourceOp", scope.makeOpName("DestroyResourceOp"));
     opBuilder.addInput(resource.asOutput());

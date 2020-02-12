@@ -45,7 +45,7 @@ public final class InvGrad<T extends TType> extends PrimitiveOp implements Opera
    * @param dy 
    * @return a new instance of InvGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> InvGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvGrad", scope.makeOpName("InvGrad"));
     opBuilder.addInput(y.asOutput());

@@ -57,7 +57,7 @@ public final class Requantize<U extends TType> extends PrimitiveOp {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of Requantize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Requantize", scope.makeOpName("Requantize"));
     opBuilder.addInput(input.asOutput());

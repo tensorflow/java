@@ -91,7 +91,7 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Pri
    * @param options carries optional attributes values
    * @return a new instance of LocalResponseNormalizationGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LocalResponseNormalizationGrad<T> create(Scope scope, Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRNGrad", scope.makeOpName("LocalResponseNormalizationGrad"));
     opBuilder.addInput(inputGrads.asOutput());

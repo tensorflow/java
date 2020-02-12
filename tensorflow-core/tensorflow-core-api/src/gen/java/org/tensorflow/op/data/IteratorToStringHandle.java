@@ -40,7 +40,7 @@ public final class IteratorToStringHandle extends PrimitiveOp implements Operand
    * @param resourceHandle A handle to an iterator resource.
    * @return a new instance of IteratorToStringHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorToStringHandle create(Scope scope, Operand<?> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorToStringHandle", scope.makeOpName("IteratorToStringHandle"));
     opBuilder.addInput(resourceHandle.asOutput());

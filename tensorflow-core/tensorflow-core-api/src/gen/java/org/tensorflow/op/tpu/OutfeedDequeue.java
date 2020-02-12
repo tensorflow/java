@@ -68,7 +68,7 @@ public final class OutfeedDequeue<T extends TType> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of OutfeedDequeue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> OutfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeue", scope.makeOpName("OutfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

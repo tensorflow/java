@@ -38,7 +38,7 @@ public final class StatsAggregatorSetSummaryWriter extends PrimitiveOp {
    * @param summary 
    * @return a new instance of StatsAggregatorSetSummaryWriter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StatsAggregatorSetSummaryWriter create(Scope scope, Operand<?> statsAggregator, Operand<?> summary) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSetSummaryWriter", scope.makeOpName("StatsAggregatorSetSummaryWriter"));
     opBuilder.addInput(statsAggregator.asOutput());

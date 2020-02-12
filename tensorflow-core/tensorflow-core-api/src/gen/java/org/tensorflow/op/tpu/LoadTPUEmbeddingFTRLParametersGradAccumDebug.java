@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingFTRLParametersGradAccumDebug extends Primitiv
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingFTRLParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingFTRLParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> linears, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingFTRLParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingFTRLParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());

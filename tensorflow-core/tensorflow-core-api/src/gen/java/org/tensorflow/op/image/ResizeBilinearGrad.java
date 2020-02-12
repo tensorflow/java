@@ -75,7 +75,7 @@ public final class ResizeBilinearGrad<T extends TNumber> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinearGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope, Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinearGrad", scope.makeOpName("ResizeBilinearGrad"));
     opBuilder.addInput(grads.asOutput());

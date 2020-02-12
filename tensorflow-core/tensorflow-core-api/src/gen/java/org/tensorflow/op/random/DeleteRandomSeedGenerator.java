@@ -37,7 +37,7 @@ public final class DeleteRandomSeedGenerator extends PrimitiveOp {
    * @param deleter 
    * @return a new instance of DeleteRandomSeedGenerator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeleteRandomSeedGenerator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteRandomSeedGenerator", scope.makeOpName("DeleteRandomSeedGenerator"));
     opBuilder.addInput(handle.asOutput());

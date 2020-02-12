@@ -39,7 +39,7 @@ public final class ResourceAccumulatorNumAccumulated extends PrimitiveOp impleme
    * @param handle The handle to an accumulator.
    * @return a new instance of ResourceAccumulatorNumAccumulated
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ResourceAccumulatorNumAccumulated create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorNumAccumulated", scope.makeOpName("ResourceAccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());

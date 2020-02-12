@@ -111,7 +111,7 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of EnqueueTPUEmbeddingSparseTensorBatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> EnqueueTPUEmbeddingSparseTensorBatch create(Scope scope, Iterable<Operand<T>> sampleIndices, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<TString> modeOverride, List<Long> tableIds, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingSparseTensorBatch", scope.makeOpName("EnqueueTPUEmbeddingSparseTensorBatch"));
     opBuilder.addInputList(Operands.asOutputs(sampleIndices));

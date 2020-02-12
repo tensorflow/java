@@ -97,7 +97,7 @@ public final class StagePeek extends PrimitiveOp implements Iterable<Operand<TTy
    * @param options carries optional attributes values
    * @return a new instance of StagePeek
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static StagePeek create(Scope scope, Operand<TInt32> index, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StagePeek", scope.makeOpName("StagePeek"));
     opBuilder.addInput(index.asOutput());

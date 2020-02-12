@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingCenteredRMSPropParameters extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingCenteredRMSPropParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingCenteredRMSPropParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingCenteredRMSPropParameters", scope.makeOpName("RetrieveTPUEmbeddingCenteredRMSPropParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

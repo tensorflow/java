@@ -44,7 +44,7 @@ public final class Timestamp extends PrimitiveOp implements Operand<TFloat64> {
    * @param scope current scope
    * @return a new instance of Timestamp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Timestamp create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Timestamp", scope.makeOpName("Timestamp"));
     opBuilder = scope.applyControlDependencies(opBuilder);

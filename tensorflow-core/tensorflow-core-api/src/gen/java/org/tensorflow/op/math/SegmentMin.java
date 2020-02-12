@@ -68,7 +68,7 @@ public final class SegmentMin<T extends TNumber> extends PrimitiveOp implements 
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMin
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SegmentMin<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMin", scope.makeOpName("SegmentMin"));
     opBuilder.addInput(data.asOutput());

@@ -85,7 +85,7 @@ public final class LoadTPUEmbeddingAdagradParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingAdagradParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingAdagradParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdagradParameters", scope.makeOpName("LoadTPUEmbeddingAdagradParameters"));
     opBuilder.addInput(parameters.asOutput());

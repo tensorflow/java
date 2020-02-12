@@ -64,7 +64,7 @@ public final class BitwiseOr<T extends TNumber> extends PrimitiveOp implements O
    * @param y 
    * @return a new instance of BitwiseOr
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BitwiseOr<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseOr", scope.makeOpName("BitwiseOr"));
     opBuilder.addInput(x.asOutput());

@@ -41,7 +41,7 @@ public final class RefIdentity<T extends TType> extends PrimitiveOp implements O
    * @param input 
    * @return a new instance of RefIdentity
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefIdentity", scope.makeOpName("RefIdentity"));
     opBuilder.addInput(input.asOutput());

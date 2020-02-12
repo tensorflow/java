@@ -48,7 +48,7 @@ public final class RequantizePerChannel<U extends TType> extends PrimitiveOp {
    * @param outType The quantized type of output tensor that needs to be converted.
    * @return a new instance of RequantizePerChannel
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput());

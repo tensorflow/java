@@ -64,7 +64,7 @@ public final class LeakyReluGrad<T extends TNumber> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of LeakyReluGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyReluGrad", scope.makeOpName("LeakyReluGrad"));
     opBuilder.addInput(gradients.asOutput());

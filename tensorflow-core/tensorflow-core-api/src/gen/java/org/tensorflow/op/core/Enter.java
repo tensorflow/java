@@ -77,7 +77,7 @@ public final class Enter<T extends TType> extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of Enter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Enter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Enter", scope.makeOpName("Enter"));
     opBuilder.addInput(data.asOutput());

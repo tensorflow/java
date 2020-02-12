@@ -94,7 +94,7 @@ public final class Unstage extends PrimitiveOp implements Iterable<Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of Unstage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Unstage create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unstage", scope.makeOpName("Unstage"));
     opBuilder = scope.applyControlDependencies(opBuilder);

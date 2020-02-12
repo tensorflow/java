@@ -75,7 +75,7 @@ public final class MaxPool3dGradGrad<T extends TNumber> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3dGradGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> MaxPool3dGradGrad<T> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPool3DGradGrad", scope.makeOpName("MaxPool3dGradGrad"));
     opBuilder.addInput(origInput.asOutput());

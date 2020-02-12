@@ -42,7 +42,7 @@ public final class MakeIterator extends PrimitiveOp {
    * @param iterator 
    * @return a new instance of MakeIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MakeIterator create(Scope scope, Operand<?> dataset, Operand<?> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MakeIterator", scope.makeOpName("MakeIterator"));
     opBuilder.addInput(dataset.asOutput());

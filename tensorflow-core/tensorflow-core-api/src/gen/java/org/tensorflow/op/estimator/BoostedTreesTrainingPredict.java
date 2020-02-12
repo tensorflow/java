@@ -53,7 +53,7 @@ public final class BoostedTreesTrainingPredict extends PrimitiveOp {
    * shape.
    * @return a new instance of BoostedTreesTrainingPredict
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesTrainingPredict create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> cachedTreeIds, Operand<TInt32> cachedNodeIds, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesTrainingPredict", scope.makeOpName("BoostedTreesTrainingPredict"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

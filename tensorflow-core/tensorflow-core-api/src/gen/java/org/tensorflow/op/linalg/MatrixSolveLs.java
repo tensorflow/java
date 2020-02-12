@@ -104,7 +104,7 @@ public final class MatrixSolveLs<T extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of MatrixSolveLs
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolveLs", scope.makeOpName("MatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());

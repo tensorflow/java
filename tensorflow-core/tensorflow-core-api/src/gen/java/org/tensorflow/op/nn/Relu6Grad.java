@@ -44,7 +44,7 @@ public final class Relu6Grad<T extends TNumber> extends PrimitiveOp implements O
    * its output; using either one produces the same result.
    * @return a new instance of Relu6Grad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Relu6Grad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6Grad", scope.makeOpName("Relu6Grad"));
     opBuilder.addInput(gradients.asOutput());

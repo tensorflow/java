@@ -47,7 +47,7 @@ public final class QuantizedRelu<U extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedRelu
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
     opBuilder.addInput(features.asOutput());

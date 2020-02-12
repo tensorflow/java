@@ -76,7 +76,7 @@ public final class MirrorPad<T extends TType> extends PrimitiveOp implements Ope
    * it is `[1, 2, 3, 3, 2]` in symmetric mode.
    * @return a new instance of MirrorPad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPad", scope.makeOpName("MirrorPad"));
     opBuilder.addInput(input.asOutput());

@@ -126,7 +126,7 @@ public final class ExtractGlimpse extends PrimitiveOp implements Operand<TFloat3
    * @param options carries optional attributes values
    * @return a new instance of ExtractGlimpse
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ExtractGlimpse create(Scope scope, Operand<TFloat32> input, Operand<TInt32> size, Operand<TFloat32> offsets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpse", scope.makeOpName("ExtractGlimpse"));
     opBuilder.addInput(input.asOutput());

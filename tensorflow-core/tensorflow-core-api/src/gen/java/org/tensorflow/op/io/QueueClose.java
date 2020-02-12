@@ -65,7 +65,7 @@ public final class QueueClose extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of QueueClose
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static QueueClose create(Scope scope, Operand<?> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueCloseV2", scope.makeOpName("QueueClose"));
     opBuilder.addInput(handle.asOutput());

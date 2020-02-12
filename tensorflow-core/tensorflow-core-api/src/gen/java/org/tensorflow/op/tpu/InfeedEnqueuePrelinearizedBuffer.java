@@ -58,7 +58,7 @@ public final class InfeedEnqueuePrelinearizedBuffer extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InfeedEnqueuePrelinearizedBuffer
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static InfeedEnqueuePrelinearizedBuffer create(Scope scope, Operand<?> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueuePrelinearizedBuffer", scope.makeOpName("InfeedEnqueuePrelinearizedBuffer"));
     opBuilder.addInput(input.asOutput());

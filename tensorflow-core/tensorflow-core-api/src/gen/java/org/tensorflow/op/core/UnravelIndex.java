@@ -65,7 +65,7 @@ public final class UnravelIndex<T extends TNumber> extends PrimitiveOp implement
    * indices.
    * @return a new instance of UnravelIndex
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
     opBuilder.addInput(indices.asOutput());

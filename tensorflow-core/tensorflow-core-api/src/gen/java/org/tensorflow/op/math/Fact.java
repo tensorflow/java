@@ -39,7 +39,7 @@ public final class Fact extends PrimitiveOp implements Operand<TString> {
    * @param scope current scope
    * @return a new instance of Fact
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Fact create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fact", scope.makeOpName("Fact"));
     opBuilder = scope.applyControlDependencies(opBuilder);

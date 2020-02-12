@@ -47,7 +47,7 @@ public final class Concat<T extends TType> extends PrimitiveOp implements Operan
    * range [-rank(values), rank(values)).
    * @return a new instance of Concat
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Concat<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatV2", scope.makeOpName("Concat"));
     opBuilder.addInputList(Operands.asOutputs(values));

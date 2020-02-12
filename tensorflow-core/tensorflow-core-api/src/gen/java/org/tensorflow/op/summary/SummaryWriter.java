@@ -66,7 +66,7 @@ public final class SummaryWriter extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of SummaryWriter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SummaryWriter create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SummaryWriter", scope.makeOpName("SummaryWriter"));
     opBuilder = scope.applyControlDependencies(opBuilder);

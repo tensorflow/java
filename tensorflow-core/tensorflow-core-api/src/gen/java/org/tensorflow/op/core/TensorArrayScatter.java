@@ -47,7 +47,7 @@ public final class TensorArrayScatter extends PrimitiveOp implements Operand<TFl
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayScatter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
     opBuilder.addInput(handle.asOutput());

@@ -83,7 +83,7 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends Prim
    * `indices.shape.ndims + params.ragged_rank - 1`.
    * @return a new instance of RaggedGather
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType, V extends TNumber> RaggedGather<T, U> create(Scope scope, Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues, Operand<V> indices, Long OUTPUTRAGGEDRANK) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedGather", scope.makeOpName("RaggedGather"));
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));

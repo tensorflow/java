@@ -91,7 +91,7 @@ public final class ResourceConditionalAccumulator extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of ResourceConditionalAccumulator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceConditionalAccumulator", scope.makeOpName("ResourceConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

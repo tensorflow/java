@@ -95,7 +95,7 @@ public final class ConfigureDistributedTPU extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of ConfigureDistributedTPU
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ConfigureDistributedTPU create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureDistributedTPU", scope.makeOpName("ConfigureDistributedTPU"));
     opBuilder = scope.applyControlDependencies(opBuilder);

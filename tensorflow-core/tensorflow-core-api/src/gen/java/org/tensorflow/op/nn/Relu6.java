@@ -43,7 +43,7 @@ public final class Relu6<T extends TNumber> extends PrimitiveOp implements Opera
    * @param features 
    * @return a new instance of Relu6
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Relu6<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6", scope.makeOpName("Relu6"));
     opBuilder.addInput(features.asOutput());

@@ -46,7 +46,7 @@ public final class CacheDatasetV2 extends PrimitiveOp implements Operand<TType> 
    * @param outputShapes 
    * @return a new instance of CacheDatasetV2
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static CacheDatasetV2 create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<?> cache, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDatasetV2", scope.makeOpName("CacheDatasetV2"));
     opBuilder.addInput(inputDataset.asOutput());

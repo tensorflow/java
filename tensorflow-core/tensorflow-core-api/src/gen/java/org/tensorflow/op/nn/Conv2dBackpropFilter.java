@@ -112,7 +112,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends PrimitiveOp i
    * @param options carries optional attributes values
    * @return a new instance of Conv2dBackpropFilter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Conv2dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2DBackpropFilter", scope.makeOpName("Conv2dBackpropFilter"));
     opBuilder.addInput(input.asOutput());

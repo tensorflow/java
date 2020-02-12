@@ -68,7 +68,7 @@ public final class Exp<T extends TType> extends PrimitiveOp implements Operand<T
    * @param x 
    * @return a new instance of Exp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Exp<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Exp", scope.makeOpName("Exp"));
     opBuilder.addInput(x.asOutput());

@@ -56,7 +56,7 @@ public final class Cholesky<T extends TType> extends PrimitiveOp implements Oper
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Cholesky
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Cholesky<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cholesky", scope.makeOpName("Cholesky"));
     opBuilder.addInput(input.asOutput());

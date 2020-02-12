@@ -69,7 +69,7 @@ public final class Placeholder<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of Placeholder
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.applyControlDependencies(opBuilder);

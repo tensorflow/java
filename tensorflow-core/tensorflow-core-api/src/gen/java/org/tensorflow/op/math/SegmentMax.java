@@ -68,7 +68,7 @@ public final class SegmentMax<T extends TNumber> extends PrimitiveOp implements 
    * first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMax", scope.makeOpName("SegmentMax"));
     opBuilder.addInput(data.asOutput());

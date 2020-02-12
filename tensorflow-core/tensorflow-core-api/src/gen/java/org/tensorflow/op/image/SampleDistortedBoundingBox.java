@@ -161,7 +161,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of SampleDistortedBoundingBox
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SampleDistortedBoundingBox<T> create(Scope scope, Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SampleDistortedBoundingBoxV2", scope.makeOpName("SampleDistortedBoundingBox"));
     opBuilder.addInput(imageSize.asOutput());

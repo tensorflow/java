@@ -140,7 +140,7 @@ public final class Batch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Batch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Batch create(Scope scope, Iterable<Operand<?>> inTensors, Long numBatchThreads, Long maxBatchSize, Long batchTimeoutMicros, Long gradTimeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Batch", scope.makeOpName("Batch"));
     opBuilder.addInputList(Operands.asOutputs(inTensors));

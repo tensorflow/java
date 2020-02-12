@@ -45,7 +45,7 @@ public final class RefSelect<T extends TType> extends PrimitiveOp implements Ope
    * @param inputs A list of ref tensors, one of which will be forwarded to `output`.
    * @return a new instance of RefSelect
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
     opBuilder.addInput(index.asOutput());

@@ -59,7 +59,7 @@ public final class Upper extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Upper
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Upper create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringUpper", scope.makeOpName("Upper"));
     opBuilder.addInput(input.asOutput());

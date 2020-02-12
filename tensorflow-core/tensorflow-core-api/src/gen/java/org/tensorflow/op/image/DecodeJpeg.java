@@ -138,7 +138,7 @@ public final class DecodeJpeg extends PrimitiveOp implements Operand<TUint8> {
    * @param options carries optional attributes values
    * @return a new instance of DecodeJpeg
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodeJpeg create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJpeg", scope.makeOpName("DecodeJpeg"));
     opBuilder.addInput(contents.asOutput());

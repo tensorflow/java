@@ -44,7 +44,7 @@ public final class Sigmoid<T extends TType> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Sigmoid
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sigmoid<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sigmoid", scope.makeOpName("Sigmoid"));
     opBuilder.addInput(x.asOutput());

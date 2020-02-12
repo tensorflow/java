@@ -38,7 +38,7 @@ public final class DeleteIterator extends PrimitiveOp {
    * @param deleter A variant deleter.
    * @return a new instance of DeleteIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
     opBuilder.addInput(handle.asOutput());

@@ -107,7 +107,7 @@ public final class ResourceStridedSliceAssign extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceStridedSliceAssign
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceStridedSliceAssign", scope.makeOpName("ResourceStridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());

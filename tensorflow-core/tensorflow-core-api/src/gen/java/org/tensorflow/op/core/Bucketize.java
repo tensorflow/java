@@ -55,7 +55,7 @@ public final class Bucketize extends PrimitiveOp implements Operand<TInt32> {
    * @param boundaries A sorted list of floats gives the boundary of the buckets.
    * @return a new instance of Bucketize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());

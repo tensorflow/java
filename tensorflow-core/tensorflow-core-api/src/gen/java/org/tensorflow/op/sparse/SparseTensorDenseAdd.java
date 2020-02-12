@@ -48,7 +48,7 @@ public final class SparseTensorDenseAdd<U extends TType> extends PrimitiveOp imp
    * @param b `ndims`-D Tensor.  With shape `a_shape`.
    * @return a new instance of SparseTensorDenseAdd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());

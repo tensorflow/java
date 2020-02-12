@@ -98,7 +98,7 @@ public final class MapUnstage extends PrimitiveOp implements Iterable<Operand<TT
    * @param options carries optional attributes values
    * @return a new instance of MapUnstage
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MapUnstage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstage", scope.makeOpName("MapUnstage"));
     opBuilder.addInput(key.asOutput());

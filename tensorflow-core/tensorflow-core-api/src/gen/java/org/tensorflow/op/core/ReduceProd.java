@@ -70,7 +70,7 @@ public final class ReduceProd<T extends TType> extends PrimitiveOp implements Op
    * @param options carries optional attributes values
    * @return a new instance of ReduceProd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ReduceProd<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prod", scope.makeOpName("ReduceProd"));
     opBuilder.addInput(input.asOutput());

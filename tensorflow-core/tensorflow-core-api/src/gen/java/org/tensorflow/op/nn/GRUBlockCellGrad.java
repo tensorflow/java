@@ -132,7 +132,7 @@ public final class GRUBlockCellGrad<T extends TNumber> extends PrimitiveOp {
    * @param dH 
    * @return a new instance of GRUBlockCellGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u, Operand<T> c, Operand<T> dH) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCellGrad", scope.makeOpName("GRUBlockCellGrad"));
     opBuilder.addInput(x.asOutput());

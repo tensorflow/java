@@ -47,7 +47,7 @@ public final class TensorListFromTensor extends PrimitiveOp implements Operand<T
    * @param elementShape 
    * @return a new instance of TensorListFromTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());

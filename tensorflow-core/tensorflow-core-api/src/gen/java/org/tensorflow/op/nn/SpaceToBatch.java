@@ -121,7 +121,7 @@ public final class SpaceToBatch<T extends TType> extends PrimitiveOp implements 
    * @param blockSize 
    * @return a new instance of SpaceToBatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SpaceToBatch<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatch", scope.makeOpName("SpaceToBatch"));
     opBuilder.addInput(input.asOutput());

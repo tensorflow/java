@@ -45,7 +45,7 @@ public final class ChooseFastestDataset extends PrimitiveOp implements Operand<T
    * @param outputShapes 
    * @return a new instance of ChooseFastestDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ChooseFastestDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, Long numExperiments, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalChooseFastestDataset", scope.makeOpName("ChooseFastestDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));

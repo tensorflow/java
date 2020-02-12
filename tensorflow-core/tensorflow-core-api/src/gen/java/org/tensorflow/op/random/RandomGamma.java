@@ -81,7 +81,7 @@ public final class RandomGamma<U extends TNumber> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of RandomGamma
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());

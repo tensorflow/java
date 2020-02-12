@@ -58,7 +58,7 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Pri
    * needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalization
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalization", scope.makeOpName("BatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());

@@ -56,7 +56,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param outType 
    * @return a new instance of Size
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
@@ -72,7 +72,7 @@ public final class Size<U extends TNumber> extends PrimitiveOp implements Operan
    * @param input 
    * @return a new instance of Size
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Size<TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }

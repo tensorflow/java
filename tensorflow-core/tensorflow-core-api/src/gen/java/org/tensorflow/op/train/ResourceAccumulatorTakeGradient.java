@@ -52,7 +52,7 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends Prim
    * of the accumulator.
    * @return a new instance of ResourceAccumulatorTakeGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceAccumulatorTakeGradient<T> create(Scope scope, Operand<?> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorTakeGradient", scope.makeOpName("ResourceAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());

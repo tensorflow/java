@@ -42,7 +42,7 @@ public final class DenseToCSRSparseMatrix extends PrimitiveOp implements Operand
    * @param indices Indices of nonzero elements.
    * @return a new instance of DenseToCSRSparseMatrix
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DenseToCSRSparseMatrix create(Scope scope, Operand<T> denseInput, Operand<TInt64> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToCSRSparseMatrix", scope.makeOpName("DenseToCSRSparseMatrix"));
     opBuilder.addInput(denseInput.asOutput());

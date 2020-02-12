@@ -43,7 +43,7 @@ public final class ResourceAccumulatorApplyGradient extends PrimitiveOp {
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of ResourceAccumulatorApplyGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceAccumulatorApplyGradient create(Scope scope, Operand<?> handle, Operand<TInt64> localStep, Operand<T> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorApplyGradient", scope.makeOpName("ResourceAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());

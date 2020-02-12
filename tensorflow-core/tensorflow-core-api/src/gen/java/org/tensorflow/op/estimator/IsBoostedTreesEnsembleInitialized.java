@@ -39,7 +39,7 @@ public final class IsBoostedTreesEnsembleInitialized extends PrimitiveOp impleme
    * @param treeEnsembleHandle Handle to the tree ensemble resouce.
    * @return a new instance of IsBoostedTreesEnsembleInitialized
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IsBoostedTreesEnsembleInitialized create(Scope scope, Operand<?> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesEnsembleInitialized", scope.makeOpName("IsBoostedTreesEnsembleInitialized"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

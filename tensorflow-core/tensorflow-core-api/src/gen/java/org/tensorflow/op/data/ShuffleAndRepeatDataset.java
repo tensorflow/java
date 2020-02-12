@@ -56,7 +56,7 @@ public final class ShuffleAndRepeatDataset extends PrimitiveOp implements Operan
    * @param outputShapes 
    * @return a new instance of ShuffleAndRepeatDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDataset", scope.makeOpName("ShuffleAndRepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());

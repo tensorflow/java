@@ -154,7 +154,7 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends Primitiv
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNCanonicalToParams
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CudnnRNNCanonicalToParams<T> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Iterable<Operand<T>> weights, Iterable<Operand<T>> biases, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNCanonicalToParamsV2", scope.makeOpName("CudnnRNNCanonicalToParams"));
     opBuilder.addInput(numLayers.asOutput());

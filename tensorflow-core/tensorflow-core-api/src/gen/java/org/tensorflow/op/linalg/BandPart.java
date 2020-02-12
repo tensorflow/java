@@ -85,7 +85,7 @@ public final class BandPart<T extends TType> extends PrimitiveOp implements Oper
    * entire upper triangle.
    * @return a new instance of BandPart
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixBandPart", scope.makeOpName("BandPart"));
     opBuilder.addInput(input.asOutput());

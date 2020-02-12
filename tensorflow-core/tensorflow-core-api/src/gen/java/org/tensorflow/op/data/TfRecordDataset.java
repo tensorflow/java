@@ -46,7 +46,7 @@ public final class TfRecordDataset extends PrimitiveOp implements Operand<TType>
    * 0 means no buffering will be performed.
    * @return a new instance of TfRecordDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TfRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordDataset", scope.makeOpName("TfRecordDataset"));
     opBuilder.addInput(filenames.asOutput());

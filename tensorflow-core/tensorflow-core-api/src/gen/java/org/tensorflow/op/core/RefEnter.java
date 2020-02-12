@@ -76,7 +76,7 @@ public final class RefEnter<T extends TType> extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of RefEnter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefEnter", scope.makeOpName("RefEnter"));
     opBuilder.addInput(data.asOutput());

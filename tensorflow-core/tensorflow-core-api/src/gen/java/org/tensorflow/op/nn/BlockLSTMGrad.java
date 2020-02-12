@@ -64,7 +64,7 @@ public final class BlockLSTMGrad<T extends TNumber> extends PrimitiveOp {
    * @param usePeephole Whether to use peephole weights.
    * @return a new instance of BlockLSTMGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMGradV2", scope.makeOpName("BlockLSTMGrad"));
     opBuilder.addInput(seqLenMax.asOutput());

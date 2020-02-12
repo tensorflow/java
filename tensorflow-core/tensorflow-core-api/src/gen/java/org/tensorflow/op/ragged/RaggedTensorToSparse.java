@@ -49,7 +49,7 @@ public final class RaggedTensorToSparse<U extends TType> extends PrimitiveOp {
    * @param rtDenseValues The `flat_values` for the `RaggedTensor`.
    * @return a new instance of RaggedTensorToSparse
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));

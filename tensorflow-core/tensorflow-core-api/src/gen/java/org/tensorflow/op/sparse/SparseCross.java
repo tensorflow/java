@@ -93,7 +93,7 @@ public final class SparseCross<T extends TType> extends PrimitiveOp {
    * @param internalType 
    * @return a new instance of SparseCross
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> SparseCross<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCross", scope.makeOpName("SparseCross"));
     opBuilder.addInputList(Operands.asOutputs(indices));

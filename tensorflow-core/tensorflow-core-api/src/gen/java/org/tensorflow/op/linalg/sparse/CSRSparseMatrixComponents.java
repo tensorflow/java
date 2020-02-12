@@ -48,7 +48,7 @@ public final class CSRSparseMatrixComponents<T extends TType> extends PrimitiveO
    * @param type 
    * @return a new instance of CSRSparseMatrixComponents
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope, Operand<?> csrSparseMatrix, Operand<TInt32> index, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixComponents", scope.makeOpName("CSRSparseMatrixComponents"));
     opBuilder.addInput(csrSparseMatrix.asOutput());

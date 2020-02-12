@@ -49,7 +49,7 @@ public final class ImmutableConst<T extends TType> extends PrimitiveOp implement
    * NewReadOnlyMemoryRegionFromFile in tensorflow::Env.
    * @return a new instance of ImmutableConst
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ImmutableConst<T> create(Scope scope, DataType<T> dtype, Shape shape, String memoryRegionName) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImmutableConst", scope.makeOpName("ImmutableConst"));
     opBuilder = scope.applyControlDependencies(opBuilder);

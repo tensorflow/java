@@ -43,7 +43,7 @@ public final class AssignVariableOp extends PrimitiveOp {
    * @param value the value to set the new tensor to use.
    * @return a new instance of AssignVariableOp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignVariableOp", scope.makeOpName("AssignVariableOp"));
     opBuilder.addInput(resource.asOutput());

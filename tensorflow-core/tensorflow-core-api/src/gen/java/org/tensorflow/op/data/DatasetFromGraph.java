@@ -42,7 +42,7 @@ public final class DatasetFromGraph extends PrimitiveOp implements Operand<TType
    * @param graphDef The graph representation of the dataset (as serialized GraphDef).
    * @return a new instance of DatasetFromGraph
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DatasetFromGraph create(Scope scope, Operand<TString> graphDef) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetFromGraph", scope.makeOpName("DatasetFromGraph"));
     opBuilder.addInput(graphDef.asOutput());

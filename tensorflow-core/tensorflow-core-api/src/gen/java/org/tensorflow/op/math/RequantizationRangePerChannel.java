@@ -44,7 +44,7 @@ public final class RequantizationRangePerChannel extends PrimitiveOp {
    * Example: set this to 6 for Relu6. 
    * @return a new instance of RequantizationRangePerChannel
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RequantizationRangePerChannel create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRangePerChannel", scope.makeOpName("RequantizationRangePerChannel"));
     opBuilder.addInput(input.asOutput());

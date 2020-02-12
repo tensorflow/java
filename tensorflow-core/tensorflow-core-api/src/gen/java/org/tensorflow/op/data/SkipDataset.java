@@ -47,7 +47,7 @@ public final class SkipDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of SkipDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SkipDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SkipDataset", scope.makeOpName("SkipDataset"));
     opBuilder.addInput(inputDataset.asOutput());

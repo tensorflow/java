@@ -39,7 +39,7 @@ public final class DeleteSessionTensor extends PrimitiveOp {
    * @param handle The handle for a tensor stored in the session state.
    * @return a new instance of DeleteSessionTensor
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DeleteSessionTensor create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteSessionTensor", scope.makeOpName("DeleteSessionTensor"));
     opBuilder.addInput(handle.asOutput());

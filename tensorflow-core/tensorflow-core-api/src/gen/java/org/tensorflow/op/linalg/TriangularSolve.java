@@ -123,7 +123,7 @@ public final class TriangularSolve<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of TriangularSolve
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixTriangularSolve", scope.makeOpName("TriangularSolve"));
     opBuilder.addInput(matrix.asOutput());

@@ -50,7 +50,7 @@ public final class Atan2<T extends TNumber> extends PrimitiveOp implements Opera
    * @param x 
    * @return a new instance of Atan2
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());

@@ -101,7 +101,7 @@ public final class UnicodeEncode extends PrimitiveOp implements Operand<TString>
    * @param options carries optional attributes values
    * @return a new instance of UnicodeEncode
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> UnicodeEncode create(Scope scope, Operand<TInt32> inputValues, Operand<T> inputSplits, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeEncode", scope.makeOpName("UnicodeEncode"));
     opBuilder.addInput(inputValues.asOutput());

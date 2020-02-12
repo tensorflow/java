@@ -75,7 +75,7 @@ public final class DataFormatDimMap<T extends TNumber> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of DataFormatDimMap
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatDimMap", scope.makeOpName("DataFormatDimMap"));
     opBuilder.addInput(x.asOutput());

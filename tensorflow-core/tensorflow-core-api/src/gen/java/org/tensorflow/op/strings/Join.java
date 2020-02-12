@@ -65,7 +65,7 @@ public final class Join extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Join
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Join create(Scope scope, Iterable<Operand<TString>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringJoin", scope.makeOpName("Join"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

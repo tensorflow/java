@@ -53,7 +53,7 @@ public final class SparseAddGrad<T extends TType> extends PrimitiveOp {
    * `[nnz(sum), ndims]`.
    * @return a new instance of SparseAddGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAddGrad", scope.makeOpName("SparseAddGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());

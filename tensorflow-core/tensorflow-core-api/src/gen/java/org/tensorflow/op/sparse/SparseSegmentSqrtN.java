@@ -51,7 +51,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends PrimitiveOp imp
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSqrtN
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentSqrtN<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtN", scope.makeOpName("SparseSegmentSqrtN"));
     opBuilder.addInput(data.asOutput());

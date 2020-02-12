@@ -151,7 +151,7 @@ public final class FractionalMaxPool<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of FractionalMaxPool
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPool", scope.makeOpName("FractionalMaxPool"));
     opBuilder.addInput(value.asOutput());

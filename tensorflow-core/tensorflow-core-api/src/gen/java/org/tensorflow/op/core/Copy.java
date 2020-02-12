@@ -84,7 +84,7 @@ public final class Copy<T extends TType> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of Copy
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Copy<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Copy", scope.makeOpName("Copy"));
     opBuilder.addInput(input.asOutput());

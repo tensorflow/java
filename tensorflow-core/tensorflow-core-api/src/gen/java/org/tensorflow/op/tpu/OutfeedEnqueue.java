@@ -38,7 +38,7 @@ public final class OutfeedEnqueue extends PrimitiveOp {
    * @param input A tensor that will be inserted into the outfeed queue.
    * @return a new instance of OutfeedEnqueue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> OutfeedEnqueue create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueue", scope.makeOpName("OutfeedEnqueue"));
     opBuilder.addInput(input.asOutput());

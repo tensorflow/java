@@ -43,7 +43,7 @@ public final class EluGrad<T extends TNumber> extends PrimitiveOp implements Ope
    * @param outputs The outputs of the corresponding Elu operation.
    * @return a new instance of EluGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> EluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> outputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("EluGrad", scope.makeOpName("EluGrad"));
     opBuilder.addInput(gradients.asOutput());

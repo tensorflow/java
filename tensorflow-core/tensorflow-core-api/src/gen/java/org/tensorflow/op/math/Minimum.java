@@ -47,7 +47,7 @@ public final class Minimum<T extends TNumber> extends PrimitiveOp implements Ope
    * @param y 
    * @return a new instance of Minimum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Minimum<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Minimum", scope.makeOpName("Minimum"));
     opBuilder.addInput(x.asOutput());

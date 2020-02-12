@@ -40,7 +40,7 @@ public final class BatchMatrixDiagPart<T extends TType> extends PrimitiveOp impl
    * @param input 
    * @return a new instance of BatchMatrixDiagPart
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiagPart", scope.makeOpName("BatchMatrixDiagPart"));
     opBuilder.addInput(input.asOutput());

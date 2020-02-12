@@ -96,7 +96,7 @@ public final class FifoQueue extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of FifoQueue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FifoQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FIFOQueueV2", scope.makeOpName("FifoQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

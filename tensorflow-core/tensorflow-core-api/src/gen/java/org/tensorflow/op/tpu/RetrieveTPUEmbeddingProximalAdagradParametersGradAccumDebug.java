@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug e
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug"));
     opBuilder = scope.applyControlDependencies(opBuilder);

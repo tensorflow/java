@@ -104,7 +104,7 @@ public final class FakeQuantWithMinMaxArgs extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxArgs
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FakeQuantWithMinMaxArgs create(Scope scope, Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgs", scope.makeOpName("FakeQuantWithMinMaxArgs"));
     opBuilder.addInput(inputs.asOutput());

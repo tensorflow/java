@@ -92,7 +92,7 @@ public final class Reverse<T extends TType> extends PrimitiveOp implements Opera
    * `[-rank(tensor), rank(tensor))`.
    * @return a new instance of Reverse
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Reverse<T> create(Scope scope, Operand<T> tensor, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseV2", scope.makeOpName("Reverse"));
     opBuilder.addInput(tensor.asOutput());

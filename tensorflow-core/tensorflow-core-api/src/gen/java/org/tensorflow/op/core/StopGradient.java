@@ -67,7 +67,7 @@ public final class StopGradient<T extends TType> extends PrimitiveOp implements 
    * @param input 
    * @return a new instance of StopGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> StopGradient<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StopGradient", scope.makeOpName("StopGradient"));
     opBuilder.addInput(input.asOutput());

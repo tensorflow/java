@@ -49,7 +49,7 @@ public final class SwitchCond<T extends TType> extends PrimitiveOp {
    * @param pred A scalar that specifies which output port will receive data.
    * @return a new instance of SwitchCond
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("Switch", scope.makeOpName("SwitchCond"));
     opBuilder.addInput(data.asOutput());

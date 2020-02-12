@@ -44,7 +44,7 @@ public final class InfeedDequeue<T extends TType> extends PrimitiveOp implements
    * @param shape The shape of the tensor.
    * @return a new instance of InfeedDequeue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -47,7 +47,7 @@ public final class DivNoNan<T extends TType> extends PrimitiveOp implements Oper
    * @param y 
    * @return a new instance of DivNoNan
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DivNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("DivNoNan", scope.makeOpName("DivNoNan"));
     opBuilder.addInput(x.asOutput());

@@ -68,7 +68,7 @@ public final class TensorArraySplit extends PrimitiveOp implements Operand<TFloa
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArraySplit create(Scope scope, Operand<?> handle, Operand<T> value, Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySplitV3", scope.makeOpName("TensorArraySplit"));
     opBuilder.addInput(handle.asOutput());

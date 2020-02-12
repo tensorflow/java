@@ -107,7 +107,7 @@ public final class RecordInput extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of RecordInput
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RecordInput create(Scope scope, String filePattern, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecordInput", scope.makeOpName("RecordInput"));
     opBuilder = scope.applyControlDependencies(opBuilder);

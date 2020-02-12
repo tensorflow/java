@@ -76,7 +76,7 @@ public final class SparseSegmentSum<T extends TNumber> extends PrimitiveOp imple
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSum", scope.makeOpName("SparseSegmentSum"));
     opBuilder.addInput(data.asOutput());

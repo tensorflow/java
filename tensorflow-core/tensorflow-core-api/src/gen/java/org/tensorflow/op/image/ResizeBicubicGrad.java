@@ -75,7 +75,7 @@ public final class ResizeBicubicGrad<T extends TNumber> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of ResizeBicubicGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ResizeBicubicGrad<T> create(Scope scope, Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubicGrad", scope.makeOpName("ResizeBicubicGrad"));
     opBuilder.addInput(grads.asOutput());

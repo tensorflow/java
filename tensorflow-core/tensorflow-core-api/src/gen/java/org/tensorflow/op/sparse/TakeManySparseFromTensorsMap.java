@@ -123,7 +123,7 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends Primiti
    * @param options carries optional attributes values
    * @return a new instance of TakeManySparseFromTensorsMap
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
     opBuilder.addInput(sparseHandles.asOutput());

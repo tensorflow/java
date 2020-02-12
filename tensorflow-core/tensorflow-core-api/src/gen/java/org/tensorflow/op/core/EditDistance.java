@@ -81,7 +81,7 @@ public final class EditDistance extends PrimitiveOp implements Operand<TFloat32>
    * @param options carries optional attributes values
    * @return a new instance of EditDistance
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> EditDistance create(Scope scope, Operand<TInt64> hypothesisIndices, Operand<T> hypothesisValues, Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices, Operand<T> truthValues, Operand<TInt64> truthShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EditDistance", scope.makeOpName("EditDistance"));
     opBuilder.addInput(hypothesisIndices.asOutput());

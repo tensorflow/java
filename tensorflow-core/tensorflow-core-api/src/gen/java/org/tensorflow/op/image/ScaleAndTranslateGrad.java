@@ -73,7 +73,7 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslateGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> ScaleAndTranslateGrad<T> create(Scope scope, Operand<T> grads, Operand<T> originalImage, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslateGrad", scope.makeOpName("ScaleAndTranslateGrad"));
     opBuilder.addInput(grads.asOutput());

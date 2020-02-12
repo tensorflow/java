@@ -44,7 +44,7 @@ public final class Neg<T extends TType> extends PrimitiveOp implements Operand<T
    * @param x 
    * @return a new instance of Neg
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Neg<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Neg", scope.makeOpName("Neg"));
     opBuilder.addInput(x.asOutput());

@@ -131,7 +131,7 @@ public final class TPUReplicateMetadata extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TPUReplicateMetadata
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TPUReplicateMetadata create(Scope scope, Long numReplicas, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicateMetadata", scope.makeOpName("TPUReplicateMetadata"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -48,7 +48,7 @@ public final class QuantizedReluX<U extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedReluX
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReluX", scope.makeOpName("QuantizedReluX"));
     opBuilder.addInput(features.asOutput());

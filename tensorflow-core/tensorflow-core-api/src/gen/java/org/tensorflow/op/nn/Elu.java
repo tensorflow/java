@@ -46,7 +46,7 @@ public final class Elu<T extends TNumber> extends PrimitiveOp implements Operand
    * @param features 
    * @return a new instance of Elu
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Elu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Elu", scope.makeOpName("Elu"));
     opBuilder.addInput(features.asOutput());

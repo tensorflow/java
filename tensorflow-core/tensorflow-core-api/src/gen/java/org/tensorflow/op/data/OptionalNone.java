@@ -39,7 +39,7 @@ public final class OptionalNone extends PrimitiveOp implements Operand<TType> {
    * @param scope current scope
    * @return a new instance of OptionalNone
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OptionalNone create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalNone", scope.makeOpName("OptionalNone"));
     opBuilder = scope.applyControlDependencies(opBuilder);

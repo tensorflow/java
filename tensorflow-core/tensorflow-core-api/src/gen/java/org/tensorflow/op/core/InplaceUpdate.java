@@ -47,7 +47,7 @@ public final class InplaceUpdate<T extends TType> extends PrimitiveOp implements
    * @param v A `Tensor` of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
    * @return a new instance of InplaceUpdate
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> InplaceUpdate<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceUpdate", scope.makeOpName("InplaceUpdate"));
     opBuilder.addInput(x.asOutput());

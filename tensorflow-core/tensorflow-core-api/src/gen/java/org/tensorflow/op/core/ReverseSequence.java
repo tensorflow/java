@@ -119,7 +119,7 @@ public final class ReverseSequence<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of ReverseSequence
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ReverseSequence<T> create(Scope scope, Operand<T> input, Operand<U> seqLengths, Long seqDim, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseSequence", scope.makeOpName("ReverseSequence"));
     opBuilder.addInput(input.asOutput());

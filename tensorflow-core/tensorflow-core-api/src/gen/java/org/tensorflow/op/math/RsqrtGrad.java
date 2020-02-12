@@ -45,7 +45,7 @@ public final class RsqrtGrad<T extends TType> extends PrimitiveOp implements Ope
    * @param dy 
    * @return a new instance of RsqrtGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RsqrtGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("RsqrtGrad", scope.makeOpName("RsqrtGrad"));
     opBuilder.addInput(y.asOutput());

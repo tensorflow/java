@@ -88,7 +88,7 @@ public final class SparseMatrixOrderingAMD extends PrimitiveOp implements Operan
    * @param input A `CSRSparseMatrix`.
    * @return a new instance of SparseMatrixOrderingAMD
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SparseMatrixOrderingAMD create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixOrderingAMD", scope.makeOpName("SparseMatrixOrderingAMD"));
     opBuilder.addInput(input.asOutput());

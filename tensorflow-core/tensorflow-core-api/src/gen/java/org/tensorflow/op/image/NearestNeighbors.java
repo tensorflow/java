@@ -47,7 +47,7 @@ public final class NearestNeighbors extends PrimitiveOp {
    * only m centers are returned.
    * @return a new instance of NearestNeighbors
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static NearestNeighbors create(Scope scope, Operand<TFloat32> points, Operand<TFloat32> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
     opBuilder.addInput(points.asOutput());

@@ -49,7 +49,7 @@ public final class HistogramSummary extends PrimitiveOp implements Operand<TStri
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> HistogramSummary create(Scope scope, Operand<TString> tag, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramSummary", scope.makeOpName("HistogramSummary"));
     opBuilder.addInput(tag.asOutput());

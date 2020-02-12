@@ -39,7 +39,7 @@ public final class TensorForestTreeSerialize extends PrimitiveOp implements Oper
    * @param treeHandle Handle to the tree resource to be serialized.
    * @return a new instance of TensorForestTreeSerialize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeSerialize create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSerialize", scope.makeOpName("TensorForestTreeSerialize"));
     opBuilder.addInput(treeHandle.asOutput());

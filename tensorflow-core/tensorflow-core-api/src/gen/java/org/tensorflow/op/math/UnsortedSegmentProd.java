@@ -69,7 +69,7 @@ public final class UnsortedSegmentProd<T extends TType> extends PrimitiveOp impl
    * @param numSegments 
    * @return a new instance of UnsortedSegmentProd
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentProd", scope.makeOpName("UnsortedSegmentProd"));
     opBuilder.addInput(data.asOutput());

@@ -41,7 +41,7 @@ public final class OptionalFromValue extends PrimitiveOp implements Operand<TTyp
    * @param components 
    * @return a new instance of OptionalFromValue
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OptionalFromValue create(Scope scope, Iterable<Operand<?>> components) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalFromValue", scope.makeOpName("OptionalFromValue"));
     opBuilder.addInputList(Operands.asOutputs(components));

@@ -64,7 +64,7 @@ public final class Cast<U extends TType> extends PrimitiveOp implements Operand<
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());

@@ -39,7 +39,7 @@ public final class IteratorGetDevice extends PrimitiveOp implements Operand<TStr
    * @param resource 
    * @return a new instance of IteratorGetDevice
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorGetDevice create(Scope scope, Operand<?> resource) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalIteratorGetDevice", scope.makeOpName("IteratorGetDevice"));
     opBuilder.addInput(resource.asOutput());

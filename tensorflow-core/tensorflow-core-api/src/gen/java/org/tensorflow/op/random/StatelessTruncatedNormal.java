@@ -53,7 +53,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends Primitive
    * @param dtype The type of the output.
    * @return a new instance of StatelessTruncatedNormal
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessTruncatedNormal", scope.makeOpName("StatelessTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
@@ -71,7 +71,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends Primitive
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessTruncatedNormal
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }

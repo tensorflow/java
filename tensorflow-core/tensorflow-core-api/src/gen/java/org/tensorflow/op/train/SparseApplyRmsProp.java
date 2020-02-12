@@ -84,7 +84,7 @@ public final class SparseApplyRmsProp<T extends TType> extends PrimitiveOp imple
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyRmsProp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SparseApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyRMSProp", scope.makeOpName("SparseApplyRmsProp"));
     opBuilder.addInput(var.asOutput());

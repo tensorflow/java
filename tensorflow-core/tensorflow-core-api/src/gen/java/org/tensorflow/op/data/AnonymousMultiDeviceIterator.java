@@ -42,7 +42,7 @@ public final class AnonymousMultiDeviceIterator extends PrimitiveOp {
    * @param outputShapes 
    * @return a new instance of AnonymousMultiDeviceIterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static AnonymousMultiDeviceIterator create(Scope scope, List<String> devices, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousMultiDeviceIterator", scope.makeOpName("AnonymousMultiDeviceIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

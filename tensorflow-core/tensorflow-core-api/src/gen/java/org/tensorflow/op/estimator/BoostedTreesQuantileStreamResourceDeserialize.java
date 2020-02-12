@@ -42,7 +42,7 @@ public final class BoostedTreesQuantileStreamResourceDeserialize extends Primiti
    * @param bucketBoundaries float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
    * @return a new instance of BoostedTreesQuantileStreamResourceDeserialize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceDeserialize create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> bucketBoundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceDeserialize", scope.makeOpName("BoostedTreesQuantileStreamResourceDeserialize"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

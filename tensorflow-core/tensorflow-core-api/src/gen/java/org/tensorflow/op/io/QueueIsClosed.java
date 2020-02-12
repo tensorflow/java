@@ -43,7 +43,7 @@ public final class QueueIsClosed extends PrimitiveOp implements Operand<TBool> {
    * @param handle The handle to a queue.
    * @return a new instance of QueueIsClosed
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static QueueIsClosed create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueIsClosedV2", scope.makeOpName("QueueIsClosed"));
     opBuilder.addInput(handle.asOutput());

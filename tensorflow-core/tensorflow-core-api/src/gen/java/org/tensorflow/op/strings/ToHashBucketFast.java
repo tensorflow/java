@@ -49,7 +49,7 @@ public final class ToHashBucketFast extends PrimitiveOp implements Operand<TInt6
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucketFast
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ToHashBucketFast create(Scope scope, Operand<TString> input, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketFast", scope.makeOpName("ToHashBucketFast"));
     opBuilder.addInput(input.asOutput());

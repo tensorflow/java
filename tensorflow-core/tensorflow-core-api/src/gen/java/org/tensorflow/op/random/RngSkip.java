@@ -45,7 +45,7 @@ public final class RngSkip extends PrimitiveOp {
    * @param delta The amount of advancement.
    * @return a new instance of RngSkip
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RngSkip create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<TInt64> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("RngSkip", scope.makeOpName("RngSkip"));
     opBuilder.addInput(resource.asOutput());

@@ -57,7 +57,7 @@ public final class RaggedTensorToVariant extends PrimitiveOp implements Operand<
    * @param batchedInput A `bool` denoting whether the input is a batched `RaggedTensor`.
    * @return a new instance of RaggedTensorToVariant
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));

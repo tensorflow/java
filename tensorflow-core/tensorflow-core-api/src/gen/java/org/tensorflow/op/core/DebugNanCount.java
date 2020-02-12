@@ -96,7 +96,7 @@ public final class DebugNanCount extends PrimitiveOp implements Operand<TInt64> 
    * @param options carries optional attributes values
    * @return a new instance of DebugNanCount
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugNanCount create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNanCount", scope.makeOpName("DebugNanCount"));
     opBuilder.addInput(input.asOutput());

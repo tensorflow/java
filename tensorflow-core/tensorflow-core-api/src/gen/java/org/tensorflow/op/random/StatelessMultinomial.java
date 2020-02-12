@@ -50,7 +50,7 @@ public final class StatelessMultinomial<V extends TNumber> extends PrimitiveOp i
    * @param outputDtype 
    * @return a new instance of StatelessMultinomial
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput());
@@ -71,7 +71,7 @@ public final class StatelessMultinomial<V extends TNumber> extends PrimitiveOp i
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessMultinomial
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
     return create(scope, logits, numSamples, seed, TInt64.DTYPE);
   }

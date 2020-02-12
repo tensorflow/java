@@ -42,7 +42,7 @@ public final class ShardedFilespec extends PrimitiveOp implements Operand<TStrin
    * @param numShards 
    * @return a new instance of ShardedFilespec
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ShardedFilespec create(Scope scope, Operand<TString> basename, Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilespec", scope.makeOpName("ShardedFilespec"));
     opBuilder.addInput(basename.asOutput());

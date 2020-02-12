@@ -59,7 +59,7 @@ public final class Rfft3d<U extends TType> extends PrimitiveOp implements Operan
    * @param Tcomplex 
    * @return a new instance of Rfft3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> Rfft3d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT3D", scope.makeOpName("Rfft3d"));
     opBuilder.addInput(input.asOutput());

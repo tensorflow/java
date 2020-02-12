@@ -44,7 +44,7 @@ public final class UnbatchDataset extends PrimitiveOp implements Operand<TType> 
    * @param outputShapes 
    * @return a new instance of UnbatchDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnbatchDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalUnbatchDataset", scope.makeOpName("UnbatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -52,7 +52,7 @@ public final class AdjustSaturation<T extends TNumber> extends PrimitiveOp imple
    * @param scale A float scale to add to the saturation.
    * @return a new instance of AdjustSaturation
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AdjustSaturation<T> create(Scope scope, Operand<T> images, Operand<TFloat32> scale) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustSaturation", scope.makeOpName("AdjustSaturation"));
     opBuilder.addInput(images.asOutput());

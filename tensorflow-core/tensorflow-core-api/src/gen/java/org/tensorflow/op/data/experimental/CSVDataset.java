@@ -53,7 +53,7 @@ public final class CSVDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of CSVDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static CSVDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header, Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue, Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalCSVDataset", scope.makeOpName("CSVDataset"));
     opBuilder.addInput(filenames.asOutput());

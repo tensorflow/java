@@ -40,7 +40,7 @@ public final class LookupTableSize extends PrimitiveOp implements Operand<TInt64
    * @param tableHandle Handle to the table.
    * @return a new instance of LookupTableSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LookupTableSize create(Scope scope, Operand<?> tableHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableSizeV2", scope.makeOpName("LookupTableSize"));
     opBuilder.addInput(tableHandle.asOutput());

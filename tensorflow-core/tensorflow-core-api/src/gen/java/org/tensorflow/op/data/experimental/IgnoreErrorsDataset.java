@@ -44,7 +44,7 @@ public final class IgnoreErrorsDataset extends PrimitiveOp implements Operand<TT
    * @param outputShapes 
    * @return a new instance of IgnoreErrorsDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IgnoreErrorsDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalIgnoreErrorsDataset", scope.makeOpName("IgnoreErrorsDataset"));
     opBuilder.addInput(inputDataset.asOutput());

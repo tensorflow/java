@@ -58,7 +58,7 @@ public final class Sqrtm<T extends TType> extends PrimitiveOp implements Operand
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Sqrtm
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSquareRoot", scope.makeOpName("Sqrtm"));
     opBuilder.addInput(input.asOutput());

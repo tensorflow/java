@@ -39,7 +39,7 @@ public final class BatchFft3d extends PrimitiveOp implements Operand<TType> {
    * @param input 
    * @return a new instance of BatchFft3d
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BatchFft3d create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchFFT3D", scope.makeOpName("BatchFft3d"));
     opBuilder.addInput(input.asOutput());

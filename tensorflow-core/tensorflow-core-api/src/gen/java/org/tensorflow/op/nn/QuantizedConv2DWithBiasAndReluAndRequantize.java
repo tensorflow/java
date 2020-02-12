@@ -82,7 +82,7 @@ public final class QuantizedConv2DWithBiasAndReluAndRequantize<W extends TType> 
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasAndReluAndRequantize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedConv2DWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());

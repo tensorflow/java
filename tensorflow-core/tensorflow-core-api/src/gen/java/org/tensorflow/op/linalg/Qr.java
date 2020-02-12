@@ -75,7 +75,7 @@ public final class Qr<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Qr
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Qr<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Qr", scope.makeOpName("Qr"));
     opBuilder.addInput(input.asOutput());

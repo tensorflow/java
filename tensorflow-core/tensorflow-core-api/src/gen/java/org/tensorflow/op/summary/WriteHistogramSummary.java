@@ -43,7 +43,7 @@ public final class WriteHistogramSummary extends PrimitiveOp {
    * @param values 
    * @return a new instance of WriteHistogramSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> WriteHistogramSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteHistogramSummary", scope.makeOpName("WriteHistogramSummary"));
     opBuilder.addInput(writer.asOutput());

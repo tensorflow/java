@@ -45,7 +45,7 @@ public final class TPUReplicatedOutput<T extends TType> extends PrimitiveOp impl
    * @param numReplicas 
    * @return a new instance of TPUReplicatedOutput
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
     opBuilder.addInput(input.asOutput());

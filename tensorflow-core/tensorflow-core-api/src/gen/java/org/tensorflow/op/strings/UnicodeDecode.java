@@ -115,7 +115,7 @@ public final class UnicodeDecode<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecode
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> UnicodeDecode<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecode", scope.makeOpName("UnicodeDecode"));
     opBuilder.addInput(input.asOutput());
@@ -149,7 +149,7 @@ public final class UnicodeDecode<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of UnicodeDecode
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnicodeDecode<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
     return create(scope, input, inputEncoding, TInt64.DTYPE, options);
   }

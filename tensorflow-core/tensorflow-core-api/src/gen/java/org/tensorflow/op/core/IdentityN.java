@@ -60,7 +60,7 @@ public final class IdentityN extends PrimitiveOp implements Iterable<Operand<TTy
    * @param input 
    * @return a new instance of IdentityN
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IdentityN", scope.makeOpName("IdentityN"));
     opBuilder.addInputList(Operands.asOutputs(input));

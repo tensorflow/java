@@ -40,7 +40,7 @@ public final class GetSessionHandle extends PrimitiveOp implements Operand<TType
    * @param value The tensor to be stored.
    * @return a new instance of GetSessionHandle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> GetSessionHandle create(Scope scope, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionHandleV2", scope.makeOpName("GetSessionHandle"));
     opBuilder.addInput(value.asOutput());

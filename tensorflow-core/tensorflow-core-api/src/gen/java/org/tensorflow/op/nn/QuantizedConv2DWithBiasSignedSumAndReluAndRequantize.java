@@ -85,7 +85,7 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X extend
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasSignedSumAndReluAndRequantize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <X extends TType, T extends TType, U extends TType, V extends TType, W extends TType> QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Operand<W> summand, Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSignedSumAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasSignedSumAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());

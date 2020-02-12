@@ -97,7 +97,7 @@ public final class BarrierTakeMany extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BarrierTakeMany
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
     opBuilder.addInput(handle.asOutput());

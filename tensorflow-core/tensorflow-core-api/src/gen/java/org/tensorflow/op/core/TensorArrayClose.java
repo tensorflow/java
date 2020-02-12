@@ -41,7 +41,7 @@ public final class TensorArrayClose extends PrimitiveOp {
    * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
    * @return a new instance of TensorArrayClose
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorArrayClose create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayCloseV3", scope.makeOpName("TensorArrayClose"));
     opBuilder.addInput(handle.asOutput());

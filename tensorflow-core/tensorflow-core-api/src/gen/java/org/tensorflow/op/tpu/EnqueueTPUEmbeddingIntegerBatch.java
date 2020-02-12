@@ -66,7 +66,7 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of EnqueueTPUEmbeddingIntegerBatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static EnqueueTPUEmbeddingIntegerBatch create(Scope scope, Iterable<Operand<TInt32>> batch, Operand<TString> modeOverride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingIntegerBatch", scope.makeOpName("EnqueueTPUEmbeddingIntegerBatch"));
     opBuilder.addInputList(Operands.asOutputs(batch));

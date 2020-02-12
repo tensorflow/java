@@ -85,7 +85,7 @@ public final class ResourceSparseApplyMomentum extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyMomentum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyMomentum", scope.makeOpName("ResourceSparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());

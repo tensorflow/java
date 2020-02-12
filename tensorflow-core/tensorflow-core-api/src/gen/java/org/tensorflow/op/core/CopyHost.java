@@ -82,7 +82,7 @@ public final class CopyHost<T extends TType> extends PrimitiveOp implements Oper
    * @param options carries optional attributes values
    * @return a new instance of CopyHost
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> CopyHost<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CopyHost", scope.makeOpName("CopyHost"));
     opBuilder.addInput(input.asOutput());

@@ -45,7 +45,7 @@ public final class CountUpTo<T extends TNumber> extends PrimitiveOp implements O
    * 'OutOfRange' error.
    * @return a new instance of CountUpTo
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
     opBuilder.addInput(ref.asOutput());

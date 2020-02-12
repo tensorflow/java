@@ -52,7 +52,7 @@ public final class TensorListSplit extends PrimitiveOp implements Operand<TType>
    * @param lengths 
    * @return a new instance of TensorListSplit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorListSplit create(Scope scope, Operand<T> tensor, Operand<U> elementShape, Operand<TInt64> lengths) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSplit", scope.makeOpName("TensorListSplit"));
     opBuilder.addInput(tensor.asOutput());

@@ -73,7 +73,7 @@ public final class WholeFileReader extends PrimitiveOp implements Operand<TType>
    * @param options carries optional attributes values
    * @return a new instance of WholeFileReader
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static WholeFileReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WholeFileReaderV2", scope.makeOpName("WholeFileReader"));
     opBuilder = scope.applyControlDependencies(opBuilder);

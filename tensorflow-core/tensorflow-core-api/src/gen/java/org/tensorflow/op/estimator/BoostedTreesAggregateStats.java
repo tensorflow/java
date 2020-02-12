@@ -47,7 +47,7 @@ public final class BoostedTreesAggregateStats extends PrimitiveOp implements Ope
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesAggregateStats
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> feature, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesAggregateStats", scope.makeOpName("BoostedTreesAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());

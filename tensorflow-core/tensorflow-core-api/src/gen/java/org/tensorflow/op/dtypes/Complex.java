@@ -61,7 +61,7 @@ public final class Complex<U extends TType> extends PrimitiveOp implements Opera
    * @param Tout 
    * @return a new instance of Complex
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput());

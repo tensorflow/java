@@ -88,7 +88,7 @@ public final class SparseApplyMomentum<T extends TType> extends PrimitiveOp impl
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyMomentum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SparseApplyMomentum<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyMomentum", scope.makeOpName("SparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());

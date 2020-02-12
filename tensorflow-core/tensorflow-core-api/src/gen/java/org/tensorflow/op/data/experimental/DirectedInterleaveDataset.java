@@ -48,7 +48,7 @@ public final class DirectedInterleaveDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of DirectedInterleaveDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DirectedInterleaveDataset create(Scope scope, Operand<?> selectorInputDataset, Iterable<Operand<?>> dataInputDatasets, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDirectedInterleaveDataset", scope.makeOpName("DirectedInterleaveDataset"));
     opBuilder.addInput(selectorInputDataset.asOutput());

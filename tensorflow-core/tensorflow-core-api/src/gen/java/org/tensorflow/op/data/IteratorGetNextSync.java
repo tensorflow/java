@@ -52,7 +52,7 @@ public final class IteratorGetNextSync extends PrimitiveOp implements Iterable<O
    * @param outputShapes 
    * @return a new instance of IteratorGetNextSync
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorGetNextSync create(Scope scope, Operand<?> iterator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
     opBuilder.addInput(iterator.asOutput());

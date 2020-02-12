@@ -53,7 +53,7 @@ public final class Rint<T extends TNumber> extends PrimitiveOp implements Operan
    * @param x 
    * @return a new instance of Rint
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Rint<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rint", scope.makeOpName("Rint"));
     opBuilder.addInput(x.asOutput());

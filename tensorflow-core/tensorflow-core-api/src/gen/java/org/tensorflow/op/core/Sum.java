@@ -70,7 +70,7 @@ public final class Sum<T extends TType> extends PrimitiveOp implements Operand<T
    * @param options carries optional attributes values
    * @return a new instance of Sum
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Sum<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sum", scope.makeOpName("Sum"));
     opBuilder.addInput(input.asOutput());

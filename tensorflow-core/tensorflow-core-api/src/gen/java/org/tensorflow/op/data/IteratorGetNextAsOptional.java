@@ -45,7 +45,7 @@ public final class IteratorGetNextAsOptional extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of IteratorGetNextAsOptional
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static IteratorGetNextAsOptional create(Scope scope, Operand<?> iterator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextAsOptional", scope.makeOpName("IteratorGetNextAsOptional"));
     opBuilder.addInput(iterator.asOutput());

@@ -46,7 +46,7 @@ public final class UnicodeScript extends PrimitiveOp implements Operand<TInt32> 
    * @param input A Tensor of int32 Unicode code points.
    * @return a new instance of UnicodeScript
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
     opBuilder.addInput(input.asOutput());

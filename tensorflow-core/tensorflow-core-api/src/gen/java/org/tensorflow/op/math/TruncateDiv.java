@@ -51,7 +51,7 @@ public final class TruncateDiv<T extends TType> extends PrimitiveOp implements O
    * @param y 
    * @return a new instance of TruncateDiv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TruncateDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateDiv", scope.makeOpName("TruncateDiv"));
     opBuilder.addInput(x.asOutput());

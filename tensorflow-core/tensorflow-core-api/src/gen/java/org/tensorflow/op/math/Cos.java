@@ -53,7 +53,7 @@ public final class Cos<T extends TType> extends PrimitiveOp implements Operand<T
    * @param x 
    * @return a new instance of Cos
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Cos<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cos", scope.makeOpName("Cos"));
     opBuilder.addInput(x.asOutput());

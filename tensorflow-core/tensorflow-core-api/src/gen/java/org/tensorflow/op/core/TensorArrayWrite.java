@@ -45,7 +45,7 @@ public final class TensorArrayWrite extends PrimitiveOp implements Operand<TFloa
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayWrite
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayWriteV3", scope.makeOpName("TensorArrayWrite"));
     opBuilder.addInput(handle.asOutput());

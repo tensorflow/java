@@ -42,7 +42,7 @@ public final class NextIteration<T extends TType> extends PrimitiveOp implements
    * @param data The tensor to be made available to the next iteration.
    * @return a new instance of NextIteration
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
     opBuilder.addInput(data.asOutput());

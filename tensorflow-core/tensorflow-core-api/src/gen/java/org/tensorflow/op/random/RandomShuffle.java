@@ -83,7 +83,7 @@ public final class RandomShuffle<T extends TType> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffle
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffle", scope.makeOpName("RandomShuffle"));
     opBuilder.addInput(value.asOutput());

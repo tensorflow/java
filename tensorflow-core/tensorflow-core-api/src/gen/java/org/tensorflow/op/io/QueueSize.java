@@ -40,7 +40,7 @@ public final class QueueSize extends PrimitiveOp implements Operand<TInt32> {
    * @param handle The handle to a queue.
    * @return a new instance of QueueSize
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static QueueSize create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueSizeV2", scope.makeOpName("QueueSize"));
     opBuilder.addInput(handle.asOutput());

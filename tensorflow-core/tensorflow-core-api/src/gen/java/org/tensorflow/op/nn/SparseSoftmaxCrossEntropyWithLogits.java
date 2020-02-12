@@ -52,7 +52,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
    * This is the label for the given minibatch entry.
    * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<U> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());

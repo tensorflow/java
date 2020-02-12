@@ -51,7 +51,7 @@ public final class SparseSliceGrad<T extends TType> extends PrimitiveOp implemen
    * @param outputIndices 2-D.  The `indices` of the sliced `SparseTensor`.
    * @return a new instance of SparseSliceGrad
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSliceGrad", scope.makeOpName("SparseSliceGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());

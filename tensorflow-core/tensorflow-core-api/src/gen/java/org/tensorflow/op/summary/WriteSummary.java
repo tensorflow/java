@@ -43,7 +43,7 @@ public final class WriteSummary extends PrimitiveOp {
    * @param summaryMetadata 
    * @return a new instance of WriteSummary
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> WriteSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<T> tensor, Operand<TString> tag, Operand<TString> summaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteSummary", scope.makeOpName("WriteSummary"));
     opBuilder.addInput(writer.asOutput());

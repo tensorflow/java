@@ -41,7 +41,7 @@ public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operan
    * @param maxBufferSize The maximum size of the host side per device buffer to keep.
    * @return a new instance of MultiDeviceIteratorInit
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorInit create(Scope scope, Operand<?> dataset, Operand<?> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorInit", scope.makeOpName("MultiDeviceIteratorInit"));
     opBuilder.addInput(dataset.asOutput());

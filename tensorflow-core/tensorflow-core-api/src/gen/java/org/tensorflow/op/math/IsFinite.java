@@ -53,7 +53,7 @@ public final class IsFinite extends PrimitiveOp implements Operand<TBool> {
    * @param x 
    * @return a new instance of IsFinite
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> IsFinite create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsFinite", scope.makeOpName("IsFinite"));
     opBuilder.addInput(x.asOutput());

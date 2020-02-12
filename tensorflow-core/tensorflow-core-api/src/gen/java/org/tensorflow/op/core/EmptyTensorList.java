@@ -52,7 +52,7 @@ public final class EmptyTensorList extends PrimitiveOp implements Operand<TType>
    * @param elementDtype 
    * @return a new instance of EmptyTensorList
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());

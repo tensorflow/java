@@ -82,7 +82,7 @@ public final class SparseReduceMax<T extends TNumber> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceMax
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SparseReduceMax<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceMax", scope.makeOpName("SparseReduceMax"));
     opBuilder.addInput(inputIndices.asOutput());

@@ -82,7 +82,7 @@ public final class RetrieveTPUEmbeddingADAMParametersGradAccumDebug extends Prim
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingADAMParametersGradAccumDebug
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingADAMParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingADAMParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingADAMParametersGradAccumDebug"));
     opBuilder = scope.applyControlDependencies(opBuilder);

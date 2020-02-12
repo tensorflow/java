@@ -42,7 +42,7 @@ public final class CreateSummaryFileWriter extends PrimitiveOp {
    * @param filenameSuffix 
    * @return a new instance of CreateSummaryFileWriter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static CreateSummaryFileWriter create(Scope scope, Operand<?> writer, Operand<TString> logdir, Operand<TInt32> maxQueue, Operand<TInt32> flushMillis, Operand<TString> filenameSuffix) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryFileWriter", scope.makeOpName("CreateSummaryFileWriter"));
     opBuilder.addInput(writer.asOutput());

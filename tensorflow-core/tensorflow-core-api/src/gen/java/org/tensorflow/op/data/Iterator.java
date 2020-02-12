@@ -44,7 +44,7 @@ public final class Iterator extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of Iterator
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static Iterator create(Scope scope, String sharedName, String container, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorV2", scope.makeOpName("Iterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

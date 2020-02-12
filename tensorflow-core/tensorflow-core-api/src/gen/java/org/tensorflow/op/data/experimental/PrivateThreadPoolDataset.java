@@ -46,7 +46,7 @@ public final class PrivateThreadPoolDataset extends PrimitiveOp implements Opera
    * @param outputShapes 
    * @return a new instance of PrivateThreadPoolDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static PrivateThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numThreads, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalPrivateThreadPoolDataset", scope.makeOpName("PrivateThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput());

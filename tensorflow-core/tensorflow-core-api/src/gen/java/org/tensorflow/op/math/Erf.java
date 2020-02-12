@@ -43,7 +43,7 @@ public final class Erf<T extends TNumber> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Erf
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Erf<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erf", scope.makeOpName("Erf"));
     opBuilder.addInput(x.asOutput());

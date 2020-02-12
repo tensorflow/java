@@ -47,7 +47,7 @@ public final class SetStatsAggregatorDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of SetStatsAggregatorDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<TString> tag, Operand<TString> counterPrefix, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetStatsAggregatorDataset", scope.makeOpName("SetStatsAggregatorDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -36,7 +36,7 @@ public final class FlushSummaryWriter extends PrimitiveOp {
    * @param writer 
    * @return a new instance of FlushSummaryWriter
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FlushSummaryWriter create(Scope scope, Operand<?> writer) {
     OperationBuilder opBuilder = scope.env().opBuilder("FlushSummaryWriter", scope.makeOpName("FlushSummaryWriter"));
     opBuilder.addInput(writer.asOutput());

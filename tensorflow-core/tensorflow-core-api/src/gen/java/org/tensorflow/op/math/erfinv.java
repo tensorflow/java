@@ -41,7 +41,7 @@ public final class erfinv<T extends TNumber> extends PrimitiveOp implements Oper
    * @param x 
    * @return a new instance of erfinv
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> erfinv<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erfinv", scope.makeOpName("erfinv"));
     opBuilder.addInput(x.asOutput());

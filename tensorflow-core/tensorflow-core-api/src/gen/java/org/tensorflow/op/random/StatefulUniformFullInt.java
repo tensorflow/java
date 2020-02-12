@@ -48,7 +48,7 @@ public final class StatefulUniformFullInt<U extends TType> extends PrimitiveOp i
    * @param dtype The type of the output.
    * @return a new instance of StatefulUniformFullInt
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformFullInt", scope.makeOpName("StatefulUniformFullInt"));
     opBuilder.addInput(resource.asOutput());

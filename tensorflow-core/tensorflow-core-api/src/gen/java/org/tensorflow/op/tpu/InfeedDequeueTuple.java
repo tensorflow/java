@@ -45,7 +45,7 @@ public final class InfeedDequeueTuple extends PrimitiveOp implements Iterable<Op
    * @param shapes The shapes of each tensor in `outputs`.
    * @return a new instance of InfeedDequeueTuple
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static InfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeueTuple", scope.makeOpName("InfeedDequeueTuple"));
     opBuilder = scope.applyControlDependencies(opBuilder);

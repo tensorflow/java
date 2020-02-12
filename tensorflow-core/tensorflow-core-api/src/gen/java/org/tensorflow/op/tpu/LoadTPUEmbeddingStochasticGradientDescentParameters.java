@@ -84,7 +84,7 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends P
    * @param options carries optional attributes values
    * @return a new instance of LoadTPUEmbeddingStochasticGradientDescentParameters
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Operand<TFloat32> parameters, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParameters"));
     opBuilder.addInput(parameters.asOutput());

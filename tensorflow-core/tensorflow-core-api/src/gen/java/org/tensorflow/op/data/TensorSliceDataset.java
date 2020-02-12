@@ -43,7 +43,7 @@ public final class TensorSliceDataset extends PrimitiveOp implements Operand<TTy
    * @param outputShapes 
    * @return a new instance of TensorSliceDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSliceDataset", scope.makeOpName("TensorSliceDataset"));
     opBuilder.addInputList(Operands.asOutputs(components));

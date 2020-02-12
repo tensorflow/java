@@ -49,7 +49,7 @@ public final class ToHashBucket extends PrimitiveOp implements Operand<TInt64> {
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucket
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static ToHashBucket create(Scope scope, Operand<TString> stringTensor, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucket", scope.makeOpName("ToHashBucket"));
     opBuilder.addInput(stringTensor.asOutput());

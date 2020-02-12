@@ -71,7 +71,7 @@ public final class Solve<T extends TType> extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of Solve
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolve", scope.makeOpName("Solve"));
     opBuilder.addInput(matrix.asOutput());

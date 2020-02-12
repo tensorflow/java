@@ -74,7 +74,7 @@ public final class AvgPool<T extends TNumber> extends PrimitiveOp implements Ope
    * @param options carries optional attributes values
    * @return a new instance of AvgPool
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AvgPool<T> create(Scope scope, Operand<T> value, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPool", scope.makeOpName("AvgPool"));
     opBuilder.addInput(value.asOutput());

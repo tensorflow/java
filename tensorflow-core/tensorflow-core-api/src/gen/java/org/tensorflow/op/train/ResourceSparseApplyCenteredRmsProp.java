@@ -88,7 +88,7 @@ public final class ResourceSparseApplyCenteredRmsProp extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyCenteredRmsProp
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyCenteredRMSProp", scope.makeOpName("ResourceSparseApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());

@@ -44,7 +44,7 @@ public final class UniqueDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of UniqueDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UniqueDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueDataset", scope.makeOpName("UniqueDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -54,7 +54,7 @@ public final class AccumulateN<T extends TType> extends PrimitiveOp implements O
    * @param shape Shape of elements of `inputs`.
    * @return a new instance of AccumulateN
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulateNV2", scope.makeOpName("AccumulateN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

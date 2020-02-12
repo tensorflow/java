@@ -75,7 +75,7 @@ public final class Equal extends PrimitiveOp implements Operand<TBool> {
    * @param options carries optional attributes values
    * @return a new instance of Equal
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Equal create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Equal", scope.makeOpName("Equal"));
     opBuilder.addInput(x.asOutput());

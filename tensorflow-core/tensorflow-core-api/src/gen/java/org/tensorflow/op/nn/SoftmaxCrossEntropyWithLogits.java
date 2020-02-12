@@ -48,7 +48,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends Prim
    * probability distribution.
    * @return a new instance of SoftmaxCrossEntropyWithLogits
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());

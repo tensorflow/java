@@ -88,7 +88,7 @@ public final class FakeQuantWithMinMaxArgsGradient extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxArgsGradient
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
     opBuilder.addInput(gradients.asOutput());

@@ -45,7 +45,7 @@ public final class FixedLengthRecordDataset extends PrimitiveOp implements Opera
    * @param compressionType 
    * @return a new instance of FixedLengthRecordDataset
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes, Operand<TInt64> bufferSize, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordDatasetV2", scope.makeOpName("FixedLengthRecordDataset"));
     opBuilder.addInput(filenames.asOutput());

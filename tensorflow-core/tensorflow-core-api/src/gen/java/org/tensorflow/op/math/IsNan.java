@@ -53,7 +53,7 @@ public final class IsNan extends PrimitiveOp implements Operand<TBool> {
    * @param x 
    * @return a new instance of IsNan
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> IsNan create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsNan", scope.makeOpName("IsNan"));
     opBuilder.addInput(x.asOutput());

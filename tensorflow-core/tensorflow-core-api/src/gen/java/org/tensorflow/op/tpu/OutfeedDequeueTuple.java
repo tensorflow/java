@@ -70,7 +70,7 @@ public final class OutfeedDequeueTuple extends PrimitiveOp implements Iterable<O
    * @param options carries optional attributes values
    * @return a new instance of OutfeedDequeueTuple
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static OutfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeueTuple", scope.makeOpName("OutfeedDequeueTuple"));
     opBuilder = scope.applyControlDependencies(opBuilder);

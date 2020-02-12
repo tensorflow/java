@@ -73,7 +73,7 @@ public final class TensorArrayGather<T extends TType> extends PrimitiveOp implem
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayGather
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
     opBuilder.addInput(handle.asOutput());

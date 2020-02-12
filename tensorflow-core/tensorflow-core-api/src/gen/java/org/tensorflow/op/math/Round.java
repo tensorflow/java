@@ -45,7 +45,7 @@ public final class Round<T extends TType> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Round
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Round<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Round", scope.makeOpName("Round"));
     opBuilder.addInput(x.asOutput());

@@ -122,7 +122,7 @@ public final class UnicodeTranscode extends PrimitiveOp implements Operand<TStri
    * @param options carries optional attributes values
    * @return a new instance of UnicodeTranscode
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static UnicodeTranscode create(Scope scope, Operand<TString> input, String inputEncoding, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeTranscode", scope.makeOpName("UnicodeTranscode"));
     opBuilder.addInput(input.asOutput());

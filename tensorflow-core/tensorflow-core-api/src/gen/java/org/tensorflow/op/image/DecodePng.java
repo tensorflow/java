@@ -91,7 +91,7 @@ public final class DecodePng<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput());
@@ -115,7 +115,7 @@ public final class DecodePng<T extends TNumber> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
     return create(scope, contents, TUint8.DTYPE, options);
   }

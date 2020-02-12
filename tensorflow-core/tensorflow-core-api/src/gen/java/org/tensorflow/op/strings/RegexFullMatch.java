@@ -49,7 +49,7 @@ public final class RegexFullMatch extends PrimitiveOp implements Operand<TBool> 
    * @param pattern A scalar string tensor containing the regular expression to match the input.
    * @return a new instance of RegexFullMatch
    */
-  @Endpoint
+  @Endpoint(describeByClass = true)
   public static RegexFullMatch create(Scope scope, Operand<TString> input, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexFullMatch", scope.makeOpName("RegexFullMatch"));
     opBuilder.addInput(input.asOutput());
