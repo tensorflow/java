@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,21 +225,19 @@ public class MNISTTest {
           labelBatch[m] = labels[k];
         }
         //logger.info("Batch = " + batch.size());
-        Tensor<?> input = Tensor.create(featureBatch);
-        Tensor<?> target = Tensor.create(labelBatch);
-        Tensor<?> loss = session.runner()
-            .feed(INPUT_NAME, input)
-            .feed(TARGET, target)
-            .addTarget(TRAIN)
-            .fetch(TRAINING_LOSS)
-            .run().get(0);
-        if (interval % 100 == 0) {
-          logger.log(Level.INFO,
-              "Iteration = " + interval + ", training loss = " + loss.floatValue());
+        try (Tensor<?> input = Tensor.create(featureBatch);
+            Tensor<?> target = Tensor.create(labelBatch);
+            Tensor<?> loss = session.runner()
+                .feed(INPUT_NAME, input)
+                .feed(TARGET, target)
+                .addTarget(TRAIN)
+                .fetch(TRAINING_LOSS)
+                .run().get(0)) {
+          if (interval % 100 == 0) {
+            logger.log(Level.INFO,
+                "Iteration = " + interval + ", training loss = " + loss.floatValue());
+          }
         }
-        input.close();
-        target.close();
-        loss.close();
         interval++;
       }
       //epoch.close();
@@ -307,12 +305,12 @@ public class MNISTTest {
     int epochs = Integer.parseInt(args[0]);
     int minibatchSize = Integer.parseInt(args[1]);
 
-    Graph graph = build(args[2]);
 
     int correctCount = 0;
     int[][] confusionMatrix = new int[10][10];
 
-    try (Session session = new Session(graph)) {
+    try (Graph graph = build(args[2]);
+        Session session = new Session(graph)) {
       train(session, epochs, minibatchSize, trainData, trainLabels);
 
       logger.info("Trained model");
