@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -81,6 +83,7 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends Prim
    * `indices.shape.ndims + params.ragged_rank - 1`.
    * @return a new instance of RaggedGather
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType, V extends TNumber> RaggedGather<T, U> create(Scope scope, Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues, Operand<V> indices, Long OUTPUTRAGGEDRANK) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedGather", scope.makeOpName("RaggedGather"));
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));

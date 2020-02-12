@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -45,6 +46,7 @@ public final class Elu<T extends TNumber> extends PrimitiveOp implements Operand
    * @param features 
    * @return a new instance of Elu
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Elu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Elu", scope.makeOpName("Elu"));
     opBuilder.addInput(features.asOutput());

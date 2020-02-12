@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -47,6 +48,7 @@ public final class TensorArrayRead<T extends TType> extends PrimitiveOp implemen
    * @param dtype The type of the elem that is returned.
    * @return a new instance of TensorArrayRead
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
     opBuilder.addInput(handle.asOutput());

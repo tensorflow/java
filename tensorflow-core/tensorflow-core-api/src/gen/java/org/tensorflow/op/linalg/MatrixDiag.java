@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -139,6 +140,7 @@ public final class MatrixDiag<T extends TType> extends PrimitiveOp implements Op
    * Default is 0.
    * @return a new instance of MatrixDiag
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> MatrixDiag<T> create(Scope scope, Operand<T> diagonal, Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagV2", scope.makeOpName("MatrixDiag"));
     opBuilder.addInput(diagonal.asOutput());

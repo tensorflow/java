@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -63,6 +65,7 @@ public final class UpperBound<U extends TNumber> extends PrimitiveOp implements 
    * @param outType 
    * @return a new instance of UpperBound
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> UpperBound<U> create(Scope scope, Operand<T> sortedInputs, Operand<T> values, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("UpperBound", scope.makeOpName("UpperBound"));
     opBuilder.addInput(sortedInputs.asOutput());
@@ -81,6 +84,7 @@ public final class UpperBound<U extends TNumber> extends PrimitiveOp implements 
    * the values that will be searched for in `sorted_search_values`.
    * @return a new instance of UpperBound
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> UpperBound<TInt32> create(Scope scope, Operand<T> sortedInputs, Operand<T> values) {
     return create(scope, sortedInputs, values, TInt32.DTYPE);
   }

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -39,6 +40,7 @@ public final class LookupTableSize extends PrimitiveOp implements Operand<TInt64
    * @param tableHandle Handle to the table.
    * @return a new instance of LookupTableSize
    */
+  @Endpoint(describeByClass = true)
   public static LookupTableSize create(Scope scope, Operand<?> tableHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableSizeV2", scope.makeOpName("LookupTableSize"));
     opBuilder.addInput(tableHandle.asOutput());

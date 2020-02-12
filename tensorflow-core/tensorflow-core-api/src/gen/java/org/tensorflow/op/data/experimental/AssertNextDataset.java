@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -43,6 +45,7 @@ public final class AssertNextDataset extends PrimitiveOp implements Operand<TTyp
    * @param outputShapes 
    * @return a new instance of AssertNextDataset
    */
+  @Endpoint(describeByClass = true)
   public static AssertNextDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> transformations, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalAssertNextDataset", scope.makeOpName("AssertNextDataset"));
     opBuilder.addInput(inputDataset.asOutput());

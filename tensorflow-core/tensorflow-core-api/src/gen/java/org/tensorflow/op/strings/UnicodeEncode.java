@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -99,6 +101,7 @@ public final class UnicodeEncode extends PrimitiveOp implements Operand<TString>
    * @param options carries optional attributes values
    * @return a new instance of UnicodeEncode
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> UnicodeEncode create(Scope scope, Operand<TInt32> inputValues, Operand<T> inputSplits, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeEncode", scope.makeOpName("UnicodeEncode"));
     opBuilder.addInput(inputValues.asOutput());

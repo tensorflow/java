@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -46,6 +47,7 @@ public final class TensorListFromTensor extends PrimitiveOp implements Operand<T
    * @param elementShape 
    * @return a new instance of TensorListFromTensor
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());

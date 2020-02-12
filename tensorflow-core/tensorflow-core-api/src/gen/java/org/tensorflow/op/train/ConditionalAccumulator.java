@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
@@ -90,6 +91,7 @@ public final class ConditionalAccumulator extends PrimitiveOp implements Operand
    * @param options carries optional attributes values
    * @return a new instance of ConditionalAccumulator
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConditionalAccumulator", scope.makeOpName("ConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

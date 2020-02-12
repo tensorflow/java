@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -47,6 +49,7 @@ public final class RaggedTensorToSparse<U extends TType> extends PrimitiveOp {
    * @param rtDenseValues The `flat_values` for the `RaggedTensor`.
    * @return a new instance of RaggedTensorToSparse
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));

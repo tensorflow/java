@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
@@ -67,6 +69,7 @@ public final class BatchDataset extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of BatchDataset
    */
+  @Endpoint(describeByClass = true)
   public static BatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchDatasetV2", scope.makeOpName("BatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

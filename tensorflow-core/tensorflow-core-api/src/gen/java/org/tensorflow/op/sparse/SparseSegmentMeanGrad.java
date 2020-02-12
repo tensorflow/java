@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -49,6 +50,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends PrimitiveOp 
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentMean op.
    * @return a new instance of SparseSegmentMeanGrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanGrad", scope.makeOpName("SparseSegmentMeanGrad"));
     opBuilder.addInput(grad.asOutput());

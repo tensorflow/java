@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
@@ -61,6 +62,7 @@ public final class ParallelConcat<T extends TType> extends PrimitiveOp implement
    * but with the number of input values in the first dimension.
    * @return a new instance of ParallelConcat
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ParallelConcat<T> create(Scope scope, Iterable<Operand<T>> values, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParallelConcat", scope.makeOpName("ParallelConcat"));
     opBuilder.addInputList(Operands.asOutputs(values));

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -43,6 +45,7 @@ public final class InvGrad<T extends TType> extends PrimitiveOp implements Opera
    * @param dy 
    * @return a new instance of InvGrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> InvGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvGrad", scope.makeOpName("InvGrad"));
     opBuilder.addInput(y.asOutput());

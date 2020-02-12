@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -111,6 +112,7 @@ public final class Conv2dBackpropInput<T extends TNumber> extends PrimitiveOp im
    * @param options carries optional attributes values
    * @return a new instance of Conv2dBackpropInput
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Conv2dBackpropInput<T> create(Scope scope, Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2DBackpropInput", scope.makeOpName("Conv2dBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());

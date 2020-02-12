@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
@@ -114,6 +115,7 @@ public final class TensorArray extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArray
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> size, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayV3", scope.makeOpName("TensorArray"));
     opBuilder.addInput(size.asOutput());

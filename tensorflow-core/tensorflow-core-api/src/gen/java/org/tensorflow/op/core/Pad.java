@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -69,6 +70,7 @@ public final class Pad<T extends TType> extends PrimitiveOp implements Operand<T
    * @param constantValues 
    * @return a new instance of Pad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Operand<T> constantValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("PadV2", scope.makeOpName("Pad"));
     opBuilder.addInput(input.asOutput());

@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -42,6 +44,7 @@ public final class UniqueDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of UniqueDataset
    */
+  @Endpoint(describeByClass = true)
   public static UniqueDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueDataset", scope.makeOpName("UniqueDataset"));
     opBuilder.addInput(inputDataset.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -92,6 +93,7 @@ public final class Gather<T extends TType> extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of Gather
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> Gather<T> create(Scope scope, Operand<T> params, Operand<U> indices, Operand<V> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherV2", scope.makeOpName("Gather"));
     opBuilder.addInput(params.asOutput());

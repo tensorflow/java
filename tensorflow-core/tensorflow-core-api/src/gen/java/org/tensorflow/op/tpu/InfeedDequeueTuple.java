@@ -27,6 +27,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -43,6 +45,7 @@ public final class InfeedDequeueTuple extends PrimitiveOp implements Iterable<Op
    * @param shapes The shapes of each tensor in `outputs`.
    * @return a new instance of InfeedDequeueTuple
    */
+  @Endpoint(describeByClass = true)
   public static InfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeueTuple", scope.makeOpName("InfeedDequeueTuple"));
     opBuilder = scope.applyControlDependencies(opBuilder);

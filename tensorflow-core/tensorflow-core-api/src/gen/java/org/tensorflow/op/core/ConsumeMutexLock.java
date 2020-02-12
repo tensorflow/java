@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -45,6 +46,7 @@ public final class ConsumeMutexLock extends PrimitiveOp {
    * @param mutexLock A tensor returned by `MutexLock`.
    * @return a new instance of ConsumeMutexLock
    */
+  @Endpoint(describeByClass = true)
   public static ConsumeMutexLock create(Scope scope, Operand<?> mutexLock) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConsumeMutexLock", scope.makeOpName("ConsumeMutexLock"));
     opBuilder.addInput(mutexLock.asOutput());

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +43,7 @@ public final class RandomGammaGrad<T extends TNumber> extends PrimitiveOp implem
    * @param sample 
    * @return a new instance of RandomGammaGrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> RandomGammaGrad<T> create(Scope scope, Operand<T> alpha, Operand<T> sample) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGammaGrad", scope.makeOpName("RandomGammaGrad"));
     opBuilder.addInput(alpha.asOutput());

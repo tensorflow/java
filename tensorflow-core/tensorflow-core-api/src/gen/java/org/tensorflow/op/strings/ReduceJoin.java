@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -96,6 +97,7 @@ public final class ReduceJoin extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of ReduceJoin
    */
+  @Endpoint(describeByClass = true)
   public static ReduceJoin create(Scope scope, Operand<TString> inputs, Operand<TInt32> reductionIndices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReduceJoin", scope.makeOpName("ReduceJoin"));
     opBuilder.addInput(inputs.asOutput());

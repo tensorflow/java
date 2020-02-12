@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used by classes to make TensorFlow operations conveniently accessible via {@code
- * org.tensorflow.op.Ops}.
+ * org.tensorflow.op.Ops} or one of its groups.
  *
  * <p>An annotation processor ({@code org.tensorflow.processor.OperatorProcessor}) builds the
  * {@code Ops} class by aggregating all classes annotated as {@code @Operator}s. Each annotated
@@ -34,7 +34,8 @@ import java.lang.annotation.Target;
  * <pre>{@code
  * @Operator
  * public final class MyOp implements Op {
- *   public static MyOp create(Scope scope, Operand operand) {
+ *   @Endpoint
+ *   public static MyOp create(Scope scope, Operand<?> operand) {
  *     ...
  *   }
  * }

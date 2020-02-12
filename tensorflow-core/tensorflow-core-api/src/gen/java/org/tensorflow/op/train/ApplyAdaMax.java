@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -73,6 +75,7 @@ public final class ApplyAdaMax<T extends TType> extends PrimitiveOp implements O
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdaMax
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyAdaMax<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdaMax", scope.makeOpName("ApplyAdaMax"));
     opBuilder.addInput(var.asOutput());

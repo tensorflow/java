@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -38,6 +39,7 @@ public final class OptionalNone extends PrimitiveOp implements Operand<TType> {
    * @param scope current scope
    * @return a new instance of OptionalNone
    */
+  @Endpoint(describeByClass = true)
   public static OptionalNone create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalNone", scope.makeOpName("OptionalNone"));
     opBuilder = scope.applyControlDependencies(opBuilder);

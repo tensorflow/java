@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -37,6 +39,7 @@ public final class ResourceAccumulatorNumAccumulated extends PrimitiveOp impleme
    * @param handle The handle to an accumulator.
    * @return a new instance of ResourceAccumulatorNumAccumulated
    */
+  @Endpoint(describeByClass = true)
   public static ResourceAccumulatorNumAccumulated create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorNumAccumulated", scope.makeOpName("ResourceAccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());

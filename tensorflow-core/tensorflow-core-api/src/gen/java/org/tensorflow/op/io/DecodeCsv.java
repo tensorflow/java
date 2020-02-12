@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -101,6 +102,7 @@ public final class DecodeCsv extends PrimitiveOp implements Iterable<Operand<TTy
    * @param options carries optional attributes values
    * @return a new instance of DecodeCsv
    */
+  @Endpoint(describeByClass = true)
   public static DecodeCsv create(Scope scope, Operand<TString> records, Iterable<Operand<?>> recordDefaults, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());

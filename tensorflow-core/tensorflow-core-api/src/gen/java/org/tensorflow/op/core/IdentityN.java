@@ -27,6 +27,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -59,6 +60,7 @@ public final class IdentityN extends PrimitiveOp implements Iterable<Operand<TTy
    * @param input 
    * @return a new instance of IdentityN
    */
+  @Endpoint(describeByClass = true)
   public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IdentityN", scope.makeOpName("IdentityN"));
     opBuilder.addInputList(Operands.asOutputs(input));

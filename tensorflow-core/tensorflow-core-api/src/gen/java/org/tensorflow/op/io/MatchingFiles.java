@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -43,6 +44,7 @@ public final class MatchingFiles extends PrimitiveOp implements Operand<TString>
    * @param pattern Shell wildcard pattern(s). Scalar or vector of type string.
    * @return a new instance of MatchingFiles
    */
+  @Endpoint(describeByClass = true)
   public static MatchingFiles create(Scope scope, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFiles", scope.makeOpName("MatchingFiles"));
     opBuilder.addInput(pattern.asOutput());

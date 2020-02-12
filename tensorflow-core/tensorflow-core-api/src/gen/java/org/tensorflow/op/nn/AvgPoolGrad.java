@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -71,6 +73,7 @@ public final class AvgPoolGrad<T extends TNumber> extends PrimitiveOp implements
    * @param options carries optional attributes values
    * @return a new instance of AvgPoolGrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> AvgPoolGrad<T> create(Scope scope, Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPoolGrad", scope.makeOpName("AvgPoolGrad"));
     opBuilder.addInput(origInputShape.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -49,6 +50,7 @@ public final class MergeSummary extends PrimitiveOp implements Operand<TString> 
    * buffers.
    * @return a new instance of MergeSummary
    */
+  @Endpoint(describeByClass = true)
   public static MergeSummary create(Scope scope, Iterable<Operand<TString>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeSummary", scope.makeOpName("MergeSummary"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

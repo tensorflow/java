@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -79,6 +80,7 @@ public final class QuantizedResizeBilinear<T extends TType> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of QuantizedResizeBilinear
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());

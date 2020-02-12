@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -51,6 +52,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends PrimitiveOp
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomUniform
    */
+  @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
@@ -68,6 +70,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends PrimitiveOp
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomUniform
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }

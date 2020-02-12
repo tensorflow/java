@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -51,6 +52,7 @@ public final class QuantizedBiasAdd<V extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedBiasAdd
    */
+  @Endpoint(describeByClass = true)
   public static <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBiasAdd", scope.makeOpName("QuantizedBiasAdd"));
     opBuilder.addInput(input.asOutput());

@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -79,6 +81,7 @@ public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends Pr
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2DWithBiasSumAndRelu
    */
+  @Endpoint(describeByClass = true)
   public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DWithBiasSumAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> summand, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndRelu", scope.makeOpName("QuantizedConv2DWithBiasSumAndRelu"));
     opBuilder.addInput(input.asOutput());

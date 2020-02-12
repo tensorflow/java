@@ -22,6 +22,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -80,6 +82,7 @@ public final class RetrieveTPUEmbeddingAdagradParametersGradAccumDebug extends P
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingAdagradParametersGradAccumDebug
    */
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingAdagradParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingAdagradParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingAdagradParametersGradAccumDebug"));
     opBuilder = scope.applyControlDependencies(opBuilder);

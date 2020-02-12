@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -56,6 +57,7 @@ public final class Range<T extends TNumber> extends PrimitiveOp implements Opera
    * @param delta 0-D (scalar). Optional. Default is 1. Number that increments `start`.
    * @return a new instance of Range
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Range<T> create(Scope scope, Operand<T> start, Operand<T> limit, Operand<T> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("Range", scope.makeOpName("Range"));
     opBuilder.addInput(start.asOutput());

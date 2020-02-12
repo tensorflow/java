@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -103,6 +104,7 @@ public final class TensorScatterNdSub<T extends TType> extends PrimitiveOp imple
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdSub
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorScatterNdSub<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterSub", scope.makeOpName("TensorScatterNdSub"));
     opBuilder.addInput(tensor.asOutput());

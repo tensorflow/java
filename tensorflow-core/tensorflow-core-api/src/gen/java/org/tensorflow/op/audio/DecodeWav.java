@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -85,6 +86,7 @@ public final class DecodeWav extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of DecodeWav
    */
+  @Endpoint(describeByClass = true)
   public static DecodeWav create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeWav", scope.makeOpName("DecodeWav"));
     opBuilder.addInput(contents.asOutput());

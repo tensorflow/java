@@ -1,3 +1,20 @@
+// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ==============================================================================
+//
+// This class has been generated, DO NOT EDIT!
+//
 package org.tensorflow.op;
 
 import org.tensorflow.DataType;
@@ -21,25 +38,30 @@ public final class DtypesOps {
   }
 
   /**
-   * Builds an {@link AsString} operation
+   * Converts each entry in the given tensor to strings.
+   *  <p>
+   *  Supports many numeric types and boolean.
+   *  <p>
+   *  For Unicode, see the
+   *  [https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode text)
+   *  tutorial.
    *
-   * @param input 
+   * @param input
    * @param options carries optional attributes values
    * @return a new instance of AsString
-   * @see org.tensorflow.op.dtypes.AsString
    */
   public <T extends TType> AsString asString(Operand<T> input, AsString.Options... options) {
     return AsString.create(scope, input, options);
   }
 
   /**
-   * Builds an {@link Cast} operation
+   * Cast x of type SrcT to y of DstT.
    *
-   * @param x 
-   * @param DstT 
+   * @param <U> data type for {@code y()} output
+   * @param x
+   * @param DstT
    * @param options carries optional attributes values
    * @return a new instance of Cast
-   * @see org.tensorflow.op.dtypes.Cast
    */
   public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, DataType<U> DstT,
       Cast.Options... options) {
@@ -47,13 +69,27 @@ public final class DtypesOps {
   }
 
   /**
-   * Builds an {@link Complex} operation
+   * Converts two real numbers to a complex number.
+   *  <p>
+   *  Given a tensor `real` representing the real part of a complex number, and a
+   *  tensor `imag` representing the imaginary part of a complex number, this
+   *  operation returns complex numbers elementwise of the form \\(a + bj\\), where
+   *  <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
+   *  <p>
+   *  The input tensors `real` and `imag` must have the same shape.
+   *  <p>
+   *  For example:
+   *  <pre>{@code
+   *  # tensor 'real' is [2.25, 3.25]
+   *  # tensor `imag` is [4.75, 5.75]
+   *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
+   *  }</pre>
    *
-   * @param real 
-   * @param imag 
-   * @param Tout 
+   * @param <U> data type for {@code out()} output
+   * @param real
+   * @param imag
+   * @param Tout
    * @return a new instance of Complex
-   * @see org.tensorflow.op.dtypes.Complex
    */
   public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
       DataType<U> Tout) {

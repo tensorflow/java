@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
@@ -65,6 +66,7 @@ public final class TensorArrayPack<T extends TType> extends PrimitiveOp implemen
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayPack
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayPack", scope.makeOpName("TensorArrayPack"));
     opBuilder.addInput(handle.asOutput());

@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TType;
 
@@ -154,6 +156,7 @@ public final class DebugNumericSummary extends PrimitiveOp implements Operand<TF
    * @param options carries optional attributes values
    * @return a new instance of DebugNumericSummary
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugNumericSummary create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummary", scope.makeOpName("DebugNumericSummary"));
     opBuilder.addInput(input.asOutput());

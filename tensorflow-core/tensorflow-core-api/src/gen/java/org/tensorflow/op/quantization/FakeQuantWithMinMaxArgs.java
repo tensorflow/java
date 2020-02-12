@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -103,6 +104,7 @@ public final class FakeQuantWithMinMaxArgs extends PrimitiveOp implements Operan
    * @param options carries optional attributes values
    * @return a new instance of FakeQuantWithMinMaxArgs
    */
+  @Endpoint(describeByClass = true)
   public static FakeQuantWithMinMaxArgs create(Scope scope, Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgs", scope.makeOpName("FakeQuantWithMinMaxArgs"));
     opBuilder.addInput(inputs.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -68,6 +69,7 @@ public final class BatchSvd<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BatchSvd
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSvd", scope.makeOpName("BatchSvd"));
     opBuilder.addInput(input.asOutput());

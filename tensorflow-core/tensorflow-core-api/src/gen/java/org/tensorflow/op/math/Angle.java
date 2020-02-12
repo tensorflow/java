@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -61,6 +62,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param Tout 
    * @return a new instance of Angle
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
@@ -76,6 +78,7 @@ public final class Angle<U extends TNumber> extends PrimitiveOp implements Opera
    * @param input 
    * @return a new instance of Angle
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat32.DTYPE);
   }

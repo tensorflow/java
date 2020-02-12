@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -37,6 +38,7 @@ public final class ReaderReset extends PrimitiveOp {
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderReset
    */
+  @Endpoint(describeByClass = true)
   public static ReaderReset create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderResetV2", scope.makeOpName("ReaderReset"));
     opBuilder.addInput(readerHandle.asOutput());

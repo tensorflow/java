@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -70,6 +71,7 @@ public final class ApplyAdagradDa<T extends TType> extends PrimitiveOp implement
    * @param options carries optional attributes values
    * @return a new instance of ApplyAdagradDa
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradDA", scope.makeOpName("ApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -68,6 +70,7 @@ public final class DatasetToGraph extends PrimitiveOp implements Operand<TString
    * @param options carries optional attributes values
    * @return a new instance of DatasetToGraph
    */
+  @Endpoint(describeByClass = true)
   public static DatasetToGraph create(Scope scope, Operand<?> inputDataset, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToGraphV2", scope.makeOpName("DatasetToGraph"));
     opBuilder.addInput(inputDataset.asOutput());

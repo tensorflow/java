@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -81,6 +82,7 @@ public final class DynamicPartition<T extends TType> extends PrimitiveOp impleme
    * @param numPartitions The number of partitions to output.
    * @return a new instance of DynamicPartition
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DynamicPartition<T> create(Scope scope, Operand<T> data, Operand<TInt32> partitions, Long numPartitions) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicPartition", scope.makeOpName("DynamicPartition"));
     opBuilder.addInput(data.asOutput());

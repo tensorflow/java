@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -50,6 +51,7 @@ public final class TensorListScatterIntoExistingList extends PrimitiveOp impleme
    * @param indices 
    * @return a new instance of TensorListScatterIntoExistingList
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());

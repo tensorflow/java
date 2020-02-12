@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -56,6 +58,7 @@ public final class NcclAllReduce<T extends TNumber> extends PrimitiveOp implemen
    * @param sharedName 
    * @return a new instance of NcclAllReduce
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NcclAllReduce<T> create(Scope scope, Operand<T> input, String reduction, Long numDevices, String sharedName) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclAllReduce", scope.makeOpName("NcclAllReduce"));
     opBuilder.addInput(input.asOutput());

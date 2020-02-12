@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -87,6 +88,7 @@ public final class ResourceApplyCenteredRmsProp extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyCenteredRmsProp
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyCenteredRMSProp", scope.makeOpName("ResourceApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());

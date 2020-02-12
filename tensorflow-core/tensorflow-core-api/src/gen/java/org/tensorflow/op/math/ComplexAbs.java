@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -50,6 +51,7 @@ public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements 
    * @param Tout 
    * @return a new instance of ComplexAbs
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
@@ -65,6 +67,7 @@ public final class ComplexAbs<U extends TNumber> extends PrimitiveOp implements 
    * @param x 
    * @return a new instance of ComplexAbs
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ComplexAbs<TFloat32> create(Scope scope, Operand<T> x) {
     return create(scope, x, TFloat32.DTYPE);
   }

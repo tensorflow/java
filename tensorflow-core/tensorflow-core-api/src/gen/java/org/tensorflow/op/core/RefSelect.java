@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,7 @@ public final class RefSelect<T extends TType> extends PrimitiveOp implements Ope
    * @param inputs A list of ref tensors, one of which will be forwarded to `output`.
    * @return a new instance of RefSelect
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
     opBuilder.addInput(index.asOutput());

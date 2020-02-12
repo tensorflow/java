@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -61,6 +63,7 @@ public final class IteratorFromStringHandle extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of IteratorFromStringHandle
    */
+  @Endpoint(describeByClass = true)
   public static IteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorFromStringHandleV2", scope.makeOpName("IteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());

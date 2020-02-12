@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -42,6 +43,7 @@ public final class ReaderNumRecordsProduced extends PrimitiveOp implements Opera
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderNumRecordsProduced
    */
+  @Endpoint(describeByClass = true)
   public static ReaderNumRecordsProduced create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumRecordsProducedV2", scope.makeOpName("ReaderNumRecordsProduced"));
     opBuilder.addInput(readerHandle.asOutput());

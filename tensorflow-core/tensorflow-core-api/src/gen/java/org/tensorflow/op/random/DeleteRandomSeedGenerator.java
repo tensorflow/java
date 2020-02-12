@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  */
@@ -35,6 +37,7 @@ public final class DeleteRandomSeedGenerator extends PrimitiveOp {
    * @param deleter 
    * @return a new instance of DeleteRandomSeedGenerator
    */
+  @Endpoint(describeByClass = true)
   public static DeleteRandomSeedGenerator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteRandomSeedGenerator", scope.makeOpName("DeleteRandomSeedGenerator"));
     opBuilder.addInput(handle.asOutput());

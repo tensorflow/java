@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,7 @@ public final class Identity<T extends TType> extends PrimitiveOp implements Oper
    * @param input 
    * @return a new instance of Identity
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
     opBuilder.addInput(input.asOutput());

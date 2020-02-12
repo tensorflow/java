@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -40,6 +42,7 @@ public final class ResourceAccumulatorSetGlobalStep extends PrimitiveOp {
    * @param newGlobalStep The new global_step value to set.
    * @return a new instance of ResourceAccumulatorSetGlobalStep
    */
+  @Endpoint(describeByClass = true)
   public static ResourceAccumulatorSetGlobalStep create(Scope scope, Operand<?> handle, Operand<TInt64> newGlobalStep) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorSetGlobalStep", scope.makeOpName("ResourceAccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());

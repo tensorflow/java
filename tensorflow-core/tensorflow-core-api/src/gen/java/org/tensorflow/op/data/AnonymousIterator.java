@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 
 /**
@@ -39,6 +41,7 @@ public final class AnonymousIterator extends PrimitiveOp {
    * @param outputShapes 
    * @return a new instance of AnonymousIterator
    */
+  @Endpoint(describeByClass = true)
   public static AnonymousIterator create(Scope scope, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);

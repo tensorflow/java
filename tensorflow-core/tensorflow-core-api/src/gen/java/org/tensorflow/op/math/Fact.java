@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -38,6 +39,7 @@ public final class Fact extends PrimitiveOp implements Operand<TString> {
    * @param scope current scope
    * @return a new instance of Fact
    */
+  @Endpoint(describeByClass = true)
   public static Fact create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fact", scope.makeOpName("Fact"));
     opBuilder = scope.applyControlDependencies(opBuilder);

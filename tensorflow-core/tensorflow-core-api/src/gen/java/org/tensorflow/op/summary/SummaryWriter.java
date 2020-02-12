@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -64,6 +66,7 @@ public final class SummaryWriter extends PrimitiveOp implements Operand<TType> {
    * @param options carries optional attributes values
    * @return a new instance of SummaryWriter
    */
+  @Endpoint(describeByClass = true)
   public static SummaryWriter create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SummaryWriter", scope.makeOpName("SummaryWriter"));
     opBuilder = scope.applyControlDependencies(opBuilder);

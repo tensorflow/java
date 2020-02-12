@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -39,6 +41,7 @@ public final class DatasetCardinality extends PrimitiveOp implements Operand<TIn
    * @param inputDataset A variant tensor representing the dataset to return cardinality for.
    * @return a new instance of DatasetCardinality
    */
+  @Endpoint(describeByClass = true)
   public static DatasetCardinality create(Scope scope, Operand<?> inputDataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDatasetCardinality", scope.makeOpName("DatasetCardinality"));
     opBuilder.addInput(inputDataset.asOutput());

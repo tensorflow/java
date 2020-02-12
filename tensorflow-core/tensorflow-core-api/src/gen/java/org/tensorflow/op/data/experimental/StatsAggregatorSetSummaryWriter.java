@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Set a summary_writer_interface to record statistics using given stats_aggregator.
@@ -36,6 +38,7 @@ public final class StatsAggregatorSetSummaryWriter extends PrimitiveOp {
    * @param summary 
    * @return a new instance of StatsAggregatorSetSummaryWriter
    */
+  @Endpoint(describeByClass = true)
   public static StatsAggregatorSetSummaryWriter create(Scope scope, Operand<?> statsAggregator, Operand<?> summary) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSetSummaryWriter", scope.makeOpName("StatsAggregatorSetSummaryWriter"));
     opBuilder.addInput(statsAggregator.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -41,6 +42,7 @@ public final class DenseToCSRSparseMatrix extends PrimitiveOp implements Operand
    * @param indices Indices of nonzero elements.
    * @return a new instance of DenseToCSRSparseMatrix
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DenseToCSRSparseMatrix create(Scope scope, Operand<T> denseInput, Operand<TInt64> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToCSRSparseMatrix", scope.makeOpName("DenseToCSRSparseMatrix"));
     opBuilder.addInput(denseInput.asOutput());

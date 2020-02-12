@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -43,6 +45,7 @@ public final class RngSkip extends PrimitiveOp {
    * @param delta The amount of advancement.
    * @return a new instance of RngSkip
    */
+  @Endpoint(describeByClass = true)
   public static RngSkip create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<TInt64> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("RngSkip", scope.makeOpName("RngSkip"));
     opBuilder.addInput(resource.asOutput());

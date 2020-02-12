@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -80,6 +81,7 @@ public final class ResourceApplyMomentum extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of ResourceApplyMomentum
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyMomentum", scope.makeOpName("ResourceApplyMomentum"));
     opBuilder.addInput(var.asOutput());

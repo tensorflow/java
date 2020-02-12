@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -104,6 +106,7 @@ public final class EncodeProto extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of EncodeProto
    */
+  @Endpoint(describeByClass = true)
   public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values, List<String> fieldNames, String messageType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());

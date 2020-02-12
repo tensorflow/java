@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -69,6 +70,7 @@ public final class ResourceSparseApplyProximalGradientDescent extends PrimitiveO
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalGradientDescent
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalGradientDescent create(Scope scope, Operand<?> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalGradientDescent", scope.makeOpName("ResourceSparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());

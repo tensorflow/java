@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,7 @@ public final class DeepCopy<T extends TType> extends PrimitiveOp implements Oper
    * @param x The source tensor of type `T`.
    * @return a new instance of DeepCopy
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
     opBuilder.addInput(x.asOutput());

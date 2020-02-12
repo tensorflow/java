@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -49,6 +51,7 @@ public final class ZipDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of ZipDataset
    */
+  @Endpoint(describeByClass = true)
   public static ZipDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZipDataset", scope.makeOpName("ZipDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));

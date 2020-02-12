@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -100,6 +101,7 @@ public final class Where extends PrimitiveOp implements Operand<TInt64> {
    * @param condition 
    * @return a new instance of Where
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Where create(Scope scope, Operand<T> condition) {
     OperationBuilder opBuilder = scope.env().opBuilder("Where", scope.makeOpName("Where"));
     opBuilder.addInput(condition.asOutput());

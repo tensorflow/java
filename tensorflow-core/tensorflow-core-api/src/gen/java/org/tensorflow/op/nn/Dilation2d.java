@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -73,6 +74,7 @@ public final class Dilation2d<T extends TNumber> extends PrimitiveOp implements 
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2d
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Dilation2d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2D", scope.makeOpName("Dilation2d"));
     opBuilder.addInput(input.asOutput());

@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -37,6 +39,7 @@ public final class TensorForestTreeDeserialize extends PrimitiveOp {
    * @param treeConfig Serialied proto string of the boosted_trees.Tree proto.
    * @return a new instance of TensorForestTreeDeserialize
    */
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
     opBuilder.addInput(treeHandle.asOutput());

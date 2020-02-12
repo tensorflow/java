@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -48,6 +49,7 @@ public final class SerializeSparse<U extends TType> extends PrimitiveOp implemen
    * (default) and `variant`.
    * @return a new instance of SerializeSparse
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeSparse", scope.makeOpName("SerializeSparse"));
     opBuilder.addInput(sparseIndices.asOutput());
@@ -67,6 +69,7 @@ public final class SerializeSparse<U extends TType> extends PrimitiveOp implemen
    * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
    * @return a new instance of SerializeSparse
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SerializeSparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
     return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
   }

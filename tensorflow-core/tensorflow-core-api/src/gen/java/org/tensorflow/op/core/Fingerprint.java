@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -72,6 +73,7 @@ public final class Fingerprint extends PrimitiveOp implements Operand<TUint8> {
    * `farmhash::fingerprint64`.
    * @return a new instance of Fingerprint
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());

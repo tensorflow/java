@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -62,6 +63,7 @@ public final class SparseSoftmax<T extends TNumber> extends PrimitiveOp implemen
    * @param spShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseSoftmax
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> SparseSoftmax<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmax", scope.makeOpName("SparseSoftmax"));
     opBuilder.addInput(spIndices.asOutput());

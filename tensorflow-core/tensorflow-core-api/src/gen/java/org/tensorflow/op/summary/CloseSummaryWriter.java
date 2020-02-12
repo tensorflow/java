@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  */
@@ -34,6 +36,7 @@ public final class CloseSummaryWriter extends PrimitiveOp {
    * @param writer 
    * @return a new instance of CloseSummaryWriter
    */
+  @Endpoint(describeByClass = true)
   public static CloseSummaryWriter create(Scope scope, Operand<?> writer) {
     OperationBuilder opBuilder = scope.env().opBuilder("CloseSummaryWriter", scope.makeOpName("CloseSummaryWriter"));
     opBuilder.addInput(writer.asOutput());

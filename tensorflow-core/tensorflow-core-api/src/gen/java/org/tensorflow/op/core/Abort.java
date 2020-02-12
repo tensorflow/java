@@ -21,6 +21,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -69,6 +70,7 @@ public final class Abort extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Abort
    */
+  @Endpoint(describeByClass = true)
   public static Abort create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abort", scope.makeOpName("Abort"));
     opBuilder = scope.applyControlDependencies(opBuilder);

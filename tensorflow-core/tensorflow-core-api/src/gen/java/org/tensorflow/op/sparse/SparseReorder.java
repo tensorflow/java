@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -54,6 +55,7 @@ public final class SparseReorder<T extends TType> extends PrimitiveOp {
    * @param inputShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseReorder
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
     opBuilder.addInput(inputIndices.asOutput());

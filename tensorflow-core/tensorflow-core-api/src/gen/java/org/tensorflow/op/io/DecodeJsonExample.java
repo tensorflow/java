@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -47,6 +48,7 @@ public final class DecodeJsonExample extends PrimitiveOp implements Operand<TStr
    * mapping of the Example proto.
    * @return a new instance of DecodeJsonExample
    */
+  @Endpoint(describeByClass = true)
   public static DecodeJsonExample create(Scope scope, Operand<TString> jsonExamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJSONExample", scope.makeOpName("DecodeJsonExample"));
     opBuilder.addInput(jsonExamples.asOutput());

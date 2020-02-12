@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * An op which enqueues prelinearized buffer into TPU infeed.
@@ -56,6 +58,7 @@ public final class InfeedEnqueuePrelinearizedBuffer extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of InfeedEnqueuePrelinearizedBuffer
    */
+  @Endpoint(describeByClass = true)
   public static InfeedEnqueuePrelinearizedBuffer create(Scope scope, Operand<?> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueuePrelinearizedBuffer", scope.makeOpName("InfeedEnqueuePrelinearizedBuffer"));
     opBuilder.addInput(input.asOutput());

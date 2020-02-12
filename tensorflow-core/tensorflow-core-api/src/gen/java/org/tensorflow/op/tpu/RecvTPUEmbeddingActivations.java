@@ -26,6 +26,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -49,6 +51,7 @@ public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements It
    * @param config Serialized TPUEmbeddingConfiguration proto.
    * @return a new instance of RecvTPUEmbeddingActivations
    */
+  @Endpoint(describeByClass = true)
   public static RecvTPUEmbeddingActivations create(Scope scope, Long numOutputs, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecvTPUEmbeddingActivations", scope.makeOpName("RecvTPUEmbeddingActivations"));
     opBuilder = scope.applyControlDependencies(opBuilder);

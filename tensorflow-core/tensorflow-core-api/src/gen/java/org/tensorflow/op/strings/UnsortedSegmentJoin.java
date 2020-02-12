@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -91,6 +92,7 @@ public final class UnsortedSegmentJoin extends PrimitiveOp implements Operand<TS
    * @param options carries optional attributes values
    * @return a new instance of UnsortedSegmentJoin
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
     opBuilder.addInput(inputs.asOutput());

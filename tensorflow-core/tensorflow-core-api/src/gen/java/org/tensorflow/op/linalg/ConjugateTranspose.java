@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -47,6 +48,7 @@ public final class ConjugateTranspose<T extends TType> extends PrimitiveOp imple
    * @param perm 
    * @return a new instance of ConjugateTranspose
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -71,6 +72,7 @@ public final class ApplyProximalAdagrad<T extends TType> extends PrimitiveOp imp
    * @param options carries optional attributes values
    * @return a new instance of ApplyProximalAdagrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalAdagrad", scope.makeOpName("ApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());

@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -95,6 +96,7 @@ public final class MapStage extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of MapStage
    */
+  @Endpoint(describeByClass = true)
   public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
     opBuilder.addInput(key.asOutput());

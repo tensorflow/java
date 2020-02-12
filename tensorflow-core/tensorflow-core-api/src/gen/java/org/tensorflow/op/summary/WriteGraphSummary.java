@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
@@ -38,6 +40,7 @@ public final class WriteGraphSummary extends PrimitiveOp {
    * @param tensor 
    * @return a new instance of WriteGraphSummary
    */
+  @Endpoint(describeByClass = true)
   public static WriteGraphSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteGraphSummary", scope.makeOpName("WriteGraphSummary"));
     opBuilder.addInput(writer.asOutput());

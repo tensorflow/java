@@ -28,6 +28,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -76,6 +77,7 @@ public final class MlirPassthroughOp extends PrimitiveOp implements Iterable<Ope
    * @param Toutputs 
    * @return a new instance of MlirPassthroughOp
    */
+  @Endpoint(describeByClass = true)
   public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<DataType<?>> Toutputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MlirPassthroughOp", scope.makeOpName("MlirPassthroughOp"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

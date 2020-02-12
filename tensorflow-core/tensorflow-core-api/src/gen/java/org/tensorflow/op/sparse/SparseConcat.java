@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -89,6 +90,7 @@ public final class SparseConcat<T extends TType> extends PrimitiveOp {
    * where rank is the number of dimensions in each input `SparseTensor`.
    * @return a new instance of SparseConcat
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseConcat<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
     opBuilder.addInputList(Operands.asOutputs(indices));

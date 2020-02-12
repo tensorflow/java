@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -49,6 +50,7 @@ public final class DecodeGif extends PrimitiveOp implements Operand<TUint8> {
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
    */
+  @Endpoint(describeByClass = true)
   public static DecodeGif create(Scope scope, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeGif", scope.makeOpName("DecodeGif"));
     opBuilder.addInput(contents.asOutput());

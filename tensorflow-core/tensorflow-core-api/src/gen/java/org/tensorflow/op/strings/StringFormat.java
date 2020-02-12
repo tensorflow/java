@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -80,6 +81,7 @@ public final class StringFormat extends PrimitiveOp implements Operand<TString> 
    * @param options carries optional attributes values
    * @return a new instance of StringFormat
    */
+  @Endpoint(describeByClass = true)
   public static StringFormat create(Scope scope, Iterable<Operand<?>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringFormat", scope.makeOpName("StringFormat"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

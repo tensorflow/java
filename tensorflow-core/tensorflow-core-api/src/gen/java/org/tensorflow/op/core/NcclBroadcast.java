@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -52,6 +54,7 @@ public final class NcclBroadcast<T extends TNumber> extends PrimitiveOp implemen
    * @param shape 
    * @return a new instance of NcclBroadcast
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
     opBuilder.addInput(input.asOutput());

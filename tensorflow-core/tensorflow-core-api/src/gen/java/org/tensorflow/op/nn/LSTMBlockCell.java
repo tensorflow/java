@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -110,6 +112,7 @@ public final class LSTMBlockCell<T extends TNumber> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of LSTMBlockCell
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());

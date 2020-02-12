@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -45,6 +47,7 @@ public final class NearestNeighbors extends PrimitiveOp {
    * only m centers are returned.
    * @return a new instance of NearestNeighbors
    */
+  @Endpoint(describeByClass = true)
   public static NearestNeighbors create(Scope scope, Operand<TFloat32> points, Operand<TFloat32> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
     opBuilder.addInput(points.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,7 @@ public final class CountUpTo<T extends TNumber> extends PrimitiveOp implements O
    * 'OutOfRange' error.
    * @return a new instance of CountUpTo
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
     opBuilder.addInput(ref.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -42,6 +43,7 @@ public final class TensorListLength extends PrimitiveOp implements Operand<TInt3
    * @param inputHandle 
    * @return a new instance of TensorListLength
    */
+  @Endpoint(describeByClass = true)
   public static TensorListLength create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListLength", scope.makeOpName("TensorListLength"));
     opBuilder.addInput(inputHandle.asOutput());

@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -56,6 +58,7 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends PrimitiveOp 
    * @param maxSplits the number of nodes that can be split in the whole tree. Used as a dimension of output tensors.
    * @return a new instance of BoostedTreesCalculateBestGainsPerFeature
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesCalculateBestGainsPerFeature create(Scope scope, Operand<TInt32> nodeIdRange, Iterable<Operand<TFloat32>> statsSummaryList, Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight, Long maxSplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestGainsPerFeature", scope.makeOpName("BoostedTreesCalculateBestGainsPerFeature"));
     opBuilder.addInput(nodeIdRange.asOutput());

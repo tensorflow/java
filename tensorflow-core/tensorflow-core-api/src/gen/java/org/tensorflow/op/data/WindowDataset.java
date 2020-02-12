@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
@@ -51,6 +53,7 @@ public final class WindowDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of WindowDataset
    */
+  @Endpoint(describeByClass = true)
   public static WindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> size, Operand<TInt64> shift, Operand<TInt64> stride, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("WindowDataset", scope.makeOpName("WindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());

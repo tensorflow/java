@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
@@ -43,6 +44,7 @@ public final class PlaceholderWithDefault<T extends TType> extends PrimitiveOp i
    * @param shape The (possibly partial) shape of the tensor.
    * @return a new instance of PlaceholderWithDefault
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("PlaceholderWithDefault", scope.makeOpName("PlaceholderWithDefault"));
     opBuilder.addInput(input.asOutput());

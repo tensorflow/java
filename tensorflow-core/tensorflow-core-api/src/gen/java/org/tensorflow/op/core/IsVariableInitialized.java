@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
@@ -42,6 +43,7 @@ public final class IsVariableInitialized extends PrimitiveOp implements Operand<
    * @param ref Should be from a `Variable` node. May be uninitialized.
    * @return a new instance of IsVariableInitialized
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> IsVariableInitialized create(Scope scope, Operand<T> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());

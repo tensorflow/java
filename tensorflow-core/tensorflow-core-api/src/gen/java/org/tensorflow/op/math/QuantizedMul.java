@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -49,6 +50,7 @@ public final class QuantizedMul<V extends TType> extends PrimitiveOp {
    * @param Toutput 
    * @return a new instance of QuantizedMul
    */
+  @Endpoint(describeByClass = true)
   public static <V extends TType, T extends TType, U extends TType> QuantizedMul<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMul", scope.makeOpName("QuantizedMul"));
     opBuilder.addInput(x.asOutput());

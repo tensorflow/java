@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -58,6 +59,7 @@ public final class ToHashBucketStrong extends PrimitiveOp implements Operand<TIn
    * elements.
    * @return a new instance of ToHashBucketStrong
    */
+  @Endpoint(describeByClass = true)
   public static ToHashBucketStrong create(Scope scope, Operand<TString> input, Long numBuckets, List<Long> key) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketStrong", scope.makeOpName("ToHashBucketStrong"));
     opBuilder.addInput(input.asOutput());

@@ -26,6 +26,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -52,6 +53,7 @@ public final class SplitV<T extends TType> extends PrimitiveOp implements Iterab
    * @param numSplit 
    * @return a new instance of SplitV
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> SplitV<T> create(Scope scope, Operand<T> value, Operand<U> sizeSplits, Operand<TInt32> axis, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("SplitV", scope.makeOpName("SplitV"));
     opBuilder.addInput(value.asOutput());

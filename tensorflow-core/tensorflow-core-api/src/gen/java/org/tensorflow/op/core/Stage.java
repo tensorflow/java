@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -92,6 +93,7 @@ public final class Stage extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of Stage
    */
+  @Endpoint(describeByClass = true)
   public static Stage create(Scope scope, Iterable<Operand<?>> values, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Stage", scope.makeOpName("Stage"));
     opBuilder.addInputList(Operands.asOutputs(values));

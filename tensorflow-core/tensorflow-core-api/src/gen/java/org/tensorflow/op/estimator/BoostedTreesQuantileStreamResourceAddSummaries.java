@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -42,6 +44,7 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends Primit
    * @param summaries string; List of Rank 2 Tensor each containing the summaries for a single feature.
    * @return a new instance of BoostedTreesQuantileStreamResourceAddSummaries
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceAddSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> summaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceAddSummaries", scope.makeOpName("BoostedTreesQuantileStreamResourceAddSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());

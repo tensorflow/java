@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -70,6 +71,7 @@ public final class Fill<U extends TType> extends PrimitiveOp implements Operand<
    * @end_compatibility
    * @return a new instance of Fill
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> Fill<U> create(Scope scope, Operand<T> dims, Operand<U> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fill", scope.makeOpName("Fill"));
     opBuilder.addInput(dims.asOutput());

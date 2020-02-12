@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -41,6 +43,7 @@ public final class Exit<T extends TType> extends PrimitiveOp implements Operand<
    * @param data The tensor to be made available to the parent frame.
    * @return a new instance of Exit
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Exit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("Exit", scope.makeOpName("Exit"));
     opBuilder.addInput(data.asOutput());

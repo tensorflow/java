@@ -22,6 +22,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  */
@@ -33,6 +35,7 @@ public final class AnonymousMemoryCache extends PrimitiveOp {
    * @param scope current scope
    * @return a new instance of AnonymousMemoryCache
    */
+  @Endpoint(describeByClass = true)
   public static AnonymousMemoryCache create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousMemoryCache", scope.makeOpName("AnonymousMemoryCache"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -44,6 +45,7 @@ public final class Ifft<T extends TType> extends PrimitiveOp implements Operand<
    * @param input A complex tensor.
    * @return a new instance of Ifft
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Ifft<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IFFT", scope.makeOpName("Ifft"));
     opBuilder.addInput(input.asOutput());

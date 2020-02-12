@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -50,6 +51,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends PrimitiveOp imp
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSqrtN
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> SparseSegmentSqrtN<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtN", scope.makeOpName("SparseSegmentSqrtN"));
     opBuilder.addInput(data.asOutput());

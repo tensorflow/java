@@ -26,6 +26,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -64,6 +66,7 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
    * @param Tsplits 
    * @return a new instance of RaggedTensorFromVariant
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput());
@@ -87,6 +90,7 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
    * @param Tvalues 
    * @return a new instance of RaggedTensorFromVariant
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues) {
     return create(scope, encodedRagged, inputRaggedRank, outputRaggedRank, Tvalues, TInt64.DTYPE);
   }

@@ -22,6 +22,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -80,6 +82,7 @@ public final class RetrieveTPUEmbeddingMomentumParameters extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of RetrieveTPUEmbeddingMomentumParameters
    */
+  @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingMomentumParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingMomentumParameters", scope.makeOpName("RetrieveTPUEmbeddingMomentumParameters"));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -22,6 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -44,6 +45,7 @@ public final class AccumulatorApplyGradient extends PrimitiveOp {
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of AccumulatorApplyGradient
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<T> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorApplyGradient", scope.makeOpName("AccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,6 +38,7 @@ public final class WrapDatasetVariant extends PrimitiveOp implements Operand<TTy
    * @param inputHandle 
    * @return a new instance of WrapDatasetVariant
    */
+  @Endpoint(describeByClass = true)
   public static WrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("WrapDatasetVariant", scope.makeOpName("WrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());

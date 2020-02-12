@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -47,6 +48,7 @@ public final class SparseTensorDenseAdd<U extends TType> extends PrimitiveOp imp
    * @param b `ndims`-D Tensor.  With shape `a_shape`.
    * @return a new instance of SparseTensorDenseAdd
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -121,6 +122,7 @@ public final class UnicodeTranscode extends PrimitiveOp implements Operand<TStri
    * @param options carries optional attributes values
    * @return a new instance of UnicodeTranscode
    */
+  @Endpoint(describeByClass = true)
   public static UnicodeTranscode create(Scope scope, Operand<TString> input, String inputEncoding, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeTranscode", scope.makeOpName("UnicodeTranscode"));
     opBuilder.addInput(input.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -46,6 +47,7 @@ public final class QuantizedRelu6<U extends TType> extends PrimitiveOp {
    * @param outType 
    * @return a new instance of QuantizedRelu6
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> QuantizedRelu6<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu6", scope.makeOpName("QuantizedRelu6"));
     opBuilder.addInput(features.asOutput());

@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -80,6 +82,7 @@ public final class BoostedTreesUpdateEnsembleV2 extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesUpdateEnsembleV2
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesUpdateEnsembleV2 create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> dimensionIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Iterable<Operand<TString>> splitTypes, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Operand<TInt32> pruningMode, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsembleV2", scope.makeOpName("BoostedTreesUpdateEnsembleV2"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());

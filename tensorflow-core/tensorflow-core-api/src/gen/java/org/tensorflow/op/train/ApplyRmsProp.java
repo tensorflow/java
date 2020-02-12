@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -81,6 +82,7 @@ public final class ApplyRmsProp<T extends TType> extends PrimitiveOp implements 
    * @param options carries optional attributes values
    * @return a new instance of ApplyRmsProp
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyRMSProp", scope.makeOpName("ApplyRmsProp"));
     opBuilder.addInput(var.asOutput());

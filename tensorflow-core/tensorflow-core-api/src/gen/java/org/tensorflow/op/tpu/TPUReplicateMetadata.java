@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Metadata indicating how the TPU computation should be replicated.
@@ -129,6 +131,7 @@ public final class TPUReplicateMetadata extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TPUReplicateMetadata
    */
+  @Endpoint(describeByClass = true)
   public static TPUReplicateMetadata create(Scope scope, Long numReplicas, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicateMetadata", scope.makeOpName("TPUReplicateMetadata"));
     opBuilder = scope.applyControlDependencies(opBuilder);

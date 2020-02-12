@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -50,6 +51,7 @@ public final class AddN<T extends TType> extends PrimitiveOp implements Operand<
    * @param inputs 
    * @return a new instance of AddN
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

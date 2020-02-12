@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -37,6 +39,7 @@ public final class StatsAggregatorSummary extends PrimitiveOp implements Operand
    * @param iterator 
    * @return a new instance of StatsAggregatorSummary
    */
+  @Endpoint(describeByClass = true)
   public static StatsAggregatorSummary create(Scope scope, Operand<?> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSummary", scope.makeOpName("StatsAggregatorSummary"));
     opBuilder.addInput(iterator.asOutput());

@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -153,6 +154,7 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends Primitiv
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNCanonicalToParams
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> CudnnRNNCanonicalToParams<T> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Iterable<Operand<T>> weights, Iterable<Operand<T>> biases, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNCanonicalToParamsV2", scope.makeOpName("CudnnRNNCanonicalToParams"));
     opBuilder.addInput(numLayers.asOutput());

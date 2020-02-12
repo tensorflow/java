@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -39,6 +40,7 @@ public final class VarIsInitializedOp extends PrimitiveOp implements Operand<TBo
    * @param resource the input resource handle.
    * @return a new instance of VarIsInitializedOp
    */
+  @Endpoint(describeByClass = true)
   public static VarIsInitializedOp create(Scope scope, Operand<?> resource) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarIsInitializedOp", scope.makeOpName("VarIsInitializedOp"));
     opBuilder.addInput(resource.asOutput());

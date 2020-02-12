@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -46,6 +47,7 @@ public final class Relu<T extends TType> extends PrimitiveOp implements Operand<
    * @param features 
    * @return a new instance of Relu
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
     opBuilder.addInput(features.asOutput());

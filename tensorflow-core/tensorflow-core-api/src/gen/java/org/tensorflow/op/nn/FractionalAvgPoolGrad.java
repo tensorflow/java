@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -81,6 +83,7 @@ public final class FractionalAvgPoolGrad<T extends TNumber> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of FractionalAvgPoolGrad
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> FractionalAvgPoolGrad<T> create(Scope scope, Operand<TInt64> origInputTensorShape, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPoolGrad", scope.makeOpName("FractionalAvgPoolGrad"));
     opBuilder.addInput(origInputTensorShape.asOutput());

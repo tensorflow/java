@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -146,6 +147,7 @@ public final class BatchToSpaceNd<T extends TType> extends PrimitiveOp implement
    * 
    * @return a new instance of BatchToSpaceNd
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber, V extends TNumber> BatchToSpaceNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> crops) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpaceND", scope.makeOpName("BatchToSpaceNd"));
     opBuilder.addInput(input.asOutput());

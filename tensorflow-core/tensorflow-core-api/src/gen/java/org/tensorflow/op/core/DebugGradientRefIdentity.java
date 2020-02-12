@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -43,6 +45,7 @@ public final class DebugGradientRefIdentity<T extends TType> extends PrimitiveOp
    * @param input 
    * @return a new instance of DebugGradientRefIdentity
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientRefIdentity", scope.makeOpName("DebugGradientRefIdentity"));
     opBuilder.addInput(input.asOutput());

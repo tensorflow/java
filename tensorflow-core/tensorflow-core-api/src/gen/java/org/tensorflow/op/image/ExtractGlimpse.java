@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -125,6 +126,7 @@ public final class ExtractGlimpse extends PrimitiveOp implements Operand<TFloat3
    * @param options carries optional attributes values
    * @return a new instance of ExtractGlimpse
    */
+  @Endpoint(describeByClass = true)
   public static ExtractGlimpse create(Scope scope, Operand<TFloat32> input, Operand<TInt32> size, Operand<TFloat32> offsets, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpse", scope.makeOpName("ExtractGlimpse"));
     opBuilder.addInput(input.asOutput());

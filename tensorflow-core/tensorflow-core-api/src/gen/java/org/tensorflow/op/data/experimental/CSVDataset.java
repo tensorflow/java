@@ -25,6 +25,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
@@ -51,6 +53,7 @@ public final class CSVDataset extends PrimitiveOp implements Operand<TType> {
    * @param outputShapes 
    * @return a new instance of CSVDataset
    */
+  @Endpoint(describeByClass = true)
   public static CSVDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header, Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue, Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalCSVDataset", scope.makeOpName("CSVDataset"));
     opBuilder.addInput(filenames.asOutput());

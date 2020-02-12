@@ -24,6 +24,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -94,6 +96,7 @@ public final class QuantizedMatMulWithBias<W extends TType> extends PrimitiveOp 
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMulWithBias
    */
+  @Endpoint(describeByClass = true)
   public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBias<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBias", scope.makeOpName("QuantizedMatMulWithBias"));
     opBuilder.addInput(a.asOutput());

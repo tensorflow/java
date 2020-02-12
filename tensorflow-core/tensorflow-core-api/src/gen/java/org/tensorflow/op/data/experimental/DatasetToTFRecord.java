@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -39,6 +41,7 @@ public final class DatasetToTFRecord extends PrimitiveOp {
    * compression), (ii) "ZLIB", or (iii) "GZIP".
    * @return a new instance of DatasetToTFRecord
    */
+  @Endpoint(describeByClass = true)
   public static DatasetToTFRecord create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDatasetToTFRecord", scope.makeOpName("DatasetToTFRecord"));
     opBuilder.addInput(inputDataset.asOutput());

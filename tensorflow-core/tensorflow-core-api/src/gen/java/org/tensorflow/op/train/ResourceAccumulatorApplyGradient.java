@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +43,7 @@ public final class ResourceAccumulatorApplyGradient extends PrimitiveOp {
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of ResourceAccumulatorApplyGradient
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ResourceAccumulatorApplyGradient create(Scope scope, Operand<?> handle, Operand<TInt64> localStep, Operand<T> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorApplyGradient", scope.makeOpName("ResourceAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());

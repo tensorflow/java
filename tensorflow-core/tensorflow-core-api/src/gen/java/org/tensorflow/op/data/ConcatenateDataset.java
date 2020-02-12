@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
@@ -43,6 +45,7 @@ public final class ConcatenateDataset extends PrimitiveOp implements Operand<TTy
    * @param outputShapes 
    * @return a new instance of ConcatenateDataset
    */
+  @Endpoint(describeByClass = true)
   public static ConcatenateDataset create(Scope scope, Operand<?> inputDataset, Operand<?> anotherDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatenateDataset", scope.makeOpName("ConcatenateDataset"));
     opBuilder.addInput(inputDataset.asOutput());

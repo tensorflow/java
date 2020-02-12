@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -69,6 +71,7 @@ public final class RebatchDataset extends PrimitiveOp implements Operand<TType> 
    * @param options carries optional attributes values
    * @return a new instance of RebatchDataset
    */
+  @Endpoint(describeByClass = true)
   public static RebatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numReplicas, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalRebatchDataset", scope.makeOpName("RebatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());

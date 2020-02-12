@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -85,6 +86,7 @@ public final class StringSplit extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of StringSplit
    */
+  @Endpoint(describeByClass = true)
   public static StringSplit create(Scope scope, Operand<TString> input, Operand<TString> sep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
     opBuilder.addInput(input.asOutput());

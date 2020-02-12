@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -162,6 +163,7 @@ public final class SparseMatrixSparseMatMul extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of SparseMatrixSparseMatMul
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseMatMul", scope.makeOpName("SparseMatrixSparseMatMul"));
     opBuilder.addInput(a.asOutput());

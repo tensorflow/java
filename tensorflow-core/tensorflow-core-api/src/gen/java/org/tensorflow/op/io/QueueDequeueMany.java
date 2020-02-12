@@ -27,6 +27,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -82,6 +83,7 @@ public final class QueueDequeueMany extends PrimitiveOp implements Iterable<Oper
    * @param options carries optional attributes values
    * @return a new instance of QueueDequeueMany
    */
+  @Endpoint(describeByClass = true)
   public static QueueDequeueMany create(Scope scope, Operand<?> handle, Operand<TInt32> n, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueManyV2", scope.makeOpName("QueueDequeueMany"));
     opBuilder.addInput(handle.asOutput());

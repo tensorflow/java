@@ -27,6 +27,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -46,6 +48,7 @@ public final class BoostedTreesMakeQuantileSummaries extends PrimitiveOp impleme
    * @param epsilon float; The required maximum approximation error.
    * @return a new instance of BoostedTreesMakeQuantileSummaries
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesMakeQuantileSummaries create(Scope scope, Iterable<Operand<TFloat32>> floatValues, Operand<TFloat32> exampleWeights, Operand<TFloat32> epsilon) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeQuantileSummaries", scope.makeOpName("BoostedTreesMakeQuantileSummaries"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));

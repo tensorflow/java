@@ -22,6 +22,8 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * A container for an iterator resource.
@@ -36,6 +38,7 @@ public final class DeleteIterator extends PrimitiveOp {
    * @param deleter A variant deleter.
    * @return a new instance of DeleteIterator
    */
+  @Endpoint(describeByClass = true)
   public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
     opBuilder.addInput(handle.asOutput());

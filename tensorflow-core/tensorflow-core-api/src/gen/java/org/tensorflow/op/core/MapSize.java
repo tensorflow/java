@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -88,6 +89,7 @@ public final class MapSize extends PrimitiveOp implements Operand<TInt32> {
    * @param options carries optional attributes values
    * @return a new instance of MapSize
    */
+  @Endpoint(describeByClass = true)
   public static MapSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapSize", scope.makeOpName("MapSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

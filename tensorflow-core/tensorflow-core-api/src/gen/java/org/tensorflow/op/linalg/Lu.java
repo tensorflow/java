@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -65,6 +66,7 @@ public final class Lu<T extends TType, U extends TNumber> extends PrimitiveOp {
    * @param outputIdxType 
    * @return a new instance of Lu
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Lu<T, U> create(Scope scope, Operand<T> input, DataType<U> outputIdxType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lu", scope.makeOpName("Lu"));
     opBuilder.addInput(input.asOutput());
@@ -81,6 +83,7 @@ public final class Lu<T extends TType, U extends TNumber> extends PrimitiveOp {
    * size `[M, M]`.
    * @return a new instance of Lu
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Lu<T, TInt32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TInt32.DTYPE);
   }

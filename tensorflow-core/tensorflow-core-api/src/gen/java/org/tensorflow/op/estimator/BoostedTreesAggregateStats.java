@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -45,6 +47,7 @@ public final class BoostedTreesAggregateStats extends PrimitiveOp implements Ope
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesAggregateStats
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> feature, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesAggregateStats", scope.makeOpName("BoostedTreesAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());

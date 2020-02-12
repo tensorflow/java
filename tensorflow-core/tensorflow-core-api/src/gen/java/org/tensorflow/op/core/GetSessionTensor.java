@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,7 @@ public final class GetSessionTensor<T extends TType> extends PrimitiveOp impleme
    * @param dtype The type of the output value.
    * @return a new instance of GetSessionTensor
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
     opBuilder.addInput(handle.asOutput());

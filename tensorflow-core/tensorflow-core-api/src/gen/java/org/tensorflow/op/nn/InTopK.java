@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
@@ -59,6 +60,7 @@ public final class InTopK extends PrimitiveOp implements Operand<TBool> {
    * @param k Number of top elements to look at for computing precision.
    * @return a new instance of InTopK
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions, Operand<T> targets, Operand<T> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("InTopKV2", scope.makeOpName("InTopK"));
     opBuilder.addInput(predictions.asOutput());

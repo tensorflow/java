@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -39,6 +40,7 @@ public final class LogicalNot extends PrimitiveOp implements Operand<TBool> {
    * @param x 
    * @return a new instance of LogicalNot
    */
+  @Endpoint(describeByClass = true)
   public static LogicalNot create(Scope scope, Operand<TBool> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalNot", scope.makeOpName("LogicalNot"));
     opBuilder.addInput(x.asOutput());

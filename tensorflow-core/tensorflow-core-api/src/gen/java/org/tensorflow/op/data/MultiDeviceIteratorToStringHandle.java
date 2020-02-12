@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -37,6 +39,7 @@ public final class MultiDeviceIteratorToStringHandle extends PrimitiveOp impleme
    * @param multiDeviceIterator A MultiDeviceIterator resource.
    * @return a new instance of MultiDeviceIteratorToStringHandle
    */
+  @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorToStringHandle create(Scope scope, Operand<?> multiDeviceIterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorToStringHandle", scope.makeOpName("MultiDeviceIteratorToStringHandle"));
     opBuilder.addInput(multiDeviceIterator.asOutput());

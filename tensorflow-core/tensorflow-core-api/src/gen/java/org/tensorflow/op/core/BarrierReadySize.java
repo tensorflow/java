@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -40,6 +41,7 @@ public final class BarrierReadySize extends PrimitiveOp implements Operand<TInt3
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierReadySize
    */
+  @Endpoint(describeByClass = true)
   public static BarrierReadySize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierReadySize", scope.makeOpName("BarrierReadySize"));
     opBuilder.addInput(handle.asOutput());

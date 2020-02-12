@@ -24,6 +24,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -46,6 +48,7 @@ public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements O
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesMakeStatsSummary
    */
+  @Endpoint(describeByClass = true)
   public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Iterable<Operand<TInt32>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeStatsSummary", scope.makeOpName("BoostedTreesMakeStatsSummary"));
     opBuilder.addInput(nodeIds.asOutput());

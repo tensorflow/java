@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
@@ -81,6 +82,7 @@ public final class TensorArrayConcat<T extends TType> extends PrimitiveOp {
    * @param options carries optional attributes values
    * @return a new instance of TensorArrayConcat
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());

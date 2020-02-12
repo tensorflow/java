@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +40,7 @@ public final class SerializeIterator extends PrimitiveOp implements Operand<TTyp
    * @param resourceHandle A handle to an iterator resource.
    * @return a new instance of SerializeIterator
    */
+  @Endpoint(describeByClass = true)
   public static SerializeIterator create(Scope scope, Operand<?> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeIterator", scope.makeOpName("SerializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());

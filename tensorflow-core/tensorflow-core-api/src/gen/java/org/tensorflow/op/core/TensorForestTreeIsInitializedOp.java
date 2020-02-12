@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
@@ -37,6 +39,7 @@ public final class TensorForestTreeIsInitializedOp extends PrimitiveOp implement
    * @param treeHandle Handle to the tree.
    * @return a new instance of TensorForestTreeIsInitializedOp
    */
+  @Endpoint(describeByClass = true)
   public static TensorForestTreeIsInitializedOp create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeIsInitializedOp", scope.makeOpName("TensorForestTreeIsInitializedOp"));
     opBuilder.addInput(treeHandle.asOutput());

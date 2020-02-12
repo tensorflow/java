@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -49,6 +50,7 @@ public final class Merge<T extends TType> extends PrimitiveOp {
    * @param inputs The input tensors, exactly one of which will become available.
    * @return a new instance of Merge
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Merge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("Merge", scope.makeOpName("Merge"));
     opBuilder.addInputList(Operands.asOutputs(inputs));

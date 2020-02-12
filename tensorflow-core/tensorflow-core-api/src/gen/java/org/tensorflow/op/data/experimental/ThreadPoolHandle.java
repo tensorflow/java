@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -79,6 +81,7 @@ public final class ThreadPoolHandle extends PrimitiveOp implements Operand<TType
    * @param options carries optional attributes values
    * @return a new instance of ThreadPoolHandle
    */
+  @Endpoint(describeByClass = true)
   public static ThreadPoolHandle create(Scope scope, Long numThreads, String displayName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalThreadPoolHandle", scope.makeOpName("ThreadPoolHandle"));
     opBuilder = scope.applyControlDependencies(opBuilder);

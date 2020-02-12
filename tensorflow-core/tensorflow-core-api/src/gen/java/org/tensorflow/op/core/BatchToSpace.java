@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -59,6 +60,7 @@ public final class BatchToSpace<T extends TType> extends PrimitiveOp implements 
    * @param blockSize 
    * @return a new instance of BatchToSpace
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpace", scope.makeOpName("BatchToSpace"));
     opBuilder.addInput(input.asOutput());

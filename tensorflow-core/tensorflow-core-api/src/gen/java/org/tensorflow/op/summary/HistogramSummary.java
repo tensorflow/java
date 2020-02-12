@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -48,6 +49,7 @@ public final class HistogramSummary extends PrimitiveOp implements Operand<TStri
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> HistogramSummary create(Scope scope, Operand<TString> tag, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramSummary", scope.makeOpName("HistogramSummary"));
     opBuilder.addInput(tag.asOutput());

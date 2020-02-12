@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -51,6 +52,7 @@ public final class TensorArrayGradWithShape extends PrimitiveOp {
    * to return.
    * @return a new instance of TensorArrayGradWithShape
    */
+  @Endpoint(describeByClass = true)
   public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradWithShape", scope.makeOpName("TensorArrayGradWithShape"));
     opBuilder.addInput(handle.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -42,6 +43,7 @@ public final class Erf<T extends TNumber> extends PrimitiveOp implements Operand
    * @param x 
    * @return a new instance of Erf
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Erf<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erf", scope.makeOpName("Erf"));
     opBuilder.addInput(x.asOutput());

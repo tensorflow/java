@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -49,6 +51,7 @@ public final class KmeansPlusPlusInitialization extends PrimitiveOp implements O
    * heuristic is used to sample O(log(num_to_sample)) additional points.
    * @return a new instance of KmeansPlusPlusInitialization
    */
+  @Endpoint(describeByClass = true)
   public static KmeansPlusPlusInitialization create(Scope scope, Operand<TFloat32> points, Operand<TInt64> numToSample, Operand<TInt64> seed, Operand<TInt64> numRetriesPerSample) {
     OperationBuilder opBuilder = scope.env().opBuilder("KmeansPlusPlusInitialization", scope.makeOpName("KmeansPlusPlusInitialization"));
     opBuilder.addInput(points.asOutput());

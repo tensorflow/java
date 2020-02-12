@@ -25,6 +25,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -88,6 +89,7 @@ public final class OrderedMapIncompleteSize extends PrimitiveOp implements Opera
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapIncompleteSize
    */
+  @Endpoint(describeByClass = true)
   public static OrderedMapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapIncompleteSize", scope.makeOpName("OrderedMapIncompleteSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);

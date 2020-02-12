@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -49,6 +50,7 @@ public final class StatefulStandardNormal<U extends TType> extends PrimitiveOp i
    * @param dtype The type of the output.
    * @return a new instance of StatefulStandardNormal
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TType, T extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
@@ -68,6 +70,7 @@ public final class StatefulStandardNormal<U extends TType> extends PrimitiveOp i
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulStandardNormal
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
   }

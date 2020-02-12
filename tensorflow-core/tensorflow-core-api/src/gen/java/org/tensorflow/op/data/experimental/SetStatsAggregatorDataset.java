@@ -25,6 +25,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -45,6 +47,7 @@ public final class SetStatsAggregatorDataset extends PrimitiveOp implements Oper
    * @param outputShapes 
    * @return a new instance of SetStatsAggregatorDataset
    */
+  @Endpoint(describeByClass = true)
   public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<TString> tag, Operand<TString> counterPrefix, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSetStatsAggregatorDataset", scope.makeOpName("SetStatsAggregatorDataset"));
     opBuilder.addInput(inputDataset.asOutput());

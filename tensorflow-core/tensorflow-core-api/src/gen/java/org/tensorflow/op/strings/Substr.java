@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -137,6 +138,7 @@ public final class Substr extends PrimitiveOp implements Operand<TString> {
    * @param options carries optional attributes values
    * @return a new instance of Substr
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Substr", scope.makeOpName("Substr"));
     opBuilder.addInput(input.asOutput());

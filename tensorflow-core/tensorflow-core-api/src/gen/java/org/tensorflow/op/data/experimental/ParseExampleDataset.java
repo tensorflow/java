@@ -26,6 +26,8 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -83,6 +85,7 @@ public final class ParseExampleDataset extends PrimitiveOp implements Operand<TT
    * @param options carries optional attributes values
    * @return a new instance of ParseExampleDataset
    */
+  @Endpoint(describeByClass = true)
   public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalParseExampleDataset", scope.makeOpName("ParseExampleDataset"));
     opBuilder.addInput(inputDataset.asOutput());

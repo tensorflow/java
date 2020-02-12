@@ -23,6 +23,8 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -64,6 +66,7 @@ public final class AllToAll<T extends TType> extends PrimitiveOp implements Oper
    * size(group_assignment.get_shape()[1])
    * @return a new instance of AllToAll
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> AllToAll<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
     OperationBuilder opBuilder = scope.env().opBuilder("AllToAll", scope.makeOpName("AllToAll"));
     opBuilder.addInput(input.asOutput());

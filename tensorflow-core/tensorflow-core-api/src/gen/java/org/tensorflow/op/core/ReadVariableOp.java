@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -50,6 +51,7 @@ public final class ReadVariableOp<T extends TType> extends PrimitiveOp implement
    * @param dtype the dtype of the value.
    * @return a new instance of ReadVariableOp
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
     opBuilder.addInput(resource.asOutput());

@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -50,6 +51,7 @@ public final class ClipByValue<T extends TType> extends PrimitiveOp implements O
    * as `t`. The maximum value to clip by.
    * @return a new instance of ClipByValue
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> ClipByValue<T> create(Scope scope, Operand<T> t, Operand<T> clipValueMin, Operand<T> clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("ClipByValue", scope.makeOpName("ClipByValue"));
     opBuilder.addInput(t.asOutput());

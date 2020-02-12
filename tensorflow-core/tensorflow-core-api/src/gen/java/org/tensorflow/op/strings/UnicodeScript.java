@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -45,6 +46,7 @@ public final class UnicodeScript extends PrimitiveOp implements Operand<TInt32> 
    * @param input A Tensor of int32 Unicode code points.
    * @return a new instance of UnicodeScript
    */
+  @Endpoint(describeByClass = true)
   public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
     opBuilder.addInput(input.asOutput());

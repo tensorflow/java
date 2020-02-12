@@ -23,6 +23,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -55,6 +56,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
     opBuilder.addInput(data.asOutput());

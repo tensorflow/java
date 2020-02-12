@@ -24,6 +24,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -46,6 +47,7 @@ public final class Concat<T extends TType> extends PrimitiveOp implements Operan
    * range [-rank(values), rank(values)).
    * @return a new instance of Concat
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Concat<T> create(Scope scope, Iterable<Operand<T>> values, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatV2", scope.makeOpName("Concat"));
     opBuilder.addInputList(Operands.asOutputs(values));

@@ -24,6 +24,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.PrimitiveOp;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -62,6 +63,7 @@ public final class Irfft2d<U extends TNumber> extends PrimitiveOp implements Ope
    * @param Treal 
    * @return a new instance of Irfft2d
    */
+  @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TType> Irfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT2D", scope.makeOpName("Irfft2d"));
     opBuilder.addInput(input.asOutput());
@@ -79,6 +81,7 @@ public final class Irfft2d<U extends TNumber> extends PrimitiveOp implements Ope
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @return a new instance of Irfft2d
    */
+  @Endpoint(describeByClass = true)
   public static <T extends TType> Irfft2d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.DTYPE);
   }
