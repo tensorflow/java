@@ -34,12 +34,10 @@ import org.tensorflow.types.family.TNumber;
 
 abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
-  private static final float EPSILON_F = 1e-7f;
-
   @Test
   public void initializeTensorsWithZeros() {
     // Allocate a tensor of 32-bits integer of the shape (2, 3, 2)
-    Tensor<T> tensor = allocateTensor(Shape.make(2, 3, 2));
+    Tensor<T> tensor = allocateTensor(Shape.of(2, 3, 2));
     NdArray<U> tensorData = tensor.data();
 
     assertEquals(3, tensorData.rank());
@@ -50,11 +48,11 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
       // Initialize tensor memory with zeros and take a snapshot
       tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(0)));
-      Constant<T> x = tf.constant(tensor);
+      Constant<T> x = tf.val(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
       tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(1)));
-      Constant<T> y = tf.constant(tensor);
+      Constant<T> y = tf.val(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
@@ -69,7 +67,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
     IntNdArray heapData = NdArrays.vectorOf(0, 1, 2, 3);
 
     // Creates a 2x2 matrix
-    try (Tensor<TInt32> tensor = TInt32.ofShape(2, 2)) {
+    try (Tensor<TInt32> tensor = TInt32.tensorOf(Shape.of(2, 2))) {
       IntNdArray tensorData = tensor.data();
 
       // Copy first 2 values of the vector to the first row of the matrix
@@ -95,7 +93,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
         Ops tf = Ops.create(session);
 
         // Compute the power of the tensor by itself
-        Constant<TInt32> x = tf.constant(tensor);
+        Constant<TInt32> x = tf.val(tensor);
         IntNdArray result = tf.math.pow(x, x).data();
 
         // Validate result by computing the same operation in Java

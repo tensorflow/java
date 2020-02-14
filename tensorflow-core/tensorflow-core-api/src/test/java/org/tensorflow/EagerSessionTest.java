@@ -133,6 +133,7 @@ public class EagerSessionTest {
 
   @Test
   public void defaultSession() throws Exception {
+    EagerSession.closeDefaultForTest();
     EagerSession.Options options =
         EagerSession.options().resourceCleanupStrategy(ResourceCleanupStrategy.ON_SESSION_CLOSE);
     EagerSession.initDefault(options);

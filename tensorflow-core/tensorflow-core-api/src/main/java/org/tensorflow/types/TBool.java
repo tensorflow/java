@@ -17,6 +17,7 @@
 
 package org.tensorflow.types;
 
+import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -25,6 +26,7 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.BooleanDataBuffer;
 import org.tensorflow.tools.ndarray.BooleanNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.tools.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
 
@@ -48,7 +50,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> scalarOf(boolean value) {
-    return Tensor.allocate(DTYPE, Shape.scalar(), data -> data.setBoolean(value));
+    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setBoolean(value));
   }
 
   /**
@@ -58,29 +60,10 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static Tensor<TBool> vectorOf(boolean... values) {
-    return Tensor.allocate(DTYPE, Shape.make(values.length), data -> data.write(values));
-  }
-
-  /**
-   * Allocates a new tensor of the given shape.
-   *
-   * @param shape shape of the tensor to allocate
-   * @return the new tensor
-   */
-  static Tensor<TBool> ofShape(Shape shape) {
-    return Tensor.allocate(DTYPE, shape);
-  }
-
-  /**
-   * Allocates a new tensor of the given shape.
-   *
-   * <p>Invoking {@code ofShape(x, y, z)} is equivalent to {@code ofShape(Shape.make(x, y, z))}
-   *
-   * @param dimensionSizes dimension sizes that defines the shape of the tensor to allocate
-   * @return the new tensor
-   */
-  static Tensor<TBool> ofShape(long... dimensionSizes) {
-    return Tensor.allocate(DTYPE, Shape.make(dimensionSizes));
+    if (values == null) {
+      throw new IllegalArgumentException();
+    }
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
   }
 
   /**
@@ -91,8 +74,30 @@ public interface TBool extends BooleanNdArray, TType {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TBool> copyOf(NdArray<Boolean> src) {
-    return Tensor.allocate(DTYPE, src.shape(), src::copyTo);
+  static Tensor<TBool> tensorOf(NdArray<Boolean> src) {
+    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  }
+
+  /**
+   * Allocates a new tensor of the given shape.
+   *
+   * @param shape shape of the tensor to allocate
+   * @return the new tensor
+   */
+  static Tensor<TBool> tensorOf(Shape shape) {
+    return Tensor.of(DTYPE, shape);
+  }
+
+  /**
+   * Allocates a new tensor of the given shape and initialize its data.
+   *
+   * @param shape shape of the tensor to allocate
+   * @param dataInit tensor data initializer
+   * @return the new tensor
+   * @throws org.tensorflow.TensorFlowException if the tensor cannot be allocated or initialized
+   */
+  static Tensor<TBool> tensorOf(Shape shape, Consumer<TBool> dataInit) {
+    return Tensor.of(DTYPE, shape, dataInit);
   }
 }
 

@@ -67,66 +67,6 @@ public interface BooleanNdArray extends NdArray<Boolean> {
    */
   BooleanNdArray setBoolean(boolean value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination boolean array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default BooleanNdArray read(boolean[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination boolean array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first boolean to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  BooleanNdArray read(boolean[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source boolean array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default BooleanNdArray write(boolean[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source boolean array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first boolean to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  BooleanNdArray write(boolean[] src, int offset);
-
   @Override
   BooleanNdArray slice(Index... indices);
 
@@ -164,16 +104,4 @@ public interface BooleanNdArray extends NdArray<Boolean> {
   BooleanNdArray write(DataBuffer<Boolean> src);
 
   BooleanNdArray write(BooleanDataBuffer src);
-
-  @Override
-  BooleanNdArray read(Boolean[] dst);
-
-  @Override
-  BooleanNdArray read(Boolean[] dst, int offset);
-
-  @Override
-  BooleanNdArray write(Boolean[] src);
-
-  @Override
-  BooleanNdArray write(Boolean[] src, int offset);
 }

@@ -64,8 +64,8 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -158,7 +158,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
     long[] dimSizes = new long[numDimensions(obj, dtype)];
     fillShape(obj, 0, dimSizes);
-    Tensor<T> t = new Tensor(dtype, Shape.make(dimSizes));
+    Tensor<T> t = new Tensor(dtype, Shape.of(dimSizes));
     TF_Tensor nativeHandle;
     if (t.dtype != TString.DTYPE) {
       long byteSize = elemByteSize(t.dtype) * t.shape.size();
@@ -290,25 +290,25 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     return t;
   }
 
-  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape) {
-    return allocate(dtype, shape, shape.size() * dtype.byteSize());
+  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape) {
+    return of(dtype, shape, shape.size() * dtype.byteSize());
   }
 
-  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape, long size) {
+  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size) {
     Tensor<T> t = new Tensor<>(dtype, shape);
     TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
     t.nativeRef = new NativeReference(nativeHandle);
     return t;
   }
 
-  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape,
+  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape,
       Consumer<T> dataInitializer) {
-    return allocate(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
+    return of(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
   }
 
-  public static <T extends TType> Tensor<T> allocate(DataType<T> dtype, Shape shape, long size,
+  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size,
       Consumer<T> dataInitializer) {
-    Tensor<T> tensor = allocate(dtype, shape, size);
+    Tensor<T> tensor = of(dtype, shape, size);
     try {
       dataInitializer.accept(tensor.data());
       return tensor;
@@ -350,7 +350,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
       // DT_STRING tensor encoded in a ByteBuffer.
       nbytes = nBuffered;
     }
-    Tensor<T> t = new Tensor<>(dataType, Shape.make(dimSizes));
+    Tensor<T> t = new Tensor<>(dataType, Shape.of(dimSizes));
     TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), dimSizes, nbytes);
     t.nativeRef = new NativeReference(nativeHandle);
     return t;
@@ -582,7 +582,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * <p>Takes ownership of the handle.
    */
   static Tensor<?> fromHandle(TF_Tensor handle) {
-    Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.make(shape(handle)));
+    Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.of(shape(handle)));
     t.nativeRef = new NativeReference(handle);
     return t;
   }

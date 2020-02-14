@@ -151,6 +151,111 @@ public final class DataBuffers {
   /**
    * Create a buffer from an array of floats into a data buffer.
    *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(float[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values float values
+   * @return a new buffer
+   */
+  public static FloatDataBuffer of(float... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of bytes into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(byte[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values byte values
+   * @return a new buffer
+   */
+  public static ByteDataBuffer of(byte... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of longs into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(long[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values long values
+   * @return a new buffer
+   */
+  public static LongDataBuffer of(long... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of ints into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(int[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values int values
+   * @return a new buffer
+   */
+  public static IntDataBuffer of(int... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of shorts into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(short[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values short values
+   * @return a new buffer
+   */
+  public static ShortDataBuffer of(short... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of doubles into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(double[], boolean, boolean) from(array, false, false}}
+   *
+   * @param values double values
+   * @return a new buffer
+   */
+  public static DoubleDataBuffer of(double... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of booleans into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(boolean[], boolean, boolean) from(values, false, false}}
+   *
+   * @param values booleans values
+   * @return a new buffer
+   */
+  public static BooleanDataBuffer of(boolean... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of objects into a data buffer.
+   *
+   * <p>The returned buffer allows read and write operations and share the memory of the source
+   * array, which is equivalent to call {@link #from(T[], boolean, boolean)} from(values, false, false}}
+   *
+   * @param values objects values
+   * @return a new buffer
+   */
+  @SafeVarargs
+  public static <T> DataBuffer<T> ofObjects(T... values) {
+    return from(values, false, false);
+  }
+
+  /**
+   * Create a buffer from an array of floats into a data buffer.
+   *
    * @param array array of floats
    * @param readOnly true if the buffer created must be read-only
    * @param makeCopy true if the array must be copied, false will wrap the provided array

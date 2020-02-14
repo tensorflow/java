@@ -143,7 +143,7 @@ public class GraphOperationBuilderTest {
       n =
           g.opBuilder("Placeholder", "batch_of_vectors")
               .setAttr("dtype", TFloat32.DTYPE)
-              .setAttr("shape", Shape.make(-1, 784))
+              .setAttr("shape", Shape.of(-1, 784))
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
@@ -156,10 +156,10 @@ public class GraphOperationBuilderTest {
   @Test
   public void setAttrShapeList() {
     // Those shapes match tensors ones, so no exception is thrown
-    testSetAttrShapeList(new Shape[] {Shape.make(2, 2), Shape.make(2, 2, 2)});
+    testSetAttrShapeList(new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)});
     try {
       // Those shapes do not match tensors ones, exception is thrown
-      testSetAttrShapeList(new Shape[] {Shape.make(2, 2), Shape.make(2, 2, 2, 2)});
+      testSetAttrShapeList(new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2, 2)});
       fail("Shapes are incompatible and an exception was expected");
     } catch (IllegalArgumentException e) {
       // expected

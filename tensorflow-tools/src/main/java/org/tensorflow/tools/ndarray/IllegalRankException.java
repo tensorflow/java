@@ -16,6 +16,9 @@
  */
 package org.tensorflow.tools.ndarray;
 
+/**
+ * Exception thrown when an operation cannot be completed because of the rank of the targeted array.
+ */
 public class IllegalRankException extends IllegalArgumentException {
 
     public IllegalRankException(String message) {

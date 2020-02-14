@@ -17,10 +17,7 @@
 package org.tensorflow.tools.ndarray;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 
@@ -36,107 +33,24 @@ public abstract class FloatNdArrayTestBase extends NdArrayTestBase<Float> {
 
     @Test
     public void iteratePrimitiveElements() {
-        FloatNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        FloatNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
-        matrix3d.scalars().forEachIndexed((coords, scalar) -> {
-            scalar.setFloat((float)coords[2]);
-        });
+        matrix3d.scalars().forEachIndexed((coords, scalar) ->
+            scalar.setFloat((float)coords[2])
+        );
 
         assertEquals(0.0f, matrix3d.getFloat(0, 0, 0), 0.0f);
         assertEquals(1.0f, matrix3d.getFloat(0, 0, 1), 0.0f);
         assertEquals(4.0f, matrix3d.getFloat(0, 0, 4), 0.0f);
         assertEquals(2.0f, matrix3d.getFloat(0, 1, 2), 0.0f);
 
-        matrix3d.elements(1).forEach(vector -> {
-            vector.set(NdArrays.vectorOf(5.0f, 6.0f, 7.0f, 8.0f, 9.0f));
-        });
+        matrix3d.elements(1).forEach(vector ->
+            vector.set(NdArrays.vectorOf(5.0f, 6.0f, 7.0f, 8.0f, 9.0f))
+        );
 
         assertEquals(5, matrix3d.getFloat(0, 0, 0), 0.0f);
         assertEquals(6, matrix3d.getFloat(0, 0, 1), 0.0f);
         assertEquals(9, matrix3d.getFloat(0, 0, 4), 0.0f);
         assertEquals(7, matrix3d.getFloat(0, 1, 2), 0.0f);
-    }
-
-    @Test
-    public void writeAndReadWithPrimitiveArrays() {
-        float[] values = new float[] { 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f };
-
-        FloatNdArray matrix = allocate(Shape.make(3, 4));
-        matrix.write(values);
-        assertEquals(0.0f, matrix.getFloat(0, 0), 0.0f);
-        assertEquals(0.3f, matrix.getFloat(0, 3), 0.0f);
-        assertEquals(0.4f, matrix.getFloat(1, 0), 0.0f);
-        assertEquals(1.1f, matrix.getFloat(2, 3), 0.0f);
-
-        matrix.write(values, 4);
-        assertEquals(0.4f, matrix.getFloat(0, 0), 0.0f);
-        assertEquals(0.7f, matrix.getFloat(0, 3), 0.0f);
-        assertEquals(0.8f, matrix.getFloat(1, 0), 0.0f);
-        assertEquals(1.5f, matrix.getFloat(2, 3), 0.0f);
-
-        matrix.setFloat(100.5f, 1, 0);
-        matrix.read(values, 2);
-        assertEquals(0.4f, values[2], 0);
-        assertEquals(0.7f, values[5], 0);
-        assertEquals(100.5f, values[6], 0);
-        assertEquals(1.5f, values[13], 0);
-        assertEquals(1.5f, values[15], 0);
-
-        matrix.read(values);
-        assertEquals(0.4f, values[0], 0);
-        assertEquals(0.7f, values[3], 0);
-        assertEquals(100.5f, values[4], 0);
-        assertEquals(1.5f, values[11], 0);
-        assertEquals(1.5f, values[13], 0);
-        assertEquals(1.5f, values[15], 0);
-
-        try {
-            matrix.write(new float[] { 0.1f, 0.2f, 0.3f, 0.4f });
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length);
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(new float[4]);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
     }
 }

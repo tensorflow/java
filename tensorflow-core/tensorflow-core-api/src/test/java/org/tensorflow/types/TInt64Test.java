@@ -24,7 +24,7 @@ public class TInt64Test extends NumericTypesTestBase<TInt64, Long> {
 
   @Override
   Tensor<TInt64> allocateTensor(Shape shape) {
-    return TInt64.ofShape(shape);
+    return TInt64.tensorOf(shape);
   }
 
   @Override

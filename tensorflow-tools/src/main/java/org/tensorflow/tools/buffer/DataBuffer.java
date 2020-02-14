@@ -17,6 +17,8 @@
 
 package org.tensorflow.tools.buffer;
 
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
 import java.nio.ReadOnlyBufferException;
 
 /**
@@ -86,7 +88,94 @@ public interface DataBuffer<T> {
   DataBuffer<T> setObject(T value, long index);
   
   /**
-   * Copy data of this buffer in the given buffer.
+   * Read the references of the objects in this buffer into the destination array.
+   * <p>
+   * This method transfers values from this buffer into the given destination array. If there are
+   * fewer values in the buffer than are required to satisfy the request, that is, if
+   * {@code dst.length > size()}, then no values are transferred and a
+   * BufferUnderflowException is thrown.
+   * <p>
+   * Otherwise, this method copies {@code n = dst.length} values from this buffer into the given
+   * array.
+   *
+   * @param dst the array into which values are to be written
+   * @return this buffer
+   * @throws BufferUnderflowException if there are not enough values to copy from this buffer
+   */
+  default DataBuffer<T> read(T[] dst) {
+    return read(dst, 0, dst.length);
+  }
+
+  /**
+   * Read the references of the objects in this buffer into the destination array.
+   * <p>
+   * This method transfers values from this buffer into the given destination array. If there are
+   * fewer values in the buffer than are required to satisfy the request, that is, if
+   * {@code length > size()}, then no values are transferred and a
+   * BufferUnderflowException is thrown.
+   * <p>
+   * Otherwise, this method copies {@code n = length} values from this buffer into the given array
+   * starting at the given offset.
+   *
+   * @param dst the array into which values are to be written
+   * @param offset the offset within the array of the first value to be written; must be
+   *               non-negative and no larger than {@code dst.length}
+   * @param length the maximum number of values to be written to the given array; must be
+   *               non-negative and no larger than {@code dst.length - offset}
+   * @return this buffer
+   * @throws BufferUnderflowException if there are fewer than length values remaining in this buffer
+   * @throws IndexOutOfBoundsException if the preconditions on the offset and length parameters do
+   *                                   not hold
+   */
+  DataBuffer<T> read(T[] dst, int offset, int length);
+
+  /**
+   * Write the references of the objects in the source array into this buffer.
+   * <p>
+   * This method transfers the values in the given source array into this buffer. If there are
+   * more values in the source array than in this buffer, that is, if
+   * {@code src.length > size()}, then no values are transferred and a
+   * BufferOverflowException is thrown.
+   * <p>
+   * Otherwise, this method copies {@code n = src.length} values from the given array.
+   *
+   * @param src the source array from which values are to be read
+   * @return this buffer
+   * @throws BufferOverflowException if there is insufficient space in this buffer for the values in
+   *                                 the source array
+   * @throws ReadOnlyBufferException if this buffer is read-only
+   */
+  default DataBuffer<T> write(T[] src) {
+    return write(src, 0, src.length);
+  }
+
+  /**
+   * Bulk <i>put</i> method, using int arrays.
+   * <p>
+   * This method transfers the values in the given source array into this buffer. If there are
+   * more values in the source array than in this buffer, that is, if
+   * {@code length > size()}, then no values are transferred and a
+   * BufferOverflowException is thrown.
+   * <p>
+   * Otherwise, this method copies {@code n = length} values from the given array into this buffer,
+   * starting at the given offset.
+   *
+   * @param src the source array from which values are to be read
+   * @param offset the offset within the array of the first value to be read; must be non-negative
+   *               and no larger than {@code src.length}
+   * @param length the number of values to be read from the given array; must be non-negative and no
+   *               larger than {@code src.length - offset}
+   * @return this buffer
+   * @throws BufferOverflowException if there is insufficient space in this buffer for the values in
+   *                                 the source array
+   * @throws IndexOutOfBoundsException if the preconditions on the offset and length parameters do
+   *                                   not hold
+   * @throws ReadOnlyBufferException if this buffer is read-only
+   */
+  DataBuffer<T> write(T[] src, int offset, int length);
+
+  /**
+   * Write the references of the objects in the source array into this buffer.
    * <p>
    * If there are more values to copy than the destination buffer size, i.e.
    * {@code size > dst.size()}, then no values are transferred and a

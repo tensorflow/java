@@ -193,7 +193,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static final Pattern JAVADOC_TAG_PATTERN =
-      Pattern.compile("@(?:param|return|throws|exception|see)\\s+.*");
+      Pattern.compile("@(?:param|return|throws|exception|see|deprecated)\\s+.*");
   private static final TypeName T_OP = ClassName.get("org.tensorflow.op", "Op");
   private static final ClassName T_OPS = ClassName.get("org.tensorflow.op", "Ops");
   private static final TypeName T_OPERATOR =
@@ -280,17 +280,14 @@ public final class OperatorProcessor extends AbstractProcessor {
         result = false;
         continue;
       }
-      TypeElement opClass = (TypeElement) e;
-      // Skip deprecated operations for now, as we do not guarantee API stability yet
-      if (opClass.getAnnotation(Deprecated.class) == null) {
-        collectOpMethods(groupedMethods, opClass, annotation);
-      }
+      collectOpMethods(groupedMethods, (TypeElement)e, annotation);
     }
     return result;
   }
 
   private void collectOpMethods(
       Multimap<String, MethodSpec> groupedMethods, TypeElement opClass, TypeElement annotation) {
+    boolean opClassDeprecated = opClass.getAnnotation(Deprecated.class) != null;
     AnnotationMirror operatorAnnot = getAnnotationMirror(opClass, annotation.getQualifiedName());
     if (operatorAnnot == null) {
       throw new IllegalArgumentException(
@@ -331,7 +328,8 @@ public final class OperatorProcessor extends AbstractProcessor {
         }
         boolean describeByClass =
             getAnnotationElementValueAsBoolean("describeByClass", endpointAnnot, false);
-        MethodSpec method = buildOpMethod(endpointName, opClass, opMethod, describeByClass);
+        boolean deprecated = opMethod.getAnnotation(Deprecated.class) != null || opClassDeprecated;
+        MethodSpec method = buildOpMethod(endpointName, opClass, opMethod, describeByClass, deprecated);
         groupedMethods.put(endpointGroup, method);
       }
     }
@@ -339,7 +337,7 @@ public final class OperatorProcessor extends AbstractProcessor {
 
   private MethodSpec buildOpMethod(
       String methodName, TypeElement opClass, ExecutableElement endpointMethod,
-      boolean describeByClass) {
+      boolean describeByClass, boolean deprecated) {
     MethodSpec.Builder builder =
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
@@ -347,6 +345,9 @@ public final class OperatorProcessor extends AbstractProcessor {
             .varargs(endpointMethod.isVarArgs())
             .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass));
 
+    if (deprecated) {
+      builder.addAnnotation(Deprecated.class);
+    }
     for (TypeParameterElement tp : endpointMethod.getTypeParameters()) {
       TypeVariableName tvn = TypeVariableName.get((TypeVariable) tp.asType());
       builder.addTypeVariable(tvn);
@@ -470,27 +471,27 @@ public final class OperatorProcessor extends AbstractProcessor {
                     + "{@link $T @Operator} is exposed\n"
                     + "by this API or one of its subgroup.\n<p>Example usage:\n<pre>{@code\n"
                     + "try (Graph g = new Graph()) {\n"
-                    + "  Ops ops = Ops.create(g);\n"
+                    + "  Ops tf = Ops.create(g);\n"
                     + "  // Operations are typed classes with convenience\n"
                     + "  // builders in Ops.\n"
-                    + "  Constant three = ops.constant(3);\n"
+                    + "  Constant<TInt32> three = tf.val(3);\n"
                     + "  // Single-result operations implement the Operand\n"
                     + "  // interface, so this works too.\n"
-                    + "  Operand four = ops.constant(4);\n"
+                    + "  Operand<TInt32> four = tf.val(4);\n"
                     + "  // Most builders are found within a group, and accept\n"
                     + "  // Operand types as operands\n"
-                    + "  Operand nine = ops.math.add(four, ops.constant(5));\n"
+                    + "  Operand<TInt32> nine = tf.math.add(four, tf.val(5));\n"
                     + "  // Multi-result operations however offer methods to\n"
                     + "  // select a particular result for use.\n"
-                    + "  Operand result = \n"
-                    + "      ops.math.add(ops.unique(s, a).y(), b);\n"
+                    + "  Operand<TInt32> result = \n"
+                    + "      tf.math.add(tf.unique(s, a).y(), b);\n"
                     + "  // Optional attributes\n"
-                    + "  ops.linalg.matMul(a, b, MatMul.transposeA(true));\n"
+                    + "  tf.linalg.matMul(a, b, MatMul.transposeA(true));\n"
                     + "  // Naming operators\n"
-                    + "  ops.withName(\"foo\").constant(5); // name \"foo\"\n"
+                    + "  tf.withName(\"foo\").val(5); // name \"foo\"\n"
                     + "  // Names can exist in a hierarchy\n"
-                    + "  Ops sub = ops.withSubScope(\"sub\");\n"
-                    + "  sub.withName(\"bar\").constant(4); // \"sub/bar\"\n"
+                    + "  Ops sub = tf.withSubScope(\"sub\");\n"
+                    + "  sub.withName(\"bar\").val(4); // \"sub/bar\"\n"
                     + "}\n"
                     + "}</pre>\n",
                 T_OP,

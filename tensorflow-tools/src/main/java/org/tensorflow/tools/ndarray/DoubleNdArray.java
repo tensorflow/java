@@ -67,66 +67,6 @@ public interface DoubleNdArray extends NdArray<Double> {
    */
   DoubleNdArray setDouble(double value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination double array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default DoubleNdArray read(double[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination double array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first double to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  DoubleNdArray read(double[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source double array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default DoubleNdArray write(double[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source double array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first double to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  DoubleNdArray write(double[] src, int offset);
-
   @Override
   DoubleNdArray slice(Index... indices);
 
@@ -164,16 +104,4 @@ public interface DoubleNdArray extends NdArray<Double> {
   DoubleNdArray write(DataBuffer<Double> src);
 
   DoubleNdArray write(DoubleDataBuffer src);
-
-  @Override
-  DoubleNdArray read(Double[] dst);
-
-  @Override
-  DoubleNdArray read(Double[] dst, int offset);
-
-  @Override
-  DoubleNdArray write(Double[] src);
-
-  @Override
-  DoubleNdArray write(Double[] src, int offset);
 }

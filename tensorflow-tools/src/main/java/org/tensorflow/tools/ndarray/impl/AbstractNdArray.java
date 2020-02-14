@@ -17,7 +17,6 @@
 package org.tensorflow.tools.ndarray.impl;
 
 import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
@@ -49,26 +48,6 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
   @Override
   public NdArraySequence<U> scalars() {
     return ElementSequence.create(this, shape().numDimensions() - 1);  // negative if this array is a scalar
-  }
-
-  @Override
-  public U read(T[] dst) {
-    return (U)read(DataBuffers.from(dst, false, false));
-  }
-
-  @Override
-  public U read(T[] dst, int offset) {
-    return (U)read(DataBuffers.from(dst, false, false).offset(offset));
-  }
-
-  @Override
-  public U write(T[] src) {
-    return (U)write(DataBuffers.from(src, true, false));
-  }
-
-  @Override
-  public U write(T[] src, int offset) {
-    return (U)write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   protected AbstractNdArray(DimensionalSpace dimensions) {

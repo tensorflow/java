@@ -99,7 +99,7 @@ class EagerOperation extends AbstractOperation {
     for (int i = 0; i < shape.length; ++i) {
       shape[i] = dim(outputNativeHandle, i);
     }
-    return Shape.make(shape);
+    return Shape.of(shape);
   }
 
   @Override

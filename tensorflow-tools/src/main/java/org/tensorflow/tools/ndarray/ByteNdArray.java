@@ -67,66 +67,6 @@ public interface ByteNdArray extends NdArray<Byte> {
    */
   ByteNdArray setByte(byte value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination byte array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default ByteNdArray read(byte[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination byte array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first byte to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  ByteNdArray read(byte[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source byte array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default ByteNdArray write(byte[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source byte array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first byte to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  ByteNdArray write(byte[] src, int offset);
-
   @Override
   ByteNdArray slice(Index... indices);
 
@@ -164,16 +104,4 @@ public interface ByteNdArray extends NdArray<Byte> {
   ByteNdArray write(DataBuffer<Byte> src);
 
   ByteNdArray write(ByteDataBuffer src);
-
-  @Override
-  ByteNdArray read(Byte[] dst);
-
-  @Override
-  ByteNdArray read(Byte[] dst, int offset);
-
-  @Override
-  ByteNdArray write(Byte[] src);
-
-  @Override
-  ByteNdArray write(Byte[] src, int offset);
 }

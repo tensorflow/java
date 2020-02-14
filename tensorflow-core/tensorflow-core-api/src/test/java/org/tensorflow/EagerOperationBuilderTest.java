@@ -119,12 +119,12 @@ public class EagerOperationBuilderTest {
       // shape
       opBuilder(session, "EnsureShape", "ShapeAttr")
           .addInput(TestUtil.constant(session, "Const", new int[2][2]))
-          .setAttr("shape", Shape.make(2, 2))
+          .setAttr("shape", Shape.of(2, 2))
           .build();
       // list(shape)
       opBuilder(session, "FIFOQueue", "queue")
           .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
-          .setAttr("shapes", new Shape[] {Shape.make(2, 2), Shape.make(2, 2, 2)})
+          .setAttr("shapes", new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)})
           .build();
       // bool
       opBuilder(session, "All", "Bool")

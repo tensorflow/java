@@ -18,11 +18,8 @@ package org.tensorflow.tools.ndarray;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 
@@ -38,100 +35,24 @@ public abstract class BooleanNdArrayTestBase extends NdArrayTestBase<Boolean> {
 
     @Test
     public void iteratePrimitiveElements() {
-        BooleanNdArray matrix3d = allocate(Shape.make(5, 4, 5));
+        BooleanNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
-        matrix3d.scalars().forEachIndexed((coords, scalar) -> {
-            scalar.setBoolean(coords[2] > 0);
-        });
+        matrix3d.scalars().forEachIndexed((coords, scalar) ->
+            scalar.setBoolean(coords[2] > 0)
+        );
 
         assertFalse(matrix3d.getBoolean(0, 0, 0));
         assertTrue(matrix3d.getBoolean(0, 0, 1));
         assertTrue(matrix3d.getBoolean(0, 0, 4));
         assertTrue(matrix3d.getBoolean(0, 1, 2));
 
-        matrix3d.elements(1).forEach(vector -> {
-            vector.set(vectorOf(true, false, true, false, true));
-        });
+        matrix3d.elements(1).forEach(vector ->
+            vector.set(vectorOf(true, false, true, false, true))
+        );
 
         assertTrue(matrix3d.getBoolean(0, 0, 0));
         assertFalse(matrix3d.getBoolean(0, 0, 1));
         assertTrue(matrix3d.getBoolean(0, 0, 4));
         assertTrue(matrix3d.getBoolean(0, 1, 2));
-    }
-
-    @Test
-    public void writeAndReadWithPrimitiveArrays() {
-        boolean[] values = new boolean[] { true, true, false, false, true, true, false, true, false, false, true, false, true, false, true, true };
-
-        BooleanNdArray matrix = allocate(Shape.make(3, 4));
-        matrix.write(values);
-        assertTrue(matrix.getBoolean(0, 0));
-        assertFalse(matrix.getBoolean(0, 3));
-        assertTrue(matrix.getBoolean(1, 0));
-        assertFalse(matrix.getBoolean(2, 3));
-
-        matrix.write(values, 4);
-        assertTrue(matrix.getBoolean(0, 0));
-        assertTrue(matrix.getBoolean(0, 3));
-        assertFalse(matrix.getBoolean(1, 0));
-        assertTrue(matrix.getBoolean(2, 3));
-
-        matrix.setBoolean(true, 1, 0);
-        matrix.read(values, 2);
-        assertTrue(values[2]);
-        assertTrue(values[5]);
-
-        matrix.read(values);
-        assertTrue(values[0]);
-        assertTrue(values[3]);
-
-        try {
-            matrix.write(new boolean[] { true, true, true, true });
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length);
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(new boolean[4]);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
     }
 }

@@ -67,66 +67,6 @@ public interface ShortNdArray extends NdArray<Short> {
    */
   ShortNdArray setShort(short value, long... coordinates);
 
-  /**
-   * Reads the content of this N-dimensional array into the destination short array.
-   *
-   * <p>The size of the destination array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   */
-  default ShortNdArray read(short[] dst) {
-    return read(dst, 0);
-  }
-
-  /**
-   * Reads the content of this N-dimensional array into the destination short array.
-   *
-   * <p>{@code dst.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param dst the destination array
-   * @param offset the index of the first short to write in the destination array
-   * @return this array
-   * @throws java.nio.BufferOverflowException if the destination array cannot hold the content of this array
-   * @throws IndexOutOfBoundsException if offset is greater than dst length or is negative
-   */
-  ShortNdArray read(short[] dst, int offset);
-
-  /**
-   * Writes the content of this N-dimensional array from the source short array.
-   *
-   * <p>The size of the source array must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   */
-  default ShortNdArray write(short[] src) {
-    return write(src, 0);
-  }
-
-  /**
-   * Writes the content of this N-dimensional array from the source short array.
-   *
-   * <p>{@code src.length - offset} must be equal or greater to the {@link #size()} of this array,
-   * or an exception is thrown. After the copy, content of the both arrays can be altered
-   * independently, without affecting each other.
-   *
-   * @param src the source array
-   * @param offset the index of the first short to read from the source array
-   * @return this array
-   * @throws java.nio.BufferUnderflowException if the size of the source array is less than the size of this array
-   * @throws IndexOutOfBoundsException if offset is greater than src length or is negative
-   */
-  ShortNdArray write(short[] src, int offset);
-
   @Override
   ShortNdArray slice(Index... coordinates);
 
@@ -164,16 +104,4 @@ public interface ShortNdArray extends NdArray<Short> {
   ShortNdArray write(DataBuffer<Short> src);
 
   ShortNdArray write(ShortDataBuffer src);
-
-  @Override
-  ShortNdArray read(Short[] dst);
-
-  @Override
-  ShortNdArray read(Short[] dst, int offset);
-
-  @Override
-  ShortNdArray write(Short[] src);
-
-  @Override
-  ShortNdArray write(Short[] src, int offset);
 }

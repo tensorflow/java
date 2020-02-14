@@ -141,7 +141,7 @@ public final class GraphOperation extends AbstractOperation {
     Graph.Reference r = graph.ref();
     try {
       long[] shape = shape(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx);
-      return shape == null ? Shape.unknown() : Shape.make(shape);
+      return shape == null ? Shape.unknown() : Shape.of(shape);
     } finally {
       r.close();
     }

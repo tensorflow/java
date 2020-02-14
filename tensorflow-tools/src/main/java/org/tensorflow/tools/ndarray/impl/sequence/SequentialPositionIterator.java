@@ -17,6 +17,7 @@
 
 package org.tensorflow.tools.ndarray.impl.sequence;
 
+import java.util.NoSuchElementException;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
 class SequentialPositionIterator implements PositionIterator {
@@ -28,6 +29,9 @@ class SequentialPositionIterator implements PositionIterator {
 
   @Override
   public long nextLong() {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    }
     return stride * index++;
   }
 

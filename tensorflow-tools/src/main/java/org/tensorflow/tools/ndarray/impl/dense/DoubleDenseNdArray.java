@@ -18,7 +18,6 @@ package org.tensorflow.tools.ndarray.impl.dense;
 
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
 import org.tensorflow.tools.buffer.DoubleDataBuffer;
 import org.tensorflow.tools.ndarray.DoubleNdArray;
 import org.tensorflow.tools.ndarray.NdArray;
@@ -41,18 +40,6 @@ public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArr
   public DoubleNdArray setDouble(double value, long... indices) {
     buffer.setDouble(value, positionOf(indices, true));
     return this;
-  }
-
-  @Override
-  public DoubleNdArray read(double[] dst, int offset) {
-    Validator.getArrayArgs(this, dst.length, offset);
-    return read(DataBuffers.from(dst, false, false).offset(offset));
-  }
-
-  @Override
-  public DoubleNdArray write(double[] src, int offset) {
-    Validator.putArrayArgs(this, src.length, offset);
-    return write(DataBuffers.from(src, true, false).offset(offset));
   }
 
   @Override

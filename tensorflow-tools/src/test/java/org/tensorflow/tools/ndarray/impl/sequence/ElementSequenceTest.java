@@ -34,7 +34,7 @@ public class ElementSequenceTest {
 
   @Test
   public void iterateVectorsWithIndex() {
-    IntNdArray array = NdArrays.ofInts(Shape.make(2, 3, 2));
+    IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
 
     @SuppressWarnings("unchecked")
     NdArraySequence<IntNdArray> sequence = ElementSequence
@@ -53,7 +53,7 @@ public class ElementSequenceTest {
 
   @Test
   public void iterateScalarsWithIndex() {
-    IntNdArray array = NdArrays.ofInts(Shape.make(2, 3, 2));
+    IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
 
     @SuppressWarnings("unchecked")
     NdArraySequence<IntNdArray> cursor = ElementSequence.create((AbstractNdArray<Integer, IntNdArray>)array, 2);

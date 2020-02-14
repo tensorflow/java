@@ -17,10 +17,7 @@
 package org.tensorflow.tools.ndarray;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
 import org.junit.Test;
 import org.tensorflow.tools.Shape;
 
@@ -35,85 +32,25 @@ public abstract class LongNdArrayTestBase extends NdArrayTestBase<Long> {
     }
 
     @Test
-    public void writeAndReadWithPrimitiveArrays() {
-        long[] values = new long[] { 0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L };
+    public void iteratePrimitiveElements() {
+        LongNdArray matrix3d = allocate(Shape.of(5, 4, 5));
 
-        LongNdArray matrix = allocate(Shape.make(3, 4));
-        matrix.write(values);
-        assertEquals(0L, matrix.getLong(0, 0));
-        assertEquals(3L, matrix.getLong(0, 3));
-        assertEquals(4L, matrix.getLong(1, 0));
-        assertEquals(11L, matrix.getLong(2, 3));
+        matrix3d.scalars().forEachIndexed((coords, scalar) ->
+            scalar.setLong(coords[2])
+        );
 
-        matrix.write(values, 4);
-        assertEquals(4L, matrix.getLong(0, 0));
-        assertEquals(7L, matrix.getLong(0, 3));
-        assertEquals(8L, matrix.getLong(1, 0));
-        assertEquals(15L, matrix.getLong(2, 3));
+        assertEquals(0, matrix3d.getLong(0, 0, 0));
+        assertEquals(1, matrix3d.getLong(0, 0, 1));
+        assertEquals(4, matrix3d.getLong(0, 0, 4));
+        assertEquals(2, matrix3d.getLong(0, 1, 2));
 
-        matrix.setLong(100L, 1, 0);
-        matrix.read(values, 2);
-        assertEquals(4L, values[2]);
-        assertEquals(7L, values[5]);
-        assertEquals(100L, values[6]);
-        assertEquals(15L, values[13]);
-        assertEquals(15L, values[15]);
+        matrix3d.elements(1).forEach(vector ->
+            vector.set(NdArrays.vectorOf(5L, 6L, 7L, 8L, 9L))
+        );
 
-        matrix.read(values);
-        assertEquals(4L, values[0]);
-        assertEquals(7L, values[3]);
-        assertEquals(100L, values[4]);
-        assertEquals(15L, values[11]);
-        assertEquals(15L, values[13]);
-        assertEquals(15L, values[15]);
-
-        try {
-            matrix.write(new long[] { 1, 2, 3, 4 });
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length);
-            fail();
-        } catch (BufferUnderflowException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.write(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(new long[4]);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length);
-            fail();
-        } catch (BufferOverflowException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, -1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
-        try {
-            matrix.read(values, values.length + 1);
-            fail();
-        } catch (IndexOutOfBoundsException e) {
-            // as expected
-        }
+        assertEquals(5, matrix3d.getLong(0, 0, 0));
+        assertEquals(6, matrix3d.getLong(0, 0, 1));
+        assertEquals(9, matrix3d.getLong(0, 0, 4));
+        assertEquals(7, matrix3d.getLong(0, 1, 2));
     }
 }

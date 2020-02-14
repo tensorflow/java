@@ -24,7 +24,7 @@ public class TFloat16Test extends NumericTypesTestBase<TFloat16, Float> {
 
   @Override
   Tensor<TFloat16> allocateTensor(Shape shape) {
-    return TFloat16.ofShape(shape);
+    return TFloat16.tensorOf(shape);
   }
 
   @Override

@@ -23,17 +23,19 @@ import org.tensorflow.types.family.TType;
  * <p>Example usage:
  *
  * <pre>{@code
+ * Ops tf = Ops.create();
+ *
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
- * Operand<TUint8> decodeJpeg = ops.image.decodeJpeg(...);
- * ops.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
+ * Operand<TUint8> decodeJpeg = tf.image.decodeJpeg(...);
+ * tf.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation
- * Output<TInt32> y = ops.unique(...).y();
- * ops.dtypes.cast(y, TFloat32.DTYPE);
+ * Output<TInt32> y = tf.unique(...).y();
+ * tf.dtypes.cast(y, TFloat32.DTYPE);
  *
  * // The "split" operation can be used as operand list to the "concat" operation
- * Iterable<? extends Operand<TFloat32>> split = ops.split(...);
- * ops.concat(split, ops.constant(0));
+ * Iterable<? extends Operand<TFloat32>> split = tf.split(...);
+ * tf.concat(split, tf.val(0));
  * }</pre>
  */
 public interface Operand<T extends TType> {
@@ -49,10 +51,25 @@ public interface Operand<T extends TType> {
   Output<T> asOutput();
 
   /**
-   * Returns the data of the tensor.
+   * Returns this operand as a tensor.
    *
-   * <i>This only works when running in an eager execution</i>
+   * <i>Only works when running in an eager execution</i>
+   * <p>This helper method is equivalent to {@code asOutput().tensor()}
    *
+   * @return the tensor
+   * @throws IllegalStateException if this is an operand of a graph
+   */
+  default Tensor<T> asTensor() {
+    return asOutput().tensor();
+  }
+
+  /**
+   * Returns the data of this operand.
+   *
+   * <i>Only works when running in an eager execution</i>
+   * <p>This helper method is equivalent to {@code asTensor().data()}
+   *
+   * @return the tensor data
    * @throws IllegalStateException if this is an operand of a graph
    */
   default T data() {

@@ -89,7 +89,7 @@ public final class Indices {
     if (coords == null) {
       throw new IllegalArgumentException();
     }
-    return new Sequence(NdArrays.wrap(DataBuffers.from(coords, true, false), Shape.make(coords.length)));
+    return new Sequence(NdArrays.wrap(DataBuffers.from(coords, true, false), Shape.of(coords.length)));
   }
 
   /**
