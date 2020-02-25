@@ -57,7 +57,6 @@ import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
-import org.tensorflow.op.core.CoreOps;
 import org.tensorflow.op.core.CountUpTo;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
@@ -80,6 +79,7 @@ import org.tensorflow.op.core.GetSessionTensor;
 import org.tensorflow.op.core.Gradients;
 import org.tensorflow.op.core.GuaranteeConst;
 import org.tensorflow.op.core.HashTable;
+import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
@@ -7334,6 +7334,18 @@ public final class Ops {
   }
 
   /**
+   * Factory method to create a new Variable with it's initializer.
+   *
+   * @param scope current scope
+   * @param init The op to use to initialise this variable.
+   * @param options carries optional attributes values
+   * @return a new instance of Variable
+   */
+  public <T extends TType> Variable<T> variable(Operand<T> init, Variable.Options... options) {
+    return Helpers.createVariableWithInit(scope, init, options);
+  }
+
+  /**
    * Holds state in the form of a tensor that persists across steps.
    *  <p>
    *  Outputs a ref to the tensor state so it may be read or modified.
@@ -7388,19 +7400,6 @@ public final class Ops {
    */
   public <T extends TNumber> VariableShape<T> variableShape(Operand<?> input, DataType<T> outType) {
     return VariableShape.create(scope, input, outType);
-  }
-
-  /**
-   * Factory method to create a new Variable with it's initializer.
-   *
-   * @param scope current scope
-   * @param init The op to use to initialise this variable.
-   * @param options carries optional attributes values
-   * @return a new instance of Variable
-   */
-  public <T extends TType> Variable<T> variableWithInit(Operand<T> init,
-      Variable.Options... options) {
-    return CoreOps.createVariableWithInit(scope, init, options);
   }
 
   /**

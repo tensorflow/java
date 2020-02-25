@@ -15,6 +15,12 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -27,66 +33,39 @@ import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  *
  */
 public abstract class Optimizer {
 
   public static final String VARIABLE_V2 = "VariableV2";
-
-  /**
-   * Optional attributes for {@link org.tensorflow.training.optimizers.Optimizer}
-   */
-  public static class Options {
-
-    /**
-     * @param sharedName If non-empty, this variable is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Optimizer.Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-
-    protected String sharedName;
-
-    private Options() {
-    }
-  }
-  /**
-   * Top level map key is the variable name, lower level map key is the slot name.
-   */
-  private final Map<String, Map<String, Variable<?>>> slots;
-
   /**
    * Global state variables
    */
   //TODO make this be used.
   protected final List<Variable<?>> globals;
-
   /**
    * The Graph this optimizer is operating on.
    */
   protected final Graph graph;
-
   /**
    * The ops builder for the graph.
    */
   protected final Ops tf;
+  /**
+   * Top level map key is the variable name, lower level map key is the slot name.
+   */
+  private final Map<String, Map<String, Variable<?>>> slots;
 
   protected Optimizer(Graph graph) {
     this.graph = graph;
     this.tf = Ops.create(graph).withName(getOptimizerName());
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
+  }
+
+  public static String createName(Output<? extends TType> variable, String slotName) {
+    return variable.op().name() + "-" + slotName;
   }
 
   public Op minimize(Operand<?> loss) {
@@ -101,13 +80,11 @@ public abstract class Optimizer {
 
   public <T extends TType> List<GradAndVar<?>> computeGradients(Operand<?> loss) {
     List<Operation> variables = new ArrayList<>();
-    Iterator<Operation> opItr = graph.operations();
-    while (opItr.hasNext()) {
-      Operation op = opItr.next();
+    graph.operations().forEachRemaining((Operation op) -> {
       if (op.type().equals(VARIABLE_V2)) {
         variables.add(op);
       }
-    }
+    });
 
     Output<?>[] variableOutputArray = new Output[variables.size()];
     for (int i = 0; i < variables.size(); i++) {
@@ -172,12 +149,10 @@ public abstract class Optimizer {
         @SuppressWarnings("unchecked") // This method should only be called when the type is known.
             Optional<Variable<T>> opt = Optional.of((Variable<T>) slot);
         return opt;
-      } else {
-        return Optional.empty();
       }
-    } else {
       return Optional.empty();
     }
+    return Optional.empty();
   }
 
   /**
@@ -254,8 +229,24 @@ public abstract class Optimizer {
    */
   public abstract String getOptimizerName();
 
-  public static String createName(Output<? extends TType> variable, String slotName) {
-    return variable.op().name() + "-" + slotName;
+  /**
+   * Optional attributes for {@link org.tensorflow.training.optimizers.Optimizer}
+   */
+  public static class Options {
+
+    protected String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * @param sharedName If non-empty, this variable is named in the given bucket with this
+     *                   shared_name. Otherwise, the node name is used instead.
+     */
+    public Optimizer.Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 
   public static class GradAndVar<T extends TType> {

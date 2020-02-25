@@ -15,6 +15,8 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -22,12 +24,8 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adagrad Dual-Averaging algorithm.
@@ -38,16 +36,11 @@ public class AdaGradDA extends Optimizer {
 
   public static final String ACCUMULATOR = "gradient_accumulator";
   public static final String SQUARED_ACCUMULATOR = "gradient_squared_accumulator";
-
-  private Variable<TInt64> globalStep;
-
   private final float learningRate;
-
   private final float initialAccumulatorValue;
-
   private final float l1Strength;
-
   private final float l2Strength;
+  private Variable<TInt64> globalStep;
 
   public AdaGradDA(Graph graph, float learningRate) {
     this(graph, learningRate, 0.1f, 0.0f, 0.0f);
@@ -64,7 +57,7 @@ public class AdaGradDA extends Optimizer {
 
   @Override
   protected Optional<Operand<?>> prepare(String name) {
-    return Optional.of(tf.assignAdd(globalStep, tf.constant(1L)));
+    return Optional.of(tf.assignAdd(globalStep, tf.val(1L)));
   }
 
   @Override
@@ -73,16 +66,16 @@ public class AdaGradDA extends Optimizer {
       createAdaGradDASlot(v);
     }
     globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.DTYPE);
-    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
+    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.val(0L));
     graph.addInitializer(globalStepInitializer);
   }
 
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
     Operand<T> initializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> sqInitializer = tf.fill(tf.shape(v),
-        tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE), v.dataType()));
+        tf.dtypes.cast(tf.val(initialAccumulatorValue), v.dataType()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 
@@ -91,9 +84,9 @@ public class AdaGradDA extends Optimizer {
     Variable<T> gradSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> gradSquaredSlot = getSlot(variable, SQUARED_ACCUMULATOR).get();
     return tf.train.applyAdagradDa(variable, gradSlot, gradSquaredSlot, gradient,
-        tf.constant(learningRate, gradient.dataType()),
-        tf.constant(l1Strength, gradient.dataType()),
-        tf.constant(l2Strength, gradient.dataType()),
+        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+        tf.dtypes.cast(tf.val(l1Strength), gradient.dataType()),
+        tf.dtypes.cast(tf.val(l2Strength), gradient.dataType()),
         globalStep);
   }
 
@@ -108,7 +101,7 @@ public class AdaGradDA extends Optimizer {
    */
   @Override
   protected Op finish(List<Operand<?>> updateOperations, String name) {
-    updateOperations.add(tf.assignAdd(globalStep, tf.constant(1L)));
+    updateOperations.add(tf.assignAdd(globalStep, tf.val(1L)));
     return super.finish(updateOperations, name);
   }
 

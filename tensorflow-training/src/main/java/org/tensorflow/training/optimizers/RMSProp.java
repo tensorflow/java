@@ -15,14 +15,12 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the RMSProp algorithm.
@@ -65,14 +63,14 @@ public class RMSProp extends Optimizer {
 
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
     Operand<T> rmsInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(1.0f), v.dataType()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
     Operand<T> momentumInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
       Operand<T> mgInitializer = tf
-          .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+          .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }
@@ -84,19 +82,18 @@ public class RMSProp extends Optimizer {
     if (centered) {
       Variable<T> mgSlot = getSlot(variable, MG).get();
       return tf.train.applyCenteredRmsProp(variable, mgSlot, rmsSlot, momentumSlot,
-          tf.constant(learningRate, gradient.dataType()),
-          tf.constant(decay, gradient.dataType()),
-          tf.constant(momentum, gradient.dataType()),
-          tf.constant(epsilon, gradient.dataType()),
-          gradient);
-    } else {
-      return tf.train.applyRmsProp(variable, rmsSlot, momentumSlot,
-          tf.constant(learningRate, gradient.dataType()),
-          tf.constant(decay, gradient.dataType()),
-          tf.constant(momentum, gradient.dataType()),
-          tf.constant(epsilon, gradient.dataType()),
+          tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+          tf.dtypes.cast(tf.val(decay), gradient.dataType()),
+          tf.dtypes.cast(tf.val(momentum), gradient.dataType()),
+          tf.dtypes.cast(tf.val(epsilon), gradient.dataType()),
           gradient);
     }
+    return tf.train.applyRmsProp(variable, rmsSlot, momentumSlot,
+        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+        tf.dtypes.cast(tf.val(decay), gradient.dataType()),
+        tf.dtypes.cast(tf.val(momentum), gradient.dataType()),
+        tf.dtypes.cast(tf.val(epsilon), gradient.dataType()),
+        gradient);
   }
 
   @Override

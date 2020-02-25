@@ -21,7 +21,6 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Placeholder;
@@ -85,64 +84,64 @@ public class MNISTTest {
 
     // Inputs
     Placeholder<TFloat32> input = tf.withName(INPUT_NAME).placeholder(TFloat32.DTYPE,
-        Placeholder.shape(Shape.make(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
+        Placeholder.shape(Shape.of(-1, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)));
     Placeholder<TInt32> labels = tf.withName(TARGET).placeholder(TInt32.DTYPE);
 
     // Scaling the features
-    Constant<TFloat32> centeringFactor = tf.constant(PIXEL_DEPTH / 2.0f);
-    Constant<TFloat32> scalingFactor = tf.constant((float) PIXEL_DEPTH);
+    Constant<TFloat32> centeringFactor = tf.val(PIXEL_DEPTH / 2.0f);
+    Constant<TFloat32> scalingFactor = tf.val((float) PIXEL_DEPTH);
     Operand<TFloat32> scaledInput = tf.math.div(tf.math.sub(input, centeringFactor), scalingFactor);
 
     // First conv layer
-    Variable<TFloat32> conv1Weights = tf.variableWithInit(tf.math.mul(tf.random
-        .truncatedNormal(tf.constant(new int[]{5, 5, NUM_CHANNELS, 32}), TFloat32.DTYPE,
-            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> conv1Weights = tf.variable(tf.math.mul(tf.random
+        .truncatedNormal(tf.array(5, 5, NUM_CHANNELS, 32), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.val(0.1f)));
     Conv2d<TFloat32> conv1 = tf.nn
         .conv2d(scaledInput, conv1Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
     Variable<TFloat32> conv1Biases = tf
-        .variableWithInit(tf.fill(tf.constant(new int[]{32}), tf.constant(0.0f)));
+        .variable(tf.fill(tf.array(new int[]{32}), tf.val(0.0f)));
     Relu<TFloat32> relu1 = tf.nn.relu(tf.nn.biasAdd(conv1, conv1Biases));
 
     // First pooling layer
     MaxPool<TFloat32> pool1 = tf.nn
-        .maxPool(relu1, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}),
+        .maxPool(relu1, tf.array(1, 2, 2, 1), tf.array(1, 2, 2, 1),
             PADDING_TYPE);
 
     // Second conv layer
-    Variable<TFloat32> conv2Weights = tf.variableWithInit(tf.math.mul(tf.random
-        .truncatedNormal(tf.constant(new int[]{5, 5, 32, 64}), TFloat32.DTYPE,
-            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> conv2Weights = tf.variable(tf.math.mul(tf.random
+        .truncatedNormal(tf.array(5, 5, 32, 64), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.val(0.1f)));
     Conv2d<TFloat32> conv2 = tf.nn
         .conv2d(pool1, conv2Weights, Arrays.asList(1L, 1L, 1L, 1L), PADDING_TYPE);
     Variable<TFloat32> conv2Biases = tf
-        .variableWithInit(tf.fill(tf.constant(new int[]{64}), tf.constant(0.1f)));
+        .variable(tf.fill(tf.array(new int[]{64}), tf.val(0.1f)));
     Relu<TFloat32> relu2 = tf.nn.relu(tf.nn.biasAdd(conv2, conv2Biases));
 
     // Second pooling layer
     MaxPool<TFloat32> pool2 = tf.nn
-        .maxPool(relu2, tf.constant(new int[]{1, 2, 2, 1}), tf.constant(new int[]{1, 2, 2, 1}),
+        .maxPool(relu2, tf.array(1, 2, 2, 1), tf.array(1, 2, 2, 1),
             PADDING_TYPE);
 
     // Flatten inputs
     Reshape<TFloat32> flatten = tf.reshape(pool2, tf.concat(Arrays
-        .asList(tf.slice(tf.shape(pool2), tf.constant(new int[]{0}), tf.constant(new int[]{1})),
-            tf.constant(new int[]{-1})), tf.constant(0)));
+        .asList(tf.slice(tf.shape(pool2), tf.array(new int[]{0}), tf.array(new int[]{1})),
+            tf.array(new int[]{-1})), tf.val(0)));
 
     // Fully connected layer
-    Variable<TFloat32> fc1Weights = tf.variableWithInit(tf.math.mul(tf.random
-        .truncatedNormal(tf.constant(new int[]{IMAGE_SIZE * IMAGE_SIZE * 4, 512}), TFloat32.DTYPE,
-            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc1Weights = tf.variable(tf.math.mul(tf.random
+        .truncatedNormal(tf.array(IMAGE_SIZE * IMAGE_SIZE * 4, 512), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.val(0.1f)));
     Variable<TFloat32> fc1Biases = tf
-        .variableWithInit(tf.fill(tf.constant(new int[]{512}), tf.constant(0.1f)));
+        .variable(tf.fill(tf.array(new int[]{512}), tf.val(0.1f)));
     Relu<TFloat32> relu3 = tf.nn
         .relu(tf.math.add(tf.linalg.matMul(flatten, fc1Weights), fc1Biases));
 
     // Softmax layer
-    Variable<TFloat32> fc2Weights = tf.variableWithInit(tf.math.mul(tf.random
-        .truncatedNormal(tf.constant(new int[]{512, NUM_LABELS}), TFloat32.DTYPE,
-            TruncatedNormal.seed(SEED)), tf.constant(0.1f)));
+    Variable<TFloat32> fc2Weights = tf.variable(tf.math.mul(tf.random
+        .truncatedNormal(tf.array(512, NUM_LABELS), TFloat32.DTYPE,
+            TruncatedNormal.seed(SEED)), tf.val(0.1f)));
     Variable<TFloat32> fc2Biases = tf
-        .variableWithInit(tf.fill(tf.constant(new int[]{NUM_LABELS}), tf.constant(0.1f)));
+        .variable(tf.fill(tf.array(new int[]{NUM_LABELS}), tf.val(0.1f)));
 
     Add<TFloat32> logits = tf.math.add(tf.linalg.matMul(relu3, fc2Weights), fc2Biases);
 
@@ -151,15 +150,15 @@ public class MNISTTest {
 
     // Loss function & regularization
     OneHot<TFloat32> oneHot = tf
-        .oneHot(labels, tf.constant(10), tf.constant(1.0f), tf.constant(0.0f));
+        .oneHot(labels, tf.val(10), tf.val(1.0f), tf.val(0.0f));
     SoftmaxCrossEntropyWithLogits<TFloat32> batchLoss = tf.nn
         .softmaxCrossEntropyWithLogits(logits, oneHot);
-    Mean<TFloat32> labelLoss = tf.math.mean(batchLoss.loss(), tf.constant(0));
+    Mean<TFloat32> labelLoss = tf.math.mean(batchLoss.loss(), tf.val(0));
     Add<TFloat32> regularizers = tf.math.add(tf.nn.l2Loss(fc1Weights), tf.math
         .add(tf.nn.l2Loss(fc1Biases),
             tf.math.add(tf.nn.l2Loss(fc2Weights), tf.nn.l2Loss(fc2Biases))));
     Add<TFloat32> loss = tf.withName(TRAINING_LOSS).math
-        .add(labelLoss, tf.math.mul(regularizers, tf.constant(5e-4f)));
+        .add(labelLoss, tf.math.mul(regularizers, tf.val(5e-4f)));
 
     // Optimizer
     Optimizer optimizer;
@@ -304,7 +303,6 @@ public class MNISTTest {
 
     int epochs = Integer.parseInt(args[0]);
     int minibatchSize = Integer.parseInt(args[1]);
-
 
     int correctCount = 0;
     int[][] confusionMatrix = new int[10][10];

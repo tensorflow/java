@@ -15,14 +15,12 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the Adagrad algorithm.
@@ -57,7 +55,7 @@ public class AdaGrad extends Optimizer {
 
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
     Operand<T> initializer = tf.fill(tf.shape(v),
-        tf.dtypes.cast(tf.constant(initialAccumulatorValue, TFloat32.DTYPE), v.dataType()));
+        tf.dtypes.cast(tf.val(initialAccumulatorValue), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 
@@ -65,7 +63,8 @@ public class AdaGrad extends Optimizer {
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return tf.train
-        .applyAdagrad(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient);
+        .applyAdagrad(variable, slot, tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+            gradient);
   }
 
   @Override

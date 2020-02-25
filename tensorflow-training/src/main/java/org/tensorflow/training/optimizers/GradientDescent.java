@@ -18,9 +18,7 @@ package org.tensorflow.training.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
 
 /**
  * Basic SGD.
@@ -37,7 +35,7 @@ public class GradientDescent extends Optimizer {
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     return tf.train.applyGradientDescent(variable,
-        tf.dtypes.cast(tf.constant(learningRate, TFloat32.DTYPE), gradient.dataType()), gradient);
+        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()), gradient);
   }
 
   @Override

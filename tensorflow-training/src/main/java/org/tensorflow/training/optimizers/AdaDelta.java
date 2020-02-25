@@ -15,14 +15,12 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the Adadelta algorithm.
@@ -60,10 +58,10 @@ public class AdaDelta extends Optimizer {
 
   private <T extends TType> void createAdaDeltaSlot(Output<T> v) {
     Operand<T> accumulatorInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, accumulatorInitializer);
     Operand<T> updateInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR_UPDATE, updateInitializer);
   }
 
@@ -72,9 +70,9 @@ public class AdaDelta extends Optimizer {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> accumUpdateSlot = getSlot(variable, ACCUMULATOR_UPDATE).get();
     return tf.train.applyAdadelta(variable, accumSlot, accumUpdateSlot,
-        tf.constant(learningRate, gradient.dataType()),
-        tf.constant(rho, gradient.dataType()),
-        tf.constant(epsilon, gradient.dataType()),
+        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+        tf.dtypes.cast(tf.val(rho), gradient.dataType()),
+        tf.dtypes.cast(tf.val(epsilon), gradient.dataType()),
         gradient);
   }
 

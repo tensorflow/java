@@ -15,15 +15,13 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyMomentum;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * SGD plus momentum, either nesterov or traditional.
@@ -57,7 +55,7 @@ public class Momentum extends Optimizer {
 
   private <T extends TType> void createMomentumSlot(Output<T> v) {
     Operand<T> initializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, initializer);
   }
 
@@ -65,8 +63,10 @@ public class Momentum extends Optimizer {
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, MOMENTUM).get();
     return tf.train
-        .applyMomentum(variable, slot, tf.constant(learningRate, gradient.dataType()), gradient,
-            tf.constant(momentum, gradient.dataType()), ApplyMomentum.useNesterov(useNesterov));
+        .applyMomentum(variable, slot, tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+            gradient,
+            tf.dtypes.cast(tf.val(momentum), gradient.dataType()),
+            ApplyMomentum.useNesterov(useNesterov));
   }
 
   @Override

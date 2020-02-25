@@ -15,6 +15,8 @@
  */
 package org.tensorflow.training.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -28,9 +30,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adam algorithm.
@@ -70,12 +69,14 @@ public class Adam extends Optimizer {
     this.epsilon = epsilon;
   }
 
-  @Endpoint(name="adam_minimize")
-  public static <T extends TType> Op createAdamMinimize(Scope scope, Operand<T> loss, float learningRate, float betaOne, float betaTwo, float epsilon, Optimizer.Options... options) {
+  @Endpoint(name = "adam_minimize")
+  public static <T extends TType> Op createAdamMinimize(Scope scope, Operand<T> loss,
+      float learningRate, float betaOne, float betaTwo, float epsilon,
+      Optimizer.Options... options) {
     if (!(scope.env() instanceof Graph)) {
       throw new IllegalArgumentException("Optimizers are only supported on Graphs");
     }
-    Adam adam = new Adam((Graph)scope.env(),learningRate,betaOne,betaTwo,epsilon);
+    Adam adam = new Adam((Graph) scope.env(), learningRate, betaOne, betaTwo, epsilon);
     String name = null;
     for (Options o : options) {
       if (o.sharedName != null) {
@@ -85,7 +86,7 @@ public class Adam extends Optimizer {
     if (name == null) {
       return adam.minimize(loss);
     } else {
-      return adam.minimize(loss,name);
+      return adam.minimize(loss, name);
     }
   }
 
@@ -96,29 +97,29 @@ public class Adam extends Optimizer {
     }
     betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.DTYPE);
     Assign<TFloat32> betaOnePowerInit = tf
-        .assign(betaOnePower, tf.constant(betaOne, TFloat32.DTYPE));
+        .assign(betaOnePower, tf.val(betaOne));
     graph.addInitializer(betaOnePowerInit);
     betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.DTYPE);
     Assign<TFloat32> betaTwoPowerInit = tf
-        .assign(betaTwoPower, tf.constant(betaTwo, TFloat32.DTYPE));
+        .assign(betaTwoPower, tf.val(betaTwo));
     graph.addInitializer(betaTwoPowerInit);
   }
 
   @Override
   protected Optional<Operand<?>> prepare(String scopeName) {
-    betaOneConst = tf.constant(betaOne);
-    betaTwoConst = tf.constant(betaTwo);
-    learningRateConst = tf.constant(learningRate);
-    epsilonConst = tf.constant(epsilon);
+    betaOneConst = tf.val(betaOne);
+    betaTwoConst = tf.val(betaTwo);
+    learningRateConst = tf.val(learningRate);
+    epsilonConst = tf.val(epsilon);
     return Optional.empty();
   }
 
   private <T extends TType> void createAdamSlot(Output<T> v) {
     Operand<T> firstMomentInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
     Operand<T> secondMomentInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f, TFloat32.DTYPE), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
