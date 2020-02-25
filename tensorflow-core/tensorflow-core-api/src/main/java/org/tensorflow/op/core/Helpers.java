@@ -38,7 +38,9 @@ public abstract class Helpers {
 
     /**
      * Factory method to create a new Variable with it's initializer.
-     *
+     * <p>
+     * Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op
+     * does not work in an EagerSession.
      * @param scope current scope
      * @param init The op to use to initialise this variable.
      * @param options carries optional attributes values
@@ -53,6 +55,8 @@ public abstract class Helpers {
         if (exEnv instanceof Graph) {
             Graph graph = (Graph) exEnv;
             graph.addInitializer(assignOp);
+        } else {
+            throw new IllegalArgumentException("variable with init is only supported on Graph sessions.");
         }
 
         return newVar;

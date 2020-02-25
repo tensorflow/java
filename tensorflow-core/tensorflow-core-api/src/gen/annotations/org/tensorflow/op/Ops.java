@@ -7335,6 +7335,9 @@ public final class Ops {
 
   /**
    * Factory method to create a new Variable with it's initializer.
+   *  <p>
+   *  Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op
+   *  does not work in an EagerSession.
    *
    * @param scope current scope
    * @param init The op to use to initialise this variable.
