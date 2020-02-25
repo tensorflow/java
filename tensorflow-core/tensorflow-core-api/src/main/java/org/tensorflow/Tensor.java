@@ -157,7 +157,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     }
     long[] dimSizes = new long[numDimensions(obj, dtype)];
     fillShape(obj, 0, dimSizes);
-    Tensor<T> t = new Tensor<>(dtype, Shape.make(dimSizes));
+    Tensor<T> t = new Tensor<>(dtype, Shape.of(dimSizes));
     TF_Tensor nativeHandle;
     if (t.dtype != TString.DTYPE) {
       long byteSize = elemByteSize(t.dtype) * t.shape.size();

@@ -19,6 +19,9 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
@@ -34,6 +37,7 @@ import java.util.Optional;
  * <p>
  * See the <a href="http://arxiv.org/abs/1412.6980">paper</a>.
  */
+@Operator
 public class Adam extends Optimizer {
 
   public static final String FIRST_MOMENT = "m";
@@ -64,6 +68,25 @@ public class Adam extends Optimizer {
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
+  }
+
+  @Endpoint(name="adam_minimize")
+  public static <T extends TType> Op createAdamMinimize(Scope scope, Operand<T> loss, float learningRate, float betaOne, float betaTwo, float epsilon, Optimizer.Options... options) {
+    if (!(scope.env() instanceof Graph)) {
+      throw new IllegalArgumentException("Optimizers are only supported on Graphs");
+    }
+    Adam adam = new Adam((Graph)scope.env(),learningRate,betaOne,betaTwo,epsilon);
+    String name = null;
+    for (Options o : options) {
+      if (o.sharedName != null) {
+        name = o.sharedName;
+      }
+    }
+    if (name == null) {
+      return adam.minimize(loss);
+    } else {
+      return adam.minimize(loss,name);
+    }
   }
 
   @Override

@@ -43,6 +43,25 @@ public abstract class Optimizer {
   public static final String VARIABLE_V2 = "VariableV2";
 
   /**
+   * Optional attributes for {@link org.tensorflow.training.optimizers.Optimizer}
+   */
+  public static class Options {
+
+    /**
+     * @param sharedName If non-empty, this variable is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     */
+    public Optimizer.Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
+
+    protected String sharedName;
+
+    private Options() {
+    }
+  }
+  /**
    * Top level map key is the variable name, lower level map key is the slot name.
    */
   private final Map<String, Map<String, Variable<?>>> slots;

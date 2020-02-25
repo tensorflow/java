@@ -57,6 +57,7 @@ import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
+import org.tensorflow.op.core.CoreOps;
 import org.tensorflow.op.core.CountUpTo;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
@@ -1846,7 +1847,7 @@ public final class Ops {
    *  Example of usage:
    *  <pre>{@code
    *  Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
-   *  Scalar<TFloat32> alpha = ops.scalar(1.0f);
+   *  Constant<TFloat32> alpha = tf.val(1.0f);
    *  tf.train.applyGradientDescent(w, alpha, gradients.<Float>dy(0));
    *  tf.train.applyGradientDescent(b, alpha, gradients.<Float>dy(1));
    *  }</pre>
@@ -7387,6 +7388,19 @@ public final class Ops {
    */
   public <T extends TNumber> VariableShape<T> variableShape(Operand<?> input, DataType<T> outType) {
     return VariableShape.create(scope, input, outType);
+  }
+
+  /**
+   * Factory method to create a new Variable with it's initializer.
+   *
+   * @param scope current scope
+   * @param init The op to use to initialise this variable.
+   * @param options carries optional attributes values
+   * @return a new instance of Variable
+   */
+  public <T extends TType> Variable<T> variableWithInit(Operand<T> init,
+      Variable.Options... options) {
+    return CoreOps.createVariableWithInit(scope, init, options);
   }
 
   /**
