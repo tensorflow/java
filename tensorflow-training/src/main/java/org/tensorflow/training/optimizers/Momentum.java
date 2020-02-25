@@ -46,6 +46,13 @@ public class Momentum extends Optimizer {
     this.useNesterov = useNesterov;
   }
 
+  public Momentum(Graph graph, String name, float learningRate, float momentum, boolean useNesterov) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.momentum = momentum;
+    this.useNesterov = useNesterov;
+  }
+
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {

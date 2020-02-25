@@ -55,6 +55,19 @@ public class AdaGradDA extends Optimizer {
     this.l2Strength = l2Strength;
   }
 
+  public AdaGradDA(Graph graph, String name, float learningRate) {
+    this(graph, name, learningRate, 0.1f, 0.0f, 0.0f);
+  }
+
+  public AdaGradDA(Graph graph, String name, float learningRate, float initialAccumulatorValue, float l1Strength,
+      float l2Strength) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.initialAccumulatorValue = initialAccumulatorValue;
+    this.l1Strength = l1Strength;
+    this.l2Strength = l2Strength;
+  }
+
   @Override
   protected Optional<Operand<?>> prepare(String name) {
     return Optional.of(tf.assignAdd(globalStep, tf.val(1L)));

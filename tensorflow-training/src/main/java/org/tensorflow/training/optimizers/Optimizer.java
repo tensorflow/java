@@ -34,7 +34,7 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
 
 /**
- *
+ * Base class for gradient optimizers.
  */
 public abstract class Optimizer {
 
@@ -57,9 +57,27 @@ public abstract class Optimizer {
    */
   private final Map<String, Map<String, Variable<?>>> slots;
 
+  /**
+   * Builds an optimizer for the supplied graph.
+   * <p>
+   * Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
+   * @param graph The graph to optimize.
+   */
   protected Optimizer(Graph graph) {
     this.graph = graph;
     this.tf = Ops.create(graph).withName(getOptimizerName());
+    this.slots = new HashMap<>();
+    this.globals = new ArrayList<>();
+  }
+
+  /**
+   * Builds an optimizer for the supplied graph.
+   * @param graph The graph to optimize.
+   * @param name The base name for the operations.
+   */
+  protected Optimizer(Graph graph, String name) {
+    this.graph = graph;
+    this.tf = Ops.create(graph).withName(name);
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
   }

@@ -69,6 +69,18 @@ public class Adam extends Optimizer {
     this.epsilon = epsilon;
   }
 
+  public Adam(Graph graph, String name, float learningRate) {
+    this(graph, name, learningRate, 0.9f, 0.999f, 1e-8f);
+  }
+
+  public Adam(Graph graph, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.betaOne = betaOne;
+    this.betaTwo = betaTwo;
+    this.epsilon = epsilon;
+  }
+
   @Endpoint(name = "adam_minimize")
   public static <T extends TType> Op createAdamMinimize(Scope scope, Operand<T> loss,
       float learningRate, float betaOne, float betaTwo, float epsilon,

@@ -46,6 +46,16 @@ public class AdaGrad extends Optimizer {
     this.initialAccumulatorValue = initialAccumulatorValue;
   }
 
+  public AdaGrad(Graph graph, String name, float learningRate) {
+    this(graph, name, learningRate, 0.01f);
+  }
+
+  public AdaGrad(Graph graph, String name, float learningRate, float initialAccumulatorValue) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.initialAccumulatorValue = initialAccumulatorValue;
+  }
+
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {

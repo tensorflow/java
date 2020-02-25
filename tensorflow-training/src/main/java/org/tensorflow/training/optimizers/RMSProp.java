@@ -54,6 +54,20 @@ public class RMSProp extends Optimizer {
     this.centered = centered;
   }
 
+  public RMSProp(Graph graph, String name, float learningRate) {
+    this(graph, name, learningRate, 0.9f, 0.0f, 1e-10f, false);
+  }
+
+  public RMSProp(Graph graph, String name, float learningRate, float decay, float momentum, float epsilon,
+      boolean centered) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.decay = decay;
+    this.momentum = momentum;
+    this.epsilon = epsilon;
+    this.centered = centered;
+  }
+
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {

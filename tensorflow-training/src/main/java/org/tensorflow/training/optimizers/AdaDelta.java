@@ -49,6 +49,17 @@ public class AdaDelta extends Optimizer {
     this.epsilon = epsilon;
   }
 
+  public AdaDelta(Graph graph, String name, float learningRate) {
+    this(graph, name, learningRate, 0.95f, 1e-8f);
+  }
+
+  public AdaDelta(Graph graph, String name, float learningRate, float rho, float epsilon) {
+    super(graph, name);
+    this.learningRate = learningRate;
+    this.rho = rho;
+    this.epsilon = epsilon;
+  }
+
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {

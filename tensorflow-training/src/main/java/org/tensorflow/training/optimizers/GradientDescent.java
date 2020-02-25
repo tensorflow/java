@@ -32,6 +32,11 @@ public class GradientDescent extends Optimizer {
     this.learningRate = learningRate;
   }
 
+  public GradientDescent(Graph graph, String name, float learningRate) {
+    super(graph, name);
+    this.learningRate = learningRate;
+  }
+
   @Override
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     return tf.train.applyGradientDescent(variable,
