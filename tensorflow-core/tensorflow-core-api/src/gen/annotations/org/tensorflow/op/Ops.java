@@ -79,6 +79,7 @@ import org.tensorflow.op.core.GetSessionTensor;
 import org.tensorflow.op.core.Gradients;
 import org.tensorflow.op.core.GuaranteeConst;
 import org.tensorflow.op.core.HashTable;
+import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
@@ -1846,7 +1847,7 @@ public final class Ops {
    *  Example of usage:
    *  <pre>{@code
    *  Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
-   *  Scalar<TFloat32> alpha = ops.scalar(1.0f);
+   *  Constant<TFloat32> alpha = tf.val(1.0f);
    *  tf.train.applyGradientDescent(w, alpha, gradients.<Float>dy(0));
    *  tf.train.applyGradientDescent(b, alpha, gradients.<Float>dy(1));
    *  }</pre>
@@ -7330,6 +7331,21 @@ public final class Ops {
    */
   public VarIsInitializedOp varIsInitializedOp(Operand<?> resource) {
     return VarIsInitializedOp.create(scope, resource);
+  }
+
+  /**
+   * Factory method to create a new Variable with its initializer.
+   *  <p>
+   *  Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op
+   *  does not work in an EagerSession.
+   *
+   * @param scope current scope
+   * @param init The op to use to initialise this variable.
+   * @param options carries optional attributes values
+   * @return a new instance of Variable
+   */
+  public <T extends TType> Variable<T> variable(Operand<T> init, Variable.Options... options) {
+    return Helpers.createVariableWithInit(scope, init, options);
   }
 
   /**

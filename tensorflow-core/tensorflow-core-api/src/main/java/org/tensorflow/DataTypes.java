@@ -70,5 +70,6 @@ final class DataTypes {
   //      to allow user to register custom data types?
   private static void register(DataType<?> dataType) {
     DATA_TYPE_REGISTRY.put(dataType.nativeCode(), dataType);
+    DATA_TYPE_REGISTRY.put(dataType.nativeCode() + 100, dataType);
   }
 }

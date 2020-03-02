@@ -37,6 +37,10 @@ xcuserdata/**
 /estimator_api_init_files_list.txt
 *.whl
 
+# Patch files
+*.orig
+*.rej
+
 # Android
 .gradle
 .idea
