@@ -44,10 +44,10 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    */
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
     List<Shape> batchOutputShapes = getOutputShapes().stream()
-        .map(s -> Shape.make(Utils.array(batchSize, s.asArray())))
+        .map(s -> Shape.of(Utils.array(batchSize, s.asArray())))
         .collect(Collectors.toList());
-    return new BatchDataset(tf, this.getVariant(), tf.constant(batchSize),
-        tf.constant(dropLastBatch), this.getOutputTypes(), batchOutputShapes);
+    return new BatchDataset(tf, this.getVariant(), tf.val(batchSize),
+        tf.val(dropLastBatch), this.getOutputTypes(), batchOutputShapes);
   }
 
   /**
@@ -68,7 +68,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return A new Dataset with `count` elements removed.
    */
   public final Dataset skip(long count) {
-    return new SkipDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+    return new SkipDataset(tf, this.getVariant(), tf.val(count), this.getOutputTypes(), this.getOutputShapes());
   }
 
   /**
@@ -78,7 +78,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return A new Dataset containing the first `count` elements from this dataset.
    */
   public final Dataset take(long count) {
-    return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+    return new TakeDataset(tf, this.getVariant(), tf.val(count), this.getOutputTypes(), this.getOutputShapes());
   }
 
   /**
@@ -147,7 +147,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     }
     List<DataType<?>> outputTypes = getOutputTypes();
     List<Shape> outputShapes = getOutputShapes();
-    Operand<?> iterator = tf.data.iterator("graphIteratorSharedName", "graphIteratorContainer", outputTypes, outputShapes);
+    Operand<?> iterator = tf.data.iterator(null, null, outputTypes, outputShapes);
 
     MakeIterator makeIterator = tf.data.makeIterator(getVariant(), iterator);
     List<Output<?>> components = tf.data.iteratorGetNext(iterator, outputTypes, outputShapes).components();
