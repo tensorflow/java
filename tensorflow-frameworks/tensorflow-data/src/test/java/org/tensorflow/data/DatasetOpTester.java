@@ -20,7 +20,7 @@ public class DatasetOpTester {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
 
-      Constant<TInt32> X = tf.constant(
+      Constant<TInt32> X = tf.val(
           new int[][]{
               {1, 2, 3},
               {4, 5, 6},
@@ -29,7 +29,7 @@ public class DatasetOpTester {
           }
       );
 
-      Constant<TInt32> y = tf.constant(
+      Constant<TInt32> y = tf.val(
           new int[][]{
               {1},
               {4},
@@ -44,26 +44,26 @@ public class DatasetOpTester {
       // // Try running TensorDataset
       List<DataType<?>> outputTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
       List<Shape> outputShapes = Arrays.asList(
-          Shape.make(3),
-          Shape.make(1));
+          Shape.of(3),
+          Shape.of(1));
 
       TensorSliceDataset tensorDataset = TensorSliceDataset.create(tf.scope(), tensors, outputShapes);
 
       BatchDataset batchDataset = BatchDataset.create(
           tf.scope(),
           tensorDataset,
-          tf.constant(2L),
-          tf.constant(true),
+          tf.val(2L),
+          tf.val(true),
           outputTypes,
           Arrays.asList(
-              Shape.make(2, 3),
-              Shape.make(2, 1))
+              Shape.of(2, 3),
+              Shape.of(2, 1))
       );
 
 
       AnonymousIterator anonymousIter = AnonymousIterator.create(tf.scope(), outputTypes, Arrays.asList(
-          Shape.make(2, 3),
-          Shape.make(2, 1)));
+          Shape.of(2, 3),
+          Shape.of(2, 1)));
 
       MakeIterator makeIterator = tf.data.makeIterator(batchDataset, anonymousIter.handle());
 
@@ -88,7 +88,7 @@ public class DatasetOpTester {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
 
-      Constant<TInt32> X = tf.constant(
+      Constant<TInt32> X = tf.val(
           new int[][]{
               {1, 2, 3},
               {4, 5, 6},
@@ -97,7 +97,7 @@ public class DatasetOpTester {
           }
       );
 
-      Constant<TInt32> y = tf.constant(
+      Constant<TInt32> y = tf.val(
           new int[][]{
               {1},
               {4},
@@ -138,7 +138,7 @@ public class DatasetOpTester {
       try (Session session = new Session(graph)) {
         long BATCH_SIZE = 2L;
 
-        Constant<TInt32> X = tf.constant(
+        Constant<TInt32> X = tf.val(
             new int[][]{
                 {1, 2, 3},
                 {4, 5, 6},
@@ -147,7 +147,7 @@ public class DatasetOpTester {
             }
         );
 
-        Constant<TInt32> y = tf.constant(
+        Constant<TInt32> y = tf.val(
             new int[][]{
                 {1},
                 {4},
@@ -159,8 +159,8 @@ public class DatasetOpTester {
         // // Try running TensorDataset
         List<DataType<?>> outputTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
         List<Shape> outputShapes = Arrays.asList(
-            Shape.make(3),
-            Shape.make(1));
+            Shape.of(3),
+            Shape.of(1));
 
         TensorSliceDataset tensorDataset = TensorSliceDataset.create(tf.scope(),
             Arrays.asList(X, y),
@@ -169,17 +169,17 @@ public class DatasetOpTester {
         BatchDataset batchDataset = BatchDataset.create(
             tf.scope(),
             tensorDataset,
-            tf.constant(BATCH_SIZE),
-            tf.constant(true),
+            tf.val(BATCH_SIZE),
+            tf.val(true),
             outputTypes,
             Arrays.asList(
-                Shape.make(BATCH_SIZE, 3),
-                Shape.make(BATCH_SIZE, 1))
+                Shape.of(BATCH_SIZE, 3),
+                Shape.of(BATCH_SIZE, 1))
         );
 
-        Iterator anonymousIter = Iterator.create(tf.scope(), "anoniterator", "iterator", outputTypes, Arrays.asList(
-            Shape.make(BATCH_SIZE, 3),
-            Shape.make(BATCH_SIZE, 1)));
+        Iterator anonymousIter = Iterator.create(tf.scope(), null, null, outputTypes, Arrays.asList(
+            Shape.of(BATCH_SIZE, 3),
+            Shape.of(BATCH_SIZE, 1)));
 
         MakeIterator makeIterator = tf.data.makeIterator(batchDataset, anonymousIter);
 
@@ -219,7 +219,7 @@ public class DatasetOpTester {
       try (Session session = new Session(graph)) {
         long BATCH_SIZE = 2L;
 
-        Constant<TInt32> X = tf.constant(
+        Constant<TInt32> X = tf.val(
             new int[][]{
                 {1, 2, 3},
                 {4, 5, 6},
@@ -228,7 +228,7 @@ public class DatasetOpTester {
             }
         );
 
-        Constant<TInt32> y = tf.constant(
+        Constant<TInt32> y = tf.val(
             new int[][]{
                 {1},
                 {4},

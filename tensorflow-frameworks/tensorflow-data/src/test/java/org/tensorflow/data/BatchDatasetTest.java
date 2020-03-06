@@ -22,8 +22,8 @@ public class BatchDatasetTest extends DatasetTestBase {
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
             Arrays.asList(
-                tf.constant(testMatrix1),
-                tf.constant(testMatrix2)),
+                tf.val(testMatrix1),
+                tf.val(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .batch(2);
 
@@ -46,8 +46,8 @@ public class BatchDatasetTest extends DatasetTestBase {
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
             Arrays.asList(
-                tf.constant(testMatrix1),
-                tf.constant(testMatrix2)),
+                tf.val(testMatrix1),
+                tf.val(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .batch(3, true);
 
@@ -69,8 +69,8 @@ public class BatchDatasetTest extends DatasetTestBase {
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
             Arrays.asList(
-                tf.constant(testMatrix1),
-                tf.constant(testMatrix2)),
+                tf.val(testMatrix1),
+                tf.val(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .batch(3, false);
 
@@ -93,6 +93,4 @@ public class BatchDatasetTest extends DatasetTestBase {
 
     assertTrue(foundLastBatch);
   }
-
-
 }

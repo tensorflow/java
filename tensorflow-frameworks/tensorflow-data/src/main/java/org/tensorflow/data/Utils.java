@@ -5,7 +5,7 @@ import org.tensorflow.tools.Shape;
 public class Utils {
 
     private static Shape head(Shape shape) {
-        return Shape.make(shape.size(0));
+        return Shape.of(shape.size(0));
     }
 
     public static Shape tail(Shape shape) {
@@ -14,7 +14,7 @@ public class Utils {
             tail[i - 1] = shape.size(i);
         }
 
-        return Shape.make(tail);
+        return Shape.of(tail);
     }
 
     public static long[] shapeArray(Shape shape) {
