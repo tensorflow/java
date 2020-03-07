@@ -147,7 +147,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     }
     List<DataType<?>> outputTypes = getOutputTypes();
     List<Shape> outputShapes = getOutputShapes();
-    Operand<?> iterator = tf.data.iterator(null, null, outputTypes, outputShapes);
+    Operand<?> iterator = tf.data.iterator("null", "null", outputTypes, outputShapes);
 
     MakeIterator makeIterator = tf.data.makeIterator(getVariant(), iterator);
     List<Output<?>> components = tf.data.iteratorGetNext(iterator, outputTypes, outputShapes).components();
