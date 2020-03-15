@@ -91,8 +91,9 @@ class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDat
       @Override
       public BooleanDataBuffer otherwise() {
         if (dst instanceof BooleanDataBuffer) {
+          BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (int idx = 0; idx < size; ++idx) {
-            ((BooleanDataBuffer)dst).setBoolean(bitSet.get(idx + offset), idx);
+            booleanDst.setBoolean(bitSet.get(idx + offset), idx);
           }
         } else {
           for (int idx = 0; idx < size; ++idx) {

@@ -114,4 +114,11 @@ public class StdArraysTest {
     Shape shape = StdArrays.shapeOf(new int[2][2][3]);
     assertArrayEquals(new long[] {2, 2, 3}, shape.asArray());
   }
+
+  @Test
+  public void createArrayFromObjectMatrix() {
+    NdArray<String> ndArray = StdArrays.ndCopyOf(new String[][] {{"a", "b"}, {"c", "d"}});
+    assertEquals(NdArrays.vectorOfObjects("a", "b"), ndArray.get(0));
+    assertEquals(NdArrays.vectorOfObjects("c", "d"), ndArray.get(1));
+  }
 }

@@ -60,8 +60,9 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
   public DoubleDataBuffer copyTo(DataBuffer<Double> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof DoubleDataBuffer) {
+      DoubleDataBuffer doubleDst = (DoubleDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((DoubleDataBuffer)dst).setDouble(getDouble(idx), idx);
+        doubleDst.setDouble(getDouble(idx), idx);
       }
       return this;
     }

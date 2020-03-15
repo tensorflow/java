@@ -522,7 +522,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T> ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -535,7 +535,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[][] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T>ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -548,7 +548,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[][][] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T>ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -561,7 +561,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T>ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -574,7 +574,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][][] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T>ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -587,7 +587,7 @@ public final class StdArrays {
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][][][] array) {
     @SuppressWarnings("unchecked")
-    NdArray<T>ndArray = NdArrays.ofObjects((Class<T>)array.getClass().getComponentType(), shapeOf(array));
+    NdArray<T>ndArray = NdArrays.ofObjects(componentTypeOf(array), shapeOf(array));
     copyTo(ndArray, array);
     return ndArray;
   }
@@ -2198,5 +2198,13 @@ public final class StdArrays {
       computeShape(array[i], shape);
     }
     return shape;
+  }
+
+  private static <T> Class<T> componentTypeOf(Object array) {
+    Class<?> componentType = array.getClass().getComponentType();
+    while (componentType.isArray()) {
+      componentType = componentType.getComponentType();
+    }
+    return (Class<T>)componentType;
   }
 }

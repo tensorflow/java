@@ -60,8 +60,9 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
   public IntDataBuffer copyTo(DataBuffer<Integer> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof IntDataBuffer) {
+      IntDataBuffer intDst = (IntDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((IntDataBuffer)dst).setInt(getInt(idx), idx);
+        intDst.setInt(getInt(idx), idx);
       }
       return this;
     }

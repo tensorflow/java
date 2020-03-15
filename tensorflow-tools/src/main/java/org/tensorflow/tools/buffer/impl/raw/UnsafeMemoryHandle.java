@@ -115,7 +115,7 @@ final class UnsafeMemoryHandle {
 
   UnsafeMemoryHandle rescale(long scale) {
     if (object != null) {
-      throw new IllegalStateException("Raw heap memory can be rescaled");
+      throw new IllegalStateException("Raw heap memory cannot be rescaled");
     }
     return new UnsafeMemoryHandle(null, byteOffset, byteSize, scale);
   }

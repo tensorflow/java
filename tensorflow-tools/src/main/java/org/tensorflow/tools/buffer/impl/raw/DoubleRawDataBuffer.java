@@ -85,8 +85,9 @@ final class DoubleRawDataBuffer extends AbstractRawDataBuffer<Double, DoubleData
       @Override
       public DoubleDataBuffer otherwise() {
         if (dst instanceof DoubleDataBuffer) {
+          DoubleDataBuffer doubleDst = (DoubleDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((DoubleDataBuffer)dst).setDouble(getDouble(idx), idx);
+            doubleDst.setDouble(getDouble(idx), idx);
           }
           return DoubleRawDataBuffer.this;
         }

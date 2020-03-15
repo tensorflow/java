@@ -228,10 +228,10 @@ public interface DataBuffer<T> {
    * Visits the backing storage of this buffer.
    *
    * <p>The buffer implementation is responsible of passing back a reference to the actual data
-   * storage to the provided visitor. The visitor does not have to handle all possible type of
+   * storage to the provided visitor. The visitor does not have to handle all possible types of
    * data storage and can override only methods for storage it is actually interested in. For any
-   * other type of storage, the call will fallback to {@link DataStorageVisitor#otherwise()} so the
-   * visitor can handle it as a general case.
+   * other type of storage, this call will fallback to {@link DataStorageVisitor#otherwise()} so the
+   * visitor can execute some generic routine if needed.
    *
    * @param visitor visits the data storage of this buffer
    * @param <R> type of value returned by the visitor
@@ -245,7 +245,17 @@ public interface DataBuffer<T> {
    * Checks equality between data buffers.
    *
    * <p>A data buffer is equal to another object if this object is another {@link DataBuffer} of the
-   * same size and each elements are equal and stored in the same order.
+   * same size, type and the elements are equal and in the same order. For example:
+   *
+   * <pre>{@code
+   * IntDataBuffer buffer = DataBuffers.of(1, 2, 3);
+   *
+   * assertEquals(buffer, DataBuffers.of(1, 2, 3));  // true
+   * assertEquals(buffer, DataBuffers.ofObjects(1, 2, 3));  // true, as Integers are equal to ints
+   * assertNotEquals(buffer, DataBuffers.of(1, 2, 3, 0));  // false, different sizes
+   * assertNotEquals(buffer, DataBuffers.of(1, 3, 2));  // false, different order
+   * assertNotEquals(buffer, DataBuffers.of(1L, 2L, 3L));  // false, different types
+   * }</pre>
    *
    * <p>Note that the computation required to verify equality between two buffers can be expensive
    * in some cases and therefore, it is recommended to not use this method in a critical path

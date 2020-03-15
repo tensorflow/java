@@ -60,8 +60,9 @@ class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof ShortDataBuffer) {
+      ShortDataBuffer shortDst = (ShortDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+        shortDst.setShort(getShort(idx), idx);
       }
       return this;
     }

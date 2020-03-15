@@ -60,8 +60,9 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
   public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof BooleanDataBuffer) {
+      BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((BooleanDataBuffer)dst).setBoolean(getBoolean(idx), idx);
+        booleanDst.setBoolean(getBoolean(idx), idx);
       }
       return this;
     }

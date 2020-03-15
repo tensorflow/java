@@ -85,8 +85,9 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
       @Override
       public ShortDataBuffer otherwise() {
         if (dst instanceof ShortDataBuffer) {
+          ShortDataBuffer shortDst = (ShortDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+            shortDst.setShort(getShort(idx), idx);
           }
           return ShortRawDataBuffer.this;
         }

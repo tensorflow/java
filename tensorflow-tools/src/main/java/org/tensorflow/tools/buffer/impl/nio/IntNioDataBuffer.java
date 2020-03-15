@@ -66,8 +66,9 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
       @Override
       public IntDataBuffer otherwise() {
         if (dst instanceof IntDataBuffer) {
+          IntDataBuffer intDst = (IntDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((IntDataBuffer)dst).setInt(getInt(idx), idx);
+            intDst.setInt(getInt(idx), idx);
           }
           return IntNioDataBuffer.this;
         }

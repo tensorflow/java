@@ -128,4 +128,15 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
     assertFalse(buffer.equals(array2Buffer));
     assertNotEquals(array2Buffer.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    BooleanDataBuffer buffer = allocate(2)
+        .setBoolean(false, 0)
+        .setBoolean(true, 1);
+    ByteDataBuffer byteBuffer = DataBuffers.of((byte)0, (byte)1);
+
+    assertFalse(buffer.equals(byteBuffer));
+    assertFalse(byteBuffer.equals(buffer));
+  }
 }

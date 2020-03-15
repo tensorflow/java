@@ -85,8 +85,9 @@ final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer
       @Override
       public LongDataBuffer otherwise() {
         if (dst instanceof LongDataBuffer) {
+          LongDataBuffer longDst = (LongDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((LongDataBuffer)dst).setLong(getLong(idx), idx);
+            longDst.setLong(getLong(idx), idx);
           }
           return LongRawDataBuffer.this;
         }

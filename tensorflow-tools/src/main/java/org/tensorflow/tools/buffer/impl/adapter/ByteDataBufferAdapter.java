@@ -49,8 +49,9 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   public ByteDataBuffer copyTo(DataBuffer<Byte> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof ByteDataBuffer) {
+      ByteDataBuffer byteDst = (ByteDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((ByteDataBuffer)dst).setByte(getByte(idx), idx);
+        byteDst.setByte(getByte(idx), idx);
       }
       return this;
     }

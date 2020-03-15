@@ -79,8 +79,9 @@ final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanD
       @Override
       public BooleanDataBuffer otherwise() {
         if (dst instanceof BooleanDataBuffer) {
+          BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((BooleanDataBuffer) dst).setBoolean(getBoolean(idx), idx);
+            booleanDst.setBoolean(getBoolean(idx), idx);
           }
           return BooleanRawDataBuffer.this;
         }

@@ -60,8 +60,9 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   public FloatDataBuffer copyTo(DataBuffer<Float> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof FloatDataBuffer) {
+      FloatDataBuffer floatDst = (FloatDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((FloatDataBuffer)dst).setFloat(getFloat(idx), idx);
+        floatDst.setFloat(getFloat(idx), idx);
       }
       return this;
     }

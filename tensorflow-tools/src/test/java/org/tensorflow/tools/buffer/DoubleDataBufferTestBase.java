@@ -121,4 +121,15 @@ public abstract class DoubleDataBufferTestBase extends DataBufferTestBase<Double
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    DoubleDataBuffer buffer = allocate(2)
+        .setDouble(1.0, 0)
+        .setDouble(16.0, 1);
+    FloatDataBuffer floatBuffer = DataBuffers.of(1.0f, 16.0f);
+
+    assertFalse(buffer.equals(floatBuffer));
+    assertFalse(floatBuffer.equals(buffer));
+  }
 }

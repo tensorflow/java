@@ -121,4 +121,15 @@ public abstract class LongDataBufferTestBase extends DataBufferTestBase<Long> {
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    LongDataBuffer buffer = allocate(2)
+        .setLong(1L, 0)
+        .setLong(16L, 1);
+    IntDataBuffer intBuffer = DataBuffers.of(1, 16);
+
+    assertFalse(buffer.equals(intBuffer));
+    assertFalse(intBuffer.equals(buffer));
+  }
 }

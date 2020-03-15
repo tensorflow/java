@@ -121,4 +121,15 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    IntDataBuffer buffer = allocate(2)
+        .setInt(1, 0)
+        .setInt(16, 1);
+    LongDataBuffer longBuffer = DataBuffers.of(1L, 16L);
+
+    assertFalse(buffer.equals(longBuffer));
+    assertFalse(longBuffer.equals(buffer));
+  }
 }

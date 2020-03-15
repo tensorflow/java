@@ -296,7 +296,19 @@ public interface NdArray<T> {
    * Checks equality between n-dimensional arrays.
    *
    * <p>An array is equal to another object if this object is another {@link NdArray} of the
-   * same shape and each elements are equal and in the same order.
+   * same shape, type and the elements are equal and in the same order. For example:
+   *
+   * <pre>{@code
+   * IntNdArray array = NdArrays.ofInts(Shape.of(2, 2))
+   *    .set(NdArrays.vectorOf(1, 2), 0)
+   *    .set(NdArrays.vectorOf(3, 4), 1);
+   *
+   * assertEquals(array, StdArrays.ndCopyOf(new int[][] {{1, 2}, {3, 4}}));  // true
+   * assertEquals(array, StdArrays.ndCopyOf(new Integer[][] {{1, 2}, {3, 4}}));  // true, as Integers are equal to ints
+   * assertNotEquals(array, NdArrays.vectorOf(1, 2, 3, 4));  // false, different shapes
+   * assertNotEquals(array, StdArrays.ndCopyOf(new int[][] {{3, 4}, {1, 2}}));  // false, different order
+   * assertNotEquals(array, StdArrays.ndCopyOf(new long[][] {{1L, 2L}, {3L, 4L}}));  // false, different types
+   * }</pre>
    *
    * <p>Note that the computation required to verify equality between two arrays can be expensive
    * in some cases and therefore, it is recommended to not use this method in a critical path

@@ -121,4 +121,25 @@ public abstract class ByteDataBufferTestBase extends DataBufferTestBase<Byte> {
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    ByteDataBuffer buffer = allocate(2)
+        .setByte((byte)1, 0)
+        .setByte((byte)16, 1);
+    LongDataBuffer longBuffer = DataBuffers.of(1L, 16L);
+
+    assertFalse(buffer.equals(longBuffer));
+    assertFalse(longBuffer.equals(buffer));
+
+    try {
+      IntDataBuffer intBuffer = buffer.asInts();
+
+      assertFalse(buffer.equals(intBuffer));
+      assertFalse(intBuffer.equals(buffer));
+
+    } catch (IllegalStateException e) {
+      // some byte buffers cannot be converted to ints, ignore the test in that case
+    }
+  }
 }
