@@ -59,7 +59,7 @@ public final class Output<T extends TType> implements Operand<T> {
   public <U extends TType> Output<U> expect(DataType<U> dt) {
     if (!dt.equals(this.dataType())) {
       throw new IllegalArgumentException(
-          "Cannot cast from tensor of " + this.dataType() + " to tensor of " + dt);
+          "Cannot cast from output of " + this.dataType() + " to output of " + dt);
     }
     return ((Output<U>) this);
   }
