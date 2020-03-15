@@ -60,8 +60,9 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   public LongDataBuffer copyTo(DataBuffer<Long> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof LongDataBuffer) {
+      LongDataBuffer longDst = (LongDataBuffer)dst;
       for (long idx = 0L; idx < size; ++idx) {
-        ((LongDataBuffer)dst).setLong(getLong(idx), idx);
+        longDst.setLong(getLong(idx), idx);
       }
       return this;
     }

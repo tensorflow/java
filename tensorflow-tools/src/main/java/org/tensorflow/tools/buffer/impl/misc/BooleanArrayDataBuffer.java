@@ -84,8 +84,9 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
       @Override
       public BooleanDataBuffer otherwise() {
         if (dst instanceof BooleanDataBuffer) {
+          BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (int idx = 0; idx < size; ++idx) {
-            ((BooleanDataBuffer)dst).setBoolean(values[idx + offset], idx);
+            booleanDst.setBoolean(values[idx + offset], idx);
           }
         } else {
           for (int idx = 0; idx < size; ++idx) {

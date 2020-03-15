@@ -66,8 +66,9 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
       @Override
       public FloatDataBuffer otherwise() {
         if (dst instanceof FloatDataBuffer) {
+          FloatDataBuffer floatDst = (FloatDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((FloatDataBuffer)dst).setFloat(getFloat(idx), idx);
+            floatDst.setFloat(getFloat(idx), idx);
           }
           return FloatNioDataBuffer.this;
         }

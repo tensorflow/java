@@ -66,8 +66,9 @@ final class ShortNioDataBuffer extends AbstractNioDataBuffer<Short>
       @Override
       public ShortDataBuffer otherwise() {
         if (dst instanceof ShortDataBuffer) {
+          ShortDataBuffer shortDst = (ShortDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((ShortDataBuffer)dst).setShort(getShort(idx), idx);
+            shortDst.setShort(getShort(idx), idx);
           }
           return ShortNioDataBuffer.this;
         }

@@ -135,8 +135,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of ints.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link IntDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted
@@ -146,8 +146,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of shorts.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link ShortDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted
@@ -157,8 +157,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of longs.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link LongDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted
@@ -168,8 +168,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of floats.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link FloatDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted
@@ -179,8 +179,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of doubles.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link DoubleDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted
@@ -190,8 +190,8 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   /**
    * Return this byte buffer as a buffer of booleans.
    *
-   * <p>The returned buffer shares the same memory as the original one, meaning that changing a value
-   * in one will affect the other.
+   * <p>The returned buffer provides a different view on the same memory as the original byte buffer,
+   * meaning that changing a value in one will affect the other.
    *
    * @return this buffer as a {@link BooleanDataBuffer}
    * @throws IllegalStateException if this buffer cannot be converted

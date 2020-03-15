@@ -53,13 +53,7 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    for (NdArray<T> scalar : scalars()) {
-      result = prime * result + scalar.getObject().hashCode();
-    }
-    result = prime * result + shape().hashCode();
-    return result;
+    return slowHashCode();
   }
 
   @Override
@@ -79,6 +73,16 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
 
   protected void slowCopyTo(NdArray<T> array) {
     scalars().forEachIndexed((coords, e) -> array.setObject(e.getObject(), coords));
+  }
+
+  protected int slowHashCode() {
+    final int prime = 31;
+    int result = 1;
+    for (NdArray<T> scalar : scalars()) {
+      result = prime * result + scalar.getObject().hashCode();
+    }
+    result = prime * result + shape().hashCode();
+    return result;
   }
 
   protected boolean slowEquals(NdArray<?> array) {

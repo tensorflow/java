@@ -17,8 +17,9 @@
 package org.tensorflow.tools.buffer.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import org.tensorflow.tools.buffer.DataBuffer;
 
 public abstract class AbstractDataBuffer<T> implements DataBuffer<T> {
@@ -130,56 +131,56 @@ public abstract class AbstractDataBuffer<T> implements DataBuffer<T> {
   }
 
   private int arrayHashCode(long startIdx, Class<?> arrayClass) {
-    Function<Long, Integer> hashCoder;
-    if (arrayClass == byte[].class) {
-      hashCoder = idx -> Arrays.hashCode((byte[])getObject(idx));
-    } else if (arrayClass == int[].class) {
-      hashCoder = idx -> Arrays.hashCode((int[])getObject(idx));
-    } else if (arrayClass == short[].class) {
-      hashCoder = idx -> Arrays.hashCode((short[])getObject(idx));
-    } else if (arrayClass == long[].class) {
-      hashCoder = idx -> Arrays.hashCode((long[])getObject(idx));
-    } else if (arrayClass == float[].class) {
-      hashCoder = idx -> Arrays.hashCode((float[])getObject(idx));
-    } else if (arrayClass == double[].class) {
-      hashCoder = idx -> Arrays.hashCode((double[])getObject(idx));
-    } else if (arrayClass == boolean[].class) {
-      hashCoder = idx -> Arrays.hashCode((boolean[])getObject(idx));
-    } else {
-      hashCoder = idx -> Arrays.deepHashCode((Object[])getObject(idx));
-    }
+    ArrayHashCoder hashCoder = ARRAY_HASH_CODERS.getOrDefault(arrayClass, DEFAULT_ARRAY_HASH_CODER);
     final int prime = 31;
     int result = 1;
     for (long idx = startIdx; idx < size(); ++idx) {
-      result = prime * result + hashCoder.apply(idx);
+      result = prime * result + hashCoder.hashCode(this, idx);
     }
     return result;
   }
 
   private boolean arrayEquals(long startIdx, Class<?> arrayClass, DataBuffer<?> other) {
-    Function<Long, Boolean> comparator;
-    if (arrayClass == byte[].class) {
-      comparator = idx -> Arrays.equals((byte[])other.getObject(idx), (byte[])getObject(idx));
-    } else if (arrayClass == int[].class) {
-      comparator = idx -> Arrays.equals((int[])other.getObject(idx), (int[])getObject(idx));
-    } else if (arrayClass == short[].class) {
-      comparator = idx -> Arrays.equals((short[])other.getObject(idx), (short[])getObject(idx));
-    } else if (arrayClass == long[].class) {
-      comparator = idx -> Arrays.equals((long[])other.getObject(idx), (long[])getObject(idx));
-    } else if (arrayClass == float[].class) {
-      comparator = idx -> Arrays.equals((float[])other.getObject(idx), (float[])getObject(idx));
-    } else if (arrayClass == double[].class) {
-      comparator = idx -> Arrays.equals((double[])other.getObject(idx), (double[])getObject(idx));
-    } else if (arrayClass == boolean[].class) {
-      comparator = idx -> Arrays.equals((boolean[]) other.getObject(idx), (boolean[]) getObject(idx));
-    } else {
-      comparator = idx -> Arrays.deepEquals((Object[]) other.getObject(idx), (Object[]) getObject(idx));
-    }
+    ArrayComparator comparator = ARRAY_COMPARATORS.getOrDefault(arrayClass, DEFAULT_ARRAY_COMPARATOR);
     for (long idx = startIdx; idx < size(); ++idx) {
-      if (!comparator.apply(idx)) {
+      if (!comparator.equals(this, other, idx)) {
         return false;
       }
     }
     return true;
+  }
+
+  @FunctionalInterface
+  private static interface ArrayHashCoder {
+    int hashCode(DataBuffer<?> buffer, long index);
+  }
+  private static final Map<Class<?>, ArrayHashCoder> ARRAY_HASH_CODERS = new HashMap<>();
+  private static final ArrayHashCoder DEFAULT_ARRAY_HASH_CODER;
+
+  @FunctionalInterface
+  private static interface ArrayComparator {
+    boolean equals(DataBuffer<?> buffer, DataBuffer<?> otherBuffer, long index);
+  }
+  private static final Map<Class<?>, ArrayComparator> ARRAY_COMPARATORS = new HashMap<>();
+  private static final ArrayComparator DEFAULT_ARRAY_COMPARATOR;
+
+  static {
+    ARRAY_HASH_CODERS.put(byte[].class, (b, idx) -> Arrays.hashCode((byte[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(int[].class, (b, idx) -> Arrays.hashCode((int[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(short[].class, (b, idx) -> Arrays.hashCode((short[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(long[].class, (b, idx) -> Arrays.hashCode((long[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(float[].class, (b, idx) -> Arrays.hashCode((float[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(double[].class, (b, idx) -> Arrays.hashCode((double[])b.getObject(idx)));
+    ARRAY_HASH_CODERS.put(boolean[].class, (b, idx) -> Arrays.hashCode((boolean[])b.getObject(idx)));
+    DEFAULT_ARRAY_HASH_CODER = (b, idx) -> Arrays.deepHashCode((Object[])b.getObject(idx));
+
+    ARRAY_COMPARATORS.put(byte[].class, (b1, b2, idx) -> Arrays.equals((byte[])b1.getObject(idx), (byte[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(int[].class, (b1, b2, idx) -> Arrays.equals((int[])b1.getObject(idx), (int[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(short[].class, (b1, b2, idx) -> Arrays.equals((short[])b1.getObject(idx), (short[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(long[].class, (b1, b2, idx) -> Arrays.equals((long[])b1.getObject(idx), (long[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(float[].class, (b1, b2, idx) -> Arrays.equals((float[])b1.getObject(idx), (float[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(double[].class, (b1, b2, idx) -> Arrays.equals((double[])b1.getObject(idx), (double[])b2.getObject(idx)));
+    ARRAY_COMPARATORS.put(boolean[].class, (b1, b2, idx) -> Arrays.equals((boolean[])b1.getObject(idx), (boolean[])b2.getObject(idx)));
+    DEFAULT_ARRAY_COMPARATOR = (b1, b2, idx) -> Arrays.deepEquals((Object[])b1.getObject(idx), (Object[])b2.getObject(idx));
   }
 }

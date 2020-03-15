@@ -91,8 +91,9 @@ final class ByteRawDataBuffer extends AbstractRawDataBuffer<Byte, ByteDataBuffer
       @Override
       public ByteDataBuffer otherwise() {
         if (dst instanceof ByteDataBuffer) {
+          ByteDataBuffer byteDst = (ByteDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((ByteDataBuffer)dst).setByte(getByte(idx), idx);
+            byteDst.setByte(getByte(idx), idx);
           }
           return ByteRawDataBuffer.this;
         }

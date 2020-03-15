@@ -79,9 +79,12 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
 
   @Override
   public int hashCode() {
+    if (dimensions().isSegmented()) {
+      return slowHashCode();
+    }
     final int prime = 31;
     int result = 1;
-    result = prime * result + buffer().hashCode();
+    result = prime * result + trimBuffer().hashCode();
     result = prime * result + shape().hashCode();
     return result;
   }
@@ -101,7 +104,7 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
     if (!shape().equals(other.shape())) {
       return false;
     }
-    return buffer().equals(other.buffer());
+    return trimBuffer().equals(other.trimBuffer());
   }
 
   protected AbstractDenseNdArray(DimensionalSpace dimensions) {
@@ -109,6 +112,18 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
   }
 
   abstract protected DataBuffer<T> buffer();
+
+  protected DataBuffer<T> trimBuffer() {
+    // For optimization, when an array is sliced, we just adjust its offset and give it a new
+    // dimension space. Therefore, the buffer is not narrowed to the size of the slice, which would
+    // required some extra computation. But for some operations, like equality check, we need the
+    // buffer to be trimmed to the actual size of the array (assuming that the array is not
+    // segmented).
+    if (dimensions().isSegmented()) {
+      throw new IllegalStateException("Segmented arrays cannot trim their buffers");
+    }
+    return buffer().size() > shape().size() ? buffer().narrow(shape().size()) : buffer();
+  }
 
   abstract U instantiate(DataBuffer<T> buffer, DimensionalSpace dimensions);
 

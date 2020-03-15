@@ -121,4 +121,15 @@ public abstract class ShortDataBufferTestBase extends DataBufferTestBase<Short> 
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    ShortDataBuffer buffer = allocate(2)
+        .setShort((short)1, 0)
+        .setShort((short)16, 1);
+    LongDataBuffer longBuffer = DataBuffers.of(1L, 16L);
+
+    assertFalse(buffer.equals(longBuffer));
+    assertFalse(longBuffer.equals(buffer));
+  }
 }

@@ -121,4 +121,15 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
     assertFalse(buffer.equals(objBuffer2));
     assertNotEquals(objBuffer2.hashCode(), buffer.hashCode());
   }
+
+  @Test
+  public void notEqualWithOtherTypes() {
+    FloatDataBuffer buffer = allocate(2)
+        .setFloat(1.0f, 0)
+        .setFloat(16.0f, 1);
+    DoubleDataBuffer doubleBuffer = DataBuffers.of(1.0, 16.0);
+
+    assertFalse(buffer.equals(doubleBuffer));
+    assertFalse(doubleBuffer.equals(buffer));
+  }
 }

@@ -74,8 +74,9 @@ final class ByteNioDataBuffer extends AbstractNioDataBuffer<Byte>
       @Override
       public ByteDataBuffer otherwise() {
         if (dst instanceof ByteDataBuffer) {
+          ByteDataBuffer byteDst = (ByteDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((ByteDataBuffer)dst).setByte(getByte(idx), idx);
+            byteDst.setByte(getByte(idx), idx);
           }
           return ByteNioDataBuffer.this;
         }

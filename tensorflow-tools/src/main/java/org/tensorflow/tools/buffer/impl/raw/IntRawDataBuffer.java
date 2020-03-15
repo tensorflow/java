@@ -85,8 +85,9 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
       @Override
       public IntDataBuffer otherwise() {
         if (dst instanceof IntDataBuffer) {
+          IntDataBuffer intDst = (IntDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
-            ((IntDataBuffer)dst).setInt(getInt(idx), idx);
+            intDst.setInt(getInt(idx), idx);
           }
           return IntRawDataBuffer.this;
         }
