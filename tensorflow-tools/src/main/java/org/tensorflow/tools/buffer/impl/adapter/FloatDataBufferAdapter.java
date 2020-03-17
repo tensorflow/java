@@ -82,6 +82,12 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public FloatDataBuffer slice(long index, long size) {
+    return new FloatDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;

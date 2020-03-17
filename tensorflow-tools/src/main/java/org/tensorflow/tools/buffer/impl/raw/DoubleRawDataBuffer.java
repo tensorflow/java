@@ -83,7 +83,7 @@ final class DoubleRawDataBuffer extends AbstractRawDataBuffer<Double, DoubleData
       }
 
       @Override
-      public DoubleDataBuffer otherwise() {
+      public DoubleDataBuffer fallback() {
         if (dst instanceof DoubleDataBuffer) {
           DoubleDataBuffer doubleDst = (DoubleDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -123,11 +123,11 @@ final class DoubleRawDataBuffer extends AbstractRawDataBuffer<Double, DoubleData
         if (memory.isArray()) {
           return buffer.equals(memory.toArrayDoubleBuffer());
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getDouble(idx) != getDouble(idx)) {
             return false;

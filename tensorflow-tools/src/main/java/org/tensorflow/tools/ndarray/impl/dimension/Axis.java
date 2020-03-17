@@ -40,7 +40,12 @@ final class Axis extends AbstractDimension {
   public long elementSize() {
     return elementSize;
   }
-  
+
+  @Override
+  public long physicalSize() {
+    return elementSize * numElements;
+  }
+
   @Override
   public String toString() {
     return String.valueOf(numElements);

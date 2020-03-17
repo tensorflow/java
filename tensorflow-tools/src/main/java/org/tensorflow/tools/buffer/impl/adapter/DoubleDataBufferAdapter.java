@@ -82,6 +82,12 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public DoubleDataBuffer slice(long index, long size) {
+    return new DoubleDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;

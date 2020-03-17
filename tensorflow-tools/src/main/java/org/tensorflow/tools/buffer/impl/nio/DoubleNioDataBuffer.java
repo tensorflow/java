@@ -64,7 +64,7 @@ final class DoubleNioDataBuffer extends AbstractNioDataBuffer<Double>
       }
 
       @Override
-      public DoubleDataBuffer otherwise() {
+      public DoubleDataBuffer fallback() {
         if (dst instanceof DoubleDataBuffer) {
           DoubleDataBuffer doubleDst = (DoubleDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -87,6 +87,15 @@ final class DoubleNioDataBuffer extends AbstractNioDataBuffer<Double>
   public DoubleDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new DoubleNioDataBuffer(((DoubleBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public DoubleDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    DoubleBuffer sliceBuf = buf.duplicate();
+    sliceBuf.position((int)index);
+    sliceBuf.limit((int)index + (int)size);
+    return new DoubleNioDataBuffer(sliceBuf.slice());
   }
 
   @Override
@@ -114,7 +123,7 @@ final class DoubleNioDataBuffer extends AbstractNioDataBuffer<Double>
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getDouble(idx) != getDouble(idx)) {
             return false;

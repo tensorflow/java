@@ -202,13 +202,17 @@ public interface DataBuffer<T> {
    * The index must not be greater than this buffer size. Changes to this buffer's content will
    * be visible in the new buffer and vice versa. The new buffer will be read-only if, and only if,
    * this buffer is read-only.
+   * <p>
+   * This call is equivalent to {@link #slice(long, long) slice(index, size() - index)}
    *
    * @param index index of the first value of the new buffer created, must not be greater than
    *              {@code size()}
    * @return the new buffer
    * @throws IllegalArgumentException if index do not pass validation checks
    */
-  DataBuffer<T> offset(long index);
+  default DataBuffer<T> offset(long index) {
+    return slice(index, size() - index);
+  }
 
   /**
    * Creates a new buffer whose content is a shared subsequence of this buffer's content, whose
@@ -217,12 +221,31 @@ public interface DataBuffer<T> {
    * The new size must not be greater than this buffer size. Changes to this buffer's
    * content will be visible in the new buffer and vice versa. The new buffer will be read-only if,
    * and only if, this buffer is read-only.
+   * <p>
+   * This call is equivalent to {@link #slice(long, long) slice(0, size)}
+   *
+   * @param index index of the first value of the new buffer created
+   * @param size size of this new buffer
+   * @return the new buffer
+   * @throws IllegalArgumentException if index and/or size values do not pass validation checks
+   */
+  default DataBuffer<T> narrow(long size) {
+    return slice(0, size);
+  }
+
+  /**
+   * Creates a new buffer whose content is a shared subsequence of this buffer's content, starting
+   * at the given index and of the given size.
+   * <p>
+   * The index plus the new size must not be greater than this buffer size. Changes to this
+   * buffer's content will be visible in the new buffer and vice versa. The new buffer will be
+   * read-only if, and only if, this buffer is read-only.
    *
    * @param size size of this new buffer, must not be greater than {@code size()}
    * @return the new buffer
    * @throws IllegalArgumentException if size value do not pass validation checks
    */
-  DataBuffer<T> narrow(long size);
+  DataBuffer<T> slice(long index, long size);
 
   /**
    * Visits the backing storage of this buffer.
@@ -230,7 +253,7 @@ public interface DataBuffer<T> {
    * <p>The buffer implementation is responsible of passing back a reference to the actual data
    * storage to the provided visitor. The visitor does not have to handle all possible types of
    * data storage and can override only methods for storage it is actually interested in. For any
-   * other type of storage, this call will fallback to {@link DataStorageVisitor#otherwise()} so the
+   * other type of storage, this call will fallback to {@link DataStorageVisitor#fallback()} so the
    * visitor can execute some generic routine if needed.
    *
    * @param visitor visits the data storage of this buffer
@@ -238,7 +261,7 @@ public interface DataBuffer<T> {
    * @return the same value returned by the visitor
    */
   default <R> R accept(DataStorageVisitor<R> visitor) {
-    return visitor.otherwise();
+    return visitor.fallback();
   }
 
   /**

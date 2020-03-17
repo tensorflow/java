@@ -146,8 +146,15 @@ public interface BooleanDataBuffer extends DataBuffer<Boolean> {
   BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size);
 
   @Override
-  BooleanDataBuffer offset(long index);
+  default BooleanDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  BooleanDataBuffer narrow(long size);
+  default BooleanDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  BooleanDataBuffer slice(long index, long size);
 }

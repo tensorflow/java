@@ -79,7 +79,7 @@ final class DataTransfer {
           valueTransfer
       );
     } else {
-      srcBuffer.copyTo(dstBuffer, srcDimensions.get(0).totalSize());
+      srcBuffer.copyTo(dstBuffer, srcDimensions.physicalSize());
     }
   }
 
@@ -95,7 +95,7 @@ final class DataTransfer {
           valueTransfer
       );
     } else {
-      srcBuffer.copyTo(dstBuffer, dstDimensions.get(0).totalSize());
+      srcBuffer.copyTo(dstBuffer, dstDimensions.physicalSize());
     }
   }
 
@@ -111,7 +111,7 @@ final class DataTransfer {
           valueTransfer
       );
     } else {
-      srcBuffer.copyTo(dstBuffer, srcDimensions.get(0).totalSize());
+      srcBuffer.copyTo(dstBuffer, srcDimensions.physicalSize());
     }
   }
 

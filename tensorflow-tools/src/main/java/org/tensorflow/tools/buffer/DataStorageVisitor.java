@@ -23,7 +23,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(ByteBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -34,7 +34,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(ShortBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -45,7 +45,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(IntBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -56,7 +56,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(LongBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -67,7 +67,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(FloatBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -78,7 +78,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(DoubleBuffer buffer) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -91,7 +91,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(boolean[] array, int offset, int length) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -104,7 +104,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(BitSet bitSet, int offset, long numBits) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -117,7 +117,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(Object[] array, int offset, int length) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -130,7 +130,7 @@ public interface DataStorageVisitor<R> {
    * @see DataBuffer#accept(DataStorageVisitor)
    */
   default R visit(long address, long length, long scale) {
-    return otherwise();
+    return fallback();
   }
 
   /**
@@ -143,5 +143,5 @@ public interface DataStorageVisitor<R> {
    *
    * @return any value
    */
-  R otherwise();
+  R fallback();
 }

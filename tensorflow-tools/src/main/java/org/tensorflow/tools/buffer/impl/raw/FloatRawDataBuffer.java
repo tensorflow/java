@@ -83,7 +83,7 @@ final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuf
       }
 
       @Override
-      public FloatDataBuffer otherwise() {
+      public FloatDataBuffer fallback() {
         if (dst instanceof FloatDataBuffer) {
           FloatDataBuffer floatDst = (FloatDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -123,11 +123,11 @@ final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuf
         if (memory.isArray()) {
           return buffer.equals(memory.toArrayFloatBuffer());
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getFloat(idx) != getFloat(idx)) {
             return false;

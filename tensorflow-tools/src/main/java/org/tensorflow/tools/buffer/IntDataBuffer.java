@@ -146,8 +146,15 @@ public interface IntDataBuffer extends DataBuffer<Integer> {
   IntDataBuffer copyTo(DataBuffer<Integer> dst, long size);
 
   @Override
-  IntDataBuffer offset(long index);
+  default IntDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  IntDataBuffer narrow(long size);
+  default IntDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  IntDataBuffer slice(long index, long size);
 }

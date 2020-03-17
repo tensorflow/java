@@ -28,9 +28,7 @@ public interface Dimension {
 
   long elementSize();
 
-  default long totalSize() {
-    return numElements() * elementSize();
-  }
+  long physicalSize();
 
   long positionOf(long coord);
 

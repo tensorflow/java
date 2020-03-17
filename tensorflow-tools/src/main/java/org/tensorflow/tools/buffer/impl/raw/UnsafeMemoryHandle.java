@@ -113,6 +113,10 @@ final class UnsafeMemoryHandle {
     return new UnsafeMemoryHandle(object, byteOffset, scale(size), scale);
   }
 
+  UnsafeMemoryHandle slice(long index, long size) {
+    return new UnsafeMemoryHandle(object, this.byteOffset + scale(index), scale(size), scale);
+  }
+
   UnsafeMemoryHandle rescale(long scale) {
     if (object != null) {
       throw new IllegalStateException("Raw heap memory cannot be rescaled");

@@ -39,6 +39,13 @@ final class ReducedDimension extends AbstractDimension {
   }
 
   @Override
+  public long physicalSize() {
+    // We simplify the computation by assuming that a reduced dimension takes the same amount of
+    // memory than the original one
+    return originalDimension.physicalSize();
+  }
+
+  @Override
   public String toString() {
     return String.valueOf(numElements());
   }

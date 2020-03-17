@@ -82,6 +82,12 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public IntDataBuffer slice(long index, long size) {
+    return new IntDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;

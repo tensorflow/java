@@ -82,6 +82,12 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public BooleanDataBuffer slice(long index, long size) {
+    return new BooleanDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
