@@ -83,7 +83,7 @@ final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer
       }
 
       @Override
-      public LongDataBuffer otherwise() {
+      public LongDataBuffer fallback() {
         if (dst instanceof LongDataBuffer) {
           LongDataBuffer longDst = (LongDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -123,11 +123,11 @@ final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer
         if (memory.isArray()) {
           return buffer.equals(memory.toArrayLongBuffer());
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getLong(idx) != getLong(idx)) {
             return false;

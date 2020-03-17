@@ -53,23 +53,45 @@ public abstract class DataBufferTestBase<T> {
   }
 
   @Test
-  public void offsetAndNarrow() {
-    DataBuffer<T> buffer = allocate(10L);
-    buffer.setObject(valueOf(100L), 6);
+  public void offsetNarrowAndSlice() {
+    DataBuffer<T> buffer = allocate(10L).setObject(valueOf(1L), 5); // 0, 0, 0, 0, 0, 1, 0, 0, 0, 0
     assertEquals(10L, buffer.size());
-    assertEquals(valueOf(100L), buffer.getObject(6));
+    assertEquals(valueOf(1L), buffer.getObject(5));
 
-    DataBuffer<T> subBuffer = buffer.offset(3L);
-    assertEquals(7L, subBuffer.size());
-    assertEquals(valueOf(100L), subBuffer.getObject(3));
+    DataBuffer<T> subBuffer = buffer.slice(2, 6); // 0, 0, 0, 1, 0, 0
+    assertEquals(6L, subBuffer.size());
+    assertEquals(valueOf(1L), subBuffer.getObject(3));
 
-    subBuffer = subBuffer.narrow(2L);
+    subBuffer = subBuffer.offset(2L); // 0, 1, 0, 0
+    assertEquals(4L, subBuffer.size());
+    assertEquals(valueOf(1L), subBuffer.getObject(1));
+
+    subBuffer = subBuffer.narrow(2L); // 0, 1
     assertEquals(2L, subBuffer.size());
+    assertEquals(valueOf(1L), subBuffer.getObject(1));
     try {
-      subBuffer.getObject(3);
+      subBuffer.getObject(2);
       fail();
     } catch (IndexOutOfBoundsException e) {
       //as expected
+    }
+    try {
+      buffer.slice(2, 12);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+    try {
+      buffer.slice(-1, 3);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+    try {
+      buffer.slice(2, -1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
     }
     try {
       buffer.offset(-1L);

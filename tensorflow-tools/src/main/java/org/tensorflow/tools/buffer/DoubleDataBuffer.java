@@ -146,8 +146,15 @@ public interface DoubleDataBuffer extends DataBuffer<Double> {
   DoubleDataBuffer copyTo(DataBuffer<Double> dst, long size);
 
   @Override
-  DoubleDataBuffer offset(long index);
+  default DoubleDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  DoubleDataBuffer narrow(long size);
+  default DoubleDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  DoubleDataBuffer slice(long index, long size);
 }

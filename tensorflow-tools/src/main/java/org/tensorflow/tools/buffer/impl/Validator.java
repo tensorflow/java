@@ -86,8 +86,11 @@ public class Validator {
   }
 
   public static <T> void offsetArgs(DataBuffer<T> buffer, long index) {
-    if (index < 0 || index > buffer.size()) {
-      throw new IllegalArgumentException();
+    if (index < 0) {
+      throw new IllegalArgumentException("Index must be non-negative");
+    }
+    if (index > buffer.size()) {
+      throw new IllegalArgumentException("Index must not exceed buffer size");
     }
   }
 
@@ -97,6 +100,18 @@ public class Validator {
     }
     if (size > buffer.size()) {
       throw new IllegalArgumentException("Cannot narrow a buffer of size " + buffer.size() + " to " + size);
+    }
+  }
+
+  public static <T> void sliceArgs(DataBuffer<T> buffer, long index, long size) {
+    if (index < 0) {
+      throw new IllegalArgumentException("Index must be non-negative");
+    }
+    if (size < 0) {
+      throw new IllegalArgumentException("Size must be non-negative");
+    }
+    if (index + size > buffer.size()) {
+      throw new IllegalArgumentException("Buffer view must not exceed original buffer limits");
     }
   }
 

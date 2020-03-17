@@ -64,7 +64,7 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
       }
 
       @Override
-      public FloatDataBuffer otherwise() {
+      public FloatDataBuffer fallback() {
         if (dst instanceof FloatDataBuffer) {
           FloatDataBuffer floatDst = (FloatDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -87,6 +87,15 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
   public FloatDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new FloatNioDataBuffer(((FloatBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public FloatDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    FloatBuffer sliceBuf = buf.duplicate();
+    sliceBuf.position((int)index);
+    sliceBuf.limit((int)index + (int)size);
+    return new FloatNioDataBuffer(sliceBuf.slice());
   }
 
   @Override
@@ -114,7 +123,7 @@ final class FloatNioDataBuffer extends AbstractNioDataBuffer<Float>
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getFloat(idx) != getFloat(idx)) {
             return false;

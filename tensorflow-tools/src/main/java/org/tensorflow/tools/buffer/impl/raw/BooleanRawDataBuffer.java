@@ -77,7 +77,7 @@ final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanD
       }
 
       @Override
-      public BooleanDataBuffer otherwise() {
+      public BooleanDataBuffer fallback() {
         if (dst instanceof BooleanDataBuffer) {
           BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -120,11 +120,11 @@ final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanD
             return Arrays.equals(thisArray, array);
           }
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getBoolean(idx) != getBoolean(idx)) {
             return false;

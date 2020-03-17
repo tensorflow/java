@@ -82,7 +82,7 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
       }
 
       @Override
-      public BooleanDataBuffer otherwise() {
+      public BooleanDataBuffer fallback() {
         if (dst instanceof BooleanDataBuffer) {
           BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (int idx = 0; idx < size; ++idx) {
@@ -99,15 +99,9 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
   }
 
   @Override
-  public BooleanDataBuffer offset(long index) {
-    Validator.offsetArgs(this, index);
-    return new BooleanArrayDataBuffer(values, readOnly, offset + (int)index, length - (int)index);
-  }
-
-  @Override
-  public BooleanDataBuffer narrow(long size) {
-    Validator.narrowArgs(this, size);
-    return new BooleanArrayDataBuffer(values, readOnly, offset, (int)size);
+  public BooleanDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    return new BooleanArrayDataBuffer(values, readOnly, offset + (int)index, (int)size);
   }
 
   @Override
@@ -153,7 +147,7 @@ class BooleanArrayDataBuffer extends AbstractDataBuffer<Boolean> implements
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getBoolean(idx) != values[idx + offset]) {
             return false;

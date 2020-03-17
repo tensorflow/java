@@ -82,6 +82,12 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public LongDataBuffer slice(long index, long size) {
+    return new LongDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;

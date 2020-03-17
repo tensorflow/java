@@ -89,7 +89,7 @@ class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDat
       }
 
       @Override
-      public BooleanDataBuffer otherwise() {
+      public BooleanDataBuffer fallback() {
         if (dst instanceof BooleanDataBuffer) {
           BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
           for (int idx = 0; idx < size; ++idx) {
@@ -106,15 +106,9 @@ class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDat
   }
 
   @Override
-  public BooleanDataBuffer offset(long index) {
-    Validator.offsetArgs(this, index);
-    return new BitSetDataBuffer(bitSet, numBits - index, readOnly, offset + (int)index);
-  }
-
-  @Override
-  public BooleanDataBuffer narrow(long size) {
-    Validator.narrowArgs(this, size);
-    return new BitSetDataBuffer(bitSet, size, readOnly, offset);
+  public BooleanDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    return new BitSetDataBuffer(bitSet, size, readOnly, offset + (int)index);
   }
 
   @Override
@@ -160,7 +154,7 @@ class BitSetDataBuffer extends AbstractDataBuffer<Boolean> implements BooleanDat
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getBoolean(idx) != bitSet.get(idx + offset)) {
             return false;

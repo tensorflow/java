@@ -146,8 +146,15 @@ public interface ShortDataBuffer extends DataBuffer<Short> {
   ShortDataBuffer copyTo(DataBuffer<Short> dst, long size);
 
   @Override
-  ShortDataBuffer offset(long index);
+  default ShortDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  ShortDataBuffer narrow(long size);
+  default ShortDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  ShortDataBuffer slice(long index, long size);
 }

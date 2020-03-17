@@ -150,6 +150,14 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
     return new StringTensorBuffer(offsets.narrow(size), data.narrow(offsets.getLong(size)));
   }
 
+  @Override
+  public DataBuffer<byte[]> slice(long index, long size) {
+    return new StringTensorBuffer(
+        offsets.slice(index, size),
+        data.slice(offsets.getLong(index), offsets.getLong(index + size))
+    );
+  }
+
   StringTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
     this.offsets = offsets;
     this.data = data;

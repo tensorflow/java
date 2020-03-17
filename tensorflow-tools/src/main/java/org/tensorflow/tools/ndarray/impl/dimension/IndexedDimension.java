@@ -35,13 +35,21 @@ final class IndexedDimension extends AbstractDimension {
   
   @Override
   public boolean isSegmented() {
-    // TODO for now we consider all indexed dimensions as segmented but might depend on the actual index
+    // TODO (karllessard) for now we consider all indexed dimensions as segmented but might depend
+    //      on the actual index
     return true;
   }
 
   @Override
   public long elementSize() {
-    return originalDimension.elementSize(); // indices do not change the size of a inner element
+    return originalDimension.elementSize();  // indices do not change the size of an inner element
+  }
+
+  @Override
+  public long physicalSize() {
+    // TODO (karllessard) we consider this dimension takes the same amount of memory that the
+    //      original one but might depend on the actual index
+    return originalDimension.physicalSize();
   }
 
   @Override

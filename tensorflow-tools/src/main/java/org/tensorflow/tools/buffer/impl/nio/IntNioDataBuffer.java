@@ -64,7 +64,7 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
       }
 
       @Override
-      public IntDataBuffer otherwise() {
+      public IntDataBuffer fallback() {
         if (dst instanceof IntDataBuffer) {
           IntDataBuffer intDst = (IntDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -87,6 +87,15 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
   public IntDataBuffer narrow(long size) {
     Validator.narrowArgs(this, size);
     return new IntNioDataBuffer(((IntBuffer)buf.duplicate().limit((int)size)).slice());
+  }
+
+  @Override
+  public IntDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    IntBuffer sliceBuf = buf.duplicate();
+    sliceBuf.position((int)index);
+    sliceBuf.limit((int)index + (int)size);
+    return new IntNioDataBuffer(sliceBuf.slice());
   }
 
   @Override
@@ -114,7 +123,7 @@ final class IntNioDataBuffer extends AbstractNioDataBuffer<Integer>
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getInt(idx) != getInt(idx)) {
             return false;

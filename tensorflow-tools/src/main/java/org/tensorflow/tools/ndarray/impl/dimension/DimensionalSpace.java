@@ -101,7 +101,7 @@ public class DimensionalSpace {
 
   public Shape shape() {
     if (shape == null) {
-      shape = shape(dimensions);
+      shape = toShape(dimensions);
     }
     return shape;
   }
@@ -112,6 +112,10 @@ public class DimensionalSpace {
 
   public long numElements(int i) {
     return dimensions[i].numElements();
+  }
+
+  public long physicalSize() {
+    return dimensions.length > 0 ? dimensions[0].physicalSize() : 1;  // dimensions.length == 0 for scalars
   }
 
   public Dimension get(int i) {
@@ -158,7 +162,7 @@ public class DimensionalSpace {
   private final int segmentationIdx;
   private Shape shape;
 
-  private static Shape shape(Dimension[] dimensions) {
+  private static Shape toShape(Dimension[] dimensions) {
     long[] shapeDimSizes = new long[dimensions.length];
     int i = 0;
     for (Dimension dimension : dimensions) {

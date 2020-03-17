@@ -83,7 +83,7 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
       }
 
       @Override
-      public ShortDataBuffer otherwise() {
+      public ShortDataBuffer fallback() {
         if (dst instanceof ShortDataBuffer) {
           ShortDataBuffer shortDst = (ShortDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -123,11 +123,11 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
         if (memory.isArray()) {
           return buffer.equals(memory.toArrayShortBuffer());
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getShort(idx) != getShort(idx)) {
             return false;

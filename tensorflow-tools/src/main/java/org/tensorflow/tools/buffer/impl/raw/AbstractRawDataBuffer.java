@@ -70,15 +70,9 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
   }
 
   @Override
-  public B offset(long index) {
-    Validator.offsetArgs(this, index);
-    return instantiate(memory.offset(index));
-  }
-
-  @Override
-  public B narrow(long size) {
-    Validator.narrowArgs(this, size);
-    return instantiate(memory.narrow(size));
+  public B slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    return instantiate(memory.slice(index, size));
   }
 
   protected final UnsafeMemoryHandle memory;

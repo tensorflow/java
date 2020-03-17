@@ -83,7 +83,7 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
       }
 
       @Override
-      public IntDataBuffer otherwise() {
+      public IntDataBuffer fallback() {
         if (dst instanceof IntDataBuffer) {
           IntDataBuffer intDst = (IntDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -123,11 +123,11 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
         if (memory.isArray()) {
           return buffer.equals(memory.toArrayIntBuffer());
         }
-        return otherwise();
+        return fallback();
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (long idx = 0L; idx < size(); ++idx) {
           if (other.getInt(idx) != getInt(idx)) {
             return false;

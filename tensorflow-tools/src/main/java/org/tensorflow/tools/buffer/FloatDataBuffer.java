@@ -146,8 +146,15 @@ public interface FloatDataBuffer extends DataBuffer<Float> {
   FloatDataBuffer copyTo(DataBuffer<Float> dst, long size);
 
   @Override
-  FloatDataBuffer offset(long index);
+  default FloatDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  FloatDataBuffer narrow(long size);
+  default FloatDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  FloatDataBuffer slice(long index, long size);
 }

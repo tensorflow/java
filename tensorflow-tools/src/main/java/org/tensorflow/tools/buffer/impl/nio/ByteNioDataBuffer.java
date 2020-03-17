@@ -72,7 +72,7 @@ final class ByteNioDataBuffer extends AbstractNioDataBuffer<Byte>
       }
 
       @Override
-      public ByteDataBuffer otherwise() {
+      public ByteDataBuffer fallback() {
         if (dst instanceof ByteDataBuffer) {
           ByteDataBuffer byteDst = (ByteDataBuffer)dst;
           for (long idx = 0L; idx < size; ++idx) {
@@ -128,6 +128,15 @@ final class ByteNioDataBuffer extends AbstractNioDataBuffer<Byte>
   }
 
   @Override
+  public ByteDataBuffer slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    ByteBuffer sliceBuf = buf.duplicate();
+    sliceBuf.position((int)index);
+    sliceBuf.limit((int)index + (int)size);
+    return new ByteNioDataBuffer(sliceBuf.slice());
+  }
+
+  @Override
   public <R> R accept(DataStorageVisitor<R> visitor) {
     return visitor.visit(buf);
   }
@@ -152,7 +161,7 @@ final class ByteNioDataBuffer extends AbstractNioDataBuffer<Byte>
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         for (int idx = 0; idx < size(); ++idx) {
           if (other.getByte(idx) != getByte(idx)) {
             return false;

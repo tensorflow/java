@@ -211,9 +211,17 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
   @Override
   ByteDataBuffer copyTo(DataBuffer<Byte> dst, long size);
 
-  @Override
-  ByteDataBuffer offset(long index);
 
   @Override
-  ByteDataBuffer narrow(long size);
+  default ByteDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
+
+  @Override
+  default ByteDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  ByteDataBuffer slice(long index, long size);
 }

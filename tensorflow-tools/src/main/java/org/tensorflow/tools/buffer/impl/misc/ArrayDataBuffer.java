@@ -59,7 +59,7 @@ class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
       }
 
       @Override
-      public DataBuffer<T> otherwise() {
+      public DataBuffer<T> fallback() {
         for (int idx = 0; idx < size; ++idx) {
           dst.setObject(values[idx + offset], idx);
         }
@@ -69,15 +69,9 @@ class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
   }
 
   @Override
-  public DataBuffer<T> offset(long index) {
-    Validator.offsetArgs(this, index);
-    return new ArrayDataBuffer<>(values, readOnly, offset + (int)index, length - (int)index);
-  }
-
-  @Override
-  public DataBuffer<T> narrow(long size) {
-    Validator.narrowArgs(this, size);
-    return new ArrayDataBuffer<>(values, readOnly, offset, (int)size);
+  public DataBuffer<T> slice(long index, long size) {
+    Validator.sliceArgs(this, index, size);
+    return new ArrayDataBuffer<>(values, readOnly, offset + (int)index, (int)size);
   }
 
   @Override
@@ -108,7 +102,7 @@ class ArrayDataBuffer<T> extends AbstractDataBuffer<T> {
       }
 
       @Override
-      public Boolean otherwise() {
+      public Boolean fallback() {
         return slowEquals(other);
       }
     });

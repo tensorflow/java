@@ -146,8 +146,15 @@ public interface LongDataBuffer extends DataBuffer<Long> {
   LongDataBuffer copyTo(DataBuffer<Long> dst, long size);
 
   @Override
-  LongDataBuffer offset(long index);
+  default LongDataBuffer offset(long index) {
+    return slice(index, size() - index);
+  }
 
   @Override
-  LongDataBuffer narrow(long size);
+  default LongDataBuffer narrow(long size) {
+    return slice(0, size);
+  }
+
+  @Override
+  LongDataBuffer slice(long index, long size);
 }

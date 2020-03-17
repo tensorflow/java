@@ -101,6 +101,12 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public ByteDataBuffer slice(long index, long size) {
+    return new ByteDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
