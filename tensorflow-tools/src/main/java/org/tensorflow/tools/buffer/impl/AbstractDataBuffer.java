@@ -44,11 +44,7 @@ public abstract class AbstractDataBuffer<T> implements DataBuffer<T> {
 
   @Override
   public DataBuffer<T> copyTo(DataBuffer<T> dst, long size) {
-    Validator.copyToArgs(this, dst, size);
-    for (long idx = 0L; idx < size; ++idx) {
-      dst.setObject(getObject(idx), idx);
-    }
-    return this;
+    return slowCopyTo(dst, size);
   }
 
   @Override
