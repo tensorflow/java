@@ -110,7 +110,9 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
 
     // Read string of the given length
     byte[] bytes = new byte[length];
-    data.offset(offset).read(bytes);
+    if (length > 0) {
+      data.offset(offset).read(bytes);
+    }
     return bytes;
   }
 
@@ -142,20 +144,17 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
 
   @Override
   public DataBuffer<byte[]> offset(long index) {
-    return new StringTensorBuffer(offsets.offset(index), data.offset(offsets.getLong(index)));
+    return new StringTensorBuffer(offsets.offset(index), data);
   }
 
   @Override
   public DataBuffer<byte[]> narrow(long size) {
-    return new StringTensorBuffer(offsets.narrow(size), data.narrow(offsets.getLong(size)));
+    return new StringTensorBuffer(offsets.narrow(size), data);
   }
 
   @Override
   public DataBuffer<byte[]> slice(long index, long size) {
-    return new StringTensorBuffer(
-        offsets.slice(index, size),
-        data.slice(offsets.getLong(index), offsets.getLong(index + size))
-    );
+    return new StringTensorBuffer(offsets.slice(index, size), data);
   }
 
   StringTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
