@@ -37,6 +37,19 @@ import org.tensorflow.types.family.TType;
  * are added onto an existing tensor (as opposed to a variable). If the memory
  * for the existing tensor cannot be re-used, a copy is made and updated.
  * <p>
+ * `indices` is an integer tensor containing indices into a new tensor of shape
+ * `tensor.shape`.  The last dimension of `indices` can be at most the rank of
+ * `tensor.shape`:
+ * <p>
+ *     indices.shape[-1] <= tensor.shape.rank
+ * <p>
+ * The last dimension of `indices` corresponds to indices into elements
+ * (if `indices.shape[-1] = tensor.shape.rank`) or slices
+ * (if `indices.shape[-1] < tensor.shape.rank`) along dimension
+ * `indices.shape[-1]` of `tensor.shape`.  `updates` is a tensor with shape
+ * <p>
+ *     indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
+ * <p>
  * The simplest form of tensor_scatter_add is to add individual elements to a
  * tensor by index. For example, say we want to add 4 elements in a rank-1
  * tensor with 8 elements.
