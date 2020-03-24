@@ -447,6 +447,22 @@ public class TensorTest {
   }
 
   @Test
+  public void allocateTensorWithSize() {
+    try (Tensor<TInt32> t = Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize())) {
+      // ok
+    }
+    try (Tensor<TInt32> t = Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 9 * TInt32.DTYPE.byteSize())) {
+      // ok (size requested is larger that minimum space required)
+    }
+    try {
+      Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize() - 1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // as expected
+    }
+  }
+
+  @Test
   public void useAfterClose() {
     int n = 4;
     Tensor<?> t = TInt32.scalarOf(n);

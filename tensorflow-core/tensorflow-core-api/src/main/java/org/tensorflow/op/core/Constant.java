@@ -508,7 +508,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @return a double constant
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
-  @Endpoint
+  @Endpoint(name = "val")
   public static Constant<TFloat64> tensorOf(Scope scope, Shape shape, DoubleDataBuffer data) {
     try (Tensor<TFloat64> value = TFloat64.tensorOf(shape, data)) {
       return create(scope, value);
@@ -973,7 +973,7 @@ public final class Constant<T extends TType> extends PrimitiveOp implements Oper
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *     buffer
    */
-  @Endpoint
+  @Endpoint(name = "val")
   public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
       ByteDataBuffer data) {
     try (Tensor<T> value = Tensor.of(type, shape, data)) {

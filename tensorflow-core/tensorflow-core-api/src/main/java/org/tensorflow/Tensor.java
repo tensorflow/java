@@ -66,6 +66,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param dtype datatype of the tensor
    * @param shape shape of the tensor
    * @return an allocated but uninitialized tensor
+   * @throws IllegalStateException if tensor failed to be allocated
    */
   public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape) {
     return of(dtype, shape, shape.size() * dtype.byteSize());
@@ -86,8 +87,16 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param size size, in bytes, of the tensor
    * @return an allocated but uninitialized tensor
    * @see #of(DataType, Shape)
+   * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
+   *                                  store the tensor data
+   * @throws IllegalStateException if tensor failed to be allocated
    */
   public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size) {
+    // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
+    // we only validate them for fixed length datatypes
+    if (!dtype.isVariableLength() && shape.size() * dtype.byteSize() > size) {
+      throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
+    }
     Tensor<T> t = new Tensor<>(dtype, shape);
     TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
     t.nativeRef = new NativeReference(nativeHandle);
@@ -116,6 +125,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param shape shape of the tensor
    * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
    * @return an allocated and initialized tensor
+   * @throws IllegalStateException if tensor failed to be allocated
    */
   public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape,
       Consumer<T> dataInitializer) {
@@ -138,6 +148,9 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
    * @return an allocated and initialized tensor
    * @see #of(DataType, Shape, long, Consumer)
+   * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
+   *                                  store the tensor data
+   * @throws IllegalStateException if tensor failed to be allocated
    */
   public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size,
       Consumer<T> dataInitializer) {
@@ -161,15 +174,10 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @param dtype the tensor element data type
    * @param shape the tensor shape.
    * @param rawData a buffer containing the tensor raw data.
-   * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
-   *     buffer
+   * @throws IllegalArgumentException if {@code rawData} is not large enough to contain the tensor data
+   * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
   public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
-    // The raw data buffer should be at least large enough to contain all scalar values of the tensor,
-    // but could be larger as well (e.g. TString)
-    if (shape.size() * dtype.byteSize() > rawData.size()) {
-      throw new IllegalArgumentException("Buffer is not large enough to contain all scalar values");
-    }
     Tensor<T> t = of(dtype, shape, rawData.size());
     rawData.copyTo(TensorBuffers.toBytes(t.nativeHandle()), rawData.size());
     return t;

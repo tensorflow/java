@@ -1082,35 +1082,6 @@ public final class Ops {
   }
 
   /**
-   * Create a {@link TFloat64} constant with data from the given buffer.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a double constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public Constant<TFloat64> constant(Shape shape, DoubleDataBuffer data) {
-    return Constant.tensorOf(scope, shape, data);
-  }
-
-  /**
-   * Create a constant with data from the given buffer.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param type the tensor datatype.
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a constant of type `type`
-   * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
-   *      buffer
-   */
-  public <T extends TType> Constant<T> constant(DataType<T> type, Shape shape,
-      ByteDataBuffer data) {
-    return Constant.tensorOf(scope, type, shape, data);
-  }
-
-  /**
    * This op consumes a lock created by `MutexLock`.
    *  <p>
    *  This op exists to consume a tensor created by `MutexLock` (other than
@@ -7230,6 +7201,19 @@ public final class Ops {
   }
 
   /**
+   * Create a {@link TFloat64} constant with data from the given buffer.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a double constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   */
+  public Constant<TFloat64> val(Shape shape, DoubleDataBuffer data) {
+    return Constant.tensorOf(scope, shape, data);
+  }
+
+  /**
    * Create a {@link TFloat32} constant with data from the given buffer.
    *
    * @param scope is a scope used to add the underlying operation.
@@ -7307,6 +7291,21 @@ public final class Ops {
    */
   public Constant<TString> val(Charset charset, Shape shape, DataBuffer<String> data) {
     return Constant.tensorOf(scope, charset, shape, data);
+  }
+
+  /**
+   * Create a constant with data from the given buffer.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param type the tensor datatype.
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a constant of type `type`
+   * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
+   *      buffer
+   */
+  public <T extends TType> Constant<T> val(DataType<T> type, Shape shape, ByteDataBuffer data) {
+    return Constant.tensorOf(scope, type, shape, data);
   }
 
   /**
