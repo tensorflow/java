@@ -55,6 +55,13 @@ public final class DataType<T extends TType> {
   }
 
   /**
+   * Returns true if this datatype has elements of variable length
+   */
+  public boolean isVariableLength() {
+    return byteSize == -1;
+  }
+
+  /**
    * Returns a readable name for this type
    */
   public String name() {
