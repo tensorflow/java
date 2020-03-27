@@ -255,7 +255,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    *   });
    *   assertEquals(NdArrays.vectorOf(3.0f, 4.0f), data.getFloat(1));
    *
-   *   Constant<TFloat32> c = tf.val(t);
+   *   Constant<TFloat32> c = tf.constant(t);
    *   assertEquals(4.0f, c.data().getFloat(1, 1));
    * }
    * }</pre>

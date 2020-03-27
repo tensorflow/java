@@ -479,7 +479,7 @@ public class TensorTest {
     Tensor<TInt32> sum;
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
-      sum = tf.math.add(tf.val(10), tf.val(20)).asTensor();
+      sum = tf.math.add(tf.constant(10), tf.constant(20)).asTensor();
       sum.nativeHandle(); // does not throw
       assertEquals(30, sum.data().getInt());
     }

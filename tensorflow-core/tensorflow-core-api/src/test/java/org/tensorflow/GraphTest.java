@@ -42,7 +42,7 @@ public class GraphTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
       tf.withName("Y").linalg.matMul(
-          tf.withName("A").val(new int[2][2]),
+          tf.withName("A").constant(new int[2][2]),
           tf.withName("X").placeholder(TInt32.DTYPE),
           MatMul.transposeA(true).transposeB(false)
       );
@@ -94,9 +94,9 @@ public class GraphTest {
       assertFalse(iterator.hasNext());
 
       operations = new HashSet<>();
-      operations.add(tf.withName("Const-A").val(1.0f).op());
-      operations.add(tf.withName("Const-B").val(23).op());
-      operations.add(tf.withName("Const-C").val(1.618).op());
+      operations.add(tf.withName("Const-A").constant(1.0f).op());
+      operations.add(tf.withName("Const-B").constant(23).op());
+      operations.add(tf.withName("Const-C").constant(1.618).op());
 
       iterator = g.operations();
 
@@ -283,7 +283,7 @@ public class GraphTest {
           toArray(input),
           (condGraph, condInputs, condOutputs) -> {
             Ops tfc = Ops.create(condGraph);
-            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.val(16)).z();
+            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.constant(16)).z();
           },
           (bodyGraph, bodyInputs, bodyOutputs) -> {
             Ops tfb = Ops.create(bodyGraph);
@@ -318,7 +318,7 @@ public class GraphTest {
           inputs,
           (condGraph, condInputs, condOutputs) -> {
             Ops tfc = Ops.create(condGraph);
-            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.val(16)).z();
+            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.constant(16)).z();
           },
           (bodyGraph, bodyInputs, bodyOutputs) -> {
             Ops tfb = Ops.create(bodyGraph);

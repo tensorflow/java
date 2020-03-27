@@ -61,8 +61,8 @@ public class EagerOperationBuilderTest {
       Ops tf = Ops.create(session);
       Operation asrt =
           opBuilder(session, "Assert", "assert")
-              .addInput(tf.val(true).asOutput())
-              .addInputList(new Output<?>[] {tf.val(-1).asOutput()})
+              .addInput(tf.constant(true).asOutput())
+              .addInputList(new Output<?>[] {tf.constant(-1).asOutput()})
               .build();
       try {
         opBuilder(session, "Const", "var").addControlInput(asrt);
@@ -79,8 +79,8 @@ public class EagerOperationBuilderTest {
       Ops tf = Ops.create(session);
       opBuilder(session, "Add", "SetDevice")
           .setDevice("/job:localhost/replica:0/task:0/device:CPU:0")
-          .addInput(tf.val(2).asOutput())
-          .addInput(tf.val(4).asOutput())
+          .addInput(tf.constant(2).asOutput())
+          .addInput(tf.constant(4).asOutput())
           .build();
     }
   }
@@ -110,19 +110,19 @@ public class EagerOperationBuilderTest {
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")
-          .addInput(tf.val(new float[2][2][2][2]).asOutput())
+          .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("ksize", new long[] {1, 1, 1, 1})
           .setAttr("strides", new long[] {1, 1, 1, 1})
           .setAttr("padding", "SAME")
           .build();
       // list(float), device
       opBuilder(session, "FractionalMaxPool", "FloatList")
-          .addInput(tf.val(new float[2][2][2][2]).asOutput())
+          .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
           .build();
       // shape
       opBuilder(session, "EnsureShape", "ShapeAttr")
-          .addInput(tf.val(new int[2][2]).asOutput())
+          .addInput(tf.constant(new int[2][2]).asOutput())
           .setAttr("shape", Shape.of(2, 2))
           .build();
       // list(shape)
@@ -132,14 +132,14 @@ public class EagerOperationBuilderTest {
           .build();
       // bool
       opBuilder(session, "All", "Bool")
-          .addInput(tf.val(new boolean[] {true, true, false}).asOutput())
-          .addInput(tf.val(0).asOutput())
+          .addInput(tf.constant(new boolean[] {true, true, false}).asOutput())
+          .addInput(tf.constant(0).asOutput())
           .setAttr("keep_dims", false)
           .build();
       // float
       opBuilder(session, "ApproximateEqual", "Float")
-          .addInput(tf.val(10.00001f).asOutput())
-          .addInput(tf.val(10.00000f).asOutput())
+          .addInput(tf.constant(10.00001f).asOutput())
+          .addInput(tf.constant(10.00000f).asOutput())
           .setAttr("tolerance", 0.1f)
           .build();
       // Missing tests: list(string), list(byte), list(bool), list(type)

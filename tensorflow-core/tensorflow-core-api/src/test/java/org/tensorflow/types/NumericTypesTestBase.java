@@ -48,11 +48,11 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
 
       // Initialize tensor memory with zeros and take a snapshot
       tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(0)));
-      Constant<T> x = tf.val(tensor);
+      Constant<T> x = tf.constant(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
       tensorData.scalars().forEach(scalar -> scalar.setObject(valueOf(1)));
-      Constant<T> y = tf.val(tensor);
+      Constant<T> y = tf.constant(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
@@ -93,7 +93,7 @@ abstract class NumericTypesTestBase<T extends TNumber & NdArray<U>, U> {
         Ops tf = Ops.create(session);
 
         // Compute the power of the tensor by itself
-        Constant<TInt32> x = tf.val(tensor);
+        Constant<TInt32> x = tf.constant(tensor);
         IntNdArray result = tf.math.pow(x, x).data();
 
         // Validate result by computing the same operation in Java

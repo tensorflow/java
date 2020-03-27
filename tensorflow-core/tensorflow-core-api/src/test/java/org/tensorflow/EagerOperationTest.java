@@ -63,8 +63,8 @@ public class EagerOperationTest {
       Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "CompareResult")
-              .addInput(tf.val(2).asOutput())
-              .addInput(tf.val(4).asOutput())
+              .addInput(tf.constant(2).asOutput())
+              .addInput(tf.constant(4).asOutput())
               .build();
       assertEquals(6, add.tensor(0).expect(TInt32.DTYPE).data().getInt());
 
@@ -79,8 +79,8 @@ public class EagerOperationTest {
   public void inputAndOutputListLengths() {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
-      Output<TFloat32> c1 = tf.val(new float[] {1f, 2f}).asOutput();
-      Output<TFloat32> c2 = tf.val(new float[] {3f, 4f}).asOutput();
+      Output<TFloat32> c1 = tf.constant(new float[] {1f, 2f}).asOutput();
+      Output<TFloat32> c2 = tf.constant(new float[] {3f, 4f}).asOutput();
 
       EagerOperation acc =
           opBuilder(session, "AddN", "InputListLength")
@@ -91,7 +91,7 @@ public class EagerOperationTest {
 
       EagerOperation split =
           opBuilder(session, "Split", "OutputListLength")
-              .addInput(tf.val(0).asOutput())
+              .addInput(tf.constant(0).asOutput())
               .addInput(c1)
               .setAttr("num_split", 2)
               .build();
@@ -120,8 +120,8 @@ public class EagerOperationTest {
       Ops tf = Ops.create(session);
       EagerOperation op =
           opBuilder(session, "UniqueWithCountsV2", "unq")
-              .addInput(tf.val(new int[] {1, 2, 1}).asOutput())
-              .addInput(tf.val(new int[] {0}).asOutput())
+              .addInput(tf.constant(new int[] {1, 2, 1}).asOutput())
+              .addInput(tf.constant(new int[] {0}).asOutput())
               .setAttr("out_idx", TInt32.DTYPE)
               .build();
       assertEquals(3, op.numOutputs());
@@ -134,8 +134,8 @@ public class EagerOperationTest {
     Ops tf = Ops.create(session);
     EagerOperation add =
         opBuilder(session, "Add", "SessionClosed")
-            .addInput(tf.val(2).asOutput())
-            .addInput(tf.val(4).asOutput())
+            .addInput(tf.constant(2).asOutput())
+            .addInput(tf.constant(4).asOutput())
             .build();
     assertEquals(1, add.outputListLength("z"));
     session.close();
@@ -153,8 +153,8 @@ public class EagerOperationTest {
       Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "OutOfRange")
-              .addInput(tf.val(2).asOutput())
-              .addInput(tf.val(4).asOutput())
+              .addInput(tf.constant(2).asOutput())
+              .addInput(tf.constant(4).asOutput())
               .build();
       try {
         add.getUnsafeNativeHandle(1);

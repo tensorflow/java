@@ -71,7 +71,7 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      Split<TInt32> split = tf.split(tf.val(0), tf.array(1, 2, 3, 4), 2L);
+      Split<TInt32> split = tf.split(tf.constant(0), tf.array(1, 2, 3, 4), 2L);
       tf.math.add(split.output().get(0), split.output().get(1));
 
       // Fetch using colon separated names.
@@ -130,8 +130,8 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      tf.withName("c1").val(2718);
-      tf.withName("c2").val(31415);
+      tf.withName("c1").constant(2718);
+      tf.withName("c2").constant(31415);
       AutoCloseableList<Tensor<?>> outputs =
           new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
       assertEquals(2, outputs.size());
@@ -204,7 +204,7 @@ public class SessionTest {
 
   private static void transpose_A_times_X(Ops tf, int[][] a) {
     tf.withName("Y").linalg.matMul(
-        tf.withName("A").val(a),
+        tf.withName("A").constant(a),
         tf.withName("X").placeholder(TInt32.DTYPE),
         MatMul.transposeA(true).transposeB(false)
     );

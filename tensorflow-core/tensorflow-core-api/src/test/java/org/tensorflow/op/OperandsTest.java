@@ -33,7 +33,7 @@ public class OperandsTest {
   public void createOutputArrayFromOperandList() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Split<?> split = tf.split(tf.val(0), tf.array(0, 1, 2), 3L);
+      Split<?> split = tf.split(tf.constant(0), tf.array(0, 1, 2), 3L);
       Output<?>[] array = Operands.asOutputs(split.output());
       assertEquals(split.output().size(), array.length);
       assertSame(array[0], split.output().get(0));

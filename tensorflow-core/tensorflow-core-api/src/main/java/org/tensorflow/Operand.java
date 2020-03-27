@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  *
  * // The "split" operation can be used as operand list to the "concat" operation
  * Iterable<? extends Operand<TFloat32>> split = tf.split(...);
- * tf.concat(split, tf.val(0));
+ * tf.concat(split, tf.constant(0));
  * }</pre>
  */
 public interface Operand<T extends TType> {
