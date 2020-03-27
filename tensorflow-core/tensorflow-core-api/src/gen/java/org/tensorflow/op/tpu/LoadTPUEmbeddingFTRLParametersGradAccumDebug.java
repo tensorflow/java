@@ -20,7 +20,7 @@ package org.tensorflow.op.tpu;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -35,7 +35,7 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
-public final class LoadTPUEmbeddingFTRLParametersGradAccumDebug extends PrimitiveOp {
+public final class LoadTPUEmbeddingFTRLParametersGradAccumDebug extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.LoadTPUEmbeddingFTRLParametersGradAccumDebug}

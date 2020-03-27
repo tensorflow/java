@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.types.TFloat32;
 /**
  * Output the logits for the given input data
  */
-public final class TensorForestTreePredict extends PrimitiveOp implements Operand<TFloat32> {
+public final class TensorForestTreePredict extends RawOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorForestTreePredict operation.

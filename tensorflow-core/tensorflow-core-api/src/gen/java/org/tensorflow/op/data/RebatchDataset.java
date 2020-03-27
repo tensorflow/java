@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * Creates a dataset that changes the batch size of the dataset to current batch
  * size // num_workers.
  */
-public final class RebatchDataset extends PrimitiveOp implements Operand<TType> {
+public final class RebatchDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.RebatchDataset}

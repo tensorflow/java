@@ -20,7 +20,7 @@ package org.tensorflow.op.io;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -29,7 +29,7 @@ import org.tensorflow.op.annotation.Operator;
  * Restore a Reader to its initial clean state.
  */
 @Operator(group = "io")
-public final class ReaderReset extends PrimitiveOp {
+public final class ReaderReset extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new ReaderReset operation.

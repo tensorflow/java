@@ -7519,9 +7519,9 @@ public final class Ops {
   /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
-   * @see {@link Scope#withControlDependencies(Iterable<Operand<?>>)}
+   * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
    */
-  public Ops withControlDependencies(Iterable<Operand<?>> controls) {
+  public Ops withControlDependencies(Iterable<Op> controls) {
     return new Ops(scope.withControlDependencies(controls));
   }
 

@@ -20,7 +20,7 @@ package org.tensorflow.op.tpu;
 import java.util.List;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.op.annotation.Operator;
  * <p>
  * This operation holds the metadata common to operations of a `tpu.replicate()` computation subgraph.
  */
-public final class TPUReplicateMetadata extends PrimitiveOp {
+public final class TPUReplicateMetadata extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.TPUReplicateMetadata}

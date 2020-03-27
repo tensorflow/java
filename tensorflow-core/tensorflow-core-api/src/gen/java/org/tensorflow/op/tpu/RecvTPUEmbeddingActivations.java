@@ -24,7 +24,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -40,7 +40,7 @@ import org.tensorflow.types.TFloat32;
  * one Tensor of activations per table specified in the model. There can be at
  * most one RecvTPUEmbeddingActivations op in the TPU graph.
  */
-public final class RecvTPUEmbeddingActivations extends PrimitiveOp implements Iterable<Operand<TFloat32>> {
+public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable<Operand<TFloat32>> {
   
   /**
    * Factory method to create a class wrapping a new RecvTPUEmbeddingActivations operation.

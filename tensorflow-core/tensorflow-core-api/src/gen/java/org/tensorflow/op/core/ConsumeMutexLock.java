@@ -20,7 +20,7 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -37,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * be enforced via the `colocate_with` mechanism.
  */
 @Operator
-public final class ConsumeMutexLock extends PrimitiveOp {
+public final class ConsumeMutexLock extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new ConsumeMutexLock operation.

@@ -16,6 +16,7 @@ package org.tensorflow.op.core;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
@@ -59,6 +60,11 @@ public final class Zeros<T extends TType> implements Op, Operand<T> {
       zero = Cast.create(zerosScope.withName("Zero"), Constant.scalarOf(zerosScope, 0), type);
     }
     return new Zeros<>(Fill.create(zerosScope.withName("Fill"), dims, zero));
+  }
+
+  @Override
+  public Operation op() {
+    return fill.op();
   }
 
   @Override

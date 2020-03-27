@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -47,7 +47,7 @@ import org.tensorflow.types.TString;
  * time than `tf.string_to_hash_bucket_fast`.
  */
 @Operator(group = "strings")
-public final class ToHashBucketStrong extends PrimitiveOp implements Operand<TInt64> {
+public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new ToHashBucketStrong operation.

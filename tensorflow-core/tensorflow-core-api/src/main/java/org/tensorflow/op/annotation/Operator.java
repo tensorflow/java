@@ -66,7 +66,7 @@ public @interface Operator {
    *
    * <pre>{@code
    * @Operator(group="math")
-   * public final class Add extends PrimitiveOp implements Operand {
+   * public final class Add extends RawOp implements Operand {
    *   ...
    * }
    * }</pre>
@@ -83,7 +83,7 @@ public @interface Operator {
    *
    * <pre>{@code
    * @Operator(group="data.experimental")
-   * public final class MyDataset extends PrimitiveOp implements Operand {
+   * public final class MyDataset extends RawOp implements Operand {
    *   ...
    * }
    * }</pre>

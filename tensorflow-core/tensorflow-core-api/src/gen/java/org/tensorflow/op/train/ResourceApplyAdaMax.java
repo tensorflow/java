@@ -20,7 +20,7 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * v_t <- max(beta2 * v_{t-1}, abs(g))
  * variable <- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
  */
-public final class ResourceApplyAdaMax extends PrimitiveOp {
+public final class ResourceApplyAdaMax extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdaMax}

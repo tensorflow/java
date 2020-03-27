@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.TInt32;
  * <p>
  * or by starting a new tree.
  */
-public final class BoostedTreesUpdateEnsemble extends PrimitiveOp {
+public final class BoostedTreesUpdateEnsemble extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesUpdateEnsemble operation.

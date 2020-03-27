@@ -19,7 +19,7 @@ package org.tensorflow.op.core;
 
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.op.annotation.Operator;
  * Only useful as a placeholder for control edges.
  */
 @Operator
-public final class ControlTrigger extends PrimitiveOp {
+public final class ControlTrigger extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new ControlTrigger operation.

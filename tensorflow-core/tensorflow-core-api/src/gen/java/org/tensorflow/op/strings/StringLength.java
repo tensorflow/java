@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TString;
  * Computes the length of each string given in the input tensor.
  */
 @Operator(group = "strings")
-public final class StringLength extends PrimitiveOp implements Operand<TInt32> {
+public final class StringLength extends RawOp implements Operand<TInt32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StringLength}

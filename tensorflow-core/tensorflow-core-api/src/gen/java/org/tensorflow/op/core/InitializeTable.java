@@ -20,7 +20,7 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.types.family.TType;
  * Table initializer that takes two tensors for keys and values respectively.
  */
 @Operator
-public final class InitializeTable extends PrimitiveOp {
+public final class InitializeTable extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new InitializeTable operation.

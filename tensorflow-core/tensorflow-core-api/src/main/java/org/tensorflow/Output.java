@@ -31,11 +31,6 @@ import org.tensorflow.types.family.TType;
  */
 public final class Output<T extends TType> implements Operand<T> {
 
-  /** Returns the Operation that will produce the tensor referred to by this Output. */
-  public Operation op() {
-    return operation;
-  }
-
   /** Returns the index into the outputs of the Operation. */
   public int index() {
     return index;
@@ -69,6 +64,11 @@ public final class Output<T extends TType> implements Operand<T> {
   @SuppressWarnings("unchecked")
   public Tensor<T> tensor() {
     return (Tensor<T>) operation.tensor(index);
+  }
+
+  @Override
+  public Operation op() {
+    return operation;
   }
 
   @Override

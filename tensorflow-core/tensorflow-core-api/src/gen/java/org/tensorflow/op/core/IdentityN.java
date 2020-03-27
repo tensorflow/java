@@ -25,7 +25,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TType;
  * 
  */
 @Operator
-public final class IdentityN extends PrimitiveOp implements Iterable<Operand<TType>> {
+public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IdentityN operation.

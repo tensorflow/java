@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -42,7 +42,7 @@ import org.tensorflow.types.TInt64;
  * true labels.
  */
 @Operator(group = "nn")
-public final class LearnedUnigramCandidateSampler extends PrimitiveOp {
+public final class LearnedUnigramCandidateSampler extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LearnedUnigramCandidateSampler}

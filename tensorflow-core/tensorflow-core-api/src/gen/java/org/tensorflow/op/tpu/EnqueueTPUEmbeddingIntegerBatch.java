@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.types.TString;
 /**
  * An op that enqueues a list of input batch tensors to TPUEmbedding.
  */
-public final class EnqueueTPUEmbeddingIntegerBatch extends PrimitiveOp {
+public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.EnqueueTPUEmbeddingIntegerBatch}

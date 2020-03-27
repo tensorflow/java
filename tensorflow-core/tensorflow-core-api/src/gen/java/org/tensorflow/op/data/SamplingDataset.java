@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * `experimental_optimization.filter_with_random_uniform_fusion` option of
  * `tf.data.Options`.
  */
-public final class SamplingDataset extends PrimitiveOp implements Operand<TType> {
+public final class SamplingDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new SamplingDataset operation.

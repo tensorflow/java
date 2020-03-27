@@ -29,9 +29,9 @@ import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.op.PrimitiveOp} */
+/** Unit tests for {@link RawOp} */
 @RunWith(JUnit4.class)
-public class PrimitiveOpTest {
+public class RawOpTest {
 
   @Test
   public void equalsHashcode() {
@@ -40,11 +40,11 @@ public class PrimitiveOpTest {
 
       Output<TInt32> array = tf.constant(new int[2]).asOutput();
 
-      PrimitiveOp test1 =
-          new PrimitiveOp(g.opBuilder("Shape", "shape1").addInput(array).build()) {};
-      PrimitiveOp test2 =
-          new PrimitiveOp(g.opBuilder("Shape", "shape2").addInput(array).build()) {};
-      PrimitiveOp test3 = new PrimitiveOp(test1.operation) {};
+      RawOp test1 =
+          new RawOp(g.opBuilder("Shape", "shape1").addInput(array).build()) {};
+      RawOp test2 =
+          new RawOp(g.opBuilder("Shape", "shape2").addInput(array).build()) {};
+      RawOp test3 = new RawOp(test1.operation) {};
 
       // equals() tests
       assertNotEquals(test1, test2);
@@ -53,7 +53,7 @@ public class PrimitiveOpTest {
       assertNotEquals(test2, test3);
 
       // hashcode() tests
-      Set<PrimitiveOp> ops = new HashSet<>();
+      Set<RawOp> ops = new HashSet<>();
       assertTrue(ops.add(test1));
       assertTrue(ops.add(test2));
       assertFalse(ops.add(test3));

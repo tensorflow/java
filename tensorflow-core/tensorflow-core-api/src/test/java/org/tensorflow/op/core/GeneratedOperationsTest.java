@@ -25,6 +25,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
@@ -74,7 +75,7 @@ public final class GeneratedOperationsTest {
       Ops ops = Ops.create(g);
       Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.DTYPE);
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
-      ArrayList<Operand<?>> controls = new ArrayList<>();
+      ArrayList<Op> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
       Operand<TInt32> x =
           ops.withControlDependencies(controls).math.add(variable, ops.constant(0));

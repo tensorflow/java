@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
  */
 @Operator(group = "math")
-public final class NotEqual extends PrimitiveOp implements Operand<TBool> {
+public final class NotEqual extends RawOp implements Operand<TBool> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.math.NotEqual}

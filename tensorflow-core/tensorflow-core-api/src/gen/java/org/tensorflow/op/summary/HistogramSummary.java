@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * This op reports an `InvalidArgument` error if any value is not finite.
  */
 @Operator(group = "summary")
-public final class HistogramSummary extends PrimitiveOp implements Operand<TString> {
+public final class HistogramSummary extends RawOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new HistogramSummary operation.

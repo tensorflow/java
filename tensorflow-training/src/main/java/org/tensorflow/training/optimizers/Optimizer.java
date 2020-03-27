@@ -130,9 +130,9 @@ public abstract class Optimizer {
 
     createSlots(variables);
 
-    Optional<Operand<? extends TType>> prepOp = prepare(name + "/prepare");
+    Optional<Op> prepOp = prepare(name + "/prepare");
 
-    List<Operand<? extends TType>> updateOps = new ArrayList<>();
+    List<Op> updateOps = new ArrayList<>();
     prepOp.ifPresent(updateOps::add);
     for (GradAndVar<? extends TType> pair : gradsAndVars) {
       updateOps.add(applyDense(pair));
@@ -199,7 +199,7 @@ public abstract class Optimizer {
    *
    * @param scopeName The scope name to use for any variable creations.
    */
-  protected Optional<Operand<? extends TType>> prepare(String scopeName) {
+  protected Optional<Op> prepare(String scopeName) {
     return Optional.empty();
   }
 
@@ -211,7 +211,7 @@ public abstract class Optimizer {
   protected void createSlots(List<Output<? extends TType>> variables) {
   }
 
-  private <T extends TType> Operand<T> applyDense(GradAndVar<T> gradVarPair) {
+  private <T extends TType> Op applyDense(GradAndVar<T> gradVarPair) {
     return applyDense(gradVarPair.getGradient(), gradVarPair.getVariable());
   }
 
@@ -223,8 +223,7 @@ public abstract class Optimizer {
    * @param <T>      The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
-  protected abstract <T extends TType> Operand<T> applyDense(Output<T> gradient,
-      Output<T> variable);
+  protected abstract <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable);
 
   /**
    * Gathers up the update operations into a single op that can be used as a run target.
@@ -233,7 +232,7 @@ public abstract class Optimizer {
    * @param name             The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
-  protected Op finish(List<Operand<?>> updateOperations, String name) {
+  protected Op finish(List<Op> updateOperations, String name) {
     Scope scope = new Scope(graph);
     scope = scope.withName(name);
     scope = scope.withControlDependencies(updateOperations);

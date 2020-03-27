@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -63,7 +63,7 @@ import org.tensorflow.types.family.TType;
  *   [14+]: Sizes of the dimensions.
  * 
  */
-public final class DebugNumericSummary extends PrimitiveOp implements Operand<TFloat64> {
+public final class DebugNumericSummary extends RawOp implements Operand<TFloat64> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.DebugNumericSummary}

@@ -23,7 +23,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An op which linearizes multiple Tensor values to an opaque variant tensor.
  */
-public final class PrelinearizeTuple extends PrimitiveOp implements Operand<TType> {
+public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.PrelinearizeTuple}

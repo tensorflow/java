@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * <p>
  * Counts number of NaNs in the input tensor, for debugging.
  */
-public final class DebugNanCount extends PrimitiveOp implements Operand<TInt64> {
+public final class DebugNanCount extends RawOp implements Operand<TInt64> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.DebugNanCount}

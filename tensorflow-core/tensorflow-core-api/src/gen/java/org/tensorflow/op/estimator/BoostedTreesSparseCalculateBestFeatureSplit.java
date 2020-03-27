@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -40,7 +40,7 @@ import org.tensorflow.types.TString;
  * <p>
  * The output shapes are compatible in a way that the first dimension of all tensors are the same and equal to the number of possible split nodes for each feature.
  */
-public final class BoostedTreesSparseCalculateBestFeatureSplit extends PrimitiveOp {
+public final class BoostedTreesSparseCalculateBestFeatureSplit extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.estimator.BoostedTreesSparseCalculateBestFeatureSplit}

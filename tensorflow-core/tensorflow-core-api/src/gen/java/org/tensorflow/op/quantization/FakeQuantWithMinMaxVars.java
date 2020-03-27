@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -51,7 +51,7 @@ import org.tensorflow.types.TFloat32;
  * values.
  */
 @Operator(group = "quantization")
-public final class FakeQuantWithMinMaxVars extends PrimitiveOp implements Operand<TFloat32> {
+public final class FakeQuantWithMinMaxVars extends RawOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVars}

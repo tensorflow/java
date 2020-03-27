@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.TInt32;
  * Op returns the number of incomplete elements in the underlying container.
  */
 @Operator
-public final class MapIncompleteSize extends PrimitiveOp implements Operand<TInt32> {
+public final class MapIncompleteSize extends RawOp implements Operand<TInt32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MapIncompleteSize}

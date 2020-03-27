@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -35,7 +35,7 @@ import org.tensorflow.types.TString;
  * Note also that the order of filenames returned is deterministic.
  */
 @Operator(group = "io")
-public final class MatchingFiles extends PrimitiveOp implements Operand<TString> {
+public final class MatchingFiles extends RawOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new MatchingFiles operation.

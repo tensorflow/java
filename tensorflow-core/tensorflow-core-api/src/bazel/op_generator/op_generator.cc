@@ -423,7 +423,7 @@ void GenerateOp(const OpSpec& op, const EndpointSpec& endpoint,
                 Env* env) {
   Type op_class(
       ClassOf(endpoint, base_package)
-          .add_supertype(Type::Class("PrimitiveOp", "org.tensorflow.op")));
+          .add_supertype(Type::Class("RawOp", "org.tensorflow.op")));
   Javadoc op_javadoc(endpoint.javadoc());
 
   // op interfaces

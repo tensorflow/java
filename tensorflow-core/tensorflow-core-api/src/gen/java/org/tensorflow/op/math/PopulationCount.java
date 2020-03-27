@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TType;
  * 8- or 16-bit inputs and then aggregate the resulting counts.
  */
 @Operator(group = "math")
-public final class PopulationCount extends PrimitiveOp implements Operand<TUint8> {
+public final class PopulationCount extends RawOp implements Operand<TUint8> {
   
   /**
    * Factory method to create a class wrapping a new PopulationCount operation.

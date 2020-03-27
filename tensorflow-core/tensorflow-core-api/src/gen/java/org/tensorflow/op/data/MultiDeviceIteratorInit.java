@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.types.TInt64;
 /**
  * Initializes the multi device iterator with the given dataset.
  */
-public final class MultiDeviceIteratorInit extends PrimitiveOp implements Operand<TInt64> {
+public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt64> {
   
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorInit operation.

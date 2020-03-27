@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -43,7 +43,7 @@ import org.tensorflow.types.TInt32;
  *       `rois`: output RoIs, a 3D tensor of shape [Batch, post_nms_topn, 4], padded by 0 if less than post_nms_topn candidates found.
  *       `roi_probabilities`: probability scores of each roi in 'rois', a 2D tensor of shape [Batch,post_nms_topn], padded with 0 if needed, sorted by scores.
  */
-public final class GenerateBoundingBoxProposals extends PrimitiveOp {
+public final class GenerateBoundingBoxProposals extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.GenerateBoundingBoxProposals}

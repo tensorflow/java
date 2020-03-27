@@ -17,7 +17,6 @@ package org.tensorflow.op;
 
 import java.util.ArrayList;
 import org.tensorflow.ExecutionEnvironment;
-import org.tensorflow.Operand;
 import org.tensorflow.OperationBuilder;
 
 /**
@@ -150,7 +149,7 @@ public final class Scope {
   }
 
   private Scope(
-      ExecutionEnvironment env, NameScope nameScope, Iterable<Operand<?>> controlDependencies) {
+      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
@@ -165,7 +164,7 @@ public final class Scope {
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
    */
-  public Scope withControlDependencies(Iterable<Operand<?>> controls) {
+  public Scope withControlDependencies(Iterable<Op> controls) {
     return new Scope(env, nameScope, controls);
   }
 
@@ -175,13 +174,13 @@ public final class Scope {
    * @param builder OperationBuilder to add control inputs to
    */
   public OperationBuilder applyControlDependencies(OperationBuilder builder) {
-    for (Operand<?> control : controlDependencies) {
-      builder = builder.addControlInput(control.asOutput().op());
+    for (Op control : controlDependencies) {
+      builder = builder.addControlInput(control.op());
     }
     return builder;
   }
 
   private final ExecutionEnvironment env;
-  private final Iterable<Operand<?>> controlDependencies;
+  private final Iterable<Op> controlDependencies;
   private final NameScope nameScope;
 }

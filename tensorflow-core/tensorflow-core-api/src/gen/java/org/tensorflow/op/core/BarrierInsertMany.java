@@ -20,7 +20,7 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * INVALID_ARGUMENT, and leave the barrier in an undefined state.
  */
 @Operator
-public final class BarrierInsertMany extends PrimitiveOp {
+public final class BarrierInsertMany extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BarrierInsertMany operation.

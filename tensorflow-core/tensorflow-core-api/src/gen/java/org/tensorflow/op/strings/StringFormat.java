@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TString;
  * Formats a string template using a list of tensors, pretty-printing tensor summaries.
  */
 @Operator(group = "strings")
-public final class StringFormat extends PrimitiveOp implements Operand<TString> {
+public final class StringFormat extends RawOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StringFormat}

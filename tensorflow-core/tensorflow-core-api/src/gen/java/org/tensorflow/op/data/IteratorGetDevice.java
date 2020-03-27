@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,7 +30,7 @@ import org.tensorflow.types.TString;
 /**
  * Returns the name of the device on which `resource` has been placed.
  */
-public final class IteratorGetDevice extends PrimitiveOp implements Operand<TString> {
+public final class IteratorGetDevice extends RawOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new IteratorGetDevice operation.

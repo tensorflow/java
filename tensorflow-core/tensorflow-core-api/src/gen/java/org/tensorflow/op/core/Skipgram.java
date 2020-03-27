@@ -20,7 +20,7 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.types.TString;
  * Parses a text file and creates a batch of examples.
  */
 @Operator
-public final class Skipgram extends PrimitiveOp {
+public final class Skipgram extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Skipgram}

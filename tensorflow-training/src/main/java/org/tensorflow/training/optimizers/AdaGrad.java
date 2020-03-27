@@ -19,6 +19,7 @@ import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
 
@@ -70,7 +71,7 @@ public class AdaGrad extends Optimizer {
   }
 
   @Override
-  protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return tf.train
         .applyAdagrad(variable, slot, tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),

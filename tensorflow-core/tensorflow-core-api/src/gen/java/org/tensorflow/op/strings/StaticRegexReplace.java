@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.types.TString;
  * <p>
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
-public final class StaticRegexReplace extends PrimitiveOp implements Operand<TString> {
+public final class StaticRegexReplace extends RawOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.StaticRegexReplace}
