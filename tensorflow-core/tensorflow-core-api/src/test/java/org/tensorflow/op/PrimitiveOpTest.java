@@ -38,7 +38,7 @@ public class PrimitiveOpTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Output<TInt32> array = tf.val(new int[2]).asOutput();
+      Output<TInt32> array = tf.constant(new int[2]).asOutput();
 
       PrimitiveOp test1 =
           new PrimitiveOp(g.opBuilder("Shape", "shape1").addInput(array).build()) {};

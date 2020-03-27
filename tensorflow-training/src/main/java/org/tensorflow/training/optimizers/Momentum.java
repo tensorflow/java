@@ -62,7 +62,7 @@ public class Momentum extends Optimizer {
 
   private <T extends TType> void createMomentumSlot(Output<T> v) {
     Operand<T> initializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, initializer);
   }
 
@@ -70,9 +70,9 @@ public class Momentum extends Optimizer {
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, MOMENTUM).get();
     return tf.train
-        .applyMomentum(variable, slot, tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+        .applyMomentum(variable, slot, tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
             gradient,
-            tf.dtypes.cast(tf.val(momentum), gradient.dataType()),
+            tf.dtypes.cast(tf.constant(momentum), gradient.dataType()),
             ApplyMomentum.useNesterov(useNesterov));
   }
 

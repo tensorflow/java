@@ -65,7 +65,7 @@ public class AdaGrad extends Optimizer {
 
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
     Operand<T> initializer = tf.fill(tf.shape(v),
-        tf.dtypes.cast(tf.val(initialAccumulatorValue), v.dataType()));
+        tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 
@@ -73,7 +73,7 @@ public class AdaGrad extends Optimizer {
   protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return tf.train
-        .applyAdagrad(variable, slot, tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
+        .applyAdagrad(variable, slot, tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
             gradient);
   }
 

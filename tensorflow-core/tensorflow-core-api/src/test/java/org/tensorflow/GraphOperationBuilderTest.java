@@ -38,7 +38,7 @@ public class GraphOperationBuilderTest {
     try (Graph g1 = new Graph();
         Graph g2 = new Graph()) {
       Ops tf = Ops.create(g1);
-      Constant<TInt32> c1 = tf.val(3);
+      Constant<TInt32> c1 = tf.constant(3);
       tf.math.add(c1, c1);
       try {
         Ops tf2 = Ops.create(g2);
@@ -113,7 +113,7 @@ public class GraphOperationBuilderTest {
       assertTrue(hasNode(g, "Int"));
       // list(int)
       g.opBuilder("MaxPool", "IntList")
-          .addInput(tf.val(new float[2][2][2][2]).asOutput())
+          .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("ksize", new long[] {1, 1, 1, 1})
           .setAttr("strides", new long[] {1, 1, 1, 1})
           .setAttr("padding", "SAME")
@@ -121,7 +121,7 @@ public class GraphOperationBuilderTest {
       assertTrue(hasNode(g, "IntList"));
       // list(float)
       g.opBuilder("FractionalMaxPool", "FloatList")
-          .addInput(tf.val(new float[2][2][2][2]).asOutput())
+          .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
           .build();
       assertTrue(hasNode(g, "FloatList"));
@@ -207,8 +207,8 @@ public class GraphOperationBuilderTest {
               .build()
               .output(0);
       assertTrue(hasNode(g, "queue"));
-      Output<TInt32> c1 = tf.val(matrix).asOutput();
-      Output<TInt32> c2 = tf.val(new int[][][] {matrix, matrix}).asOutput();
+      Output<TInt32> c1 = tf.constant(matrix).asOutput();
+      Output<TInt32> c2 = tf.constant(new int[][][] {matrix, matrix}).asOutput();
       Operation enqueue =
           g.opBuilder("QueueEnqueue", "enqueue")
               .addInput(queue)

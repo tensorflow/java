@@ -70,7 +70,7 @@ public class AdaGradDA extends Optimizer {
 
   @Override
   protected Optional<Operand<?>> prepare(String name) {
-    return Optional.of(tf.assignAdd(globalStep, tf.val(1L)));
+    return Optional.of(tf.assignAdd(globalStep, tf.constant(1L)));
   }
 
   @Override
@@ -79,16 +79,16 @@ public class AdaGradDA extends Optimizer {
       createAdaGradDASlot(v);
     }
     globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.DTYPE);
-    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.val(0L));
+    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
     graph.addInitializer(globalStepInitializer);
   }
 
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
     Operand<T> initializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> sqInitializer = tf.fill(tf.shape(v),
-        tf.dtypes.cast(tf.val(initialAccumulatorValue), v.dataType()));
+        tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.dataType()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 
@@ -97,9 +97,9 @@ public class AdaGradDA extends Optimizer {
     Variable<T> gradSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> gradSquaredSlot = getSlot(variable, SQUARED_ACCUMULATOR).get();
     return tf.train.applyAdagradDa(variable, gradSlot, gradSquaredSlot, gradient,
-        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
-        tf.dtypes.cast(tf.val(l1Strength), gradient.dataType()),
-        tf.dtypes.cast(tf.val(l2Strength), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(l1Strength), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(l2Strength), gradient.dataType()),
         globalStep);
   }
 
@@ -114,7 +114,7 @@ public class AdaGradDA extends Optimizer {
    */
   @Override
   protected Op finish(List<Operand<?>> updateOperations, String name) {
-    updateOperations.add(tf.assignAdd(globalStep, tf.val(1L)));
+    updateOperations.add(tf.assignAdd(globalStep, tf.constant(1L)));
     return super.finish(updateOperations, name);
   }
 

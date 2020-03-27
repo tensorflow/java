@@ -69,10 +69,10 @@ public class AdaDelta extends Optimizer {
 
   private <T extends TType> void createAdaDeltaSlot(Output<T> v) {
     Operand<T> accumulatorInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR, accumulatorInitializer);
     Operand<T> updateInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), ACCUMULATOR_UPDATE, updateInitializer);
   }
 
@@ -81,9 +81,9 @@ public class AdaDelta extends Optimizer {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> accumUpdateSlot = getSlot(variable, ACCUMULATOR_UPDATE).get();
     return tf.train.applyAdadelta(variable, accumSlot, accumUpdateSlot,
-        tf.dtypes.cast(tf.val(learningRate), gradient.dataType()),
-        tf.dtypes.cast(tf.val(rho), gradient.dataType()),
-        tf.dtypes.cast(tf.val(epsilon), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(rho), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
         gradient);
   }
 

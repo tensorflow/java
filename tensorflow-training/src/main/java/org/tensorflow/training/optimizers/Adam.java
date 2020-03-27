@@ -109,29 +109,29 @@ public class Adam extends Optimizer {
     }
     betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.DTYPE);
     Assign<TFloat32> betaOnePowerInit = tf
-        .assign(betaOnePower, tf.val(betaOne));
+        .assign(betaOnePower, tf.constant(betaOne));
     graph.addInitializer(betaOnePowerInit);
     betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.DTYPE);
     Assign<TFloat32> betaTwoPowerInit = tf
-        .assign(betaTwoPower, tf.val(betaTwo));
+        .assign(betaTwoPower, tf.constant(betaTwo));
     graph.addInitializer(betaTwoPowerInit);
   }
 
   @Override
   protected Optional<Operand<?>> prepare(String scopeName) {
-    betaOneConst = tf.val(betaOne);
-    betaTwoConst = tf.val(betaTwo);
-    learningRateConst = tf.val(learningRate);
-    epsilonConst = tf.val(epsilon);
+    betaOneConst = tf.constant(betaOne);
+    betaTwoConst = tf.constant(betaTwo);
+    learningRateConst = tf.constant(learningRate);
+    epsilonConst = tf.constant(epsilon);
     return Optional.empty();
   }
 
   private <T extends TType> void createAdamSlot(Output<T> v) {
     Operand<T> firstMomentInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
     Operand<T> secondMomentInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.val(0.0f), v.dataType()));
+        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
