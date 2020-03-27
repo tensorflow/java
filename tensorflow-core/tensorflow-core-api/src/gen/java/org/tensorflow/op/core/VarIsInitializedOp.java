@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.types.TBool;
  * Checks whether a resource handle-based variable has been initialized.
  */
 @Operator
-public final class VarIsInitializedOp extends PrimitiveOp implements Operand<TBool> {
+public final class VarIsInitializedOp extends RawOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new VarIsInitializedOp operation.

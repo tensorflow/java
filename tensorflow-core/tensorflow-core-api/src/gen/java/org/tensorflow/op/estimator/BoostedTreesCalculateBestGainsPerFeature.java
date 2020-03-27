@@ -24,7 +24,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -43,7 +43,7 @@ import org.tensorflow.types.TInt32;
  * The length of output lists are all of the same length, `num_features`.
  * The output shapes are compatible in a way that the first dimension of all tensors of all lists are the same and equal to the number of possible split nodes for each feature.
  */
-public final class BoostedTreesCalculateBestGainsPerFeature extends PrimitiveOp {
+public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesCalculateBestGainsPerFeature operation.

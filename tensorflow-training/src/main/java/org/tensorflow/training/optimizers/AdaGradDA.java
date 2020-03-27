@@ -69,7 +69,7 @@ public class AdaGradDA extends Optimizer {
   }
 
   @Override
-  protected Optional<Operand<?>> prepare(String name) {
+  protected Optional<Op> prepare(String name) {
     return Optional.of(tf.assignAdd(globalStep, tf.constant(1L)));
   }
 
@@ -93,7 +93,7 @@ public class AdaGradDA extends Optimizer {
   }
 
   @Override
-  protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> gradSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> gradSquaredSlot = getSlot(variable, SQUARED_ACCUMULATOR).get();
     return tf.train.applyAdagradDa(variable, gradSlot, gradSquaredSlot, gradient,
@@ -113,7 +113,7 @@ public class AdaGradDA extends Optimizer {
    * @return A NoOp with a control dependency on each update operation.
    */
   @Override
-  protected Op finish(List<Operand<?>> updateOperations, String name) {
+  protected Op finish(List<Op> updateOperations, String name) {
     updateOperations.add(tf.assignAdd(globalStep, tf.constant(1L)));
     return super.finish(updateOperations, name);
   }

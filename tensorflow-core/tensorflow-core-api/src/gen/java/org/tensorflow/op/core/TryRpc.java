@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -78,7 +78,7 @@ import org.tensorflow.types.TString;
  * not fail; the rest of the entries will have empty strings.
  */
 @Operator
-public final class TryRpc extends PrimitiveOp {
+public final class TryRpc extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TryRpc}

@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * depends on the tensor_debug_mode attribute.
  * This op is used internally by TensorFlow Debugger (tfdbg) v2.
  */
-public final class DebugNumericSummaryV2 extends PrimitiveOp implements Operand<TFloat32> {
+public final class DebugNumericSummaryV2 extends RawOp implements Operand<TFloat32> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.DebugNumericSummaryV2}

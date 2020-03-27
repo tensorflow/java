@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * Creates a handle to a Variable resource.
  */
 @Operator
-public final class VarHandleOp extends PrimitiveOp implements Operand<TType> {
+public final class VarHandleOp extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.VarHandleOp}

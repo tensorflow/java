@@ -196,6 +196,8 @@ public final class OperatorProcessor extends AbstractProcessor {
       Pattern.compile("@(?:param|return|throws|exception|see|deprecated)\\s+.*");
   private static final TypeName T_OP = ClassName.get("org.tensorflow.op", "Op");
   private static final ClassName T_OPS = ClassName.get("org.tensorflow.op", "Ops");
+  private static final TypeName T_ITERABLE_OP =
+      ParameterizedTypeName.get(ClassName.get(Iterable.class), T_OP);
   private static final TypeName T_OPERATOR =
       ClassName.get("org.tensorflow.op.annotation", "Operator");
   private static final TypeName T_ENDPOINT =
@@ -205,13 +207,6 @@ public final class OperatorProcessor extends AbstractProcessor {
       ClassName.get("org.tensorflow", "ExecutionEnvironment");
   private static final TypeName T_EAGER_SESSION = ClassName.get("org.tensorflow", "EagerSession");
   private static final TypeName T_STRING = ClassName.get(String.class);
-  // Operand<?>
-  private static final TypeName T_OPERAND =
-      ParameterizedTypeName.get(
-          ClassName.get("org.tensorflow", "Operand"), WildcardTypeName.subtypeOf(Object.class));
-  // Iterable<Operand<?>>
-  private static final TypeName T_ITERABLE_OPERAND =
-      ParameterizedTypeName.get(ClassName.get(Iterable.class), T_OPERAND);
 
   private static final String LICENSE =
       "Copyright 2020 The TensorFlow Authors. All Rights Reserved.\n"
@@ -529,12 +524,12 @@ public final class OperatorProcessor extends AbstractProcessor {
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withControlDependencies")
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(T_ITERABLE_OPERAND, "controls")
+            .addParameter(T_ITERABLE_OP, "controls")
             .returns(T_OPS)
             .addStatement("return new Ops(scope.withControlDependencies(controls))")
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
-                    + "@see {@link $T#withControlDependencies(Iterable<Operand<?>>)}\n",
+                    + "@see {@link $T#withControlDependencies(Iterable<Op<?>>)}\n",
                 T_SCOPE)
             .build());
 

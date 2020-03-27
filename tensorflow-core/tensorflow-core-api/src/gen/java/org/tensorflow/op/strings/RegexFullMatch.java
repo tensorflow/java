@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -39,7 +39,7 @@ import org.tensorflow.types.TString;
  * The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
 @Operator(group = "strings")
-public final class RegexFullMatch extends PrimitiveOp implements Operand<TBool> {
+public final class RegexFullMatch extends RawOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new RegexFullMatch operation.

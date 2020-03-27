@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TString;
  * CompilationResultProto, which holds a status and an error message if an error
  * occurred during compilation.
  */
-public final class TPUCompilationResult extends PrimitiveOp implements Operand<TString> {
+public final class TPUCompilationResult extends RawOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new TPUCompilationResult operation.

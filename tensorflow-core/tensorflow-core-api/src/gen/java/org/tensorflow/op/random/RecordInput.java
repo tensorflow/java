@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.types.TString;
  * Emits randomized records.
  */
 @Operator(group = "random")
-public final class RecordInput extends PrimitiveOp implements Operand<TString> {
+public final class RecordInput extends RawOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RecordInput}

@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -81,7 +81,7 @@ import org.tensorflow.types.family.TType;
  * red.
  */
 @Operator(group = "summary")
-public final class ImageSummary extends PrimitiveOp implements Operand<TString> {
+public final class ImageSummary extends RawOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.summary.ImageSummary}

@@ -21,7 +21,7 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An op which feeds a single Tensor value into the computation.
  */
-public final class InfeedEnqueue extends PrimitiveOp {
+public final class InfeedEnqueue extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.InfeedEnqueue}

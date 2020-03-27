@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.types.TBool;
  * <p>
  * An Op that checks if quantile stream resource is initialized.
  */
-public final class IsBoostedTreesQuantileStreamResourceInitialized extends PrimitiveOp implements Operand<TBool> {
+public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new IsBoostedTreesQuantileStreamResourceInitialized operation.

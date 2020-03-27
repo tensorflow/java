@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.types.TFloat32;
 /**
  * Calculates the prior from the training data (the bias) and fills in the first node with the logits' prior. Returns a boolean indicating whether to continue centering.
  */
-public final class BoostedTreesCenterBias extends PrimitiveOp implements Operand<TBool> {
+public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesCenterBias operation.

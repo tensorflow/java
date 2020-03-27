@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,7 +31,7 @@ import org.tensorflow.tools.Shape;
 /**
  * Feeds multiple Tensor values into the computation as an XLA tuple.
  */
-public final class InfeedEnqueueTuple extends PrimitiveOp {
+public final class InfeedEnqueueTuple extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.InfeedEnqueueTuple}

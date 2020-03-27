@@ -26,7 +26,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * will be passed to consumer nodes as outputs of this node.
  */
 @Operator
-public final class RemoteFusedGraphExecute extends PrimitiveOp implements Iterable<Operand<TType>> {
+public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new RemoteFusedGraphExecute operation.

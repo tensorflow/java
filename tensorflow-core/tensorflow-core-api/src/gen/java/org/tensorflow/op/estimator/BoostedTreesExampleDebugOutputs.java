@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,7 +36,7 @@ import org.tensorflow.types.TString;
  * such as getting split feature ids and logits after each split along the decision
  * path used to compute directional feature contributions.
  */
-public final class BoostedTreesExampleDebugOutputs extends PrimitiveOp implements Operand<TString> {
+public final class BoostedTreesExampleDebugOutputs extends RawOp implements Operand<TString> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesExampleDebugOutputs operation.

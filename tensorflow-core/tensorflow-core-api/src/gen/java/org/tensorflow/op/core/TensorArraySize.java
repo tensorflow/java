@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.types.TInt32;
  * Get the current size of the TensorArray.
  */
 @Operator
-public final class TensorArraySize extends PrimitiveOp implements Operand<TInt32> {
+public final class TensorArraySize extends RawOp implements Operand<TInt32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArraySize operation.

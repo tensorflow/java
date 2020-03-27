@@ -118,7 +118,7 @@ public class Adam extends Optimizer {
   }
 
   @Override
-  protected Optional<Operand<?>> prepare(String scopeName) {
+  protected Optional<Op> prepare(String scopeName) {
     betaOneConst = tf.constant(betaOne);
     betaTwoConst = tf.constant(betaTwo);
     learningRateConst = tf.constant(learningRate);
@@ -136,7 +136,7 @@ public class Adam extends Optimizer {
   }
 
   @Override
-  protected <T extends TType> Operand<T> applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> firstMomentSlot = getSlot(variable, FIRST_MOMENT).get();
     Variable<T> secondMomentSlot = getSlot(variable, SECOND_MOMENT).get();
     return tf.train.applyAdam(variable, firstMomentSlot, secondMomentSlot,
@@ -159,7 +159,7 @@ public class Adam extends Optimizer {
    * @return A NoOp with a control dependency on each update operation.
    */
   @Override
-  protected Op finish(List<Operand<?>> updateOperations, String name) {
+  protected Op finish(List<Op> updateOperations, String name) {
     updateOperations.add(tf.assign(betaOnePower, tf.math.mul(betaOnePower, betaOneConst)));
     updateOperations.add(tf.assign(betaTwoPower, tf.math.mul(betaTwoPower, betaTwoConst)));
     return super.finish(updateOperations, name);

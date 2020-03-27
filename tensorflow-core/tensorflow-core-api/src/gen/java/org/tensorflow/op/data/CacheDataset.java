@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * (e.g. cannot be opened, contains tensors of the wrong shape / size), an error
  * will the returned when used.
  */
-public final class CacheDataset extends PrimitiveOp implements Operand<TType> {
+public final class CacheDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new CacheDataset operation.

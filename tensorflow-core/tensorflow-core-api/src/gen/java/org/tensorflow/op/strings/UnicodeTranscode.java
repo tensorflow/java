@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -56,7 +56,7 @@ import org.tensorflow.types.TString;
  * but as metadata, and so is not preserved in the output.
  */
 @Operator(group = "strings")
-public final class UnicodeTranscode extends PrimitiveOp implements Operand<TString> {
+public final class UnicodeTranscode extends RawOp implements Operand<TString> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.strings.UnicodeTranscode}

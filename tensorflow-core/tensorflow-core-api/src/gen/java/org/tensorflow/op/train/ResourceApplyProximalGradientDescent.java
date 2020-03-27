@@ -20,7 +20,7 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}
  */
 @Operator(group = "train")
-public final class ResourceApplyProximalGradientDescent extends PrimitiveOp {
+public final class ResourceApplyProximalGradientDescent extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyProximalGradientDescent}

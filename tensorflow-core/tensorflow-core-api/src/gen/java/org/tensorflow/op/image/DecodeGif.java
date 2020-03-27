@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -41,7 +41,7 @@ import org.tensorflow.types.TUint8;
  * `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeGif extends PrimitiveOp implements Operand<TUint8> {
+public final class DecodeGif extends RawOp implements Operand<TUint8> {
   
   /**
    * Factory method to create a class wrapping a new DecodeGif operation.

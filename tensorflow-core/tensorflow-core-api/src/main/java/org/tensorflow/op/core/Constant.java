@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -66,7 +66,7 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 @Operator
-public final class Constant<T extends TType> extends PrimitiveOp implements Operand<T> {
+public final class Constant<T extends TType> extends RawOp implements Operand<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.

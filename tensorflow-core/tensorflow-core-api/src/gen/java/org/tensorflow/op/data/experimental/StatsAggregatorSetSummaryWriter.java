@@ -20,7 +20,7 @@ package org.tensorflow.op.data.experimental;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 /**
  * Set a summary_writer_interface to record statistics using given stats_aggregator.
  */
-public final class StatsAggregatorSetSummaryWriter extends PrimitiveOp {
+public final class StatsAggregatorSetSummaryWriter extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new StatsAggregatorSetSummaryWriter operation.

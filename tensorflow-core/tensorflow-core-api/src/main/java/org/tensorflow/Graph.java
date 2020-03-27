@@ -40,6 +40,7 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.NoOp;
 
@@ -177,7 +178,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Adds an initializer to the graph initializer list.
    * @param initializer An initializer to add to the list.
    */
-  public synchronized void addInitializer(Operand<?> initializer) {
+  public synchronized void addInitializer(Op initializer) {
     initializers.add(initializer);
   }
 
@@ -407,7 +408,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private TF_Graph nativeHandle;
   private int refcount = 0;
 
-  private final List<Operand<?>> initializers = new ArrayList<>();
+  private final List<Op> initializers = new ArrayList<>();
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not

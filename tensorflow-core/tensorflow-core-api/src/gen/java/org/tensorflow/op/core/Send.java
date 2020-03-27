@@ -20,7 +20,7 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -29,7 +29,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Sends the named tensor from send_device to recv_device.
  */
-public final class Send extends PrimitiveOp {
+public final class Send extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Send}

@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code xGrad()} output
  */
-public final class BlockLSTMGrad<T extends TNumber> extends PrimitiveOp {
+public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BlockLSTMGrad operation.

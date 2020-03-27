@@ -23,7 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * If not, it will run the preprocessing pipeline as usual, and write out a
  * snapshot of the data processed for future use.
  */
-public final class SnapshotDataset extends PrimitiveOp implements Operand<TType> {
+public final class SnapshotDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.SnapshotDataset}

@@ -20,12 +20,12 @@ import org.tensorflow.Operation;
 /**
  * A base class for {@link Op} implementations that are backed by a single {@link Operation}.
  *
- * <p>Each operation registered in the TensorFlow core is a primitive and is provided as a {@code
- * PrimitiveOp}. Custom operations working with only one primitive may also derive from this class.
+ * <p>Each operation registered in the TensorFlow core is provided as a {@code RawOp}. Custom
+ * operations working with only a single operation may also derive from this class.
  */
-public abstract class PrimitiveOp implements Op {
+public abstract class RawOp implements Op {
 
-  /** Returns the underlying {@link Operation} */
+  @Override
   public Operation op() {
     return operation;
   }
@@ -42,10 +42,10 @@ public abstract class PrimitiveOp implements Op {
     }
     // Note: we consider that all objects wrapping the same operation are equal, no matter their
     // implementation
-    if (!(obj instanceof PrimitiveOp)) {
+    if (!(obj instanceof RawOp)) {
       return false;
     }
-    return operation.equals(((PrimitiveOp) obj).operation);
+    return operation.equals(((RawOp) obj).operation);
   }
 
   @Override
@@ -60,7 +60,7 @@ public abstract class PrimitiveOp implements Op {
    *
    * @param operation the underlying operation
    */
-  protected PrimitiveOp(Operation operation) {
+  protected RawOp(Operation operation) {
     this.operation = operation;
   }
 }

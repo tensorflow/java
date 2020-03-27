@@ -20,7 +20,7 @@ package org.tensorflow.op.data;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.op.annotation.Operator;
  * iterator in `iterator` to the first element of `dataset`.
  */
 @Operator(group = "data")
-public final class MakeIterator extends PrimitiveOp {
+public final class MakeIterator extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new MakeIterator operation.

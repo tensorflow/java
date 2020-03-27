@@ -25,7 +25,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * Returns the value stored in an Optional variant or raises an error if none exists.
  */
 @Operator(group = "data")
-public final class OptionalGetValue extends PrimitiveOp implements Iterable<Operand<TType>> {
+public final class OptionalGetValue extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new OptionalGetValue operation.

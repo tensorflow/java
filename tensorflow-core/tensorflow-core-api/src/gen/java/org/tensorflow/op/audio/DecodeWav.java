@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -48,7 +48,7 @@ import org.tensorflow.types.TString;
  * output shape of [10, 2].
  */
 @Operator(group = "audio")
-public final class DecodeWav extends PrimitiveOp {
+public final class DecodeWav extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.audio.DecodeWav}

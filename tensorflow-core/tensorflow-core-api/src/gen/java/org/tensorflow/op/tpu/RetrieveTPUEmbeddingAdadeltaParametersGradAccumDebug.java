@@ -20,7 +20,7 @@ package org.tensorflow.op.tpu;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TFloat32;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
-public final class RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug extends PrimitiveOp {
+public final class RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug}

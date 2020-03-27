@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomUniformInt<U extends TNumber> extends PrimitiveOp implements Operand<U> {
+public final class RandomUniformInt<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomUniformInt}

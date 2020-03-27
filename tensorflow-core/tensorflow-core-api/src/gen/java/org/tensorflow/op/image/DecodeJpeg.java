@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -57,7 +57,7 @@ import org.tensorflow.types.TUint8;
  * the same, though it is cleaner to use `tf.image.decode_image`.
  */
 @Operator(group = "image")
-public final class DecodeJpeg extends PrimitiveOp implements Operand<TUint8> {
+public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodeJpeg}

@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * with dim_size() equal to the total number of lookups into the table described by
  * the corresponding feature.
  */
-public final class EnqueueTPUEmbeddingSparseTensorBatch extends PrimitiveOp {
+public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.EnqueueTPUEmbeddingSparseTensorBatch}

@@ -22,7 +22,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TInt32;
  * <p>
  * The summary stats contains gradients and hessians accumulated into the corresponding node and bucket for each example.
  */
-public final class BoostedTreesMakeStatsSummary extends PrimitiveOp implements Operand<TFloat32> {
+public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new BoostedTreesMakeStatsSummary operation.

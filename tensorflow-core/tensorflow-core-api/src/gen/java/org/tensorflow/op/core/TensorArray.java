@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * Write data via Write and read via Read or Pack.
  */
 @Operator
-public final class TensorArray extends PrimitiveOp {
+public final class TensorArray extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorArray}

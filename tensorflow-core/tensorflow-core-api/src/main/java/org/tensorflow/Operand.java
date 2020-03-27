@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.op.Op;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -38,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * tf.concat(split, tf.constant(0));
  * }</pre>
  */
-public interface Operand<T extends TType> {
+public interface Operand<T extends TType> extends Op {
 
   /**
    * Returns the symbolic handle of the tensor.

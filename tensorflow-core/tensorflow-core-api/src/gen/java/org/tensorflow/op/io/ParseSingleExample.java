@@ -25,7 +25,7 @@ import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -37,7 +37,7 @@ import org.tensorflow.types.TString;
  * Transforms a tf.Example proto (as a string) into typed tensors.
  */
 @Operator(group = "io")
-public final class ParseSingleExample extends PrimitiveOp {
+public final class ParseSingleExample extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new ParseSingleExample operation.

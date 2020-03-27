@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class SpaceToBatch<T extends TType> extends PrimitiveOp implements Operand<T> {
+public final class SpaceToBatch<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SpaceToBatch operation.

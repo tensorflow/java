@@ -20,7 +20,7 @@ package org.tensorflow.op.data.experimental;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -29,7 +29,7 @@ import org.tensorflow.types.TString;
 /**
  * Writes the given dataset to the given file using the TFRecord format.
  */
-public final class DatasetToTFRecord extends PrimitiveOp {
+public final class DatasetToTFRecord extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new DatasetToTFRecord operation.

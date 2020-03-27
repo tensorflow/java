@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  */
 @Operator
-public final class TensorArrayUnpack extends PrimitiveOp implements Operand<TFloat32> {
+public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayUnpack operation.

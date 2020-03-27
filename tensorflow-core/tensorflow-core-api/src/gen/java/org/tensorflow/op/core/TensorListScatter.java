@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * output_handle: The TensorList.
  */
 @Operator
-public final class TensorListScatter extends PrimitiveOp implements Operand<TType> {
+public final class TensorListScatter extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListScatter operation.

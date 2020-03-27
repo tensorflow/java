@@ -21,7 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.PrimitiveOp;
+import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -34,7 +34,7 @@ import org.tensorflow.types.TBool;
  * `summarize` determines how many entries of the tensors to print.
  */
 @Operator
-public final class AssertThat extends PrimitiveOp {
+public final class AssertThat extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.AssertThat}
