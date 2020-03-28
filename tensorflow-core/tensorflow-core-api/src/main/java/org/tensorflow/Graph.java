@@ -27,6 +27,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
@@ -41,8 +42,6 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.Scope;
-import org.tensorflow.op.core.NoOp;
 
 
 /**
@@ -54,8 +53,6 @@ import org.tensorflow.op.core.NoOp;
  * the {@link #close()} method then the Graph object is no longer needed.
  */
 public final class Graph implements ExecutionEnvironment, AutoCloseable {
-
-  public static final String DEFAULT_INIT_NAME = "init";
 
   /** Create an empty Graph. */
   public Graph() {
@@ -183,17 +180,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Returns an op which initializers all the variables.
-   * @return The initializer operation.
+   * Returns all initializers added to the graph via {@link #addInitializer(Op)}
    */
-  public NoOp variablesInitializer() {
-    return variablesInitializer(DEFAULT_INIT_NAME);
-  }
-
-  public NoOp variablesInitializer(String name) {
-    Scope scope = new Scope(this);
-    scope = scope.withName(name).withControlDependencies(initializers);
-    return NoOp.create(scope);
+  public List<Op> initializers() {
+    return Collections.unmodifiableList(initializers);
   }
 
   /**

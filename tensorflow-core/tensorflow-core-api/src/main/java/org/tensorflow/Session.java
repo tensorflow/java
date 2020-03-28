@@ -36,6 +36,8 @@ import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.op.Op;
+import org.tensorflow.op.core.Init;
 
 /**
  * Driver for {@link Graph} execution.
@@ -430,6 +432,106 @@ public final class Session implements AutoCloseable {
   /** Create a Runner to execute graph operations and evaluate Tensors. */
   public Runner runner() {
     return new Runner();
+  }
+
+  /**
+   * Run all graph initializers.
+   *
+   * <p>Initializers must be executed once before running the graph in a training
+   * loop using a session {@link Runner}.</p>
+   *
+   * <p>This method invokes {@link #runInit(String)} using the default name for the init
+   * operation, which is {@link Init#DEFAULT_NAME}. For example:</p>
+   * <pre>{@code
+   * try (Graph g = new Graph()) {
+   *   Ops tf = Ops.create(g);
+   *
+   *   Variable<TInt32> x = tf.variable(tf.constant(10));
+   *   Variable<TInt32> y = tf.variable(tf.constant(20));
+   *   Add<TInt32> z = tf.math.add(x, y);
+   *   tf.init();
+   *
+   *   try (Session s = new Session(g)) {
+   *     s.runInit();
+   *
+   *     try (Tensor<TInt32> t = s.runner().fetch(z).run().get(0).expect(TInt32.DTYPE)) {
+   *       assertEquals(30, t.data().getInt());
+   *     }
+   *   }
+   * }
+   * }</pre>
+   */
+  public void runInit() {
+    runInit(Init.DEFAULT_NAME);
+  }
+
+  /**
+   * Run all graph initializers grouped under the {@code initOpName} operation.
+   *
+   * <p>Initializers must be executed once before running the graph in a training loop using a
+   * session {@link Runner}.</p>
+   *
+   * <p>The {@code initOpName} is the name of a single operation already added to the
+   * graph that executes all graph initializers at once. For example:</p>
+   * <pre>{@code
+   * try (Graph g = new Graph()) {
+   *   Ops tf = Ops.create(g);
+   *
+   *   Variable<TInt32> x = tf.variable(tf.constant(10));
+   *   Variable<TInt32> y = tf.variable(tf.constant(20));
+   *   Add<TInt32> z = tf.math.add(x, y);
+   *   tf.withName("initialize").init();
+   *
+   *   try (Session s = new Session(g)) {
+   *     s.runInit("initialize");
+   *
+   *     try (Tensor<TInt32> t = s.runner().fetch(z).run().get(0).expect(TInt32.DTYPE)) {
+   *       assertEquals(30, t.data().getInt());
+   *     }
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param initOpName name of the initializer operation.
+   */
+  public void runInit(String initOpName) {
+    Operation operation = graph.operation(initOpName);
+    if (operation == null) {
+      throw new IllegalArgumentException("Initializer operation named '"
+          + initOpName + "' cannot be found in the graph");
+    }
+    runner().addTarget(operation).run();
+  }
+
+  /**
+   * Run all graph initializers registered by the given {@code init} op.
+   *
+   * <p>Initializers must be executed once before running the graph in a training
+   * loop using a session {@link Runner}.</p>
+   *
+   * <p>This method can be used if the graph is being built by the same program running the session.
+   * For example:</p>
+   * <pre>{@code
+   * try (Graph g = new Graph()) {
+   *   Ops tf = Ops.create(g);
+   *
+   *   Variable<TInt32> x = tf.variable(tf.constant(10));
+   *   Variable<TInt32> y = tf.variable(tf.constant(20));
+   *   Add<TInt32> z = tf.math.add(x, y);
+   *   Init init = tf.withName("initialize").init();
+   *
+   *   try (Session s = new Session(g)) {
+   *     s.runInit(init);
+   *
+   *     try (Tensor<TInt32> t = s.runner().fetch(z).run().get(0).expect(TInt32.DTYPE)) {
+   *       assertEquals(30, t.data().getInt());
+   *     }
+   *   }
+   * }
+   * }</pre>
+   */
+  public void runInit(Init initOp) {
+    runner().addTarget(initOp.op()).run();
   }
 
   /**
