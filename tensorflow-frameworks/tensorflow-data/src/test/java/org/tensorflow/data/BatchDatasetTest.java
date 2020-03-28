@@ -48,7 +48,7 @@ public class BatchDatasetTest extends DatasetTestBase {
             Arrays.asList(
                 tf.val(testMatrix1),
                 tf.val(testMatrix2)),
-            Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
+            Arrays.asList(TInt32.DTYPE, TInt32.DTYPE));
       Tensor<TInt32> batch1 = components.get(0).tensor().expect(TInt32.DTYPE);
       Tensor<TInt32> batch2 = components.get(1).tensor().expect(TInt32.DTYPE);
 
@@ -56,7 +56,6 @@ public class BatchDatasetTest extends DatasetTestBase {
       assertArrayEquals(concat(concat(testMatrix2[count], testMatrix2[count + 1]), testMatrix2[count + 2]), getIntTensorAsArray(batch2));
 
       count += 3;
-    }
   }
 
   @Test

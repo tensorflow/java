@@ -7,7 +7,7 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.data.*;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.utils.Tuple2;
+// import org.tensorflow.utils.Tuple2;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
@@ -276,8 +276,7 @@ public class DatasetOpTester {
   }
 
   public static void printIntTensor(Tensor<?> tensor) {
-    IntBuffer buffer = IntBuffer.allocate((int) tensor.shape().size());
-    tensor.writeTo(buffer);
+    tensor.expect(TInt32.DTYPE).data().;
     System.out.println("Tensor: shape=" + Arrays.toString(tensor.shape().asArray()) + " vals=" + Arrays.toString(buffer.array()));
   }
 }

@@ -6,7 +6,10 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.types.TInt32;
 
+import javax.xml.crypto.Data;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -152,6 +155,10 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     List<Output<?>> components = tf.data.iteratorGetNext(iterator, outputTypes, outputShapes).components();
 
     return new OneShotIterator(makeIterator, components);
+  }
+
+  public static <T> Dataset fromTensorSlices(Ops tf, List<NdArray<T>> slices) {
+
   }
 
   public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> slices, List<DataType<?>> outputTypes) {
