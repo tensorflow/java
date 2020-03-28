@@ -58,6 +58,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
@@ -350,7 +351,11 @@ public final class OperatorProcessor extends AbstractProcessor {
     for (TypeMirror thrownType : endpointMethod.getThrownTypes()) {
       builder.addException(TypeName.get(thrownType));
     }
-    StringBuilder call = new StringBuilder("return $T.")
+    StringBuilder call = new StringBuilder();
+    if (!NoType.class.isAssignableFrom(endpointMethod.getReturnType().getClass())) {
+      call.append("return ");
+    }
+    call.append("$T.")
       .append(endpointMethod.getSimpleName())
       .append("(scope");
     boolean first = true;

@@ -15,8 +15,6 @@
  */
 package org.tensorflow.op.core;
 
-import org.tensorflow.ExecutionEnvironment;
-import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Scope;
@@ -46,19 +44,12 @@ public abstract class Helpers {
      * @param options carries optional attributes values
      * @return a new instance of Variable
      */
-    @Endpoint(name="variable")
+    @Endpoint(name = "variable")
     public static <T extends TType> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
         Output<T> initOutput = init.asOutput();
-        Variable<T> newVar = Variable.create(scope,initOutput.shape(),initOutput.dataType(),options);
-        Assign<T> assignOp = Assign.create(scope,newVar,init);
-        ExecutionEnvironment exEnv = scope.env();
-        if (exEnv instanceof Graph) {
-            Graph graph = (Graph) exEnv;
-            graph.addInitializer(assignOp);
-        } else {
-            throw new IllegalArgumentException("variable with init is only supported on Graph sessions.");
-        }
-
+        Variable<T> newVar = Variable.create(scope,initOutput.shape(), initOutput.dataType(), options);
+        Assign<T> assignOp = Assign.create(scope, newVar, init);
+        Init.add(scope, assignOp);
         return newVar;
     }
 }

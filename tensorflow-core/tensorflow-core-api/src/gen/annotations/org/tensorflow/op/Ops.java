@@ -79,6 +79,7 @@ import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.ImmutableConst;
+import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.InitializeTable;
 import org.tensorflow.op.core.InitializeTableFromTextFile;
 import org.tensorflow.op.core.InplaceAdd;
@@ -2658,6 +2659,39 @@ public final class Ops {
   public <T extends TType> ImmutableConst<T> immutableConst(DataType<T> dtype, Shape shape,
       String memoryRegionName) {
     return ImmutableConst.create(scope, dtype, shape, memoryRegionName);
+  }
+
+  /**
+   * Factory method to create an operation executing all initializers of a graph.
+   *
+   *  <p>All initializers added to a graph via {@link #add(Scope, Op) tf.initAdd} are grouped
+   *  together as a single unit of computation in the graph.
+   *
+   *  <p>This op must be added to all graphs using one or more {@link Variable variables} and must be
+   *  run prior to training using {@link org.tensorflow.Session#runInit() Session.runInit()} in order
+   *  to initialize the variables state.</p>
+   *
+   * @param scope current scope
+   * @return an op grouping all initializers added to the graph
+   * @throws IllegalArgumentException if the execution environment in scope is not a graph
+   */
+  public Init init() {
+    return Init.create(scope);
+  }
+
+  /**
+   * Register an op as an initializer of the graph.
+   *
+   *  <p>The op will be registered to be invoked when the {@link #create(Scope) init} op is executed
+   *  by a graph session prior to training using {@link org.tensorflow.Session#runInit() Session.runInit()}
+   *
+   * @param scope
+   * @param initializer
+   * @throws IllegalArgumentException if the execution environment in scope is not a graph
+   * @see #create(Scope)
+   */
+  public void initAdd(Op initializer) {
+    Init.add(scope, initializer);
   }
 
   /**
