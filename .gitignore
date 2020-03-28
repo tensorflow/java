@@ -51,3 +51,5 @@ gradleBuild
 .settings/
 .project
 .classpath
+
+**/target
