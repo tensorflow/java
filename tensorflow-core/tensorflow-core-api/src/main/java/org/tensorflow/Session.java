@@ -252,11 +252,11 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run} execute {@code operand}, but not return any evaluated {@link Tensor
+     * Make {@link #run} execute {@code op}, but not return any evaluated {@link Tensor
      * Tensors}.
      */
-    public Runner addTarget(Operand<?> operand) {
-      return addTarget(operand.asOutput().op());
+    public Runner addTarget(Op op) {
+      return addTarget(op.op());
     }
 
     /**
