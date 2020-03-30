@@ -157,10 +157,6 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     return new OneShotIterator(makeIterator, components);
   }
 
-  public static <T> Dataset fromTensorSlices(Ops tf, List<NdArray<T>> slices) {
-
-  }
-
   public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> slices, List<DataType<?>> outputTypes) {
     return new TensorSliceDataset(tf, slices, outputTypes);
   }

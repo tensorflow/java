@@ -1,11 +1,15 @@
 package org.tensorflow.data;
 
+import org.bytedeco.javacpp.annotation.Const;
 import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.data.*;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.tools.ndarray.NdArrays;
+import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 // import org.tensorflow.utils.Tuple2;
 
@@ -20,16 +24,16 @@ public class DatasetOpTester {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
 
-      Constant<TInt32> X = tf.val(
-          new int[][]{
-              {1, 2, 3},
-              {4, 5, 6},
-              {7, 8, 9},
-              {10, 11, 12}
-          }
+      NdArray<Integer> X = StdArrays.ndCopyOf(
+              new int[][]{
+                      {1, 2, 3},
+                      {4, 5, 6},
+                      {7, 8, 9},
+                      {10, 11, 12}
+              }
       );
 
-      Constant<TInt32> y = tf.val(
+      NdArray<Integer> y = StdArrays.ndCopyOf(
           new int[][]{
               {1},
               {4},
@@ -39,7 +43,7 @@ public class DatasetOpTester {
       );
 
 
-      List<Operand<?>> tensors = Arrays.asList(X, y);
+      List<Operand<?>> tensors = Arrays.asList(tf.val(X), tf.val(y));
 
       // // Try running TensorDataset
       List<DataType<?>> outputTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
@@ -50,7 +54,7 @@ public class DatasetOpTester {
       TensorSliceDataset tensorDataset = TensorSliceDataset.create(tf.scope(), tensors, outputShapes);
 
       BatchDataset batchDataset = BatchDataset.create(
-          tf.scope(),
+          tf.scope(),fee
           tensorDataset,
           tf.val(2L),
           tf.val(true),
