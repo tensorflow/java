@@ -29,15 +29,10 @@ The following describes the layout of the repository and its different artifacts
   * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
   
 * `tensorflow-tools`
-  * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes
+  * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes.
   
-* `tensorflow-frameworks`
-  * High-level APIs built on top of the core libraries for simplifying the usage of TensorFlow in Java.
-  
-* `tensorflow-starters`
-  * Artifacts aggregating others for simplifying dependency management with TensorFlow
-  
-*Note: Right now, only the `tensorflow-core` and `tensorflow-tools` components are present*
+* `tensorflow-training`
+  * High-level APIs built on top of the core libraries for neural network training with TensorFlow.
   
 ## Building Sources
 
@@ -122,8 +117,6 @@ significantly increase  the size of your JAR. So it is good practice to limit yo
 the platforms you are targeting. For this purpose the `-platform` artifacts include profiles that follow
 the conventions established on this page:
 * [Reducing the Number of Dependencies](https://github.com/bytedeco/javacpp-presets/wiki/Reducing-the-Number-of-Dependencies)
-
-*Note: the `tensorflow-starters` artifact is not available at this moment*
 
 ## How to Contribute?
 
