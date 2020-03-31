@@ -325,6 +325,7 @@
               <failOnError>false</failOnError>
               <minmemory>256m</minmemory>
               <maxmemory>2048m</maxmemory>
+              <quiet>true</quiet>
               <links>
                 <link>http://bytedeco.org/javacpp/apidocs</link>
               </links>
