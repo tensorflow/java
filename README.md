@@ -27,12 +27,12 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-core`
   * All artifacts that build up the core language bindings of TensorFlow for Java. 
   * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
+    
+* `tensorflow-training`
+  * High-level APIs built on top of the core libraries for neural network training with TensorFlow.
   
 * `tensorflow-tools`
   * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes.
-  
-* `tensorflow-training`
-  * High-level APIs built on top of the core libraries for neural network training with TensorFlow.
   
 ## Building Sources
 
