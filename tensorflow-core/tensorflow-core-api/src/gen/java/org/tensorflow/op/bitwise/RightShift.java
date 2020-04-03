@@ -47,11 +47,11 @@ import org.tensorflow.types.family.TType;
  * for dtype in dtype_list:
  *   lhs = tf.constant([-1, -5, -3, -14], dtype=dtype)
  *   rhs = tf.constant([5, 0, 7, 11], dtype=dtype)
- *   
+ * 
  *   right_shift_result = bitwise_ops.right_shift(lhs, rhs)
- *   
+ * 
  *   print(right_shift_result)
- *   
+ * 
  * # This will print:
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int8)
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int16)

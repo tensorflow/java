@@ -34,7 +34,6 @@ import org.tensorflow.types.family.TType;
  * Transposes the inner (matrix) dimensions of a SparseMatrix and optionally
  * conjugates its values.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixTranspose extends RawOp implements Operand<TType> {
   
   /**

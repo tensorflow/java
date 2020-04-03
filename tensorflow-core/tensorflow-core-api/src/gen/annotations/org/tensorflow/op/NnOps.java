@@ -520,7 +520,7 @@ public final class NnOps {
    *  biases: the canonical form of biases that can be used for saving
    *      and restoration. They are more likely to be compatible across different
    *      generations.
-   *  num_params_weigths: number of weight parameter matrix for all layers.
+   *  num_params_weights: number of weight parameter matrix for all layers.
    *  num_params_biases: number of bias parameter vector for all layers.
    *  rnn_mode: Indicates the type of the RNN model.
    *  input_mode: Indicate whether there is a linear projection between the input and
@@ -564,7 +564,7 @@ public final class NnOps {
    *  num_layers: Specifies the number of layers in the RNN model.
    *  num_units: Specifies the size of the hidden state.
    *  input_size: Specifies the size of the input state.
-   *  num_params_weigths: number of weight parameter matrix for all layers.
+   *  num_params_weights: number of weight parameter matrix for all layers.
    *  num_params_biases: number of bias parameter vector for all layers.
    *  weights: the canonical form of weights that can be used for saving
    *      and restoration. They are more likely to be compatible across different

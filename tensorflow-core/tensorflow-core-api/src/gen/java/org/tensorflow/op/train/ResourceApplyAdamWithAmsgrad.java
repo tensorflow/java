@@ -29,11 +29,11 @@ import org.tensorflow.types.family.TType;
 /**
  * Update '*var' according to the Adam algorithm.
  * <p>
- * $$lr_t := \text{learning\_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
- * $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
- * $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
- * $$vhat_t := max{vhat_{t-1}, v_t}$$
- * $$variable := variable - lr_t * m_t / (\sqrt{vhat_t} + \epsilon)$$
+ * $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+ * $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+ * $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
+ * $$\hat{v}_t := max{\hat{v}_{t-1}, v_t}$$
+ * $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{\hat{v}_t} + \epsilon)$$
  */
 @Operator(group = "train")
 public final class ResourceApplyAdamWithAmsgrad extends RawOp {

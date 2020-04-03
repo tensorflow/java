@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * The `tf.math.atan` operation returns the inverse of `tf.math.tan`, such that
  * if `y = tf.math.tan(x)` then, `x = tf.math.atan(y)`.
  * <p>
- * <b>Note</b>: The output of `tf.math.atan` will lie within the invertible range 
+ * <b>Note</b>: The output of `tf.math.atan` will lie within the invertible range
  * of tan, i.e (-pi/2, pi/2).
  * <p>
  * For example:

@@ -33,7 +33,6 @@ import org.tensorflow.types.family.TType;
  * The gradients of SparseMatrixAdd outputs with respect to alpha and beta are not
  * currently defined (TensorFlow will return zeros for these entries).
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
   
   /**

@@ -45,6 +45,13 @@ public final class DtypesOps {
    *  For Unicode, see the
    *  [https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode text)
    *  tutorial.
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.as_string([3, 2])
+   *  <tf.Tensor: shape=(2,), dtype=string, numpy=array([b'3', b'2'], dtype=object)>
+   *  >>> tf.strings.as_string([3.1415926, 2.71828], precision=2).numpy()
+   *  array([b'3.14', b'2.72'], dtype=object)
    *
    * @param input
    * @param options carries optional attributes values

@@ -57,7 +57,6 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixMatMul<T extends TType> extends RawOp implements Operand<T> {
   
   /**

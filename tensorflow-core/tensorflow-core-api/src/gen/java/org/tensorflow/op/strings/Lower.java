@@ -28,6 +28,13 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
+ * Converts all uppercase characters into their respective lowercase replacements.
+ * <p>
+ * Example:
+ * <p>
+ * >>> tf.strings.lower("CamelCase string and ALL CAPS")
+ * <tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'>
+ * 
  */
 @Operator(group = "strings")
 public final class Lower extends RawOp implements Operand<TString> {

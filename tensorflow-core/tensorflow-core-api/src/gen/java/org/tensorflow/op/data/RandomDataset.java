@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * Creates a Dataset that returns a stream of uniformly distributed
  * pseudorandom 64-bit signed integers.
  * <p>
- * In the TensorFlow Python API, you can instantiate this dataset via the 
+ * In the TensorFlow Python API, you can instantiate this dataset via the
  * class `tf.data.experimental.RandomDataset`.
  * <p>
  * Instances of this dataset are also created as a result of the

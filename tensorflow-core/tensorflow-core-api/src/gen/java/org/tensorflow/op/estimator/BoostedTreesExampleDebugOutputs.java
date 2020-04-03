@@ -32,7 +32,7 @@ import org.tensorflow.types.TString;
 /**
  * Debugging/model interpretability outputs for each example.
  * <p>
- * It traverses all the trees and computes debug metrics for individual examples, 
+ * It traverses all the trees and computes debug metrics for individual examples,
  * such as getting split feature ids and logits after each split along the decision
  * path used to compute directional feature contributions.
  */

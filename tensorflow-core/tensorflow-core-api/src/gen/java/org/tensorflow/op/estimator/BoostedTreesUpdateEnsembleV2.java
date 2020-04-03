@@ -83,10 +83,10 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
    * @return a new instance of BoostedTreesUpdateEnsembleV2
    */
   @Endpoint(describeByClass = true)
-  public static BoostedTreesUpdateEnsembleV2 create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> dimensionIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Iterable<Operand<TString>> splitTypes, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Operand<TInt32> pruningMode, Options... options) {
+  public static BoostedTreesUpdateEnsembleV2 create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> featureIds, Iterable<Operand<TInt32>> dimensionIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Iterable<Operand<TString>> splitTypes, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Operand<TInt32> pruningMode, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsembleV2", scope.makeOpName("BoostedTreesUpdateEnsembleV2"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInput(featureIds.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(featureIds));
     opBuilder.addInputList(Operands.asOutputs(dimensionIds));
     opBuilder.addInputList(Operands.asOutputs(nodeIds));
     opBuilder.addInputList(Operands.asOutputs(gains));

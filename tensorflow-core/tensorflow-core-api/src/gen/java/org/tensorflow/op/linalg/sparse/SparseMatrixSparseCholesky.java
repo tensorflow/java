@@ -103,7 +103,6 @@ import org.tensorflow.types.family.TType;
  * permutation: A `Tensor`.
  * type: The type of `input`.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixSparseCholesky extends RawOp implements Operand<TType> {
   
   /**

@@ -50,6 +50,11 @@ public final class Strip extends RawOp implements Operand<TString> {
   
   /**
    * A string `Tensor` of the same shape as the input.
+   * <p>
+   * Examples:
+   * <p>
+   * >>> tf.strings.strip(["\nTensorFlow", "     The python library    "]).numpy()
+   * array([b'TensorFlow', b'The python library'], dtype=object)
    */
   public Output<TString> output() {
     return output;

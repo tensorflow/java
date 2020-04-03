@@ -78,7 +78,6 @@ import org.tensorflow.types.TInt32;
  * <p>
  * input: A `CSRSparseMatrix`.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt32> {
   
   /**

@@ -50,7 +50,16 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TType> exte
       return this;
     }
     
+    /**
+     * @param paddingList 
+     */
+    public Options paddingList(List<Long> paddingList) {
+      this.paddingList = paddingList;
+      return this;
+    }
+    
     private List<Long> dilations;
+    private List<Long> paddingList;
     
     private Options() {
     }
@@ -100,6 +109,13 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TType> exte
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
+        if (opts.paddingList != null) {
+          long[] paddingListArray = new long[opts.paddingList.size()];
+          for (int i = 0; i < paddingListArray.length; ++i) {
+            paddingListArray[i] = opts.paddingList.get(i);
+          }
+          opBuilder.setAttr("padding_list", paddingListArray);
+        }
       }
     }
     return new QuantizedDepthwiseConv2DWithBiasAndRelu<V>(opBuilder.build());
@@ -110,6 +126,13 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TType> exte
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
+  }
+  
+  /**
+   * @param paddingList 
+   */
+  public static Options paddingList(List<Long> paddingList) {
+    return new Options().paddingList(paddingList);
   }
   
   /**

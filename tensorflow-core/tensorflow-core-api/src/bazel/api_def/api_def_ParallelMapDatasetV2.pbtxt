@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ParallelMapDatasetV2"
+  endpoint {
+    name: "data.ParallelMapDataset"
+  }
+}

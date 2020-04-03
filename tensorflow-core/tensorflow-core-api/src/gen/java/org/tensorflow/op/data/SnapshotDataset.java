@@ -142,6 +142,22 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
       return this;
     }
     
+    /**
+     * @param mode 
+     */
+    public Options mode(String mode) {
+      this.mode = mode;
+      return this;
+    }
+    
+    /**
+     * @param snapshotName 
+     */
+    public Options snapshotName(String snapshotName) {
+      this.snapshotName = snapshotName;
+      return this;
+    }
+    
     private String compression;
     private String readerPathPrefix;
     private String writerPathPrefix;
@@ -154,6 +170,8 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
     private Boolean shuffleOnRead;
     private Long seed;
     private Long seed2;
+    private String mode;
+    private String snapshotName;
     
     private Options() {
     }
@@ -223,6 +241,12 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
         }
         if (opts.seed2 != null) {
           opBuilder.setAttr("seed2", opts.seed2);
+        }
+        if (opts.mode != null) {
+          opBuilder.setAttr("mode", opts.mode);
+        }
+        if (opts.snapshotName != null) {
+          opBuilder.setAttr("snapshot_name", opts.snapshotName);
         }
       }
     }
@@ -311,6 +335,20 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
+  }
+  
+  /**
+   * @param mode 
+   */
+  public static Options mode(String mode) {
+    return new Options().mode(mode);
+  }
+  
+  /**
+   * @param snapshotName 
+   */
+  public static Options snapshotName(String snapshotName) {
+    return new Options().snapshotName(snapshotName);
   }
   
   /**

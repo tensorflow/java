@@ -36,6 +36,13 @@ import org.tensorflow.types.family.TType;
  * <p>
  * (Note that int32 overflow results in an error while float overflow
  * results in a rounded value.)
+ * <p>
+ * Example:
+ * <p>
+ * >>> strings = ["5.0", "3.0", "7.0"]
+ * >>> tf.strings.to_number(strings)
+ * <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
+ * 
  * 
  * @param <T> data type for {@code output()} output
  */

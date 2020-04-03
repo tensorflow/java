@@ -150,12 +150,12 @@ public final class ImageOps {
    *  The output of this operation is the final boxes, scores and classes tensor
    *  returned after performing non_max_suppression.
    *
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
-   *  same boxes are used for all classes otherwise, if `q` is equal to number of 
+   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then
+   *  same boxes are used for all classes otherwise, if `q` is equal to number of
    *  classes, class-specific boxes are used.
    * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
    *  representing a single score corresponding to each box (each row of boxes).
-   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
+   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of
    *  boxes to be selected by non max suppression per class
    * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
    * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
@@ -637,7 +637,7 @@ public final class ImageOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of ExtractImagePatches
    */
-  public <T extends TNumber> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
+  public <T extends TType> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
       List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     return ExtractImagePatches.create(scope, images, ksizes, strides, rates, padding);
   }
@@ -896,6 +896,17 @@ public final class ImageOps {
    *  `output[..., 0]` contains hue, `output[..., 1]` contains saturation, and
    *  `output[..., 2]` contains value. All HSV values are in `[0,1]`. A hue of 0
    *  corresponds to pure red, hue 1/3 is pure green, and 2/3 is pure blue.
+   *  <p>
+   *  Usage Example:
+   *  <p>
+   *  >>> blue_image = tf.stack([
+   *  ...    tf.zeros([5,5]),
+   *  ...    tf.zeros([5,5]),
+   *  ...    tf.ones([5,5])],
+   *  ...    axis=-1)
+   *  >>> blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
+   *  >>> blue_hsv_image[0,0].numpy()
+   *  array([0.6666667, 1. , 1. ], dtype=float32)
    *
    * @param <T> data type for {@code output()} output
    * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.

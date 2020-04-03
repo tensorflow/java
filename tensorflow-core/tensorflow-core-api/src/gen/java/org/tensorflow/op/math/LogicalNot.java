@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
- * Returns the truth value of NOT x element-wise.
+ * Returns the truth value of `NOT x` element-wise.
  */
 @Operator(group = "math")
 public final class LogicalNot extends RawOp implements Operand<TBool> {
@@ -37,7 +37,7 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
    * Factory method to create a class wrapping a new LogicalNot operation.
    * 
    * @param scope current scope
-   * @param x 
+   * @param x A `Tensor` of type `bool`.
    * @return a new instance of LogicalNot
    */
   @Endpoint(describeByClass = true)
@@ -49,6 +49,7 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
   }
   
   /**
+   * A `Tensor` of type `bool` with the same shape as `x`. The logical negation of `x`.
    */
   public Output<TBool> y() {
     return y;

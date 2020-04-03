@@ -120,6 +120,7 @@ import org.tensorflow.op.math.UnsortedSegmentMin;
 import org.tensorflow.op.math.UnsortedSegmentProd;
 import org.tensorflow.op.math.UnsortedSegmentSum;
 import org.tensorflow.op.math.Xdivy;
+import org.tensorflow.op.math.Xlog1py;
 import org.tensorflow.op.math.Xlogy;
 import org.tensorflow.op.math.Zeta;
 import org.tensorflow.op.math.erfinv;
@@ -423,7 +424,7 @@ public final class MathOps {
    *  The `tf.math.asin` operation returns the inverse of `tf.math.sin`, such that
    *  if `y = tf.math.sin(x)` then, `x = tf.math.asin(y)`.
    *  <p>
-   *  <b>Note</b>: The output of `tf.math.asin` will lie within the invertible range 
+   *  <b>Note</b>: The output of `tf.math.asin` will lie within the invertible range
    *  of sine, i.e [-pi/2, pi/2].
    *  <p>
    *  For example:
@@ -469,7 +470,7 @@ public final class MathOps {
    *  The `tf.math.atan` operation returns the inverse of `tf.math.tan`, such that
    *  if `y = tf.math.tan(x)` then, `x = tf.math.atan(y)`.
    *  <p>
-   *  <b>Note</b>: The output of `tf.math.atan` will lie within the invertible range 
+   *  <b>Note</b>: The output of `tf.math.atan` will lie within the invertible range
    *  of tan, i.e (-pi/2, pi/2).
    *  <p>
    *  For example:
@@ -1408,9 +1409,9 @@ public final class MathOps {
   }
 
   /**
-   * Returns the truth value of NOT x element-wise.
+   * Returns the truth value of `NOT x` element-wise.
    *
-   * @param x
+   * @param x A `Tensor` of type `bool`.
    * @return a new instance of LogicalNot
    */
   public LogicalNot logicalNot(Operand<TBool> x) {
@@ -2373,6 +2374,18 @@ public final class MathOps {
    */
   public <T extends TType> Xdivy<T> xdivy(Operand<T> x, Operand<T> y) {
     return Xdivy.create(scope, x, y);
+  }
+
+  /**
+   * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
+   *
+   * @param <T> data type for {@code z()} output
+   * @param x
+   * @param y
+   * @return a new instance of Xlog1py
+   */
+  public <T extends TType> Xlog1py<T> xlog1py(Operand<T> x, Operand<T> y) {
+    return Xlog1py.create(scope, x, y);
   }
 
   /**

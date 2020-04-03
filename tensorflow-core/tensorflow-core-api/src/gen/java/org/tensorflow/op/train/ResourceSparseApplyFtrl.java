@@ -74,7 +74,7 @@ public final class ResourceSparseApplyFtrl extends RawOp {
    * @param indices A vector of indices into the first dimension of var and accum.
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage 
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values

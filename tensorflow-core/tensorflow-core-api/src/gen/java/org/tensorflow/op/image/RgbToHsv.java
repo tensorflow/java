@@ -38,6 +38,18 @@ import org.tensorflow.types.family.TType;
  * `output[..., 0]` contains hue, `output[..., 1]` contains saturation, and
  * `output[..., 2]` contains value. All HSV values are in `[0,1]`. A hue of 0
  * corresponds to pure red, hue 1/3 is pure green, and 2/3 is pure blue.
+ * <p>
+ * Usage Example:
+ * <p>
+ * >>> blue_image = tf.stack([
+ * ...    tf.zeros([5,5]),
+ * ...    tf.zeros([5,5]),
+ * ...    tf.ones([5,5])],
+ * ...    axis=-1)
+ * >>> blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
+ * >>> blue_hsv_image[0,0].numpy()
+ * array([0.6666667, 1. , 1. ], dtype=float32)
+ * 
  * 
  * @param <T> data type for {@code output()} output
  */

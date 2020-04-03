@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * The `tf.math.asin` operation returns the inverse of `tf.math.sin`, such that
  * if `y = tf.math.sin(x)` then, `x = tf.math.asin(y)`.
  * <p>
- * <b>Note</b>: The output of `tf.math.asin` will lie within the invertible range 
+ * <b>Note</b>: The output of `tf.math.asin` will lie within the invertible range
  * of sine, i.e [-pi/2, pi/2].
  * <p>
  * For example:

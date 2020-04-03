@@ -70,8 +70,8 @@ public final class ResourceApplyFtrl extends RawOp {
    * @param linear Should be from a Variable().
    * @param grad The gradient.
    * @param lr Scaling factor. Must be a scalar.
-   * @param l1 L1 regulariation. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l1 L1 regularization. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage 
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values

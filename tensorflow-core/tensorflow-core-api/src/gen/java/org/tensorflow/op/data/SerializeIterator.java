@@ -34,18 +34,52 @@ import org.tensorflow.types.family.TType;
 public final class SerializeIterator extends RawOp implements Operand<TType> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.data.SerializeIterator}
+   */
+  public static class Options {
+    
+    /**
+     * @param externalStatePolicy 
+     */
+    public Options externalStatePolicy(Long externalStatePolicy) {
+      this.externalStatePolicy = externalStatePolicy;
+      return this;
+    }
+    
+    private Long externalStatePolicy;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new SerializeIterator operation.
    * 
    * @param scope current scope
    * @param resourceHandle A handle to an iterator resource.
+   * @param options carries optional attributes values
    * @return a new instance of SerializeIterator
    */
   @Endpoint(describeByClass = true)
-  public static SerializeIterator create(Scope scope, Operand<?> resourceHandle) {
+  public static SerializeIterator create(Scope scope, Operand<?> resourceHandle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeIterator", scope.makeOpName("SerializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.externalStatePolicy != null) {
+          opBuilder.setAttr("external_state_policy", opts.externalStatePolicy);
+        }
+      }
+    }
     return new SerializeIterator(opBuilder.build());
+  }
+  
+  /**
+   * @param externalStatePolicy 
+   */
+  public static Options externalStatePolicy(Long externalStatePolicy) {
+    return new Options().externalStatePolicy(externalStatePolicy);
   }
   
   /**

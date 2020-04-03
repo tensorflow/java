@@ -32,6 +32,12 @@ import org.tensorflow.types.TString;
  * Joins the strings in the given list of string tensors into one tensor;
  * <p>
  * with the given separator (default is an empty separator).
+ * <p>
+ * Examples:
+ * <p>
+ * >>> s = ["hello", "world", "tensorflow"]
+ * >>> tf.strings.join(s, " ")
+ * <tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'>
  */
 @Operator(group = "strings")
 public final class Join extends RawOp implements Operand<TString> {

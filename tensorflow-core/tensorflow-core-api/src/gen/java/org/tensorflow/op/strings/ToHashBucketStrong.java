@@ -45,6 +45,11 @@ import org.tensorflow.types.TString;
  * <p>
  * The additional robustness comes at a cost of roughly 4x higher compute
  * time than `tf.string_to_hash_bucket_fast`.
+ * <p>
+ * Examples:
+ * <p>
+ * >>> tf.strings.to_hash_bucket_strong(["Hello", "TF"], 3, [1, 2]).numpy()
+ * array([2, 0])
  */
 @Operator(group = "strings")
 public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {

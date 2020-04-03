@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "Spence"
+  endpoint {
+    name: "math.special.Spence"
+  }
+}

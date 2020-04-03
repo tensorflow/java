@@ -36,10 +36,10 @@ import org.tensorflow.types.family.TType;
  * have no eigenvalues which are real and negative (pairs of complex conjugate
  * eigenvalues are allowed).
  * <p>
- * The matrix square root is computed by first reducing the matrix to 
- * quasi-triangular form with the real Schur decomposition. The square root 
- * of the quasi-triangular matrix is then computed directly. Details of 
- * the algorithm can be found in: Nicholas J. Higham, "Computing real 
+ * The matrix square root is computed by first reducing the matrix to
+ * quasi-triangular form with the real Schur decomposition. The square root
+ * of the quasi-triangular matrix is then computed directly. Details of
+ * the algorithm can be found in: Nicholas J. Higham, "Computing real
  * square roots of a real matrix", Linear Algebra Appl., 1987.
  * <p>
  * The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions

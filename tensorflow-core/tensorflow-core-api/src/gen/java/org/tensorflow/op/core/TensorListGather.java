@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * Creates a Tensor by indexing into the TensorList.
  * <p>
  * Each row in the produced Tensor corresponds to the element in the TensorList
- * specified by the given index (see `tf.gather`).  
+ * specified by the given index (see `tf.gather`).
  * <p>
  * input_handle: The input tensor list.
  * indices: The indices used to index into the list.

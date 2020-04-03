@@ -32,7 +32,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Calculates the gradient of the SparseMatrixSoftmax op.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TType> {
   
   /**

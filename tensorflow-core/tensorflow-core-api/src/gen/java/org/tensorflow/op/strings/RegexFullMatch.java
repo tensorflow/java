@@ -37,6 +37,13 @@ import org.tensorflow.types.TString;
  * if the input matches the regex pattern provided.
  * <p>
  * The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
+ * <p>
+ * Examples:
+ * <p>
+ * >>> tf.strings.regex_full_match(["TF lib", "lib TF"], ".*lib$")
+ * <tf.Tensor: shape=(2,), dtype=bool, numpy=array([ True, False])>
+ * >>> tf.strings.regex_full_match(["TF lib", "lib TF"], ".*TF$")
+ * <tf.Tensor: shape=(2,), dtype=bool, numpy=array([False,  True])>
  */
 @Operator(group = "strings")
 public final class RegexFullMatch extends RawOp implements Operand<TBool> {

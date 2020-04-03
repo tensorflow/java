@@ -39,8 +39,8 @@ import org.tensorflow.types.TFloat32;
  * -1 to 1, together with a window width in samples, and a stride specifying how
  * far to move the window between slices. From this it generates a three
  * dimensional output. The first dimension is for the channels in the input, so a
- * stereo audio input would have two here for example. The second dimension is time, 
- * with successive frequency slices. The third dimension has an amplitude value for 
+ * stereo audio input would have two here for example. The second dimension is time,
+ * with successive frequency slices. The third dimension has an amplitude value for
  * each frequency during that time slice.
  * <p>
  * This means the layout when converted and saved as an image is rotated 90 degrees

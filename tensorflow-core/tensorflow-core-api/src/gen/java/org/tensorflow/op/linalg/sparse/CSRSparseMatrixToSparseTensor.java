@@ -34,7 +34,6 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code values()} output
  */
-@Operator(group = "linalg.sparse")
 public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp {
   
   /**

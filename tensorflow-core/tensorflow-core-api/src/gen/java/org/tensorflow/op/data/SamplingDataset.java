@@ -48,7 +48,7 @@ public final class SamplingDataset extends RawOp implements Operand<TType> {
    * 
    * @param scope current scope
    * @param inputDataset 
-   * @param rate A scalar representing the sample rate. Each element of `input_dataset` is 
+   * @param rate A scalar representing the sample rate. Each element of `input_dataset` is
    * retained with this probability, independent of all other elements.
    * @param seed A scalar representing seed of random number generator.
    * @param seed2 A scalar representing seed2 of random number generator.
