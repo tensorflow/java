@@ -104,7 +104,6 @@ import org.tensorflow.types.family.TType;
  * adjoint_a: If True, `a` adjointed before multiplication.
  * adjoint_b: If True, `b` adjointed before multiplication.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TType> {
   
   /**

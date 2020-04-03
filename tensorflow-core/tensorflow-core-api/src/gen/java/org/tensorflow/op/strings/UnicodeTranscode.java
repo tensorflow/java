@@ -54,6 +54,16 @@ import org.tensorflow.types.TString;
  * transcoding is faithful to all codepoints in the source. If it is not marked
  * with an explicit endianness, the BOM is not considered part of the string itself
  * but as metadata, and so is not preserved in the output.
+ * <p>
+ * Examples:
+ * <p>
+ * >>> tf.strings.unicode_transcode(["Hello", "TensorFlow", "2.x"], "UTF-8", "UTF-16-BE")
+ * <tf.Tensor: shape=(3,), dtype=string, numpy=
+ * array([b'\x00H\x00e\x00l\x00l\x00o',
+ *        b'\x00T\x00e\x00n\x00s\x00o\x00r\x00F\x00l\x00o\x00w',
+ *        b'\x002\x00.\x00x'], dtype=object)>
+ * >>> tf.strings.unicode_transcode(["A", "B", "C"], "US ASCII", "UTF-8").numpy()
+ * array([b'A', b'B', b'C'], dtype=object)
  */
 @Operator(group = "strings")
 public final class UnicodeTranscode extends RawOp implements Operand<TString> {

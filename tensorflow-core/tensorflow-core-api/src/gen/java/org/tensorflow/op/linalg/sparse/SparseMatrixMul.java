@@ -39,7 +39,6 @@ import org.tensorflow.types.family.TType;
  * <b>NOTE</b> even if `b` is zero, the sparsity structure of the output does not
  * change.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixMul extends RawOp implements Operand<TType> {
   
   /**

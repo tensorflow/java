@@ -65,38 +65,42 @@ import org.tensorflow.types.family.TType;
  * </div>
  * <p>
  * In Python, this scatter operation would look like this:
- * <pre>{@code
- *     indices = tf.constant([[4], [3], [1], [7]])
- *     updates = tf.constant([9, 10, 11, 12])
- *     tensor = tf.ones([8], dtype=tf.int32)
- *     updated = tf.tensor_scatter_nd_update(tensor, indices, updates)
- *     print(updated)
- * }</pre>
- * The resulting tensor would look like this:
  * <p>
- *     [1, 11, 1, 10, 9, 1, 1, 12]
+ *     >>> indices = tf.constant([[4], [3], [1], [7]])
+ *     >>> updates = tf.constant([9, 10, 11, 12])
+ *     >>> tensor = tf.ones([8], dtype=tf.int32)
+ *     >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates))
+ *     tf.Tensor([ 1 11  1 10  9  1  1 12], shape=(8,), dtype=int32)
  * <p>
  * We can also, insert entire slices of a higher rank tensor all at once. For
  * example, if we wanted to insert two slices in the first dimension of a
  * rank-3 tensor with two matrices of new values.
  * <p>
  * In Python, this scatter operation would look like this:
- * <pre>{@code
- *     indices = tf.constant([[0], [2]])
- *     updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
- *                             [7, 7, 7, 7], [8, 8, 8, 8]],
- *                            [[5, 5, 5, 5], [6, 6, 6, 6],
- *                             [7, 7, 7, 7], [8, 8, 8, 8]]])
- *     tensor = tf.ones([4, 4, 4],dtype=tf.int32)
- *     updated = tf.tensor_scatter_nd_update(tensor, indices, updates)
- *     print(updated)
- * }</pre>
- * The resulting tensor would look like this:
  * <p>
- *     [[[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
- *      [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
- *      [[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
- *      [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]]
+ *     >>> indices = tf.constant([[0], [2]])
+ *     >>> updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
+ *     ...                         [7, 7, 7, 7], [8, 8, 8, 8]],
+ *     ...                        [[5, 5, 5, 5], [6, 6, 6, 6],
+ *     ...                         [7, 7, 7, 7], [8, 8, 8, 8]]])
+ *     >>> tensor = tf.ones([4, 4, 4], dtype=tf.int32)
+ *     >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates).numpy())
+ *     [[[5 5 5 5]
+ *       [6 6 6 6]
+ *       [7 7 7 7]
+ *       [8 8 8 8]]
+ *      [[1 1 1 1]
+ *       [1 1 1 1]
+ *       [1 1 1 1]
+ *       [1 1 1 1]]
+ *      [[5 5 5 5]
+ *       [6 6 6 6]
+ *       [7 7 7 7]
+ *       [8 8 8 8]]
+ *      [[1 1 1 1]
+ *       [1 1 1 1]
+ *       [1 1 1 1]
+ *       [1 1 1 1]]]
  * <p>
  * Note that on CPU, if an out of bound index is found, an error is returned.
  * On GPU, if an out of bound index is found, the index is ignored.

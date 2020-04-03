@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * independently.  The resulting row is the equivalent of calling
  * `np.searchsorted(sorted_inputs, values, side='left')`.
  * <p>
- * The result is not a global index to the entire 
+ * The result is not a global index to the entire
  * `Tensor`, but rather just the index in the last dimension.
  * <p>
  * A 2-D example:

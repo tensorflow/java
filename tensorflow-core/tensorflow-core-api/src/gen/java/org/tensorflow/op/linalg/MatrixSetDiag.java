@@ -55,7 +55,18 @@ import org.tensorflow.types.family.TType;
  *   = diagonal[i, j, ..., l, diag_index, index_in_diag] ; if k[0] <= d <= k[1]
  *     input[i, j, ..., l, m, n]                         ; otherwise
  * }</pre>
- * where `d = n - m`, `diag_index = k[1] - d`, and `index_in_diag = n - max(d, 0)`.
+ * where `d = n - m`, `diag_index = k[1] - d`, and
+ * `index_in_diag = n - max(d, 0) + offset`.
+ * <p>
+ * `offset` is zero except when the alignment of the diagonal is to the right.
+ * <pre>{@code
+ * offset = max_diag_len - diag_len(d) ; if (`align` in {RIGHT_LEFT, RIGHT_RIGHT}
+ *                                            and `d >= 0`) or
+ *                                          (`align` in {LEFT_RIGHT, RIGHT_RIGHT}
+ *                                            and `d <= 0`)
+ *          0                          ; otherwise
+ * }</pre>
+ * where `diag_len(d) = min(cols - max(d, 0), rows + min(d, 0))`.
  * <p>
  * For example:
  * <pre>{@code
@@ -68,15 +79,16 @@ import org.tensorflow.types.family.TType;
  *                    [7, 7, 7, 7]]])
  * diagonal = np.array([[1, 2, 3],               # Diagonal shape: (2, 3)
  *                      [4, 5, 6]])
- * tf.matrix_set_diag(diagonal) ==> [[[1, 7, 7, 7],  # Output shape: (2, 3, 4)
- *                                    [7, 2, 7, 7],
- *                                    [7, 7, 3, 7]],
- *                                   [[4, 7, 7, 7],
- *                                    [7, 5, 7, 7],
- *                                    [7, 7, 6, 7]]]
+ * tf.matrix_set_diag(input, diagonal)
+ *   ==> [[[1, 7, 7, 7],  # Output shape: (2, 3, 4)
+ *         [7, 2, 7, 7],
+ *         [7, 7, 3, 7]],
+ *        [[4, 7, 7, 7],
+ *         [7, 5, 7, 7],
+ *         [7, 7, 6, 7]]]
  * 
  * # A superdiagonal (per batch).
- * tf.matrix_set_diag(diagonal, k = 1)
+ * tf.matrix_set_diag(input, diagonal, k = 1)
  *   ==> [[[7, 1, 7, 7],  # Output shape: (2, 3, 4)
  *         [7, 7, 2, 7],
  *         [7, 7, 7, 3]],
@@ -85,17 +97,38 @@ import org.tensorflow.types.family.TType;
  *         [7, 7, 7, 6]]]
  * 
  * # A band of diagonals.
- * diagonals = np.array([[[1, 2, 3],  # Diagonal shape: (2, 2, 3)
+ * diagonals = np.array([[[0, 9, 1],  # Diagonal shape: (2, 4, 3)
+ *                        [6, 5, 8],
+ *                        [1, 2, 3],
  *                        [4, 5, 0]],
- *                       [[6, 1, 2],
+ *                       [[0, 1, 2],
+ *                        [5, 6, 4],
+ *                        [6, 1, 2],
  *                        [3, 4, 0]]])
- * tf.matrix_set_diag(diagonals, k = (-1, 0))
- *   ==> [[[1, 7, 7, 7],  # Output shape: (2, 3, 4)
- *         [4, 2, 7, 7],
- *         [0, 5, 3, 7]],
- *        [[6, 7, 7, 7],
- *         [3, 1, 7, 7],
- *         [7, 4, 2, 7]]]
+ * tf.matrix_set_diag(input, diagonals, k = (-1, 2))
+ *   ==> [[[1, 6, 9, 7],  # Output shape: (2, 3, 4)
+ *         [4, 2, 5, 1],
+ *         [7, 5, 3, 8]],
+ *        [[6, 5, 1, 7],
+ *         [3, 1, 6, 2],
+ *         [7, 4, 2, 4]]]
+ * 
+ * # LEFT_RIGHT alignment.
+ * diagonals = np.array([[[9, 1, 0],  # Diagonal shape: (2, 4, 3)
+ *                        [6, 5, 8],
+ *                        [1, 2, 3],
+ *                        [0, 4, 5]],
+ *                       [[1, 2, 0],
+ *                        [5, 6, 4],
+ *                        [6, 1, 2],
+ *                        [0, 3, 4]]])
+ * tf.matrix_set_diag(input, diagonals, k = (-1, 2), align="LEFT_RIGHT")
+ *   ==> [[[1, 6, 9, 7],  # Output shape: (2, 3, 4)
+ *         [4, 2, 5, 1],
+ *         [7, 5, 3, 8]],
+ *        [[6, 5, 1, 7],
+ *         [3, 1, 6, 2],
+ *         [7, 4, 2, 4]]]
  * 
  * }</pre>
  * 
@@ -104,6 +137,31 @@ import org.tensorflow.types.family.TType;
  */
 @Operator(group = "linalg")
 public final class MatrixSetDiag<T extends TType> extends RawOp implements Operand<T> {
+  
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.MatrixSetDiag}
+   */
+  public static class Options {
+    
+    /**
+     * @param align Some diagonals are shorter than `max_diag_len` and need to be padded. `align` is
+     * a string specifying how superdiagonals and subdiagonals should be aligned,
+     * respectively. There are four possible alignments: "RIGHT_LEFT" (default),
+     * "LEFT_RIGHT", "LEFT_LEFT", and "RIGHT_RIGHT". "RIGHT_LEFT" aligns superdiagonals
+     * to the right (left-pads the row) and subdiagonals to the left (right-pads the
+     * row). It is the packing format LAPACK uses. cuSPARSE uses "LEFT_RIGHT", which is
+     * the opposite alignment.
+     */
+    public Options align(String align) {
+      this.align = align;
+      return this;
+    }
+    
+    private String align;
+    
+    private Options() {
+    }
+  }
   
   /**
    * Factory method to create a class wrapping a new MatrixSetDiag operation.
@@ -116,16 +174,37 @@ public final class MatrixSetDiag<T extends TType> extends RawOp implements Opera
    * diagonal, and negative value means subdiagonals. `k` can be a single integer
    * (for a single diagonal) or a pair of integers specifying the low and high ends
    * of a matrix band. `k[0]` must not be larger than `k[1]`.
+   * @param options carries optional attributes values
    * @return a new instance of MatrixSetDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> MatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV2", scope.makeOpName("MatrixSetDiag"));
+  public static <T extends TType> MatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV3", scope.makeOpName("MatrixSetDiag"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(diagonal.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.align != null) {
+          opBuilder.setAttr("align", opts.align);
+        }
+      }
+    }
     return new MatrixSetDiag<T>(opBuilder.build());
+  }
+  
+  /**
+   * @param align Some diagonals are shorter than `max_diag_len` and need to be padded. `align` is
+   * a string specifying how superdiagonals and subdiagonals should be aligned,
+   * respectively. There are four possible alignments: "RIGHT_LEFT" (default),
+   * "LEFT_RIGHT", "LEFT_LEFT", and "RIGHT_RIGHT". "RIGHT_LEFT" aligns superdiagonals
+   * to the right (left-pads the row) and subdiagonals to the left (right-pads the
+   * row). It is the packing format LAPACK uses. cuSPARSE uses "LEFT_RIGHT", which is
+   * the opposite alignment.
+   */
+  public static Options align(String align) {
+    return new Options().align(align);
   }
   
   /**

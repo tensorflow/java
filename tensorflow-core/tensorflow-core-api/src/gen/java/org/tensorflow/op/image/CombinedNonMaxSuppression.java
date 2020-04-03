@@ -86,12 +86,12 @@ public final class CombinedNonMaxSuppression extends RawOp {
    * Factory method to create a class wrapping a new CombinedNonMaxSuppression operation.
    * 
    * @param scope current scope
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then 
-   * same boxes are used for all classes otherwise, if `q` is equal to number of 
+   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then
+   * same boxes are used for all classes otherwise, if `q` is equal to number of
    * classes, class-specific boxes are used.
    * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
    * representing a single score corresponding to each box (each row of boxes).
-   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of 
+   * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of
    * boxes to be selected by non max suppression per class
    * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
    * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
@@ -145,7 +145,7 @@ public final class CombinedNonMaxSuppression extends RawOp {
   }
   
   /**
-   * A [batch_size, max_detections, 4] float32 tensor 
+   * A [batch_size, max_detections, 4] float32 tensor
    * containing the non-max suppressed boxes.
    */
   public Output<TFloat32> nmsedBoxes() {
@@ -153,7 +153,7 @@ public final class CombinedNonMaxSuppression extends RawOp {
   }
   
   /**
-   * A [batch_size, max_detections] float32 tensor 
+   * A [batch_size, max_detections] float32 tensor
    * containing the scores for the boxes.
    */
   public Output<TFloat32> nmsedScores() {
@@ -161,7 +161,7 @@ public final class CombinedNonMaxSuppression extends RawOp {
   }
   
   /**
-   * A [batch_size, max_detections] float32 tensor 
+   * A [batch_size, max_detections] float32 tensor
    * containing the classes for the boxes.
    */
   public Output<TFloat32> nmsedClasses() {

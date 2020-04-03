@@ -33,7 +33,48 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * A dataset that creates window datasets from the input dataset.
+ *   Combines (nests of) input elements into a dataset of (nests of) windows.
+ * <p>
+ *   A "window" is a finite dataset of flat elements of size `size` (or possibly
+ *   fewer if there are not enough input elements to fill the window and
+ *   `drop_remainder` evaluates to false).
+ * <p>
+ *   The `shift` argument determines the number of input elements by which
+ *   the window moves on each iteration.  The first element in the `k`th window
+ *   will be element
+ * <p>
+ *   <pre>{@code
+ *   1 + (k-1) * shift
+ *   }</pre>
+ * of the input dataset. In particular, the first element of the first window
+ *   will always be the first element of the input dataset.  
+ * <p>
+ *   If the `stride` parameter is greater than 1, then each window will skip
+ *   `(stride - 1)` input elements between each element that appears in the
+ *   window. Output windows will still contain `size` elements regardless of
+ *   the value of `stride`.
+ * <p>
+ *   The `stride` argument determines the stride of the input elements, and the
+ *   `shift` argument determines the shift of the window.
+ * <p>
+ *   For example, letting `{...}` to represent a Dataset:
+ * <p>
+ *   - `tf.data.Dataset.range(7).window(2)` produces
+ *     `{{0, 1}, {2, 3}, {4, 5}, {6}}`
+ *   - `tf.data.Dataset.range(7).window(3, 2, 1, True)` produces
+ *     `{{0, 1, 2}, {2, 3, 4}, {4, 5, 6}}`
+ *   - `tf.data.Dataset.range(7).window(3, 1, 2, True)` produces
+ *     `{{0, 2, 4}, {1, 3, 5}, {2, 4, 6}}`
+ * <p>
+ *   Note that when the `window` transformation is applied to a dataset of
+ *   nested elements, it produces a dataset of nested windows.
+ * <p>
+ *   For example:
+ * <p>
+ *   - `tf.data.Dataset.from_tensor_slices((range(4), range(4))).window(2)`
+ *     produces `{({0, 1}, {0, 1}), ({2, 3}, {2, 3})}`
+ *   - `tf.data.Dataset.from_tensor_slices({"a": range(4)}).window(2)`
+ *     produces `{{"a": {0, 1}}, {"a": {2, 3}}}`
  */
 public final class WindowDataset extends RawOp implements Operand<TType> {
   
@@ -42,13 +83,16 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
    * 
    * @param scope current scope
    * @param inputDataset 
-   * @param size A scalar representing the number of elements to accumulate in a window.
-   * @param shift A scalar representing the steps moving the sliding window forward in one
-   * iteration. It must be positive.
-   * @param stride A scalar representing the stride of the input elements of the sliding window.
-   * It must be positive.
-   * @param dropRemainder A scalar representing whether a window should be dropped in case its size is
-   * smaller than desired.
+   * @param size An integer scalar, representing the number of elements
+   * of the input dataset to combine into a window. Must be positive.
+   * @param shift An integer scalar, representing the number of input elements
+   * by which the window moves in each iteration.  Defaults to `size`.
+   * Must be positive.
+   * @param stride An integer scalar, representing the stride of the input elements
+   * in the sliding window. Must be positive. The default value of 1 means
+   * "retain every input element".
+   * @param dropRemainder A Boolean scalar, representing whether the last window should be
+   * dropped if its size is smaller than `window_size`.
    * @param outputTypes 
    * @param outputShapes 
    * @return a new instance of WindowDataset

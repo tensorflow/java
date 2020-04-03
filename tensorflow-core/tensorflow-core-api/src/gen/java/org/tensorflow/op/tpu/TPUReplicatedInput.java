@@ -30,6 +30,18 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Connects N inputs to an N-way replicated TPU computation.
+ * <p>
+ * This operation holds a replicated input to a `tpu.replicate()` computation subgraph.
+ * Each replicated input has the same shape and type alongside the output.
+ * <p>
+ * For example:
+ * <pre>{@code
+ * %a = "tf.opA"()
+ * %b = "tf.opB"()
+ * %replicated_input = "tf.TPUReplicatedInput"(%a, %b)
+ * %computation = "tf.Computation"(%replicated_input)
+ * }</pre>
+ * The above computation has a replicated input of two replicas.
  * 
  * @param <T> data type for {@code output()} output
  */

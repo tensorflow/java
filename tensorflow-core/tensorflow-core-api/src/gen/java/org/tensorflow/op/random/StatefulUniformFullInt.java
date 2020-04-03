@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Outputs random integers from a uniform distribution.
  * <p>
- * The generated values are uniform integers covering the whole range of `dtype`. 
+ * The generated values are uniform integers covering the whole range of `dtype`.
  * 
  * @param <U> data type for {@code output()} output
  */

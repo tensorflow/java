@@ -37,6 +37,11 @@ import org.tensorflow.types.TString;
  * unimportant. There is a risk of adversaries constructing inputs that all hash
  * to the same bucket. To prevent this problem, use a strong hash function with
  * `tf.string_to_hash_bucket_strong`.
+ * <p>
+ * Examples:
+ * <p>
+ * >>> tf.strings.to_hash_bucket_fast(["Hello", "TensorFlow", "2.x"], 3).numpy()
+ * array([0, 2, 2])
  */
 @Operator(group = "strings")
 public final class ToHashBucketFast extends RawOp implements Operand<TInt64> {

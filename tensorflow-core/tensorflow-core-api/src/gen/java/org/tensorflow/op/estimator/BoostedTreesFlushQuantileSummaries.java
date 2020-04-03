@@ -34,7 +34,7 @@ import org.tensorflow.types.TFloat32;
  * Flush the quantile summaries from each quantile stream resource.
  * <p>
  * An op that outputs a list of quantile summaries of a quantile stream resource.
- * Each summary Tensor is rank 2, containing summaries (value, weight, min_rank, 
+ * Each summary Tensor is rank 2, containing summaries (value, weight, min_rank,
  * max_rank) for a single feature.
  */
 public final class BoostedTreesFlushQuantileSummaries extends RawOp implements Iterable<Operand<TFloat32>> {

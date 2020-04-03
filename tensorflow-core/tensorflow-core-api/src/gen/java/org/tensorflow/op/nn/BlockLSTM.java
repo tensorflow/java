@@ -48,7 +48,7 @@ import org.tensorflow.types.family.TType;
  *   h.append(h1)
  * return pack(i), pack(cs), pack(f), pack(o), pack(ci), pack(ch), pack(h)
  * 
- * Note that unlike LSTMBlockCell (and BlockLSTM) which uses ICFO gate layout, 
+ * Note that unlike LSTMBlockCell (and BlockLSTM) which uses ICFO gate layout,
  * this op uses IFCO. So in order for the following snippet to be equivalent
  * all gate-related outputs should be reordered.
  * }</pre>

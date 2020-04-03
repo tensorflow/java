@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CTCLossV2"
+  endpoint {
+    name: "nn.CTCLossV2"
+  }
+}

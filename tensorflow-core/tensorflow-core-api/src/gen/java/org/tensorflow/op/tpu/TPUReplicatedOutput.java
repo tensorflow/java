@@ -31,7 +31,17 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Connects outputs of an N-way replicated computation to N outputs.
+ * Connects N outputs from an N-way replicated TPU computation.
+ * <p>
+ * This operation holds a replicated output from a `tpu.replicate()` computation subgraph.
+ * Each replicated output has the same shape and type alongside the input.
+ * <p>
+ * For example:
+ * <pre>{@code
+ * %computation = "tf.Computation"()
+ * %replicated_output:2 = "tf.TPUReplicatedOutput"(%computation)
+ * }</pre>
+ * The above computation has a replicated output of two replicas.
  * 
  * @param <T> data type for {@code outputs()} output
  */

@@ -36,7 +36,7 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
    * Factory method to create a class wrapping a new IsBoostedTreesEnsembleInitialized operation.
    * 
    * @param scope current scope
-   * @param treeEnsembleHandle Handle to the tree ensemble resouce.
+   * @param treeEnsembleHandle Handle to the tree ensemble resource.
    * @return a new instance of IsBoostedTreesEnsembleInitialized
    */
   @Endpoint(describeByClass = true)

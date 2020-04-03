@@ -41,11 +41,11 @@ public final class TridiagonalMatMul<T extends TType> extends RawOp implements O
    * 
    * @param scope current scope
    * @param superdiag Tensor of shape `[..., 1, M]`, representing superdiagonals of
-   * tri-diagonal matrices to the left of multiplication. Last element is ingored.
+   * tri-diagonal matrices to the left of multiplication. Last element is ignored.
    * @param maindiag Tensor of shape `[..., 1, M]`, representing main diagonals of tri-diagonal
    * matrices to the left of multiplication.
    * @param subdiag Tensor of shape `[..., 1, M]`, representing subdiagonals of tri-diagonal
-   * matrices to the left of multiplication. First element is ingored.
+   * matrices to the left of multiplication. First element is ignored.
    * @param rhs Tensor of shape `[..., M, N]`, representing MxN matrices to the right of
    * multiplication.
    * @return a new instance of TridiagonalMatMul

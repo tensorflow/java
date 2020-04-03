@@ -30,7 +30,6 @@ import org.tensorflow.types.TInt32;
 /**
  * Returns the number of nonzeroes of `sparse_matrix`.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
   
   /**

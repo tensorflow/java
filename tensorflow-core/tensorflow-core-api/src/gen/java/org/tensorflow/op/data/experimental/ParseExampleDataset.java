@@ -30,6 +30,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -43,14 +44,27 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
   public static class Options {
     
     /**
-     * @param sloppy 
+     * @param deterministic A string indicating the op-level determinism to use. Deterministic controls
+     * whether the dataset is allowed to return elements out of order if the next
+     * element to be returned isn't available, but a later element is. Options are
+     * "true", "false", and "default". "default" indicates that determinism should be
+     * decided by the `experimental_deterministic` parameter of `tf.data.Options`.
      */
-    public Options sloppy(Boolean sloppy) {
-      this.sloppy = sloppy;
+    public Options deterministic(String deterministic) {
+      this.deterministic = deterministic;
       return this;
     }
     
-    private Boolean sloppy;
+    /**
+     * @param raggedKeys 
+     */
+    public Options raggedKeys(List<String> raggedKeys) {
+      this.raggedKeys = raggedKeys;
+      return this;
+    }
+    
+    private String deterministic;
+    private List<String> raggedKeys;
     
     private Options() {
     }
@@ -82,12 +96,14 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
    * given feature along this dimension.
    * @param outputTypes The type list for the return values.
    * @param outputShapes The list of shapes being produced.
+   * @param raggedValueTypes 
+   * @param raggedSplitTypes 
    * @param options carries optional attributes values
    * @return a new instance of ParseExampleDataset
    */
   @Endpoint(describeByClass = true)
-  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalParseExampleDataset", scope.makeOpName("ParseExampleDataset"));
+  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleDatasetV2", scope.makeOpName("ParseExampleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
@@ -122,10 +138,27 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    DataType[] raggedValueTypesArray = new DataType[raggedValueTypes.size()];
+    for (int i = 0; i < raggedValueTypesArray.length; ++i) {
+      raggedValueTypesArray[i] = raggedValueTypes.get(i);
+    }
+    opBuilder.setAttr("ragged_value_types", raggedValueTypesArray);
+    DataType[] raggedSplitTypesArray = new DataType[raggedSplitTypes.size()];
+    for (int i = 0; i < raggedSplitTypesArray.length; ++i) {
+      raggedSplitTypesArray[i] = raggedSplitTypes.get(i);
+    }
+    opBuilder.setAttr("ragged_split_types", raggedSplitTypesArray);
     if (options != null) {
       for (Options opts : options) {
-        if (opts.sloppy != null) {
-          opBuilder.setAttr("sloppy", opts.sloppy);
+        if (opts.deterministic != null) {
+          opBuilder.setAttr("deterministic", opts.deterministic);
+        }
+        if (opts.raggedKeys != null) {
+          String[] raggedKeysArray = new String[opts.raggedKeys.size()];
+          for (int i = 0; i < raggedKeysArray.length; ++i) {
+            raggedKeysArray[i] = opts.raggedKeys.get(i);
+          }
+          opBuilder.setAttr("ragged_keys", raggedKeysArray);
         }
       }
     }
@@ -133,10 +166,21 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
   }
   
   /**
-   * @param sloppy 
+   * @param deterministic A string indicating the op-level determinism to use. Deterministic controls
+   * whether the dataset is allowed to return elements out of order if the next
+   * element to be returned isn't available, but a later element is. Options are
+   * "true", "false", and "default". "default" indicates that determinism should be
+   * decided by the `experimental_deterministic` parameter of `tf.data.Options`.
    */
-  public static Options sloppy(Boolean sloppy) {
-    return new Options().sloppy(sloppy);
+  public static Options deterministic(String deterministic) {
+    return new Options().deterministic(deterministic);
+  }
+  
+  /**
+   * @param raggedKeys 
+   */
+  public static Options raggedKeys(List<String> raggedKeys) {
+    return new Options().raggedKeys(raggedKeys);
   }
   
   /**

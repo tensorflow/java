@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that zips together `input_datasets`.
  * <p>
- * The elements of the resulting dataset are created by zipping corresponding 
+ * The elements of the resulting dataset are created by zipping corresponding
  * elements from each of the input datasets.
  * <p>
  * The size of the resulting dataset will match the size of the smallest input

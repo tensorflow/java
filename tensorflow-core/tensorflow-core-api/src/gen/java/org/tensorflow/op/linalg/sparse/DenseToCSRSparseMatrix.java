@@ -31,7 +31,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Converts a dense tensor to a (possibly batched) CSRSparseMatrix.
  */
-@Operator(group = "linalg.sparse")
 public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType> {
   
   /**

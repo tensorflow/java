@@ -171,9 +171,11 @@ public final class DataOps {
    * Converts the given `resource_handle` representing an iterator to a variant tensor.
    *
    * @param resourceHandle A handle to an iterator resource.
+   * @param options carries optional attributes values
    * @return a new instance of SerializeIterator
    */
-  public SerializeIterator serializeIterator(Operand<?> resourceHandle) {
-    return SerializeIterator.create(scope, resourceHandle);
+  public SerializeIterator serializeIterator(Operand<?> resourceHandle,
+      SerializeIterator.Options... options) {
+    return SerializeIterator.create(scope, resourceHandle, options);
   }
 }

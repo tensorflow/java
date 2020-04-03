@@ -36,14 +36,16 @@ import org.tensorflow.types.family.TType;
  * of each inner-most matrix is assumed to be zero and not accessed.
  * If `lower` is False then the strictly lower triangular part of each inner-most
  * matrix is assumed to be zero and not accessed.
- * `rhs` is a tensor of shape `[..., M, K]`.
+ * `rhs` is a tensor of shape `[..., M, N]`.
  * <p>
- * The output is a tensor of shape `[..., M, K]`. If `adjoint` is
+ * The output is a tensor of shape `[..., M, N]`. If `adjoint` is
  * `True` then the innermost matrices in `output` satisfy matrix equations
  * `matrix[..., :, :] * output[..., :, :] = rhs[..., :, :]`.
  * If `adjoint` is `False` then the strictly then the  innermost matrices in
  * `output` satisfy matrix equations
  * `adjoint(matrix[..., i, k]) * output[..., k, j] = rhs[..., i, j]`.
+ * <p>
+ * Note, the batch shapes for the inputs only need to broadcast.
  * <p>
  * Example:
  * <pre>{@code

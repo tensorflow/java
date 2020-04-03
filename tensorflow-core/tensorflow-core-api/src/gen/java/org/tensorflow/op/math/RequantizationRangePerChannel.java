@@ -41,7 +41,7 @@ public final class RequantizationRangePerChannel extends RawOp {
    * @param inputMin The minimum value of the input tensor
    * @param inputMax The maximum value of the input tensor.
    * @param clipValueMax The maximum value of the output that needs to be clipped.
-   * Example: set this to 6 for Relu6. 
+   * Example: set this to 6 for Relu6.
    * @return a new instance of RequantizationRangePerChannel
    */
   @Endpoint(describeByClass = true)

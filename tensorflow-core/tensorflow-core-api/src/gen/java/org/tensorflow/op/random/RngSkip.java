@@ -32,7 +32,7 @@ import org.tensorflow.types.TInt64;
  * The state of the RNG after
  * `rng_skip(n)` will be the same as that after `stateful_uniform([n])`
  * (or any other distribution). The actual increment added to the
- * counter is an unspecified implementation detail.  
+ * counter is an unspecified implementation detail.
  */
 public final class RngSkip extends RawOp {
   

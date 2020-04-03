@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -34,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class BroadcastSend<T extends TNumber> extends RawOp implements Operand<T> {
+public final class BroadcastSend<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.collective.BroadcastSend}
@@ -68,7 +67,7 @@ public final class BroadcastSend<T extends TNumber> extends RawOp implements Ope
    * @return a new instance of BroadcastSend
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
+  public static <T extends TType> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSend", scope.makeOpName("BroadcastSend"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

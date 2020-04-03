@@ -38,7 +38,6 @@ import org.tensorflow.types.family.TType;
  * the output has the same sparsity structure as the input (though missing values
  * in the output may now be treated as having probability zero).
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixSoftmax extends RawOp implements Operand<TType> {
   
   /**

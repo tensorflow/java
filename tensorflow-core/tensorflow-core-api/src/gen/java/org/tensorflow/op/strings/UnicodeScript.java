@@ -35,6 +35,11 @@ import org.tensorflow.types.TInt32;
  * Unicode (ICU) UScriptCode values. See http://icu-project.org/apiref/icu4c/uscript_8h.html.
  * Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
  * match input shape.
+ * <p>
+ * Examples:
+ * <p>
+ * >>> tf.strings.unicode_script([1, 31, 38])
+ * <tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)>
  */
 @Operator(group = "strings")
 public final class UnicodeScript extends RawOp implements Operand<TInt32> {

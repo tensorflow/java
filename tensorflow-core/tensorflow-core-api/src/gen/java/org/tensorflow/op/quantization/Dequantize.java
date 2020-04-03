@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,10 +27,11 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Dequantize the 'input' tensor into a float Tensor.
+ * Dequantize the 'input' tensor into a float or bfloat16 Tensor.
  * <p>
  * [min_range, max_range] are scalar floats that specify the range for
  * the output. The 'mode' attribute controls exactly which calculations are
@@ -79,9 +81,11 @@ import org.tensorflow.types.family.TType;
  *                                                     max_range / max_expected_T);
  * }</pre>
  * 
+ * 
+ * @param <U> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class Dequantize extends RawOp implements Operand<TFloat32> {
+public final class Dequantize<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
@@ -127,16 +131,19 @@ public final class Dequantize extends RawOp implements Operand<TFloat32> {
    * @param input 
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
+   * @param dtype Type of the output tensor. Currently Dequantize supports float and bfloat16.
+   * If 'dtype' is 'bfloat16', it only supports 'MIN_COMBINED' mode.
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Dequantize create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
+  public static <U extends TNumber, T extends TType> Dequantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {
         if (opts.mode != null) {
@@ -150,7 +157,22 @@ public final class Dequantize extends RawOp implements Operand<TFloat32> {
         }
       }
     }
-    return new Dequantize(opBuilder.build());
+    return new Dequantize<U>(opBuilder.build());
+  }
+  
+  /**
+   * Factory method to create a class wrapping a new Dequantize operation using default output types.
+   * 
+   * @param scope current scope
+   * @param input 
+   * @param minRange The minimum scalar value possibly produced for the input.
+   * @param maxRange The maximum scalar value possibly produced for the input.
+   * @param options carries optional attributes values
+   * @return a new instance of Dequantize
+   */
+  @Endpoint(describeByClass = true)
+  public static <T extends TType> Dequantize<TFloat32> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
+    return create(scope, input, minRange, maxRange, TFloat32.DTYPE, options);
   }
   
   /**
@@ -176,16 +198,16 @@ public final class Dequantize extends RawOp implements Operand<TFloat32> {
   
   /**
    */
-  public Output<TFloat32> output() {
+  public Output<U> output() {
     return output;
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<U> asOutput() {
     return output;
   }
   
-  private Output<TFloat32> output;
+  private Output<U> output;
   
   private Dequantize(Operation operation) {
     super(operation);

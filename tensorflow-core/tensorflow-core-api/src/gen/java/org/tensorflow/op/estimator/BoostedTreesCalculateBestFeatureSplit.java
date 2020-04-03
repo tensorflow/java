@@ -71,7 +71,7 @@ public final class BoostedTreesCalculateBestFeatureSplit extends RawOp {
    * @param l1 l1 regularization factor on leaf weights, per instance based.
    * @param l2 l2 regularization factor on leaf weights, per instance based.
    * @param treeComplexity adjustment to the gain, per leaf based.
-   * @param minNodeWeight mininum avg of hessians in a node before required for the node to be considered for splitting.
+   * @param minNodeWeight minimum avg of hessians in a node before required for the node to be considered for splitting.
    * @param logitsDimension The dimension of logit, i.e., number of classes.
    * @param options carries optional attributes values
    * @return a new instance of BoostedTreesCalculateBestFeatureSplit

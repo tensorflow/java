@@ -100,6 +100,9 @@ import org.tensorflow.op.core.MapSize;
 import org.tensorflow.op.core.MapStage;
 import org.tensorflow.op.core.MapUnstage;
 import org.tensorflow.op.core.MapUnstageNoKey;
+import org.tensorflow.op.core.MatrixDiagPartV3;
+import org.tensorflow.op.core.MatrixDiagV3;
+import org.tensorflow.op.core.MatrixSetDiagV3;
 import org.tensorflow.op.core.Max;
 import org.tensorflow.op.core.Merge;
 import org.tensorflow.op.core.Min;
@@ -246,6 +249,7 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
+import org.tensorflow.op.core.Xlog1py;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.tools.Shape;
@@ -328,15 +332,17 @@ public final class Ops {
 
   public final BitwiseOps bitwise;
 
+  public final DebuggingOps debugging;
+
   public final MathOps math;
 
   public final AudioOps audio;
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -353,11 +359,12 @@ public final class Ops {
     strings = new StringsOps(scope);
     sparse = new SparseOps(scope);
     bitwise = new BitwiseOps(scope);
+    debugging = new DebuggingOps(scope);
     math = new MathOps(scope);
     audio = new AudioOps(scope);
     signal = new SignalOps(scope);
-    train = new TrainOps(scope);
     quantization = new QuantizationOps(scope);
+    train = new TrainOps(scope);
   }
 
   /**
@@ -3048,6 +3055,381 @@ public final class Ops {
   public MapUnstageNoKey mapUnstageNoKey(Operand<TInt32> indices, List<DataType<?>> dtypes,
       MapUnstageNoKey.Options... options) {
     return MapUnstageNoKey.create(scope, indices, dtypes, options);
+  }
+
+  /**
+   * Returns the batched diagonal part of a batched tensor.
+   *  <p>
+   *  Returns a tensor with the `k[0]`-th to `k[1]`-th diagonals of the batched
+   *  `input`.
+   *  <p>
+   *  Assume `input` has `r` dimensions `[I, J, ..., L, M, N]`.
+   *  Let `max_diag_len` be the maximum length among all diagonals to be extracted,
+   *  `max_diag_len = min(M + min(k[1], 0), N + min(-k[0], 0))`
+   *  Let `num_diags` be the number of diagonals to extract,
+   *  `num_diags = k[1] - k[0] + 1`.
+   *  <p>
+   *  If `num_diags == 1`, the output tensor is of rank `r - 1` with shape
+   *  `[I, J, ..., L, max_diag_len]` and values:
+   *  <pre>{@code
+   *  diagonal[i, j, ..., l, n]
+   *    = input[i, j, ..., l, n+y, n+x] ; if 0 <= n+y < M and 0 <= n+x < N,
+   *      padding_value                 ; otherwise.
+   *  }</pre>
+   *  where `y = max(-k[1], 0)`, `x = max(k[1], 0)`.
+   *  <p>
+   *  Otherwise, the output tensor has rank `r` with dimensions
+   *  `[I, J, ..., L, num_diags, max_diag_len]` with values:
+   *  <pre>{@code
+   *  diagonal[i, j, ..., l, m, n]
+   *    = input[i, j, ..., l, n+y, n+x] ; if 0 <= n+y < M and 0 <= n+x < N,
+   *      padding_value                 ; otherwise.
+   *  }</pre>
+   *  where `d = k[1] - m`, `y = max(-d, 0) - offset`, and `x = max(d, 0) - offset`.
+   *  <p>
+   *  `offset` is zero except when the alignment of the diagonal is to the right.
+   *  <pre>{@code
+   *  offset = max_diag_len - diag_len(d) ; if (`align` in {RIGHT_LEFT, RIGHT_RIGHT}
+   *                                             and `d >= 0`) or
+   *                                           (`align` in {LEFT_RIGHT, RIGHT_RIGHT}
+   *                                             and `d <= 0`)
+   *           0                          ; otherwise
+   *  }</pre>
+   *  where `diag_len(d) = min(cols - max(d, 0), rows + min(d, 0))`.
+   *  <p>
+   *  The input must be at least a matrix.
+   *  <p>
+   *  For example:
+   *  <pre>{@code
+   *  input = np.array([[[1, 2, 3, 4],  # Input shape: (2, 3, 4)
+   *                     [5, 6, 7, 8],
+   *                     [9, 8, 7, 6]],
+   *                    [[5, 4, 3, 2],
+   *                     [1, 2, 3, 4],
+   *                     [5, 6, 7, 8]]])
+   *
+   *  # A main diagonal from each batch.
+   *  tf.matrix_diag_part(input) ==> [[1, 6, 7],  # Output shape: (2, 3)
+   *                                  [5, 2, 7]]
+   *
+   *  # A superdiagonal from each batch.
+   *  tf.matrix_diag_part(input, k = 1)
+   *    ==> [[2, 7, 6],  # Output shape: (2, 3)
+   *         [4, 3, 8]]
+   *
+   *  # A band from each batch.
+   *  tf.matrix_diag_part(input, k = (-1, 2))
+   *    ==> [[[0, 3, 8],  # Output shape: (2, 4, 3)
+   *          [2, 7, 6],
+   *          [1, 6, 7],
+   *          [5, 8, 0]],
+   *         [[0, 3, 4],
+   *          [4, 3, 8],
+   *          [5, 2, 7],
+   *          [1, 6, 0]]]
+   *
+   *  # LEFT_RIGHT alignment.
+   *  tf.matrix_diag_part(input, k = (-1, 2), align="LEFT_RIGHT")
+   *    ==> [[[3, 8, 0],  # Output shape: (2, 4, 3)
+   *          [2, 7, 6],
+   *          [1, 6, 7],
+   *          [0, 5, 8]],
+   *         [[3, 4, 0],
+   *          [4, 3, 8],
+   *          [5, 2, 7],
+   *          [0, 1, 6]]]
+   *
+   *  # max_diag_len can be shorter than the main diagonal.
+   *  tf.matrix_diag_part(input, k = (-2, -1))
+   *    ==> [[[5, 8],
+   *          [9, 0]],
+   *         [[1, 6],
+   *          [5, 0]]]
+   *
+   *  # padding_value = 9
+   *  tf.matrix_diag_part(input, k = (1, 3), padding_value = 9)
+   *    ==> [[[9, 9, 4],  # Output shape: (2, 3, 3)
+   *          [9, 3, 8],
+   *          [2, 7, 6]],
+   *         [[9, 9, 2],
+   *          [9, 3, 4],
+   *          [4, 3, 8]]]
+   *
+   *  }</pre>
+   *
+   * @param <T> data type for {@code diagonal()} output
+   * @param input Rank `r` tensor where `r >= 2`.
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   *  diagonal, and negative value means subdiagonals. `k` can be a single integer
+   *  (for a single diagonal) or a pair of integers specifying the low and high ends
+   *  of a matrix band. `k[0]` must not be larger than `k[1]`.
+   * @param paddingValue The value to fill the area outside the specified diagonal band with.
+   *  Default is 0.
+   * @param options carries optional attributes values
+   * @return a new instance of MatrixDiagPartV3
+   */
+  public <T extends TType> MatrixDiagPartV3<T> matrixDiagPartV3(Operand<T> input, Operand<TInt32> k,
+      Operand<T> paddingValue, MatrixDiagPartV3.Options... options) {
+    return MatrixDiagPartV3.create(scope, input, k, paddingValue, options);
+  }
+
+  /**
+   * Returns a batched diagonal tensor with given batched diagonal values.
+   *  <p>
+   *  Returns a tensor with the contents in `diagonal` as `k[0]`-th to `k[1]`-th
+   *  diagonals of a matrix, with everything else padded with `padding`. `num_rows`
+   *  and `num_cols` specify the dimension of the innermost matrix of the output. If
+   *  both are not specified, the op assumes the innermost matrix is square and infers
+   *  its size from `k` and the innermost dimension of `diagonal`. If only one of them
+   *  is specified, the op assumes the unspecified value is the smallest possible
+   *  based on other criteria.
+   *  <p>
+   *  Let `diagonal` have `r` dimensions `[I, J, ..., L, M, N]`. The output tensor has
+   *  rank `r+1` with shape `[I, J, ..., L, M, num_rows, num_cols]` when only one
+   *  diagonal is given (`k` is an integer or `k[0] == k[1]`). Otherwise, it has rank
+   *  `r` with shape `[I, J, ..., L, num_rows, num_cols]`.
+   *  <p>
+   *  The second innermost dimension of `diagonal` has double meaning.
+   *  When `k` is scalar or `k[0] == k[1]`, `M` is part of the batch size
+   *  [I, J, ..., M], and the output tensor is:
+   *  <pre>{@code
+   *  output[i, j, ..., l, m, n]
+   *    = diagonal[i, j, ..., l, n-max(d_upper, 0)] ; if n - m == d_upper
+   *      padding_value                             ; otherwise
+   *  }</pre>
+   *  Otherwise, `M` is treated as the number of diagonals for the matrix in the
+   *  same batch (`M = k[1]-k[0]+1`), and the output tensor is:
+   *  <pre>{@code
+   *  output[i, j, ..., l, m, n]
+   *    = diagonal[i, j, ..., l, diag_index, index_in_diag] ; if k[0] <= d <= k[1]
+   *      padding_value                                     ; otherwise
+   *  }</pre>
+   *  where `d = n - m`, `diag_index = [k] - d`, and
+   *  `index_in_diag = n - max(d, 0) + offset`.
+   *  <p>
+   *  `offset` is zero except when the alignment of the diagonal is to the right.
+   *  <pre>{@code
+   *  offset = max_diag_len - diag_len(d) ; if (`align` in {RIGHT_LEFT, RIGHT_RIGHT}
+   *                                             and `d >= 0`) or
+   *                                           (`align` in {LEFT_RIGHT, RIGHT_RIGHT}
+   *                                             and `d <= 0`)
+   *           0                          ; otherwise
+   *  }</pre>
+   *  where `diag_len(d) = min(cols - max(d, 0), rows + min(d, 0))`.
+   *  <p>
+   *  For example:
+   *  <pre>{@code
+   *  # The main diagonal.
+   *  diagonal = np.array([[1, 2, 3, 4],            # Input shape: (2, 4)
+   *                       [5, 6, 7, 8]])
+   *  tf.matrix_diag(diagonal) ==> [[[1, 0, 0, 0],  # Output shape: (2, 4, 4)
+   *                                 [0, 2, 0, 0],
+   *                                 [0, 0, 3, 0],
+   *                                 [0, 0, 0, 4]],
+   *                                [[5, 0, 0, 0],
+   *                                 [0, 6, 0, 0],
+   *                                 [0, 0, 7, 0],
+   *                                 [0, 0, 0, 8]]]
+   *
+   *  # A superdiagonal (per batch).
+   *  diagonal = np.array([[1, 2, 3],  # Input shape: (2, 3)
+   *                       [4, 5, 6]])
+   *  tf.matrix_diag(diagonal, k = 1)
+   *    ==> [[[0, 1, 0, 0],  # Output shape: (2, 4, 4)
+   *          [0, 0, 2, 0],
+   *          [0, 0, 0, 3],
+   *          [0, 0, 0, 0]],
+   *         [[0, 4, 0, 0],
+   *          [0, 0, 5, 0],
+   *          [0, 0, 0, 6],
+   *          [0, 0, 0, 0]]]
+   *
+   *  # A tridiagonal band (per batch).
+   *  diagonals = np.array([[[0, 8, 9],  # Input shape: (2, 2, 3)
+   *                         [1, 2, 3],
+   *                         [4, 5, 0]],
+   *                        [[0, 2, 3],
+   *                         [6, 7, 9],
+   *                         [9, 1, 0]]])
+   *  tf.matrix_diag(diagonals, k = (-1, 1))
+   *    ==> [[[1, 8, 0],  # Output shape: (2, 3, 3)
+   *          [4, 2, 9],
+   *          [0, 5, 3]],
+   *         [[6, 2, 0],
+   *          [9, 7, 3],
+   *          [0, 1, 9]]]
+   *
+   *  # LEFT_RIGHT alignment.
+   *  diagonals = np.array([[[8, 9, 0],  # Input shape: (2, 2, 3)
+   *                         [1, 2, 3],
+   *                         [0, 4, 5]],
+   *                        [[2, 3, 0],
+   *                         [6, 7, 9],
+   *                         [0, 9, 1]]])
+   *  tf.matrix_diag(diagonals, k = (-1, 1), align="LEFT_RIGHT")
+   *    ==> [[[1, 8, 0],  # Output shape: (2, 3, 3)
+   *          [4, 2, 9],
+   *          [0, 5, 3]],
+   *         [[6, 2, 0],
+   *          [9, 7, 3],
+   *          [0, 1, 9]]]
+   *
+   *  # Rectangular matrix.
+   *  diagonal = np.array([1, 2])  # Input shape: (2)
+   *  tf.matrix_diag(diagonal, k = -1, num_rows = 3, num_cols = 4)
+   *    ==> [[0, 0, 0, 0],  # Output shape: (3, 4)
+   *         [1, 0, 0, 0],
+   *         [0, 2, 0, 0]]
+   *
+   *  # Rectangular matrix with inferred num_cols and padding_value = 9.
+   *  tf.matrix_diag(diagonal, k = -1, num_rows = 3, padding_value = 9)
+   *    ==> [[9, 9],  # Output shape: (3, 2)
+   *         [1, 9],
+   *         [9, 2]]
+   *
+   *  }</pre>
+   *
+   * @param <T> data type for {@code output()} output
+   * @param diagonal Rank `r`, where `r >= 1`
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   *  diagonal, and negative value means subdiagonals. `k` can be a single integer
+   *  (for a single diagonal) or a pair of integers specifying the low and high ends
+   *  of a matrix band. `k[0]` must not be larger than `k[1]`.
+   * @param numRows The number of rows of the output matrix. If it is not provided, the op assumes
+   *  the output matrix is a square matrix and infers the matrix size from k and the
+   *  innermost dimension of `diagonal`.
+   * @param numCols The number of columns of the output matrix. If it is not provided, the op
+   *  assumes the output matrix is a square matrix and infers the matrix size from
+   *  k and the innermost dimension of `diagonal`.
+   * @param paddingValue The number to fill the area outside the specified diagonal band with.
+   *  Default is 0.
+   * @param options carries optional attributes values
+   * @return a new instance of MatrixDiagV3
+   */
+  public <T extends TType> MatrixDiagV3<T> matrixDiagV3(Operand<T> diagonal, Operand<TInt32> k,
+      Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue,
+      MatrixDiagV3.Options... options) {
+    return MatrixDiagV3.create(scope, diagonal, k, numRows, numCols, paddingValue, options);
+  }
+
+  /**
+   * Returns a batched matrix tensor with new batched diagonal values.
+   *  <p>
+   *  Given `input` and `diagonal`, this operation returns a tensor with the
+   *  same shape and values as `input`, except for the specified diagonals of the
+   *  innermost matrices. These will be overwritten by the values in `diagonal`.
+   *  <p>
+   *  `input` has `r+1` dimensions `[I, J, ..., L, M, N]`. When `k` is scalar or
+   *  `k[0] == k[1]`, `diagonal` has `r` dimensions `[I, J, ..., L, max_diag_len]`.
+   *  Otherwise, it has `r+1` dimensions `[I, J, ..., L, num_diags, max_diag_len]`.
+   *  `num_diags` is the number of diagonals, `num_diags = k[1] - k[0] + 1`.
+   *  `max_diag_len` is the longest diagonal in the range `[k[0], k[1]]`,
+   *  `max_diag_len = min(M + min(k[1], 0), N + min(-k[0], 0))`
+   *  <p>
+   *  The output is a tensor of rank `k+1` with dimensions `[I, J, ..., L, M, N]`.
+   *  If `k` is scalar or `k[0] == k[1]`:
+   *  <pre>{@code
+   *  output[i, j, ..., l, m, n]
+   *    = diagonal[i, j, ..., l, n-max(k[1], 0)] ; if n - m == k[1]
+   *      input[i, j, ..., l, m, n]              ; otherwise
+   *  }</pre>
+   *  Otherwise,
+   *  <pre>{@code
+   *  output[i, j, ..., l, m, n]
+   *    = diagonal[i, j, ..., l, diag_index, index_in_diag] ; if k[0] <= d <= k[1]
+   *      input[i, j, ..., l, m, n]                         ; otherwise
+   *  }</pre>
+   *  where `d = n - m`, `diag_index = k[1] - d`, and
+   *  `index_in_diag = n - max(d, 0) + offset`.
+   *  <p>
+   *  `offset` is zero except when the alignment of the diagonal is to the right.
+   *  <pre>{@code
+   *  offset = max_diag_len - diag_len(d) ; if (`align` in {RIGHT_LEFT, RIGHT_RIGHT}
+   *                                             and `d >= 0`) or
+   *                                           (`align` in {LEFT_RIGHT, RIGHT_RIGHT}
+   *                                             and `d <= 0`)
+   *           0                          ; otherwise
+   *  }</pre>
+   *  where `diag_len(d) = min(cols - max(d, 0), rows + min(d, 0))`.
+   *  <p>
+   *  For example:
+   *  <pre>{@code
+   *  # The main diagonal.
+   *  input = np.array([[[7, 7, 7, 7],              # Input shape: (2, 3, 4)
+   *                     [7, 7, 7, 7],
+   *                     [7, 7, 7, 7]],
+   *                    [[7, 7, 7, 7],
+   *                     [7, 7, 7, 7],
+   *                     [7, 7, 7, 7]]])
+   *  diagonal = np.array([[1, 2, 3],               # Diagonal shape: (2, 3)
+   *                       [4, 5, 6]])
+   *  tf.matrix_set_diag(input, diagonal)
+   *    ==> [[[1, 7, 7, 7],  # Output shape: (2, 3, 4)
+   *          [7, 2, 7, 7],
+   *          [7, 7, 3, 7]],
+   *         [[4, 7, 7, 7],
+   *          [7, 5, 7, 7],
+   *          [7, 7, 6, 7]]]
+   *
+   *  # A superdiagonal (per batch).
+   *  tf.matrix_set_diag(input, diagonal, k = 1)
+   *    ==> [[[7, 1, 7, 7],  # Output shape: (2, 3, 4)
+   *          [7, 7, 2, 7],
+   *          [7, 7, 7, 3]],
+   *         [[7, 4, 7, 7],
+   *          [7, 7, 5, 7],
+   *          [7, 7, 7, 6]]]
+   *
+   *  # A band of diagonals.
+   *  diagonals = np.array([[[0, 9, 1],  # Diagonal shape: (2, 4, 3)
+   *                         [6, 5, 8],
+   *                         [1, 2, 3],
+   *                         [4, 5, 0]],
+   *                        [[0, 1, 2],
+   *                         [5, 6, 4],
+   *                         [6, 1, 2],
+   *                         [3, 4, 0]]])
+   *  tf.matrix_set_diag(input, diagonals, k = (-1, 2))
+   *    ==> [[[1, 6, 9, 7],  # Output shape: (2, 3, 4)
+   *          [4, 2, 5, 1],
+   *          [7, 5, 3, 8]],
+   *         [[6, 5, 1, 7],
+   *          [3, 1, 6, 2],
+   *          [7, 4, 2, 4]]]
+   *
+   *  # LEFT_RIGHT alignment.
+   *  diagonals = np.array([[[9, 1, 0],  # Diagonal shape: (2, 4, 3)
+   *                         [6, 5, 8],
+   *                         [1, 2, 3],
+   *                         [0, 4, 5]],
+   *                        [[1, 2, 0],
+   *                         [5, 6, 4],
+   *                         [6, 1, 2],
+   *                         [0, 3, 4]]])
+   *  tf.matrix_set_diag(input, diagonals, k = (-1, 2), align="LEFT_RIGHT")
+   *    ==> [[[1, 6, 9, 7],  # Output shape: (2, 3, 4)
+   *          [4, 2, 5, 1],
+   *          [7, 5, 3, 8]],
+   *         [[6, 5, 1, 7],
+   *          [3, 1, 6, 2],
+   *          [7, 4, 2, 4]]]
+   *
+   *  }</pre>
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input Rank `r+1`, where `r >= 1`.
+   * @param diagonal Rank `r` when `k` is an integer or `k[0] == k[1]`. Otherwise, it has rank `r+1`.
+   *  `k >= 1`.
+   * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+   *  diagonal, and negative value means subdiagonals. `k` can be a single integer
+   *  (for a single diagonal) or a pair of integers specifying the low and high ends
+   *  of a matrix band. `k[0]` must not be larger than `k[1]`.
+   * @param options carries optional attributes values
+   * @return a new instance of MatrixSetDiagV3
+   */
+  public <T extends TType> MatrixSetDiagV3<T> matrixSetDiagV3(Operand<T> input, Operand<T> diagonal,
+      Operand<TInt32> k, MatrixSetDiagV3.Options... options) {
+    return MatrixSetDiagV3.create(scope, input, diagonal, k, options);
   }
 
   /**
@@ -6418,7 +6800,7 @@ public final class Ops {
    * Creates a Tensor by indexing into the TensorList.
    *  <p>
    *  Each row in the produced Tensor corresponds to the element in the TensorList
-   *  specified by the given index (see `tf.gather`).  
+   *  specified by the given index (see `tf.gather`).
    *  <p>
    *  input_handle: The input tensor list.
    *  indices: The indices used to index into the list.
@@ -6830,38 +7212,42 @@ public final class Ops {
    *  </div>
    *  <p>
    *  In Python, this scatter operation would look like this:
-   *  <pre>{@code
-   *      indices = tf.constant([[4], [3], [1], [7]])
-   *      updates = tf.constant([9, 10, 11, 12])
-   *      tensor = tf.ones([8], dtype=tf.int32)
-   *      updated = tf.tensor_scatter_nd_update(tensor, indices, updates)
-   *      print(updated)
-   *  }</pre>
-   *  The resulting tensor would look like this:
    *  <p>
-   *      [1, 11, 1, 10, 9, 1, 1, 12]
+   *      >>> indices = tf.constant([[4], [3], [1], [7]])
+   *      >>> updates = tf.constant([9, 10, 11, 12])
+   *      >>> tensor = tf.ones([8], dtype=tf.int32)
+   *      >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates))
+   *      tf.Tensor([ 1 11  1 10  9  1  1 12], shape=(8,), dtype=int32)
    *  <p>
    *  We can also, insert entire slices of a higher rank tensor all at once. For
    *  example, if we wanted to insert two slices in the first dimension of a
    *  rank-3 tensor with two matrices of new values.
    *  <p>
    *  In Python, this scatter operation would look like this:
-   *  <pre>{@code
-   *      indices = tf.constant([[0], [2]])
-   *      updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
-   *                              [7, 7, 7, 7], [8, 8, 8, 8]],
-   *                             [[5, 5, 5, 5], [6, 6, 6, 6],
-   *                              [7, 7, 7, 7], [8, 8, 8, 8]]])
-   *      tensor = tf.ones([4, 4, 4],dtype=tf.int32)
-   *      updated = tf.tensor_scatter_nd_update(tensor, indices, updates)
-   *      print(updated)
-   *  }</pre>
-   *  The resulting tensor would look like this:
    *  <p>
-   *      [[[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
-   *       [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
-   *       [[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
-   *       [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]]
+   *      >>> indices = tf.constant([[0], [2]])
+   *      >>> updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
+   *      ...                         [7, 7, 7, 7], [8, 8, 8, 8]],
+   *      ...                        [[5, 5, 5, 5], [6, 6, 6, 6],
+   *      ...                         [7, 7, 7, 7], [8, 8, 8, 8]]])
+   *      >>> tensor = tf.ones([4, 4, 4], dtype=tf.int32)
+   *      >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates).numpy())
+   *      [[[5 5 5 5]
+   *        [6 6 6 6]
+   *        [7 7 7 7]
+   *        [8 8 8 8]]
+   *       [[1 1 1 1]
+   *        [1 1 1 1]
+   *        [1 1 1 1]
+   *        [1 1 1 1]]
+   *       [[5 5 5 5]
+   *        [6 6 6 6]
+   *        [7 7 7 7]
+   *        [8 8 8 8]]
+   *       [[1 1 1 1]
+   *        [1 1 1 1]
+   *        [1 1 1 1]
+   *        [1 1 1 1]]]
    *  <p>
    *  Note that on CPU, if an out of bound index is found, an error is returned.
    *  On GPU, if an out of bound index is found, the index is ignored.
@@ -7550,6 +7936,18 @@ public final class Ops {
    */
   public <T extends TType> Where where(Operand<T> condition) {
     return Where.create(scope, condition);
+  }
+
+  /**
+   * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
+   *
+   * @param <T> data type for {@code z()} output
+   * @param x
+   * @param y
+   * @return a new instance of Xlog1py
+   */
+  public <T extends TType> Xlog1py<T> xlog1py(Operand<T> x, Operand<T> y) {
+    return Xlog1py.create(scope, x, y);
   }
 
   /**

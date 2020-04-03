@@ -44,9 +44,9 @@ import org.tensorflow.types.family.TType;
  * for dtype in dtype_list:
  *   lhs = tf.constant([-1, -5, -3, -14], dtype=dtype)
  *   rhs = tf.constant([5, 0, 7, 11], dtype=dtype)
- *   
+ * 
  *   left_shift_result = bitwise_ops.left_shift(lhs, rhs)
- *   
+ * 
  *   print(left_shift_result)
  * 
  * # This will print:

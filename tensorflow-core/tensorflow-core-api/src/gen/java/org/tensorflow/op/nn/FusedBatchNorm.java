@@ -54,6 +54,14 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     }
     
     /**
+     * @param exponentialAvgFactor 
+     */
+    public Options exponentialAvgFactor(Float exponentialAvgFactor) {
+      this.exponentialAvgFactor = exponentialAvgFactor;
+      return this;
+    }
+    
+    /**
      * @param dataFormat The data format for x and y. Either "NHWC" (default) or "NCHW".
      */
     public Options dataFormat(String dataFormat) {
@@ -71,6 +79,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     }
     
     private Float epsilon;
+    private Float exponentialAvgFactor;
     private String dataFormat;
     private Boolean isTraining;
     
@@ -106,6 +115,9 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
         if (opts.epsilon != null) {
           opBuilder.setAttr("epsilon", opts.epsilon);
         }
+        if (opts.exponentialAvgFactor != null) {
+          opBuilder.setAttr("exponential_avg_factor", opts.exponentialAvgFactor);
+        }
         if (opts.dataFormat != null) {
           opBuilder.setAttr("data_format", opts.dataFormat);
         }
@@ -122,6 +134,13 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
    */
   public static Options epsilon(Float epsilon) {
     return new Options().epsilon(epsilon);
+  }
+  
+  /**
+   * @param exponentialAvgFactor 
+   */
+  public static Options exponentialAvgFactor(Float exponentialAvgFactor) {
+    return new Options().exponentialAvgFactor(exponentialAvgFactor);
   }
   
   /**

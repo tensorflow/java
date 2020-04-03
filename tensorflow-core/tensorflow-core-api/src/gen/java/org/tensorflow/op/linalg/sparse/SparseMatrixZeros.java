@@ -32,7 +32,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates an all-zeros CSRSparseMatrix with shape `dense_shape`.
  */
-@Operator(group = "linalg.sparse")
 public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
   
   /**

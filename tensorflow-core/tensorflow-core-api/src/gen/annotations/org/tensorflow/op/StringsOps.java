@@ -60,6 +60,12 @@ public final class StringsOps {
    * Joins the strings in the given list of string tensors into one tensor;
    *  <p>
    *  with the given separator (default is an empty separator).
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> s = ["hello", "world", "tensorflow"]
+   *  >>> tf.strings.join(s, " ")
+   *  <tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'>
    *
    * @param inputs A list of string tensors.  The tensors must all have the same shape,
    *  or be scalars.  Scalars may be mixed in; these will be broadcast to the shape
@@ -72,6 +78,12 @@ public final class StringsOps {
   }
 
   /**
+   * Converts all uppercase characters into their respective lowercase replacements.
+   *  <p>
+   *  Example:
+   *  <p>
+   *  >>> tf.strings.lower("CamelCase string and ALL CAPS")
+   *  <tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'>
    *
    * @param input
    * @param options carries optional attributes values
@@ -128,6 +140,13 @@ public final class StringsOps {
    *  if the input matches the regex pattern provided.
    *  <p>
    *  The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.regex_full_match(["TF lib", "lib TF"], ".*lib$")
+   *  <tf.Tensor: shape=(2,), dtype=bool, numpy=array([ True, False])>
+   *  >>> tf.strings.regex_full_match(["TF lib", "lib TF"], ".*TF$")
+   *  <tf.Tensor: shape=(2,), dtype=bool, numpy=array([False,  True])>
    *
    * @param input A string tensor of the text to be processed.
    * @param pattern A scalar string tensor containing the regular expression to match the input.
@@ -172,8 +191,14 @@ public final class StringsOps {
    * String lengths of `input`.
    *  <p>
    *  Computes the length of each string given in the input tensor.
+   *  <p>
+   *  >>> strings = tf.constant(['Hello','TensorFlow', '\U0001F642'])
+   *  >>> tf.strings.length(strings).numpy() # default counts bytes
+   *  array([ 5, 10, 4], dtype=int32)
+   *  >>> tf.strings.length(strings, unit="UTF8_CHAR").numpy()
+   *  array([ 5, 10, 1], dtype=int32)
    *
-   * @param input The string for which to compute the length.
+   * @param input The strings for which to compute the length for each element.
    * @param options carries optional attributes values
    * @return a new instance of StringLength
    */
@@ -329,6 +354,12 @@ public final class StringsOps {
    *
    *  output = [b'hir', b'ee', b'n']
    *  }</pre>
+   *  Raises:
+   *  <p>
+   * `ValueError`: If the first argument cannot be converted to a
+   *       Tensor of `dtype string`.
+   * `InvalidArgumentError`: If indicies are out of range.
+   * `ValueError`: If `pos` and `len` are not the same shape.
    *
    * @param input Tensor of strings
    * @param pos Scalar defining the position of first character in each substring
@@ -368,6 +399,11 @@ public final class StringsOps {
    *  unimportant. There is a risk of adversaries constructing inputs that all hash
    *  to the same bucket. To prevent this problem, use a strong hash function with
    *  `tf.string_to_hash_bucket_strong`.
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.to_hash_bucket_fast(["Hello", "TensorFlow", "2.x"], 3).numpy()
+   *  array([0, 2, 2])
    *
    * @param input The strings to assign a hash bucket.
    * @param numBuckets The number of buckets.
@@ -393,6 +429,11 @@ public final class StringsOps {
    *  <p>
    *  The additional robustness comes at a cost of roughly 4x higher compute
    *  time than `tf.string_to_hash_bucket_fast`.
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.to_hash_bucket_strong(["Hello", "TF"], 3, [1, 2]).numpy()
+   *  array([2, 0])
    *
    * @param input The strings to assign a hash bucket.
    * @param numBuckets The number of buckets.
@@ -410,6 +451,12 @@ public final class StringsOps {
    *  <p>
    *  (Note that int32 overflow results in an error while float overflow
    *  results in a rounded value.)
+   *  <p>
+   *  Example:
+   *  <p>
+   *  >>> strings = ["5.0", "3.0", "7.0"]
+   *  >>> tf.strings.to_number(strings)
+   *  <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
    *
    * @param <T> data type for {@code output()} output
    * @param stringTensor
@@ -424,6 +471,12 @@ public final class StringsOps {
    *  <p>
    *  (Note that int32 overflow results in an error while float overflow
    *  results in a rounded value.)
+   *  <p>
+   *  Example:
+   *  <p>
+   *  >>> strings = ["5.0", "3.0", "7.0"]
+   *  >>> tf.strings.to_number(strings)
+   *  <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
    *
    * @param <T> data type for {@code output()} output
    * @param stringTensor
@@ -443,6 +496,11 @@ public final class StringsOps {
    *  Unicode (ICU) UScriptCode values. See http://icu-project.org/apiref/icu4c/uscript_8h.html.
    *  Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
    *  match input shape.
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.unicode_script([1, 31, 38])
+   *  <tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)>
    *
    * @param input A Tensor of int32 Unicode code points.
    * @return a new instance of UnicodeScript
@@ -478,6 +536,16 @@ public final class StringsOps {
    *  transcoding is faithful to all codepoints in the source. If it is not marked
    *  with an explicit endianness, the BOM is not considered part of the string itself
    *  but as metadata, and so is not preserved in the output.
+   *  <p>
+   *  Examples:
+   *  <p>
+   *  >>> tf.strings.unicode_transcode(["Hello", "TensorFlow", "2.x"], "UTF-8", "UTF-16-BE")
+   *  <tf.Tensor: shape=(3,), dtype=string, numpy=
+   *  array([b'\x00H\x00e\x00l\x00l\x00o',
+   *         b'\x00T\x00e\x00n\x00s\x00o\x00r\x00F\x00l\x00o\x00w',
+   *         b'\x002\x00.\x00x'], dtype=object)>
+   *  >>> tf.strings.unicode_transcode(["A", "B", "C"], "US ASCII", "UTF-8").numpy()
+   *  array([b'A', b'B', b'C'], dtype=object)
    *
    * @param input The text to be processed. Can have any shape.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
@@ -535,6 +603,12 @@ public final class StringsOps {
   }
 
   /**
+   * Converts all lowercase characters into their respective uppercase replacements.
+   *  <p>
+   *  Example:
+   *  <p>
+   *  >>> tf.strings.upper("CamelCase string and ALL CAPS")
+   *  <tf.Tensor: shape=(), dtype=string, numpy=b'CAMELCASE STRING AND ALL CAPS'>
    *
    * @param input
    * @param options carries optional attributes values

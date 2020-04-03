@@ -340,8 +340,8 @@ public final class TrainOps {
    * @param linear Should be from a Variable().
    * @param grad The gradient.
    * @param lr Scaling factor. Must be a scalar.
-   * @param l1 L1 regulariation. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l1 L1 regularization. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values
@@ -369,9 +369,9 @@ public final class TrainOps {
   }
 
   /**
-   * Update '*var' according to the momentum scheme. Set use_nesterov = True if you
+   * Update '*var' according to the momentum scheme.
    *  <p>
-   *  want to use Nesterov momentum.
+   *  Set use_nesterov = True if you want to use Nesterov momentum.
    *  <p>
    *  accum = accum * momentum + grad
    *  var -= lr * accum
@@ -702,10 +702,10 @@ public final class TrainOps {
   /**
    * Update '*var' according to the Adam algorithm.
    *  <p>
-   *  $$lr_t := \text{learning\_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
-   *  $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
-   *  $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
-   *  $$variable := variable - lr_t * m_t / (\sqrt{v_t} + \epsilon)$$
+   *  $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+   *  $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+   *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
+   *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{v_t} + \epsilon)$$
    *
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -729,11 +729,11 @@ public final class TrainOps {
   /**
    * Update '*var' according to the Adam algorithm.
    *  <p>
-   *  $$lr_t := \text{learning\_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
-   *  $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
-   *  $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
-   *  $$vhat_t := max{vhat_{t-1}, v_t}$$
-   *  $$variable := variable - lr_t * m_t / (\sqrt{vhat_t} + \epsilon)$$
+   *  $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+   *  $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+   *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
+   *  $$\hat{v}_t := max{\hat{v}_{t-1}, v_t}$$
+   *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{\hat{v}_t} + \epsilon)$$
    *
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -836,8 +836,8 @@ public final class TrainOps {
    * @param linear Should be from a Variable().
    * @param grad The gradient.
    * @param lr Scaling factor. Must be a scalar.
-   * @param l1 L1 regulariation. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l1 L1 regularization. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values
@@ -864,9 +864,9 @@ public final class TrainOps {
   }
 
   /**
-   * Update '*var' according to the momentum scheme. Set use_nesterov = True if you
+   * Update '*var' according to the momentum scheme.
    *  <p>
-   *  want to use Nesterov momentum.
+   *  Set use_nesterov = True if you want to use Nesterov momentum.
    *  <p>
    *  accum = accum * momentum - lr * grad
    *  var += accum
@@ -1126,7 +1126,7 @@ public final class TrainOps {
    * @param indices A vector of indices into the first dimension of var and accum.
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values
@@ -1521,7 +1521,7 @@ public final class TrainOps {
    * @param indices A vector of indices into the first dimension of var and accum.
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
-   * @param l2 L2 shrinkage regulariation. Must be a scalar.
+   * @param l2 L2 shrinkage regularization. Must be a scalar.
    * @param l2Shrinkage
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attributes values
