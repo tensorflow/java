@@ -445,8 +445,8 @@ public final class Session implements AutoCloseable {
   public void run(String opName) {
     Operation operation = graph.operation(opName);
     if (operation == null) {
-      throw new IllegalArgumentException("Initializer operation named '"
-          + opName + "' cannot be found in the graph");
+      throw new IllegalArgumentException("Operation named '" + opName
+          + "' cannot be found in the graph");
     }
     runner().addTarget(operation).run();
   }
