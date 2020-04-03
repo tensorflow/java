@@ -31,7 +31,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
-import com.squareup.javapoet.WildcardTypeName;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -425,7 +424,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static TypeSpec buildGroupClass(OpsSpec spec) {
-    System.out.println("Generating " + spec.className + " class");
+    //System.out.println("Generating " + spec.className + " class");
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
@@ -454,7 +453,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static TypeSpec buildTopClass(OpsSpec spec) {
-    System.out.println("Generating " + spec.className + " class");
+    //System.out.println("Generating " + spec.className + " class");
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
