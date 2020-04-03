@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
@@ -173,31 +172,9 @@ public class SessionTest {
       tf.initAdd(tf.assign(var1, tf.constant(10)));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
-      tf.init();
 
       try (Session s = new Session(g)) {
-        s.runInit();
-
-        try (Tensor<TInt32> t = s.runner().fetch(add).run().get(0).expect(TInt32.DTYPE)) {
-          assertEquals(30, t.data().getInt());
-        }
-      }
-    }
-  }
-
-  @Test
-  public void runInitByVar() {
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.DTYPE);
-      tf.initAdd(tf.assign(var1, tf.constant(10)));
-      Variable<TInt32> var2 = tf.variable(tf.constant(20));
-      Add<TInt32> add = tf.math.add(var1, var2);
-      Init init = tf.withName("initialize").init();
-
-      try (Session s = new Session(g)) {
-        s.runInit(init);
+        s.run(tf.init());
 
         try (Tensor<TInt32> t = s.runner().fetch(add).run().get(0).expect(TInt32.DTYPE)) {
           assertEquals(30, t.data().getInt());
@@ -218,13 +195,13 @@ public class SessionTest {
       tf.withName("init_test").init();
 
       try (Session s = new Session(g)) {
-        s.runInit("init_test");
+        s.run("init_test");
 
         try (Tensor<TInt32> t = s.runner().fetch(add).run().get(0).expect(TInt32.DTYPE)) {
           assertEquals(30, t.data().getInt());
         }
         try {
-          s.runInit("wrong_name");
+          s.run("wrong_name");
           fail();
         } catch (IllegalArgumentException e) {
           // as expected
