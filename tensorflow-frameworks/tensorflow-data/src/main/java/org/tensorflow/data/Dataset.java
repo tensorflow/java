@@ -4,13 +4,8 @@ import org.tensorflow.*;
 import org.tensorflow.data.impl.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.data.AnonymousIterator;
-import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.types.TInt32;
 
-import javax.xml.crypto.Data;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +44,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
         List<Shape> batchOutputShapes = getOutputShapes().stream()
                 .map(s -> Shape.of(Utils.array(batchSize, s.asArray())))
                 .collect(Collectors.toList());
+
+
         return new BatchDataset(tf, this.getVariant(), tf.constant(batchSize),
                 tf.constant(dropLastBatch), this.getOutputTypes(), batchOutputShapes);
     }
@@ -65,7 +62,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     }
 
     /**
-     * Creates new `Dataset` skips `count` initial elements from this dataset
+     * Returns a new `Dataset` which skips `count` initial elements from this
+     * dataset
      *
      * @param count The number of elements to `skip` to form the new dataset.
      * @return A new Dataset with `count` elements removed.
@@ -75,7 +73,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     }
 
     /**
-     * Creates new `Dataset` with the first `count` elements from this dataset.
+     * Returns a new `Dataset` with only the first `count` elements from this
+     * dataset.
      *
      * @param count The number of elements to "take" from this dataset.
      * @return A new Dataset containing the first `count` elements from this dataset.
@@ -128,33 +127,63 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
     }
 
     /**
-     * Return the necessary components to iterate through batches of this
-     * dataset in Graph mode.
-     * <p>
-     * This method returns a Pair whose first element is a MakeIterator operation
-     * that must be run first in its own session to create the iterator internally.
-     * <p>
-     * The second element in the pair is a list of Output objects. In sequential
-     * calls to session.run() in which these (or child) nodes are fetched, the batches
-     * are already loaded into these objects.
+     * Creates a `DatasetIterator` that can be used to iterate
+     * over elements of this dataset.
      *
-     * @return A Pair whose first element is a MakeIterator Operation, and whose
-     * second element is a list batch components.
+     * This iterator will have to be initialized with a call
+     * to `iterator.makeInitializer(Dataset)` before elements
+     * can be retreived in a loop.
+     *
+     * @return A new `DatasetIterator` based on this dataset's structure.
      */
-    public DatasetIterator makeIterator() {
+    public DatasetIterator makeInitializeableIterator() {
         return DatasetIterator
-                .fromStructure(tf, outputShapes, outputTypes);
+                .fromStructure(tf, outputTypes, outputShapes);
     }
 
+    /**
+     * Creates a `DatasetIterator` that can be used to iterate over
+     * elements of this dataset. Using `makeOneShotIterator` ensures
+     * that the iterator is
+     * automatically initialized on this dataset.
+     *skips
+     * In graph mode, the initializer op will be added to the Graph's
+     * intitializer list, which must be run via `tf.init()`:
+     *
+     * Ex:
+     * <pre>
+     *     try (Session session = new Session(graph) {
+     *         // Immediately run initializers
+     *         session.run(tf.init());
+     *     }
+     * </pre>
+     *
+     * In eager mode, the initializer will be run automatically as a result
+     * of this call.
+     *
+     * @return A new `DatasetIterator` based on this dataset's structure.
+     */
     public DatasetIterator makeOneShotIterator() {
-        DatasetIterator iterator = makeIterator();
+        DatasetIterator iterator = makeInitializeableIterator();
         Op initializer = iterator.makeInitializer(this);
         if (tf.scope().env() instanceof Graph) tf.initAdd(initializer);
         return iterator;
     }
 
-    public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> slices, List<DataType<?>> outputTypes) {
-        return new TensorSliceDataset(tf, slices, outputTypes);
+    /**
+     * Creates an in-memory `Dataset` whose elements are slices of the given
+     * tensors. Each element of this dataset will be a List<Output<?>>,
+     * representing slices (e.g. batches) of the provided tensors.
+     *
+     * @param tf Ops Accessor
+     * @param tensors A list of Operand<?> representing components of this
+     *                dataset (e.g. features, labels)
+     * @param outputTypes A list of `DataType` objects representing the data
+     *                    type of each component of this dataset.
+     * @return A new `Dataset`
+     */
+    public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> tensors, List<DataType<?>> outputTypes) {
+        return new TensorSliceDataset(tf, tensors, outputTypes);
     }
 
     /**
