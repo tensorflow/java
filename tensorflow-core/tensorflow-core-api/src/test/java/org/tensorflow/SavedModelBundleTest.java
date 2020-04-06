@@ -24,6 +24,8 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.framework.ConfigProto;
+import org.tensorflow.framework.RunOptions;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
 @RunWith(JUnit4.class)
@@ -72,44 +74,16 @@ public class SavedModelBundleTest {
     }
   }
 
-  private static byte[] sillyRunOptions() {
-    // Ideally this would use the generated Java sources for protocol buffers
-    // and end up with something like the snippet below. However, generating
-    // the Java files for the .proto files in tensorflow/core:protos_all is
-    // a bit cumbersome in bazel until the proto_library rule is setup.
-    //
-    // See https://github.com/bazelbuild/bazel/issues/52#issuecomment-194341866
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251515362
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251692558
-    //
-    // For this test, for now, the use of specific bytes suffices.
-    return new byte[] {0x08, 0x03};
-    /*
-    return org.tensorflow.framework.RunOptions.newBuilder()
+  private static RunOptions sillyRunOptions() {
+    return RunOptions.newBuilder()
         .setTraceLevel(RunOptions.TraceLevel.FULL_TRACE)
-        .build()
-        .toByteArray();
-    */
+        .build();
   }
 
-  public static byte[] sillyConfigProto() {
-    // Ideally this would use the generated Java sources for protocol buffers
-    // and end up with something like the snippet below. However, generating
-    // the Java files for the .proto files in tensorflow/core:protos_all is
-    // a bit cumbersome in bazel until the proto_library rule is setup.
-    //
-    // See https://github.com/bazelbuild/bazel/issues/52#issuecomment-194341866
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251515362
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251692558
-    //
-    // For this test, for now, the use of specific bytes suffices.
-    return new byte[] {0x10, 0x01, 0x28, 0x01};
-    /*
-    return org.tensorflow.framework.ConfigProto.newBuilder()
+  public static ConfigProto sillyConfigProto() {
+    return ConfigProto.newBuilder()
         .setInterOpParallelismThreads(1)
         .setIntraOpParallelismThreads(1)
-        .build()
-        .toByteArray();
-     */
+        .build();
   }
 }

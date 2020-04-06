@@ -1,4 +1,4 @@
 op {
   graph_op_name: "DebugNumericSummary"
-  visibility: HIDDEN
+  visibility: SKIP
 }

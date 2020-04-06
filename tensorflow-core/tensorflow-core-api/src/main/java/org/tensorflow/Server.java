@@ -23,6 +23,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_ServerStop;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.distruntime.ServerDef;
 import org.tensorflow.internal.c_api.TF_Server;
 import org.tensorflow.internal.c_api.TF_Status;
 
@@ -64,7 +65,7 @@ import org.tensorflow.internal.c_api.TF_Status;
  *   .setProtocol("grpc")
  * .build();
  *
- * try (Server srv = new Server(serverDef.toByteArray())) {
+ * try (Server srv = new Server(serverDef)) {
  *   srv.start();
  *   srv.join();
  * }
@@ -74,11 +75,11 @@ public final class Server implements AutoCloseable {
   /**
    * Constructs a new instance of server.
    *
-   * @param serverDef Server definition specified as a serialized <a
+   * @param serverDef Server definition specified as a <a
    *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/tensorflow_server.proto">ServerDef</a>
    *     protocol buffer.
    */
-  public Server(byte[] serverDef) {
+  public Server(ServerDef serverDef) {
     nativeHandle = allocate(serverDef);
   }
 
@@ -130,10 +131,11 @@ public final class Server implements AutoCloseable {
     }
   }
 
-  private static TF_Server allocate(byte[] serverDef) {
+  private static TF_Server allocate(ServerDef serverDef) {
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Server server = TF_NewServer(new BytePointer(serverDef), serverDef.length, status);
+      BytePointer serverDefBytes = new BytePointer(serverDef.toByteArray());
+      TF_Server server = TF_NewServer(serverDefBytes, serverDefBytes.capacity(), status);
       status.throwExceptionIfNotOK();
       return server;
     }

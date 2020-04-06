@@ -2,6 +2,9 @@ workspace(name = "tensorflow_core_api")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# TensorFlow archive
+# Note: Make sure to synchronize Maven dependencies inherited from TensorFlow binaries when updating
+# the version of this archive (e.g. google protobuf)
 http_archive(
     name = "org_tensorflow",
     patches = [

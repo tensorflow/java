@@ -15,6 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -22,6 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.framework.OpList;
 
 /** Unit tests for {@link org.tensorflow.TensorFlow}. */
 @RunWith(JUnit4.class)
@@ -33,10 +36,7 @@ public class TensorFlowTest {
 
   @Test
   public void registeredOpList() {
-    // Would be nice to actually parse the output as a tensorflow.OpList protocol buffer message,
-    // but as of May 2017, bazel support for generating Java code from protocol buffer definitions
-    // was not sorted out. Revisit? Till then, at least exercise the code.
-    assertTrue(TensorFlow.registeredOpList().length > 0);
+    assertNotNull(TensorFlow.registeredOpList());
   }
 
   @Ignore // FIXME This test requires to build native test sources
@@ -54,8 +54,10 @@ public class TensorFlowTest {
       }
 
       // Load the library containing the operation.
-      byte[] opList = TensorFlow.loadLibrary("tensorflow/java/my_test_op.so");
-      assertTrue(opList.length > 0);
+      OpList opList = TensorFlow.loadLibrary("tensorflow/java/my_test_op.so");
+      assertNotNull(opList);
+      assertEquals(1, opList.getOpCount());
+      assertTrue(opList.getOpList().get(0).getName() == "MyTest");
 
       // Now graph building should succeed.
       g.opBuilder("MyTest", "MyTest").build();

@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.framework.GraphDef;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.types.TFloat32;
@@ -37,7 +38,7 @@ public class GraphTest {
 
   @Test
   public void graphDefRoundTrip() {
-    byte[] graphDef;
+    GraphDef graphDef;
     // Create a graph for A * X + B
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
@@ -118,12 +119,6 @@ public class GraphTest {
     try (Graph g = new Graph()) {
       try {
         g.importGraphDef(null);
-      } catch (IllegalArgumentException e) {
-        // expected exception.
-      }
-
-      try {
-        g.importGraphDef(new byte[] {1});
       } catch (IllegalArgumentException e) {
         // expected exception.
       }
