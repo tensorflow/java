@@ -1,6 +1,4 @@
 op {
   graph_op_name: "CheckNumerics"
-  endpoint {
-    name: "debugging.CheckNumerics"
-  }
+  visibility: SKIP
 }

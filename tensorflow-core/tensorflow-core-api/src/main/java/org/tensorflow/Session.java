@@ -22,12 +22,16 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.framework.ConfigProto;
+import org.tensorflow.framework.RunMetadata;
+import org.tensorflow.framework.RunOptions;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Operation;
@@ -37,7 +41,6 @@ import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.core.Init;
 
 /**
  * Driver for {@link Graph} execution.
@@ -70,25 +73,24 @@ public final class Session implements AutoCloseable {
 
   /** Construct a new session with the associated {@link Graph}. */
   public Session(Graph g) {
-    this(g, (byte[])null);
+    this(g, (ConfigProto)null);
   }
 
   /**
    * Construct a new session with the associated {@link Graph} and configuration options.
    *
    * @param g The {@link Graph} the created Session will operate on.
-   * @param config Configuration parameters for the session specified as a serialized <a
+   * @param config Configuration parameters for the session specified as a <a
    *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
    *     protocol buffer.
    * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
    *     protocol buffer.
    */
-  public Session(Graph g, byte[] config) {
+  public Session(Graph g, ConfigProto config) {
     graph = g;
     Graph.Reference r = g.ref();
     try {
-      nativeHandle =
-          (config == null) ? allocate(r.nativeHandle()) : allocate2(r.nativeHandle(), null, config);
+      nativeHandle = allocate(r.nativeHandle(), null, config);
       graphRef = g.ref();
     } finally {
       r.close();
@@ -260,9 +262,9 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * (Experimental method): set options (typically for debugging) for this run.
+     * Set options (typically for debugging) for this run.
      *
-     * <p>The options are presented as a serialized <a
+     * <p>The options are presented as a <a
      * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
      * protocol buffer</a>.
      *
@@ -273,7 +275,7 @@ public final class Session implements AutoCloseable {
      * choice is under review and this function may be replaced by more type-safe equivalents at any
      * time.
      */
-    public Runner setOptions(byte[] options) {
+    public Runner setOptions(RunOptions options) {
       this.runOptions = options;
       return this;
     }
@@ -301,7 +303,7 @@ public final class Session implements AutoCloseable {
      * Execute graph fragments to compute requested fetches and return metadata about the run.
      *
      * <p>This is exactly like {@link #run()}, but in addition to the requested Tensors, also
-     * returns metadata about the graph execution in the form of a serialized <a
+     * returns metadata about the graph execution in the form of a <a
      * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
      * protocol buffer</a>.
      */
@@ -341,7 +343,7 @@ public final class Session implements AutoCloseable {
         targetOpHandles[idx++] = op.getUnsafeNativeHandle();
       }
       Reference runRef = new Reference();
-      byte[] metadata = null;
+      RunMetadata metadata = null;
       try {
         metadata =
             Session.run(
@@ -426,7 +428,7 @@ public final class Session implements AutoCloseable {
     private ArrayList<Tensor<?>> inputTensors = new ArrayList<>();
     private ArrayList<Output<?>> outputs = new ArrayList<>();
     private ArrayList<GraphOperation> targets = new ArrayList<>();
-    private byte[] runOptions = null;
+    private RunOptions runOptions = null;
   }
 
   /** Create a Runner to execute graph operations and evaluate Tensors. */
@@ -472,9 +474,9 @@ public final class Session implements AutoCloseable {
     public List<Tensor<?>> outputs;
 
     /**
-     * (Experimental): Metadata about the run.
+     * Metadata about the run.
      *
-     * <p>A serialized <a
+     * <p>A <a
      * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
      * protocol buffer</a>. The org.tensorflow package is free of any protocol buffer dependencies
      * in order to remain friendly to resource constrained systems (where something like <a
@@ -482,7 +484,7 @@ public final class Session implements AutoCloseable {
      * be more appropriate). A cost of that is this opaque blob. This choice is under review and
      * this field may be replaced by more type-safe equivalents at any time.
      */
-    public byte[] metadata;
+    public RunMetadata metadata;
   }
 
   private final Graph graph;
@@ -510,21 +512,16 @@ public final class Session implements AutoCloseable {
     }
   }
 
-  // TODO(ashankar): Remove after TensorFlow 1.2 has been released with allocate2().
-  private static TF_Session allocate(TF_Graph graphHandle) {
-    return allocate2(graphHandle, null, null);
-  }
-
-  private static TF_Session allocate2(TF_Graph graphHandle, String target, byte[] config) {
+  private static TF_Session allocate(TF_Graph graphHandle, String target, ConfigProto config) {
     if (graphHandle == null || graphHandle.isNull()) {
       throw new IllegalStateException("Graph has been close()d");
     }
-
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_SessionOptions opts = TF_SessionOptions.newSessionOptions();
-      if (config != null && config.length > 0) {
-        TF_SetConfig(opts, new BytePointer(config), config.length, status);
+      if (config != null) {
+        BytePointer configBytes = new BytePointer(config.toByteArray());
+        TF_SetConfig(opts, configBytes, configBytes.capacity(), status);
         status.throwExceptionIfNotOK();
       }
 
@@ -554,7 +551,7 @@ public final class Session implements AutoCloseable {
    * take solace in the fact that this is a private method meant to cross the JNI boundary.
    *
    * @param handle to the C API TF_Session object (Session.nativeHandle)
-   * @param runOptions serialized representation of a RunOptions protocol buffer, or null
+   * @param runOptions A RunOptions protocol buffer, or null
    * @param inputOpHandles (see inputOpIndices)
    * @param inputOpIndices (see inputTensorHandles)
    * @param inputTensorHandles together with inputOpHandles and inputOpIndices specifies the values
@@ -571,12 +568,11 @@ public final class Session implements AutoCloseable {
    * @param wantRunMetadata indicates whether metadata about this execution should be returned.
    * @param outputTensorHandles will be filled in with handles to the outputs requested. It is
    *     required that outputTensorHandles.length == outputOpHandles.length.
-   * @return if wantRunMetadata is true, serialized representation of the RunMetadata protocol
-   *     buffer, false otherwise.
+   * @return if wantRunMetadata is true, a RunMetadata protocol buffer, false otherwise.
    */
-  private static byte[] run(
+  private static RunMetadata run(
       TF_Session handle,
-      byte[] runOptions,
+      RunOptions runOptions,
       TF_Tensor[] inputTensorHandles,
       TF_Operation[] inputOpHandles,
       int[] inputOpIndices,
@@ -615,8 +611,11 @@ public final class Session implements AutoCloseable {
       for (int i = 0; i < noutputs; ++i) {
         outputTensorHandles[i] = outputValues.get(TF_Tensor.class, i);
       }
-
-      return runMetadata != null ? runMetadata.get() : null;
+      try {
+        return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;
+      } catch (InvalidProtocolBufferException e) {
+        throw new TensorFlowException("Cannot parse RunMetadata protocol buffer", e);
+      }
     }
   }
 }

@@ -19,9 +19,13 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadSessionFrom
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.framework.ConfigProto;
+import org.tensorflow.framework.MetaGraphDef;
+import org.tensorflow.framework.RunOptions;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
@@ -33,9 +37,9 @@ import org.tensorflow.internal.c_api.TF_Status;
  *
  * <p>The model consists of a description of the computation (a {@link Graph}), a {@link Session}
  * with tensors (e.g., parameters or variables in the graph) initialized to values saved in storage,
- * and a description of the model (a serialized representation of a <a
+ * and a description of the model as a <a
  * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
- * protocol buffer</a>).
+ * protocol buffer</a>.
  */
 public class SavedModelBundle implements AutoCloseable {
   /** Options for loading a SavedModel. */
@@ -48,11 +52,11 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Sets options to use when executing model initialization operations.
      *
-     * @param options Serialized <a
+     * @param options A <a
      *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
      *     protocol buffer</a>.
      */
-    public Loader withRunOptions(byte[] options) {
+    public Loader withRunOptions(RunOptions options) {
       this.runOptions = options;
       return this;
     }
@@ -60,11 +64,11 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Set configuration of the <code>Session</code> object created when loading the model.
      *
-     * @param configProto Serialized <a
+     * @param configProto A <a
      *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto
      *     protocol buffer</a>.
      */
-    public Loader withConfigProto(byte[] configProto) {
+    public Loader withConfigProto(ConfigProto configProto) {
       this.configProto = configProto;
       return this;
     }
@@ -85,8 +89,8 @@ public class SavedModelBundle implements AutoCloseable {
 
     private String exportDir = null;
     private String[] tags = null;
-    private byte[] configProto = null;
-    private byte[] runOptions = null;
+    private ConfigProto configProto = null;
+    private RunOptions runOptions = null;
   }
 
   /**
@@ -121,11 +125,11 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
-   * Returns the serialized <a
+   * Returns the <a
    * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
    * protocol buffer</a> associated with the saved model.
    */
-  public byte[] metaGraphDef() {
+  public MetaGraphDef metaGraphDef() {
     return metaGraphDef;
   }
 
@@ -155,9 +159,9 @@ public class SavedModelBundle implements AutoCloseable {
 
   private final Graph graph;
   private final Session session;
-  private final byte[] metaGraphDef;
+  private final MetaGraphDef metaGraphDef;
 
-  private SavedModelBundle(Graph graph, Session session, byte[] metaGraphDef) {
+  private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
@@ -165,19 +169,19 @@ public class SavedModelBundle implements AutoCloseable {
 
   /**
    * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session
-   * object, plus the serialized MetaGraphDef.
+   * object, plus the MetaGraphDef.
    *
    * <p>Invoked from the native load method. Takes ownership of the handles.
    */
   private static SavedModelBundle fromHandle(
-      TF_Graph graphHandle, TF_Session sessionHandle, byte[] metaGraphDef) {
+      TF_Graph graphHandle, TF_Session sessionHandle, MetaGraphDef metaGraphDef) {
     Graph graph = new Graph(graphHandle);
     Session session = new Session(graph, sessionHandle);
     return new SavedModelBundle(graph, session, metaGraphDef);
   }
 
   private static SavedModelBundle load(
-      String exportDir, String[] tags, byte[] config, byte[] runOptions) {
+      String exportDir, String[] tags, ConfigProto config, RunOptions runOptions) {
     SavedModelBundle bundle = null;
 
     try (PointerScope scope = new PointerScope()) {
@@ -185,8 +189,9 @@ public class SavedModelBundle implements AutoCloseable {
 
       // allocate parameters for TF_LoadSessionFromSavedModel
       TF_SessionOptions opts = TF_SessionOptions.newSessionOptions();
-      if (config != null && config.length > 0) {
-        TF_SetConfig(opts, new BytePointer(config), config.length, status);
+      if (config != null) {
+        BytePointer configBytes = new BytePointer(config.toByteArray());
+        TF_SetConfig(opts, configBytes, configBytes.capacity(), status);
         status.throwExceptionIfNotOK();
       }
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
@@ -200,7 +205,11 @@ public class SavedModelBundle implements AutoCloseable {
       status.throwExceptionIfNotOK();
 
       // handle the result
-      bundle = fromHandle(graph, session, metagraphDef.get());
+      try {
+        bundle = fromHandle(graph, session, MetaGraphDef.parseFrom(metagraphDef.dataAsByteBuffer()));
+      } catch (InvalidProtocolBufferException e) {
+        throw new TensorFlowException("Cannot parse MetaGraphDef protocol buffer", e);
+      }
     }
 
     return bundle;

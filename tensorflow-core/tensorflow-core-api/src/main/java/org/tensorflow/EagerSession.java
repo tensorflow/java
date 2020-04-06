@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.framework.ConfigProto;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -173,18 +174,14 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
 
     /**
-     * Configures the session based on the data found in the provided buffer, which is serialized
-     * TensorFlow config proto.
+     * Configures the session based on the data found in the provided configuration.
      *
-     * <p>Warning: the support of this feature is subject to changes since TensorFlow protos might
-     * not be supported on public endpoints in the future.
-     *
-     * @param value a serialized config proto
+     * @param value a config protocol buffer
      * @see <a
      *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto"/>
      */
-    public Options config(byte[] value) {
-      config = value;
+    public Options config(ConfigProto config) {
+      this.config = config;
       return this;
     }
 
@@ -201,7 +198,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     private boolean async;
     private DevicePlacementPolicy devicePlacementPolicy;
     private ResourceCleanupStrategy resourceCleanupStrategy;
-    private byte[] config;
+    private ConfigProto config;
 
     private Options() {
       async = false;
@@ -554,12 +551,13 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  private static TFE_Context allocate(boolean async, int devicePlacementPolicy, byte[] config) {
+  private static TFE_Context allocate(boolean async, int devicePlacementPolicy, ConfigProto config) {
     try (PointerScope scope = new PointerScope()) {
       TFE_ContextOptions opts = TFE_ContextOptions.newContextOptions();
       TF_Status status = TF_Status.newStatus();
-      if (config != null && config.length > 0) {
-        TFE_ContextOptionsSetConfig(opts, new BytePointer(config), config.length, status);
+      if (config != null) {
+        BytePointer configBytes = new BytePointer(config.toByteArray());
+        TFE_ContextOptionsSetConfig(opts, configBytes, configBytes.capacity(), status);
         status.throwExceptionIfNotOK();
       }
       TFE_ContextOptionsSetAsync(opts, (byte)(async ? 1 : 0));

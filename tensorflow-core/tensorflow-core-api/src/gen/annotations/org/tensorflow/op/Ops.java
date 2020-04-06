@@ -332,8 +332,6 @@ public final class Ops {
 
   public final BitwiseOps bitwise;
 
-  public final DebuggingOps debugging;
-
   public final MathOps math;
 
   public final AudioOps audio;
@@ -359,7 +357,6 @@ public final class Ops {
     strings = new StringsOps(scope);
     sparse = new SparseOps(scope);
     bitwise = new BitwiseOps(scope);
-    debugging = new DebuggingOps(scope);
     math = new MathOps(scope);
     audio = new AudioOps(scope);
     signal = new SignalOps(scope);

@@ -16,12 +16,15 @@ limitations under the License.
 package org.tensorflow;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.framework.ConfigProto;
+import org.tensorflow.framework.RunOptions;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
@@ -115,13 +118,8 @@ public class SessionTest {
         assertEquals(1, outputs.size());
         assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).data().getInt(0, 0));
         // Sanity check on metadata
-        // See comments in fullTraceRunOptions() for an explanation about
-        // why this check is really silly. Ideally, this would be:
-        /*
-            RunMetadata md = RunMetadata.parseFrom(result.metadata);
-            assertTrue(md.toString(), md.hasStepStats());
-        */
-        assertTrue(result.metadata.length > 0);
+        assertNotNull(result.metadata);
+        assertTrue(result.metadata.toString(), result.metadata.hasStepStats());
         outputs.close();
       }
     }
@@ -210,45 +208,17 @@ public class SessionTest {
     }
   }
 
-  private static byte[] fullTraceRunOptions() {
-    // Ideally this would use the generated Java sources for protocol buffers
-    // and end up with something like the snippet below. However, generating
-    // the Java files for the .proto files in tensorflow/core:protos_all is
-    // a bit cumbersome in bazel until the proto_library rule is setup.
-    //
-    // See https://github.com/bazelbuild/bazel/issues/52#issuecomment-194341866
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251515362
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251692558
-    //
-    // For this test, for now, the use of specific bytes suffices.
-    return new byte[] {0x08, 0x03};
-    /*
-    return org.tensorflow.framework.RunOptions.newBuilder()
+  private static RunOptions fullTraceRunOptions() {
+    return RunOptions.newBuilder()
         .setTraceLevel(RunOptions.TraceLevel.FULL_TRACE)
-        .build()
-        .toByteArray();
-    */
+        .build();
   }
 
-  private static byte[] singleThreadConfigProto() {
-    // Ideally this would use the generated Java sources for protocol buffers
-    // and end up with something like the snippet below. However, generating
-    // the Java files for the .proto files in tensorflow/core:protos_all is
-    // a bit cumbersome in bazel until the proto_library rule is setup.
-    //
-    // See https://github.com/bazelbuild/bazel/issues/52#issuecomment-194341866
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251515362
-    // https://github.com/bazelbuild/rules_go/pull/121#issuecomment-251692558
-    //
-    // For this test, for now, the use of specific bytes suffices.
-    return new byte[] {0x10, 0x01, 0x28, 0x01};
-    /*
-    return org.tensorflow.framework.ConfigProto.newBuilder()
+  private static ConfigProto singleThreadConfigProto() {
+    return ConfigProto.newBuilder()
         .setInterOpParallelismThreads(1)
         .setIntraOpParallelismThreads(1)
-        .build()
-        .toByteArray();
-     */
+        .build();
   }
 
   private static void transpose_A_times_X(Ops tf, int[][] a) {

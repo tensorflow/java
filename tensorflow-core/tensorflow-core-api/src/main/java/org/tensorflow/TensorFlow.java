@@ -22,7 +22,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.framework.OpList;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -37,15 +39,19 @@ public final class TensorFlow {
   /**
    * All the TensorFlow operations available in this address space.
    *
-   * @return A serialized representation of an <a
+   * @return A <a
    *     href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a>
    *     protocol buffer, which lists all the available TensorFlow operations.
    */
-  public static byte[] registeredOpList() {
+  public static OpList registeredOpList() {
     TF_Buffer buf = TF_GetAllOpList();
-    byte[] ret = buf.get();
-    TF_DeleteBuffer(buf);
-    return ret;
+    try {
+      return OpList.parseFrom(buf.dataAsByteBuffer());
+    } catch (InvalidProtocolBufferException e) {
+      throw new TensorFlowException("Cannot parse OpList protocol buffer", e);
+    } finally {
+      TF_DeleteBuffer(buf);
+    }
   }
 
   /**
@@ -53,12 +59,12 @@ public final class TensorFlow {
    * library.
    *
    * @param filename Path of the dynamic library containing operations and kernels to load.
-   * @return Serialized bytes of the <a
+   * @return A <a
    *     href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a>
    *     protocol buffer message defining the operations defined in the library.
    * @throws UnsatisfiedLinkError if filename cannot be loaded.
    */
-  public static byte[] loadLibrary(String filename) {
+  public static OpList loadLibrary(String filename) {
     TF_Library h = null;
     try {
       h = libraryLoad(filename);
@@ -87,9 +93,13 @@ public final class TensorFlow {
     }
   }
 
-  private static byte[] libraryOpList(TF_Library handle) {
+  private static OpList libraryOpList(TF_Library handle) {
     TF_Buffer buf = TF_GetOpList(handle);
-    return buf.get();
+    try {
+      return OpList.parseFrom(buf.dataAsByteBuffer());
+    } catch (InvalidProtocolBufferException e) {
+      throw new TensorFlowException("Cannot parse OpList protocol buffer", e);
+    }
   }
 
   private TensorFlow() {}

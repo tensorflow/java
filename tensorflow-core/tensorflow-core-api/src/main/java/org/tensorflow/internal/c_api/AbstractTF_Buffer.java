@@ -21,6 +21,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewBuffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewBufferFromString;
 
+import com.google.protobuf.Message;
+import java.nio.ByteBuffer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
@@ -46,12 +48,12 @@ public abstract class AbstractTF_Buffer extends Pointer {
         return b;
     }
 
-    /** Returns {@code newBufferFromString(new BytePointer(proto)), or null if proto is null or empty. */
-    public static TF_Buffer newBufferFromString(byte[] proto) {
-        if (proto == null || proto.length == 0) {
+    /** Returns {@code newBufferFromString(new BytePointer(proto.toByteArray())), or null if proto is null or empty. */
+    public static TF_Buffer newBufferFromString(Message proto) {
+        if (proto == null) {
             return null;
         }
-        return newBufferFromString(new BytePointer(proto));
+        return newBufferFromString(new BytePointer(proto.toByteArray()));
     }
 
     /**
@@ -72,7 +74,7 @@ public abstract class AbstractTF_Buffer extends Pointer {
     /**
      * Returns a copy of the data in a Java array, or throws IndexOutOfBoundsException if too large.
      */
-    public byte[] get() {
+    public byte[] copyData() {
         long length = ((TF_Buffer)this).length();
         if (length > Integer.MAX_VALUE) {
             throw new IndexOutOfBoundsException("TF_Buffer is too large to serialize into a byte[] array");
@@ -80,6 +82,13 @@ public abstract class AbstractTF_Buffer extends Pointer {
         byte[] data = new byte[(int)length];
         new BytePointer(((TF_Buffer)this).data()).get(data);
         return data;
+    }
+
+    /**
+     * Returns the data of this buffer as a {@link java.nio.ByteBuffer}
+     */
+    public ByteBuffer dataAsByteBuffer() {
+        return ((TF_Buffer)this).data().capacity(((TF_Buffer) this).length()).asByteBuffer();
     }
 
     /**

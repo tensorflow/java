@@ -25,36 +25,32 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Checks a tensor for NaN, -Inf and +Inf values.
+ * Identity op for gradient debugging.
  * <p>
- * When run, reports an `InvalidArgument` error if `tensor` has any values
- * that are not a number (NaN) or infinity (Inf). Otherwise, passes `tensor` as-is.
- * Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf in the
- * errors it throws.
+ * This op is hidden from public in Python. It is used by TensorFlow Debugger to
+ * register gradient tensors for gradient debugging.
+ * This op operates on reference-type tensors.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CheckNumerics<T extends TNumber> extends RawOp implements Operand<T> {
+public final class DebugGradientRefIdentity<T extends TType> extends RawOp implements Operand<T> {
   
   /**
-   * Factory method to create a class wrapping a new CheckNumerics operation.
+   * Factory method to create a class wrapping a new DebugGradientRefIdentity operation.
    * 
    * @param scope current scope
-   * @param tensor 
-   * @param message Prefix of the error message.
-   * @return a new instance of CheckNumerics
+   * @param input 
+   * @return a new instance of DebugGradientRefIdentity
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CheckNumericsV2", scope.makeOpName("CheckNumerics"));
-    opBuilder.addInput(tensor.asOutput());
+  public static <T extends TType> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientRefIdentity", scope.makeOpName("DebugGradientRefIdentity"));
+    opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("message", message);
-    return new CheckNumerics<T>(opBuilder.build());
+    return new DebugGradientRefIdentity<T>(opBuilder.build());
   }
   
   /**
@@ -70,7 +66,7 @@ public final class CheckNumerics<T extends TNumber> extends RawOp implements Ope
   
   private Output<T> output;
   
-  private CheckNumerics(Operation operation) {
+  private DebugGradientRefIdentity(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
