@@ -118,6 +118,31 @@ the platforms you are targeting. For this purpose the `-platform` artifacts incl
 the conventions established on this page:
 * [Reducing the Number of Dependencies](https://github.com/bytedeco/javacpp-presets/wiki/Reducing-the-Number-of-Dependencies)
 
+### Snapshots
+
+Artifacts resulting from this repository are actually only available as snapshots and to retrieve them, you need
+to add Sonatype OSS repository in your pom.xml, like the following
+
+```
+    <repositories>
+        <repository>
+            <id>tensorflow-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencies>
+        <!-- Example of dependency, see section above for more options -->
+        <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow-core-platform</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+```
+
 ## How to Contribute?
 
 This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
