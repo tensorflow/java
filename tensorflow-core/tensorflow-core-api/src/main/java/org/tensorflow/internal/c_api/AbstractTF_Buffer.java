@@ -72,7 +72,8 @@ public abstract class AbstractTF_Buffer extends Pointer {
     }
 
     /**
-     * Returns a copy of the data in a Java array, or throws IndexOutOfBoundsException if too large.
+     * @return a copy of the data in a Java array
+     * @throws IndexOutOfBoundsException if too large.
      */
     public byte[] copyData() {
         long length = ((TF_Buffer)this).length();
@@ -85,10 +86,15 @@ public abstract class AbstractTF_Buffer extends Pointer {
     }
 
     /**
-     * Returns the data of this buffer as a {@link java.nio.ByteBuffer}
+     * @return the data of this buffer as a {@link java.nio.ByteBuffer}
+     * @throws IndexOutOfBoundsException if too large.
      */
     public ByteBuffer dataAsByteBuffer() {
-        return ((TF_Buffer)this).data().capacity(((TF_Buffer) this).length()).asByteBuffer();
+        long length = ((TF_Buffer)this).length();
+        if (length > Integer.MAX_VALUE) {
+            throw new IndexOutOfBoundsException("TF_Buffer is too large to accessed via a ByteBuffer interface");
+        }
+        return ((TF_Buffer)this).data().capacity(length).asByteBuffer();
     }
 
     /**
