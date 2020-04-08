@@ -5,6 +5,8 @@ import org.tensorflow.data.impl.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.types.family.TType;
 
 import java.util.Iterator;
 import java.util.List;
@@ -182,7 +184,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
      *                    type of each component of this dataset.
      * @return A new `Dataset`
      */
-    public static TensorSliceDataset fromTensorSlices(Ops tf, List<Operand<?>> tensors, List<DataType<?>> outputTypes) {
+    public static Dataset fromTensorSlices(Ops tf, List<Operand<?>> tensors, List<DataType<?>> outputTypes) {
         return new TensorSliceDataset(tf, tensors, outputTypes);
     }
 
