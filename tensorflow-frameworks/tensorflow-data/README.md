@@ -1,3 +1,7 @@
+
+NOTE: This readme follows the discussion of this [RFC]()
+
+
 Tensorflow-Data (Java)
 ==
 
@@ -211,21 +215,3 @@ try (Graph graph = new Graph()) {
 }
 
 ```
-
-## Questions and Discussion Topics
-
-See [MNISTBasicEagerClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicEagerClassifier.java) and [MNISTBasicGraphClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicGraphClassifier.java) as examples using the described API
-for training a simple MNIST classifier.
-
-
-## Release Plan
-
-The features / transformations included in the initial release will be
-
-- `static Dataset.fromTensorSlices( ... )`
-- `Dataset.batch(int batchSize, boolean dropRemainder)`
-- `Dataset.take()`
-- `Dataset.skip()`
-
-Additionally, graph and eager mode iteration will be supported using
-`DatasetIterator`.
