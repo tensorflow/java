@@ -13,108 +13,219 @@ Usage
 The `Dataset` abstraction represents a sequence of elements, where each element in the sequence is a collection (`List`) of tensors (or, "components").
 
 
-Creation
--
-A dataset can be constructed from a list of constant tensors
-using `Dataset.fromTensorSlices( ... )` as follows:
-A `Dataset` is an abstraction representing a sequence of elements. 
-Each element in the sequence is a collection (`List`) of tensors (or, "components").
 
-Creation
--
-A dataset can be constructed from a list of constant tensors
-using `Dataset.fromTensorSlices( ... )` as follows:
+The `Dataset` class represents a sequence of elements which can be iterated over and
+transformed. Each element is a list of "output" operands, represented by the type `List<Output<?>>`. 
 
-```java
-// Declare dataset components as arrays.
-// NOTE: All components in a dataset must share the first "batch" dimension.
+Note: An `Output` is a symbolic handle to a tensor produced by a TensorFlow op. In graph
+mode, `Output` objects will not have a concrete `Tensor` value unless all dependent operations
+are run in a `Session` (this is done "in-real-time" in eager mode).
 
-int[][] m1 = new int[][]{
-        {1, 2, 3, 4, 5},
-        {2, 4, 6, 8, 10},
-        {3, 6, 8, 12, 15},
-        {4, 8, 12, 16, 20}
-    };
+### Construction
 
-int[][] m2 = new int[][]{
-    {1}, {0}, {1}, {1}
-};
+Datasets can be constructed either directly from a data source (e.g. a list of tensors representing the components of the dataset), or as a transformation on an existing dataset.
 
+#### From Data Source
 
-Ops tf = // ... TensorFlow Ops Accessor (either graph or eager).
-
-// Construct dataset with two components, batchSize=2.
-Dataset dataset = Dataset.fromTensorSlices(tf,
-    // List of array components
-    Arrays.asList(tf.constant(m1), tf.constant(m2)),
-    // List of each component's dtype
-    Arrays.asList(TInt32.DTYPE, TInt32.DTYPE)
-)
-).batch(2);
-```
-
-Iteration
---
-
-In eager mode, the dataset can be iterated through using a standard 
-"for-each" loop, to receive the tensor values of each component:
-"for-each" loop:
+To construct a dataset from a list of tensor components, use 
+`Dataset.fromTensorSlices( ... )`. For example, say we are working
+with a standard feature/label dataset which has 4 elements.
 
 ```java
-int BATCH_SIZE = 2;
-for (List<Output<?>> components : dataset.batch(BATCH_SIZE)) {
-      Tensor<TInt32> XBatch = components.get(0).tensor().expect(TInt32.DTYPE);
-      Tensor<TInt32> yBatch = components.get(1).tensor().expect(TInt32.DTYPE);
-      
-      // ... use batch tensors
+float[][] features = new float[][] {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9},
+    {10, 11, 12}
+}
+
+float[] labels = new float[] {
+    0,
+    1,
+    1,
+    0
 }
 ```
 
-In graph mode, the dataset can be iterated through using the `OneShotIterator` abstraction, and a while loop, as follows:
+A dataset can be constructed from a list of the constant `Operand`s generated
+from this dataset, and a list of `DataType` objects corresponding
+to the type of each component:
+
+Note: Each of the input components must share the same first "batch" dimension.
 
 ```java
-OneShotIterator oneShotIterator = dataset.makeOneShotIterator();
-Operation makeIterator = oneShotIterator.getMakeIteratorOp();
-List<Output<?>> components = oneShotIterator.getComponents();
+Ops tf = // ... TensorFlow Ops accessor (either graph or eager)
+Dataset dataset = Dataset.fromTensorSlices(
+    Arrays.asList(tf.constant(features), tf.constant(labels)),
+    Arrays.asList(TInt32.DTYPE, TInt32.DTYPE)
+);
+```
 
-try (Session session = new Session(graph)) {
-    // Run MakeIterator Op to set iterator position
-    session.runner()
-        .addTarget(makeIterator)
-        .run();
+
+Other data sources are also possible, using `tf.data` ops; these include TFRecord files, CSV files, and more.
+
+#### Transformations on Existing Datasets
+
+Once a dataset has been created from a data source it can be transformed by calling
+methods on the `Dataset` object. For example, to group elements in the above dataset into batches of size `2`, use `Dataset.batch(int batchSize)`:
+
+```java
+dataset = dataset.batch(2)
+```
+
+Dataset transformations alter both the values and shapes of the original elements, and
+return a *new* `Dataset` object.
+
+In this case, the original dataset had 4 elements of shape `[features: (3,) labels: (1,)]`.
+Once the `.batch` transformation is applied, the new dataset has 2 elements (batches) of shape `[features: (2, 3), labels: (2, 1)]`.
+
+Similar transformations include `.skip`, `.take`, `.map`, `.filter`, etc.
+
+
+### Iterating over Dataset Elements
+
+The primary use of a dataset is for iteration over its elements.
+Each row (or batch) element is represented as a list of tensor components, with
+type `List<Output<?>>`. The tensor components of this elements can be accessed using `List.get(int index)`.
+
+It is recommended to use `Tensor.expect(DataType<?> dtype)` to restore types
+to the retrieved tensors.
+
+#### Using DatastetIterator
+The `DatasetIterator` class provides abstractions for creating and using
+iterators in graph and eager mode. These will be explained here; however
+end-users should only interact with `Iterator` objects through the methods
+provided in the `Dataset` class (examples to follow).
+
+To construct an iterator for a dataset of a specific structure, use
+the static method `Iterator.fromStructure(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes)`. This creates a `DatasetIterator` object
+which can be used with any dataset of a matching structure.
+
+Once a `DatasetIterator` is created, it can be initialized on a `Dataset` intsance using `Iterator.makeInitializer(Dataset dataset)`. This will initialize (or re-initialize) the iterator to start at the beginning
+of this dataset.
+
+The `Iterator.getNext()` method can be used to retrieve dataset elements.
+In eager mode, each call to `getNext()` will return the next dataset element as
+as `List<Output<?>>`. In graph mode, this method should be called just once
+to retrieve the components. These can be fed into additional operations as
+a computation Graph is built. On successive `session.run` operations, the
+successive dataset elements will be automatically passed through the graph.
+
+
+#### Eager Mode: Iterable
+The `Dataset` class implements the `Iterable` interface, so in
+eager mode, iteration over dataset elements is possible using a standard for-each loop (this is a wrapper around `DatasetIterator` constructs).
+
+Using the same example dataset from above, dataset elements can be extracted and
+used as follows:
+```java
+// Use default EagerSession
+Ops tf = Ops.create()
+
+// Dataset of (features, labels) from above
+Dataset dataset = Dataset.fromTensorSlices(tf, ... );
+
+// batch dataset elements into batches of size 2
+dataset = dataset.batch(2);
+
+Optmizer optimizer = ... // TF Optimizer
+
+for (List<Output<?>> batch : dataset) {
+    Operand<?> featureBatch = element.get(0);
+    Operand<?> labelBatch = element.get(1);
+
+    // Perform batch-wise computations on featureBatch and labelBatch
+    // e.g. computing model losses, running optimizers.
+
+    Operand<TFloat32> loss = myModelLoss(featureBatch, labelBatch);
+
+    optimizer.minimize(loss);
     
-    while (true) {
-        try {
-            List<Tensor<?>> outputs = session.runner()
-                .fetch(components.get(0))
-                .fetch(components.get(1))
-                .run();
+    ...
+}   
 
-            Tensor<TInt32> matrix1 = outputs.get(0).expect(TInt32.DTYPE);
-            Tensor<TInt32> matrix2 = outputs.get(1).expect(TInt32.DTYPE);
+```
 
-        } catch (IndexOutOfBoundsException e) {
-            // Finished iterating
-            break;
+#### Graph Mode: OneShotIterator
+
+The above code will not work in graph mode, which requires the use of `Session`s
+to run the computations. In graph mode, datasets can be iterated over using the `DatasetIterator` abstraction, and a while loop.
+
+Once the iterator is initialized, repeated calls to `Session.run` will populate the components with new values, until all elements have
+been retrieved. After this, `Session.run` will result in an `IndexOutOfBounds` exception.
+
+Note that the make-iterator operation can be re-run to re-initialize
+the iterator, to iterate over the dataset a second time.
+
+```java
+try (Graph graph = new Graph()) {
+    // Graph mode Ops accessor
+    Ops tf = Ops.create(graph)
+
+    // Dataset of (features, labels) from above
+    Dataset dataset = Dataset.fromTensorSlices(tf, ... );
+
+    // batch dataset elements into batches of size 2
+    dataset = dataset.batch(2); 
+
+    // makeOneShotIterator() automatically adds the 
+    // iterator initializer (MakeIterator) Op to the Graph
+    // initializers list. Make sure to run `session.run(tf.init())`
+    // first!
+    DatasetIterator iterator = dataset.makeOneShotIterator();
+    List<Output<?>> batch = iterator.getNext();
+
+    Operand<?> features = batch.get(0);
+    Operand<?> labels = batch.get(1);
+
+    // Run additional computations on `features` and `labels`,
+    // e.g. computing model losses, instantiating Optimizers
+
+    Optimizer optimizer = ... // TF Optimizer 
+    Operand<TFloat32> loss = myModelLoss(features, labels);
+    
+    Op trainOp = optimizer.minimize(loss)
+
+    // instantiate graph-mode session
+    try (Session session = new Session(graph)) {
+        // Run graph initializers (and the iterator initializer)
+        session.run(tf.init());
+
+        // Iterate over dataset elements
+        while (true) {
+            try {
+                // Run training ops / fetch loss
+                List<Tensor<?>> outputs = session.runner()
+                    .addTarget(trainOp)
+                    .fetch(loss)
+                    .run();
+
+                ...
+
+            } catch (IndexOutOfBoundsException e) {
+                // Finished iterating
+                break;
+            }
         }
     }
 }
-```
-In graph mode, the dataset is iterated through using a while-loop, 
-using the `OneShotIterator` abstraction.
 
-```java
-while (true) {
-    try {
-        IteratorGetNext getNext = tf.data.iteratorGetNext(anonymousIter.handle(), outputTypes, outputShapes);
-        List<Output<?>> outputs = getNext.components();
-        System.out.println("BATCH: ");
-        printIntTensor(outputs.get(0).tensor());
-        printIntTensor(outputs.get(1).tensor());
-        System.out.println();
-    } catch (IndexOutOfBoundsException e) {
-        System.out.println("finished iterating.");
-        break;
-    }
-}
 ```
+
+## Questions and Discussion Topics
+
+See [MNISTBasicEagerClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicEagerClassifier.java) and [MNISTBasicGraphClassifier.java](https://github.com/dhruvrajan/tensorflow-java/blob/tensorflow-keras-dev/tensorflow-frameworks/tensorflow-keras/src/main/java/org/tensorflow/keras/examples/mnist/MNISTBasicGraphClassifier.java) as examples using the described API
+for training a simple MNIST classifier.
+
+
+## Release Plan
+
+The features / transformations included in the initial release will be
+
+- `static Dataset.fromTensorSlices( ... )`
+- `Dataset.batch(int batchSize, boolean dropRemainder)`
+- `Dataset.take()`
+- `Dataset.skip()`
+
+Additionally, graph and eager mode iteration will be supported using
+`DatasetIterator`.
