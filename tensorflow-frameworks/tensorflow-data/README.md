@@ -5,11 +5,12 @@ NOTE: This readme follows the discussion of this [RFC]()
 Tensorflow-Data (Java)
 ==
 
-TensorFlow Data provides simple APIs for loading data of various formats, and preparing
-datasets for use in training and using deep learning models.
-
-TensorFlow Java's implementation simplifies the use of the C++ `data` ops, and provides
-a simple API for configuring and iterating over datasets in both "gra**ph" and "eager" mode.
+TensorFlow Data provides utilities and APIsfor loading data of various formats
+, and preparing datasets for use in training and using deep learning models
+. This package
+ provides a
+ simple API for configuring and iterating over
+ datasets in both "graph" and "eager" mode.
 
 Usage
 --
