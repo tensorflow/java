@@ -21,7 +21,6 @@ import java.util.List;
  *  Operand<?> XTensor = tf.constant( ... );
  *  Operand<?> yTensor = tf.constant( ... );
  *
- *  int BATCH_SIZE = ...
  *
  *  Dataset dataset = Dataset
  *          .fromTensorSlices(XTensor, yTensor);
@@ -120,7 +119,6 @@ class DatasetIterator {
     }
 
     /**
-     * result of
      * Returns a list of `Operand<?>` representing the components of the
      * next dataset element.
      * <p>
@@ -141,7 +139,7 @@ class DatasetIterator {
     }
 
     /**
-     * Creates an returns a TF `Op` that can be run to initialize
+     * Creates and returns a TF `Op` that can be run to initialize
      * this iterator on a dataset. The dataset must have a structure
      * (outputTypes, outputShapes) that match this iterator, and
      * share the same ExecutionEnvironment as this iterator.
