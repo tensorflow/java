@@ -1,11 +1,8 @@
 package org.tensorflow.data;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.ndarray.IntNdArray;
-import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;
@@ -16,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class DatasetIteratorTest extends DatasetTestBase{
 
     @Test
-    public void fromStructure() {
+    public void testGraphIteration() {
         try (Graph graph = new Graph()) {
             Ops tf = Ops.create(graph);
 
@@ -68,7 +65,7 @@ public class DatasetIteratorTest extends DatasetTestBase{
     }
 
     @Test
-    public void fromStructureEager() {
+    public void testEagerIteration() {
 
         Ops tf = Ops.create();
 
