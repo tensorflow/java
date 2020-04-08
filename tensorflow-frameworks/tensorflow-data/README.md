@@ -9,7 +9,7 @@ TensorFlow Data provides simple APIs for loading data of various formats, and pr
 datasets for use in training and using deep learning models.
 
 TensorFlow Java's implementation simplifies the use of the C++ `data` ops, and provides
-a simple API for configuring and iterating over datasets in both "graph" and "eager" mode.
+a simple API for configuring and iterating over datasets in both "gra**ph" and "eager" mode.
 
 Usage
 --
@@ -36,19 +36,21 @@ To construct a dataset from a list of tensor components, use
 with a standard feature/label dataset which has 4 elements.
 
 ```java
-float[][] features = new float[][] {
-    {1, 2, 3},
-    {4, 5, 6},
-    {7, 8, 9},
-    {10, 11, 12}
-}
+FloatNdArray features = StdArrays.ndCopyOf(
+        new float[][] {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+        {10, 11, 12}
+});
 
-float[] labels = new float[] {
-    0,
-    1,
-    1,
-    0
-}
+FloatNdArray labels = StdArrays.ndCopyOf(
+    new float[] {
+        0,
+        1,
+        1,
+        0
+});
 ```
 
 A dataset can be constructed from a list of the constant `Operand`s generated
