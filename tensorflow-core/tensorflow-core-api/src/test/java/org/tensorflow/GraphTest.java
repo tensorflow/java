@@ -26,9 +26,9 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.framework.GraphDef;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.MatMul;
+import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 

@@ -24,8 +24,8 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.framework.ConfigProto;
-import org.tensorflow.framework.RunOptions;
+import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.RunOptions;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
 @RunWith(JUnit4.class)

@@ -24,10 +24,10 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.framework.OpList;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.proto.framework.OpList;
 
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {

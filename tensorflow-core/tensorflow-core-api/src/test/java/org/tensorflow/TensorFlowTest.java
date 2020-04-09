@@ -24,7 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.framework.OpList;
+import org.tensorflow.proto.framework.OpList;
 
 /** Unit tests for {@link org.tensorflow.TensorFlow}. */
 @RunWith(JUnit4.class)

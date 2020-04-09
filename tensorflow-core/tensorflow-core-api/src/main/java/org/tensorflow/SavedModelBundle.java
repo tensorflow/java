@@ -23,14 +23,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.framework.ConfigProto;
-import org.tensorflow.framework.MetaGraphDef;
-import org.tensorflow.framework.RunOptions;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.MetaGraphDef;
+import org.tensorflow.proto.framework.RunOptions;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
