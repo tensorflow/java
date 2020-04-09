@@ -13,6 +13,7 @@ http_archive(
         ":tensorflow-api-def.patch"
     ],
     patch_args = ["-p1"],
+    patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\(.* java_package = \"org\.tensorflow\.\)\(.*\"\)/\\1proto.\\2'/"],
     urls = [
        "https://github.com/tensorflow/tensorflow/archive/v2.2.0-rc2.tar.gz",
     ],

@@ -30,10 +30,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.framework.ConfigProto;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.proto.framework.ConfigProto;
 
 /**
  * An environment for executing TensorFlow operations eagerly.

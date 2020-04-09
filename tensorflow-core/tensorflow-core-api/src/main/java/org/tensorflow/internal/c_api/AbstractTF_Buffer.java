@@ -72,7 +72,7 @@ public abstract class AbstractTF_Buffer extends Pointer {
     }
 
     /**
-     * @return a copy of the data in a Java array
+     * Returns a copy of the data in a Java array
      * @throws IndexOutOfBoundsException if too large.
      */
     public byte[] copyData() {
@@ -86,7 +86,7 @@ public abstract class AbstractTF_Buffer extends Pointer {
     }
 
     /**
-     * @return the data of this buffer as a {@link java.nio.ByteBuffer}
+     * Returns the data of this buffer as a {@link java.nio.ByteBuffer}
      * @throws IndexOutOfBoundsException if too large.
      */
     public ByteBuffer dataAsByteBuffer() {

@@ -29,9 +29,6 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.framework.ConfigProto;
-import org.tensorflow.framework.RunMetadata;
-import org.tensorflow.framework.RunOptions;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Operation;
@@ -41,6 +38,9 @@ import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.op.Op;
+import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.RunMetadata;
+import org.tensorflow.proto.framework.RunOptions;
 
 /**
  * Driver for {@link Graph} execution.

@@ -39,7 +39,6 @@ import org.tensorflow.op.math.BesselI1e;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
-import org.tensorflow.op.math.CheckNumerics;
 import org.tensorflow.op.math.CompareAndBitpack;
 import org.tensorflow.op.math.ComplexAbs;
 import org.tensorflow.op.math.Conj;
@@ -619,21 +618,6 @@ public final class MathOps {
    */
   public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
     return Ceil.create(scope, x);
-  }
-
-  /**
-   * Checks a tensor for NaN and Inf values.
-   *  <p>
-   *  When run, reports an `InvalidArgument` error if `tensor` has any values
-   *  that are not a number (NaN) or infinity (Inf). Otherwise, passes `tensor` as-is.
-   *
-   * @param <T> data type for {@code output()} output
-   * @param tensor
-   * @param message Prefix of the error message.
-   * @return a new instance of CheckNumerics
-   */
-  public <T extends TNumber> CheckNumerics<T> checkNumerics(Operand<T> tensor, String message) {
-    return CheckNumerics.create(scope, tensor, message);
   }
 
   /**
