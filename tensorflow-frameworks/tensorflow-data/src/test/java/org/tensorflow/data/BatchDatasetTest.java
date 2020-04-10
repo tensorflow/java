@@ -52,7 +52,7 @@ public class BatchDatasetTest extends DatasetTestBase {
                                 tf.constant(testMatrix1),
                                 tf.constant(testMatrix2)),
                         Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
-                .batch(3);
+                .batch(3, true);
 
         int count = 0;
         for (List<Output<?>> components : dataset) {

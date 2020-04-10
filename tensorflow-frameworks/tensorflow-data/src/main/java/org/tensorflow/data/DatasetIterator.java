@@ -12,7 +12,11 @@ import java.util.List;
 
 /**
  * Represents the state of an iteration through
- * a tf.data Datset.
+ * a tf.data Datset. DatasetIterator is not
+ * a java.util.Iterator. In eager mode, `Dataset`
+ * can be used as an Iterable, returning dataset
+ * elements each iteration.
+ *
  * <p>
  * Example: Iteration in graph mode.
  *
@@ -74,7 +78,7 @@ import java.util.List;
  *  }
  * }</pre>
  */
-class DatasetIterator {
+public class DatasetIterator {
     public static final String EMPTY_SHARED_NAME = "";
 
     private Ops tf;
@@ -97,7 +101,7 @@ class DatasetIterator {
      * @param outputShapes     A list of `Shape` objects corresponding to the
      *                         shapes of each componenet of a dataset element.
      */
-    public DatasetIterator(Ops tf, Operand<?> iteratorResource,
+    private DatasetIterator(Ops tf, Operand<?> iteratorResource,
                            Op initializer,
                            List<DataType<?>> outputTypes,
                            List<Shape> outputShapes) {
@@ -109,7 +113,7 @@ class DatasetIterator {
         this.outputShapes = outputShapes;
     }
 
-    public DatasetIterator(Ops tf, Operand<?> iteratorResource,
+    private DatasetIterator(Ops tf, Operand<?> iteratorResource,
                            List<DataType<?>> outputTypes,
                            List<Shape> outputShapes) {
         this.tf = tf;

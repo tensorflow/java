@@ -65,7 +65,7 @@ public final class Shape {
         return new Shape(dimensionSizes);
     }
 
-    public static Shape of(long firstDimensionSize, long... otherDimensionSizes) {
+    public static Shape of(long firstDimensionSize, long[] otherDimensionSizes) {
         long[] dimensionSizes = new long[otherDimensionSizes.length + 1];
         dimensionSizes[0] = firstDimensionSize;
         System.arraycopy(
