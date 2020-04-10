@@ -55,13 +55,13 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
 
     /**
      * Groups elements of this dataset into batches.
-     * Leaves out the last batch if it has fewer than `batchSize` elements.
+     * Includes the last batch, even if it has fewer than `batchSize` elements.
      *
      * @param batchSize The number of desired elements per batch
      * @return A batched Dataset
      */
     public final Dataset batch(long batchSize) {
-        return batch(batchSize, true);
+        return batch(batchSize, false);
     }
 
     /**
