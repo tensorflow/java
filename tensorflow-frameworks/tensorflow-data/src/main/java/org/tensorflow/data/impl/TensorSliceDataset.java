@@ -1,13 +1,12 @@
 package org.tensorflow.data.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.data.Dataset;
-import org.tensorflow.data.Utils;
 import org.tensorflow.op.Ops;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TensorSliceDataset extends Dataset {
   private org.tensorflow.op.data.TensorSliceDataset dataset;
@@ -15,7 +14,7 @@ public class TensorSliceDataset extends Dataset {
   public TensorSliceDataset(Ops tf, List<Operand<?>> components, List<DataType<?>> outputTypes) {
     super(tf, outputTypes,
         components.stream()
-            .map(c -> Utils.tail(c.asOutput().shape()))
+            .map(c -> c.asOutput().shape().tail())
             .collect(Collectors.toList()));
 
     if (!(components.size() == outputTypes.size())) {

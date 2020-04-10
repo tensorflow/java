@@ -1,12 +1,13 @@
 package org.tensorflow.data;
 
 import org.tensorflow.*;
-import org.tensorflow.data.impl.*;
+import org.tensorflow.data.impl.BatchDataset;
+import org.tensorflow.data.impl.SkipDataset;
+import org.tensorflow.data.impl.TakeDataset;
+import org.tensorflow.data.impl.TensorSliceDataset;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.types.family.TType;
 
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
      */
     public final Dataset batch(long batchSize, boolean dropLastBatch) {
         List<Shape> batchOutputShapes = getOutputShapes().stream()
-                .map(s -> Shape.of(Utils.array(batchSize, s.asArray())))
+                .map(s -> Shape.of(batchSize, s.asArray()))
                 .collect(Collectors.toList());
 
 
