@@ -21,122 +21,159 @@ import java.util.Arrays;
 
 public final class Shape {
 
-  public static long UNKNOWN_SIZE = -1L;
+    public static long UNKNOWN_SIZE = -1L;
 
-  /** Create a Shape representing an unknown number of dimensions. */
-  public static Shape unknown() {
-    return new Shape(null);
-  }
-
-  /** Create a Shape representing a scalar value. */
-  public static Shape scalar() {
-    return new Shape(new long[0]);
-  }
-
-  /**
-   * Create a Shape representing an N-dimensional value.
-   *
-   * <p>Creates a Shape representing an N-dimensional value (N being at least 1), with the provided
-   * size for each dimension. A -1 indicates that the size of the corresponding dimension is
-   * unknown. For example:
-   *
-   * <pre>{@code
-   * // A 2-element vector.
-   * Shape vector = Shape.of(2);
-   *
-   * // A 2x3 matrix.
-   * Shape matrix = Shape.of(2, 3);
-   *
-   * // A matrix with 4 columns but an unknown number of rows.
-   * // This is typically used to indicate the shape of tensors that represent
-   * // a variable-sized batch of values. The Shape below might represent a
-   * // variable-sized batch of 4-element vectors.
-   * Shape batch = Shape.of(-1, 4);
-   * }</pre>
-   */
-  public static Shape of(long... dimensionSizes) {
-    if (dimensionSizes == null || dimensionSizes.length == 0) {
-      return scalar();
+    /**
+     * Create a Shape representing an unknown number of dimensions.
+     */
+    public static Shape unknown() {
+        return new Shape(null);
     }
-    return new Shape(dimensionSizes);
-  }
 
-  public long size() {
-    if (size == null) {
-      size = computeSize(dimensionSizes);
+    /**
+     * Create a Shape representing a scalar value.
+     */
+    public static Shape scalar() {
+        return new Shape(new long[0]);
     }
-    return size;
-  }
 
-  public long size(int i) {
-    return dimensionSizes != null ? dimensionSizes[i] : UNKNOWN_SIZE;
-  }
-
-  public int numDimensions() {
-    return dimensionSizes != null ? dimensionSizes.length : -1;
-  }
-
-  public boolean hasUnknownDimension() {
-    if (dimensionSizes == null) {
-      return true;
+    /**
+     * Create a Shape representing an N-dimensional value.
+     *
+     * <p>Creates a Shape representing an N-dimensional value (N being at least 1), with the provided
+     * size for each dimension. A -1 indicates that the size of the corresponding dimension is
+     * unknown. For example:
+     *
+     * <pre>{@code
+     * // A 2-element vector.
+     * Shape vector = Shape.of(2);
+     *
+     * // A 2x3 matrix.
+     * Shape matrix = Shape.of(2, 3);
+     *
+     * // A matrix with 4 columns but an unknown number of rows.
+     * // This is typically used to indicate the shape of tensors that represent
+     * // a variable-sized batch of values. The Shape below might represent a
+     * // variable-sized batch of 4-element vectors.
+     * Shape batch = Shape.of(-1, 4);
+     * }</pre>
+     */
+    public static Shape of(long... dimensionSizes) {
+        if (dimensionSizes == null || dimensionSizes.length == 0) {
+            return scalar();
+        }
+        return new Shape(dimensionSizes);
     }
-    for (long dimSize : dimensionSizes) {
-      if (dimSize == UNKNOWN_SIZE) {
-        return true;
-      }
+
+    public static Shape of(long firstDimensionSize, long... otherDimensionSizes) {
+        long[] dimensionSizes = new long[otherDimensionSizes.length + 1];
+        dimensionSizes[0] = firstDimensionSize;
+        System.arraycopy(
+                otherDimensionSizes, 0, dimensionSizes, 1, otherDimensionSizes.length);
+
+        return Shape.of(dimensionSizes);
     }
-    return false;
-  }
 
-  public long[] asArray() {
-    return dimensionSizes;
-  }
-
-  @Override
-  public int hashCode() {
-    return dimensionSizes != null ? Arrays.hashCode(dimensionSizes) : super.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public long size() {
+        if (size == null) {
+            size = computeSize(dimensionSizes);
+        }
+        return size;
     }
-    // Shapes are equivalent if all of their dimensions are equals
-    if (obj instanceof Shape) {
-      Shape otherShape = (Shape)obj;
-      if (otherShape.hasUnknownDimension()) {
+
+    public long size(int i) {
+        return dimensionSizes != null ? dimensionSizes[i] : UNKNOWN_SIZE;
+    }
+
+    public int numDimensions() {
+        return dimensionSizes != null ? dimensionSizes.length : -1;
+    }
+
+    public boolean hasUnknownDimension() {
+        if (dimensionSizes == null) {
+            return true;
+        }
+        for (long dimSize : dimensionSizes) {
+            if (dimSize == UNKNOWN_SIZE) {
+                return true;
+            }
+        }
         return false;
-      }
-      return Arrays.equals(dimensionSizes, otherShape.dimensionSizes);
     }
-    return false;
-  }
 
-  /** Succinct description of the shape meant for debugging. */
-  @Override
-  public String toString() {
-    return Arrays.toString(dimensionSizes);
-  }
-
-  private Shape(long[] dimensionSizes) {
-    this.dimensionSizes = dimensionSizes;
-  }
-
-  private final long[] dimensionSizes;
-  private Long size;
-
-  private static long computeSize(long[] dimensionSizes) {
-    if (dimensionSizes == null) {
-      return UNKNOWN_SIZE;
+    public long[] asArray() {
+        return dimensionSizes;
     }
-    long computedSize = 1L;
-    for (long dimensionSize : dimensionSizes) {
-      if (dimensionSize == UNKNOWN_SIZE) {
-        return UNKNOWN_SIZE;
-      }
-      computedSize *= dimensionSize;
+
+    @Override
+    public int hashCode() {
+        return dimensionSizes != null ? Arrays.hashCode(dimensionSizes) : super.hashCode();
     }
-    return computedSize;
-  }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        // Shapes are equivalent if all of their dimensions are equals
+        if (obj instanceof Shape) {
+            Shape otherShape = (Shape) obj;
+            if (otherShape.hasUnknownDimension()) {
+                return false;
+            }
+            return Arrays.equals(dimensionSizes, otherShape.dimensionSizes);
+        }
+        return false;
+    }
+
+    /**
+     * Succinct description of the shape meant for debugging.
+     */
+    @Override
+    public String toString() {
+        return Arrays.toString(dimensionSizes);
+    }
+
+    private Shape(long[] dimensionSizes) {
+        this.dimensionSizes = dimensionSizes;
+    }
+
+    private final long[] dimensionSizes;
+    private Long size;
+
+    /**
+     * Returns a 1-dimension shape with first
+     * dimension matching the first dimensions
+     * of this shape.
+     */
+    private Shape head() {
+        return Shape.of(size(0));
+    }
+
+    /**
+     * Returns a new shape, with this shape's
+     * first dimension removed.
+     */
+    public Shape tail() {
+        long[] tail = new long[numDimensions() - 1];
+        for (int i = 1; i < numDimensions(); i++) {
+            tail[i - 1] = size(i);
+        }
+
+        return Shape.of(tail);
+    }
+
+    private static long computeSize(long[] dimensionSizes) {
+        if (dimensionSizes == null) {
+            return UNKNOWN_SIZE;
+        }
+        long computedSize = 1L;
+        for (long dimensionSize : dimensionSizes) {
+            if (dimensionSize == UNKNOWN_SIZE) {
+                return UNKNOWN_SIZE;
+            }
+            computedSize *= dimensionSize;
+        }
+        return computedSize;
+    }
 }
