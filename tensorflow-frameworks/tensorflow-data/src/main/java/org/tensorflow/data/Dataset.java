@@ -12,6 +12,7 @@ import org.tensorflow.tools.Shape;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -105,25 +106,17 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
         DatasetIterator iterator = makeOneShotIterator();
 
         return new Iterator<List<Output<?>>>() {
-            private List<Output<?>> tryNext = getNext();
-
-            private List<Output<?>> getNext() {
-                try {
-                    return iterator.getNext();
-                } catch (IndexOutOfBoundsException e) {
-                    return null;
-                }
-            }
+            private DatasetOptional nextOptional = iterator.getNextAsOptional();
 
             @Override
             public boolean hasNext() {
-                return tryNext != null;
+                return nextOptional.hasValue().data().getBoolean();
             }
 
             @Override
             public List<Output<?>> next() {
-                List<Output<?>> result = tryNext;
-                tryNext = getNext();
+                List<Output<?>> result = nextOptional.getValue();
+                nextOptional = iterator.getNextAsOptional();
                 return result;
             }
         };
