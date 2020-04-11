@@ -5,8 +5,7 @@ NOTE: This readme follows the discussion of this [RFC]()
 Tensorflow-Data (Java)
 ==
 
-TensorFlow Data provides utilities and APIsfor loading data of various formats
-, and preparing datasets for use in training and using deep learning models
+TensorFlow Data provides utilities and APIs for loading data of various formats, and preparing datasets for use in training and using deep learning models
 . This package
  provides a
  simple API for configuring and iterating over
@@ -14,10 +13,6 @@ TensorFlow Data provides utilities and APIsfor loading data of various formats
 
 Usage
 --
-
-The `Dataset` abstraction represents a sequence of elements, where each element in the sequence is a collection (`List`) of tensors (or, "components").
-
-
 
 The `Dataset` class represents a sequence of elements which can be iterated over and
 transformed. Each element is a list of "output" operands, represented by the type `List<Output<?>>`. 
@@ -45,13 +40,7 @@ FloatNdArray features = StdArrays.ndCopyOf(
         {10, 11, 12}
 });
 
-FloatNdArray labels = StdArrays.ndCopyOf(
-    new float[] {
-        0,
-        1,
-        1,
-        0
-});
+FloatNdArray labels = NdArrays.vectorOf(0, 1, 1, 0);
 ```
 
 A dataset can be constructed from a list of the constant `Operand`s generated
@@ -80,8 +69,8 @@ methods on the `Dataset` object. For example, to group elements in the above dat
 dataset = dataset.batch(2)
 ```
 
-Dataset transformations alter both the values and shapes of the original elements, and
-return a *new* `Dataset` object.
+Each dataset transformation alters both the values and shapes of the original
+ elements, and returns a *new* `Dataset` object.
 
 In this case, the original dataset had 4 elements of shape `[features: (3,) labels: (1,)]`.
 Once the `.batch` transformation is applied, the new dataset has 2 elements (batches) of shape `[features: (2, 3), labels: (2, 1)]`.
@@ -93,7 +82,7 @@ Similar transformations include `.skip`, `.take`, `.map`, `.filter`, etc.
 
 The primary use of a dataset is for iteration over its elements.
 Each row (or batch) element is represented as a list of tensor components, with
-type `List<Output<?>>`. The tensor components of this elements can be accessed using `List.get(int index)`.
+type `List<Output<?>>`. The tensor components of this element can be accessed using `List.get(int index)`.
 
 It is recommended to use `Tensor.expect(DataType<?> dtype)` to restore types
 to the retrieved tensors.
@@ -155,7 +144,8 @@ for (List<Output<?>> batch : dataset) {
 
 #### Graph Mode: OneShotIterator
 
-The above code will not work in graph mode, which requires the use of `Session`s
+The above code will not work in graph mode, which requires the use of
+ `Session` instances
 to run the computations. In graph mode, datasets can be iterated over using the `DatasetIterator` abstraction, and a while loop.
 
 Once the iterator is initialized, repeated calls to `Session.run` will populate the components with new values, until all elements have
@@ -216,5 +206,4 @@ try (Graph graph = new Graph()) {
         }
     }
 }
-
 ```
