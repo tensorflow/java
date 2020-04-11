@@ -3,6 +3,7 @@ package org.tensorflow.data;
 import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class DatasetIteratorTest extends DatasetTestBase{
+public class DatasetIteratorTest extends DatasetTestBase {
 
     @Test
     public void testGraphIteration() {
@@ -79,7 +80,6 @@ public class DatasetIteratorTest extends DatasetTestBase{
         );
 
         Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
-
         int count = 0;
         for (List<Output<?>> outputs : dataset) {
             try (Tensor<TInt32> XBatch =

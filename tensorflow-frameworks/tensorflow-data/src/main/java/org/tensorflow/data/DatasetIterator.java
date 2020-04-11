@@ -102,9 +102,9 @@ public class DatasetIterator {
      *                         shapes of each componenet of a dataset element.
      */
     private DatasetIterator(Ops tf, Operand<?> iteratorResource,
-                           Op initializer,
-                           List<DataType<?>> outputTypes,
-                           List<Shape> outputShapes) {
+                            Op initializer,
+                            List<DataType<?>> outputTypes,
+                            List<Shape> outputShapes) {
 
         this.tf = tf;
         this.iteratorResource = iteratorResource;
@@ -114,8 +114,8 @@ public class DatasetIterator {
     }
 
     private DatasetIterator(Ops tf, Operand<?> iteratorResource,
-                           List<DataType<?>> outputTypes,
-                           List<Shape> outputShapes) {
+                            List<DataType<?>> outputTypes,
+                            List<Shape> outputShapes) {
         this.tf = tf;
         this.iteratorResource = iteratorResource;
         this.outputTypes = outputTypes;
@@ -140,6 +140,30 @@ public class DatasetIterator {
     public List<Output<?>> getNext() {
         return tf.data.iteratorGetNext(getIteratorResource(),
                 getOutputTypes(), getOutputShapes()).components();
+    }
+
+    /**
+     * Returns a list of `Operand<?>` representing the components of the
+     * next dataset element.
+     * <p>
+     * In graph mode, call this method once, and use its result as input
+     * to another computation. Then in the training loop, on successive calls
+     * to session.run(), successive dataset elements will be retrieved through
+     * these components.
+     * <p>
+     * In eager mode, each time this method is called, the next dataset
+     * element will be returned. (This is done automatically by iterating
+     * through `Dataset` as a Java `Iterable`).
+     *
+     * @return A `List<Operand<?>>` representing dataset element components.
+     */
+    public DatasetOptional getNextAsOptional() {
+        Operand<?> optionalVariant = tf.data.iteratorGetNextAsOptional(
+                getIteratorResource(),
+                getOutputTypes(),
+                getOutputShapes()).optional();
+        return new DatasetOptional(tf, optionalVariant, outputTypes,
+                outputShapes);
     }
 
     /**
