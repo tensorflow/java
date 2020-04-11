@@ -1,6 +1,11 @@
 package org.tensorflow.data;
 
-import org.tensorflow.*;
+
+import org.tensorflow.DataType;
+import org.tensorflow.EagerSession;
+import org.tensorflow.Graph;
+import org.tensorflow.Operand;
+import org.tensorflow.Output;
 import org.tensorflow.data.impl.BatchDataset;
 import org.tensorflow.data.impl.SkipDataset;
 import org.tensorflow.data.impl.TakeDataset;
@@ -12,7 +17,6 @@ import org.tensorflow.tools.Shape;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
