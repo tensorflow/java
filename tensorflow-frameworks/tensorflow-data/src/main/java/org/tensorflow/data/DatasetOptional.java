@@ -15,10 +15,10 @@ import java.util.List;
  * has been reached.
  */
 public class DatasetOptional {
-  Ops tf;
-  Operand<?> optionalVariant;
-  List<DataType<?>> outputTypes;
-  List<Shape> outputShapes;
+  private Ops tf;
+  private Operand<?> optionalVariant;
+  private List<DataType<?>> outputTypes;
+  private List<Shape> outputShapes;
 
   DatasetOptional(
       Ops tf,
