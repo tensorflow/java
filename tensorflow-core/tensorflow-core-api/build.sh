@@ -46,7 +46,7 @@ if [[ -f $TENSORFLOW_SO ]]; then
     ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so
     ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so.2
 fi
-TENSORFLOW_DYLIB=($TENSORFLOW_BIN/tensorflow/libtensorflow.?.?.?.dylib)
+TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow.?.?.?.dylib)
 if [[ -f $TENSORFLOW_DYLIB ]]; then
     ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.dylib
     ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.2.dylib
@@ -57,6 +57,7 @@ for TENSORFLOW_LIB in ${TENSORFLOW_LIBS[@]}; do
         ln -sf $(basename $TENSORFLOW_LIB) $TENSORFLOW_BIN/tensorflow.lib
     fi
 done
+ls -l $TENSORFLOW_BIN
 
 mkdir -p src/gen/java/
 cd src/gen/java
