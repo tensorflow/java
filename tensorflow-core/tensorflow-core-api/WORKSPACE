@@ -12,6 +12,7 @@ http_archive(
         ":tensorflow-proto.patch",
         ":tensorflow-api-def.patch"
     ],
+    patch_tool = "patch",
     patch_args = ["-p1"],
     patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\(.* java_package = \"org\.tensorflow\.\)\(.*\"\)/\\1proto.\\2'/"],
     urls = [
