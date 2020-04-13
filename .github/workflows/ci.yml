@@ -25,7 +25,7 @@ jobs:
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/2.2.0/bazel-2.2.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -55,7 +55,7 @@ jobs:
         run: |
           python3 -m pip install six
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/2.2.0/bazel-2.2.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -88,7 +88,7 @@ jobs:
           bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
           echo Downloading Bazel
           mkdir C:\bazel
-          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.2.0/bazel-2.2.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
           echo Installing CUDA
           curl.exe -L http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_windows.exe -o cuda.exe
           curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.4/cudnn-10.1-windows7-x64-v7.6.4.38.zip -o cudnn.zip
