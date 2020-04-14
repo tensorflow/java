@@ -31,7 +31,9 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   public Dataset(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     if (Objects.isNull(tf)) {
       throw new IllegalArgumentException("Ops accessor cannot be null.");
-    } else if (outputTypes.size() != outputShapes.size()) {
+    }
+
+    if (outputTypes.size() != outputShapes.size()) {
       throw new IllegalArgumentException("`outputTypes` and `outputShapes` must have the same size.");
     }
 
