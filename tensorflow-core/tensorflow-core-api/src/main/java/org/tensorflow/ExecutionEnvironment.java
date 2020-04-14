@@ -18,6 +18,11 @@ package org.tensorflow;
 /** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
 public interface ExecutionEnvironment {
 
+  enum Environments {
+    GRAPH,
+    EAGER
+  }
+
   /**
    * Returns a builder to create a new {@link Operation}.
    *
@@ -28,4 +33,15 @@ public interface ExecutionEnvironment {
    *     then some resources may leak.
    */
   OperationBuilder opBuilder(String type, String name);
+
+  /**
+   * Get the type of this environment (from
+   * the `Environments` enumeration.
+   * @return An `Environments` value indicating the type of execution
+   *         environment.
+   */
+  Environments environmentType();
+
+  default boolean isEager() { return environmentType() == Environments.EAGER; }
+  default boolean isGraph() { return environmentType() == Environments.GRAPH; }
 }

@@ -131,6 +131,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new GraphOperationBuilder(this, type, name);
   }
 
+  @Override
+  public Environments environmentType() {
+    return Environments.GRAPH;
+  }
+
   /**
    * Import a representation of a TensorFlow graph.
    *

@@ -105,7 +105,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   @Override
   public Iterator<List<Output<?>>> iterator() {
 
-    if (!(tf.scope().env() instanceof EagerSession)) {
+    if (!tf.scope().env().isEager()) {
       throw new UnsupportedOperationException("Cannot iterate through a dataset in graph mode.");
     }
 
@@ -168,7 +168,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   public DatasetIterator makeOneShotIterator() {
     DatasetIterator iterator = makeInitializeableIterator();
     Op initializer = iterator.makeInitializer(this);
-    if (tf.scope().env() instanceof Graph) tf.initAdd(initializer);
+    if (tf.scope().env().isGraph()) tf.initAdd(initializer);
     return iterator;
   }
 
