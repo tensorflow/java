@@ -2,8 +2,6 @@ package org.tensorflow.data;
 
 
 import org.tensorflow.DataType;
-import org.tensorflow.EagerSession;
-import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.data.impl.BatchDataset;
@@ -28,13 +26,15 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
-  public Dataset(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public Dataset(Ops tf, List<DataType<?>> outputTypes,
+                 List<Shape> outputShapes) {
     if (Objects.isNull(tf)) {
       throw new IllegalArgumentException("Ops accessor cannot be null.");
     }
 
     if (outputTypes.size() != outputShapes.size()) {
-      throw new IllegalArgumentException("`outputTypes` and `outputShapes` must have the same size.");
+      throw new IllegalArgumentException("`outputTypes` and " +
+          "`outputShapes` must have the same size.");
     }
 
     this.tf = tf;
@@ -51,13 +51,15 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return A batched Dataset
    */
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
-    List<Shape> batchOutputShapes = getOutputShapes().stream()
-        .map(s -> Shape.of(batchSize, s.asArray()))
-        .collect(Collectors.toList());
+    List<Shape> batchOutputShapes =
+        outputShapes.stream()
+            .map(s -> Shape.of(batchSize, s.asArray()))
+            .collect(Collectors.toList());
 
-
-    return new BatchDataset(tf, this.getVariant(), tf.constant(batchSize),
-        tf.constant(dropLastBatch), this.getOutputTypes(), batchOutputShapes);
+    return new BatchDataset(tf, this.getVariant(),
+        tf.constant(batchSize),
+        tf.constant(dropLastBatch),
+        outputTypes, batchOutputShapes);
   }
 
   /**
@@ -79,7 +81,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return A new Dataset with `count` elements removed.
    */
   public final Dataset skip(long count) {
-    return new SkipDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+    return new SkipDataset(tf, this.getVariant(), tf.constant(count),
+        this.getOutputTypes(), this.getOutputShapes());
   }
 
   /**
@@ -87,14 +90,17 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * dataset.
    *
    * @param count The number of elements to "take" from this dataset.
-   * @return A new Dataset containing the first `count` elements from this dataset.
+   * @return A new Dataset containing the first `count` elements from this
+   * dataset.
    */
   public final Dataset take(long count) {
-    return new TakeDataset(tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+    return new TakeDataset(tf, this.getVariant(), tf.constant(count),
+        this.getOutputTypes(), this.getOutputShapes());
   }
 
   /**
-   * Creates an iterator which iterates through all batches of this Dataset in an eager fashion.
+   * Creates an iterator which iterates through all batches of this Dataset
+   * in an eager fashion.
    * Each batch is a list of components, returned as `Output` objects.
    * <p>
    * This method enables for-each iteration through batches when running
@@ -106,7 +112,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   public Iterator<List<Output<?>>> iterator() {
 
     if (!tf.scope().env().isEager()) {
-      throw new UnsupportedOperationException("Cannot iterate through a dataset in graph mode.");
+      throw new UnsupportedOperationException("Cannot iterate through a " +
+          "dataset in graph mode.");
     }
 
     DatasetIterator iterator = makeOneShotIterator();
@@ -184,7 +191,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    *                    type of each component of this dataset.
    * @return A new `Dataset`
    */
-  public static Dataset fromTensorSlices(Ops tf, List<Operand<?>> tensors, List<DataType<?>> outputTypes) {
+  public static Dataset fromTensorSlices(Ops tf, List<Operand<?>> tensors,
+                                         List<DataType<?>> outputTypes) {
     return new TensorSliceDataset(tf, tensors, outputTypes);
   }
 
