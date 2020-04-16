@@ -47,7 +47,7 @@ public final class Output<T extends TType> implements Operand<T> {
     return (DataType<T>)operation.dtype(index);
   }
 
-    /**
+  /**
    * Returns this Output object with the type {@code Output<U>}. This method is useful when given a
    * value of type {@code Output<?>}.
    *

@@ -3,7 +3,9 @@ package org.tensorflow.data;
 import org.junit.Test;
 import org.tensorflow.*;
 import org.tensorflow.op.Ops;
+import org.tensorflow.tools.ndarray.FloatNdArray;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;
@@ -12,6 +14,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class DatasetIteratorTest extends DatasetTestBase {
+
+  static class Logs {
+    int batches = 0;
+  }
 
   @Test
   public void testGraphIteration() {
@@ -27,9 +33,7 @@ public class DatasetIteratorTest extends DatasetTestBase {
           TInt32.DTYPE, TInt32.DTYPE
       );
 
-      Dataset dataset =
-          Dataset.fromTensorSlices(tf, tensors, dataTypes);
-
+      Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
       DatasetIterator iterator = dataset.makeOneShotIterator();
 
       List<Output<?>> components = iterator.getNext();
@@ -39,28 +43,19 @@ public class DatasetIteratorTest extends DatasetTestBase {
       try (Session session = new Session(graph)) {
         session.run(tf.init());
 
-        int count = 0;
-        while (true) {
-          try {
-            List<Tensor<?>> outputs = session.runner()
-                .fetch(X)
-                .fetch(y)
-                .run();
+        Logs logs = new Logs();
+        session.runner()
+            .fetch(X)
+            .fetch(y)
+            .repeat()
+            .forEach(outputs -> {
+              Tensor<TInt32> XBatch = outputs.pop(TInt32.DTYPE);
+              Tensor<TInt32> yBatch = outputs.pop(TInt32.DTYPE);
 
-            try (Tensor<TInt32> XBatch =
-                     outputs.get(0).expect(TInt32.DTYPE);
-                 Tensor<TInt32> yBatch =
-                     outputs.get(1).expect(TInt32.DTYPE);) {
-
-              assertEquals(testMatrix1.get(count), XBatch.data());
-              assertEquals(testMatrix2.get(count), yBatch.data());
-
-              count++;
-            }
-          } catch (IndexOutOfBoundsException e) {
-            break;
-          }
-        }
+              assertEquals(testMatrix1.get(logs.batches), XBatch.data());
+              assertEquals(testMatrix2.get(logs.batches), yBatch.data());
+              logs.batches++;
+            });
       }
     }
   }

@@ -23,8 +23,15 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterators;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -41,6 +48,8 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
+import org.tensorflow.types.*;
+import org.tensorflow.types.family.TType;
 
 /**
  * Driver for {@link Graph} execution.
@@ -71,20 +80,22 @@ import org.tensorflow.proto.framework.RunOptions;
  */
 public final class Session implements AutoCloseable {
 
-  /** Construct a new session with the associated {@link Graph}. */
+  /**
+   * Construct a new session with the associated {@link Graph}.
+   */
   public Session(Graph g) {
-    this(g, (ConfigProto)null);
+    this(g, (ConfigProto) null);
   }
 
   /**
    * Construct a new session with the associated {@link Graph} and configuration options.
    *
-   * @param g The {@link Graph} the created Session will operate on.
+   * @param g      The {@link Graph} the created Session will operate on.
    * @param config Configuration parameters for the session specified as a <a
-   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
-   *     protocol buffer.
+   *               href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
+   *               protocol buffer.
    * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
-   *     protocol buffer.
+   *                                  protocol buffer.
    */
   public Session(Graph g, ConfigProto config) {
     graph = g;
@@ -97,7 +108,9 @@ public final class Session implements AutoCloseable {
     }
   }
 
-  /** Wrap an existing session with the associated {@link Graph}. */
+  /**
+   * Wrap an existing session with the associated {@link Graph}.
+   */
   Session(Graph g, TF_Session nativeHandle) {
     graph = g;
     this.nativeHandle = nativeHandle;
@@ -135,21 +148,21 @@ public final class Session implements AutoCloseable {
    * Run {@link Operation}s and evaluate {@link Tensor Tensors}.
    *
    * <p>A Runner runs the necessary graph fragments to execute every {@link Operation} required to
-   * evaluate the {@link Tensor Tensors} to fetch. The {@link #feed(String,int,Tensor)} call allows
+   * evaluate the {@link Tensor Tensors} to fetch. The {@link #feed(String, int, Tensor)} call allows
    * callers to override the value of {@link Tensor Tensors} in the graph by substituting the
    * provided {@link Tensor Tensors} for the outputs of the operations provided to {@link
-   * #feed(String,int,Tensor)}.
+   * #feed(String, int, Tensor)}.
    */
   public final class Runner {
     /**
      * Avoid evaluating {@code operation} and substitute {@code t} for the value it produces.
      *
      * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code feed(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
-     *     feed(operation_name, output_index)}. These colon-separated names are commonly used in the
-     *     {@code SignatureDef} protocol buffer messages that are included in {@link
-     *     SavedModelBundle#metaGraphDef()}.
+     *                  shorthand for {@code feed(operation, 0)}, or it is a string of the form
+     *                  <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     *                  feed(operation_name, output_index)}. These colon-separated names are commonly used in the
+     *                  {@code SignatureDef} protocol buffer messages that are included in {@link
+     *                  SavedModelBundle#metaGraphDef()}.
      */
     public Runner feed(String operation, Tensor<?> t) {
       return feed(parseOutput(operation), t);
@@ -185,11 +198,11 @@ public final class Session implements AutoCloseable {
      * Make {@link #run()} return the output of {@code operation}.
      *
      * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code fetch(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
-     *     fetch(operation_name, output_index)}. These colon-separated names are commonly used in
-     *     the {@code SignatureDef} protocol buffer messages that are included in {@link
-     *     SavedModelBundle#metaGraphDef()}.
+     *                  shorthand for {@code fetch(operation, 0)}, or it is a string of the form
+     *                  <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     *                  fetch(operation_name, output_index)}. These colon-separated names are commonly used in
+     *                  the {@code SignatureDef} protocol buffer messages that are included in {@link
+     *                  SavedModelBundle#metaGraphDef()}.
      */
     public Runner fetch(String operation) {
       return fetch(parseOutput(operation));
@@ -209,16 +222,16 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
-    /** 
-     * Makes {@link #run()} return the Tensor referred to by {@code output}. 
+    /**
+     * Makes {@link #run()} return the Tensor referred to by {@code output}.
      */
     public Runner fetch(Output<?> output) {
       outputs.add(output);
       return this;
     }
-    
+
     /**
-     * Makes {@link #run()} return the Tensor referred to by the output of {@code operand}. 
+     * Makes {@link #run()} return the Tensor referred to by the output of {@code operand}.
      */
     public Runner fetch(Operand<?> operand) {
       return fetch(operand.asOutput());
@@ -300,6 +313,56 @@ public final class Session implements AutoCloseable {
     }
 
     /**
+     * Creates a stream of `Session.Run` objects which can be
+     * processed to retrieve the results of repeated calls
+     * to Session.Runner.run().
+     * <p>
+     * Each item in the stream contains the results corresponding
+     * to "fetched" tensors from this Runner.
+     * <p>
+     * When the graph contains a dataset iterator, the stream
+     * will end once the iterator has reached the end of
+     * its iteration.
+     * <p>
+     * To process only a prefix of this stream, a limit can manually
+     * specified using Stream.limit( ... ). All other Stream operators
+     * can be used on this stream as well.
+     *
+     * @return A Stream of Session.Run items containing results
+     * of repeated calls to Session.Runner.run()
+     */
+    public Stream<Session.Run> repeat() {
+      Iterator<Session.Run> iterator = new Iterator<Run>() {
+        List<Tensor<?>> outputs;
+
+        @Override
+        public boolean hasNext() {
+          if (outputs != null) {
+            for (Tensor<?> output : outputs) {
+              output.close();
+            }
+          }
+
+          try {
+            outputs = run();
+            return true;
+          } catch (IndexOutOfBoundsException e) {
+            // IndexOutOfBoundsException indicates the end of a dataset
+            // iteration.
+            return false;
+          }
+        }
+
+        @Override
+        public Run next() {
+          return new Run(outputs);
+        }
+      };
+
+      return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
+    }
+
+    /**
      * Execute graph fragments to compute requested fetches and return metadata about the run.
      *
      * <p>This is exactly like {@link #run()}, but in addition to the requested Tensors, also
@@ -328,13 +391,13 @@ public final class Session implements AutoCloseable {
       }
       idx = 0;
       for (Output<?> o : inputs) {
-        inputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
+        inputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         inputOpIndices[idx] = o.index();
         idx++;
       }
       idx = 0;
       for (Output<?> o : outputs) {
-        outputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
+        outputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         outputOpIndices[idx] = o.index();
         idx++;
       }
@@ -372,10 +435,7 @@ public final class Session implements AutoCloseable {
           throw e;
         }
       }
-      Run ret = new Run();
-      ret.outputs = outputs;
-      ret.metadata = metadata;
-      return ret;
+      return new Run(outputs, metadata);
     }
 
     private class Reference implements AutoCloseable {
@@ -431,7 +491,9 @@ public final class Session implements AutoCloseable {
     private RunOptions runOptions = null;
   }
 
-  /** Create a Runner to execute graph operations and evaluate Tensors. */
+  /**
+   * Create a Runner to execute graph operations and evaluate Tensors.
+   */
   public Runner runner() {
     return new Runner();
   }
@@ -469,8 +531,10 @@ public final class Session implements AutoCloseable {
    *
    * <p>See {@link Runner#runAndFetchMetadata()}
    */
-  public static final class Run {
-    /** Tensors from requested fetches. */
+  public static final class Run implements AutoCloseable {
+    /**
+     * Tensors from requested fetches.
+     */
     public List<Tensor<?>> outputs;
 
     /**
@@ -485,6 +549,31 @@ public final class Session implements AutoCloseable {
      * this field may be replaced by more type-safe equivalents at any time.
      */
     public RunMetadata metadata;
+
+    /**
+     * Current `pop` index in the `outputs` list.
+     */
+    private int index = 0;
+
+    Run(List<Tensor<?>> outputs, RunMetadata metadata) {
+      this.outputs = outputs;
+      this.metadata = metadata;
+    }
+
+    Run(List<Tensor<?>> outputs) {
+      this.outputs = outputs;
+    }
+
+    public Tensor<?> get(int index) {
+      return this.outputs.get(index);
+    }
+
+    @Override
+    public void close() {
+      for (Tensor<?> tensor : this.outputs) {
+        tensor.close();
+      }
+    }
   }
 
   private final Graph graph;
@@ -550,24 +639,24 @@ public final class Session implements AutoCloseable {
    * <p>The author apologizes for the ugliness of the long argument list of this method. However,
    * take solace in the fact that this is a private method meant to cross the JNI boundary.
    *
-   * @param handle to the C API TF_Session object (Session.nativeHandle)
-   * @param runOptions A RunOptions protocol buffer, or null
-   * @param inputOpHandles (see inputOpIndices)
-   * @param inputOpIndices (see inputTensorHandles)
-   * @param inputTensorHandles together with inputOpHandles and inputOpIndices specifies the values
-   *     that are being "fed" (do not need to be computed) during graph execution.
-   *     inputTensorHandles[i] (which corresponds to a Tensor.nativeHandle) is considered to be the
-   *     inputOpIndices[i]-th output of the Operation inputOpHandles[i]. Thus, it is required that
-   *     inputOpHandles.length == inputOpIndices.length == inputTensorHandles.length.
-   * @param outputOpHandles (see outputOpIndices)
-   * @param outputOpIndices together with outputOpHandles identifies the set of values that should
-   *     be computed. The outputOpIndices[i]-th output of the Operation outputOpHandles[i], It is
-   *     required that outputOpHandles.length == outputOpIndices.length.
-   * @param targetOpHandles is the set of Operations in the graph that are to be executed but whose
-   *     output will not be returned
-   * @param wantRunMetadata indicates whether metadata about this execution should be returned.
+   * @param handle              to the C API TF_Session object (Session.nativeHandle)
+   * @param runOptions          A RunOptions protocol buffer, or null
+   * @param inputOpHandles      (see inputOpIndices)
+   * @param inputOpIndices      (see inputTensorHandles)
+   * @param inputTensorHandles  together with inputOpHandles and inputOpIndices specifies the values
+   *                            that are being "fed" (do not need to be computed) during graph execution.
+   *                            inputTensorHandles[i] (which corresponds to a Tensor.nativeHandle) is considered to be the
+   *                            inputOpIndices[i]-th output of the Operation inputOpHandles[i]. Thus, it is required that
+   *                            inputOpHandles.length == inputOpIndices.length == inputTensorHandles.length.
+   * @param outputOpHandles     (see outputOpIndices)
+   * @param outputOpIndices     together with outputOpHandles identifies the set of values that should
+   *                            be computed. The outputOpIndices[i]-th output of the Operation outputOpHandles[i], It is
+   *                            required that outputOpHandles.length == outputOpIndices.length.
+   * @param targetOpHandles     is the set of Operations in the graph that are to be executed but whose
+   *                            output will not be returned
+   * @param wantRunMetadata     indicates whether metadata about this execution should be returned.
    * @param outputTensorHandles will be filled in with handles to the outputs requested. It is
-   *     required that outputTensorHandles.length == outputOpHandles.length.
+   *                            required that outputTensorHandles.length == outputOpHandles.length.
    * @return if wantRunMetadata is true, a RunMetadata protocol buffer, false otherwise.
    */
   private static RunMetadata run(
@@ -604,8 +693,8 @@ public final class Session implements AutoCloseable {
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
       TF_SessionRun(handle, runOpts, inputs, inputValues, ninputs,
-                    outputs, outputValues, noutputs, targets, ntargets,
-                    runMetadata, status);
+          outputs, outputValues, noutputs, targets, ntargets,
+          runMetadata, status);
       status.throwExceptionIfNotOK();
 
       for (int i = 0; i < noutputs; ++i) {
