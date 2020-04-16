@@ -155,8 +155,8 @@ public final class Shape {
    * first dimension removed.
    */
   public Shape tail() {
-    long[] tail = Arrays.copyOfRange(dimensionSizes, 1, dimensionSizes.length);
-    return Shape.of(tail);
+    return Shape.of(Arrays.copyOfRange(dimensionSizes, 1,
+        dimensionSizes.length));
   }
 
   private static long computeSize(long[] dimensionSizes) {
