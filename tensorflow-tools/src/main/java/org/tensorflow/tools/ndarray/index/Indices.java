@@ -201,4 +201,19 @@ public final class Indices {
   public static Index flip() {
     return Flip.INSTANCE;
   }
+  
+  /**
+   * An index that returns elements according to an hyperslab defined by {@code start},
+   * {@code stride}, {@code count}, {@code block}. See {@link Hyperslab}.
+   * 
+   * @param start Starting location for the hyperslab.
+   * @param stride The number of elements to separate each element or block to be selected.
+   * @param count The number of elements or blocks to select along the dimension.
+   * @param block The size of the block selected from the dimension.
+   * 
+   * @return index
+   */
+  public static Index hyperslab(long start, long stride, long count, long block) {
+    return new Hyperslab(start, stride, count, block);
+  }
 }
