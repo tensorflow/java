@@ -142,17 +142,22 @@ for (List<Output<?>> batch : dataset) {
 
 ```
 
-#### Graph Mode: OneShotIterator
+#### Graph Mode: DatasetIterator
 
 The above code will not work in graph mode, which requires the use of
  `Session` instances
 to run the computations. In graph mode, datasets can be iterated over using the `DatasetIterator` abstraction, and a while loop.
 
 Once the iterator is initialized, repeated calls to `Session.run` will populate the components with new values, until all elements have
-been retrieved. After this, `Session.run` will result in an `IndexOutOfBounds` exception.
-
-Note that the make-iterator operation can be re-run to re-initialize
+been retrieved. After this, `Session.run` will result in an `IndexOutOfBounds
+` exception. Note that the make-iterator operation can be re-run to re-initialize
 the iterator, to iterate over the dataset a second time.
+
+To make repeated calls to `session.run`, to iterate through all elements, or
+ batches, of a dataset, use `Session.Runner.repeat()`, which returns a stream
+ of `Session.Run` objects containing the `fetch` results of each batch
+ run. The stream will automatically end once the iterator is exhausted. Use
+ `forEach` with a lambda to process the results of each batch.
 
 ```java
 try (Graph graph = new Graph()) {
@@ -189,21 +194,15 @@ try (Graph graph = new Graph()) {
         session.run(tf.init());
 
         // Iterate over dataset elements
-        while (true) {
-            try {
-                // Run training ops / fetch loss
-                List<Tensor<?>> outputs = session.runner()
-                    .addTarget(trainOp)
-                    .fetch(loss)
-                    .run();
-
-                ...
-
-            } catch (IndexOutOfBoundsException e) {
-                // Finished iterating
-                break;
-            }
-        }
+        session.runner()
+          .addTarget(trainOp)
+          .fetch(loss)
+          .repeat()
+          .forEach(outputs -> {
+            // process batch results.
+            float loss = results.get(0).expect(TFloat32.DTYPE).data().getFloat();
+            ...
+          });
     }
 }
 ```
