@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_AllocateTensor;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Dim;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
@@ -98,8 +96,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
     Tensor<T> t = new Tensor<>(dtype, shape);
-    TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
-    t.nativeRef = new NativeReference(nativeHandle);
+    t.tensorHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
     return t;
   }
 
@@ -210,7 +207,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    */
   @Override
   public void close() {
-    nativeRef.release();
+    tensorHandle.releaseReference();
   }
 
   /** Returns the {@link DataType} of elements stored in the Tensor. */
@@ -221,7 +218,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
   /** Returns the size, in bytes, of the tensor data. */
   public long numBytes() {
     if (numBytes == null) {
-      numBytes = TF_TensorByteSize(nativeRef.tensorHandle);
+      numBytes = TF_TensorByteSize(tensorHandle);
     }
     return numBytes;
   }
@@ -304,7 +301,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    */
   static Tensor<?> fromHandle(TF_Tensor handle) {
     Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.of(shape(handle)));
-    t.nativeRef = new NativeReference(handle);
+    t.tensorHandle = handle.retainReference();
     return t;
   }
 
@@ -315,7 +312,8 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    */
   static Tensor<?> fromHandle(TF_Tensor handle, EagerSession session) {
     Tensor<?> t = fromHandle(handle);
-    t.nativeRef.eager(session, t);
+    session.attach(handle);
+    handle.releaseReference();
     return t;
   }
 
@@ -324,71 +322,10 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * @throws IllegalStateException if tensor has been closed
    */
   TF_Tensor nativeHandle() {
-    return requireHandle(nativeRef.tensorHandle);
+    return requireHandle(tensorHandle);
   }
 
-  /**
-   * Reference to the underlying native tensor
-   *
-   * <p>Tensors are commonly allocated in a `try-with-resources` statement, where they get
-   * automatically released after executing the last line of the `try` block they were declared in.
-   *
-   * <p>They can also be attached to an eager session, where in this case their lifetime ends either
-   * when this session is closed or when the Tensor instance is no longer referenced and have been
-   * garbage-collected.
-   *
-   * <p>This helper class wraps the tensor native handle and support both situations; If an eager
-   * reference to the tensor exists, it will take care of releasing the tensor at the end of its
-   * life. If the tensor is being explicitly closed before this happens, it will take cake of
-   * clearing its association with any eager session before cleaning up the resources.
-   */
-  private static class NativeReference {
-
-    /** Attaches this reference to an eager session */
-    private class EagerReference extends EagerSession.NativeReference {
-
-      EagerReference(EagerSession session, Tensor<?> tensor) {
-        super(session, tensor);
-      }
-
-      @Override
-      void delete() {
-        // Mark this eager reference as cleared since it has been deleted by the session
-        Tensor.NativeReference.this.eagerRef = null;
-        Tensor.NativeReference.this.release();
-      }
-    }
-
-    NativeReference(TF_Tensor tensorHandle) {
-      setTensorHandle(tensorHandle);
-    }
-
-    void eager(EagerSession session, Tensor<?> tensor) {
-      if (eagerRef != null) {
-        throw new IllegalStateException("The tensor is already attached to an eager session");
-      }
-      eagerRef = new EagerReference(session, tensor);
-    }
-
-    synchronized void release() {
-      if (tensorHandle != null && !tensorHandle.isNull()) {
-        // Clear any remaining eager reference to this tensor
-        if (eagerRef != null) {
-          eagerRef.clear();
-          eagerRef = null;
-        }
-        Tensor.delete(tensorHandle);
-        setTensorHandle(null);
-      }
-    }
-
-    private TF_Tensor tensorHandle;
-    private EagerReference eagerRef;
-
-    private void setTensorHandle(TF_Tensor tensorHandle) {
-      this.tensorHandle = tensorHandle;
-    }
-  }
+  private TF_Tensor tensorHandle;
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {
     if (handle == null || handle.isNull()) {
@@ -398,16 +335,11 @@ public final class Tensor<T extends TType> implements AutoCloseable {
   }
 
   private static TF_Tensor allocate(int dtype, long[] shape, long byteSize) {
-    TF_Tensor t = TF_AllocateTensor(dtype, shape, shape.length, byteSize);
+    TF_Tensor t = TF_Tensor.allocateTensor(dtype, shape, byteSize);
     if (t == null || t.isNull()) {
       throw new IllegalStateException("unable to allocate memory for the Tensor");
     }
-    return t;
-  }
-
-  private static void delete(TF_Tensor handle) {
-    if (handle == null || handle.isNull()) return;
-    TF_DeleteTensor(handle);
+    return t.retainReference();
   }
 
   private static int dtype(TF_Tensor handle) {
@@ -425,7 +357,6 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     return dims;
   }
 
-  private NativeReference nativeRef = null;
   private final DataType<T> dtype;
   private final Shape shape;
   private T data = null;

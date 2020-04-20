@@ -26,6 +26,13 @@
       <version>${javacpp.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
+      <classifier>${javacpp.platform}</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>${protobuf.version}</version>

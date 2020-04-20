@@ -15,9 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteOp;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_Execute;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewOp;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpAddInput;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpAddInputList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBool;
@@ -60,23 +58,28 @@ final class EagerOperationBuilder implements OperationBuilder {
     this.session = session;
     this.type = type;
     this.name = name;
-    this.nativeRef = new NativeReference(session, this, allocate(session.nativeHandle(), type));
+    this.opHandle = allocate(session.nativeHandle(), type);
+    session.attach(opHandle);
+    opHandle.releaseReference();
   }
 
   @Override
   public EagerOperation build() {
-    TFE_TensorHandle[] tensorHandles = execute(nativeRef.opHandle);
+    TFE_TensorHandle[] tensorHandles = execute(opHandle);
     EagerOperation operation =
-        new EagerOperation(session, nativeRef.opHandle, tensorHandles, type, name);
+        new EagerOperation(session, opHandle, tensorHandles, type, name);
     // Release our reference to the native op handle now that we transferred its
     // ownership to the EagerOperation
-    nativeRef.clear();
+    session.detach(opHandle);
+    for (int i = 0; i < tensorHandles.length; ++i) {
+      tensorHandles[i].releaseReference();
+    }
     return operation;
   }
 
   @Override
   public EagerOperationBuilder addInput(Output<?> input) {
-    addInput(nativeRef.opHandle, (TFE_TensorHandle)input.getUnsafeNativeHandle());
+    addInput(opHandle, (TFE_TensorHandle)input.getUnsafeNativeHandle());
     return this;
   }
 
@@ -86,7 +89,7 @@ final class EagerOperationBuilder implements OperationBuilder {
     for (int i = 0; i < inputs.length; ++i) {
       inputHandles[i] = (TFE_TensorHandle)inputs[i].getUnsafeNativeHandle();
     }
-    addInputList(nativeRef.opHandle, inputHandles);
+    addInputList(opHandle, inputHandles);
     return this;
   }
 
@@ -98,7 +101,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder setDevice(String device) {
-    setDevice(nativeRef.opHandle, device);
+    setDevice(opHandle, device);
     return this;
   }
 
@@ -114,55 +117,55 @@ final class EagerOperationBuilder implements OperationBuilder {
     for (int i = 0; i < values.length; ++i) {
       objects[i] = values[i].getBytes(utf8);
     }
-    setAttrStringList(nativeRef.opHandle, name, objects);
+    setAttrStringList(opHandle, name, objects);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, byte[] values) {
-    setAttrString(nativeRef.opHandle, name, values);
+    setAttrString(opHandle, name, values);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, long value) {
-    setAttrInt(nativeRef.opHandle, name, value);
+    setAttrInt(opHandle, name, value);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, long[] values) {
-    setAttrIntList(nativeRef.opHandle, name, values);
+    setAttrIntList(opHandle, name, values);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, float value) {
-    setAttrFloat(nativeRef.opHandle, name, value);
+    setAttrFloat(opHandle, name, value);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, float[] values) {
-    setAttrFloatList(nativeRef.opHandle, name, values);
+    setAttrFloatList(opHandle, name, values);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, boolean value) {
-    setAttrBool(nativeRef.opHandle, name, value);
+    setAttrBool(opHandle, name, value);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, boolean[] values) {
-    setAttrBoolList(nativeRef.opHandle, name, values);
+    setAttrBoolList(opHandle, name, values);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, DataType<?> value) {
-    setAttrType(nativeRef.opHandle, name, value.nativeCode());
+    setAttrType(opHandle, name, value.nativeCode());
     return this;
   }
 
@@ -172,13 +175,13 @@ final class EagerOperationBuilder implements OperationBuilder {
     for (int i = 0; i < values.length; ++i) {
       c[i] = values[i].nativeCode();
     }
-    setAttrTypeList(nativeRef.opHandle, name, c);
+    setAttrTypeList(opHandle, name, c);
     return this;
   }
 
   @Override
   public EagerOperationBuilder setAttr(String name, Tensor<?> value) {
-    setAttrTensor(nativeRef.opHandle, name, value.nativeHandle());
+    setAttrTensor(opHandle, name, value.nativeHandle());
     return this;
   }
 
@@ -191,7 +194,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder setAttr(String name, Shape value) {
-    setAttrShape(nativeRef.opHandle, name, value.asArray(), value.numDimensions());
+    setAttrShape(opHandle, name, value.asArray(), value.numDimensions());
     return this;
   }
 
@@ -217,38 +220,15 @@ final class EagerOperationBuilder implements OperationBuilder {
         }
       }
     }
-    setAttrShapeList(nativeRef.opHandle, name, shapes, numDimensions);
+    setAttrShapeList(opHandle, name, shapes, numDimensions);
     return this;
   }
 
-  private static class NativeReference extends EagerSession.NativeReference {
-
-    NativeReference(EagerSession session, EagerOperationBuilder operation, TFE_Op opHandle) {
-      super(session, operation);
-      this.opHandle = opHandle;
-    }
-
-    @Override
-    public void clear() {
-      super.clear();
-      opHandle = null;
-    }
-
-    @Override
-    synchronized void delete() {
-      if (opHandle != null && !opHandle.isNull()) {
-        EagerOperationBuilder.delete(opHandle);
-        opHandle = null;
-      }
-    }
-
-    private TFE_Op opHandle;
-  }
+  private TFE_Op opHandle;
 
   private final EagerSession session;
   private final String type;
   private final String name;
-  private final NativeReference nativeRef;
 
   /** This value should be >= to the maximum number of outputs in any op */
   private static final int MAX_OUTPUTS_PER_OP = 8;
@@ -281,15 +261,10 @@ final class EagerOperationBuilder implements OperationBuilder {
     requireContext(ctxHandle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TFE_Op op = TFE_NewOp(ctxHandle, type, status);
+      TFE_Op op = TFE_Op.newOp(ctxHandle, type, status);
       status.throwExceptionIfNotOK();
-      return op;
+      return op.retainReference();
     }
-  }
-
-  private static void delete(TFE_Op opHandle) {
-    if (opHandle == null || opHandle.isNull()) return;
-    TFE_DeleteOp(opHandle);
   }
 
   private static TFE_TensorHandle[] execute(TFE_Op opHandle) {
@@ -303,7 +278,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
       TFE_TensorHandle[] rethandles = new TFE_TensorHandle[numRetvals.get()];
       for (int i = 0; i < rethandles.length; ++i) {
-        rethandles[i] = retvals.get(TFE_TensorHandle.class, i);
+        rethandles[i] = retvals.get(TFE_TensorHandle.class, i).withDeallocator().retainReference();
       }
       return rethandles;
     }

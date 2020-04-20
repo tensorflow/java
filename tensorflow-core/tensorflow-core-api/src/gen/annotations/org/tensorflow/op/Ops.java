@@ -128,6 +128,7 @@ import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
+import org.tensorflow.op.core.QuantizedConcatV2;
 import org.tensorflow.op.core.QuantizedReshape;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
@@ -3732,6 +3733,21 @@ public final class Ops {
   public <T extends TType, U extends TNumber> Prod<T> prod(Operand<T> input, Operand<U> axis,
       Prod.Options... options) {
     return Prod.create(scope, input, axis, options);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param values
+   * @param axis
+   * @param inputMins
+   * @param inputMaxes
+   * @return a new instance of QuantizedConcatV2
+   */
+  public <T extends TType, U extends TNumber> QuantizedConcatV2<T> quantizedConcatV2(
+      Iterable<Operand<T>> values, Operand<U> axis, Iterable<Operand<TFloat32>> inputMins,
+      Iterable<Operand<TFloat32>> inputMaxes) {
+    return QuantizedConcatV2.create(scope, values, axis, inputMins, inputMaxes);
   }
 
   /**

@@ -123,24 +123,24 @@ the conventions established on this page:
 Artifacts resulting from this repository are actually only available as snapshots and to retrieve them, you need
 to add Sonatype OSS repository in your pom.xml, like the following
 
-```
-    <repositories>
-        <repository>
-            <id>tensorflow-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <dependencies>
-        <!-- Example of dependency, see section above for more options -->
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow-core-platform</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+```xml
+<repositories>
+    <repository>
+        <id>tensorflow-snapshots</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+<dependencies>
+    <!-- Example of dependency, see section above for more options -->
+    <dependency>
+        <groupId>org.tensorflow</groupId>
+        <artifactId>tensorflow-core-platform</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
 ```
 
 ## How to Contribute?

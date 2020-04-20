@@ -39,7 +39,7 @@ public abstract class AbstractTFE_Context extends Pointer {
      * Calls TFE_NewContext(), and registers a deallocator.
      * @return TFE_Context created. Do not call TFE_DeleteContext() on it.
      */
-    public static TFE_Context newSession(TFE_ContextOptions opts, TF_Status status) {
+    public static TFE_Context newContext(TFE_ContextOptions opts, TF_Status status) {
         TFE_Context c = TFE_NewContext(opts, status);
         if (c != null) {
             c.opts = opts;

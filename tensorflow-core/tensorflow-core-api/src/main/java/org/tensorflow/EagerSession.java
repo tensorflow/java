@@ -21,14 +21,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptions
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteContext;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewContext;
 
-import java.lang.ref.PhantomReference;
-import java.lang.ref.Reference;
-import java.lang.ref.ReferenceQueue;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
@@ -187,12 +181,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
     /** Builds an eager session with the selected options. */
     public EagerSession build() {
-      return new EagerSession(this, new ReferenceQueue<Object>());
-    }
-
-    // For garbage-collection tests only
-    EagerSession buildForGcTest(ReferenceQueue<Object> gcQueue) {
-      return new EagerSession(this, gcQueue);
+      return new EagerSession(this);
     }
 
     private boolean async;
@@ -349,7 +338,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   @Override
   public OperationBuilder opBuilder(String type, String name) {
     if (resourceCleanupStrategy == ResourceCleanupStrategy.ON_SAFE_POINTS) {
-      nativeResources.tryCleanup();
+      nativeRefs.close();
     }
     checkSession();
     return new EagerOperationBuilder(this, type, name);
@@ -364,174 +353,38 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     return resourceCleanupStrategy;
   }
 
-  /**
-   * A reference to one or more allocated native resources.
-   *
-   * <p>Any Java objects owning native resources must declare a reference to those resources in a
-   * subclass that extends from {@code NativeReference}. When {@link NativeReference#delete()} is
-   * invoked, the resources must be freed. For example:
-   *
-   * <pre>{@code
-   * private static class NativeReference extends EagerSession.NativeReference {
-   *
-   *    NativeReference(EagerSession session, MyClass referent, long handle) {
-   *        super(session, referent);
-   *        this.handle = handle;
-   *    }
-   *
-   *    @Override
-   *    void delete() {
-   *        MyClass.nativeDelete(handle);
-   *    }
-   *
-   *    private final long handle;
-   * }
-   * }</pre>
-   *
-   * A Java object "owns" a native resource if this resource should not survive beyond the lifetime
-   * of this object.
-   *
-   * <p><b>IMPORTANT</b>: All nested subclasses of {@code NativeReference} must be declared as
-   * static, otherwise their instances will hold an implicit reference to their enclosing object,
-   * preventing the garbage collector to release them when they are no longer needed.
-   */
-  abstract static class NativeReference extends PhantomReference<Object> {
-
-    /** Attach a new phantom reference of {@code referent} to {@code session}. */
-    public NativeReference(EagerSession session, Object referent) {
-      super(referent, session.nativeResources.garbageQueue);
-      session.checkSession();
-      nativeResources = session.nativeResources;
-      nativeResources.attach(this);
+  void attach(Pointer... resources) {
+    checkSession();
+    for (Pointer r : resources) {
+      nativeResources.attach(r);
     }
-
-    /**
-     * Detach this reference from its current session.
-     *
-     * <p>Clearing a NativeReference does not invoke {@link #delete()}, thus won't release the
-     * native resources it refers to. It can be used when passing the ownership of those resources
-     * to another object.
-     *
-     * <p>If native resources needs to be deleted as well, call {@link #delete()} explicitly.
-     */
-    @Override
-    public void clear() {
-      nativeResources.detach(this);
-      super.clear();
-    }
-
-    /** Releases all native resources owned by the referred object, now deleted. */
-    abstract void delete();
-
-    private final NativeResourceCollector nativeResources;
   }
 
-  /**
-   * Collects native references attached to this session and releases their resources if they are no
-   * longer needed.
-   */
-  private static class NativeResourceCollector {
-
-    NativeResourceCollector(ReferenceQueue<Object> garbageQueue) {
-      this.garbageQueue = garbageQueue;
-    }
-
-    void attach(NativeReference nativeRef) {
-      synchronized (nativeRefs) {
-        nativeRefs.put(nativeRef, null);
+  void detach(Pointer... resources) {
+    checkSession();
+    for (Pointer r : resources) {
+      if (resourceCleanupStrategy == ResourceCleanupStrategy.ON_SAFE_POINTS) {
+          nativeRefs.attach(r);
       }
+      nativeResources.detach(r);
     }
-
-    void detach(NativeReference nativeRef) {
-      synchronized (nativeRefs) {
-        nativeRefs.remove(nativeRef);
-      }
-    }
-
-    void delete(NativeReference nativeRef) {
-      synchronized (nativeRefs) {
-        if (!nativeRefs.keySet().remove(nativeRef)) {
-          return; // safety check
-        }
-      }
-      nativeRef.delete();
-    }
-
-    void deleteAll() {
-      synchronized (nativeRefs) {
-        for (NativeReference nativeRef : nativeRefs.keySet()) {
-          nativeRef.delete();
-        }
-        nativeRefs.clear();
-      }
-    }
-
-    void tryCleanup() {
-      Reference<?> nativeRef;
-      synchronized (nativeRefs) {
-        while ((nativeRef = garbageQueue.poll()) != null) {
-          delete((NativeReference) nativeRef);
-        }
-      }
-    }
-
-    synchronized void startCleanupThread() {
-      if (cleanupInBackground) {
-        return; // ignore if cleanup thread is already running
-      }
-      try {
-        cleanupInBackground = true;
-        cleanupService.execute(
-            new Runnable() {
-              @Override
-              public void run() {
-                try {
-                  while (cleanupInBackground) {
-                    NativeReference nativeRef = (NativeReference) garbageQueue.remove();
-                    delete(nativeRef);
-                  }
-                } catch (InterruptedException e) {
-                  // exit
-                }
-              }
-            });
-      } catch (Exception e) {
-        cleanupInBackground = false;
-        throw e;
-      }
-    }
-
-    void stopCleanupThread() {
-      cleanupInBackground = false;
-      cleanupService.shutdownNow(); // returns without waiting for the thread to stop
-    }
-
-    private final ExecutorService cleanupService = Executors.newSingleThreadExecutor(r -> {
-      Thread thread = Executors.defaultThreadFactory().newThread(r);
-      thread.setDaemon(true);
-      thread.setPriority(Thread.MAX_PRIORITY);
-      thread.setContextClassLoader(null);
-      return thread;
-    });
-    private final Map<NativeReference, Void> nativeRefs = new IdentityHashMap<>();
-    private final ReferenceQueue<Object> garbageQueue;
-    private volatile boolean cleanupInBackground = false;
   }
 
   private static volatile EagerSession defaultSession = null;
 
-  private final NativeResourceCollector nativeResources;
+  private final PointerScope nativeRefs;
+  private final PointerScope nativeResources;
   private final ResourceCleanupStrategy resourceCleanupStrategy;
   private TFE_Context nativeHandle;
 
-  private EagerSession(Options options, ReferenceQueue<Object> garbageQueue) {
-    this.nativeResources = new NativeResourceCollector(garbageQueue);
+  private EagerSession(Options options) {
+    this.nativeRefs = new PointerScope();
+    this.nativeResources = new PointerScope();
     this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
     this.resourceCleanupStrategy = options.resourceCleanupStrategy;
 
-    if (resourceCleanupStrategy == ResourceCleanupStrategy.IN_BACKGROUND) {
-      nativeResources.startCleanupThread();
-    }
+    nativeRefs.close(); // remove from stack
+    nativeResources.close(); // remove from stack
   }
 
   private void checkSession() {
@@ -542,10 +395,8 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private synchronized void doClose() {
     if (nativeHandle != null && !nativeHandle.isNull()) {
-      if (resourceCleanupStrategy == ResourceCleanupStrategy.IN_BACKGROUND) {
-        nativeResources.stopCleanupThread();
-      }
-      nativeResources.deleteAll();
+      nativeRefs.close();
+      nativeResources.close();
       delete(nativeHandle);
       nativeHandle = null;
     }

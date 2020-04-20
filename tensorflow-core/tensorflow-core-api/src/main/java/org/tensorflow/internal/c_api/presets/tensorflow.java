@@ -205,7 +205,9 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                .put(new Info("TFE_Context").pointerTypes("TFE_Context").base("org.tensorflow.internal.c_api.AbstractTFE_Context"))
                .put(new Info("TFE_ContextOptions").pointerTypes("TFE_ContextOptions").base("org.tensorflow.internal.c_api.AbstractTFE_ContextOptions"))
                .put(new Info("TFE_Context::context").javaText("@MemberGetter public native @ByRef EagerContext context();"))
+               .put(new Info("TFE_Op").pointerTypes("TFE_Op").base("org.tensorflow.internal.c_api.AbstractTFE_Op"))
                .put(new Info("TFE_Op::operation").javaText("@MemberGetter public native @ByRef EagerOperation operation();"))
+               .put(new Info("TFE_TensorHandle").pointerTypes("TFE_TensorHandle").base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
                .put(new Info("TF_ShapeInferenceContextDimValueKnown", "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());
     }
 }
