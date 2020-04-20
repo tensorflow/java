@@ -34,6 +34,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp-platform</artifactId>
+      <version>${javacpp.version}</version>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>

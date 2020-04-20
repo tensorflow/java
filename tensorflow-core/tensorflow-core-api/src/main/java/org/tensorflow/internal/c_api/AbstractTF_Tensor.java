@@ -66,6 +66,11 @@ public abstract class AbstractTF_Tensor extends Pointer {
         return t;
     }
 
+    /** Registers a deallocator and returns this. */
+    public TF_Tensor withDeallocator() {
+        return (TF_Tensor)this.deallocator(new DeleteDeallocator((TF_Tensor)this));
+    }
+
     /**
      * Calls the deallocator, if registered, otherwise has no effect.
      */

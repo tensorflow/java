@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteOp;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteTensorHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpGetInputLength;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpGetOutputLength;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleDataType;
@@ -52,7 +50,8 @@ class EagerOperation extends AbstractOperation {
     this.session = session;
     this.type = type;
     this.name = name;
-    this.nativeRef = new NativeReference(session, this, opNativeHandle, outputNativeHandles);
+    session.attach(this.opHandle = opNativeHandle);
+    session.attach(this.outputHandles = outputNativeHandles);
     this.outputTensors = new AtomicReferenceArray<>(outputNativeHandles.length);
   }
 
@@ -68,22 +67,22 @@ class EagerOperation extends AbstractOperation {
 
   @Override
   public int numOutputs() {
-    return nativeRef.outputHandles.length;
+    return outputHandles.length;
   }
 
   @Override
   public int outputListLength(final String name) {
-    return outputListLength(nativeRef.opHandle, name);
+    return outputListLength(opHandle, name);
   }
 
   @Override
   public int inputListLength(final String name) {
-    return inputListLength(nativeRef.opHandle, name);
+    return inputListLength(opHandle, name);
   }
 
   @Override
   public TFE_TensorHandle getUnsafeNativeHandle(int outputIndex) {
-    return nativeRef.outputHandles[outputIndex];
+    return outputHandles[outputIndex];
   }
 
   @Override
@@ -124,7 +123,6 @@ class EagerOperation extends AbstractOperation {
   }
 
   private final EagerSession session;
-  private final NativeReference nativeRef;
   private final String type;
   private final String name;
   private final AtomicReferenceArray<Tensor<?>> outputTensors;
@@ -136,38 +134,15 @@ class EagerOperation extends AbstractOperation {
     TF_Tensor tensorNativeHandle = resolveTensorHandle(getUnsafeNativeHandle(outputIndex));
     Tensor<?> tensor = Tensor.fromHandle(tensorNativeHandle, session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      tensor.close();
+      session.detach(tensorNativeHandle);
       tensor = outputTensors.get(outputIndex);
     }
+    tensorNativeHandle.releaseReference();
     return tensor;
   }
 
-  private static class NativeReference extends EagerSession.NativeReference {
-
-    NativeReference(
-        EagerSession session, EagerOperation operation, TFE_Op opHandle, TFE_TensorHandle[] outputHandles) {
-      super(session, operation);
-      this.opHandle = opHandle;
-      this.outputHandles = outputHandles;
-    }
-
-    @Override
-    void delete() {
-      if (opHandle != null && !opHandle.isNull()) {
-        for (int i = 0; i < outputHandles.length; ++i) {
-          if (outputHandles[i] != null && !outputHandles[i].isNull()) {
-            EagerOperation.deleteTensorHandle(outputHandles[i]);
-            outputHandles[i] = null;
-          }
-        }
-        EagerOperation.delete(opHandle);
-        opHandle = null;
-      }
-    }
-
-    private TFE_Op opHandle;
-    private final TFE_TensorHandle[] outputHandles;
-  }
+  private TFE_Op opHandle;
+  private final TFE_TensorHandle[] outputHandles;
 
   private static void requireOp(TFE_Op handle) {
     if (handle == null || handle.isNull()) {
@@ -181,21 +156,11 @@ class EagerOperation extends AbstractOperation {
     }
   }
 
-  private static void delete(TFE_Op handle) {
-    if (handle == null || handle.isNull()) return;
-    TFE_DeleteOp(handle);
-  }
-
-  private static void deleteTensorHandle(TFE_TensorHandle handle) {
-    if (handle == null || handle.isNull()) return;
-    TFE_DeleteTensorHandle(handle);
-  }
-
   private static TF_Tensor resolveTensorHandle(TFE_TensorHandle handle) {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status);
+      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator().retainReference();
       status.throwExceptionIfNotOK();
       return tensor;
     }

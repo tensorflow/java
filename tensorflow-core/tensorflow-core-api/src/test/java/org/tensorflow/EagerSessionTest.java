@@ -21,12 +21,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.ref.Reference;
-import java.lang.ref.ReferenceQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.bytedeco.javacpp.IntPointer;
+import org.bytedeco.javacpp.Pointer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -44,67 +40,71 @@ public class EagerSessionTest {
 
   @Test
   public void cleanupResourceOnSessionClose() {
-    TestReference ref;
+    Pointer ref;
     try (EagerSession s =
         EagerSession.options()
             .resourceCleanupStrategy(ResourceCleanupStrategy.ON_SESSION_CLOSE)
             .build()) {
-      ref = new TestReference(s, new Object());
-      assertFalse(ref.isDeleted());
+      s.attach(ref = new IntPointer(1));
+      assertFalse(ref.isNull());
 
       // check that reaching safe point did not release resources
       buildOp(s);
-      assertFalse(ref.isDeleted());
+      assertFalse(ref.isNull());
     }
-    assertTrue(ref.isDeleted());
+    assertTrue(ref.isNull());
   }
 
   @Test
   public void cleanupResourceOnSafePoints() {
-    TestGarbageCollectorQueue gcQueue = new TestGarbageCollectorQueue();
     try (EagerSession s =
         EagerSession.options()
             .resourceCleanupStrategy(ResourceCleanupStrategy.ON_SAFE_POINTS)
-            .buildForGcTest(gcQueue)) {
+            .build()) {
 
-      TestReference ref = new TestReference(s, new Object());
-      assertFalse(ref.isDeleted());
+      Pointer ref = new IntPointer(1);
+      s.attach(ref);
+      assertFalse(ref.isNull());
 
       // garbage collecting the reference won't release until we reached safe point
-      gcQueue.collect(ref);
-      assertFalse(ref.isDeleted());
+      s.detach(ref);
+      assertFalse(ref.isNull());
       buildOp(s); // safe point
-      assertTrue(ref.isDeleted());
-      assertTrue(gcQueue.isEmpty());
+      assertTrue(ref.isNull());
     }
   }
 
   @Test
   public void cleanupResourceInBackground() {
-    TestGarbageCollectorQueue gcQueue = new TestGarbageCollectorQueue();
     try (EagerSession s =
         EagerSession.options()
             .resourceCleanupStrategy(ResourceCleanupStrategy.IN_BACKGROUND)
-            .buildForGcTest(gcQueue)) {
+            .build()) {
 
-      TestReference ref = new TestReference(s, new Object());
-      assertFalse(ref.isDeleted());
-
-      gcQueue.collect(ref);
+      Pointer ref = new IntPointer(1024 * 1024);
+      s.attach(ref);
+      assertFalse(ref.isNull());
+      System.gc();
       sleep(50); // allow some time to the background thread for cleaning up resources
-      assertTrue(ref.isDeleted());
-      assertTrue(gcQueue.isEmpty());
+
+      long before = Pointer.totalBytes();
+      s.detach(ref.retainReference());
+      ref = null;
+      System.gc();
+      sleep(50); // allow some time to the background thread for cleaning up resources
+      long after = Pointer.totalBytes();
+      assertEquals(4 * 1024 * 1024, before - after);
     }
   }
 
   @Test
   public void clearedResourcesAreNotCleanedUp() {
-    TestReference ref;
+    Pointer ref;
     try (EagerSession s = EagerSession.create()) {
-      ref = new TestReference(s, new Object());
-      ref.clear();
+      s.attach(ref = new IntPointer(1));
+      s.detach(ref.retainReference());
     }
-    assertFalse(ref.isDeleted());
+    assertFalse(ref.isNull());
   }
 
   @Test
@@ -124,7 +124,7 @@ public class EagerSessionTest {
     EagerSession s = EagerSession.create();
     s.close();
     try {
-      new TestReference(s, new Object());
+      s.attach(new IntPointer(1));
       fail();
     } catch (IllegalStateException e) {
       // ok
@@ -152,55 +152,6 @@ public class EagerSessionTest {
     } catch (IllegalStateException e) {
       // expected
     }
-  }
-
-  private static class TestReference extends EagerSession.NativeReference {
-
-    TestReference(EagerSession session, Object referent) {
-      super(session, referent);
-    }
-
-    @Override
-    void delete() {
-      if (!deleted.compareAndSet(false, true)) {
-        fail("Reference was deleted more than once");
-      }
-    }
-
-    boolean isDeleted() {
-      return deleted.get();
-    }
-
-    private final AtomicBoolean deleted = new AtomicBoolean();
-  }
-
-  private static class TestGarbageCollectorQueue extends ReferenceQueue<Object> {
-
-    @Override
-    public Reference<? extends Object> poll() {
-      return garbage.poll();
-    }
-
-    @Override
-    public Reference<? extends Object> remove() throws InterruptedException {
-      return garbage.take();
-    }
-
-    @Override
-    public Reference<? extends Object> remove(long timeout)
-        throws IllegalArgumentException, InterruptedException {
-      return garbage.poll(timeout, TimeUnit.MILLISECONDS);
-    }
-
-    void collect(TestReference ref) {
-      garbage.add(ref);
-    }
-
-    boolean isEmpty() {
-      return garbage.isEmpty();
-    }
-
-    private final BlockingQueue<TestReference> garbage = new LinkedBlockingQueue<>();
   }
 
   private static void buildOp(EagerSession s) {
