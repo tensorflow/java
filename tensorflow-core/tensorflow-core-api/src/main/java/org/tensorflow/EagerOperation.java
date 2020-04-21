@@ -50,8 +50,10 @@ class EagerOperation extends AbstractOperation {
     this.session = session;
     this.type = type;
     this.name = name;
-    session.attach(this.opHandle = opNativeHandle);
-    session.attach(this.outputHandles = outputNativeHandles);
+    this.opHandle = opNativeHandle;
+    this.outputHandles = outputNativeHandles;
+    session.attach(opNativeHandle);
+    session.attach(outputNativeHandles);
     this.outputTensors = new AtomicReferenceArray<>(outputNativeHandles.length);
   }
 
