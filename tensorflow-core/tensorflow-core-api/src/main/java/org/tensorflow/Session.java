@@ -344,7 +344,8 @@ public final class Session implements AutoCloseable {
       }
       Reference runRef = new Reference();
       RunMetadata metadata = null;
-      try {
+      List<Tensor<?>> outputs = new ArrayList<>();
+      try (PointerScope scope = new PointerScope()) {
         metadata =
             Session.run(
                 nativeHandle,
@@ -356,21 +357,19 @@ public final class Session implements AutoCloseable {
                 outputOpIndices,
                 targetOpHandles,
                 wantMetadata,
-                outputTensorHandles);
+                outputTensorHandles,
+                scope);
+        for (TF_Tensor h : outputTensorHandles) {
+          outputs.add(Tensor.fromHandle(h));
+        }
+      } catch (Exception e) {
+        for (Tensor<?> t : outputs) {
+          t.close();
+        }
+        outputs.clear();
+        throw e;
       } finally {
         runRef.close();
-      }
-      List<Tensor<?>> outputs = new ArrayList<>();
-      for (TF_Tensor h : outputTensorHandles) {
-        try {
-          outputs.add(Tensor.fromHandle(h));
-        } catch (Exception e) {
-          for (Tensor<?> t : outputs) {
-            t.close();
-          }
-          outputs.clear();
-          throw e;
-        }
       }
       Run ret = new Run();
       ret.outputs = outputs;
@@ -580,7 +579,8 @@ public final class Session implements AutoCloseable {
       int[] outputOpIndices,
       TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      TF_Tensor[] outputTensorHandles) {
+      TF_Tensor[] outputTensorHandles,
+      PointerScope outputScope) {
     requireHandle(handle);
 
     int ninputs = inputTensorHandles.length;
@@ -609,7 +609,8 @@ public final class Session implements AutoCloseable {
       status.throwExceptionIfNotOK();
 
       for (int i = 0; i < noutputs; ++i) {
-        outputTensorHandles[i] = outputValues.get(TF_Tensor.class, i).withDeallocator().retainReference();
+        outputTensorHandles[i] = outputValues.get(TF_Tensor.class, i).withDeallocator();
+        outputScope.attach(outputTensorHandles[i]);
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

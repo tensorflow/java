@@ -21,6 +21,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
 import java.util.function.Consumer;
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
@@ -96,8 +97,13 @@ public final class Tensor<T extends TType> implements AutoCloseable {
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
     Tensor<T> t = new Tensor<>(dtype, shape);
-    t.tensorHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
-    return t;
+    TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
+    try (PointerScope scope = new PointerScope()) {
+        scope.attach(nativeHandle);
+        t.tensorHandle = nativeHandle;
+        t.tensorScope = scope.extend();
+        return t;
+    }
   }
 
   /**
@@ -207,7 +213,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    */
   @Override
   public void close() {
-    tensorHandle.releaseReference();
+    tensorScope.close();
   }
 
   /** Returns the {@link DataType} of elements stored in the Tensor. */
@@ -301,7 +307,11 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    */
   static Tensor<?> fromHandle(TF_Tensor handle) {
     Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.of(shape(handle)));
-    t.tensorHandle = handle.retainReference();
+    try (PointerScope scope = new PointerScope()) {
+        scope.attach(handle);
+        t.tensorHandle = handle;
+        t.tensorScope = scope.extend();
+    }
     return t;
   }
 
@@ -313,7 +323,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
   static Tensor<?> fromHandle(TF_Tensor handle, EagerSession session) {
     Tensor<?> t = fromHandle(handle);
     session.attach(handle);
-    handle.releaseReference();
+    t.tensorScope.detach(handle);
     return t;
   }
 
@@ -325,6 +335,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     return requireHandle(tensorHandle);
   }
 
+  private PointerScope tensorScope;
   private TF_Tensor tensorHandle;
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {
@@ -339,7 +350,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     if (t == null || t.isNull()) {
       throw new IllegalStateException("unable to allocate memory for the Tensor");
     }
-    return t.retainReference();
+    return t;
   }
 
   private static int dtype(TF_Tensor handle) {

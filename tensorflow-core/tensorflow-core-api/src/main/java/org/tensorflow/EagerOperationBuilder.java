@@ -55,26 +55,26 @@ import org.tensorflow.tools.Shape;
 final class EagerOperationBuilder implements OperationBuilder {
 
   EagerOperationBuilder(EagerSession session, String type, String name) {
-    this.session = session;
-    this.type = type;
-    this.name = name;
-    this.opHandle = allocate(session.nativeHandle(), type);
-    session.attach(opHandle);
-    opHandle.releaseReference();
+    try (PointerScope scope = new PointerScope()) {
+      this.session = session;
+      this.type = type;
+      this.name = name;
+      this.opHandle = allocate(session.nativeHandle(), type, scope);
+      session.attach(opHandle);
+    }
   }
 
   @Override
   public EagerOperation build() {
-    TFE_TensorHandle[] tensorHandles = execute(opHandle);
-    EagerOperation operation =
-        new EagerOperation(session, opHandle, tensorHandles, type, name);
-    // Release our reference to the native op handle now that we transferred its
-    // ownership to the EagerOperation
-    session.detach(opHandle);
-    for (int i = 0; i < tensorHandles.length; ++i) {
-      tensorHandles[i].releaseReference();
+    try (PointerScope scope = new PointerScope()) {
+      TFE_TensorHandle[] tensorHandles = execute(opHandle, scope);
+      EagerOperation operation =
+          new EagerOperation(session, opHandle, tensorHandles, type, name);
+      // Release our reference to the native op handle now that we transferred its
+      // ownership to the EagerOperation
+      session.detach(opHandle);
+      return operation;
     }
-    return operation;
   }
 
   @Override
@@ -257,17 +257,18 @@ final class EagerOperationBuilder implements OperationBuilder {
     }
   }
 
-  private static TFE_Op allocate(TFE_Context ctxHandle, String type) {
+  private static TFE_Op allocate(TFE_Context ctxHandle, String type, PointerScope outputScope) {
     requireContext(ctxHandle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TFE_Op op = TFE_Op.newOp(ctxHandle, type, status);
       status.throwExceptionIfNotOK();
-      return op.retainReference();
+      outputScope.attach(op);
+      return op;
     }
   }
 
-  private static TFE_TensorHandle[] execute(TFE_Op opHandle) {
+  private static TFE_TensorHandle[] execute(TFE_Op opHandle, PointerScope outputScope) {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
       IntPointer numRetvals = new IntPointer(1).put(MAX_OUTPUTS_PER_OP);
@@ -278,7 +279,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
       TFE_TensorHandle[] rethandles = new TFE_TensorHandle[numRetvals.get()];
       for (int i = 0; i < rethandles.length; ++i) {
-        rethandles[i] = retvals.get(TFE_TensorHandle.class, i).withDeallocator().retainReference();
+        rethandles[i] = retvals.get(TFE_TensorHandle.class, i).withDeallocator();
+        outputScope.attach(rethandles[i]);
       }
       return rethandles;
     }
