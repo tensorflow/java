@@ -52,7 +52,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
     List<Shape> batchOutputShapes =
         outputShapes.stream()
-            .map(s -> Shape.of(batchSize, s.asArray()))
+            .map(s -> Shape.of(-1, s.asArray()))
             .collect(Collectors.toList());
 
     return new BatchDataset(tf, this.getVariant(),

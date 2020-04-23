@@ -1,6 +1,8 @@
 package org.tensorflow.exceptions;
 
-public final class TFUnauthenticatedException extends RuntimeException {
+import org.tensorflow.TensorFlowException;
+
+public final class TFUnauthenticatedException extends TensorFlowException {
   public TFUnauthenticatedException(String message) {
     super(message);
   }

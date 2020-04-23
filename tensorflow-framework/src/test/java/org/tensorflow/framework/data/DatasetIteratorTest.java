@@ -2,7 +2,9 @@ package org.tensorflow.framework.data;
 
 import org.junit.Test;
 import org.tensorflow.*;
+import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;
@@ -11,10 +13,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class DatasetIteratorTest extends DatasetTestBase {
-
-  static class Logs {
-    int batches = 0;
-  }
 
   @Test
   public void testGraphIteration() {
@@ -40,19 +38,24 @@ public class DatasetIteratorTest extends DatasetTestBase {
       try (Session session = new Session(graph)) {
         session.run(tf.init());
 
-        Logs logs = new Logs();
-        session.runner()
-            .fetch(X)
-            .fetch(y)
-            .repeat()
-            .forEach(outputs -> {
-              Tensor<TInt32> XBatch = outputs.get(0).expect(TInt32.DTYPE);
-              Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE);
+        int batches = 0;
+        while (true) {
+          try {
+            List<Tensor<?>> outputs = session.runner()
+                .fetch(X)
+                .fetch(y)
+                .run();
 
-              assertEquals(testMatrix1.get(logs.batches), XBatch.data());
-              assertEquals(testMatrix2.get(logs.batches), yBatch.data());
-              logs.batches++;
-            });
+            try (Tensor<TInt32> XBatch = outputs.get(0).expect(TInt32.DTYPE);
+                 Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
+              assertEquals(testMatrix1.get(batches), XBatch.data());
+              assertEquals(testMatrix2.get(batches), yBatch.data());
+              batches++;
+            }
+          } catch (TFOutOfRangeException e) {
+            break;
+          }
+        }
       }
     }
   }

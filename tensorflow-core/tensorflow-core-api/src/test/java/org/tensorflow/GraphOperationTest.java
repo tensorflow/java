@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
@@ -44,7 +45,7 @@ public class GraphOperationTest {
       try {
         op.outputListLength("unknown");
         fail("Did not catch bad name");
-      } catch (IllegalArgumentException iae) {
+      } catch (TFInvalidArgumentException iae) {
         // expected
       }
     }
@@ -159,7 +160,7 @@ public class GraphOperationTest {
       assertEquals(1, tf.split(tf.constant(0), tf.array(0, 1), 1L).op().inputListLength("split_dim"));
       try {
         tf.split(tf.constant(0), tf.array(0, 1), 2L).op().inputListLength("inputs");
-      } catch (IllegalArgumentException iae) {
+      } catch (TFInvalidArgumentException iae) {
         // expected
       }
     }

@@ -1,6 +1,8 @@
 package org.tensorflow.exceptions;
 
-public final class TFUnimplementedException extends RuntimeException {
+import org.tensorflow.TensorFlowException;
+
+public final class TFUnimplementedException extends TensorFlowException {
   public TFUnimplementedException(String message) {
     super(message);
   }
