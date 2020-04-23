@@ -71,57 +71,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     private final int code;
   }
 
-  /**
-   * Controls how TensorFlow resources are cleaned up when they are no longer needed.
-   *
-   * <p>All resources allocated during an {@code EagerSession} are deleted when the session is
-   * closed. To prevent out-of-memory errors, it is also strongly suggest to cleanup those resources
-   * during the session. For example, executing n operations in a loop of m iterations will allocate
-   * a minimum of n*m resources while in most cases, only resources of the last iteration are still
-   * being used.
-   *
-   * <p>{@code EagerSession} instances can be notified in different ways when TensorFlow objects are
-   * no longer being referred, so they can proceed to the cleanup of any resources they owned.
-   */
-  public enum ResourceCleanupStrategy {
-
-    /**
-     * Monitor and delete unused resources from a new thread running in background.
-     *
-     * <p>This is the most reliable approach to cleanup TensorFlow resources, at the cost of
-     * starting and running an additional thread dedicated to this task. Each {@code EagerSession}
-     * instance has its own thread, which is stopped only when the session is closed.
-     *
-     * <p>This strategy is used by default.
-     */
-    IN_BACKGROUND,
-
-    /**
-     * Monitor and delete unused resources from existing threads, before or after they complete
-     * another task.
-     *
-     * <p>Unused resources are released when a call to the TensorFlow library reaches a safe point
-     * for cleanup. This is done synchronously and might block for a short period of time the thread
-     * who triggered that call.
-     *
-     * <p>This strategy should be used only if, for some reasons, no additional thread should be
-     * allocated for cleanup. Otherwise, {@link #IN_BACKGROUND} should be preferred.
-     */
-    ON_SAFE_POINTS,
-
-    /**
-     * Only delete resources when the session is closed.
-     *
-     * <p>All resources allocated during the session will remained in memory until the session is
-     * explicitly closed (or via the traditional `try-with-resource` technique). No extra task for
-     * resource cleanup will be attempted.
-     *
-     * <p>This strategy can lead up to out-of-memory errors and its usage is not recommended, unless
-     * the scope of the session is limited to execute only a small amount of operations.
-     */
-    ON_SESSION_CLOSE,
-  }
-
   public static class Options {
 
     /**
@@ -155,19 +104,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
 
     /**
-     * Controls how TensorFlow resources are cleaned up when no longer needed.
-     *
-     * <p>{@link ResourceCleanupStrategy#IN_BACKGROUND} is used by default.
-     *
-     * @param value strategy to use
-     * @see ResourceCleanupStrategy
-     */
-    public Options resourceCleanupStrategy(ResourceCleanupStrategy value) {
-      resourceCleanupStrategy = value;
-      return this;
-    }
-
-    /**
      * Configures the session based on the data found in the provided configuration.
      *
      * @param value a config protocol buffer
@@ -186,13 +122,11 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
     private boolean async;
     private DevicePlacementPolicy devicePlacementPolicy;
-    private ResourceCleanupStrategy resourceCleanupStrategy;
     private ConfigProto config;
 
     private Options() {
       async = false;
       devicePlacementPolicy = DevicePlacementPolicy.SILENT;
-      resourceCleanupStrategy = ResourceCleanupStrategy.IN_BACKGROUND;
       config = null;
     }
   }
@@ -337,9 +271,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   @Override
   public OperationBuilder opBuilder(String type, String name) {
-    if (resourceCleanupStrategy == ResourceCleanupStrategy.ON_SAFE_POINTS) {
-      nativeRefs.close();
-    }
     checkSession();
     return new EagerOperationBuilder(this, type, name);
   }
@@ -347,10 +278,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   TFE_Context nativeHandle() {
     checkSession();
     return nativeHandle;
-  }
-
-  ResourceCleanupStrategy resourceCleanupStrategy() {
-    return resourceCleanupStrategy;
   }
 
   void attach(Pointer... resources) {
@@ -363,27 +290,19 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   void detach(Pointer... resources) {
     checkSession();
     for (Pointer r : resources) {
-      if (resourceCleanupStrategy == ResourceCleanupStrategy.ON_SAFE_POINTS) {
-          nativeRefs.attach(r);
-      }
       nativeResources.detach(r);
     }
   }
 
   private static volatile EagerSession defaultSession = null;
 
-  private final PointerScope nativeRefs;
   private final PointerScope nativeResources;
-  private final ResourceCleanupStrategy resourceCleanupStrategy;
   private TFE_Context nativeHandle;
 
   private EagerSession(Options options) {
-    this.nativeRefs = new PointerScope();
     this.nativeResources = new PointerScope();
     this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
-    this.resourceCleanupStrategy = options.resourceCleanupStrategy;
 
-    nativeRefs.close(); // remove from stack
     nativeResources.close(); // remove from stack
   }
 
@@ -395,7 +314,6 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private synchronized void doClose() {
     if (nativeHandle != null && !nativeHandle.isNull()) {
-      nativeRefs.close();
       nativeResources.close();
       delete(nativeHandle);
       nativeHandle = null;
