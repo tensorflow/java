@@ -224,4 +224,9 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
 
   @Override
   ByteDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<ByteDataBuffer> window(long size) {
+    return null;
+  }
 }

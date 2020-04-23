@@ -18,8 +18,20 @@ package org.tensorflow.tools.ndarray.impl.dense;
 
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.ndarray.IllegalRankException;
+import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
 final class Validator extends org.tensorflow.tools.ndarray.impl.Validator {
+
+  static void coordinates(DimensionalSpace dimensions, long[] coords,
+      boolean isValue) {
+    if (coords.length > dimensions.numDimensions()) {
+      throw new IndexOutOfBoundsException();
+    }
+    if (isValue && coords.length != dimensions.numDimensions()) {
+      throw new IllegalRankException("Not a scalar value");
+    }
+  }
 
   static void denseShape(DataBuffer<?> buffer, Shape shape) {
     if (shape == null) {

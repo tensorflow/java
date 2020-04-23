@@ -17,35 +17,26 @@
 
 package org.tensorflow.tools.ndarray.impl.sequence;
 
+import java.util.NoSuchElementException;
+
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
-class IndexedSequentialPositionIterator extends SequentialPositionIterator implements IndexedPositionIterator {
+final class CoordinatesIncrementor {
 
-  @Override
-  public void forEachIndexed(CoordsLongConsumer consumer) {
-    while (hasNext()) {
-      consumer.consume(coords, nextLong());
-      incrementCoords();
-    }
-  }
-
-  private void incrementCoords() {
+  boolean increment() {
     for (int i = coords.length - 1; i >= 0; --i) {
-      if (coords[i] < shape[i] - 1) {
-        coords[i] += 1L;
-        return;
+      if ((coords[i] = (coords[i] + 1) % shape[i]) > 0) {
+        return true;
       }
-      coords[i] = 0L;
     }
+    return false;
   }
 
-  IndexedSequentialPositionIterator(DimensionalSpace dimensions, int dimensionIdx) {
-    super(dimensions, dimensionIdx);
-    this.shape = dimensions.shape().asArray();
+  CoordinatesIncrementor(long[] shape, int dimensionIdx) {
+    this.shape = shape;
     this.coords = new long[dimensionIdx + 1];
-    //this.coordsIncrementor = new CoordinatesIncrementor(dimensions.shape().asArray(), dimensionIdx);
   }
 
-  private final long[] shape;
-  private final long[] coords;
+  final long[] shape;
+  final long[] coords;
 }

@@ -67,7 +67,7 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
       @Override
       public IntDataBuffer visit(IntBuffer buffer) {
         if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.capacity()), size);
+          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
         } else if (memory.isArray()) {
           buffer.put(memory.toArrayIntBuffer());
         } else {

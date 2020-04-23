@@ -27,7 +27,7 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
 
   @Override
   public long size() {
-    return buffer.size() / layout.scale();
+    return size;
   }
 
   @Override
@@ -51,6 +51,7 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
   AbstractDataBufferAdapter(S buffer, DataLayout<S, T> layout) {
     this.buffer = buffer;
     this.layout = layout;
+    size = buffer.size() / layout.scale();
   }
 
   DataLayout<S, T> layout() {
@@ -63,4 +64,5 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
 
   private final S buffer;
   private final DataLayout<S, T> layout;
+  private final long size;
 }

@@ -20,7 +20,14 @@ package org.tensorflow.tools.ndarray;
 import java.util.function.BiConsumer;
 
 /**
- * Iterates through a sequence of elements of an N-dimensional array.
+ * A sequence of elements of an N-dimensional array.
+ *
+ * <p>An {@code NdArraySequence} is used to traverse an {@code NdArray} in a given dimension
+ * and visit each of its elements.  For example, given a {@code n x m} matrix on the {@code [x, y]} axes,
+ * elements are iterated in the following order:
+ * <pre>
+ * x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
+ * </pre>
  *
  * @param <T> data type of the array being iterated
  */
@@ -35,4 +42,27 @@ public interface NdArraySequence<T extends NdArray<?>> extends Iterable<T> {
    * @param consumer method to invoke for each elements
    */
   void forEachIndexed(BiConsumer<long[], T> consumer);
+
+  /**
+   * Returns each element as a new slice.
+   *
+   * <p>Unlike conventional Java collections, elements of a {@code NdArraySequence} are transient, i.e. new {@code NdArray}
+   * instances are allocated for each iteration. To improve performances, the same instance can be recycled to view
+   * all elements of this sequence, using a {@link org.tensorflow.tools.buffer.DataBufferWindow}.
+   *
+   * <p>In some cases though, it might be preferable to disable such optimization to ensure that each elements returned is a
+   * new slice of the original array. For example, if one or more elements visited must live beyond the scope of the sequence
+   * iteration, {@code asSlices()} makes sure that all elements returned by the sequence are unique instances.
+   *
+   * <pre>{@code
+   *     final List<IntNdArray> vectors = new ArrayList<>();
+   *     IntNdArray matrix = NdArrays.ofInts(Shape.of(6, 6));
+   *     ndArray.elements(0).forEach(e -> vectors::add);  // Not safe, as `e` might always be the same recycled instance
+   *     ndArray.elements(0).asSlices().forEach(e -> vectors::add);  // Safe, each `e` is a distinct NdArray instance
+   * }</pre>
+   *
+   * @return a sequence that returns each elements iterated as a new slice
+   * @see org.tensorflow.tools.buffer.DataBufferWindow
+   */
+  NdArraySequence<T> asSlices();
 }

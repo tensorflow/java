@@ -18,6 +18,7 @@
 package org.tensorflow.tools.buffer.impl.raw;
 
 import org.tensorflow.tools.buffer.DataBuffer;
+import org.tensorflow.tools.buffer.DataBufferWindow;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 
@@ -73,6 +74,12 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
   public B slice(long index, long size) {
     Validator.sliceArgs(this, index, size);
     return instantiate(memory.slice(index, size));
+  }
+
+  @Override
+  public DataBufferWindow<B> window(long size) {
+    B windowBuffer = instantiate(memory.slice(0, size));
+    return new RawDataBufferWindow<>((AbstractRawDataBuffer<?, B>)windowBuffer, size());
   }
 
   protected final UnsafeMemoryHandle memory;

@@ -21,7 +21,6 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
-import org.tensorflow.tools.ndarray.impl.sequence.ElementSequence;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArray<T> {
@@ -38,17 +37,9 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
   }
 
   @Override
-  public NdArraySequence<U> elements(int dimensionIdx) {
-    if (dimensionIdx >= shape().numDimensions()) {
-      throw new IllegalArgumentException("Cannot iterate elements in dimension '" + dimensionIdx +
-          "' of array with shape " + shape());
-    }
-    return ElementSequence.create(this, dimensionIdx);
-  }
-
-  @Override
   public NdArraySequence<U> scalars() {
-    return ElementSequence.create(this, shape().numDimensions() - 1);  // negative if this array is a scalar
+    // negative if this array is a scalar, should be handled in `elements(dimIdx)`
+    return (NdArraySequence<U>)elements(shape().numDimensions() - 1);
   }
 
   @Override
@@ -97,5 +88,5 @@ public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArra
     return true;
   }
 
-  private DimensionalSpace dimensions;
+  protected final DimensionalSpace dimensions;
 }

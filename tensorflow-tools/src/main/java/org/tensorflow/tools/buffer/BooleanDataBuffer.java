@@ -157,4 +157,9 @@ public interface BooleanDataBuffer extends DataBuffer<Boolean> {
 
   @Override
   BooleanDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<BooleanDataBuffer> window(long size) {
+    return null;
+  }
 }

@@ -157,4 +157,9 @@ public interface FloatDataBuffer extends DataBuffer<Float> {
 
   @Override
   FloatDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<FloatDataBuffer> window(long size) {
+    return null;
+  }
 }

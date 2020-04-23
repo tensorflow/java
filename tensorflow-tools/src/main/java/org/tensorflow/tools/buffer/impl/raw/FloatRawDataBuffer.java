@@ -18,6 +18,7 @@
 package org.tensorflow.tools.buffer.impl.raw;
 
 import java.nio.FloatBuffer;
+
 import org.tensorflow.tools.buffer.DataBuffer;
 import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.FloatDataBuffer;
@@ -67,7 +68,7 @@ final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuf
       @Override
       public FloatDataBuffer visit(FloatBuffer buffer) {
         if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.capacity()), size);
+          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
         } else if (memory.isArray()) {
           buffer.put(memory.toArrayFloatBuffer());
         } else {

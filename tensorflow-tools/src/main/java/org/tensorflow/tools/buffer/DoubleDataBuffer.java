@@ -157,4 +157,9 @@ public interface DoubleDataBuffer extends DataBuffer<Double> {
 
   @Override
   DoubleDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<DoubleDataBuffer> window(long size) {
+    return null;
+  }
 }
