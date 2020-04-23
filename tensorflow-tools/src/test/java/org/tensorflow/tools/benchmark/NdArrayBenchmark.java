@@ -18,6 +18,7 @@ package org.tensorflow.tools.benchmark;
 
 import static org.tensorflow.tools.ndarray.index.Indices.all;
 import static org.tensorflow.tools.ndarray.index.Indices.at;
+import static org.tensorflow.tools.ndarray.index.Indices.odd;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -38,7 +39,7 @@ import org.tensorflow.tools.ndarray.FloatNdArray;
 import org.tensorflow.tools.ndarray.NdArrays;
 import org.tensorflow.tools.ndarray.StdArrays;
 
-@Fork(value = 1, jvmArgs = {"-Xms4G", "-Xmx4G"})
+@Fork(value = 0, jvmArgs = {"-Xms4G", "-Xmx4G"})
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 3)
 @Measurement(iterations = 5)
@@ -83,8 +84,24 @@ public class NdArrayBenchmark {
 	}
 
 	@Benchmark
-	public void iteratingAllPixels() {
-		pixels.elements(0).forEach(pixel -> {});
+	public void readingAllPixelsChannelsBySequence() {
+		pixels.scalars().forEach(pixel -> pixel.getFloat());
+	}
+
+	@Benchmark
+	public void readingAllPixelsChannelsBySequenceSlices() {
+		pixels.scalars().asSlices().forEach(pixel -> pixel.getFloat());
+	}
+
+	@Benchmark
+	@Measurement(batchSize = 100)
+	public void readingAllPixelsChannelsByIndex() {
+		long[] shape = pixels.shape().asArray();
+		for (int i = 0; i < shape[0]; ++i) {
+			for (int j = 0; j < shape[1]; ++j) {
+				pixels.getFloat(i, j);
+			}
+		}
 	}
 
 	@Benchmark

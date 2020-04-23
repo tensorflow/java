@@ -67,7 +67,7 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
       @Override
       public ShortDataBuffer visit(ShortBuffer buffer) {
         if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.capacity()), size);
+          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
         } else if (memory.isArray()) {
           buffer.put(memory.toArrayShortBuffer());
         } else {

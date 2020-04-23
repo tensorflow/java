@@ -157,4 +157,9 @@ public interface ShortDataBuffer extends DataBuffer<Short> {
 
   @Override
   ShortDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<ShortDataBuffer> window(long size) {
+    return null;
+  }
 }

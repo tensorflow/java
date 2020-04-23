@@ -248,6 +248,38 @@ public interface DataBuffer<T> {
   DataBuffer<T> slice(long index, long size);
 
   /**
+   * Creates a {@link DataBufferWindow} that provides a partial view of this buffer.
+   *
+   * <p>The created window has a fixed size and can be {@link DataBufferWindow#slideTo(long) "slide"}
+   * across this buffer at different offsets to provide different views of the data without allocating
+   * a new buffer instance, like {@link #offset(long)} does. This improves overall performances when
+   * this operation is repeated frequently. For example:
+   *
+   * <pre>{@code
+   * IntDataBuffer bufferA = DataBuffers.ofInts(1024);
+   * // ... init buffer data
+   * IntDataBuffer bufferB = DataBuffers.ofInts(1, 2, 3, 4);
+   *
+   * // Return the index of the first occurrence of bufferB in bufferA using a sliding window
+   * DataBufferWindow<IntDataBuffer> windowA = bufferA.window(4);
+   * for (int i = 0; i < bufferA.size() - bufferB.size(); ++i) {
+   *     if (windowA.slideTo(i).buffer().equals(bufferB)) {
+   *         return i;
+   *     }
+   * }
+   * }</pre>
+   *
+   * <p>The returned object is stateful and is not thread-safe.
+   *
+   * @param size size of the window
+   * @return a new window that starts at the index 0 of this buffer,
+   *         or null if this type of buffer does not support buffer windows
+   */
+  default DataBufferWindow<? extends DataBuffer<T>> window(long size) {
+    return null;
+  }
+
+  /**
    * Visits the backing storage of this buffer.
    *
    * <p>The buffer implementation is responsible of passing back a reference to the actual data

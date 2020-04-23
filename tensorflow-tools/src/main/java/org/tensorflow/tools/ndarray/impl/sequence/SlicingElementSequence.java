@@ -19,47 +19,53 @@ package org.tensorflow.tools.ndarray.impl.sequence;
 
 import java.util.Iterator;
 import java.util.function.BiConsumer;
-import org.tensorflow.tools.ndarray.IllegalRankException;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
+import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
-public final class SingleElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
+public final class SlicingElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
-  public SingleElementSequence(AbstractNdArray<T, U> ndArray) {
+  public SlicingElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx) {
+    this(ndArray, dimensionIdx, ndArray.dimensions().from(dimensionIdx + 1));
+  }
+
+  public SlicingElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx, DimensionalSpace elementDimensions) {
     this.ndArray = ndArray;
+    this.dimensionIdx = dimensionIdx;
+    this.elementDimensions = elementDimensions;
   }
 
   @Override
   public Iterator<U> iterator() {
+    PositionIterator positionIterator = PositionIterator.create(ndArray.dimensions(), dimensionIdx);
     return new Iterator<U>() {
 
       @Override
       public boolean hasNext() {
-        return element != null;
+        return positionIterator.hasNext();
       }
 
       @Override
       public U next() {
-        U ret = element;
-        element = null;
-        return ret;
+        return ndArray.slice(positionIterator.next(), elementDimensions);
       }
-
-      @SuppressWarnings("unchecked")
-      private U element = (U)ndArray;
     };
   }
 
   @Override
-  public NdArraySequence<U> asSlices() {
-    return this;  // no need to slice, as there are only one element
+  public void forEachIndexed(BiConsumer<long[], U> consumer) {
+    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx).forEachIndexed((long[] coords, long position) ->
+        consumer.accept(coords, ndArray.slice(position, elementDimensions))
+    );
   }
 
   @Override
-  public void forEachIndexed(BiConsumer<long[], U> consumer) {
-    throw new IllegalRankException("Single element has no coordinates to iterate on, use forEach()");
+  public NdArraySequence<U> asSlices() {
+    return this;
   }
 
   private final AbstractNdArray<T, U> ndArray;
+  private final int dimensionIdx;
+  private final DimensionalSpace elementDimensions;
 }

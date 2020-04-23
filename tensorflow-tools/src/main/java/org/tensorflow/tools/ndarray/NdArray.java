@@ -81,19 +81,19 @@ public interface NdArray<T> {
   }
 
   /**
-   * Visit all elements of a given dimension.
+   * Returns a sequence of all elements at a given dimension.
    *
    * <p>Logically, the N-dimensional array can be flatten in a single vector, where the scalars of
    * the {@code (n - 1)}th element precedes those of the {@code (n)}th element, for a total of
    * {@link #size()} values.
    *
-   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, values are iterated in
+   * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, elements are iterated in
    * the following order:
    * <pre>
    * x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
    * </pre>
    *
-   * <p>The returned cursor is used to visit each elements, either by calling
+   * <p>The returned sequence can then be iterated to visit each elements, either by calling
    * {@link NdArraySequence#forEach(Consumer)} or {@link NdArraySequence#forEachIndexed(BiConsumer)}.
    * <pre>{@code
    *    // Iterate matrix for initializing each of its vectors
@@ -107,16 +107,16 @@ public interface NdArray<T> {
    *    });
    * }</pre>
    *
-   * @return a new cursor to visit all elements at the requested dimension
+   * @return an {@code NdArray} sequence
    */
   NdArraySequence<? extends NdArray<T>> elements(int dimensionIdx);
 
   /**
-   * Visit all scalars of this array.
+   * Returns a sequence of all scalars in this array.
    *
    * <p>This is equivalent to call {@code elements(shape().numDimensions() - 1)}
    *
-   * @return a new cursor to visit all scalars of this array
+   * @return an {@code NdArray} sequence
    */
   NdArraySequence<? extends NdArray<T>> scalars();
 

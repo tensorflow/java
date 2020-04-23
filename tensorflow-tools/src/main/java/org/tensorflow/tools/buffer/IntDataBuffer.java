@@ -157,4 +157,9 @@ public interface IntDataBuffer extends DataBuffer<Integer> {
 
   @Override
   IntDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<IntDataBuffer> window(long size) {
+    return null;
+  }
 }

@@ -19,6 +19,7 @@ package org.tensorflow.tools.buffer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -224,5 +225,64 @@ public abstract class DataBufferTestBase<T> {
     assertFalse(buffer5.equals(buffer1));
     assertFalse(buffer1.equals(buffer5));
     assertNotEquals(buffer5.hashCode(), buffer1.hashCode());
+  }
+
+  @Test
+  public void bufferWindow() {
+    DataBuffer<T> buffer = allocate(20);
+    DataBufferWindow<? extends DataBuffer<T>> bufferWindow = buffer.window(4);
+    if (bufferWindow == null) {
+      return;  // skip test if this buffer does not support windows
+    }
+    assertEquals(0, bufferWindow.offset());
+    assertEquals(4, bufferWindow.size());
+    assertEquals(4, bufferWindow.buffer().size());
+
+    for (long i = 0; i < buffer.size(); ++i) {
+      buffer.setObject(valueOf(i), i);
+    }
+    assertEquals(valueOf(2L), bufferWindow.buffer().getObject(2));
+    DataBuffer<T> windowBuffer = bufferWindow.buffer();
+
+    bufferWindow.slideOf(10);
+    assertEquals(10, bufferWindow.offset());
+    assertEquals(4, bufferWindow.size());
+    assertEquals(valueOf(12L), bufferWindow.buffer().getObject(2));
+    assertSame(windowBuffer, bufferWindow.buffer());
+
+    bufferWindow.slideOf(-2);
+    assertEquals(8, bufferWindow.offset());
+    assertEquals(4, bufferWindow.size());
+    assertEquals(valueOf(10L), bufferWindow.buffer().getObject(2));
+
+    bufferWindow.slideTo(16);
+    assertEquals(16, bufferWindow.offset());
+    assertEquals(4, bufferWindow.size());
+    assertEquals(valueOf(18L), bufferWindow.buffer().getObject(2));
+
+    try {
+      bufferWindow.slideOf(1);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
+    try {
+      bufferWindow.slideOf(-17);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
+    try {
+      bufferWindow.slideTo(-1);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
+    try {
+      bufferWindow.slideTo(17);
+      fail();
+    } catch (IndexOutOfBoundsException e) {
+      // as expected
+    }
   }
 }

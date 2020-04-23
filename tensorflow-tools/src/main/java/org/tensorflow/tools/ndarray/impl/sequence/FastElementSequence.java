@@ -19,25 +19,40 @@ package org.tensorflow.tools.ndarray.impl.sequence;
 
 import java.util.Iterator;
 import java.util.function.BiConsumer;
+
+import org.tensorflow.tools.buffer.DataBufferWindow;
 import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
-import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
-public class ElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
+public final class FastElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
-  public static <T, U extends NdArray<T>> NdArraySequence<U> create(AbstractNdArray<T, U> ndArray, int dimensionIdx) {
-    if (ndArray.rank() == 0 && dimensionIdx < 0) {
-      return new SingleElementSequence<>(ndArray);
-    }
-    return new ElementSequence<>(ndArray, dimensionIdx);
+  public FastElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx, U element, DataBufferWindow<?> elementWindow) {
+    this.ndArray = ndArray;
+    this.dimensionIdx = dimensionIdx;
+    this.element = element;
+    this.elementWindow = elementWindow;
   }
 
   @Override
   public Iterator<U> iterator() {
-    DimensionalSpace elementDimensions = ndArray.dimensions().from(dimensionIdx + 1);
-    PositionIterator positionIterator = PositionIterator.create(ndArray.dimensions(), dimensionIdx);
-    return new Iterator<U>() {
+    return new SequenceIterator();
+  }
+
+  @Override
+  public void forEachIndexed(BiConsumer<long[], U> consumer) {
+    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx).forEachIndexed((long[] coords, long position) -> {
+      elementWindow.slideTo(position);
+      consumer.accept(coords, element);
+    });
+  }
+
+  @Override
+  public NdArraySequence<U> asSlices() {
+    return new SlicingElementSequence<T, U>(ndArray, dimensionIdx);
+  }
+
+  private class SequenceIterator implements Iterator<U> {
 
       @Override
       public boolean hasNext() {
@@ -46,24 +61,15 @@ public class ElementSequence<T, U extends NdArray<T>> implements NdArraySequence
 
       @Override
       public U next() {
-        return ndArray.slice(positionIterator.next(), elementDimensions);
+        elementWindow.slideTo(positionIterator.nextLong());
+        return element;
       }
-    };
-  }
 
-  @Override
-  public void forEachIndexed(BiConsumer<long[], U> consumer) {
-    DimensionalSpace elementDimensions = ndArray.dimensions().from(dimensionIdx + 1);
-    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx).forEachIndexed((long[] coords, long position) ->
-        consumer.accept(coords, ndArray.slice(position, elementDimensions))
-    );
-  }
-
-  private ElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx) {
-    this.ndArray = ndArray;
-    this.dimensionIdx = dimensionIdx;
+      private final PositionIterator positionIterator = PositionIterator.create(ndArray.dimensions(), dimensionIdx);
   }
 
   private final AbstractNdArray<T, U> ndArray;
   private final int dimensionIdx;
+  private final U element;
+  private final DataBufferWindow<?> elementWindow;
 }

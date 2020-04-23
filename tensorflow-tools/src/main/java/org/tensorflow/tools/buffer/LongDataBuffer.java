@@ -157,4 +157,9 @@ public interface LongDataBuffer extends DataBuffer<Long> {
 
   @Override
   LongDataBuffer slice(long index, long size);
+
+  @Override
+  default DataBufferWindow<LongDataBuffer> window(long size) {
+    return null;
+  }
 }
