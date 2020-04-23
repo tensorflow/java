@@ -300,10 +300,10 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   private TFE_Context nativeHandle;
 
   private EagerSession(Options options) {
-    this.nativeResources = new PointerScope();
-    this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
-
-    nativeResources.close(); // remove from stack
+    try (PointerScope scope = new PointerScope()) {
+      this.nativeResources = scope.extend();
+      this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
+    }
   }
 
   private void checkSession() {

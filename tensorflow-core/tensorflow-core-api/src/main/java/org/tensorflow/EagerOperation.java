@@ -133,14 +133,15 @@ class EagerOperation extends AbstractOperation {
     // Take an optimistic approach, where we attempt to resolve the output tensor without locking.
     // If another thread has resolved it meanwhile, release our copy and reuse the existing one
     // instead.
-    TF_Tensor tensorNativeHandle = resolveTensorHandle(getUnsafeNativeHandle(outputIndex));
-    Tensor<?> tensor = Tensor.fromHandle(tensorNativeHandle, session);
-    if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      session.detach(tensorNativeHandle);
-      tensor = outputTensors.get(outputIndex);
+    try (PointerScope scope = new PointerScope()) {
+        TF_Tensor tensorNativeHandle = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), scope);
+        Tensor<?> tensor = Tensor.fromHandle(tensorNativeHandle, session);
+        if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
+          session.detach(tensorNativeHandle);
+          tensor = outputTensors.get(outputIndex);
+        }
+        return tensor;
     }
-    tensorNativeHandle.releaseReference();
-    return tensor;
   }
 
   private TFE_Op opHandle;
@@ -158,12 +159,13 @@ class EagerOperation extends AbstractOperation {
     }
   }
 
-  private static TF_Tensor resolveTensorHandle(TFE_TensorHandle handle) {
+  private static TF_Tensor resolveTensorHandle(TFE_TensorHandle handle, PointerScope outputScope) {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator().retainReference();
+      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
+      outputScope.attach(tensor);
       return tensor;
     }
   }
