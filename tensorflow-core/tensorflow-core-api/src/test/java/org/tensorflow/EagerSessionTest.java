@@ -26,7 +26,6 @@ import org.bytedeco.javacpp.Pointer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.tensorflow.EagerSession.ResourceCleanupStrategy;
 
 @RunWith(JUnit4.class)
 public class EagerSessionTest {
@@ -41,10 +40,7 @@ public class EagerSessionTest {
   @Test
   public void cleanupResourceOnSessionClose() {
     Pointer ref;
-    try (EagerSession s =
-        EagerSession.options()
-            .resourceCleanupStrategy(ResourceCleanupStrategy.ON_SESSION_CLOSE)
-            .build()) {
+    try (EagerSession s = EagerSession.create()) {
       s.attach(ref = new IntPointer(1));
       assertFalse(ref.isNull());
 
@@ -56,30 +52,8 @@ public class EagerSessionTest {
   }
 
   @Test
-  public void cleanupResourceOnSafePoints() {
-    try (EagerSession s =
-        EagerSession.options()
-            .resourceCleanupStrategy(ResourceCleanupStrategy.ON_SAFE_POINTS)
-            .build()) {
-
-      Pointer ref = new IntPointer(1);
-      s.attach(ref);
-      assertFalse(ref.isNull());
-
-      // garbage collecting the reference won't release until we reached safe point
-      s.detach(ref);
-      assertFalse(ref.isNull());
-      buildOp(s); // safe point
-      assertTrue(ref.isNull());
-    }
-  }
-
-  @Test
   public void cleanupResourceInBackground() {
-    try (EagerSession s =
-        EagerSession.options()
-            .resourceCleanupStrategy(ResourceCleanupStrategy.IN_BACKGROUND)
-            .build()) {
+    try (EagerSession s = EagerSession.create()) {
 
       Pointer ref = new IntPointer(1024 * 1024);
       s.attach(ref);
@@ -134,12 +108,10 @@ public class EagerSessionTest {
   @Test
   public void defaultSession() throws Exception {
     EagerSession.closeDefaultForTest();
-    EagerSession.Options options =
-        EagerSession.options().resourceCleanupStrategy(ResourceCleanupStrategy.ON_SESSION_CLOSE);
+    EagerSession.Options options = EagerSession.options();
     EagerSession.initDefault(options);
     EagerSession session = EagerSession.getDefault();
     assertNotNull(session);
-    assertEquals(ResourceCleanupStrategy.ON_SESSION_CLOSE, session.resourceCleanupStrategy());
     try {
       EagerSession.initDefault(options);
       fail();
