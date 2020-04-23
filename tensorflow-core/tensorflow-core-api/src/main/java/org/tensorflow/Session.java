@@ -313,56 +313,6 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Creates a stream of `Session.Run` objects which can be
-     * processed to retrieve the results of repeated calls
-     * to Session.Runner.run().
-     * <p>
-     * Each item in the stream contains the results corresponding
-     * to "fetched" tensors from this Runner.
-     * <p>
-     * When the graph contains a dataset iterator, the stream
-     * will end once the iterator has reached the end of
-     * its iteration.
-     * <p>
-     * To process only a prefix of this stream, a limit can manually
-     * specified using Stream.limit( ... ). All other Stream operators
-     * can be used on this stream as well.
-     *
-     * @return A Stream of Session.Run items containing results
-     * of repeated calls to Session.Runner.run()
-     */
-    public Stream<Session.Run> repeat() {
-      Iterator<Session.Run> iterator = new Iterator<Run>() {
-        List<Tensor<?>> outputs;
-
-        @Override
-        public boolean hasNext() {
-          if (outputs != null) {
-            for (Tensor<?> output : outputs) {
-              output.close();
-            }
-          }
-
-          try {
-            outputs = run();
-            return true;
-          } catch (IndexOutOfBoundsException e) {
-            // IndexOutOfBoundsException indicates the end of a dataset
-            // iteration.
-            return false;
-          }
-        }
-
-        @Override
-        public Run next() {
-          return new Run(outputs);
-        }
-      };
-
-      return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
-    }
-
-    /**
      * Execute graph fragments to compute requested fetches and return metadata about the run.
      *
      * <p>This is exactly like {@link #run()}, but in addition to the requested Tensors, also
