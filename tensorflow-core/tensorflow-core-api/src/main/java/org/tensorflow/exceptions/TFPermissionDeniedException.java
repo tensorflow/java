@@ -1,6 +1,8 @@
 package org.tensorflow.exceptions;
 
-public final class TFPermissionDeniedException extends RuntimeException {
+import org.tensorflow.TensorFlowException;
+
+public final class TFPermissionDeniedException extends TensorFlowException {
   public TFPermissionDeniedException(String message) {
     super(message);
   }

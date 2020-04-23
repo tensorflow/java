@@ -15,11 +15,14 @@ limitations under the License.
 
 package org.tensorflow;
 
-/** Unchecked exception thrown by TensorFlow core classes */
-public final class TensorFlowException extends RuntimeException {
+/**
+ * Unchecked exception thrown by TensorFlow core classes
+ */
+public class TensorFlowException extends RuntimeException {
   public TensorFlowException(String message) {
     super(message);
   }
+
   public TensorFlowException(String message, Throwable cause) {
     super(message, cause);
   }

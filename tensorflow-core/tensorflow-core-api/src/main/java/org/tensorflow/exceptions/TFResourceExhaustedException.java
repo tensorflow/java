@@ -1,6 +1,8 @@
 package org.tensorflow.exceptions;
 
-public final class TFResourceExhaustedException extends RuntimeException {
+import org.tensorflow.TensorFlowException;
+
+public final class TFResourceExhaustedException extends TensorFlowException {
   public TFResourceExhaustedException(String message) {
     super(message);
   }

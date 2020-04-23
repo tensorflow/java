@@ -33,7 +33,12 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_UNIMPLEMENTED;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
 import org.tensorflow.TensorFlowException;
-import org.tensorflow.exceptions.*;
+import org.tensorflow.exceptions.TFFailedPreconditionException;
+import org.tensorflow.exceptions.TFInvalidArgumentException;
+import org.tensorflow.exceptions.TFPermissionDeniedException;
+import org.tensorflow.exceptions.TFOutOfRangeException;
+import org.tensorflow.exceptions.TFUnimplementedException;
+
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Status extends Pointer {
@@ -72,11 +77,9 @@ public abstract class AbstractTF_Status extends Pointer {
         case TF_INVALID_ARGUMENT:
           throw new TFInvalidArgumentException(TF_Message(s).getString());
         case TF_UNAUTHENTICATED:
-          throw new TFUnauthenticatedException(TF_Message(s).getString());
         case TF_PERMISSION_DENIED:
           throw new TFPermissionDeniedException(TF_Message(s).getString());
         case TF_RESOURCE_EXHAUSTED:
-          throw new TFResourceExhaustedException(TF_Message(s).getString());
         case TF_FAILED_PRECONDITION:
           throw new TFFailedPreconditionException(TF_Message(s).getString());
         case TF_OUT_OF_RANGE:

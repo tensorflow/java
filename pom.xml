@@ -31,8 +31,7 @@
   <modules>
     <module>tensorflow-tools</module>
     <module>tensorflow-core</module>
-    <module>tensorflow-training</module>
-    <module>tensorflow-frameworks</module>
+    <module>tensorflow-framework</module>
   </modules>
 
   <properties>
