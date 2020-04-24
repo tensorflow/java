@@ -149,7 +149,7 @@ The above code will not work in graph mode, which requires the use of
 to run the computations. In graph mode, datasets can be iterated over using the `DatasetIterator` abstraction, and a while loop.
 
 Once the iterator is initialized, repeated calls to `Session.run` will populate the components with new values, until all elements have
-been retrieved. After this, `Session.run` will result in an `IndexOutOfBounds` exception.
+been retrieved. After this, `Session.run` will result in a `TFOutOfRangeException`.
 
 Note that the make-iterator operation can be re-run to re-initialize
 the iterator, to iterate over the dataset a second time.
