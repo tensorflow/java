@@ -199,7 +199,7 @@ try (Graph graph = new Graph()) {
 
                 ...
 
-            } catch (IndexOutOfBoundsException e) {
+            } catch (TFOutOfRangeError e) {
                 // Finished iterating
                 break;
             }
