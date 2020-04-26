@@ -2,7 +2,7 @@ Tensorflow Data (Java)
 ==
 
 TensorFlow Data provides abstractions for loading data of various 
-formats, and preparing it for use with deep learning models.
+formats, and preparing it for use with machine learning models.
 . This package provides a simple API for configuring and iterating over
 datasets in both "graph" and "eager" mode.
 
