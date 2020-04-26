@@ -20,6 +20,7 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
+import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.tools.Shape;
@@ -100,7 +101,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
-   * @throws org.tensorflow.TensorFlowException if the tensor cannot be allocated or initialized
+   * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static Tensor<TUint8> tensorOf(Shape shape, Consumer<TUint8> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);

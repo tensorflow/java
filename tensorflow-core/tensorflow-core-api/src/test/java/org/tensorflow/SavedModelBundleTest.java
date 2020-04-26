@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 
@@ -55,7 +56,7 @@ public class SavedModelBundleTest {
       SavedModelBundle bundle = SavedModelBundle.load("__BAD__", "serve");
       bundle.close();
       fail("not expected");
-    } catch (org.tensorflow.TensorFlowException e) {
+    } catch (TensorFlowException e) {
       // expected exception
       assertTrue(e.getMessage().contains("Could not find SavedModel"));
     }

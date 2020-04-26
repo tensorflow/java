@@ -29,8 +29,8 @@
 
   <name>TensorFlow Framework Library</name>
   <description>
-    Abstractions to help train deep learning
-    models using TensorFlow Java
+    High-level abstractions for training and
+    serving TensorFlow models.
   </description>
 
   <dependencies>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
@@ -65,7 +65,7 @@
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx2G -XX:MaxPermSize=256m -Djava.library.path=/home/dhruv/git/tensorflow-java/tensorflow-core/tensorflow-core-api/target/native/org/tensorflow/internal/c_api/linux-x86_64/</argLine>
+          <argLine>-Xmx2G -XX:MaxPermSize=256m</argLine>
           <skipTests>false</skipTests>
           <includes>
             <include>**/*Test.java</include>

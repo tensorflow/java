@@ -356,8 +356,8 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public Environments environmentType() {
-    return Environments.EAGER;
+  public Types environmentType() {
+    return Types.EAGER;
   }
 
   TFE_Context nativeHandle() {

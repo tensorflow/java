@@ -1,15 +1,10 @@
-
-NOTE: This readme follows the discussion of this [RFC]()
-
-
-Tensorflow-Data (Java)
+Tensorflow Data (Java)
 ==
 
-TensorFlow Data provides utilities and APIs for loading data of various formats, and preparing datasets for use in training and using deep learning models
-. This package
- provides a
- simple API for configuring and iterating over
- datasets in both "graph" and "eager" mode.
+TensorFlow Data provides abstractions for loading data of various 
+formats, and preparing it for use with deep learning models.
+. This package provides a simple API for configuring and iterating over
+datasets in both "graph" and "eager" mode.
 
 Usage
 --
@@ -90,17 +85,17 @@ to the retrieved tensors.
 #### Using DatastetIterator
 The `DatasetIterator` class provides abstractions for creating and using
 iterators in graph and eager mode. These will be explained here; however
-end-users should only interact with `Iterator` objects through the methods
+end-users should only interact with `DatasetIterator` objects through the methods
 provided in the `Dataset` class (examples to follow).
 
 To construct an iterator for a dataset of a specific structure, use
-the static method `Iterator.fromStructure(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes)`. This creates a `DatasetIterator` object
+the static method `DatasetIterator.fromStructure(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes)`. This creates a `DatasetIterator` object
 which can be used with any dataset of a matching structure.
 
-Once a `DatasetIterator` is created, it can be initialized on a `Dataset` intsance using `Iterator.makeInitializer(Dataset dataset)`. This will initialize (or re-initialize) the iterator to start at the beginning
+Once a `DatasetIterator` is created, it can be initialized on a `Dataset` intsance using `DatasetIterator.makeInitializer(Dataset dataset)`. This will initialize (or re-initialize) the iterator to start at the beginning
 of this dataset.
 
-The `Iterator.getNext()` method can be used to retrieve dataset elements.
+The `DatasetIterator.getNext()` method can be used to retrieve dataset elements.
 In eager mode, each call to `getNext()` will return the next dataset element as
 as `List<Output<?>>`. In graph mode, this method should be called just once
 to retrieve the components. These can be fed into additional operations as
@@ -165,11 +160,7 @@ try (Graph graph = new Graph()) {
     // batch dataset elements into batches of size 2
     dataset = dataset.batch(2); 
 
-    // makeOneShotIterator() automatically adds the 
-    // iterator initializer (MakeIterator) Op to the Graph
-    // initializers list. Make sure to run `session.run(tf.init())`
-    // first!
-    DatasetIterator iterator = dataset.makeOneShotIterator();
+    DatasetIterator iterator = dataset.makeInitializeableIterator();
     List<Output<?>> batch = iterator.getNext();
 
     Operand<?> features = batch.get(0);
@@ -185,11 +176,12 @@ try (Graph graph = new Graph()) {
 
     // instantiate graph-mode session
     try (Session session = new Session(graph)) {
-        // Run graph initializers (and the iterator initializer)
+        // Run graph initializers
         session.run(tf.init());
 
         // Iterate over dataset elements
         while (true) {
+            session.run(iterator.getInitializer());
             try {
                 // Run training ops / fetch loss
                 List<Tensor<?>> outputs = session.runner()
@@ -199,7 +191,7 @@ try (Graph graph = new Graph()) {
 
                 ...
 
-            } catch (TFOutOfRangeError e) {
+            } catch (TFOutOfRangeException e) {
                 // Finished iterating
                 break;
             }
