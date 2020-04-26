@@ -18,10 +18,7 @@ package org.tensorflow.framework.data;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.framework.data.impl.BatchDataset;
-import org.tensorflow.framework.data.impl.SkipDataset;
-import org.tensorflow.framework.data.impl.TakeDataset;
-import org.tensorflow.framework.data.impl.TensorSliceDataset;
+import org.tensorflow.framework.data.impl.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
@@ -153,7 +150,10 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A new `DatasetIterator` based on this dataset's structure.
    */
   public DatasetIterator makeInitializeableIterator() {
-    return DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
+    DatasetIterator iterator = DatasetIterator
+        .fromStructure(tf, outputTypes, outputShapes);
+    iterator.makeInitializer(this);
+    return iterator;
   }
 
   /**
@@ -199,7 +199,23 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
     return new TensorSliceDataset(tf, tensors, outputTypes);
   }
 
-  /** Get the variant tensor representing this dataset. */
+  public static Dataset tfRecordDataset(Ops tf, String filename,
+                                        String compressionType,
+                                        long bufferSize) {
+    return new TFRecordDataset(tf,
+        tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  }
+
+  public static Dataset textLineDataset(Ops tf, String filename,
+                                        String compressionType,
+                                        long bufferSize) {
+    return new TextLineDataset(tf,
+        tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  }
+
+  /**
+   * Get the variant tensor representing this dataset.
+   */
   public abstract Operand<?> getVariant();
 
   /** Get a list of output types for each component of this dataset. */
