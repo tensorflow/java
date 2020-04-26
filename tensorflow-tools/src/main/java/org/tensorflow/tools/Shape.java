@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 
 package org.tensorflow.tools;
 
@@ -23,16 +23,12 @@ public final class Shape {
 
   public static long UNKNOWN_SIZE = -1L;
 
-  /**
-   * Create a Shape representing an unknown number of dimensions.
-   */
+  /** Create a Shape representing an unknown number of dimensions. */
   public static Shape unknown() {
     return new Shape(null);
   }
 
-  /**
-   * Create a Shape representing a scalar value.
-   */
+  /** Create a Shape representing a scalar value. */
   public static Shape scalar() {
     return new Shape(new long[0]);
   }
@@ -68,8 +64,7 @@ public final class Shape {
   public static Shape of(long firstDimensionSize, long[] otherDimensionSizes) {
     long[] dimensionSizes = new long[otherDimensionSizes.length + 1];
     dimensionSizes[0] = firstDimensionSize;
-    System.arraycopy(
-        otherDimensionSizes, 0, dimensionSizes, 1, otherDimensionSizes.length);
+    System.arraycopy(otherDimensionSizes, 0, dimensionSizes, 1, otherDimensionSizes.length);
 
     return Shape.of(dimensionSizes);
   }
@@ -126,9 +121,7 @@ public final class Shape {
     return false;
   }
 
-  /**
-   * Succinct description of the shape meant for debugging.
-   */
+  /** Succinct description of the shape meant for debugging. */
   @Override
   public String toString() {
     return Arrays.toString(dimensionSizes);
@@ -142,21 +135,15 @@ public final class Shape {
   private Long size;
 
   /**
-   * Returns a 1-dimension shape with first
-   * dimension matching the first dimensions
-   * of this shape.
+   * Returns a 1-dimension shape with first dimension matching the first dimensions of this shape.
    */
   private Shape head() {
     return Shape.of(size(0));
   }
 
-  /**
-   * Returns a new shape, with this shape's
-   * first dimension removed.
-   */
+  /** Returns a new shape, with this shape's first dimension removed. */
   public Shape tail() {
-    return Shape.of(Arrays.copyOfRange(dimensionSizes, 1,
-        dimensionSizes.length));
+    return Shape.of(Arrays.copyOfRange(dimensionSizes, 1, dimensionSizes.length));
   }
 
   private static long computeSize(long[] dimensionSizes) {

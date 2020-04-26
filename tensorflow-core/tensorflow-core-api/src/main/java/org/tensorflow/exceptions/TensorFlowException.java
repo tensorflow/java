@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package org.tensorflow;
+package org.tensorflow.exceptions;
 
 /**
  * Unchecked exception thrown by TensorFlow core classes
