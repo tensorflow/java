@@ -23,6 +23,7 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ import java.util.List;
  *         .batch(BATCH_SIZE);
  *
  * DatasetIterator iterator = dataset.makeInitializeableIterator();
- * List<Output<?>> components = iterator.getNext();
+ * List<Operand<?>> components = iterator.getNext();
  * Operand<?> XBatch = components.get(0);
  * Operand<?> yBatch = components.get(1);
  *
@@ -88,7 +89,7 @@ import java.util.List;
  *
  * Optimizer optimizer = ... // create an optimizer
  *
- * for (List<Output<?>> components : dataset) {
+ * for (List<Operand<?>> components : dataset) {
  *     Operand<?> XBatch = components.get(0);
  *     Operand<?> yBatch = components.get(1);
  *
@@ -154,23 +155,25 @@ public class DatasetIterator {
    * <p>In eager mode, each time this method is called, the next dataset element will be returned.
    * (This is done automatically by iterating through `Dataset` as a Java `Iterable`).
    *
-   * @return A `List<Output<?>>` representing dataset element components.
+   * @return A `List<Operand<?>>` representing dataset element components.
    */
-  public List<Output<?>> getNext() {
-    return tf.data
+  public List<Operand<?>> getNext() {
+    List<Operand<?>> components = new ArrayList<>();
+    tf.data
         .iteratorGetNext(getIteratorResource(), getOutputTypes(), getOutputShapes())
-        .components();
+        .iterator()
+        .forEachRemaining(components::add);
+    return components;
   }
 
   /**
-   * Returns a `DatasetOptional` representing the components of the next
-   * dataset element.
-
-   * <p>In eager mode, each time this method is called, the next dataset
-   * element will be returned as a `DatasetOptional`.
+   * Returns a `DatasetOptional` representing the components of the next dataset element.
    *
-   * Use `DatasetOptional.hasValue` to check if this optional has a value,
-   * and `DatasetOptional.getValue` to retrieve the value.
+   * <p>In eager mode, each time this method is called, the next dataset element will be returned as
+   * a `DatasetOptional`.
+   *
+   * <p>Use `DatasetOptional.hasValue` to check if this optional has a value, and
+   * `DatasetOptional.getValue` to retrieve the value.
    *
    * @return A `DatasetOptional` representing dataset element components.
    */

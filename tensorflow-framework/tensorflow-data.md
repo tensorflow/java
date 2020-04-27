@@ -10,7 +10,7 @@ Usage
 --
 
 The `Dataset` class represents a sequence of elements which can be iterated over and
-transformed. Each element is a list of "output" operands, represented by the type `List<Output<?>>`. 
+transformed. Each element is a list of "output" operands, represented by the type `List<Operand<?>>`. 
 
 Note: An `Output` is a symbolic handle to a tensor produced by a TensorFlow op. In graph
 mode, `Output` objects will not have a concrete `Tensor` value unless all dependent operations
@@ -77,7 +77,7 @@ Similar transformations include `.skip`, `.take`, `.map`, `.filter`, etc.
 
 The primary use of a dataset is for iteration over its elements.
 Each row (or batch) element is represented as a list of tensor components, with
-type `List<Output<?>>`. The tensor components of this element can be accessed using `List.get(int index)`.
+type `List<Operand<?>>`. The tensor components of this element can be accessed using `List.get(int index)`.
 
 It is recommended to use `Tensor.expect(DataType<?> dtype)` to restore types
 to the retrieved tensors.
@@ -97,7 +97,7 @@ of this dataset.
 
 The `DatasetIterator.getNext()` method can be used to retrieve dataset elements.
 In eager mode, each call to `getNext()` will return the next dataset element as
-as `List<Output<?>>`. In graph mode, this method should be called just once
+as `List<Operand<?>>`. In graph mode, this method should be called just once
 to retrieve the components. These can be fed into additional operations as
 a computation Graph is built. On successive `session.run` operations, the
 successive dataset elements will be automatically passed through the graph.
@@ -121,7 +121,7 @@ dataset = dataset.batch(2);
 
 Optmizer optimizer = ... // TF Optimizer
 
-for (List<Output<?>> batch : dataset) {
+for (List<Operand<?>> batch : dataset) {
     Operand<?> featureBatch = element.get(0);
     Operand<?> labelBatch = element.get(1);
 
@@ -161,7 +161,7 @@ try (Graph graph = new Graph()) {
     dataset = dataset.batch(2); 
 
     DatasetIterator iterator = dataset.makeInitializeableIterator();
-    List<Output<?>> batch = iterator.getNext();
+    List<Operand<?>> batch = iterator.getNext();
 
     Operand<?> features = batch.get(0);
     Operand<?> labels = batch.get(1);

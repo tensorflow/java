@@ -22,6 +22,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,8 +49,14 @@ public class DatasetOptional {
   }
 
   /** Returns the value of the dataset element represented by this optional, if it exists. */
-  public List<Output<?>> getValue() {
-    return tf.data.optionalGetValue(optionalVariant, outputTypes, outputShapes).components();
+  public List<Operand<?>> getValue() {
+    List<Operand<?>> components = new ArrayList<>();
+    tf.data
+        .optionalGetValue(optionalVariant, outputTypes, outputShapes)
+        .iterator()
+        .forEachRemaining(components::add);
+
+    return components;
   }
 
   public static DatasetOptional fromComponents(

@@ -19,19 +19,14 @@ public class DatasetIteratorTest extends DatasetTestBase {
     try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
 
-      List<Operand<?>> tensors = Arrays.asList(
-          tf.constant(testMatrix1),
-          tf.constant(testMatrix2)
-      );
+      List<Operand<?>> tensors = Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2));
 
-      List<DataType<?>> dataTypes = Arrays.asList(
-          TInt32.DTYPE, TInt32.DTYPE
-      );
+      List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
 
       Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
       DatasetIterator iterator = dataset.makeOneShotIterator();
 
-      List<Output<?>> components = iterator.getNext();
+      List<Operand<?>> components = iterator.getNext();
       Operand<?> X = components.get(0);
       Operand<?> y = components.get(1);
 
@@ -41,13 +36,10 @@ public class DatasetIteratorTest extends DatasetTestBase {
         int batches = 0;
         while (true) {
           try {
-            List<Tensor<?>> outputs = session.runner()
-                .fetch(X)
-                .fetch(y)
-                .run();
+            List<Tensor<?>> outputs = session.runner().fetch(X).fetch(y).run();
 
             try (Tensor<TInt32> XBatch = outputs.get(0).expect(TInt32.DTYPE);
-                 Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
+                Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
               assertEquals(testMatrix1.get(batches), XBatch.data());
               assertEquals(testMatrix2.get(batches), yBatch.data());
               batches++;
@@ -65,22 +57,15 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
     Ops tf = Ops.create();
 
-    List<Operand<?>> tensors = Arrays.asList(
-        tf.constant(testMatrix1),
-        tf.constant(testMatrix2)
-    );
+    List<Operand<?>> tensors = Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2));
 
-    List<DataType<?>> dataTypes = Arrays.asList(
-        TInt32.DTYPE, TInt32.DTYPE
-    );
+    List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
 
     Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
     int count = 0;
-    for (List<Output<?>> outputs : dataset) {
-      try (Tensor<TInt32> XBatch =
-               outputs.get(0).tensor().expect(TInt32.DTYPE);
-           Tensor<TInt32> yBatch =
-               outputs.get(1).tensor().expect(TInt32.DTYPE);) {
+    for (List<Operand<?>> outputs : dataset) {
+      try (Tensor<TInt32> XBatch = outputs.get(0).asTensor().expect(TInt32.DTYPE);
+          Tensor<TInt32> yBatch = outputs.get(1).asTensor().expect(TInt32.DTYPE); ) {
 
         assertEquals(testMatrix1.get(count), XBatch.data());
         assertEquals(testMatrix2.get(count), yBatch.data());

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * Represents a potentially large list of independent elements (samples), and allows iteration and
  * transformations to be performed across these elements.
  */
-public abstract class Dataset implements Iterable<List<Output<?>>> {
+public abstract class Dataset implements Iterable<List<Operand<?>>> {
   protected Ops tf;
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
@@ -118,7 +118,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
    * @return an Iterator through batches of this dataset.
    */
   @Override
-  public Iterator<List<Output<?>>> iterator() {
+  public Iterator<List<Operand<?>>> iterator() {
 
     if (!tf.scope().env().isEager()) {
       throw new UnsupportedOperationException(
@@ -127,7 +127,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
 
     DatasetIterator iterator = makeOneShotIterator();
 
-    return new Iterator<List<Output<?>>>() {
+    return new Iterator<List<Operand<?>>>() {
       private DatasetOptional nextOptional = iterator.getNextAsOptional();
 
       @Override
@@ -136,8 +136,8 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
       }
 
       @Override
-      public List<Output<?>> next() {
-        List<Output<?>> result = nextOptional.getValue();
+      public List<Operand<?>> next() {
+        List<Operand<?>> result = nextOptional.getValue();
         nextOptional = iterator.getNextAsOptional();
         return result;
       }
@@ -184,7 +184,7 @@ public abstract class Dataset implements Iterable<List<Output<?>>> {
 
   /**
    * Creates an in-memory `Dataset` whose elements are slices of the given tensors. Each element of
-   * this dataset will be a List<Output<?>>, representing slices (e.g. batches) of the provided
+   * this dataset will be a List<Operand<?>>, representing slices (e.g. batches) of the provided
    * tensors.
    *
    * @param tf Ops Accessor

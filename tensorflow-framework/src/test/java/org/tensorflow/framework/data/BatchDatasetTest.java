@@ -1,6 +1,7 @@
 package org.tensorflow.framework.data;
 
 import org.junit.Test;
+import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
@@ -29,11 +30,11 @@ public class BatchDatasetTest extends DatasetTestBase {
         .batch(2);
 
     int count = 0;
-    for (List<Output<?>> components : dataset) {
+    for (List<Operand<?>> components : dataset) {
       try (Tensor<TInt32> batch1 =
-               components.get(0).tensor().expect(TInt32.DTYPE);
+               components.get(0).asTensor().expect(TInt32.DTYPE);
            Tensor<TInt32> batch2 =
-               components.get(1).tensor().expect(TInt32.DTYPE);) {
+               components.get(1).asTensor().expect(TInt32.DTYPE);) {
 
         assertEquals(testMatrix1.slice(range(count, count + 2)), batch1.data());
         assertEquals(testMatrix2.slice(range(count, count + 2)), batch2.data());
@@ -55,12 +56,12 @@ public class BatchDatasetTest extends DatasetTestBase {
         .batch(3, true);
 
     int count = 0;
-    for (List<Output<?>> components : dataset) {
+    for (List<Operand<?>> components : dataset) {
 
       try (Tensor<TInt32> batch1 =
-               components.get(0).tensor().expect(TInt32.DTYPE);
+               components.get(0).asTensor().expect(TInt32.DTYPE);
            Tensor<TInt32> batch2 =
-               components.get(1).tensor().expect(TInt32.DTYPE);) {
+               components.get(1).asTensor().expect(TInt32.DTYPE);) {
 
         assertEquals(testMatrix1.slice(range(count, count + 3)), batch1.data());
         assertEquals(testMatrix2.slice(range(count, count + 3)), batch2.data());
@@ -84,11 +85,11 @@ public class BatchDatasetTest extends DatasetTestBase {
     int count = 0;
     boolean foundLastBatch = false;
 
-    for (List<Output<?>> components : dataset) {
+    for (List<Operand<?>> components : dataset) {
       try (Tensor<TInt32> batch1 =
-               components.get(0).tensor().expect(TInt32.DTYPE);
+               components.get(0).asTensor().expect(TInt32.DTYPE);
            Tensor<TInt32> batch2 =
-               components.get(1).tensor().expect(TInt32.DTYPE);) {
+               components.get(1).asTensor().expect(TInt32.DTYPE);) {
         if (count == 0) {
           assertEquals(testMatrix1.slice(range(count, count + 3)),
               batch1.data());
