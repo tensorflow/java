@@ -18,11 +18,11 @@ package org.tensorflow.framework.data;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +34,8 @@ import java.util.List;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> XTensor = tf.constant( ... );
- * Operand<?> yTensor = tf.constant( ... );
+ * Operand<?> features = tf.constant( ... );
+ * Operand<?> labels = tf.constant( ... );
  *
  *
  * Dataset dataset = Dataset
@@ -43,12 +43,12 @@ import java.util.List;
  *         .batch(BATCH_SIZE);
  *
  * DatasetIterator iterator = dataset.makeInitializeableIterator();
- * List<Output<?>> components = iterator.getNext();
- * Operand<?> XBatch = components.get(0);
- * Operand<?> yBatch = components.get(1);
+ * List<Operand<?>> components = iterator.getNext();
+ * Operand<?> featureBatch = components.get(0);
+ * Operand<?> labelBatch = components.get(1);
  *
  * // Build a TensorFlow graph that does something on each element.
- * loss = computeModelLoss(XBatch, yBatch);
+ * loss = computeModelLoss(featureBatch, labelBatch);
  *
  * optimizer = ... // create an optimizer
  * trainOp = optimizer.minimize(loss);
@@ -59,7 +59,7 @@ import java.util.List;
  *     try {
  *         session
  *           .addTarget(trainOp)
- *           .fetch( ... )
+ *           .fetch(loss)
  *           .run();
  *
  *         ...
@@ -76,23 +76,23 @@ import java.util.List;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> XTensor = tf.constant( ... );
- * Operand<?> yTensor = tf.constant( ... );
+ * Operand<?> features = tf.constant( ... );
+ * Operand<?> labels = tf.constant( ... );
  *
  * int BATCH_SIZE = ...
  *
  * Dataset dataset = Dataset
- *         .fromTensorSlices(XTensor, yTensor)
+ *         .fromTensorSlices(features, labels)
  *         .batch(BATCH_SIZE);
  * DatasetIterator iterator = dataset.makeIterator();
  *
  * Optimizer optimizer = ... // create an optimizer
  *
- * for (List<Output<?>> components : dataset) {
- *     Operand<?> XBatch = components.get(0);
- *     Operand<?> yBatch = components.get(1);
+ * for (List<Operand<?>> components : dataset) {
+ *     Operand<?> featureBatch = components.get(0);
+ *     Operand<?> labelBatch = components.get(1);
  *
- *     loss = computeModelLoss(X, y);
+ *     loss = computeModelLoss(featureBatch, labelBatch);
  *     trainOp = optimizer.minimize(loss);
  * }
  * }</pre>
@@ -154,23 +154,25 @@ public class DatasetIterator {
    * <p>In eager mode, each time this method is called, the next dataset element will be returned.
    * (This is done automatically by iterating through `Dataset` as a Java `Iterable`).
    *
-   * @return A `List<Output<?>>` representing dataset element components.
+   * @return A `List<Operand<?>>` representing dataset element components.
    */
-  public List<Output<?>> getNext() {
-    return tf.data
+  public List<Operand<?>> getNext() {
+    List<Operand<?>> components = new ArrayList<>();
+    tf.data
         .iteratorGetNext(getIteratorResource(), getOutputTypes(), getOutputShapes())
-        .components();
+        .iterator()
+        .forEachRemaining(components::add);
+    return components;
   }
 
   /**
-   * Returns a `DatasetOptional` representing the components of the next
-   * dataset element.
-
-   * <p>In eager mode, each time this method is called, the next dataset
-   * element will be returned as a `DatasetOptional`.
+   * Returns a `DatasetOptional` representing the components of the next dataset element.
    *
-   * Use `DatasetOptional.hasValue` to check if this optional has a value,
-   * and `DatasetOptional.getValue` to retrieve the value.
+   * <p>In eager mode, each time this method is called, the next dataset element will be returned as
+   * a `DatasetOptional`.
+   *
+   * <p>Use `DatasetOptional.hasValue` to check if this optional has a value, and
+   * `DatasetOptional.getValue` to retrieve the value.
    *
    * @return A `DatasetOptional` representing dataset element components.
    */
