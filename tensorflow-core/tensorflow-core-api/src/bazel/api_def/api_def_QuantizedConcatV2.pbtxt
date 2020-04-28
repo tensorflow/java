@@ -1,0 +1,4 @@
+op {
+  graph_op_name: "QuantizedConcatV2"
+  visibility: SKIP
+}
