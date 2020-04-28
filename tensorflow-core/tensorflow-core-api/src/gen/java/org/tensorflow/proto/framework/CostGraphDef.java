@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private CostGraphDef() {
     node_ = java.util.Collections.emptyList();
+    cost_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -59,6 +60,15 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.tensorflow.proto.framework.CostGraphDef.Node.parser(), extensionRegistry));
             break;
           }
+          case 18: {
+            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+              cost_ = new java.util.ArrayList<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost>();
+              mutable_bitField0_ |= 0x00000002;
+            }
+            cost_.add(
+                input.readMessage(org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -76,6 +86,9 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
         node_ = java.util.Collections.unmodifiableList(node_);
+      }
+      if (((mutable_bitField0_ & 0x00000002) != 0)) {
+        cost_ = java.util.Collections.unmodifiableList(cost_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -4120,6 +4133,689 @@ private static final long serialVersionUID = 0L;
 
   }
 
+  public interface AggregatedCostOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tensorflow.CostGraphDef.AggregatedCost)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Aggregated cost value.
+     * </pre>
+     *
+     * <code>float cost = 1;</code>
+     */
+    float getCost();
+
+    /**
+     * <pre>
+     * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+     * </pre>
+     *
+     * <code>string dimension = 2;</code>
+     */
+    java.lang.String getDimension();
+    /**
+     * <pre>
+     * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+     * </pre>
+     *
+     * <code>string dimension = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDimensionBytes();
+  }
+  /**
+   * <pre>
+   * Total cost of this graph, typically used for balancing decisions.
+   * </pre>
+   *
+   * Protobuf type {@code tensorflow.CostGraphDef.AggregatedCost}
+   */
+  public  static final class AggregatedCost extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tensorflow.CostGraphDef.AggregatedCost)
+      AggregatedCostOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use AggregatedCost.newBuilder() to construct.
+    private AggregatedCost(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private AggregatedCost() {
+      dimension_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new AggregatedCost();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AggregatedCost(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 13: {
+
+              cost_ = input.readFloat();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dimension_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.tensorflow.proto.framework.CostGraphProtos.internal_static_tensorflow_CostGraphDef_AggregatedCost_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.tensorflow.proto.framework.CostGraphProtos.internal_static_tensorflow_CostGraphDef_AggregatedCost_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.class, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder.class);
+    }
+
+    public static final int COST_FIELD_NUMBER = 1;
+    private float cost_;
+    /**
+     * <pre>
+     * Aggregated cost value.
+     * </pre>
+     *
+     * <code>float cost = 1;</code>
+     */
+    public float getCost() {
+      return cost_;
+    }
+
+    public static final int DIMENSION_FIELD_NUMBER = 2;
+    private volatile java.lang.Object dimension_;
+    /**
+     * <pre>
+     * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+     * </pre>
+     *
+     * <code>string dimension = 2;</code>
+     */
+    public java.lang.String getDimension() {
+      java.lang.Object ref = dimension_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dimension_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+     * </pre>
+     *
+     * <code>string dimension = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDimensionBytes() {
+      java.lang.Object ref = dimension_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dimension_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (cost_ != 0F) {
+        output.writeFloat(1, cost_);
+      }
+      if (!getDimensionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, dimension_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (cost_ != 0F) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(1, cost_);
+      }
+      if (!getDimensionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, dimension_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.tensorflow.proto.framework.CostGraphDef.AggregatedCost)) {
+        return super.equals(obj);
+      }
+      org.tensorflow.proto.framework.CostGraphDef.AggregatedCost other = (org.tensorflow.proto.framework.CostGraphDef.AggregatedCost) obj;
+
+      if (java.lang.Float.floatToIntBits(getCost())
+          != java.lang.Float.floatToIntBits(
+              other.getCost())) return false;
+      if (!getDimension()
+          .equals(other.getDimension())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + COST_FIELD_NUMBER;
+      hash = (53 * hash) + java.lang.Float.floatToIntBits(
+          getCost());
+      hash = (37 * hash) + DIMENSION_FIELD_NUMBER;
+      hash = (53 * hash) + getDimension().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.tensorflow.proto.framework.CostGraphDef.AggregatedCost prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * Total cost of this graph, typically used for balancing decisions.
+     * </pre>
+     *
+     * Protobuf type {@code tensorflow.CostGraphDef.AggregatedCost}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tensorflow.CostGraphDef.AggregatedCost)
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.tensorflow.proto.framework.CostGraphProtos.internal_static_tensorflow_CostGraphDef_AggregatedCost_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.tensorflow.proto.framework.CostGraphProtos.internal_static_tensorflow_CostGraphDef_AggregatedCost_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.class, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder.class);
+      }
+
+      // Construct using org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        cost_ = 0F;
+
+        dimension_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.tensorflow.proto.framework.CostGraphProtos.internal_static_tensorflow_CostGraphDef_AggregatedCost_descriptor;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getDefaultInstanceForType() {
+        return org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost build() {
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost buildPartial() {
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost result = new org.tensorflow.proto.framework.CostGraphDef.AggregatedCost(this);
+        result.cost_ = cost_;
+        result.dimension_ = dimension_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.tensorflow.proto.framework.CostGraphDef.AggregatedCost) {
+          return mergeFrom((org.tensorflow.proto.framework.CostGraphDef.AggregatedCost)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.tensorflow.proto.framework.CostGraphDef.AggregatedCost other) {
+        if (other == org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.getDefaultInstance()) return this;
+        if (other.getCost() != 0F) {
+          setCost(other.getCost());
+        }
+        if (!other.getDimension().isEmpty()) {
+          dimension_ = other.dimension_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.tensorflow.proto.framework.CostGraphDef.AggregatedCost) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private float cost_ ;
+      /**
+       * <pre>
+       * Aggregated cost value.
+       * </pre>
+       *
+       * <code>float cost = 1;</code>
+       */
+      public float getCost() {
+        return cost_;
+      }
+      /**
+       * <pre>
+       * Aggregated cost value.
+       * </pre>
+       *
+       * <code>float cost = 1;</code>
+       */
+      public Builder setCost(float value) {
+        
+        cost_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated cost value.
+       * </pre>
+       *
+       * <code>float cost = 1;</code>
+       */
+      public Builder clearCost() {
+        
+        cost_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object dimension_ = "";
+      /**
+       * <pre>
+       * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+       * </pre>
+       *
+       * <code>string dimension = 2;</code>
+       */
+      public java.lang.String getDimension() {
+        java.lang.Object ref = dimension_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dimension_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+       * </pre>
+       *
+       * <code>string dimension = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDimensionBytes() {
+        java.lang.Object ref = dimension_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dimension_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+       * </pre>
+       *
+       * <code>string dimension = 2;</code>
+       */
+      public Builder setDimension(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dimension_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+       * </pre>
+       *
+       * <code>string dimension = 2;</code>
+       */
+      public Builder clearDimension() {
+        
+        dimension_ = getDefaultInstance().getDimension();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated cost dimension (e.g. 'memory', 'compute', 'network').
+       * </pre>
+       *
+       * <code>string dimension = 2;</code>
+       */
+      public Builder setDimensionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dimension_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tensorflow.CostGraphDef.AggregatedCost)
+    }
+
+    // @@protoc_insertion_point(class_scope:tensorflow.CostGraphDef.AggregatedCost)
+    private static final org.tensorflow.proto.framework.CostGraphDef.AggregatedCost DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.tensorflow.proto.framework.CostGraphDef.AggregatedCost();
+    }
+
+    public static org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<AggregatedCost>
+        PARSER = new com.google.protobuf.AbstractParser<AggregatedCost>() {
+      @java.lang.Override
+      public AggregatedCost parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AggregatedCost(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<AggregatedCost> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AggregatedCost> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public static final int NODE_FIELD_NUMBER = 1;
   private java.util.List<org.tensorflow.proto.framework.CostGraphDef.Node> node_;
   /**
@@ -4155,6 +4851,41 @@ private static final long serialVersionUID = 0L;
     return node_.get(index);
   }
 
+  public static final int COST_FIELD_NUMBER = 2;
+  private java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> cost_;
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  public java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> getCostList() {
+    return cost_;
+  }
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  public java.util.List<? extends org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder> 
+      getCostOrBuilderList() {
+    return cost_;
+  }
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  public int getCostCount() {
+    return cost_.size();
+  }
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getCost(int index) {
+    return cost_.get(index);
+  }
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  public org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder getCostOrBuilder(
+      int index) {
+    return cost_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -4172,6 +4903,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < node_.size(); i++) {
       output.writeMessage(1, node_.get(i));
     }
+    for (int i = 0; i < cost_.size(); i++) {
+      output.writeMessage(2, cost_.get(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -4184,6 +4918,10 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < node_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, node_.get(i));
+    }
+    for (int i = 0; i < cost_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, cost_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -4202,6 +4940,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getNodeList()
         .equals(other.getNodeList())) return false;
+    if (!getCostList()
+        .equals(other.getCostList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -4216,6 +4956,10 @@ private static final long serialVersionUID = 0L;
     if (getNodeCount() > 0) {
       hash = (37 * hash) + NODE_FIELD_NUMBER;
       hash = (53 * hash) + getNodeList().hashCode();
+    }
+    if (getCostCount() > 0) {
+      hash = (37 * hash) + COST_FIELD_NUMBER;
+      hash = (53 * hash) + getCostList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -4346,6 +5090,7 @@ private static final long serialVersionUID = 0L;
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
         getNodeFieldBuilder();
+        getCostFieldBuilder();
       }
     }
     @java.lang.Override
@@ -4356,6 +5101,12 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000001);
       } else {
         nodeBuilder_.clear();
+      }
+      if (costBuilder_ == null) {
+        cost_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+      } else {
+        costBuilder_.clear();
       }
       return this;
     }
@@ -4392,6 +5143,15 @@ private static final long serialVersionUID = 0L;
         result.node_ = node_;
       } else {
         result.node_ = nodeBuilder_.build();
+      }
+      if (costBuilder_ == null) {
+        if (((bitField0_ & 0x00000002) != 0)) {
+          cost_ = java.util.Collections.unmodifiableList(cost_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.cost_ = cost_;
+      } else {
+        result.cost_ = costBuilder_.build();
       }
       onBuilt();
       return result;
@@ -4464,6 +5224,32 @@ private static final long serialVersionUID = 0L;
                  getNodeFieldBuilder() : null;
           } else {
             nodeBuilder_.addAllMessages(other.node_);
+          }
+        }
+      }
+      if (costBuilder_ == null) {
+        if (!other.cost_.isEmpty()) {
+          if (cost_.isEmpty()) {
+            cost_ = other.cost_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureCostIsMutable();
+            cost_.addAll(other.cost_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.cost_.isEmpty()) {
+          if (costBuilder_.isEmpty()) {
+            costBuilder_.dispose();
+            costBuilder_ = null;
+            cost_ = other.cost_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            costBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getCostFieldBuilder() : null;
+          } else {
+            costBuilder_.addAllMessages(other.cost_);
           }
         }
       }
@@ -4735,6 +5521,246 @@ private static final long serialVersionUID = 0L;
         node_ = null;
       }
       return nodeBuilder_;
+    }
+
+    private java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> cost_ =
+      java.util.Collections.emptyList();
+    private void ensureCostIsMutable() {
+      if (!((bitField0_ & 0x00000002) != 0)) {
+        cost_ = new java.util.ArrayList<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost>(cost_);
+        bitField0_ |= 0x00000002;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder, org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder> costBuilder_;
+
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> getCostList() {
+      if (costBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(cost_);
+      } else {
+        return costBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public int getCostCount() {
+      if (costBuilder_ == null) {
+        return cost_.size();
+      } else {
+        return costBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getCost(int index) {
+      if (costBuilder_ == null) {
+        return cost_.get(index);
+      } else {
+        return costBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder setCost(
+        int index, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost value) {
+      if (costBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureCostIsMutable();
+        cost_.set(index, value);
+        onChanged();
+      } else {
+        costBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder setCost(
+        int index, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder builderForValue) {
+      if (costBuilder_ == null) {
+        ensureCostIsMutable();
+        cost_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        costBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder addCost(org.tensorflow.proto.framework.CostGraphDef.AggregatedCost value) {
+      if (costBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureCostIsMutable();
+        cost_.add(value);
+        onChanged();
+      } else {
+        costBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder addCost(
+        int index, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost value) {
+      if (costBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureCostIsMutable();
+        cost_.add(index, value);
+        onChanged();
+      } else {
+        costBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder addCost(
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder builderForValue) {
+      if (costBuilder_ == null) {
+        ensureCostIsMutable();
+        cost_.add(builderForValue.build());
+        onChanged();
+      } else {
+        costBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder addCost(
+        int index, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder builderForValue) {
+      if (costBuilder_ == null) {
+        ensureCostIsMutable();
+        cost_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        costBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder addAllCost(
+        java.lang.Iterable<? extends org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> values) {
+      if (costBuilder_ == null) {
+        ensureCostIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, cost_);
+        onChanged();
+      } else {
+        costBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder clearCost() {
+      if (costBuilder_ == null) {
+        cost_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+      } else {
+        costBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public Builder removeCost(int index) {
+      if (costBuilder_ == null) {
+        ensureCostIsMutable();
+        cost_.remove(index);
+        onChanged();
+      } else {
+        costBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder getCostBuilder(
+        int index) {
+      return getCostFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder getCostOrBuilder(
+        int index) {
+      if (costBuilder_ == null) {
+        return cost_.get(index);  } else {
+        return costBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder> 
+         getCostOrBuilderList() {
+      if (costBuilder_ != null) {
+        return costBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(cost_);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder addCostBuilder() {
+      return getCostFieldBuilder().addBuilder(
+          org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder addCostBuilder(
+        int index) {
+      return getCostFieldBuilder().addBuilder(
+          index, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder> 
+         getCostBuilderList() {
+      return getCostFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.CostGraphDef.AggregatedCost, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder, org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder> 
+        getCostFieldBuilder() {
+      if (costBuilder_ == null) {
+        costBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.tensorflow.proto.framework.CostGraphDef.AggregatedCost, org.tensorflow.proto.framework.CostGraphDef.AggregatedCost.Builder, org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder>(
+                cost_,
+                ((bitField0_ & 0x00000002) != 0),
+                getParentForChildren(),
+                isClean());
+        cost_ = null;
+      }
+      return costBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

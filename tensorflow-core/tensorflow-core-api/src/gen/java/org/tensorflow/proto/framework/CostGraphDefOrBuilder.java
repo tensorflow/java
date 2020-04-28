@@ -30,4 +30,28 @@ public interface CostGraphDefOrBuilder extends
    */
   org.tensorflow.proto.framework.CostGraphDef.NodeOrBuilder getNodeOrBuilder(
       int index);
+
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  java.util.List<org.tensorflow.proto.framework.CostGraphDef.AggregatedCost> 
+      getCostList();
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  org.tensorflow.proto.framework.CostGraphDef.AggregatedCost getCost(int index);
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  int getCostCount();
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  java.util.List<? extends org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder> 
+      getCostOrBuilderList();
+  /**
+   * <code>repeated .tensorflow.CostGraphDef.AggregatedCost cost = 2;</code>
+   */
+  org.tensorflow.proto.framework.CostGraphDef.AggregatedCostOrBuilder getCostOrBuilder(
+      int index);
 }
