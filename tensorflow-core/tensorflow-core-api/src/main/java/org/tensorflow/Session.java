@@ -318,7 +318,6 @@ public final class Session implements AutoCloseable {
       TF_Operation[] outputOpHandles = new TF_Operation[outputs.size()];
       int[] outputOpIndices = new int[outputs.size()];
       TF_Operation[] targetOpHandles = new TF_Operation[targets.size()];
-      TF_Tensor[] outputTensorHandles = new TF_Tensor[outputs.size()];
 
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
@@ -345,7 +344,7 @@ public final class Session implements AutoCloseable {
       Reference runRef = new Reference();
       RunMetadata metadata = null;
       List<Tensor<?>> outputs = new ArrayList<>();
-      try (PointerScope scope = new PointerScope()) {
+      try {
         metadata =
             Session.run(
                 nativeHandle,
@@ -357,11 +356,7 @@ public final class Session implements AutoCloseable {
                 outputOpIndices,
                 targetOpHandles,
                 wantMetadata,
-                outputTensorHandles,
-                scope);
-        for (TF_Tensor h : outputTensorHandles) {
-          outputs.add(Tensor.fromHandle(h));
-        }
+                outputs);
       } catch (Exception e) {
         for (Tensor<?> t : outputs) {
           t.close();
@@ -565,8 +560,8 @@ public final class Session implements AutoCloseable {
    * @param targetOpHandles is the set of Operations in the graph that are to be executed but whose
    *     output will not be returned
    * @param wantRunMetadata indicates whether metadata about this execution should be returned.
-   * @param outputTensorHandles will be filled in with handles to the outputs requested. It is
-   *     required that outputTensorHandles.length == outputOpHandles.length.
+   * @param outputTensors will be filled in with tensors to the outputs requested. It is
+   *     required that outputs.length == outputOpHandles.length.
    * @return if wantRunMetadata is true, a RunMetadata protocol buffer, false otherwise.
    */
   private static RunMetadata run(
@@ -579,12 +574,11 @@ public final class Session implements AutoCloseable {
       int[] outputOpIndices,
       TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      TF_Tensor[] outputTensorHandles,
-      PointerScope outputScope) {
+      List<Tensor<?>> outputTensors) {
     requireHandle(handle);
 
     int ninputs = inputTensorHandles.length;
-    int noutputs = outputTensorHandles.length;
+    int noutputs = outputOpHandles.length;
     int ntargets = targetOpHandles.length;
 
     try (PointerScope scope = new PointerScope()) {
@@ -609,8 +603,8 @@ public final class Session implements AutoCloseable {
       status.throwExceptionIfNotOK();
 
       for (int i = 0; i < noutputs; ++i) {
-        outputTensorHandles[i] = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputScope.attach(outputTensorHandles[i]);
+        TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
+        outputTensors.add(Tensor.fromHandle(h));
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;
