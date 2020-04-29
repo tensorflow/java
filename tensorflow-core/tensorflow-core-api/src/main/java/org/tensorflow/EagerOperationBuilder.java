@@ -226,7 +226,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   private final String name;
 
   /** This value should be >= to the maximum number of outputs in any op */
-  private static final int MAX_OUTPUTS_PER_OP = 8;
+  private static final int MAX_OUTPUTS_PER_OP = 1000;
 
   private static void requireOp(TFE_Op handle) {
     if (handle == null || handle.isNull()) {
