@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2020 The TensorFlow Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    */
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
     List<Shape> batchOutputShapes =
-        outputShapes.stream().map(s -> Shape.of(-1, s.asArray())).collect(Collectors.toList());
+        outputShapes.stream().map(s -> s.prepend(-1)).collect(Collectors.toList());
 
     return new BatchDataset(
         tf,

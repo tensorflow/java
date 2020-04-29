@@ -61,14 +61,6 @@ public final class Shape {
     return new Shape(dimensionSizes);
   }
 
-  public static Shape of(long firstDimensionSize, long[] otherDimensionSizes) {
-    long[] dimensionSizes = new long[otherDimensionSizes.length + 1];
-    dimensionSizes[0] = firstDimensionSize;
-    System.arraycopy(otherDimensionSizes, 0, dimensionSizes, 1, otherDimensionSizes.length);
-
-    return Shape.of(dimensionSizes);
-  }
-
   public long size() {
     if (size == null) {
       size = computeSize(dimensionSizes);
@@ -137,13 +129,23 @@ public final class Shape {
   /**
    * Returns a 1-dimension shape with first dimension matching the first dimensions of this shape.
    */
-  private Shape head() {
+  public Shape head() {
     return Shape.of(size(0));
   }
 
   /** Returns a new shape, with this shape's first dimension removed. */
   public Shape tail() {
+    if (dimensionSizes.length < 2) return Shape.of();
     return Shape.of(Arrays.copyOfRange(dimensionSizes, 1, dimensionSizes.length));
+  }
+
+  /** Returns a new shape, with a new first dimension added */
+  public Shape prepend(long firstDimension) {
+    long[] newDimensions = new long[dimensionSizes.length + 1];
+    newDimensions[0] = firstDimension;
+    System.arraycopy(dimensionSizes, 0, newDimensions, 1, dimensionSizes.length);
+
+    return Shape.of(newDimensions);
   }
 
   private static long computeSize(long[] dimensionSizes) {

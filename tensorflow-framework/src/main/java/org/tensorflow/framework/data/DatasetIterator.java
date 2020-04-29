@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2020 The TensorFlow Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,7 +207,6 @@ public class DatasetIterator {
 
     if (!dataset.getOutputShapes().equals(getOutputShapes())
         || !dataset.getOutputTypes().equals(getOutputTypes())) {
-
       throw new IllegalArgumentException(
           "Dataset structure (types, " + "output shapes) must match this iterator.");
     }

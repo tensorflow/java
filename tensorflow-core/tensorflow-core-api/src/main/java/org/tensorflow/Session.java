@@ -15,32 +15,23 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
-
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.ArrayList;
-import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.internal.c_api.TF_Buffer;
-import org.tensorflow.internal.c_api.TF_Graph;
-import org.tensorflow.internal.c_api.TF_Operation;
-import org.tensorflow.internal.c_api.TF_Output;
-import org.tensorflow.internal.c_api.TF_Session;
-import org.tensorflow.internal.c_api.TF_SessionOptions;
-import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.internal.c_api.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /**
  * Driver for {@link Graph} execution.
@@ -73,7 +64,7 @@ public final class Session implements AutoCloseable {
 
   /** Construct a new session with the associated {@link Graph}. */
   public Session(Graph g) {
-    this(g, (ConfigProto)null);
+    this(g, (ConfigProto) null);
   }
 
   /**
@@ -209,17 +200,13 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
-    /** 
-     * Makes {@link #run()} return the Tensor referred to by {@code output}. 
-     */
+    /** Makes {@link #run()} return the Tensor referred to by {@code output}. */
     public Runner fetch(Output<?> output) {
       outputs.add(output);
       return this;
     }
-    
-    /**
-     * Makes {@link #run()} return the Tensor referred to by the output of {@code operand}. 
-     */
+
+    /** Makes {@link #run()} return the Tensor referred to by the output of {@code operand}. */
     public Runner fetch(Operand<?> operand) {
       return fetch(operand.asOutput());
     }
@@ -254,8 +241,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run} execute {@code op}, but not return any evaluated {@link Tensor
-     * Tensors}.
+     * Make {@link #run} execute {@code op}, but not return any evaluated {@link Tensor Tensors}.
      */
     public Runner addTarget(Op op) {
       return addTarget(op.op());
@@ -320,13 +306,13 @@ public final class Session implements AutoCloseable {
       }
       idx = 0;
       for (Output<?> o : inputs) {
-        inputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
+        inputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         inputOpIndices[idx] = o.index();
         idx++;
       }
       idx = 0;
       for (Output<?> o : outputs) {
-        outputOpHandles[idx] = (TF_Operation)o.getUnsafeNativeHandle();
+        outputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         outputOpIndices[idx] = o.index();
         idx++;
       }
@@ -426,7 +412,7 @@ public final class Session implements AutoCloseable {
   /**
    * Executes an operation in the graph with the given name.
    *
-   * <p>This method is equivalent to {@code session.runner().addTarget(opName).run()}.</p>
+   * <p>This method is equivalent to {@code session.runner().addTarget(opName).run()}.
    *
    * @param opName name of the operation to run.
    * @throws IllegalArgumentException if no operation of that name can be found in the graph
@@ -434,8 +420,8 @@ public final class Session implements AutoCloseable {
   public void run(String opName) {
     Operation operation = graph.operation(opName);
     if (operation == null) {
-      throw new IllegalArgumentException("Operation named '" + opName
-          + "' cannot be found in the graph");
+      throw new IllegalArgumentException(
+          "Operation named '" + opName + "' cannot be found in the graph");
     }
     runner().addTarget(operation).run();
   }
@@ -443,7 +429,7 @@ public final class Session implements AutoCloseable {
   /**
    * Executes an operation in the graph.
    *
-   * <p>This method is equivalent to {@code session.runner().addTarget(op).run()}.</p>
+   * <p>This method is equivalent to {@code session.runner().addTarget(op).run()}.
    *
    * @param op the operation to run.
    */
@@ -549,8 +535,8 @@ public final class Session implements AutoCloseable {
    * @param targetOpHandles is the set of Operations in the graph that are to be executed but whose
    *     output will not be returned
    * @param wantRunMetadata indicates whether metadata about this execution should be returned.
-   * @param outputTensors will be filled in with tensors to the outputs requested. It is
-   *     required that outputs.length == outputOpHandles.length.
+   * @param outputTensors will be filled in with tensors to the outputs requested. It is required
+   *     that outputs.length == outputOpHandles.length.
    * @return if wantRunMetadata is true, a RunMetadata protocol buffer, false otherwise.
    */
   private static RunMetadata run(
@@ -586,9 +572,19 @@ public final class Session implements AutoCloseable {
       TF_Status status = TF_Status.newStatus();
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
-      TF_SessionRun(handle, runOpts, inputs, inputValues, ninputs,
-                    outputs, outputValues, noutputs, targets, ntargets,
-                    runMetadata, status);
+      TF_SessionRun(
+          handle,
+          runOpts,
+          inputs,
+          inputValues,
+          ninputs,
+          outputs,
+          outputValues,
+          noutputs,
+          targets,
+          ntargets,
+          runMetadata,
+          status);
       status.throwExceptionIfNotOK();
 
       for (int i = 0; i < noutputs; ++i) {
