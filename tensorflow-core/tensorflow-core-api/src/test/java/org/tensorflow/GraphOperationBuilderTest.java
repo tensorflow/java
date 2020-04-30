@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.tools.Shape;
@@ -162,7 +163,7 @@ public class GraphOperationBuilderTest {
       // Those shapes do not match tensors ones, exception is thrown
       testSetAttrShapeList(new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2, 2)});
       fail("Shapes are incompatible and an exception was expected");
-    } catch (IllegalArgumentException e) {
+    } catch (TFInvalidArgumentException e) {
       // expected
     }
   }
@@ -189,7 +190,7 @@ public class GraphOperationBuilderTest {
       try {
         s.runner().feed(placeholder, no).addTarget(noop).run();
         fail("Did not run control operation.");
-      } catch (IllegalArgumentException e) {
+      } catch (TFInvalidArgumentException e) {
         // expected
       }
     }

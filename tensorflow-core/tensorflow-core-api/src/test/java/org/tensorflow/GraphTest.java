@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.proto.framework.GraphDef;
@@ -259,7 +260,7 @@ public class GraphTest {
 
       try {
         g.addGradients("even_more_gradients", toArray(y0), toArray(x), null);
-      } catch (IllegalArgumentException e) {
+      } catch (TFInvalidArgumentException e) {
         // expected exception
       }
     }

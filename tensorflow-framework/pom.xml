@@ -24,12 +24,13 @@
     <artifactId>tensorflow-java</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tensorflow-training</artifactId>
+  <artifactId>tensorflow-framework</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Training Library</name>
+  <name>TensorFlow Framework Library</name>
   <description>
-    Operations for training Tensorflow models.
+    High-level abstractions for training and
+    serving TensorFlow models.
   </description>
 
   <dependencies>

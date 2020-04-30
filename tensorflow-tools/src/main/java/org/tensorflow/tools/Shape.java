@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 
 package org.tensorflow.tools;
 
@@ -104,7 +104,7 @@ public final class Shape {
     }
     // Shapes are equivalent if all of their dimensions are equals
     if (obj instanceof Shape) {
-      Shape otherShape = (Shape)obj;
+      Shape otherShape = (Shape) obj;
       if (otherShape.hasUnknownDimension()) {
         return false;
       }
@@ -125,6 +125,28 @@ public final class Shape {
 
   private final long[] dimensionSizes;
   private Long size;
+
+  /**
+   * Returns a 1-dimension shape with first dimension matching the first dimensions of this shape.
+   */
+  public Shape head() {
+    return Shape.of(size(0));
+  }
+
+  /** Returns a new shape, with this shape's first dimension removed. */
+  public Shape tail() {
+    if (dimensionSizes.length < 2) return Shape.of();
+    return Shape.of(Arrays.copyOfRange(dimensionSizes, 1, dimensionSizes.length));
+  }
+
+  /** Returns a new shape, with a new first dimension added */
+  public Shape prepend(long firstDimension) {
+    long[] newDimensions = new long[dimensionSizes.length + 1];
+    newDimensions[0] = firstDimension;
+    System.arraycopy(dimensionSizes, 0, newDimensions, 1, dimensionSizes.length);
+
+    return Shape.of(newDimensions);
+  }
 
   private static long computeSize(long[] dimensionSizes) {
     if (dimensionSizes == null) {

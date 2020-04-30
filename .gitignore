@@ -4,7 +4,6 @@ node_modules
 /.bazelrc.user
 /.tf_configure.bazelrc
 /**/bazel-*
-/**/target/
 /bazel_pip
 /tools/python_bin_path.sh
 /tensorflow/tools/git/gen
@@ -47,3 +46,10 @@ xcuserdata/**
 *.iml
 local.properties
 gradleBuild
+
+# VSCode
+.settings/
+.project
+.classpath
+
+**/target

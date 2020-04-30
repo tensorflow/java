@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.tensorflow.training.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.tensorflow.Graph;
 import org.tensorflow.Output;

@@ -106,7 +106,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     /**
      * Configures the session based on the data found in the provided configuration.
      *
-     * @param value a config protocol buffer
+     * @param config a config protocol buffer
      * @see <a
      *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto"/>
      */
@@ -273,6 +273,11 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   public OperationBuilder opBuilder(String type, String name) {
     checkSession();
     return new EagerOperationBuilder(this, type, name);
+  }
+
+  @Override
+  public Types environmentType() {
+    return Types.EAGER;
   }
 
   TFE_Context nativeHandle() {

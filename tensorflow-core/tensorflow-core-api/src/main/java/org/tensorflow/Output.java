@@ -48,6 +48,24 @@ public final class Output<T extends TType> implements Operand<T> {
   }
 
   /**
+   * Returns this Output object with the type {@code Output<U>}. This method is useful when given a
+   * value of type {@code Output<?>}.
+   *
+   * @param dt any supported tensor data type
+   * @throws IllegalArgumentException if the actual data type of this object does not match the type
+   *     {@code U}.
+   */
+  @SuppressWarnings("unchecked")
+  public <U extends TType> Output<U> expect(DataType<U> dt) {
+    if (!dt.equals(this.dataType())) {
+      throw new IllegalArgumentException(
+          "Cannot cast from output of " + this.dataType() + " to output of " + dt);
+    }
+    return ((Output<U>) this);
+  }
+
+
+  /**
    * Returns the tensor at this output.
    *
    * <p>This operation is only supported on the outputs of an operation executed eagerly. For graph
