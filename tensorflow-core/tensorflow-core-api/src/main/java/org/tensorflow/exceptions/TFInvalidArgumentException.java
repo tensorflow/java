@@ -1,6 +1,6 @@
 package org.tensorflow.exceptions;
 
-public final class TFInvalidArgumentException extends TensorFlowException {
+public final class TFInvalidArgumentException extends IllegalArgumentException {
   public TFInvalidArgumentException(String message) {
     super(message);
   }
