@@ -28,8 +28,9 @@ The following describes the layout of the repository and its different artifacts
   * All artifacts that build up the core language bindings of TensorFlow for Java. 
   * Those artifacts provide the minimal support required to use the TensorFlow runtime on a JVM.
     
-* `tensorflow-training`
-  * High-level APIs built on top of the core libraries for neural network training with TensorFlow.
+* `tensorflow-framework`
+  * High-level APIs built on top of the core libraries to simplify neural network training and inference 
+    using TensorFlow.
   
 * `tensorflow-tools`
   * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes.
@@ -142,6 +143,14 @@ to add Sonatype OSS repository in your pom.xml, like the following
     </dependency>
 </dependencies>
 ```
+
+## TensorFlow Version Support
+
+This table shows the mapping between different version of TensorFlow for Java and the core runtime libraries.
+
+| TensorFlow Java Version  | TensorFlow Version |
+| ------------- | ------------- |
+| 0.1.0-SNAPSHOT  | 2.2.0-rc3  |
 
 ## How to Contribute?
 
