@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The TensorFlow Authors. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,17 @@ import java.util.List;
  * the dataset has been reached.
  */
 public class DatasetOptional {
-  private Ops tf;
+  protected Ops tf;
+
+  public Operand<?> getOptionalVariant() {
+    return optionalVariant;
+  }
+
   private Operand<?> optionalVariant;
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
-  DatasetOptional(
+  protected DatasetOptional(
       Ops tf, Operand<?> optionalVariant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     this.tf = tf;
     this.optionalVariant = optionalVariant;
@@ -66,5 +71,9 @@ public class DatasetOptional {
       List<Shape> outputShapes) {
     Operand<?> optionalVariant = tf.data.optionalFromValue(components);
     return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
+  }
+
+  public Ops getOpsInstance() {
+    return tf;
   }
 }
