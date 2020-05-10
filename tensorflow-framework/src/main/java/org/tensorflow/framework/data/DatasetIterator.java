@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The TensorFlow Authors. All rights reserved.
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,18 @@ package org.tensorflow.framework.data;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Output;
+import org.tensorflow.framework.data.impl.MapIterator;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * Represents the state of an iteration through a tf.data Datset. DatasetIterator is not a
@@ -34,8 +40,8 @@ import java.util.List;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> features = tf.constant( ... );
- * Operand<?> labels = tf.constant( ... );
+ * Operand<?> XTensor = tf.constant( ... );
+ * Operand<?> yTensor = tf.constant( ... );
  *
  *
  * Dataset dataset = Dataset
@@ -44,11 +50,11 @@ import java.util.List;
  *
  * DatasetIterator iterator = dataset.makeInitializeableIterator();
  * List<Operand<?>> components = iterator.getNext();
- * Operand<?> featureBatch = components.get(0);
- * Operand<?> labelBatch = components.get(1);
+ * Operand<?> XBatch = components.get(0);
+ * Operand<?> yBatch = components.get(1);
  *
  * // Build a TensorFlow graph that does something on each element.
- * loss = computeModelLoss(featureBatch, labelBatch);
+ * loss = computeModelLoss(XBatch, yBatch);
  *
  * optimizer = ... // create an optimizer
  * trainOp = optimizer.minimize(loss);
@@ -59,7 +65,7 @@ import java.util.List;
  *     try {
  *         session
  *           .addTarget(trainOp)
- *           .fetch(loss)
+ *           .fetch( ... )
  *           .run();
  *
  *         ...
@@ -76,37 +82,37 @@ import java.util.List;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> features = tf.constant( ... );
- * Operand<?> labels = tf.constant( ... );
+ * Operand<?> XTensor = tf.constant( ... );
+ * Operand<?> yTensor = tf.constant( ... );
  *
  * int BATCH_SIZE = ...
  *
  * Dataset dataset = Dataset
- *         .fromTensorSlices(features, labels)
+ *         .fromTensorSlices(XTensor, yTensor)
  *         .batch(BATCH_SIZE);
  * DatasetIterator iterator = dataset.makeIterator();
  *
  * Optimizer optimizer = ... // create an optimizer
  *
  * for (List<Operand<?>> components : dataset) {
- *     Operand<?> featureBatch = components.get(0);
- *     Operand<?> labelBatch = components.get(1);
+ *     Operand<?> XBatch = components.get(0);
+ *     Operand<?> yBatch = components.get(1);
  *
- *     loss = computeModelLoss(featureBatch, labelBatch);
+ *     loss = computeModelLoss(X, y);
  *     trainOp = optimizer.minimize(loss);
  * }
  * }</pre>
  */
-public class DatasetIterator {
+public class DatasetIterator implements Iterable<List<Operand<?>>> {
   public static final String EMPTY_SHARED_NAME = "";
 
-  private Ops tf;
+  protected Ops tf;
 
   private Operand<?> iteratorResource;
   private Op initializer;
 
-  private List<DataType<?>> outputTypes;
-  private List<Shape> outputShapes;
+  protected List<DataType<?>> outputTypes;
+  protected List<Shape> outputShapes;
 
   /**
    * @param tf Ops accessor corresponding to the same `ExecutionEnvironment` as the
@@ -119,7 +125,7 @@ public class DatasetIterator {
    * @param outputShapes A list of `Shape` objects corresponding to the shapes of each componenet of
    *     a dataset element.
    */
-  private DatasetIterator(
+  protected DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       Op initializer,
@@ -133,7 +139,7 @@ public class DatasetIterator {
     this.outputShapes = outputShapes;
   }
 
-  private DatasetIterator(
+  protected DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       List<DataType<?>> outputTypes,
@@ -142,6 +148,14 @@ public class DatasetIterator {
     this.iteratorResource = iteratorResource;
     this.outputTypes = outputTypes;
     this.outputShapes = outputShapes;
+  }
+
+  protected DatasetIterator(DatasetIterator other) {
+    this.tf = other.tf;
+    this.iteratorResource = other.iteratorResource;
+    this.initializer = other.initializer;
+    this.outputTypes = other.outputTypes;
+    this.outputShapes = other.outputShapes;
   }
 
   /**
@@ -159,7 +173,7 @@ public class DatasetIterator {
   public List<Operand<?>> getNext() {
     List<Operand<?>> components = new ArrayList<>();
     tf.data
-        .iteratorGetNext(getIteratorResource(), getOutputTypes(), getOutputShapes())
+        .iteratorGetNext(getIteratorResource(), outputTypes, outputShapes)
         .iterator()
         .forEachRemaining(components::add);
     return components;
@@ -179,7 +193,7 @@ public class DatasetIterator {
   public DatasetOptional getNextAsOptional() {
     Operand<?> optionalVariant =
         tf.data
-            .iteratorGetNextAsOptional(getIteratorResource(), getOutputTypes(), getOutputShapes())
+            .iteratorGetNextAsOptional(getIteratorResource(), outputTypes, outputShapes)
             .optional();
     return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
   }
@@ -205,8 +219,9 @@ public class DatasetIterator {
           "Dataset must share the same" + "ExecutionEnvironment as this iterator.");
     }
 
-    if (!dataset.getOutputShapes().equals(getOutputShapes())
-        || !dataset.getOutputTypes().equals(getOutputTypes())) {
+    if (!dataset.getOutputShapes().equals(outputShapes)
+        || !dataset.getOutputTypes().equals(outputTypes)) {
+
       throw new IllegalArgumentException(
           "Dataset structure (types, " + "output shapes) must match this iterator.");
     }
@@ -235,6 +250,72 @@ public class DatasetIterator {
     return new DatasetIterator(tf, iteratorResource, outputTypes, outputShapes);
   }
 
+  /**
+   * Returns a new DatasetIterator which maps a function across all elements from this iterator, on
+   * a single component of each element.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling `iterator.mapOneComponent(0, (tf, features) -> tf.math.mul(features,
+   * tf.constant(2)))` will map the function over the `features` component of each element,
+   * multiplying each by 2.
+   *
+   * @param index The index of the component to transform.
+   * @param mapper The function to apply to the target component.
+   * @return A new DatasetIterator applying `mapper` to the component at the chosen index.
+   */
+  public DatasetIterator mapOneComponent(
+      int index, BiFunction<Ops, Operand<?>, Operand<?>> mapper) {
+    return map(
+        (tf, outputs) -> {
+          List<Operand<?>> newComponents = new ArrayList<>(outputs);
+          newComponents.set(index, mapper.apply(tf, outputs.get(index)));
+          return newComponents;
+        });
+  }
+
+  /**
+   * Returns a new DatasetIterator which maps a function across all elements from this iterator, on
+   * all components of each element.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling `iterator.mapAllComponents((tf, component) -> tf.math.mul(component,
+   * tf.constant(2)))` will map the function over the both the `features` and `labels` components of
+   * each element, multiplying them all by 2
+   *
+   * @param mapper The function to apply to each component
+   * @return A new DatasetIterator applying `mapper` to all components of each element.
+   */
+  public DatasetIterator mapAllComponents(BiFunction<Ops, Operand<?>, Operand<?>> mapper) {
+    return map(
+        (tf, outputs) ->
+            outputs.stream().map(op -> mapper.apply(tf, op)).collect(Collectors.toList()));
+  }
+
+  /**
+   * Returns a new DatasetIterator which maps a function over all elements returned by this
+   * iterator.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling ``` iterator.map((tf, components) -> { Operand<?> features = components.get(0);
+   * Operand<?> labels = components.get(1);
+   *
+   * <p>return Arrays.asList( tf.math.mul(features, tf.constant(2)), tf.math.mul(labels,
+   * tf.constant(5)) ); }) ``` will map the function over the `features` and `labels` components,
+   * multiplying features by 2, and multiplying the labels by 5.
+   *
+   * @param mapper The function to apply to each element of this iterator.
+   * @return A new DatasetIterator applying `mapper` to each element of this iterator.
+   */
+  public DatasetIterator map(BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> mapper) {
+    return new MapIterator(this, mapper);
+  }
+
   public Operand<?> getIteratorResource() {
     return iteratorResource;
   }
@@ -243,11 +324,34 @@ public class DatasetIterator {
     return initializer;
   }
 
-  public List<DataType<?>> getOutputTypes() {
-    return outputTypes;
+  public Ops getOpsInstance() {
+    return tf;
   }
 
-  public List<Shape> getOutputShapes() {
-    return outputShapes;
+  @Override
+  public Iterator<List<Operand<?>>> iterator() {
+
+    if (!tf.scope().env().isEager()) {
+      throw new UnsupportedOperationException(
+          "Cannot use foreach iteration through a dataset in graph mode.");
+    }
+
+    DatasetIterator iterator = this;
+
+    return new Iterator<List<Operand<?>>>() {
+      private DatasetOptional nextOptional = iterator.getNextAsOptional();
+
+      @Override
+      public boolean hasNext() {
+        return nextOptional.hasValue().data().getBoolean();
+      }
+
+      @Override
+      public List<Operand<?>> next() {
+        List<Operand<?>> result = nextOptional.getValue();
+        nextOptional = iterator.getNextAsOptional();
+        return result;
+      }
+    };
   }
 }

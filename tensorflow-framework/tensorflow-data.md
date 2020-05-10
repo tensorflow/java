@@ -199,3 +199,34 @@ try (Graph graph = new Graph()) {
     }
 }
 ```
+
+
+#### Applying a `map()` Function
+
+In both graph and eager mode, the `DatasetIterator` object provides
+methods to allow mapping over dataset elements. `DatasetIterator.map`, 
+`DatasetIterator.mapOneComponent`, and `DatasetIterator.mapAllComponents`.
+See the javadoc for a detailed description of each method. 
+
+As an example: Say we have a `Dataset` with two components. The first component
+is a 2D image (tensor of pixel values in the range `[0-255]`), and the second component is 
+a classification label for that image. Often, it is helpful to normalize
+the pixel values to the range `[0, 1]` by dividing by 255.
+
+To do this, we'll create a `DatasetIterator` from this dataset, and 
+use `DatasetIterator.mapOneComponent`.
+
+```java
+Dataset dataset = // image, label dataset;
+DatasetIterator iterator = dataset.makeInitializeableIterator()
+    .mapOneComponent(0, (tf, component) -> tf.math.div(component, tf.constant(255.0)));
+
+
+for (List<Operand<?>> components : dataset) {
+  // Fetch the normalized image tensor
+  Operand<?> image = components.get(0);
+  
+  // The label tensor remains unchanged.
+  Operand<?> label = components.get(1);
+}
+```
