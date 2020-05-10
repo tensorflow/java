@@ -1,5 +1,6 @@
 package org.tensorflow.framework.datasets;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -11,37 +12,45 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GCSUtils {
-  public static final String GCS_URL = "http://storage.googleapis.com";
-  public static final String GCS_BUCKET = GCS_URL + "/" + "tfds-data";
-
+  public static final String GCS_URL = "storage.googleapis.com";
+  public static final String GCS_BUCKET = "tfds-data";
   public static final String GCS_DATASET_INFO_DIR = "dataset_info";
   public static final String GCS_DATSETS_DIR = "datasets";
 
-  private static String buildGcsUrl(String path, String prefixFilter) {
-    return GCS_BUCKET
-        + (path.length() > 0 ? "/" + path : "")
-        + (prefixFilter != null ? "?prefix=" + prefixFilter : "");
+  public static URL getGCSUrlWithPrefix(String prefix, String... paths) {
+    String[] segments = new String[paths.length + 1];
+    segments[0] = GCS_BUCKET;
+    System.arraycopy(paths, 0, segments, 1, paths.length);
+    try {
+      return new URIBuilder()
+          .setScheme("https")
+          .setHost(GCS_URL)
+          .setPathSegments(segments)
+          .setParameter("prefix", prefix)
+          .build()
+          .toURL();
+    } catch (URISyntaxException | MalformedURLException e) {
+      throw new IllegalArgumentException("Invalid URL Syntax.");
+    }
   }
 
-  private static String datasetDirectory(String datasetName) {
-    return GCS_DATSETS_DIR + "/" + datasetName;
-  }
-
-  private static String datasetInfoPrefix(String datasetName) {
-    return GCS_DATASET_INFO_DIR + "/" + datasetName;
+  public static URL getGcsUrl(String... paths) {
+    return getGCSUrlWithPrefix("", paths);
   }
 
   public static void downloadGCSFile(String gcsPath, String outPath, String prefixFilter)
       throws IOException {
-    String url = buildGcsUrl(gcsPath, prefixFilter);
-    try (BufferedInputStream input = new BufferedInputStream(new URL(url).openStream());
-         FileOutputStream output = new FileOutputStream(outPath)) {
+    URL url = getGCSUrlWithPrefix(prefixFilter, gcsPath);
+    try (BufferedInputStream input = new BufferedInputStream(url.openStream());
+        FileOutputStream output = new FileOutputStream(outPath)) {
       byte[] buffer = new byte[1024];
       for (int count; (count = input.read(buffer, 0, buffer.length)) != -1; ) {
         output.write(buffer, 0, count);
@@ -49,8 +58,8 @@ public class GCSUtils {
     }
   }
 
-  public static List<String> gcsFiles(String gcsPath) throws IOException {
-    String url = buildGcsUrl("", gcsPath);
+  public static List<String> gcsFiles(String prefix) throws IOException {
+    String url = getGCSUrlWithPrefix(prefix).toString();
 
     try {
       DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -69,42 +78,43 @@ public class GCSUtils {
     }
   }
 
-  public static List<String> gcsDatasetInfoFiles(String datasetName) throws IOException {
-    String prefix = datasetInfoPrefix(datasetName);
-    return  gcsFiles(prefix)
-        .stream()
-        .filter(file -> file.startsWith(prefix) && file.length() > prefix.length())
+  public static List<String> listGCSDatasetInfoFiles(String datasetName) throws IOException {
+    String prefix = GCS_DATASET_INFO_DIR + "/" + datasetName + "/";
+    return gcsFiles(prefix).stream()
+        .filter(name -> name.startsWith(prefix) && name.length() > prefix.length())
         .collect(Collectors.toList());
   }
 
   public static boolean isDatasetOnGCS(String datasetName) {
+    String prefix = GCS_DATSETS_DIR + "/" + datasetName + "/";
     try {
-      List<String> files = gcsFiles(datasetDirectory(datasetName));
+      List<String> files = gcsFiles(prefix);
       return files.size() > 2;
     } catch (IOException e) {
       return false;
     }
   }
 
-  public static void downloadGCSDataset(String datasetName,
-                                        String localDatasetDir) throws IOException {
-    String prefix = datasetDirectory(datasetName);
-    List<String> gcsPathsToDownload = gcsFiles(prefix).stream()
-        .filter(name -> !name.startsWith(prefix + "/" + "diffs"))
-        .collect(Collectors.toList());
+  public static void downloadGCSDataset(String datasetName, String localDatasetDir)
+      throws IOException {
+    String prefix = GCS_DATSETS_DIR + "/" + datasetName;
+    new File(localDatasetDir).mkdir();
 
-    File localDir = new File(localDatasetDir);
-    localDir.mkdir();
-    System.out.println("local DIR" + localDatasetDir);
+    List<String> gcsPathsToDownload =
+        gcsFiles(prefix).stream()
+            .filter(name -> !name.startsWith(prefix + "/" + "diffs"))
+            .collect(Collectors.toList());
+
     int count = 0;
     for (String gcsPath : gcsPathsToDownload) {
       String localPath = localDatasetDir + "/" + basePath(gcsPath);
       downloadGCSFile(gcsPath, localPath, null);
-      System.out.println("Downloaded " + count++ + " / " + gcsPathsToDownload.size() + " to " + localPath);
+      System.out.println(
+          "Downloaded " + count++ + " / " + gcsPathsToDownload.size() + " to " + localPath);
     }
   }
 
-  private static String basePath(String path) {
+  public static String basePath(String path) {
     String[] components = path.split("/");
     return components[components.length - 1];
   }

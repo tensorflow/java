@@ -1,16 +1,19 @@
 package org.tensorflow.framework.datasets;
 
-import org.junit.Test;
-
 import java.io.IOException;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class DatasetBuilderTest {
 
+  public static void main(String[] args) {
+    
+  }
+
   @Test
-  public void downloadAndPrepareTest() throws IOException {
-    DatasetBuilder builder = new DatasetBuilder("mnist", new Version(3, 0, 1));
-    builder.downloadAndPrepare();
+  public void testt() throws IOException {
+    MNIST mnist = new MNIST();
+
+    mnist.downloadAndPrepare();
+    mnist.downloadAndPrepare(true);
   }
 }

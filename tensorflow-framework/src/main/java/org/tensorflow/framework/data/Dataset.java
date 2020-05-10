@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2020 The TensorFlow Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@ package org.tensorflow.framework.data;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.framework.data.impl.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and
@@ -60,8 +59,9 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A batched Dataset
    */
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
-    List<Shape> batchOutputShapes =
-        outputShapes.stream().map(s -> Shape.of(-1, s.asArray())).collect(Collectors.toList());
+
+    List<Shape> batchOutputShapes = new ArrayList<>();
+    outputShapes.forEach(s -> batchOutputShapes.add(s.prepend(-1)));
 
     return new BatchDataset(
         tf,
@@ -116,29 +116,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    */
   @Override
   public Iterator<List<Operand<?>>> iterator() {
-
-    if (!tf.scope().env().isEager()) {
-      throw new UnsupportedOperationException(
-          "Cannot iterate through a " + "dataset in graph mode.");
-    }
-
-    DatasetIterator iterator = makeOneShotIterator();
-
-    return new Iterator<List<Operand<?>>>() {
-      private DatasetOptional nextOptional = iterator.getNextAsOptional();
-
-      @Override
-      public boolean hasNext() {
-        return nextOptional.hasValue().data().getBoolean();
-      }
-
-      @Override
-      public List<Operand<?>> next() {
-        List<Operand<?>> result = nextOptional.getValue();
-        nextOptional = iterator.getNextAsOptional();
-        return result;
-      }
-    };
+    return makeOneShotIterator().iterator();
   }
 
   /**
@@ -150,8 +128,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A new `DatasetIterator` based on this dataset's structure.
    */
   public DatasetIterator makeInitializeableIterator() {
-    DatasetIterator iterator = DatasetIterator
-        .fromStructure(tf, outputTypes, outputShapes);
+    DatasetIterator iterator = DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
     iterator.makeInitializer(this);
     return iterator;
   }
@@ -199,23 +176,19 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
     return new TensorSliceDataset(tf, tensors, outputTypes);
   }
 
-  public static Dataset tfRecordDataset(Ops tf, String filename,
-                                        String compressionType,
-                                        long bufferSize) {
-    return new TFRecordDataset(tf,
-        tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  public static Dataset tfRecordDataset(
+      Ops tf, String filename, String compressionType, long bufferSize) {
+    return new TFRecordDataset(
+        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
   }
 
-  public static Dataset textLineDataset(Ops tf, String filename,
-                                        String compressionType,
-                                        long bufferSize) {
-    return new TextLineDataset(tf,
-        tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  public static Dataset textLineDataset(
+      Ops tf, String filename, String compressionType, long bufferSize) {
+    return new TextLineDataset(
+        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
   }
 
-  /**
-   * Get the variant tensor representing this dataset.
-   */
+  /** Get the variant tensor representing this dataset. */
   public abstract Operand<?> getVariant();
 
   /** Get a list of output types for each component of this dataset. */
@@ -226,5 +199,9 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   /** Get a list of shapes for each component of this dataset. */
   public List<Shape> getOutputShapes() {
     return this.outputShapes;
+  }
+
+  public Ops getOpsInstance() {
+    return this.tf;
   }
 }

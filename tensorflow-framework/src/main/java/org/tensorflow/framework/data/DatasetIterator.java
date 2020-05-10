@@ -19,12 +19,17 @@ import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.framework.data.impl.MapIterator;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * Represents the state of an iteration through a tf.data Datset. DatasetIterator is not a
@@ -98,10 +103,10 @@ import java.util.List;
  * }
  * }</pre>
  */
-public class DatasetIterator {
+public class DatasetIterator implements Iterable<List<Operand<?>>> {
   public static final String EMPTY_SHARED_NAME = "";
 
-  private Ops tf;
+  protected Ops tf;
 
   private Operand<?> iteratorResource;
   private Op initializer;
@@ -120,7 +125,7 @@ public class DatasetIterator {
    * @param outputShapes A list of `Shape` objects corresponding to the shapes of each componenet of
    *     a dataset element.
    */
-  private DatasetIterator(
+  protected DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       Op initializer,
@@ -134,7 +139,7 @@ public class DatasetIterator {
     this.outputShapes = outputShapes;
   }
 
-  private DatasetIterator(
+  protected DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       List<DataType<?>> outputTypes,
@@ -237,6 +242,30 @@ public class DatasetIterator {
     return new DatasetIterator(tf, iteratorResource, outputTypes, outputShapes);
   }
 
+  public DatasetIterator map(
+      BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> mapper,
+      List<DataType<?>> outputTypes,
+      List<Shape> outputShapes) {
+    return new MapIterator(this, mapper, outputTypes, outputShapes);
+  }
+
+  public DatasetIterator map(BiFunction<Ops, Operand<?>, Operand<?>> mapper) {
+    BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> newMapper =
+        (tf, outputs) ->
+            outputs.stream().map(op -> mapper.apply(tf, op)).collect(Collectors.toList());
+    return new MapIterator(this, newMapper, outputTypes, outputShapes);
+  }
+
+  public <T extends TType> DatasetIterator map(
+      DataType<T> dtype, BiFunction<Ops, Operand<T>, Operand<T>> mapper) {
+    BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> newMapper =
+        (tf, outputs) ->
+            outputs.stream()
+                .map(op -> mapper.apply(tf, op.asOutput().expect(dtype)))
+                .collect(Collectors.toList());
+    return new MapIterator(this, newMapper, outputTypes, outputShapes);
+  }
+
   public Operand<?> getIteratorResource() {
     return iteratorResource;
   }
@@ -251,5 +280,36 @@ public class DatasetIterator {
 
   public List<Shape> getOutputShapes() {
     return outputShapes;
+  }
+
+  public Ops getOpsInstance() {
+    return tf;
+  }
+
+  @Override
+  public Iterator<List<Operand<?>>> iterator() {
+
+    if (!tf.scope().env().isEager()) {
+      throw new UnsupportedOperationException(
+          "Cannot iterate through a " + "dataset in graph mode.");
+    }
+
+    DatasetIterator iterator = this;
+
+    return new Iterator<List<Operand<?>>>() {
+      private DatasetOptional nextOptional = iterator.getNextAsOptional();
+
+      @Override
+      public boolean hasNext() {
+        return nextOptional.hasValue().data().getBoolean();
+      }
+
+      @Override
+      public List<Operand<?>> next() {
+        List<Operand<?>> result = nextOptional.getValue();
+        nextOptional = iterator.getNextAsOptional();
+        return result;
+      }
+    };
   }
 }

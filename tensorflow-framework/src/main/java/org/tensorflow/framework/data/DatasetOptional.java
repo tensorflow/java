@@ -30,12 +30,17 @@ import java.util.List;
  * the dataset has been reached.
  */
 public class DatasetOptional {
-  private Ops tf;
+  protected Ops tf;
+
+  public Operand<?> getOptionalVariant() {
+    return optionalVariant;
+  }
+
   private Operand<?> optionalVariant;
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
-  DatasetOptional(
+  protected DatasetOptional(
       Ops tf, Operand<?> optionalVariant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     this.tf = tf;
     this.optionalVariant = optionalVariant;
@@ -66,5 +71,9 @@ public class DatasetOptional {
       List<Shape> outputShapes) {
     Operand<?> optionalVariant = tf.data.optionalFromValue(components);
     return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
+  }
+
+  public Ops getOpsInstance() {
+    return tf;
   }
 }
