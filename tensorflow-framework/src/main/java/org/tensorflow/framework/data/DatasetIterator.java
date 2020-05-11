@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2020 The TensorFlow Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@ package org.tensorflow.framework.data;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.framework.data.impl.MapIterator;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
-import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,8 +38,8 @@ import java.util.stream.Collectors;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> XTensor = tf.constant( ... );
- * Operand<?> yTensor = tf.constant( ... );
+ * Operand<?> features = tf.constant( ... );
+ * Operand<?> labels = tf.constant( ... );
  *
  *
  * Dataset dataset = Dataset
@@ -50,11 +48,11 @@ import java.util.stream.Collectors;
  *
  * DatasetIterator iterator = dataset.makeInitializeableIterator();
  * List<Operand<?>> components = iterator.getNext();
- * Operand<?> XBatch = components.get(0);
- * Operand<?> yBatch = components.get(1);
+ * Operand<?> featureBatch = components.get(0);
+ * Operand<?> labelBatch = components.get(1);
  *
  * // Build a TensorFlow graph that does something on each element.
- * loss = computeModelLoss(XBatch, yBatch);
+ * loss = computeModelLoss(featureBatch, labelBatch);
  *
  * optimizer = ... // create an optimizer
  * trainOp = optimizer.minimize(loss);
@@ -65,7 +63,7 @@ import java.util.stream.Collectors;
  *     try {
  *         session
  *           .addTarget(trainOp)
- *           .fetch( ... )
+ *           .fetch(loss)
  *           .run();
  *
  *         ...
@@ -82,23 +80,23 @@ import java.util.stream.Collectors;
  *
  * <pre>{@code
  * // Create input tensors
- * Operand<?> XTensor = tf.constant( ... );
- * Operand<?> yTensor = tf.constant( ... );
+ * Operand<?> features = tf.constant( ... );
+ * Operand<?> labels = tf.constant( ... );
  *
  * int BATCH_SIZE = ...
  *
  * Dataset dataset = Dataset
- *         .fromTensorSlices(XTensor, yTensor)
+ *         .fromTensorSlices(features, labels)
  *         .batch(BATCH_SIZE);
  * DatasetIterator iterator = dataset.makeIterator();
  *
  * Optimizer optimizer = ... // create an optimizer
  *
  * for (List<Operand<?>> components : dataset) {
- *     Operand<?> XBatch = components.get(0);
- *     Operand<?> yBatch = components.get(1);
+ *     Operand<?> featureBatch = components.get(0);
+ *     Operand<?> labelBatch = components.get(1);
  *
- *     loss = computeModelLoss(X, y);
+ *     loss = computeModelLoss(featureBatch, labelBatch);
  *     trainOp = optimizer.minimize(loss);
  * }
  * }</pre>
@@ -122,7 +120,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param initializer An `Op` that should be run to initialize this iterator
    * @param outputTypes A list of `DataType` objects corresponding to the types of each component of
    *     a dataset element.
-   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each componenet of
+   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
    *     a dataset element.
    */
   protected DatasetIterator(

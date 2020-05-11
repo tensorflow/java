@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2020 The TensorFlow Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,12 @@ package org.tensorflow.framework.data;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.framework.data.impl.*;
+import org.tensorflow.framework.data.impl.BatchDataset;
+import org.tensorflow.framework.data.impl.SkipDataset;
+import org.tensorflow.framework.data.impl.TFRecordDataset;
+import org.tensorflow.framework.data.impl.TakeDataset;
+import org.tensorflow.framework.data.impl.TensorSliceDataset;
+import org.tensorflow.framework.data.impl.TextLineDataset;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
@@ -128,9 +132,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A new `DatasetIterator` based on this dataset's structure.
    */
   public DatasetIterator makeInitializeableIterator() {
-    DatasetIterator iterator = DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
-    iterator.makeInitializer(this);
-    return iterator;
+    return DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
   }
 
   /**
