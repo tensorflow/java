@@ -66,7 +66,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
                 "api-ms-win-core-sysinfo-l1-1-0", "api-ms-win-core-synch-l1-2-0", "api-ms-win-core-console-l1-1-0", "api-ms-win-core-debug-l1-1-0",
                 "api-ms-win-core-rtlsupport-l1-1-0", "api-ms-win-core-processthreads-l1-1-1", "api-ms-win-core-file-l1-2-0", "api-ms-win-core-profile-l1-1-0",
                 "api-ms-win-core-memory-l1-1-0", "api-ms-win-core-util-l1-1-0", "api-ms-win-core-interlocked-l1-1-0", "ucrtbase",
-                "vcruntime140", "msvcp140", "concrt140", "vcomp140", "msvcr120", "libiomp5md", "mklml", "tensorflow_framework"
+                "vcruntime140", "vcruntime140_1", "msvcp140", "concrt140", "vcomp140", "msvcr120", "libiomp5md", "mklml", "tensorflow_framework"
             }
         ),
         @Platform(
@@ -101,6 +101,26 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         List<String> preloads = properties.get("platform.preload");
         List<String> resources = properties.get("platform.preloadresource");
         List<String> preloadpaths = properties.get("platform.preloadpath");
+
+        String vcredistdir = System.getenv("VCToolsRedistDir");
+        if (vcredistdir != null && vcredistdir.length() > 0) {
+            switch (platform) {
+                case "windows-x86":
+                    preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC142.CRT");
+                    preloadpaths.add(1, vcredistdir + "\\x86\\Microsoft.VC142.OpenMP");
+                    preloadpaths.add(2, vcredistdir + "\\x86\\Microsoft.VC141.CRT");
+                    preloadpaths.add(3, vcredistdir + "\\x86\\Microsoft.VC141.OpenMP");
+                    break;
+                case "windows-x86_64":
+                    preloadpaths.add(0, vcredistdir + "\\x64\\Microsoft.VC142.CRT");
+                    preloadpaths.add(1, vcredistdir + "\\x64\\Microsoft.VC142.OpenMP");
+                    preloadpaths.add(2, vcredistdir + "\\x64\\Microsoft.VC141.CRT");
+                    preloadpaths.add(3, vcredistdir + "\\x64\\Microsoft.VC141.OpenMP");
+                    break;
+                default:
+                    // not Windows
+            }
+        }
 
         // Only apply this at load time
         if (!Loader.isLoadLibraries()) {
@@ -158,22 +178,6 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         if (i > 0) {
             resources.add("/org/bytedeco/cuda/");
             resources.add("/org/bytedeco/tensorrt/");
-        }
-
-        String vcredistdir = System.getenv("VCToolsRedistDir");
-        if (vcredistdir != null && vcredistdir.length() > 0) {
-            switch (platform) {
-                case "windows-x86":
-                    preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC141.CRT");
-                    preloadpaths.add(1, vcredistdir + "\\x86\\Microsoft.VC141.OpenMP");
-                    break;
-                case "windows-x86_64":
-                    preloadpaths.add(0, vcredistdir + "\\x64\\Microsoft.VC141.CRT");
-                    preloadpaths.add(1, vcredistdir + "\\x64\\Microsoft.VC141.OpenMP");
-                    break;
-                default:
-                    // not Windows
-            }
         }
     }
 

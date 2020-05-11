@@ -64,7 +64,7 @@ tf_cc_binary(
     srcs = [
         "src/bazel/api_def/import/api_import.cc",
     ],
-    copts = tf_copts() + ["-Wno-unused-result"],
+    copts = tf_copts(),
     linkopts = select({
         "@org_tensorflow//tensorflow:windows": [],
         "//conditions:default": ["-lm"],
