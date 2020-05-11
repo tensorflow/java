@@ -217,9 +217,10 @@ To do this, we'll create a `DatasetIterator` from this dataset, and
 use `DatasetIterator.mapOneComponent`.
 
 ```java
+Ops tf = // Get Ops instance
 Dataset dataset = // image, label dataset;
 DatasetIterator iterator = dataset.makeInitializeableIterator()
-    .mapOneComponent(0, (tf, component) -> tf.math.div(component, tf.constant(255.0)));
+    .mapOneComponent(0, component -> tf.math.div(component, tf.constant(255.0)));
 
 
 for (List<Operand<?>> components : dataset) {

@@ -132,7 +132,9 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A new `DatasetIterator` based on this dataset's structure.
    */
   public DatasetIterator makeInitializeableIterator() {
-    return DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
+    DatasetIterator iterator = DatasetIterator.fromStructure(tf, outputTypes, outputShapes);
+    iterator.makeInitializer(this);
+    return iterator;
   }
 
   /**

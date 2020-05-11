@@ -67,8 +67,8 @@ public class MapDatasetTest extends DatasetTestBase {
           dataset
               .makeOneShotIterator()
               .mapAllComponents(
-                  (ops, component) ->
-                      ops.math.mul(component.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
+                  component ->
+                      tf.math.mul(component.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
 
       List<Operand<?>> components = iterator.getNext();
       Operand<?> X = components.get(0);
@@ -113,7 +113,7 @@ public class MapDatasetTest extends DatasetTestBase {
         dataset
             .makeInitializeableIterator()
             .mapAllComponents(
-                (ops, op) -> ops.math.mul(op.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
+                op -> tf.math.mul(op.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
 
     int count = 0;
     for (List<Operand<?>> outputs : iterator) {

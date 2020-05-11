@@ -26,7 +26,7 @@ import org.tensorflow.tools.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -255,7 +255,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
    * labels).
    *
-   * <p>Calling `iterator.mapOneComponent(0, (tf, features) -> tf.math.mul(features,
+   * <p>Calling `iterator.mapOneComponent(0, features -> tf.math.mul(features,
    * tf.constant(2)))` will map the function over the `features` component of each element,
    * multiplying each by 2.
    *
@@ -263,12 +263,11 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param mapper The function to apply to the target component.
    * @return A new DatasetIterator applying `mapper` to the component at the chosen index.
    */
-  public DatasetIterator mapOneComponent(
-      int index, BiFunction<Ops, Operand<?>, Operand<?>> mapper) {
+  public DatasetIterator mapOneComponent(int index, Function<Operand<?>, Operand<?>> mapper) {
     return map(
-        (tf, outputs) -> {
+        outputs -> {
           List<Operand<?>> newComponents = new ArrayList<>(outputs);
-          newComponents.set(index, mapper.apply(tf, outputs.get(index)));
+          newComponents.set(index, mapper.apply(outputs.get(index)));
           return newComponents;
         });
   }
@@ -280,17 +279,15 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
    * labels).
    *
-   * <p>Calling `iterator.mapAllComponents((tf, component) -> tf.math.mul(component,
+   * <p>Calling `iterator.mapAllComponents(component -> tf.math.mul(component,
    * tf.constant(2)))` will map the function over the both the `features` and `labels` components of
    * each element, multiplying them all by 2
    *
    * @param mapper The function to apply to each component
    * @return A new DatasetIterator applying `mapper` to all components of each element.
    */
-  public DatasetIterator mapAllComponents(BiFunction<Ops, Operand<?>, Operand<?>> mapper) {
-    return map(
-        (tf, outputs) ->
-            outputs.stream().map(op -> mapper.apply(tf, op)).collect(Collectors.toList()));
+  public DatasetIterator mapAllComponents(Function<Operand<?>, Operand<?>> mapper) {
+    return map(outputs -> outputs.stream().map(mapper::apply).collect(Collectors.toList()));
   }
 
   /**
@@ -300,7 +297,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
    * labels).
    *
-   * <p>Calling ``` iterator.map((tf, components) -> { Operand<?> features = components.get(0);
+   * <p>Calling ``` iterator.map(components -> { Operand<?> features = components.get(0);
    * Operand<?> labels = components.get(1);
    *
    * <p>return Arrays.asList( tf.math.mul(features, tf.constant(2)), tf.math.mul(labels,
@@ -310,7 +307,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param mapper The function to apply to each element of this iterator.
    * @return A new DatasetIterator applying `mapper` to each element of this iterator.
    */
-  public DatasetIterator map(BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> mapper) {
+  public DatasetIterator map(Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     return new MapIterator(this, mapper);
   }
 

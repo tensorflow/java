@@ -22,20 +22,21 @@ import org.tensorflow.op.Ops;
 
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class MapIterator extends DatasetIterator {
-  private final BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> mapper;
+  private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
   public MapIterator(
       DatasetIterator source,
-      BiFunction<Ops, List<Operand<?>>, List<Operand<?>>> mapper) {
+      Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     super(source);
     this.mapper = mapper;
   }
 
   @Override
   public List<Operand<?>> getNext() {
-    return mapper.apply(tf, super.getNext());
+    return mapper.apply(super.getNext());
   }
 
   @Override
