@@ -1,0 +1,12 @@
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+index 55406a5686..c9e7464dba 100644
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -654,6 +654,7 @@ tf_cc_shared_object(
+ # as a workaround for https://github.com/tensorflow/tensorflow/issues/34117
+ cc_import(
+     name = "libtensorflow_framework_import_lib",
++    visibility = ["//visibility:public"],
+     shared_library = select({
+         "//tensorflow:macos": ":libtensorflow_framework.dylib",
+         "//conditions:default": ":libtensorflow_framework.so",

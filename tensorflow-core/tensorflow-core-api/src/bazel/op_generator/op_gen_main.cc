@@ -15,6 +15,7 @@
 
 #include <string>
 #include <vector>
+#include <dlfcn.h>
 
 #include "tensorflow/core/framework/op.h"
 #include "tensorflow/core/lib/core/status.h"
@@ -30,10 +31,10 @@ namespace java {
 
 const char kUsageHeader[] =
     "\n\nGenerator of operation wrappers in Java.\n\n"
-    "This executable generates wrappers for all registered operations it has "
-    "been compiled with. A wrapper exposes an intuitive and strongly-typed\n"
-    "interface for building its underlying operation and linking it into a "
-    "graph.\n\n"
+    "This executable generates wrappers for all operations registered in the "
+    "provided list of libraries. A wrapper exposes an intuitive and\n"
+	"strongly-typed interface for building its underlying operation and linking "
+	"it into a graph.\n\n"
     "Operation wrappers are generated under the path specified by the "
     "'--output_dir' argument. This path can be absolute or relative to the\n"
     "current working directory and will be created if it does not exist.\n\n"
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]) {
   tensorflow::string output_dir;
   tensorflow::string base_package = "org.tensorflow.op";
   tensorflow::string api_dirs_str;
+  tensorflow::string ops_libs_str;
   std::vector<tensorflow::Flag> flag_list = {
       tensorflow::Flag("output_dir", &output_dir,
                        "Root directory into which output files are generated"),
@@ -62,18 +64,26 @@ int main(int argc, char* argv[]) {
           "Package parent to the generated subpackage and classes"),
       tensorflow::Flag(
           "api_dirs", &api_dirs_str,
-          "List of directories that contains the ops api definitions")};
+          "List of directories that contain the ops API definitions protos")};
   tensorflow::string usage = tensorflow::java::kUsageHeader;
-  usage += tensorflow::Flags::Usage(argv[0], flag_list);
+  usage += tensorflow::Flags::Usage(
+      tensorflow::string(argv[0]) + " <ops library paths...>", flag_list);
   bool parsed_flags_ok = tensorflow::Flags::Parse(&argc, argv, flag_list);
   tensorflow::port::InitMain(usage.c_str(), &argc, &argv);
-  QCHECK(parsed_flags_ok && !output_dir.empty()) << usage;
+  QCHECK(parsed_flags_ok && !output_dir.empty() && argc > 1) << usage;
   std::vector<tensorflow::string> api_dirs = tensorflow::str_util::Split(
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
+  std::vector<void*> ops_libs_handles;
+  ops_libs_handles.reserve(argc - 1);
+  for (int i = 1; i < argc; ++i) {
+	  ops_libs_handles.push_back(dlopen(argv[i], RTLD_NOW));
+  }
   tensorflow::java::OpGenerator generator(api_dirs);
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
   TF_CHECK_OK(generator.Run(ops, base_package, output_dir));
-
+  for (void* ops_lib_handle : ops_libs_handles) {
+	  dlclose(ops_lib_handle);
+  }
   return 0;
 }

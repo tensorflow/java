@@ -30,41 +30,49 @@ if [[ "${EXTENSION:-}" == *gpu* ]]; then
 fi
 
 # Build C API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --config=monolithic --output_filter=DONT_MATCH_ANYTHING --verbose_failures \
+bazel build $BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --output_filter=DONT_MATCH_ANYTHING --verbose_failures \
     @org_tensorflow//tensorflow:tensorflow \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
-    :java_op_gen_sources \
-    :java_api_import \
-    :java_proto_gen_sources
+    :java_proto_gen_sources \
+    :java_op_generator \
+    :java_api_import 
 
+export BAZEL_SRCS=$(pwd -P)/bazel-tensorflow-core-api
 export BAZEL_BIN=$(pwd -P)/bazel-bin
 export TENSORFLOW_BIN=$BAZEL_BIN/external/org_tensorflow/tensorflow
 
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=($TENSORFLOW_BIN/libtensorflow.so.?.?.?)
 if [[ -f $TENSORFLOW_SO ]]; then
-    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so
-    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so.2
+    export TENSORFLOW_LIB=$(basename $TENSORFLOW_SO)
+    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.so
+    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.so.2
 fi
 TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow.?.?.?.dylib)
 if [[ -f $TENSORFLOW_DYLIB ]]; then
-    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.dylib
-    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.2.dylib
+    export TENSORFLOW_LIB=$(basename $TENSORFLOW_DYLIB)
+    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.dylib
+    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.2.dylib
 fi
-TENSORFLOW_LIBS=($TENSORFLOW_BIN/tensorflow.dll.if.lib $TENSORFLOW_BIN/libtensorflow.dll.ifso)
-for TENSORFLOW_LIB in ${TENSORFLOW_LIBS[@]}; do
-    if [[ -f $TENSORFLOW_LIB ]]; then
-        ln -sf $(basename $TENSORFLOW_LIB) $TENSORFLOW_BIN/tensorflow.lib
+TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow.dll.if.lib $TENSORFLOW_BIN/libtensorflow.dll.ifso)
+for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
+    if [[ -f $TENSORFLOW_DLL ]]; then
+        export TENSORFLOW_LIB=$(basename $TENSORFLOW_DLL)
+        ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/tensorflow.lib
     fi
 done
 ls -l $TENSORFLOW_BIN
 
-mkdir -p src/gen/java/
-cd src/gen/java
+GEN_SRCS_DIR=src/gen/java
+mkdir -p $GEN_SRCS_DIR
 
-# Copy only generated Java source files for ops
-cp -r $BAZEL_BIN/ops/src/* .
+# Generate Java operator wrappers
+LD_LIBRARY_PATH=$TENSORFLOW_BIN $BAZEL_BIN/java_op_generator \
+    --output_dir=$GEN_SRCS_DIR \
+    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
+    $TENSORFLOW_LIB
 
 # Copy generated Java protos from source jars
+cd $GEN_SRCS_DIR
 find $TENSORFLOW_BIN/core -name \*-speed-src.jar -exec jar xf {} \;
 rm -rf META-INF
