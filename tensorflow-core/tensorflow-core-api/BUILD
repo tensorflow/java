@@ -1,19 +1,8 @@
-load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_copts", "tf_cc_binary")
+load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_copts")
 load("@rules_java//java:defs.bzl", "java_proto_library")
-load(":tensorflow-java.bzl", "tf_java_op_gen_srcjar")
 
-tf_java_op_gen_srcjar(
-    name = "java_op_gen_sources",
-    api_def_srcs = [
-        "@org_tensorflow//tensorflow/core/api_def:base_api_def",
-        ":java_api_def",
-    ],
-    base_package = "org.tensorflow.op",
-    gen_tool = ":java_op_gen_tool",
-)
-
-tf_cc_binary(
-    name = "java_op_gen_tool",
+cc_binary(
+    name = "java_op_generator",
     srcs = [
         "src/bazel/op_generator/op_gen_main.cc",
     ],
@@ -22,12 +11,9 @@ tf_cc_binary(
         "@org_tensorflow//tensorflow:windows": [],
         "//conditions:default": ["-lm"],
     }),
-    linkstatic = 1,
     deps = [
         ":java_op_gen_lib",
-        "@org_tensorflow//tensorflow/core:framework",
-        "@org_tensorflow//tensorflow/core:lib",
-        "@org_tensorflow//tensorflow/core:ops",
+        "@org_tensorflow//tensorflow:libtensorflow_framework_import_lib",
     ],
 )
 
@@ -59,7 +45,7 @@ filegroup(
     srcs = glob(["src/bazel/api_def/*"])
 )
 
-tf_cc_binary(
+cc_binary(
     name = "java_api_import",
     srcs = [
         "src/bazel/api_def/import/api_import.cc",
@@ -69,13 +55,10 @@ tf_cc_binary(
         "@org_tensorflow//tensorflow:windows": [],
         "//conditions:default": ["-lm"],
     }),
-    linkstatic = 1,
     deps = [
-        "@org_tensorflow//tensorflow/core:framework",
-        "@org_tensorflow//tensorflow/core:lib",
-        "@org_tensorflow//tensorflow/core:ops",
         "@org_tensorflow//tensorflow/core:op_gen_lib",
-        "@org_tensorflow//tensorflow/tools/api/lib:api_objects_proto_cc"
+        "@org_tensorflow//tensorflow/tools/api/lib:api_objects_proto_cc",
+        "@org_tensorflow//tensorflow:libtensorflow_framework_import_lib"
     ],
 )
 
