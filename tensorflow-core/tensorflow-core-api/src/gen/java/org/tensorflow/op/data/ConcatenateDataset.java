@@ -33,6 +33,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that concatenates `input_dataset` with `another_dataset`.
  */
+@Operator(group = "data")
 public final class ConcatenateDataset extends RawOp implements Operand<TType> {
   
   /**

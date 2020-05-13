@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <dlfcn.h>
 
 #include "tensorflow/core/framework/op_gen_lib.h"
 #include "tensorflow/core/framework/op.h"
@@ -135,18 +136,24 @@ using namespace tensorflow;
 int main(int argc, char* argv[]) {
   string java_api_dir = "";
   string tf_src_dir = "";
+  string tf_lib_path = "";
   std::vector<Flag> flag_list = {
       Flag(
           "java_api_dir", &java_api_dir,
           "Root directory where generated Java API definitions are exported"),
       Flag(
           "tf_src_dir", &tf_src_dir,
-          "Root directory of TensorFlow sources")};
+          "Root directory of TensorFlow sources"),
+      Flag(
+          "tf_lib_path", &tf_lib_path,
+          "Path to TensorFlow shared library")};
   string usage = java::kUsageHeader;
   usage += Flags::Usage(argv[0], flag_list);
   bool parsed_flags_ok = Flags::Parse(&argc, argv, flag_list);
   port::InitMain(usage.c_str(), &argc, &argv);
-  QCHECK(parsed_flags_ok && !java_api_dir.empty() && !tf_src_dir.empty()) << usage;
+  QCHECK(parsed_flags_ok && !java_api_dir.empty()
+		  && !tf_src_dir.empty() && !tf_lib_path.empty()) << usage;
+  void* tf_lib_handle = dlopen(tf_lib_path.c_str(), RTLD_NOW);  // Register TF ops
   OpList op_defs;
   OpRegistry::Global()->Export(false, &op_defs);
   ApiDefMap python_api_map(op_defs);
@@ -313,5 +320,6 @@ int main(int argc, char* argv[]) {
   } else {
     LOG(INFO) << "All resolved!";
   }
+  dlclose(tf_lib_handle);
   return 0;
 }

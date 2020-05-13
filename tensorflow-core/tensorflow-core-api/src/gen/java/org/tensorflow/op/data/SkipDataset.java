@@ -34,6 +34,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that skips `count` elements from the `input_dataset`.
  */
+@Operator(group = "data")
 public final class SkipDataset extends RawOp implements Operand<TType> {
   
   /**

@@ -35,6 +35,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that batches `batch_size` elements from `input_dataset`.
  */
+@Operator(group = "data")
 public final class BatchDataset extends RawOp implements Operand<TType> {
   
   /**

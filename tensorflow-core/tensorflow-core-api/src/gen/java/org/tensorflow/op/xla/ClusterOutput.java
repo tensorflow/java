@@ -15,41 +15,57 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.xla;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
- * A container for an iterator resource.
+ * Operator that connects the output of an XLA computation to other consumer graph nodes.
+ * 
+ * @param <T> data type for {@code outputs()} output
  */
-@Operator(group = "data")
-public final class DeleteIterator extends RawOp {
+@Operator(group = "xla")
+public final class ClusterOutput<T extends TType> extends RawOp implements Operand<T> {
   
   /**
-   * Factory method to create a class wrapping a new DeleteIterator operation.
+   * Factory method to create a class wrapping a new ClusterOutput operation.
    * 
    * @param scope current scope
-   * @param handle A handle to the iterator to delete.
-   * @param deleter A variant deleter.
-   * @return a new instance of DeleteIterator
+   * @param input 
+   * @return a new instance of ClusterOutput
    */
   @Endpoint(describeByClass = true)
-  public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(deleter.asOutput());
+  public static <T extends TType> ClusterOutput<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaClusterOutput", scope.makeOpName("ClusterOutput"));
+    opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new DeleteIterator(opBuilder.build());
+    return new ClusterOutput<T>(opBuilder.build());
   }
   
+  /**
+   */
+  public Output<T> outputs() {
+    return outputs;
+  }
   
-  private DeleteIterator(Operation operation) {
+  @Override
+  public Output<T> asOutput() {
+    return outputs;
+  }
+  
+  private Output<T> outputs;
+  
+  private ClusterOutput(Operation operation) {
     super(operation);
+    int outputIdx = 0;
+    outputs = operation.output(outputIdx++);
   }
 }

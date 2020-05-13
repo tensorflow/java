@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaDequantize"
+  endpoint {
+    name: "xla.Dequantize"
+  }
+}

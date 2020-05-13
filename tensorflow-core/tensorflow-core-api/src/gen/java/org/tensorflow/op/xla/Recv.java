@@ -15,14 +15,13 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.xla;
 
-import java.util.List;
+import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -31,49 +30,52 @@ import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that emits each dim-0 slice of `components` once.
+ * Receives the named tensor from another XLA computation. Wraps the XLA Recv
+ * <p>
+ * operator documented at
+ *  https://www.tensorflow.org/performance/xla/operation_semantics#recv .
+ * 
+ * @param <T> data type for {@code tensor()} output
  */
-@Operator(group = "data")
-public final class TensorSliceDataset extends RawOp implements Operand<TType> {
+@Operator(group = "xla")
+public final class Recv<T extends TType> extends RawOp implements Operand<T> {
   
   /**
-   * Factory method to create a class wrapping a new TensorSliceDataset operation.
+   * Factory method to create a class wrapping a new Recv operation.
    * 
    * @param scope current scope
-   * @param components 
-   * @param outputShapes 
-   * @return a new instance of TensorSliceDataset
+   * @param dtype The type of the tensor.
+   * @param tensorName A string key that identifies the channel.
+   * @param shape The shape of the tensor.
+   * @return a new instance of Recv
    */
   @Endpoint(describeByClass = true)
-  public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorSliceDataset", scope.makeOpName("TensorSliceDataset"));
-    opBuilder.addInputList(Operands.asOutputs(components));
+  public static <T extends TType> Recv<T> create(Scope scope, DataType<T> dtype, String tensorName, Shape shape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaRecv", scope.makeOpName("Recv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new TensorSliceDataset(opBuilder.build());
+    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("tensor_name", tensorName);
+    opBuilder.setAttr("shape", shape);
+    return new Recv<T>(opBuilder.build());
   }
   
   /**
+   * The tensor to receive.
    */
-  public Output<?> handle() {
-    return handle;
+  public Output<T> tensor() {
+    return tensor;
   }
   
   @Override
-  @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) handle;
+  public Output<T> asOutput() {
+    return tensor;
   }
   
-  private Output<?> handle;
+  private Output<T> tensor;
   
-  private TensorSliceDataset(Operation operation) {
+  private Recv(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+    tensor = operation.output(outputIdx++);
   }
 }

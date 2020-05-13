@@ -32,6 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the lines of one or more text files.
  */
+@Operator(group = "data")
 public final class TextLineDataset extends RawOp implements Operand<TType> {
   
   /**

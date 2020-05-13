@@ -31,6 +31,7 @@ import org.tensorflow.tools.Shape;
 /**
  * A container for an iterator resource.
  */
+@Operator(group = "data")
 public final class AnonymousIterator extends RawOp {
   
   /**

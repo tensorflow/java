@@ -40,6 +40,7 @@ import org.tensorflow.types.family.TType;
  * The size of the resulting dataset will match the size of the smallest input
  * dataset, and no error will be raised if input datasets have different sizes.
  */
+@Operator(group = "data")
 public final class ZipDataset extends RawOp implements Operand<TType> {
   
   /**

@@ -32,6 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the records from one or more TFRecord files.
  */
+@Operator(group = "data")
 public final class TfRecordDataset extends RawOp implements Operand<TType> {
   
   /**

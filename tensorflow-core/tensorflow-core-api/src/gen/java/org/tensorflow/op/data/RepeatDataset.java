@@ -34,6 +34,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the outputs of `input_dataset` `count` times.
  */
+@Operator(group = "data")
 public final class RepeatDataset extends RawOp implements Operand<TType> {
   
   /**

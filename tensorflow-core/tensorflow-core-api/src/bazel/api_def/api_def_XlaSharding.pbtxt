@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaSharding"
+  endpoint {
+    name: "xla.Sharding"
+  }
+}

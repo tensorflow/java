@@ -318,6 +318,8 @@ public final class Ops {
 
   public final DtypesOps dtypes;
 
+  public final XlaOps xla;
+
   public final LinalgOps linalg;
 
   public final RandomOps random;
@@ -348,6 +350,7 @@ public final class Ops {
     data = new DataOps(scope);
     io = new IoOps(scope);
     dtypes = new DtypesOps(scope);
+    xla = new XlaOps(scope);
     linalg = new LinalgOps(scope);
     random = new RandomOps(scope);
     strings = new StringsOps(scope);
