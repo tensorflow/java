@@ -20,6 +20,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.nio.file.Paths;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +41,8 @@ public class TensorFlowTest {
     assertNotNull(TensorFlow.registeredOpList());
   }
 
-  @Ignore // FIXME This test requires to build native test sources
   @Test
   public void loadLibrary() {
-    // TODO(ashankar): This tell will fail when built with --config=monolithic.
-    // Figure out how we can ignore the test in that case.
     try (Graph g = new Graph()) {
       // Build a graph with an unrecognized operation.
       try {
@@ -54,10 +53,10 @@ public class TensorFlowTest {
       }
 
       // Load the library containing the operation.
-      OpList opList = TensorFlow.loadLibrary("tensorflow/java/my_test_op.so");
+      OpList opList = TensorFlow.loadLibrary(Paths.get("").resolve("bazel-bin/libcustom_op_test.so").toString());
       assertNotNull(opList);
       assertEquals(1, opList.getOpCount());
-      assertTrue(opList.getOpList().get(0).getName() == "MyTest");
+      assertEquals(opList.getOpList().get(0).getName(), "MyTest");
 
       // Now graph building should succeed.
       g.opBuilder("MyTest", "MyTest").build();

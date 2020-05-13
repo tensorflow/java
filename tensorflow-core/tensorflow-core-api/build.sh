@@ -35,7 +35,8 @@ bazel build $BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
     :java_op_generator \
-    :java_api_import 
+    :java_api_import \
+    :libcustom_op_test.so
 
 export BAZEL_SRCS=$(pwd -P)/bazel-tensorflow-core-api
 export BAZEL_BIN=$(pwd -P)/bazel-bin
