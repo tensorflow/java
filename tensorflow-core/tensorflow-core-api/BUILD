@@ -66,3 +66,14 @@ java_proto_library(
     name = "java_proto_gen_sources",
     deps = ["@org_tensorflow//tensorflow/core:protos_all"]
 )
+
+cc_binary(
+    name = "libcustom_op_test.so",
+    srcs = ["src/bazel/test/my_test_op.cc"],
+    copts = ["-fPIC"],
+    linkshared = 1,
+    deps = [
+        "@org_tensorflow//tensorflow/core:framework",
+        "@org_tensorflow//tensorflow:libtensorflow_framework_import_lib"
+    ]
+)
