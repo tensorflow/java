@@ -15,41 +15,53 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.xla;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 
 /**
- * A container for an iterator resource.
+ * Replica ID.
  */
-@Operator(group = "data")
-public final class DeleteIterator extends RawOp {
+@Operator(group = "xla")
+public final class ReplicaId extends RawOp implements Operand<TInt32> {
   
   /**
-   * Factory method to create a class wrapping a new DeleteIterator operation.
+   * Factory method to create a class wrapping a new ReplicaId operation.
    * 
    * @param scope current scope
-   * @param handle A handle to the iterator to delete.
-   * @param deleter A variant deleter.
-   * @return a new instance of DeleteIterator
+   * @return a new instance of ReplicaId
    */
   @Endpoint(describeByClass = true)
-  public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(deleter.asOutput());
+  public static ReplicaId create(Scope scope) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaReplicaId", scope.makeOpName("ReplicaId"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new DeleteIterator(opBuilder.build());
+    return new ReplicaId(opBuilder.build());
   }
   
+  /**
+   */
+  public Output<TInt32> id() {
+    return id;
+  }
   
-  private DeleteIterator(Operation operation) {
+  @Override
+  public Output<TInt32> asOutput() {
+    return id;
+  }
+  
+  private Output<TInt32> id;
+  
+  private ReplicaId(Operation operation) {
     super(operation);
+    int outputIdx = 0;
+    id = operation.output(outputIdx++);
   }
 }

@@ -15,41 +15,52 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
- * A container for an iterator resource.
  */
-@Operator(group = "data")
-public final class DeleteIterator extends RawOp {
+public final class DummyMemoryCache extends RawOp implements Operand<TType> {
   
   /**
-   * Factory method to create a class wrapping a new DeleteIterator operation.
+   * Factory method to create a class wrapping a new DummyMemoryCache operation.
    * 
    * @param scope current scope
-   * @param handle A handle to the iterator to delete.
-   * @param deleter A variant deleter.
-   * @return a new instance of DeleteIterator
+   * @return a new instance of DummyMemoryCache
    */
   @Endpoint(describeByClass = true)
-  public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(deleter.asOutput());
+  public static DummyMemoryCache create(Scope scope) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DummyMemoryCache", scope.makeOpName("DummyMemoryCache"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new DeleteIterator(opBuilder.build());
+    return new DummyMemoryCache(opBuilder.build());
   }
   
+  /**
+   */
+  public Output<?> handle() {
+    return handle;
+  }
   
-  private DeleteIterator(Operation operation) {
+  @Override
+  @SuppressWarnings("unchecked")
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
+  }
+  
+  private Output<?> handle;
+  
+  private DummyMemoryCache(Operation operation) {
     super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
 }

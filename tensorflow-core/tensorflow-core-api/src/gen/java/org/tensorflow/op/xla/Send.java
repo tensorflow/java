@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.xla;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -24,32 +24,36 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
- * A container for an iterator resource.
+ * Sends the named tensor to another XLA computation. Wraps the XLA Send operator
+ * <p>
+ * documented at
+ *  https://www.tensorflow.org/performance/xla/operation_semantics#send .
  */
-@Operator(group = "data")
-public final class DeleteIterator extends RawOp {
+@Operator(group = "xla")
+public final class Send extends RawOp {
   
   /**
-   * Factory method to create a class wrapping a new DeleteIterator operation.
+   * Factory method to create a class wrapping a new Send operation.
    * 
    * @param scope current scope
-   * @param handle A handle to the iterator to delete.
-   * @param deleter A variant deleter.
-   * @return a new instance of DeleteIterator
+   * @param tensor The tensor to send.
+   * @param tensorName A string key that identifies the channel.
+   * @return a new instance of Send
    */
   @Endpoint(describeByClass = true)
-  public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(deleter.asOutput());
+  public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaSend", scope.makeOpName("Send"));
+    opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new DeleteIterator(opBuilder.build());
+    opBuilder.setAttr("tensor_name", tensorName);
+    return new Send(opBuilder.build());
   }
   
   
-  private DeleteIterator(Operation operation) {
+  private Send(Operation operation) {
     super(operation);
   }
 }

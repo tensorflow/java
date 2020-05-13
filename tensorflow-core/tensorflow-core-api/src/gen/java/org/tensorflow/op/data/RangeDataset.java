@@ -34,6 +34,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset with a range of values. Corresponds to python's xrange.
  */
+@Operator(group = "data")
 public final class RangeDataset extends RawOp implements Operand<TType> {
   
   /**

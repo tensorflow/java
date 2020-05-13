@@ -32,6 +32,7 @@ import org.tensorflow.types.family.TType;
 
 /**
  */
+@Operator(group = "data")
 public final class Iterator extends RawOp implements Operand<TType> {
   
   /**
