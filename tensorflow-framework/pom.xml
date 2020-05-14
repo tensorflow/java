@@ -33,6 +33,10 @@
     serving TensorFlow models.
   </description>
 
+  <properties>
+    <javacpp.platform.extension></javacpp.platform.extension>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.tensorflow</groupId>
@@ -52,6 +56,13 @@
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Include native binaries dependencies only for testing -->
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
