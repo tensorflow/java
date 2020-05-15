@@ -61,13 +61,15 @@ java_proto_library(
     deps = ["@org_tensorflow//tensorflow/core:protos_all"]
 )
 
-cc_binary(
+tf_cc_binary(
     name = "libcustom_op_test.so",
     srcs = ["src/bazel/test/my_test_op.cc"],
-    copts = ["-fPIC"],
     linkshared = 1,
+    linkopts = select({
+        "@org_tensorflow//tensorflow:windows": [],
+        "//conditions:default": ["-lm"],
+    }),
     deps = [
         "@org_tensorflow//tensorflow/core:framework",
-        "@org_tensorflow//tensorflow:libtensorflow_framework_import_lib"
     ]
 )

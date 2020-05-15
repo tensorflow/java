@@ -16,7 +16,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <dlfcn.h>
 
 #include "tensorflow/core/framework/op_gen_lib.h"
 #include "tensorflow/core/framework/op.h"
@@ -153,11 +152,13 @@ int main(int argc, char* argv[]) {
   port::InitMain(usage.c_str(), &argc, &argv);
   QCHECK(parsed_flags_ok && !java_api_dir.empty()
 		  && !tf_src_dir.empty() && !tf_lib_path.empty()) << usage;
-  void* tf_lib_handle = dlopen(tf_lib_path.c_str(), RTLD_NOW);  // Register TF ops
+
+  Env* env = Env::Default();
+  void* tf_lib_handle;
+  TF_CHECK_OK(env->LoadLibrary(argv[1], &tf_lib_handle));  // This registers all TF ops
   OpList op_defs;
   OpRegistry::Global()->Export(false, &op_defs);
   ApiDefMap python_api_map(op_defs);
-  Env* env = Env::Default();
 
   // Load Python API defs
   string base_api_dir = tf_src_dir + "/tensorflow/core/api_def/base_api";
@@ -320,6 +321,5 @@ int main(int argc, char* argv[]) {
   } else {
     LOG(INFO) << "All resolved!";
   }
-  dlclose(tf_lib_handle);
   return 0;
 }
