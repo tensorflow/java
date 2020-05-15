@@ -74,6 +74,7 @@ jobs:
           df -h
   windows-x86_64:
     runs-on: windows-latest
+    timeout-minutes: 480
     strategy:
       matrix:
         ext: ["", -mkl, -gpu, -mkl-gpu]
