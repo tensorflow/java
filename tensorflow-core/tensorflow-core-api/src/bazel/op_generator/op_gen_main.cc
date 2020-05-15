@@ -15,7 +15,6 @@
 
 #include <string>
 #include <vector>
-#include <dlfcn.h>
 
 #include "tensorflow/core/framework/op.h"
 #include "tensorflow/core/lib/core/status.h"
@@ -73,17 +72,15 @@ int main(int argc, char* argv[]) {
   QCHECK(parsed_flags_ok && !output_dir.empty() && argc > 1) << usage;
   std::vector<tensorflow::string> api_dirs = tensorflow::str_util::Split(
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
-  std::vector<void*> ops_libs_handles;
-  ops_libs_handles.reserve(argc - 1);
+
+  tensorflow::Env* env = tensorflow::Env::Default();
+  void* ops_libs_handles[50];
   for (int i = 1; i < argc; ++i) {
-	  ops_libs_handles.push_back(dlopen(argv[i], RTLD_NOW));
+	  TF_CHECK_OK(env->LoadLibrary(argv[1], &ops_libs_handles[i - 1]));
   }
   tensorflow::java::OpGenerator generator(api_dirs);
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
   TF_CHECK_OK(generator.Run(ops, base_package, output_dir));
-  for (void* ops_lib_handle : ops_libs_handles) {
-	  dlclose(ops_lib_handle);
-  }
   return 0;
 }
