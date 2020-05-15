@@ -8,10 +8,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "org_tensorflow",
     patches = [
+        ":tensorflow-visibility.patch",
         ":tensorflow-windows.patch", # https://github.com/tensorflow/tensorflow/issues/25213
         ":tensorflow-proto.patch",
-        ":tensorflow-api-def.patch",
-        ":tensorflow-framework.patch"
     ],
     patch_tool = "patch",
     patch_args = ["-p1"],

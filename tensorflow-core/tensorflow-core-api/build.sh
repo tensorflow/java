@@ -18,7 +18,7 @@ else
 fi
 
 if [[ "${EXTENSION:-}" == *mkl* ]]; then
-    export BUILD_FLAGS="$BUILD_FLAGS --config=mkl"
+    export BUILD_FLAGS="$BUILD_FLAGS --config=mkl --define build_with_mkl_dnn_v1_only=false"
 fi
 
 if [[ "${EXTENSION:-}" == *gpu* ]]; then
@@ -45,21 +45,21 @@ export TENSORFLOW_BIN=$BAZEL_BIN/external/org_tensorflow/tensorflow
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=($TENSORFLOW_BIN/libtensorflow.so.?.?.?)
 if [[ -f $TENSORFLOW_SO ]]; then
-    export TENSORFLOW_LIB=$(basename $TENSORFLOW_SO)
-    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.so
-    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.so.2
+    export TENSORFLOW_LIB=$TENSORFLOW_SO
+    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so
+    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so.2
 fi
 TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow.?.?.?.dylib)
 if [[ -f $TENSORFLOW_DYLIB ]]; then
-    export TENSORFLOW_LIB=$(basename $TENSORFLOW_DYLIB)
-    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.dylib
-    ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/libtensorflow.2.dylib
+    export TENSORFLOW_LIB=$TENSORFLOW_DYLIB
+    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.dylib
+    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.2.dylib
 fi
 TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow.dll.if.lib $TENSORFLOW_BIN/libtensorflow.dll.ifso)
 for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
     if [[ -f $TENSORFLOW_DLL ]]; then
-        export TENSORFLOW_LIB=$(basename $TENSORFLOW_DLL)
-        ln -sf $TENSORFLOW_LIB $TENSORFLOW_BIN/tensorflow.lib
+        export TENSORFLOW_LIB=$TENSORFLOW_DLL
+        ln -sf $(basename $TENSORFLOW_DLL) $TENSORFLOW_BIN/tensorflow.lib
     fi
 done
 ls -l $TENSORFLOW_BIN
@@ -68,7 +68,7 @@ GEN_SRCS_DIR=src/gen/java
 mkdir -p $GEN_SRCS_DIR
 
 # Generate Java operator wrappers
-LD_LIBRARY_PATH=$TENSORFLOW_BIN $BAZEL_BIN/java_op_generator \
+$BAZEL_BIN/java_op_generator \
     --output_dir=$GEN_SRCS_DIR \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
     $TENSORFLOW_LIB
