@@ -57,6 +57,7 @@ jobs:
           echo Downloading Bazel
           curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
+          brew install libomp
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -77,6 +78,7 @@ jobs:
     strategy:
       matrix:
         ext: ["", -mkl, -gpu, -mkl-gpu]
+    timeout-minutes: 480
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2

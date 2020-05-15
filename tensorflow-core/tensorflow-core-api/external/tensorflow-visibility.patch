@@ -1,3 +1,16 @@
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+index 55406a5686..35d1547dfb 100644
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -33,7 +33,7 @@ load(
+ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+ 
+ package(
+-    default_visibility = [":internal"],
++    default_visibility = ["//visibility:public"],
+     licenses = ["notice"],  # Apache 2.0
+ )
+ 
 diff --ruN a/tensorflow/core/api_def/BUILD b/tensorflow/core/api_def/BUILD
 --- a/tensorflow/core/api_def/BUILD 2020-03-26 18:19:19.000000000 -0400
 +++ b/tensorflow/core/api_def/BUILD	2020-04-01 22:50:37.000000000 -0400
@@ -21,3 +34,4 @@ diff -ruN a/tensorflow/tools/api/lib/BUILD b/tensorflow/tools/api/lib/BUILD
  )
 
  py_library(
+ 
