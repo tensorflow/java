@@ -150,7 +150,7 @@ This table shows the mapping between different version of TensorFlow for Java an
 
 | TensorFlow Java Version  | TensorFlow Version |
 | ------------- | ------------- |
-| 0.1.0-SNAPSHOT  | 2.2.0-rc3  |
+| 0.1.0-SNAPSHOT  | 2.2.0  |
 
 ## How to Contribute?
 
