@@ -18,6 +18,7 @@ else
 fi
 
 if [[ "${EXTENSION:-}" == *mkl* ]]; then
+    # Don't use MKL-DNN v1 as it is only currently supported by Linux platform
     export BUILD_FLAGS="$BUILD_FLAGS --config=mkl --define build_with_mkl_dnn_v1_only=false"
 fi
 
@@ -29,14 +30,19 @@ if [[ "${EXTENSION:-}" == *gpu* ]]; then
     fi
 fi
 
+BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --output_filter=DONT_MATCH_ANYTHING --verbose_failures"
+
+# Always allow distinct host configuration since we rely on the host JVM for a few things (this was disabled by default on windows)
+BUILD_FLAGS="$BUILD_FLAGS --distinct_host_configuration=true"
+
 # Build C API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --output_filter=DONT_MATCH_ANYTHING --verbose_failures \
+bazel build $BUILD_FLAGS \
     @org_tensorflow//tensorflow:tensorflow \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
     :java_op_generator \
     :java_api_import \
-    :libcustom_op_test.so
+    :custom_ops_test
 
 export BAZEL_SRCS=$(pwd -P)/bazel-tensorflow-core-api
 export BAZEL_BIN=$(pwd -P)/bazel-bin
@@ -58,11 +64,11 @@ fi
 TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow.dll.if.lib $TENSORFLOW_BIN/libtensorflow.dll.ifso)
 for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
     if [[ -f $TENSORFLOW_DLL ]]; then
-        export TENSORFLOW_LIB=$TENSORFLOW_DLL
+        export TENSORFLOW_LIB=$TENSORFLOW_BIN/tensorflow.dll
         ln -sf $(basename $TENSORFLOW_DLL) $TENSORFLOW_BIN/tensorflow.lib
     fi
 done
-ls -l $TENSORFLOW_BIN
+echo "Listing $TENSORFLOW_BIN:" && ls -l $TENSORFLOW_BIN
 
 GEN_SRCS_DIR=src/gen/java
 mkdir -p $GEN_SRCS_DIR

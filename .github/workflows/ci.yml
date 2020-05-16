@@ -100,6 +100,7 @@ jobs:
           mkdir cuda
           unzip.exe cudnn.zip
           cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.1/"
+          echo %JAVA_HOME%
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project

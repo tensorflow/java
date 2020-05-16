@@ -318,6 +318,9 @@
             -Djava.library.path=${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}
           </argLine>
           <additionalClasspathElements>${project.build.directory}/native/</additionalClasspathElements>
+          <systemPropertyVariables>
+            <NATIVE_PLATFORM>${javacpp.platform}</NATIVE_PLATFORM>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
