@@ -61,15 +61,21 @@ java_proto_library(
     deps = ["@org_tensorflow//tensorflow/core:protos_all"]
 )
 
-tf_cc_binary(
-    name = "libcustom_op_test.so",
-    srcs = ["src/bazel/test/my_test_op.cc"],
-    linkshared = 1,
-    linkopts = select({
+filegroup(
+    name = "custom_ops_test",
+    srcs = select({
+        # FIXME(karllessard) Disable custom ops test on Windows since TF is still monolithic on this platform
         "@org_tensorflow//tensorflow:windows": [],
-        "//conditions:default": ["-lm"],
-    }),
-    deps = [
-        "@org_tensorflow//tensorflow/core:framework",
-    ]
+        "//conditions:default": [":libcustom_ops_test.so"],
+    })
+)
+
+tf_cc_binary(
+	name = "libcustom_ops_test.so",
+	srcs = ["src/bazel/test/my_test_op.cc"],
+	linkshared = 1,
+	linkopts = ["-lm"],
+	deps = [
+		"@org_tensorflow//tensorflow/core:framework",
+	]
 )

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 import java.nio.file.Paths;
 
@@ -43,6 +44,10 @@ public class TensorFlowTest {
 
   @Test
   public void loadLibrary() {
+    // FIXME(karllessard) Custom ops libraries are not supported on Windows since TF is built monolithic
+    // Once we are able to lift this restriction, enable this test
+    disableOnPlatform("windows");
+
     try (Graph g = new Graph()) {
       // Build a graph with an unrecognized operation.
       try {
@@ -53,7 +58,7 @@ public class TensorFlowTest {
       }
 
       // Load the library containing the operation.
-      OpList opList = TensorFlow.loadLibrary(Paths.get("").resolve("bazel-bin/libcustom_op_test.so").toString());
+      OpList opList = TensorFlow.loadLibrary(Paths.get("").resolve("bazel-bin/libcustom_ops_test.so").toString());
       assertNotNull(opList);
       assertEquals(1, opList.getOpCount());
       assertEquals(opList.getOpList().get(0).getName(), "MyTest");
@@ -61,5 +66,10 @@ public class TensorFlowTest {
       // Now graph building should succeed.
       g.opBuilder("MyTest", "MyTest").build();
     }
+  }
+
+  private void disableOnPlatform(String platform) {
+    String current = System.getProperty("NATIVE_PLATFORM");
+    assumeFalse(current != null && current.startsWith(platform.toLowerCase()));
   }
 }
