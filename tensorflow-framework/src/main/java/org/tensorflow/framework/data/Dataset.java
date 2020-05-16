@@ -17,19 +17,14 @@ package org.tensorflow.framework.data;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.data.impl.BatchDataset;
-import org.tensorflow.framework.data.impl.SkipDataset;
-import org.tensorflow.framework.data.impl.TFRecordDataset;
-import org.tensorflow.framework.data.impl.TakeDataset;
-import org.tensorflow.framework.data.impl.TensorSliceDataset;
-import org.tensorflow.framework.data.impl.TextLineDataset;
+import org.tensorflow.framework.data.impl.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and
@@ -64,8 +59,9 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @return A batched Dataset
    */
   public final Dataset batch(long batchSize, boolean dropLastBatch) {
-    List<Shape> batchOutputShapes =
-        outputShapes.stream().map(s -> s.prepend(-1)).collect(Collectors.toList());
+
+    List<Shape> batchOutputShapes = new ArrayList<>();
+    outputShapes.forEach(s -> batchOutputShapes.add(s.prepend(-1)));
 
     return new BatchDataset(
         tf,

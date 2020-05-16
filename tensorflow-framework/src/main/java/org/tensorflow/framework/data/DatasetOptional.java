@@ -40,13 +40,22 @@ public class DatasetOptional {
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
-  protected DatasetOptional(
+  public DatasetOptional(
       Ops tf, Operand<?> optionalVariant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     this.tf = tf;
     this.optionalVariant = optionalVariant;
     this.outputTypes = outputTypes;
     this.outputShapes = outputShapes;
   }
+
+  protected DatasetOptional(DatasetOptional other) {
+    this.tf = other.tf;
+    this.optionalVariant = other.optionalVariant;
+    this.outputTypes = other.outputTypes;
+    this.outputShapes = other.outputShapes;
+  }
+
+
 
   /** Whether this optional has a value. */
   public Operand<TBool> hasValue() {

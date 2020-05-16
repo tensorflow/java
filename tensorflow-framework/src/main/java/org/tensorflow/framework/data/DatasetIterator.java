@@ -123,7 +123,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
    *     a dataset element.
    */
-  protected DatasetIterator(
+  public DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       Op initializer,
@@ -137,7 +137,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
     this.outputShapes = outputShapes;
   }
 
-  protected DatasetIterator(
+  public DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
       List<DataType<?>> outputTypes,
@@ -286,8 +286,14 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param mapper The function to apply to each component
    * @return A new DatasetIterator applying `mapper` to all components of each element.
    */
+
   public DatasetIterator mapAllComponents(Function<Operand<?>, Operand<?>> mapper) {
-    return map(outputs -> outputs.stream().map(mapper::apply).collect(Collectors.toList()));
+    return map(
+        outputs -> {
+          List<Operand<?>> mappedOutputs = new ArrayList<>();
+          outputs.forEach(o -> mappedOutputs.add(mapper.apply(o)));
+          return mappedOutputs;
+        });
   }
 
   /**

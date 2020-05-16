@@ -42,6 +42,6 @@ public class MapIterator extends DatasetIterator {
   @Override
   public DatasetOptional getNextAsOptional() {
     DatasetOptional optional = super.getNextAsOptional();
-    return new MapOptional(optional, mapper, outputTypes, outputShapes);
+    return new MapOptional(optional, mapper);
   }
 }
