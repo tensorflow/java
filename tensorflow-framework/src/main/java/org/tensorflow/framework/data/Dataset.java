@@ -17,14 +17,22 @@ package org.tensorflow.framework.data;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.data.impl.*;
+import org.tensorflow.framework.data.impl.BatchDataset;
+import org.tensorflow.framework.data.impl.MapDataset;
+import org.tensorflow.framework.data.impl.SkipDataset;
+import org.tensorflow.framework.data.impl.TFRecordDataset;
+import org.tensorflow.framework.data.impl.TakeDataset;
+import org.tensorflow.framework.data.impl.TensorSliceDataset;
+import org.tensorflow.framework.data.impl.TextLineDataset;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and
@@ -32,10 +40,12 @@ import java.util.List;
  */
 public abstract class Dataset implements Iterable<List<Operand<?>>> {
   protected Ops tf;
+  private Operand<?> variant;
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
-  public Dataset(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public Dataset(
+      Ops tf, Operand<?> variant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     if (tf == null) {
       throw new IllegalArgumentException("Ops accessor cannot be null.");
     }
@@ -46,8 +56,16 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
     }
 
     this.tf = tf;
+    this.variant = variant;
     this.outputTypes = outputTypes;
     this.outputShapes = outputShapes;
+  }
+
+  protected Dataset(Dataset other) {
+    this.tf = other.tf;
+    this.variant = other.variant;
+    this.outputTypes = other.outputTypes;
+    this.outputShapes = other.outputShapes;
   }
 
   /**
@@ -103,6 +121,72 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   public final Dataset take(long count) {
     return new TakeDataset(
         tf, this.getVariant(), tf.constant(count), this.getOutputTypes(), this.getOutputShapes());
+  }
+
+  /**
+   * Returns a new Dataset which maps a function across all elements from this iterator, on a single
+   * component of each element.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling `iterator.mapOneComponent(0, features -> tf.math.mul(features, tf.constant(2)))`
+   * will map the function over the `features` component of each element, multiplying each by 2.
+   *
+   * @param index The index of the component to transform.
+   * @param mapper The function to apply to the target component.
+   * @return A new DatasetIterator applying `mapper` to the component at the chosen index.
+   */
+  public Dataset mapOneComponent(int index, Function<Operand<?>, Operand<?>> mapper) {
+    return map(
+        outputs -> {
+          List<Operand<?>> newComponents = new ArrayList<>(outputs);
+          newComponents.set(index, mapper.apply(outputs.get(index)));
+          return newComponents;
+        });
+  }
+
+  /**
+   * Returns a new Dataset which maps a function across all elements from this iterator, on all
+   * components of each element.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling `iterator.mapAllComponents(component -> tf.math.mul(component, tf.constant(2)))`
+   * will map the function over the both the `features` and `labels` components of each element,
+   * multiplying them all by 2
+   *
+   * @param mapper The function to apply to each component
+   * @return A new DatasetIterator applying `mapper` to all components of each element.
+   */
+  public Dataset mapAllComponents(Function<Operand<?>, Operand<?>> mapper) {
+    return map(
+        outputs -> {
+          List<Operand<?>> mappedOutputs = new ArrayList<>();
+          outputs.forEach(o -> mappedOutputs.add(mapper.apply(o)));
+          return mappedOutputs;
+        });
+  }
+
+  /**
+   * Returns a new Dataset which maps a function over all elements returned by this iterator.
+   *
+   * <p>For example, suppose each element is a `List<Operand<?>>` with 2 components: (features,
+   * labels).
+   *
+   * <p>Calling ``` iterator.map(components -> { Operand<?> features = components.get(0); Operand<?>
+   * labels = components.get(1);
+   *
+   * <p>return Arrays.asList( tf.math.mul(features, tf.constant(2)), tf.math.mul(labels,
+   * tf.constant(5)) ); }) ``` will map the function over the `features` and `labels` components,
+   * multiplying features by 2, and multiplying the labels by 5.
+   *
+   * @param mapper The function to apply to each element of this iterator.
+   * @return A new DatasetIterator applying `mapper` to each element of this iterator.
+   */
+  public Dataset map(Function<List<Operand<?>>, List<Operand<?>>> mapper) {
+    return new MapDataset(this, mapper);
   }
 
   /**
@@ -189,7 +273,9 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   }
 
   /** Get the variant tensor representing this dataset. */
-  public abstract Operand<?> getVariant();
+  public Operand<?> getVariant() {
+    return variant;
+  }
 
   /** Get a list of output types for each component of this dataset. */
   public List<DataType<?>> getOutputTypes() {
@@ -203,5 +289,15 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
 
   public Ops getOpsInstance() {
     return this.tf;
+  }
+
+  @Override
+  public String toString() {
+    return "Dataset{"
+        + "outputTypes="
+        + Arrays.toString(getOutputTypes().stream().map(DataType::name).toArray())
+        + ", outputShapes="
+        + Arrays.toString(getOutputShapes().stream().map(Shape::toString).toArray())
+        + "}";
   }
 }
