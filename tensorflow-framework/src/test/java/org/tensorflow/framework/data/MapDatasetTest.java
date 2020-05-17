@@ -62,14 +62,13 @@ public class MapDatasetTest extends DatasetTestBase {
 
       List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
 
-      Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
-      DatasetIterator iterator =
-          dataset
-              .makeOneShotIterator()
+      Dataset dataset =
+          Dataset.fromTensorSlices(tf, tensors, dataTypes)
               .mapAllComponents(
                   component ->
                       tf.math.mul(component.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
 
+      DatasetIterator iterator = dataset.makeOneShotIterator();
       List<Operand<?>> components = iterator.getNext();
       Operand<?> X = components.get(0);
       Operand<?> y = components.get(1);
@@ -108,15 +107,13 @@ public class MapDatasetTest extends DatasetTestBase {
 
     List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
 
-    Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
-    DatasetIterator iterator =
-        dataset
-            .makeInitializeableIterator()
+    Dataset dataset =
+        Dataset.fromTensorSlices(tf, tensors, dataTypes)
             .mapAllComponents(
                 op -> tf.math.mul(op.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
 
     int count = 0;
-    for (List<Operand<?>> outputs : iterator) {
+    for (List<Operand<?>> outputs : dataset) {
       try (Tensor<TInt32> XBatch = outputs.get(0).asTensor().expect(TInt32.DTYPE);
           Tensor<TInt32> yBatch = outputs.get(1).asTensor().expect(TInt32.DTYPE); ) {
 

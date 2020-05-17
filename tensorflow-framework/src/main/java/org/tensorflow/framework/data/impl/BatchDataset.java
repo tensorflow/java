@@ -27,8 +27,6 @@ import org.tensorflow.types.TInt64;
 import java.util.List;
 
 public class BatchDataset extends Dataset {
-  private org.tensorflow.op.data.BatchDataset batchDataset;
-
   public BatchDataset(
       Ops tf,
       Operand<?> variant,
@@ -36,13 +34,10 @@ public class BatchDataset extends Dataset {
       Constant<TBool> dropRemainder,
       List<DataType<?>> outputTypes,
       List<Shape> outputShapes) {
-    super(tf, outputTypes, outputShapes);
-    this.batchDataset =
-        tf.data.batchDataset(variant, batchSize, dropRemainder, outputTypes, outputShapes);
-  }
-
-  @Override
-  public Operand<?> getVariant() {
-    return this.batchDataset;
+    super(
+        tf,
+        tf.data.batchDataset(variant, batchSize, dropRemainder, outputTypes, outputShapes),
+        outputTypes,
+        outputShapes);
   }
 }

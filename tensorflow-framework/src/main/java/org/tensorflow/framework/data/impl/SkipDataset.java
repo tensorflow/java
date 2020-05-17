@@ -26,7 +26,6 @@ import org.tensorflow.types.TInt64;
 import java.util.List;
 
 public class SkipDataset extends Dataset {
-  private org.tensorflow.op.data.SkipDataset skipDataset;
 
   public SkipDataset(
       Ops tf,
@@ -34,12 +33,10 @@ public class SkipDataset extends Dataset {
       Constant<TInt64> count,
       List<DataType<?>> outputTypes,
       List<Shape> outputShapes) {
-    super(tf, outputTypes, outputShapes);
-    this.skipDataset = tf.data.skipDataset(variant, count, outputTypes, outputShapes);
-  }
-
-  @Override
-  public Operand<?> getVariant() {
-    return skipDataset;
+    super(
+        tf,
+        tf.data.skipDataset(variant, count, outputTypes, outputShapes),
+        outputTypes,
+        outputShapes);
   }
 }
