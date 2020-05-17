@@ -17,24 +17,26 @@ package org.tensorflow.framework.data.impl;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
-import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
+import org.tensorflow.framework.data.DatasetIterator;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
-public class TFRecordDataset extends Dataset {
+public class MapDataset extends Dataset {
+  private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
-  public TFRecordDataset(
-      Ops tf,
-      Operand<TString> filenames,
-      Operand<TString> compressionType,
-      Operand<TInt64> bufferSize) {
-    super(
-        tf,
-        tf.data.tfRecordDataset(filenames, compressionType, bufferSize),
-        Collections.singletonList(TString.DTYPE),
-        Collections.singletonList(Shape.scalar()));
+  public MapDataset(Dataset other, Function<List<Operand<?>>, List<Operand<?>>> mapper) {
+    super(other);
+    this.mapper = mapper;
+  }
+
+  @Override
+  public DatasetIterator makeOneShotIterator() {
+    return new MapIterator(super.makeOneShotIterator(), mapper);
+  }
+
+  @Override
+  public DatasetIterator makeInitializeableIterator() {
+    return new MapIterator(super.makeInitializeableIterator(), mapper);
   }
 }
