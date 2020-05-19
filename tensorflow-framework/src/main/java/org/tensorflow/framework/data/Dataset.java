@@ -41,6 +41,17 @@ import java.util.function.Function;
 public abstract class Dataset implements Iterable<List<Operand<?>>> {
   protected Ops tf;
   private Operand<?> variant;
+
+  public Dataset setOutputTypes(List<DataType<?>> outputTypes) {
+    this.outputTypes = outputTypes;
+    return this;
+  }
+
+  public Dataset setOutputShapes(List<Shape> outputShapes) {
+    this.outputShapes = outputShapes;
+    return this;
+  }
+
   private List<DataType<?>> outputTypes;
   private List<Shape> outputShapes;
 
@@ -264,6 +275,12 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
       Ops tf, String filename, String compressionType, long bufferSize) {
     return new TFRecordDataset(
         tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  }
+
+  public static Dataset tfRecordDataset(
+      Ops tf, String[] filenames, String compressionType, long bufferSize) {
+    return new TFRecordDataset(
+        tf, tf.array(filenames), tf.constant(compressionType), tf.constant(bufferSize));
   }
 
   public static Dataset textLineDataset(
