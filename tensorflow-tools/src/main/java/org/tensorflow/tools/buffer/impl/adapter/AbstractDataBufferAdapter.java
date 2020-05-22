@@ -18,7 +18,6 @@
 package org.tensorflow.tools.buffer.impl.adapter;
 
 import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.DataStorageVisitor;
 import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
 import org.tensorflow.tools.buffer.impl.Validator;
 import org.tensorflow.tools.buffer.layout.DataLayout;
@@ -47,11 +46,6 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
     Validator.setArgs(this, index);
     layout.writeObject(buffer, value, index * layout.scale());
     return (U)this;
-  }
-
-  @Override
-  public <R> R accept(DataStorageVisitor<R> visitor) {
-    return buffer().accept(visitor);
   }
 
   AbstractDataBufferAdapter(S buffer, DataLayout<S, T> layout) {
