@@ -184,7 +184,7 @@ public final class Shape {
    *
    * <p><ul>
    * <li>the number of dimensions is defined and equal for both
-   * <li>the size of each dimension is defined and eqaul for both
+   * <li>the size of each dimension is defined and equal for both
    * </ul>
    *
    * <p>If either Shape has unknown dimensions (even if they are the same in both) or if either
