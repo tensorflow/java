@@ -128,5 +128,11 @@ public class ShapeTest {
     } catch (NullPointerException e) {
       // as expected
     }
+
+    // changing the values of the array returned by asArray should not mutate the shape
+    long[] internalShape = one.asArray();
+    assertNotNull(internalShape);
+    internalShape[0] = 42L;
+    assertEquals(2L, one.size(0));
   }
 }
