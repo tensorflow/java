@@ -148,6 +148,30 @@ public final class Shape {
     return Shape.of(newDimensions);
   }
 
+  public boolean isKnown(int i) {
+    return dimensionSizes[i] != -1;
+  }
+
+  public void assertKnown(int i) {
+    if (!isKnown(i)) {
+      throw new IllegalStateException("Dimension " + i + " in shape needs to be known.");
+    }
+  }
+
+  public Shape replaceFirst(long dim) {
+    return replace(0, dim);
+  }
+
+  public Shape replaceLast(long dim) {
+    return replace(dimensionSizes.length - 1, dim);
+  }
+
+  public Shape replace(int i, long dim) {
+    Shape newShape = new Shape(Arrays.copyOf(dimensionSizes, dimensionSizes.length));
+    newShape.dimensionSizes[i] = dim;
+    return newShape;
+  }
+
   private static long computeSize(long[] dimensionSizes) {
     if (dimensionSizes == null) {
       return UNKNOWN_SIZE;
