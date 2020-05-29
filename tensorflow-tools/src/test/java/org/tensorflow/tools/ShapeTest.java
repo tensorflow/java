@@ -16,12 +16,9 @@ limitations under the License.
 */
 package org.tensorflow.tools;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ShapeTest {
 
@@ -40,12 +37,18 @@ public class ShapeTest {
     } catch (IndexOutOfBoundsException e) {
       // as expected
     }
+    assertEquals(5, shape.size(-1));
+    assertEquals(4, shape.size(-2));
+    assertEquals(5, shape.size(-3));
     try {
-      shape.size(-1);
+      shape.size(-4);
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected
     }
+    assertFalse(shape.isUnknown());
+    assertFalse(shape.hasUnknownDimension());
+    assertFalse(shape.isScalar());
   }
 
   @Test
@@ -71,6 +74,12 @@ public class ShapeTest {
     Shape unknown2 = Shape.of(-1, 4, 5);
     assertNotEquals(unknown1, unknown2);
     assertNotEquals(unknown1, shape1);
+    assertEquals(unknown1, unknown1);
+
+    Shape sizeUnknown1 = Shape.unknown();
+    Shape sizeUnknown2 = Shape.unknown();
+    assertNotEquals(sizeUnknown1, sizeUnknown2);
+    assertEquals(sizeUnknown1, sizeUnknown1);
   }
 
   @Test
@@ -94,5 +103,36 @@ public class ShapeTest {
 
     Shape three = Shape.of(2, 4, 6);
     assertEquals(three.prepend(5), Shape.of(5, 2, 4, 6));
+
+    assertEquals(Shape.of(5, 2, 4, 6), two.append(three));
+    assertEquals(Shape.of(2, 4, 6, 5), two.prepend(three));
+    assertEquals(Shape.of(1, 2, 3, 4), Shape.of(1, 2).append(Shape.of(3, 4)));
+    assertEquals(Shape.of(1, 2, 3, 4), Shape.of(1, 2, 3).append(4));
+    assertEquals(Shape.of(1, 2, 3, 4), Shape.of(1, 2, 3, 4).append(Shape.scalar()));
+    assertEquals(Shape.of(3, 4, 1, 2), Shape.of(1, 2).prepend(Shape.of(3, 4)));
+    assertEquals(Shape.of(4, 6), three.takeLast(2));
+    assertEquals(Shape.scalar(), three.takeLast(0));
+    assertEquals(Shape.of(2, 4), three.take(2));
+    assertEquals(Shape.scalar(), three.take(0));
+
+    try {
+      Shape.unknown().append(Shape.of(1, 2));
+      fail();
+    } catch (NullPointerException e) {
+      // as expected
+    }
+
+    try {
+      Shape.unknown().prepend(Shape.of(1, 2));
+      fail();
+    } catch (NullPointerException e) {
+      // as expected
+    }
+
+    // changing the values of the array returned by asArray should not mutate the shape
+    long[] internalShape = one.asArray();
+    assertNotNull(internalShape);
+    internalShape[0] = 42L;
+    assertEquals(2L, one.size(0));
   }
 }
