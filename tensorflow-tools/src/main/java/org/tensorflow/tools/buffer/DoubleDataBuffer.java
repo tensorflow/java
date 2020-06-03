@@ -160,6 +160,6 @@ public interface DoubleDataBuffer extends DataBuffer<Double> {
 
   @Override
   default DataBufferWindow<DoubleDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

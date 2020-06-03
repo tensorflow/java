@@ -272,11 +272,11 @@ public interface DataBuffer<T> {
    * <p>The returned object is stateful and is not thread-safe.
    *
    * @param size size of the window
-   * @return a new window that starts at the index 0 of this buffer,
-   *         or null if this type of buffer does not support buffer windows
+   * @return a new window that starts at the index 0 of this buffer
+   * @throws UnsupportedOperationException if this type of buffer does not support buffer windows
    */
   default DataBufferWindow<? extends DataBuffer<T>> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**

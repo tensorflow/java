@@ -160,6 +160,6 @@ public interface IntDataBuffer extends DataBuffer<Integer> {
 
   @Override
   default DataBufferWindow<IntDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@
  */
 
 package org.tensorflow.tools.ndarray.impl.sequence;
-
-import java.util.NoSuchElementException;
-
-import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
 final class CoordinatesIncrementor {
 

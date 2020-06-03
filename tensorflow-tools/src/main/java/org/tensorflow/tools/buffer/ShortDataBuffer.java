@@ -160,6 +160,6 @@ public interface ShortDataBuffer extends DataBuffer<Short> {
 
   @Override
   default DataBufferWindow<ShortDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

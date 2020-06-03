@@ -160,6 +160,6 @@ public interface BooleanDataBuffer extends DataBuffer<Boolean> {
 
   @Override
   default DataBufferWindow<BooleanDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

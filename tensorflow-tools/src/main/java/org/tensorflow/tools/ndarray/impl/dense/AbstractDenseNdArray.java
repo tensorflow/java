@@ -41,12 +41,14 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
       return new SingleElementSequence<>(this);
     }
     DimensionalSpace elemDims = dimensions().from(dimensionIdx + 1);
-    DataBufferWindow<? extends DataBuffer<T>> elemWindow = buffer().window(elemDims.physicalSize());
-    if (elemWindow != null) {
+    try {
+      DataBufferWindow<? extends DataBuffer<T>> elemWindow = buffer().window(elemDims.physicalSize());
       U element = instantiate(elemWindow.buffer(), elemDims);
       return new FastElementSequence(this, dimensionIdx, element, elemWindow);
+    } catch (UnsupportedOperationException e) {
+      // If buffer windows are not supported, fallback to slicing (and slower) sequence
+      return new SlicingElementSequence<>(this, dimensionIdx, elemDims);
     }
-    return new SlicingElementSequence<>(this, dimensionIdx, elemDims);
   }
 
   @Override
