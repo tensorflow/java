@@ -230,8 +230,10 @@ public abstract class DataBufferTestBase<T> {
   @Test
   public void bufferWindow() {
     DataBuffer<T> buffer = allocate(20);
-    DataBufferWindow<? extends DataBuffer<T>> bufferWindow = buffer.window(4);
-    if (bufferWindow == null) {
+    DataBufferWindow<? extends DataBuffer<T>> bufferWindow;
+    try {
+      bufferWindow = buffer.window(4);
+    } catch (UnsupportedOperationException e) {
       return;  // skip test if this buffer does not support windows
     }
     assertEquals(0, bufferWindow.offset());

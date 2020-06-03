@@ -227,6 +227,6 @@ public interface ByteDataBuffer extends DataBuffer<Byte> {
 
   @Override
   default DataBufferWindow<ByteDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

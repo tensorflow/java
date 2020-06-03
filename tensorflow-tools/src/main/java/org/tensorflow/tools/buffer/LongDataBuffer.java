@@ -160,6 +160,6 @@ public interface LongDataBuffer extends DataBuffer<Long> {
 
   @Override
   default DataBufferWindow<LongDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

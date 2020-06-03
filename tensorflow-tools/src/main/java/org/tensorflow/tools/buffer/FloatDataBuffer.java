@@ -160,6 +160,6 @@ public interface FloatDataBuffer extends DataBuffer<Float> {
 
   @Override
   default DataBufferWindow<FloatDataBuffer> window(long size) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }
