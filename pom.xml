@@ -29,7 +29,7 @@
   </scm>
 
   <modules>
-    <module>tensorflow-tools</module>
+    <module>ndarray</module>
     <module>tensorflow-core</module>
     <module>tensorflow-framework</module>
   </modules>

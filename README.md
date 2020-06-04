@@ -32,8 +32,9 @@ The following describes the layout of the repository and its different artifacts
   * High-level APIs built on top of the core libraries to simplify neural network training and inference 
     using TensorFlow.
   
-* `tensorflow-tools`
-  * Utility libraries that do not depend on the TensorFlow runtime but are useful for machine learning purposes.
+* `ndarray`
+  * Generic utility library for n-dimensional data I/O operations. It is used by TensorFlow without depending
+    on it, making its usage eligible to any type of projects, using TensorFlow or not.
   
 ## Building Sources
 

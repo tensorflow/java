@@ -1,18 +1,18 @@
-# TensorFlow Tools
+# TensorFlow NdArray
 
 ## Introduction
 
-TensorFlow Tools is a utility library used by TensorFlow to accomplish tasks that are not easily 
+TensorFlow NdArray is a utility library used by TensorFlow to accomplish tasks that are not easily
 achievable using a standard JDK. As opposed to other artifacts in this repository, this library does 
 not depend on TensorFlow runtime itself and can be imported by any other projects running on a JVM 
 that wants to make use of those tools. For example, an instance of `NdArray`  could easily be passed 
 from one library to another for sharing data.
 
-To import TensorFlow Tools in your project, simply add the following dependency:
+To import TensorFlow NdArray in your project, simply add the following dependency:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-tools</artifactId>
+  <artifactId>ndarray</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -91,7 +91,7 @@ assertEquals(3, slice.getInt(1, 0));  // (1, 1, 0) in the original matrix
 
 ## Integration with TensorFlow
 
-TensorFlow tools are independent of the TensorFlow runtime library, making it a good choice for 
+TensorFlow NdArray library is independent of the TensorFlow runtime library, making it a good choice for
 manipulating multi-dimensional data structures from anywhere. As an example, here
 is how it is actually done by the [TensorFlow Core API](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api):
 

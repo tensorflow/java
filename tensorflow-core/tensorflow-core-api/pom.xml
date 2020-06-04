@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-tools</artifactId>
+      <artifactId>ndarray</artifactId>
       <version>${project.version}</version>
     </dependency>
       <dependency>
