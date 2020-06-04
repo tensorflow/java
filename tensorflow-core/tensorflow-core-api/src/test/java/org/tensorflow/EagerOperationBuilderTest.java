@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 

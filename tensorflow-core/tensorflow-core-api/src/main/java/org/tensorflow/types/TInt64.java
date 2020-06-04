@@ -23,12 +23,12 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.ndarray.LongNdArray;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.ndarray.StdArrays;
-import org.tensorflow.tools.ndarray.impl.dense.LongDenseNdArray;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.LongNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
 /**

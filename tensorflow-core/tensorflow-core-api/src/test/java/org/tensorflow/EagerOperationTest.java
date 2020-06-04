@@ -21,10 +21,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFFailedPreconditionException;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
-import org.tensorflow.exceptions.TFOutOfRangeException;
-import org.tensorflow.exceptions.TFUnauthenticatedException;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 

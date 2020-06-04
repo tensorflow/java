@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.family.TType;
 
 /** Represents a type of elements in a {@link Tensor} */

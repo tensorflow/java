@@ -18,7 +18,7 @@ package org.tensorflow.framework.data.impl;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 

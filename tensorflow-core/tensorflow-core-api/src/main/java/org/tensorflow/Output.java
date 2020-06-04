@@ -17,7 +17,7 @@ package org.tensorflow;
 
 import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.family.TType;
 
 /**

@@ -28,9 +28,9 @@ import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.ndarray.NdArrays;
-import org.tensorflow.tools.ndarray.StdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.Session}. */

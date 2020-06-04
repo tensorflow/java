@@ -30,7 +30,7 @@ import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.

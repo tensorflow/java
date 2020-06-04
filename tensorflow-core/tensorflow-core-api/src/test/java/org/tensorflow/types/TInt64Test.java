@@ -18,7 +18,7 @@
 package org.tensorflow.types;
 
 import org.tensorflow.Tensor;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 public class TInt64Test extends NumericTypesTestBase<TInt64, Long> {
 

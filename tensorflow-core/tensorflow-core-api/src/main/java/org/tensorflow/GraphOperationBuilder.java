@@ -51,7 +51,7 @@ import org.tensorflow.internal.c_api.TF_OperationDescription;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {

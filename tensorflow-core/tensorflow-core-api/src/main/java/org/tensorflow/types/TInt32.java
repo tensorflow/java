@@ -22,12 +22,12 @@ import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.buffer.IntDataBuffer;
-import org.tensorflow.tools.ndarray.IntNdArray;
-import org.tensorflow.tools.ndarray.NdArray;
-import org.tensorflow.tools.ndarray.StdArrays;
-import org.tensorflow.tools.ndarray.impl.dense.IntDenseNdArray;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.IntNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
 /**

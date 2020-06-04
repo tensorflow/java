@@ -28,7 +28,7 @@ import org.tensorflow.internal.c_api.TFE_Op;
 import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.

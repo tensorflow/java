@@ -26,7 +26,7 @@ import org.tensorflow.framework.data.impl.TensorSliceDataset;
 import org.tensorflow.framework.data.impl.TextLineDataset;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 import java.util.ArrayList;
 import java.util.Arrays;
