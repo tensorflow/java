@@ -246,13 +246,13 @@ public abstract class DataBufferTestBase<T> {
     assertEquals(valueOf(2L), bufferWindow.buffer().getObject(2));
     DataBuffer<T> windowBuffer = bufferWindow.buffer();
 
-    bufferWindow.slideOf(10);
+    bufferWindow.slide(10);
     assertEquals(10, bufferWindow.offset());
     assertEquals(4, bufferWindow.size());
     assertEquals(valueOf(12L), bufferWindow.buffer().getObject(2));
     assertSame(windowBuffer, bufferWindow.buffer());
 
-    bufferWindow.slideOf(-2);
+    bufferWindow.slide(-2);
     assertEquals(8, bufferWindow.offset());
     assertEquals(4, bufferWindow.size());
     assertEquals(valueOf(10L), bufferWindow.buffer().getObject(2));
@@ -263,13 +263,13 @@ public abstract class DataBufferTestBase<T> {
     assertEquals(valueOf(18L), bufferWindow.buffer().getObject(2));
 
     try {
-      bufferWindow.slideOf(1);
+      bufferWindow.slide(1);
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected
     }
     try {
-      bufferWindow.slideOf(-17);
+      bufferWindow.slide(-17);
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected

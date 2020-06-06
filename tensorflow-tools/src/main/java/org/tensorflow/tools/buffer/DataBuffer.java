@@ -250,10 +250,10 @@ public interface DataBuffer<T> {
   /**
    * Creates a {@link DataBufferWindow} that provides a partial view of this buffer.
    *
-   * <p>The created window has a fixed size and can be {@link DataBufferWindow#slideTo(long) "slide"}
-   * across this buffer at different offsets to provide different views of the data without allocating
-   * a new buffer instance, like {@link #offset(long)} does. This improves overall performances when
-   * this operation is repeated frequently. For example:
+   * <p>The created window has a fixed size and can {@link DataBufferWindow#slide(long) "slide"}
+   * along this buffer to provide different views of the data without allocating a new buffer
+   * instance, like {@link #offset(long)} does. This improves overall performance when this
+   * operation is repeated frequently. For example:
    *
    * <pre>{@code
    * IntDataBuffer bufferA = DataBuffers.ofInts(1024);

@@ -26,7 +26,7 @@ public abstract class AbstractDataBufferWindow<B extends DataBuffer<?>> implemen
   }
 
   @Override
-  public final DataBufferWindow<B> slideOf(long step) {
+  public final DataBufferWindow<B> slide(long step) {
     return slideTo(offset + step);
   }
 

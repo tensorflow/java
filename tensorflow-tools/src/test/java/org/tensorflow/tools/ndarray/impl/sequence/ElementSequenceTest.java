@@ -40,8 +40,8 @@ public class ElementSequenceTest {
   public void iterateVectorsWithIndex() {
     IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
 
-    @SuppressWarnings("unchecked")
-    NdArraySequence<IntNdArray> sequence = new SlicingElementSequence((AbstractNdArray<Integer, IntNdArray>)array, 1);
+    NdArraySequence<IntNdArray> sequence = new SlicingElementSequence(
+        (AbstractNdArray<Integer, IntNdArray>)array, 1);
     List<long[]> coords = new ArrayList<>((int)array.shape().size());
     sequence.forEachIndexed((c, e) -> coords.add(Arrays.copyOf(c, c.length)));
 
@@ -58,8 +58,8 @@ public class ElementSequenceTest {
   public void iterateScalarsWithIndex() {
     IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
 
-    @SuppressWarnings("unchecked")
-    NdArraySequence<IntNdArray> cursor = new SlicingElementSequence((AbstractNdArray<Integer, IntNdArray>)array, 2);
+    NdArraySequence<IntNdArray> cursor = new SlicingElementSequence(
+        (AbstractNdArray<Integer, IntNdArray>)array, 2);
     List<long[]> coords = new ArrayList<>((int)array.shape().size());
     cursor.forEachIndexed((c, e) -> coords.add(Arrays.copyOf(c, c.length)));
 
@@ -81,7 +81,6 @@ public class ElementSequenceTest {
   @Test
   public void slicingElementSequenceReturnsUniqueInstances() {
     IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
-    @SuppressWarnings("unchecked")
     NdArraySequence<IntNdArray> sequence = new SlicingElementSequence(
         (AbstractNdArray<Integer, IntNdArray>) array, 1);
     List<IntNdArray> elements = new ArrayList<>();
@@ -99,7 +98,6 @@ public class ElementSequenceTest {
   public void fastElementSequenceReturnsSameInstance() {
     IntNdArray array = NdArrays.ofInts(Shape.of(2, 3, 2));
     IntNdArray element = array.get(0);
-    @SuppressWarnings("unchecked")
     NdArraySequence<IntNdArray> sequence = new FastElementSequence(
         (AbstractNdArray<Integer, IntNdArray>) array, 1, element, mockDataBufferWindow(2));
     sequence.forEach(e -> {
@@ -129,7 +127,7 @@ public class ElementSequenceTest {
       }
 
       @Override
-      public DataBufferWindow<IntDataBuffer> slideOf(long step) {
+      public DataBufferWindow<IntDataBuffer> slide(long step) {
         offset += step;
         return this;
       }

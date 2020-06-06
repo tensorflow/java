@@ -24,6 +24,12 @@ import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
 
+/**
+ * A sequence of one single element
+ *
+ * @param <T> Type of the element
+ * @param <U> Type of the {@code NdArray} with this sequence
+ */
 public final class SingleElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
   public SingleElementSequence(AbstractNdArray<T, U> ndArray) {

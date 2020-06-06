@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,12 @@ import org.tensorflow.tools.ndarray.NdArray;
 import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
 
+/**
+ * A sequence recycling the same {@code NdArray} instance when iterating its elements
+ *
+ * @param <T> Type of the elements
+ * @param <U> Type of the {@code NdArray} with this sequence
+ */
 public final class FastElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
   public FastElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx, U element, DataBufferWindow<?> elementWindow) {
