@@ -13,7 +13,7 @@ To import TensorFlow NdArray in your project, simply add the following dependenc
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>ndarray</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
 </dependency>
 ```
 
