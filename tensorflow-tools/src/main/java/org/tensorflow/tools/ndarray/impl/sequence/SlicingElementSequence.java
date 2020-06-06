@@ -24,6 +24,12 @@ import org.tensorflow.tools.ndarray.NdArraySequence;
 import org.tensorflow.tools.ndarray.impl.AbstractNdArray;
 import org.tensorflow.tools.ndarray.impl.dimension.DimensionalSpace;
 
+/**
+ * A sequence creating a new {@code NdArray} instance (slice) for each element of an iteration
+ *
+ * @param <T> Type of the element
+ * @param <U> Type of the {@code NdArray} with this sequence
+ */
 public final class SlicingElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
   public SlicingElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx) {

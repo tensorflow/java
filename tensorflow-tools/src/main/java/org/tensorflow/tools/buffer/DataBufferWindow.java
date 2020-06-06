@@ -1,12 +1,12 @@
 package org.tensorflow.tools.buffer;
 
 /**
- * A mutable container for viewing partially a {@link DataBuffer}.
+ * A mutable container for view part of a {@link DataBuffer}.
  *
- * <p>Data buffer windows have a fixed size and can be {@link DataBufferWindow#slideTo(long) "slide"}
- * across a buffer at different offsets to provide different views of the data without allocating
- * a new buffer instance, like {@link #offset(long)} does. This improves overall performances when
- * this operation is repeated frequently. For example:
+ * <p>Data buffer windows have a fixed size and can {@link DataBufferWindow#slide(long) "slide"}
+ * along a buffer to provide different views of the data without allocating a new buffer instance,
+ * like {@link #offset(long)} does. This improves overall performance when this operation is
+ * repeated frequently. For example:
  *
  * <pre>{@code
  * IntDataBuffer bufferA = DataBuffers.ofInts(1024);
@@ -41,28 +41,28 @@ public interface DataBufferWindow<B extends DataBuffer<?>> {
   /**
    * Moves the window at the given position in the underlying buffer.
    *
-   * <p>The size of the window remains the same and its offset is reset to {@code index}, so that
+   * <p>The size of the window remains the same and its offset is set to {@code index}, so that
    * accessing the value of {@link #buffer()} at index {@code x} will return the value at
    * {@code index + x} in the underlying buffer.
    *
    * @param index new offset for this window
    * @return this instance
-   * @throws IndexOutOfBoundsException if index is beyond the underlying buffer limits
+   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond buffer limits
    */
   DataBufferWindow<B> slideTo(long index);
 
   /**
    * Moves the window of {@code step} elements in the underlying buffer.
    *
-   * <p>The size of the window remains the same and its offset is reset to {@code offset() + step}.
+   * <p>The size of the window remains the same and its offset is set to {@code offset() + step}.
    * If {@code step} is positive, then the window will slide forward. If it is negative, it will
    * slide backward.
    *
    * @param step value to add to the current offset of this window
    * @return this instance
-   * @throws IndexOutOfBoundsException if the resulting offset goes beyond the underlying buffer limits
+   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond buffer limits
    */
-  DataBufferWindow<B> slideOf(long step);
+  DataBufferWindow<B> slide(long step);
 
   /**
    * Returns a buffer presenting the data currently viewed by this window.

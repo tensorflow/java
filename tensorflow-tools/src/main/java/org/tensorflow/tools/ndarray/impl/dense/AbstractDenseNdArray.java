@@ -136,7 +136,7 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
     super(dimensions);
   }
 
-  abstract protected <P> DataBuffer<T> buffer();
+  abstract protected DataBuffer<T> buffer();
 
   abstract U instantiate(DataBuffer<T> buffer, DimensionalSpace dimensions);
 
