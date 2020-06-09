@@ -49,7 +49,7 @@ public interface NdArraySequence<T extends NdArray<?>> extends Iterable<T> {
    *
    * <p>Unlike conventional Java collections, elements of a {@code NdArraySequence} are transient, i.e. new {@code NdArray}
    * instances are allocated for each iteration. To improve performance, the same instance can be recycled to view
-   * all elements of this sequence, using a {@link org.tensorflow.tools.buffer.DataBufferWindow}.
+   * all elements of this sequence, using a {@link DataBufferWindow}.
    *
    * <p>In some cases though, it might be preferable to disable such optimizations to ensure that each element returned is a
    * new slice of the original array. For example, if one or more elements visited must live beyond the scope of the sequence

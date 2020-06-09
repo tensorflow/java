@@ -20,7 +20,7 @@ package org.tensorflow.ndarray;
 import java.util.Arrays;
 
 /**
- * The shape of a Tensor or {@link org.tensorflow.tools.ndarray.NdArray}.
+ * The shape of a Tensor or {@link NdArray}.
  *
  * <p>A {@code Shape} defines sizes along its axes. It may contain an unknown size for one of the
  * axes or may be totally unknown, in which case not even the number of axes is known. If the size
