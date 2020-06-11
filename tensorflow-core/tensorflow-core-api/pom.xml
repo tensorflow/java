@@ -19,6 +19,30 @@
     <protobuf.version>3.8.0</protobuf.version>
   </properties>
 
+  <profiles>
+    <!-- Profile suitable for developers who are not altering the TensorFlow runtime library build nor the Java C API bindings.
+         Among other things, it is optimized to build faster by fetching the pre-built native artifact matching the current version 
+         and platform instead of building it locally. This profile is NOT suitable for production purposes. -->
+    <profile>
+      <id>dev</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>${native.classifier}</classifier>
+        </dependency>
+      </dependencies>
+      <properties>
+        <javacpp.build.skip>true</javacpp.build.skip>
+        <javacpp.parser.skip>true</javacpp.parser.skip>
+        <javacpp.compiler.skip>true</javacpp.compiler.skip>
+        <!-- Javadoc generation is a bit slow and CPU-consuming while not being very useful in development mode, so skip it -->
+        <maven.javadoc.skip>true</maven.javadoc.skip> 
+      </properties>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>org.bytedeco</groupId>
@@ -318,9 +342,6 @@
             -Djava.library.path=${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}
           </argLine>
           <additionalClasspathElements>${project.build.directory}/native/</additionalClasspathElements>
-          <systemPropertyVariables>
-            <NATIVE_PLATFORM>${javacpp.platform}</NATIVE_PLATFORM>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
