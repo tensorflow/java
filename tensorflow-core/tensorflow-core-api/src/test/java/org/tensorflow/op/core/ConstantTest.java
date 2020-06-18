@@ -15,9 +15,9 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -27,9 +27,7 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
@@ -54,7 +52,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
-@RunWith(JUnit4.class)
 public class ConstantTest {
   private static final float EPSILON = 1e-7f;
 

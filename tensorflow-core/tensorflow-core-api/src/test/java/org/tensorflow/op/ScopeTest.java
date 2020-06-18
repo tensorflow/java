@@ -15,13 +15,11 @@ limitations under the License.
 
 package org.tensorflow.op;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
@@ -30,7 +28,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
-@RunWith(JUnit4.class)
 public class ScopeTest {
 
   @Test

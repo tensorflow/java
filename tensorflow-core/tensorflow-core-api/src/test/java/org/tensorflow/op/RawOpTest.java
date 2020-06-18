@@ -15,22 +15,19 @@ limitations under the License.
 
 package org.tensorflow.op;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link RawOp} */
-@RunWith(JUnit4.class)
 public class RawOpTest {
 
   @Test

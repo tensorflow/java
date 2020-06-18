@@ -15,14 +15,11 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
-@RunWith(JUnit4.class)
 public class HelloWorldTest {
 
     @Test
