@@ -16,10 +16,12 @@ package org.tensorflow.op.core;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+
 
 import org.tensorflow.Graph;
 import org.tensorflow.EagerSession;
@@ -33,6 +35,7 @@ import org.tensorflow.op.core.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+
 
 public class ShapeOpsTest {
 
