@@ -16,15 +16,15 @@
  */
 package org.tensorflow.tools.buffer;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.BitSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.tools.buffer.impl.misc.MiscDataBufferFactory;
 
 public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boolean> {

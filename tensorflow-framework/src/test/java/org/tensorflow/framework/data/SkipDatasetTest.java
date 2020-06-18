@@ -15,7 +15,7 @@
  */
 package org.tensorflow.framework.data;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
@@ -24,7 +24,7 @@ import org.tensorflow.types.TInt32;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SkipDatasetTest extends DatasetTestBase {
   @Test

@@ -15,7 +15,7 @@
  */
 package org.tensorflow.framework.data;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
@@ -28,7 +28,7 @@ import org.tensorflow.types.TInt32;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DatasetIteratorTest extends DatasetTestBase {
 

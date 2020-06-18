@@ -15,7 +15,9 @@
  */
 package org.tensorflow.framework.data;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.StdArrays;
 
@@ -24,7 +26,7 @@ public class DatasetTestBase {
   IntNdArray testMatrix1;
   IntNdArray testMatrix2;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     testMatrix1 =
         StdArrays.ndCopyOf(

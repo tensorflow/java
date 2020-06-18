@@ -16,9 +16,9 @@
  */
 package org.tensorflow.tools.ndarray;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.tensorflow.tools.ndarray.NdArrays.vectorOfObjects;
 import static org.tensorflow.tools.ndarray.index.Indices.all;
 import static org.tensorflow.tools.ndarray.index.Indices.at;
@@ -32,7 +32,7 @@ import static org.tensorflow.tools.ndarray.index.Indices.to;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffer;
 
