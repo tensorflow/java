@@ -1,8 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
 package org.tensorflow.op.core;
 
 import java.util.Arrays;
@@ -38,7 +47,7 @@ import org.tensorflow.types.family.TType;
 public abstract class ShapeOps {
 
     /**
-     * flatten the shape to 1 dimension
+     * Flatten the operand to 1 dimension
      *
      * @param <T> the type of operand
      * @param scope current scope
@@ -51,7 +60,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * flatten the shape to 1 dimension
+     * Flatten the operand to 1 dimension
      *
      * @param <T> the type of operand
      * @param <U> the shape datatype.
@@ -67,12 +76,11 @@ public abstract class ShapeOps {
     }
 
     /**
-     * flatten the shape to 1 dimension
+     * Flatten the shape to 1 dimension
      *
      * @param scope current scope
      * @param shape the TensorFlow shape
      * @return the flattened shape
-     * @see reduceDims
      */
     @Endpoint(name = "flatten")
     public static Operand<TInt32> flatten(Scope scope, Shape<TInt32> shape) {
@@ -80,14 +88,13 @@ public abstract class ShapeOps {
     }
 
     /**
-     * flatten the shape to 1 dimension
+     * Flatten the shape to 1 dimension
      *
      * @param <U> the shape datatype.
      * @param scope current scope
      * @param shape the TensorFlow shape
      * @param dType the shape datatype.
      * @return the flattened shape
-     * @see reduceDims
      */
     @Endpoint(name = "flatten")
     public static <U extends TNumber> Operand<U> flatten(Scope scope, Shape<U> shape, DataType<U> dType) {
@@ -97,7 +104,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the size represented by the TensorFlow shape
+     * Get the size represented by the TensorFlow shape
      *
      * @param scope current scope
      * @param shape the TensorFlow shape
@@ -109,7 +116,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the size represented by the TensorFlow shape
+     * Get the size represented by the TensorFlow shape
      *
      * @param <U> the shape datatype. the type of the shape
      * @param scope current scope
@@ -120,12 +127,20 @@ public abstract class ShapeOps {
     @Endpoint(name = "size")
     public static <U extends TNumber> Operand<U> size(Scope scope, Shape<U> shape, DataType<U> dType) {
         Slice<U> dims = Slice.create(scope, shape,
-                Cast.create(scope, Constant.arrayOf(scope, (new int[]{0})), dType),
+                Cast.create(scope, Constant.arrayOf(scope, new int[]{0}), dType),
                 ExpandDims.create(scope, Cast.create(scope, Constant.scalarOf(scope, -1), dType), Constant.scalarOf(scope, -1)));
         ReduceProd<U> total = ReduceProd.create(scope, dims, Constant.scalarOf(scope, 0));
         return total;
     }
 
+    /**
+     * Get the size of the specified dimension in the shape
+     *
+     * @param scope current scope
+     * @param shape the TensorFlow shape
+     * @param dim the dimension
+     * @return the size of the specified dimension
+     */
     @Endpoint(name = "size")
     public static Operand<TInt32> size(Scope scope, Shape<TInt32> shape, Operand<TInt32> dim) {
         return size(scope, shape, dim, TInt32.DTYPE);
@@ -133,7 +148,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the size of the specified dimension in the shape
+     * Get the size of the specified dimension in the shape
      *
      * @param <U> the shape datatype.
      * @param scope current scope
@@ -153,7 +168,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the size of the specified dimension for the shape of the tensor
+     * Get the size of the specified dimension for the shape of the tensor
      *
      * @param scope current scope
      * @param input the operand
@@ -166,7 +181,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the size of the specified dimension for the shape of the tensor
+     * Get the size of the specified dimension for the shape of the tensor
      *
      * @param <U> the shape datatype.
      * @param scope current scope
@@ -182,12 +197,11 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the number of dimensions of the shape object
+     * Get the number of dimensions of the shape object
      *
      * @param scope current scope
      * @param shape the shape
      * @return the number of dimensions
-     * @see tf.rank
      */
     @Endpoint(name = "numDimensions")
     public static Operand<TInt32> numDimensions(Scope scope, Shape<TInt32> shape) {
@@ -195,14 +209,13 @@ public abstract class ShapeOps {
     }
 
     /**
-     * get the number of dimensions of the shape object
+     * Get the number of dimensions of the shape object
      *
      * @param <U> the shape datatype.
      * @param scope the curren scope
      * @param shape the shape
      * @param dType the shape datatype.
      * @return the number of dimensions
-     * @see tf.rank
      */
     @Endpoint(name = "numDimensions")
     public static <U extends TNumber> Operand<U> numDimensions(Scope scope,
@@ -211,7 +224,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * reshapes the operand to the specified axis,
+     * Reshapes the operand to the specified axis,
      *
      * @param <T> the type of Operand
      * @param scope current scope
@@ -226,7 +239,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * reshapes the operand to the specified axis,
+     * Reshapes the operand to the specified axis,
      *
      * @param <T> the type of Operand
      * @param <U> the shape datatype.
@@ -244,7 +257,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * reduces the shape to the specified axis,
+     * Reduces the shape to the specified axis,
      *
      * @param scope current scope
      * @param shape the TensorFlow shape
@@ -258,7 +271,7 @@ public abstract class ShapeOps {
     }
 
     /**
-     * reduces the shape to the specified axis,
+     * Reduces the shape to the specified axis,
      *
      * @param <U> the shape datatype.
      * @param scope current scope
@@ -275,7 +288,7 @@ public abstract class ShapeOps {
         Sub<U> remainder = Sub.create(scope, rank, axis);
 
         Operand<U> dims1 = Slice.create(scope, shape,
-                Cast.create(scope, Constant.arrayOf(scope, (new int[]{0})), dType),
+                Cast.create(scope, Constant.arrayOf(scope, new int[]{0}), dType),
                 ExpandDims.create(scope, axis, Constant.scalarOf(scope, -1)));
 
         Operand<U> dims2 = Slice.create(scope, shape,
@@ -296,7 +309,6 @@ public abstract class ShapeOps {
      * @param scope current scope
      * @param shape the TensorFlow shape
      * @return the squeezed shape
-     * @see tf.squeeze
      */
     @Endpoint(name = "squeeze")
     public static Operand<TInt32> squeeze(Scope scope, Shape<TInt32> shape) {
@@ -312,7 +324,6 @@ public abstract class ShapeOps {
      * @param dType the shape datatype.
      * @return the squeezed shape
      *
-     * @see tf.squeeze
      */
     @Endpoint(name = "squeeze")
     public static <U extends TNumber> Operand<U> squeeze(Scope scope,
