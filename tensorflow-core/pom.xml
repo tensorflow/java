@@ -110,6 +110,7 @@
                   <artifactId>tensorflow-core-api</artifactId>
                   <version>${project.version}</version>
                   <packaging>jar</packaging>
+                  <generatePom>false</generatePom>
                 </configuration>
               </execution>
             </executions>
