@@ -50,12 +50,12 @@
       <version>${javacpp.version}</version>
       <classifier>${javacpp.platform.macosx-x86_64}</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>${javacpp.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64}</classifier>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.bytedeco</groupId>-->
+<!--      <artifactId>javacpp</artifactId>-->
+<!--      <version>${javacpp.version}</version>-->
+<!--      <classifier>${javacpp.platform.windows-x86_64}</classifier>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.bytedeco</groupId>
       <artifactId>mkl-dnn</artifactId>
@@ -73,12 +73,12 @@
       <version>${mkl-dnn.version}</version>
       <classifier>${javacpp.platform.macosx-x86_64}</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>mkl-dnn</artifactId>
-      <version>${mkl-dnn.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64}</classifier>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.bytedeco</groupId>-->
+<!--      <artifactId>mkl-dnn</artifactId>-->
+<!--      <version>${mkl-dnn.version}</version>-->
+<!--      <classifier>${javacpp.platform.windows-x86_64}</classifier>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
@@ -96,12 +96,12 @@
       <version>${project.version}</version>
       <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
-      <version>${project.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>${project.groupId}</groupId>-->
+<!--      <artifactId>${javacpp.moduleId}</artifactId>-->
+<!--      <version>${project.version}</version>-->
+<!--      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>-->
+<!--    </dependency>-->
   </dependencies>
 
   <build>
