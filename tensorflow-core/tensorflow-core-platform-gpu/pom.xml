@@ -35,25 +35,37 @@
   <dependencies>
     <dependency>
       <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp-platform</artifactId>
+      <artifactId>javacpp</artifactId>
       <version>${javacpp.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
       <classifier>${javacpp.platform.linux-x86_64}</classifier>
     </dependency>
     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
+      <classifier>${javacpp.platform.windows-x86_64}</classifier>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${javacpp.moduleId}</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${javacpp.moduleId}</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
     </dependency>
   </dependencies>
 
