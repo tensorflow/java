@@ -15,18 +15,15 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperationBuilder} class. */
-@RunWith(JUnit4.class)
 public class EagerOperationBuilderTest {
 
   @Test

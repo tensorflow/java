@@ -15,14 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
@@ -36,7 +34,6 @@ import org.tensorflow.tools.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.Session}. */
-@RunWith(JUnit4.class)
 public class SessionTest {
 
   @Test
@@ -119,7 +116,7 @@ public class SessionTest {
         assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).data().getInt(0, 0));
         // Sanity check on metadata
         assertNotNull(result.metadata);
-        assertTrue(result.metadata.toString(), result.metadata.hasStepStats());
+        assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
         outputs.close();
       }
     }
