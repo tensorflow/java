@@ -15,14 +15,12 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
@@ -31,7 +29,6 @@ import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 
-@RunWith(JUnit4.class)
 public class GradientsTest {
 
   @Test

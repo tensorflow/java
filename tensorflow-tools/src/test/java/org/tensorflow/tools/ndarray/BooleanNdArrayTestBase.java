@@ -16,11 +16,11 @@
  */
 package org.tensorflow.tools.ndarray;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.tools.Shape;
 
 public abstract class BooleanNdArrayTestBase extends NdArrayTestBase<Boolean> {

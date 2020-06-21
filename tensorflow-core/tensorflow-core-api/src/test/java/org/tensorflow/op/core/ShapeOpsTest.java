@@ -15,11 +15,11 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull; import static org.junit.Assert.assertTrue;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
 
 import org.tensorflow.Graph;
 import org.tensorflow.EagerSession;
@@ -27,14 +27,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.core.Constant;
-import org.tensorflow.op.core.Reshape;
-import org.tensorflow.op.core.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
-@RunWith(JUnit4.class)
+
 public class ShapeOpsTest {
 
     /**

@@ -17,14 +17,14 @@
 
 package org.tensorflow.tools.ndarray.impl.sequence;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBufferWindow;
 import org.tensorflow.tools.buffer.DataBuffers;

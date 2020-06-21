@@ -15,21 +15,18 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
-@RunWith(JUnit4.class)
 public class SavedModelBundleTest {
 
   private static final String SAVED_MODEL_PATH;

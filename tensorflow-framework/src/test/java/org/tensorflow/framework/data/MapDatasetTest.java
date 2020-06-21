@@ -15,8 +15,8 @@
  */
 package org.tensorflow.framework.data;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
@@ -31,13 +31,13 @@ import org.tensorflow.types.TInt32;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MapDatasetTest extends DatasetTestBase {
   IntNdArray mapped1;
   IntNdArray mapped2;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     super.setUp();
     mapped1 =

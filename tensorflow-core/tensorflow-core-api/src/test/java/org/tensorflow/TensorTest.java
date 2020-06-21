@@ -16,10 +16,10 @@ limitations under the License.
 package org.tensorflow;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.Buffer;
 import java.nio.BufferUnderflowException;
@@ -29,9 +29,7 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.tools.Shape;
 import org.tensorflow.tools.buffer.DataBuffers;
@@ -52,7 +50,6 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 
 /** Unit tests for {@link org.tensorflow.Tensor}. */
-@RunWith(JUnit4.class)
 public class TensorTest {
   private static final double EPSILON = 1e-7;
   private static final float EPSILON_F = 1e-7f;

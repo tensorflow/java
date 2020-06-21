@@ -18,7 +18,7 @@ package org.tensorflow.tools.benchmark;
 
 import static org.tensorflow.tools.ndarray.index.Indices.all;
 import static org.tensorflow.tools.ndarray.index.Indices.at;
-import static org.tensorflow.tools.ndarray.index.Indices.odd;
+
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
