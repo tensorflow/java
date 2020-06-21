@@ -16,7 +16,6 @@
 package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;

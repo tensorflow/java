@@ -16,10 +16,9 @@
 package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.tensorflow.tools.ndarray.IntNdArray;
 import org.tensorflow.tools.ndarray.StdArrays;
+
 
 public class DatasetTestBase {
 
