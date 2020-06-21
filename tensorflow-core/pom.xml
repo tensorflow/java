@@ -71,6 +71,18 @@
       <dependencies>
         <dependency>
           <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
           <artifactId>tensorflow-core-platform</artifactId>
           <version>${project.version}</version>
         </dependency>
