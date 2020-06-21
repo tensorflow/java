@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 
@@ -29,9 +27,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.core.Constant;
-import org.tensorflow.op.core.Reshape;
-import org.tensorflow.op.core.Shape;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
