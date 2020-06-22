@@ -149,4 +149,5 @@ jobs:
             fi
           done
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          unzip -o tensorflow-core-api-*-SNAPSHOT.jar META-INF/maven/org.tensorflow/tensorflow-core-api/pom.xml
           mvn clean deploy -Possrh -Predeploy -N -B -U -e -Dfiles=$FILES -Dtypes=$TYPES -Dclassifiers=$CLASSIFIERS

@@ -71,6 +71,18 @@
       <dependencies>
         <dependency>
           <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
           <artifactId>tensorflow-core-platform</artifactId>
           <version>${project.version}</version>
         </dependency>
@@ -104,6 +116,7 @@
                 </goals>
                 <configuration>
                   <file>tensorflow-core-api-${project.version}.jar</file>
+                  <pomFile>META-INF/maven/org.tensorflow/tensorflow-core-api/pom.xml</pomFile>
                   <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
                   <url>${project.distributionManagement.snapshotRepository.url}</url>
                   <groupId>org.tensorflow</groupId>
