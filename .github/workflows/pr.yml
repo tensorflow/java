@@ -1,16 +1,18 @@
-name: CI jobs
+name: PR build
 on:
-  push:
+  pull_request:
     branches:
       - master
+    types: [opened, reopened, synchronize, labeled, unlabeled]
 jobs:
   linux-x86_64:
     runs-on: ubuntu-latest
-    container: nvidia/cuda:10.1-cudnn7-devel-centos7
-    strategy:
-      matrix:
-        ext: ["", -mkl, -gpu, -mkl-gpu]
+    env:
+      MVN_PROFILE: ${{  if contains(github.event.labels.*.name, 'Full Build') then '-Pdev' else '' }}
     steps:
+      - name: Validate event
+        if: (github.event.action == 'labeled' || github.event.action == 'unlabeled') && github.event.label.name != 'Full Build'
+        uses: andymckay/cancel-action@0.2
       - name: Install environment
         run: |
           yum -y update
@@ -20,9 +22,13 @@ jobs:
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      - name: Install Bazel
+        if: env.MVN_PROFILE == ''
+        run: |
           echo Downloading Bazel
           curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
+          bazel version
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -31,19 +37,15 @@ jobs:
           git --version
           gcc --version
           mvn -version
-          bazel version
           df -h
           echo "Fixing HOME to /root (was '$HOME')"
           export HOME=/root
           mkdir -p $HOME/.m2
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          mvn clean install $MVN_PROFILE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64
           df -h
   macosx-x86_64:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        ext: ["", -mkl]
+    if: contains(github.event.labels.*.name, 'Full Build')
     steps:
       - name: Install environment
         run: |
@@ -61,15 +63,12 @@ jobs:
           mvn -version
           bazel version
           mkdir -p $HOME/.m2
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           df -h
-          mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          mvn clean install -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64
           df -h
   windows-x86_64:
     runs-on: windows-latest
-#    strategy:
-#      matrix:
-#        ext: ["", -mkl, -gpu, -mkl-gpu]
+    if: contains(github.event.labels.*.name, 'Full Build')
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
@@ -84,13 +83,6 @@ jobs:
           echo Downloading Bazel
           mkdir C:\bazel
           curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
-          echo Installing CUDA
-          curl.exe -L http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_windows.exe -o cuda.exe
-          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.4/cudnn-10.1-windows7-x64-v7.6.4.38.zip -o cudnn.zip
-          cuda.exe -s
-          mkdir cuda
-          unzip.exe cudnn.zip
-          cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.1/"
           echo %JAVA_HOME%
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -98,9 +90,7 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
-          set "CUDA_PATH_V10_1=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
-          set "PATH=C:\bazel;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\libnvvp;%PATH%"
+          set "PATH=C:\bazel;%PATH%"
           echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
           set "TEST_TMPDIR=C:\tmp"
           set "TMPDIR=C:\tmp"
@@ -112,31 +102,9 @@ jobs:
           call mvn -version
           bazel version
           mkdir %USERPROFILE%\.m2
-          echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           df -h
           wmic pagefile list /format:list
-          call mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          call mvn clean install -Possrh -B -U -e -Djavacpp.platform=windows-x86_64
           if ERRORLEVEL 1 exit /b
           df -h
           wmic pagefile list /format:list
-  redeploy:
-    needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Redeploy snapshot artifacts
-        run: |
-          cd tensorflow-core
-          mvn dependency:resolve -Possrh -Predeploy -N -B -U -e
-          cp $HOME/.m2/repository/org/tensorflow/tensorflow-core-api/*-SNAPSHOT/tensorflow-core-api-*-SNAPSHOT*.jar .
-          for f in *.jar; do
-            if [[ $f =~ tensorflow-core-api-.*SNAPSHOT-(.*).jar ]]; then
-              [[ -n $FILES ]] && FILES=$FILES,$f || FILES=$f
-              [[ -n $TYPES ]] && TYPES=$TYPES,jar || TYPES=jar
-              [[ -n $CLASSIFIERS ]] && CLASSIFIERS=$CLASSIFIERS,${BASH_REMATCH[1]} || CLASSIFIERS=${BASH_REMATCH[1]}
-            fi
-          done
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          unzip -o tensorflow-core-api-*-SNAPSHOT.jar META-INF/maven/org.tensorflow/tensorflow-core-api/pom.xml
-          mvn clean deploy -Possrh -Predeploy -N -B -U -e -Dfiles=$FILES -Dtypes=$TYPES -Dclassifiers=$CLASSIFIERS
