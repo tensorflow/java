@@ -6,9 +6,21 @@ on:
   pull_request:
     branches:
       - master
-
+    types: [opened, reopened, synchronize, labeled, unlabeled]
 jobs:
+  quick-build:
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          git --version
+          mvn -version
+          mvn clean install -Pdev -B -U -e
   linux-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: ubuntu-latest
     container: nvidia/cuda:10.1-cudnn7-devel-centos7
     strategy:
@@ -46,6 +58,7 @@ jobs:
           mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   macosx-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: macos-latest
     strategy:
       matrix:
@@ -74,10 +87,11 @@ jobs:
           mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   windows-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: windows-latest
-#    strategy:
-#      matrix:
-#        ext: ["", -mkl, -gpu, -mkl-gpu]
+    #    strategy:
+    #      matrix:
+    #        ext: ["", -mkl, -gpu, -mkl-gpu]
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
