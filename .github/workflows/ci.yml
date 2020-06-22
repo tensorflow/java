@@ -3,12 +3,9 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
-
 jobs:
   linux-x86_64:
+    if: github.event_name == 'push' || github.event.label.name == 'CI Build'
     runs-on: ubuntu-latest
     container: nvidia/cuda:10.1-cudnn7-devel-centos7
     strategy:
@@ -40,12 +37,11 @@ jobs:
           echo "Fixing HOME to /root (was '$HOME')"
           export HOME=/root
           mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   macosx-x86_64:
+    if: github.event_name == 'push' || github.event.label.name == 'CI Build'
     runs-on: macos-latest
     strategy:
       matrix:
@@ -67,13 +63,12 @@ jobs:
           mvn -version
           bazel version
           mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           df -h
-          echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
   windows-x86_64:
+    if: github.event_name == 'push' || github.event.label.name == 'CI Build'
     runs-on: windows-latest
 #    strategy:
 #      matrix:
@@ -120,17 +115,14 @@ jobs:
           call mvn -version
           bazel version
           mkdir %USERPROFILE%\.m2
-          if "${{ github.event_name }}"=="push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           df -h
           wmic pagefile list /format:list
-          echo Executing Maven %MAVEN_PHASE%
-          call mvn clean %MAVEN_PHASE% -Possrh -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
+          call mvn clean deploy -Possrh -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           if ERRORLEVEL 1 exit /b
           df -h
           wmic pagefile list /format:list
   redeploy:
-    if: github.event_name == 'push'
     needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
     runs-on: ubuntu-latest
     steps:

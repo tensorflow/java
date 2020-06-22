@@ -1,0 +1,111 @@
+name: PR build
+on:
+  pull_request:
+    #branches:
+    #  - master
+    #types: [opened, reopened, synchronize, labeled, unlabeled]
+jobs:
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    env:
+      DEV_PROFILE: ${{ contains(github.event.labels.*.name, 'Full Build') }}
+    steps:
+      - name: Validate event
+        if: (github.event.action == 'labeled' || github.event.action == 'unlabeled') && github.event.label.name != 'Full Build'
+        uses: andymckay/cancel-action@0.2
+      - name: Install environment
+        run: |
+          yum -y update
+          yum -y install centos-release-scl-rh epel-release
+          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch python36-devel python36-pip python36-six
+          echo Downloading Maven
+          curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
+          tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
+          ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      - name: Install Bazel
+        if: ! env.DEV_PROFILE
+        run: |
+          echo Downloading Bazel
+          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
+          bash bazel.sh
+          bazel version
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          source scl_source enable devtoolset-7 rh-git218 || true
+          git --version
+          gcc --version
+          mvn -version
+          df -h
+          echo "Fixing HOME to /root (was '$HOME')"
+          export HOME=/root
+          mkdir -p $HOME/.m2
+          [[ "${{ env.DEV_PROFILE }}" ]] && MAVEN_PROFILES=-Possrh,dev || MAVEN_PROFILES=-Possrh
+          mvn clean install $MAVEN_PROFILES -B -U -e -Djavacpp.platform=linux-x86_64
+          df -h
+  macosx-x86_64:
+    runs-on: macos-latest
+    if: contains(github.event.labels.*.name, 'Full Build')
+    steps:
+      - name: Install environment
+        run: |
+          python3 -m pip install six
+          echo Downloading Bazel
+          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
+          bash bazel.sh
+          brew install libomp
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          git --version
+          clang --version
+          mvn -version
+          bazel version
+          mkdir -p $HOME/.m2
+          df -h
+          mvn clean install -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64
+          df -h
+  windows-x86_64:
+    runs-on: windows-latest
+    if: contains(github.event.labels.*.name, 'Full Build')
+    steps:
+      - name: Configure page file
+        uses: al-cheb/configure-pagefile-action@v1.2
+      - name: Install environment
+        shell: cmd
+        run: |
+          python -m pip install six
+          echo Removing some unused stuff to avoid running out of disk space
+          rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
+          echo Removing old versions of MSVC that interfere with Bazel
+          bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
+          echo Downloading Bazel
+          mkdir C:\bazel
+          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          echo %JAVA_HOME%
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          set "PATH=C:\bazel;%PATH%"
+          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
+          set "TEST_TMPDIR=C:\tmp"
+          set "TMPDIR=C:\tmp"
+          set "TEMP=C:\tmp"
+          set "TMP=C:\tmp"
+          mkdir C:\tmp
+          git --version
+          cl
+          call mvn -version
+          bazel version
+          mkdir %USERPROFILE%\.m2
+          df -h
+          wmic pagefile list /format:list
+          call mvn clean install -Possrh -B -U -e -Djavacpp.platform=windows-x86_64
+          if ERRORLEVEL 1 exit /b
+          df -h
+          wmic pagefile list /format:list
