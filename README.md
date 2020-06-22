@@ -42,11 +42,19 @@ the Maven command of your choice). It is also possible to build artifacts with s
 `mvn install -Djavacpp.platform.extension=-mkl` or CUDA with `mvn install -Djavacpp.platform.extension=-gpu`
 or both with `mvn install -Djavacpp.platform.extension=-mkl-gpu`.
 
-Note that in some cases, if a version of the TensorFlow runtime library is not found for your environment,
-this process will fetch TensorFlow sources and trigger a build of all the native code (which can take
-many hours on a standard laptop). In this case, you will also need to have a valid environment for building
-TensorFlow, including the [bazel](https://bazel.build/) build tool and a few python dependencies. Please
-read [TensorFlow documentation](https://www.tensorflow.org/install/source) for more details.
+When building this project for the first time in a given workspace, the script will attempt to download
+the [TensorFlow runtime library sources](https://github.com/tensorflow/tensorflow) and build of all the native code
+for your platform. This requires a valid environment for building TensorFlow, including the [bazel](https://bazel.build/)
+build tool and a few Python dependencies (please read [TensorFlow documentation](https://www.tensorflow.org/install/source)
+for more details).
+
+This step can take multiple hours on a regular laptop. It is possible though to skip completely the native build if you are
+working on a version that already has pre-compiled native artifacts for your platform [available on Sonatype OSS Nexus repository](#Snapshots).
+You just need to activate the `dev` profile in your Maven command to use those artifacts instead of building them from scratch
+(e.g. `mvn install -Pdev`).
+
+Note that modifying any source files under `tensorflow-core` may impact the low-level TensorFlow bindings, in which case a
+complete build could be required to reflect the changes.
 
 ## Using Maven Artifacts
 

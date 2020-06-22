@@ -70,6 +70,33 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <!--
+    Dev Profile
+      This profile skips the native libraries build and other resource-consuming tasks for local
+      development. Note that any changes to the code that may impact low-level bindings with
+      the TensorFlow runtime library will require a complete build, in which case this profile
+      cannot be used.
+    -->
+    <profile>
+      <id>dev</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.tensorflow</groupId>
+          <artifactId>tensorflow-core-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>${native.classifier}</classifier>
+        </dependency>
+      </dependencies>
+      <properties>
+        <javacpp.build.skip>true</javacpp.build.skip>
+        <javacpp.parser.skip>true</javacpp.parser.skip>
+        <javacpp.compiler.skip>true</javacpp.compiler.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+      </properties>
+    </profile>
+  </profiles>
+  
   <build>
     <plugins>
       <plugin>
@@ -323,9 +350,6 @@
             -Djava.library.path=${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}
           </argLine>
           <additionalClasspathElements>${project.build.directory}/native/</additionalClasspathElements>
-          <systemPropertyVariables>
-            <NATIVE_PLATFORM>${javacpp.platform}</NATIVE_PLATFORM>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
