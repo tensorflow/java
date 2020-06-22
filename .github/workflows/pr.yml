@@ -8,7 +8,7 @@ jobs:
   linux-x86_64:
     runs-on: ubuntu-latest
     env:
-      MVN_PROFILE: ${{  if contains(github.event.labels.*.name, 'Full Build') then '-Pdev' else '' }}
+      DEV_PROFILE: ${{ contains(github.event.labels.*.name, 'Full Build') }}
     steps:
       - name: Validate event
         if: (github.event.action == 'labeled' || github.event.action == 'unlabeled') && github.event.label.name != 'Full Build'
@@ -23,7 +23,7 @@ jobs:
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
       - name: Install Bazel
-        if: env.MVN_PROFILE == ''
+        if: ! env.DEV_PROFILE
         run: |
           echo Downloading Bazel
           curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
@@ -41,7 +41,8 @@ jobs:
           echo "Fixing HOME to /root (was '$HOME')"
           export HOME=/root
           mkdir -p $HOME/.m2
-          mvn clean install $MVN_PROFILE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64
+          [[ "${{ env.DEV_PROFILE }}" ]] && MAVEN_PROFILES=-Possrh,dev || MAVEN_PROFILES=-Possrh
+          mvn clean install $MAVEN_PROFILES -B -U -e -Djavacpp.platform=linux-x86_64
           df -h
   macosx-x86_64:
     runs-on: macos-latest
