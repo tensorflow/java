@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 
+import org.junit.jupiter.api.TestTemplate;
 import org.tensorflow.Graph;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Operand;
@@ -259,5 +260,274 @@ public class ShapeOpsTest {
 
         }
     }
+
+    @Test
+    public void testHead() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 1, 2, 1}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> head = ShapeOps.head(scope, tfshape);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {4};
+            try (Tensor<TInt32> result = session.runner().fetch(head.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testTake() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 1, 2, 1}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> take = ShapeOps.take(scope, tfshape,  Constant.scalarOf(scope, 2));
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {4, 1};
+            try (Tensor<TInt32> result = session.runner().fetch(take.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testTail() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 1, 2, 1}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> tail = ShapeOps.tail(scope, tfshape);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {1};
+            try (Tensor<TInt32> result = session.runner().fetch(tail.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testTakeLast() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 1, 2, 1}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> takeLast = ShapeOps.takeLast(scope, tfshape, Constant.scalarOf(scope, 3));
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {1, 2, 1};
+            try (Tensor<TInt32> result = session.runner().fetch(takeLast.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testPrependInt() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 2}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> prepend = ShapeOps.prepend(scope, tfshape,  3);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {3,4,2};
+            try (Tensor<TInt32> result = session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testPrependLong() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 2}));
+            Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+
+            Operand<TInt64> prepend = ShapeOps.prepend(scope, tfshape, 1L);
+            AtomicInteger index = new AtomicInteger();
+            long[] expected = {1,4,2};
+            try (Tensor<TInt64> result = session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getLong());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+
+    @Test
+    public void testPrependShapeTInt32() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand1 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual1 = Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[]{4, 2}));
+            Operand operand2 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual2 = Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[]{2, 4}));
+            Shape<TInt32> tfshape1 = Shape.create(scope, actual1);
+            Shape<TInt32> tfshape2 = Shape.create(scope, actual2);
+
+            Operand<TInt32> prepend = ShapeOps.prepend(scope, tfshape1, tfshape2);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {2, 4, 4, 2};
+            try (Tensor<TInt32> result = session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testPrependShapeTInt64() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand1 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual1 = Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[]{4, 2}));
+            Operand operand2 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual2 = Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[]{2, 4}));
+            Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
+            Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+
+            Operand<TInt64> prepend = ShapeOps.prepend(scope, tfshape1, tfshape2);
+            AtomicInteger index = new AtomicInteger();
+            long[] expected = {2, 4, 4, 2};
+            try (Tensor<TInt64> result = session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getLong());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+
+    @Test
+    public void testAppendLong() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 2}));
+            Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+
+            Operand<TInt64> append = ShapeOps.append(scope, tfshape, 2L);
+            AtomicInteger index = new AtomicInteger();
+            long[] expected = {4L,2L,2L};
+            try (Tensor<TInt64> result = session.runner().fetch(append.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getLong());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+
+    @Test
+    public void testAppendInt() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[]{4, 2}));
+            Shape<TInt32> tfshape = Shape.create(scope, actual);
+
+            Operand<TInt32> append = ShapeOps.append(scope, tfshape, 2);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {4,2,2};
+            try (Tensor<TInt32> result = session.runner().fetch(append.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+
+    @Test
+    public void testAppendShapeTInt32() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand1 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual1 = Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[]{4, 2}));
+            Operand operand2 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual2 = Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[]{2,4}));
+            Shape<TInt32> tfshape1 = Shape.create(scope, actual1);
+            Shape<TInt32> tfshape2 = Shape.create(scope, actual2);
+
+            Operand<TInt32> append = ShapeOps.append(scope, tfshape1, tfshape2);
+            AtomicInteger index = new AtomicInteger();
+            int[] expected = {4,2, 2, 4};
+            try (Tensor<TInt32> result = session.runner().fetch(append.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getInt());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
+    @Test
+    public void testAppendShapeTInt64() {
+        try (Graph g = new Graph();
+             Session session = new Session(g)) {
+            Scope scope = new Scope(g);
+            Operand operand1 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual1 = Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[]{4, 2}));
+            Operand operand2 = Constant.arrayOf(scope, new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+            Operand actual2 = Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[]{2,4}));
+            Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
+            Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+
+            Operand<TInt64> append = ShapeOps.append(scope, tfshape1, tfshape2);
+            AtomicInteger index = new AtomicInteger();
+            long[] expected = {4,2, 2, 4};
+            try (Tensor<TInt64> result = session.runner().fetch(append.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+                result.data().scalars().forEach(s -> {
+                    assertEquals(expected[index.getAndIncrement()], s.getLong());
+                });
+            }
+            assertEquals(expected.length, index.get());
+        }
+    }
+
 
 }
