@@ -177,7 +177,6 @@ import org.tensorflow.op.core.Select;
 import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.core.SetSize;
 import org.tensorflow.op.core.ShapeN;
-import org.tensorflow.op.core.ShapeOps;
 import org.tensorflow.op.core.Size;
 import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
@@ -315,6 +314,8 @@ public final class Ops {
 
   public final DataOps data;
 
+  public final ShapeOps shape;
+
   public final IoOps io;
 
   public final DtypesOps dtypes;
@@ -349,6 +350,7 @@ public final class Ops {
     summary = new SummaryOps(scope);
     image = new ImageOps(scope);
     data = new DataOps(scope);
+    shape = new ShapeOps(scope);
     io = new IoOps(scope);
     dtypes = new DtypesOps(scope);
     xla = new XlaOps(scope);
@@ -2299,58 +2301,6 @@ public final class Ops {
   }
 
   /**
-   * Flatten the operand to 1 dimension
-   *
-   * @param <T> the type of operand
-   * @param scope current scope
-   * @param operand the operand to flatten
-   * @return the reshaped operand
-   */
-  public <T extends TType> Operand<T> flatten(Operand<T> operand) {
-    return ShapeOps.flatten(scope, operand);
-  }
-
-  /**
-   * Flatten the shape to 1 dimension
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @return the flattened shape
-   */
-  public Operand<TInt32> flatten(org.tensorflow.op.core.Shape<TInt32> shape) {
-    return ShapeOps.flatten(scope, shape);
-  }
-
-  /**
-   * Flatten the operand to 1 dimension
-   *
-   * @param <T> the type of operand
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param operand the operand to flatten
-   * @param dType the shape datatype.
-   * @return the reshaped operand
-   */
-  public <T extends TType, U extends TNumber> Operand<T> flatten(Operand<T> operand,
-      DataType<U> dType) {
-    return ShapeOps.flatten(scope, operand, dType);
-  }
-
-  /**
-   * Flatten the shape to 1 dimension
-   *
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
-   * @return the flattened shape
-   */
-  public <U extends TNumber> Operand<U> flatten(org.tensorflow.op.core.Shape<U> shape,
-      DataType<U> dType) {
-    return ShapeOps.flatten(scope, shape, dType);
-  }
-
-  /**
    * Gather slices from `params` axis `axis` according to `indices`.
    *  <p>
    *  `indices` must be an integer tensor of any dimension (usually 0-D or 1-D).
@@ -3381,31 +3331,6 @@ public final class Ops {
   }
 
   /**
-   * Get the number of dimensions of the shape object
-   *
-   * @param scope current scope
-   * @param shape the shape
-   * @return the number of dimensions
-   */
-  public Operand<TInt32> numDimensions(org.tensorflow.op.core.Shape<TInt32> shape) {
-    return ShapeOps.numDimensions(scope, shape);
-  }
-
-  /**
-   * Get the number of dimensions of the shape object
-   *
-   * @param <U> the shape datatype.
-   * @param scope the curren scope
-   * @param shape the shape
-   * @param dType the shape datatype.
-   * @return the number of dimensions
-   */
-  public <U extends TNumber> Operand<U> numDimensions(org.tensorflow.op.core.Shape<U> shape,
-      DataType<U> dType) {
-    return ShapeOps.numDimensions(scope, shape, dType);
-  }
-
-  /**
    * Returns a one-hot tensor.
    *  <p>
    *  The locations represented by indices in `indices` take value `on_value`,
@@ -3934,63 +3859,6 @@ public final class Ops {
   public <T extends TNumber> ReduceAny reduceAny(Operand<TBool> input, Operand<T> axis,
       ReduceAny.Options... options) {
     return ReduceAny.create(scope, input, axis, options);
-  }
-
-  /**
-   * Reshapes the operand to the specified axis,
-   *
-   * @param <T> the type of Operand
-   * @param scope current scope
-   * @param operand the operand
-   * @param axis the axis
-   * @return the reshaped operand
-   */
-  public <T extends TType> Operand<T> reduceDims(Operand<T> operand, Operand<TInt32> axis) {
-    return ShapeOps.reduceDims(scope, operand, axis);
-  }
-
-  /**
-   * Reduces the shape to the specified axis,
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param axis the axis
-   * @return the reduced shape
-   */
-  public Operand<TInt32> reduceDims(org.tensorflow.op.core.Shape<TInt32> shape,
-      Operand<TInt32> axis) {
-    return ShapeOps.reduceDims(scope, shape, axis);
-  }
-
-  /**
-   * Reshapes the operand to the specified axis,
-   *
-   * @param <T> the type of Operand
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param operand the operand
-   * @param axis the axis
-   * @param dType the shape datatype.
-   * @return the reshaped operand
-   */
-  public <T extends TType, U extends TNumber> Operand<T> reduceDims(Operand<T> operand,
-      Operand<U> axis, DataType<U> dType) {
-    return ShapeOps.reduceDims(scope, operand, axis, dType);
-  }
-
-  /**
-   * Reduces the shape to the specified axis,
-   *
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param axis the axis
-   * @param dType the shape datatype.
-   * @return the reduced shape
-   */
-  public <U extends TNumber> Operand<U> reduceDims(org.tensorflow.op.core.Shape<U> shape,
-      Operand<U> axis, DataType<U> dType) {
-    return ShapeOps.reduceDims(scope, shape, axis, dType);
   }
 
   /**
@@ -5621,29 +5489,6 @@ public final class Ops {
   }
 
   /**
-   * Get the size represented by the TensorFlow shape
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @return the size
-   */
-  public Operand<TInt32> size(org.tensorflow.op.core.Shape<TInt32> shape) {
-    return ShapeOps.size(scope, shape);
-  }
-
-  /**
-   * Get the size of the specified dimension for the shape of the tensor
-   *
-   * @param scope current scope
-   * @param input the operand
-   * @param dim the dimension
-   * @return the size of the specified dimension
-   */
-  public Operand<TInt32> size(Operand input, Operand<TInt32> dim) {
-    return ShapeOps.size(scope, input, dim);
-  }
-
-  /**
    * Returns the size of a tensor.
    *  <p>
    *  This operation returns an integer representing the number of elements in
@@ -5662,61 +5507,6 @@ public final class Ops {
    */
   public <U extends TNumber, T extends TType> Size<U> size(Operand<T> input, DataType<U> outType) {
     return Size.create(scope, input, outType);
-  }
-
-  /**
-   * Get the size represented by the TensorFlow shape
-   *
-   * @param <U> the shape datatype. the type of the shape
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
-   * @return the size
-   */
-  public <U extends TNumber> Operand<U> size(org.tensorflow.op.core.Shape<U> shape,
-      DataType<U> dType) {
-    return ShapeOps.size(scope, shape, dType);
-  }
-
-  /**
-   * Get the size of the specified dimension in the shape
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dim the dimension
-   * @return the size of the specified dimension
-   */
-  public Operand<TInt32> size(org.tensorflow.op.core.Shape<TInt32> shape, Operand<TInt32> dim) {
-    return ShapeOps.size(scope, shape, dim);
-  }
-
-  /**
-   * Get the size of the specified dimension for the shape of the tensor
-   *
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param input the operand
-   * @param dim the dimension
-   * @param dType the shape datatype.
-   * @return the size of the specified dimension
-   */
-  public <U extends TNumber> Operand<U> size(Operand input, Operand<U> dim, DataType<U> dType) {
-    return ShapeOps.size(scope, input, dim, dType);
-  }
-
-  /**
-   * Get the size of the specified dimension in the shape
-   *
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dim the dimension
-   * @param dType the shape datatype.
-   * @return the size of the specified dimension
-   */
-  public <U extends TNumber> Operand<U> size(org.tensorflow.op.core.Shape<U> shape, Operand<U> dim,
-      DataType<U> dType) {
-    return ShapeOps.size(scope, shape, dim, dType);
   }
 
   /**
@@ -5916,17 +5706,6 @@ public final class Ops {
   }
 
   /**
-   * Removes dimensions of size 1 from the shape
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @return the squeezed shape
-   */
-  public Operand<TInt32> squeeze(org.tensorflow.op.core.Shape<TInt32> shape) {
-    return ShapeOps.squeeze(scope, shape);
-  }
-
-  /**
    * Removes dimensions of size 1 from the shape of a tensor.
    *  <p>
    *  Given a tensor `input`, this operation returns a tensor of the same type with
@@ -5952,20 +5731,6 @@ public final class Ops {
    */
   public <T extends TType> Squeeze<T> squeeze(Operand<T> input, Squeeze.Options... options) {
     return Squeeze.create(scope, input, options);
-  }
-
-  /**
-   * Removes dimensions of size 1 from the shape
-   *
-   * @param <U> the shape datatype.
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
-   * @return the squeezed shape
-   */
-  public <U extends TNumber> Operand<U> squeeze(org.tensorflow.op.core.Shape<U> shape,
-      DataType<U> dType) {
-    return ShapeOps.squeeze(scope, shape, dType);
   }
 
   /**
