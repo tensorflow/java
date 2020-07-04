@@ -20,6 +20,7 @@ package org.tensorflow.op;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.core.Shape;
+import org.tensorflow.op.core.Shapes;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -47,8 +48,8 @@ public final class ShapeOps {
    * @return a 1-dimensional operand containing the dimensions of a shape followed by the last
    *      dimension
    */
-  public Operand<TInt32> append(Shape<TInt32> shape, int lastDimension) {
-    return org.tensorflow.op.core.ShapeOps.append(scope, shape, lastDimension);
+  public Operand<TInt64> append(Shape<TInt64> shape, long lastDimension) {
+    return Shapes.append(scope, shape, lastDimension);
   }
 
   /**
@@ -61,24 +62,24 @@ public final class ShapeOps {
    * @return a 1-dimensional operand containing the dimensions of a shape followed by the last
    *      dimension
    */
-  public Operand<TInt64> append(Shape<TInt64> shape, long lastDimension) {
-    return org.tensorflow.op.core.ShapeOps.append(scope, shape, lastDimension);
+  public Operand<TInt32> append(Shape<TInt32> shape, int lastDimension) {
+    return Shapes.append(scope, shape, lastDimension);
   }
 
   /**
-   * Creates a 1-dimensional operand that represents a new shape containing the dimensions of the operand
-   *  representing a shape, followed by the dimensions of an operand representing a
-   *  shape to append.
+   * Creates a 1-dimensional operand that represents a new shape containing the dimensions of the
+   *  operand representing a shape, followed by the dimensions of an operand representing a shape to
+   *  append.
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param shapeToAppend the other shape to append
-   * @return a 1-dimensional operand that represents a new shape containing the dimensions of the operand
-   *      representing a shape, followed by the dimensions of an operand representing
-   *      a shape to append
+   * @return a 1-dimensional operand that represents a new shape containing the dimensions of the
+   *      operand representing a shape, followed by the dimensions of an operand representing a shape
+   *      to append
    */
   public <T extends TNumber> Operand<T> append(Operand<T> shape, Operand<T> shapeToAppend) {
-    return org.tensorflow.op.core.ShapeOps.append(scope, shape, shapeToAppend);
+    return Shapes.append(scope, shape, shapeToAppend);
   }
 
   /**
@@ -90,7 +91,7 @@ public final class ShapeOps {
    * @return the reshaped operand
    */
   public <T extends TType> Operand<T> flatten(Operand<T> operand) {
-    return org.tensorflow.op.core.ShapeOps.flatten(scope, operand);
+    return Shapes.flatten(scope, operand);
   }
 
   /**
@@ -101,7 +102,7 @@ public final class ShapeOps {
    * @return the flattened shape
    */
   public Operand<TInt32> flatten(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.flatten(scope, shape);
+    return Shapes.flatten(scope, shape);
   }
 
   /**
@@ -116,7 +117,7 @@ public final class ShapeOps {
    */
   public <T extends TType, U extends TNumber> Operand<T> flatten(Operand<T> operand,
       DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.flatten(scope, operand, dType);
+    return Shapes.flatten(scope, operand, dType);
   }
 
   /**
@@ -129,7 +130,7 @@ public final class ShapeOps {
    * @return the flattened shape
    */
   public <U extends TNumber> Operand<U> flatten(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.flatten(scope, shape, dType);
+    return Shapes.flatten(scope, shape, dType);
   }
 
   /**
@@ -140,11 +141,11 @@ public final class ShapeOps {
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
   public Operand<TInt32> head(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.head(scope, shape);
+    return Shapes.head(scope, shape);
   }
 
   /**
-   * Creates  a 1-dimensional Operand containing the Shape's first dimension.
+   * Creates a 1-dimensional Operand containing the Shape's first dimension.
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
@@ -153,7 +154,7 @@ public final class ShapeOps {
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
   public <U extends TNumber> Operand<U> head(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.head(scope, shape, dType);
+    return Shapes.head(scope, shape, dType);
   }
 
   /**
@@ -164,7 +165,7 @@ public final class ShapeOps {
    * @return the number of dimensions
    */
   public Operand<TInt32> numDimensions(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.numDimensions(scope, shape);
+    return Shapes.numDimensions(scope, shape);
   }
 
   /**
@@ -177,21 +178,7 @@ public final class ShapeOps {
    * @return the number of dimensions
    */
   public <U extends TNumber> Operand<U> numDimensions(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.numDimensions(scope, shape, dType);
-  }
-
-  /**
-   * Creates a 1-dimensional operand containing the first dimension followed by the dimensions of
-   *  the shape.
-   *
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param firstDimension the dimension to prepend
-   * @return a 1-dimensional operand containing the first dimension followed by the dimensions of
-   *      the shape
-   */
-  public Operand<TInt32> prepend(Shape<TInt32> shape, int firstDimension) {
-    return org.tensorflow.op.core.ShapeOps.prepend(scope, shape, firstDimension);
+    return Shapes.numDimensions(scope, shape, dType);
   }
 
   /**
@@ -205,23 +192,37 @@ public final class ShapeOps {
    *      the shape
    */
   public Operand<TInt64> prepend(Shape<TInt64> shape, long firstDimension) {
-    return org.tensorflow.op.core.ShapeOps.prepend(scope, shape, firstDimension);
+    return Shapes.prepend(scope, shape, firstDimension);
   }
 
   /**
-   * Creates a 1-dimensional operand that represents a new shape containing the dimensions of an operand
-   *  representing the shape to prepend, followed by the dimensions of an operand representing a
-   *  shape.
+   * Creates a 1-dimensional operand containing the first dimension followed by the dimensions of
+   *  the shape.
+   *
+   * @param scope current scope
+   * @param shape the TensorFlow shape
+   * @param firstDimension the dimension to prepend
+   * @return a 1-dimensional operand containing the first dimension followed by the dimensions of
+   *      the shape
+   */
+  public Operand<TInt32> prepend(Shape<TInt32> shape, int firstDimension) {
+    return Shapes.prepend(scope, shape, firstDimension);
+  }
+
+  /**
+   * Creates a 1-dimensional operand that represents a new shape containing the dimensions of an
+   *  operand representing the shape to prepend, followed by the dimensions of an operand
+   *  representing a shape.
    *
    * @param scope current scope
    * @param shape an operand containing the dimensions of a shape
    * @param shapeToPrepend an operand containing the dimensions of the shape to prepend
-   * @return a 1-dimensional operand that represents a new shape containing the dimensions of an operand
-   *      representing the shape to prepend, followed by the dimensions of an operand representing
-   *      the shape
+   * @return a 1-dimensional operand that represents a new shape containing the dimensions of an
+   *      operand representing the shape to prepend, followed by the dimensions of an operand
+   *      representing the shape
    */
   public <T extends TNumber> Operand<T> prepend(Operand<T> shape, Operand<T> shapeToPrepend) {
-    return org.tensorflow.op.core.ShapeOps.prepend(scope, shape, shapeToPrepend);
+    return Shapes.prepend(scope, shape, shapeToPrepend);
   }
 
   /**
@@ -234,7 +235,7 @@ public final class ShapeOps {
    * @return the reshaped operand
    */
   public <T extends TType> Operand<T> reduceDims(Operand<T> operand, Operand<TInt32> axis) {
-    return org.tensorflow.op.core.ShapeOps.reduceDims(scope, operand, axis);
+    return Shapes.reduceDims(scope, operand, axis);
   }
 
   /**
@@ -246,7 +247,7 @@ public final class ShapeOps {
    * @return an operand containing the dimensions for the reduced shape
    */
   public Operand<TInt32> reduceDims(Shape<TInt32> shape, Operand<TInt32> axis) {
-    return org.tensorflow.op.core.ShapeOps.reduceDims(scope, shape, axis);
+    return Shapes.reduceDims(scope, shape, axis);
   }
 
   /**
@@ -262,7 +263,7 @@ public final class ShapeOps {
    */
   public <T extends TType, U extends TNumber> Operand<T> reduceDims(Operand<T> operand,
       Operand<U> axis, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.reduceDims(scope, operand, axis, dType);
+    return Shapes.reduceDims(scope, operand, axis, dType);
   }
 
   /**
@@ -277,7 +278,7 @@ public final class ShapeOps {
    */
   public <U extends TNumber> Operand<U> reduceDims(Shape<U> shape, Operand<U> axis,
       DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.reduceDims(scope, shape, axis, dType);
+    return Shapes.reduceDims(scope, shape, axis, dType);
   }
 
   /**
@@ -288,7 +289,7 @@ public final class ShapeOps {
    * @return the size
    */
   public Operand<TInt32> size(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, shape);
+    return Shapes.size(scope, shape);
   }
 
   /**
@@ -299,8 +300,8 @@ public final class ShapeOps {
    * @param dim the dimension
    * @return the size of the specified dimension
    */
-  public Operand<TInt32> size(Operand input, Operand<TInt32> dim) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, input, dim);
+  public <T extends TType> Operand<TInt32> size(Operand<T> input, Operand<TInt32> dim) {
+    return Shapes.size(scope, input, dim);
   }
 
   /**
@@ -313,7 +314,7 @@ public final class ShapeOps {
    * @return the size
    */
   public <U extends TNumber> Operand<U> size(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, shape, dType);
+    return Shapes.size(scope, shape, dType);
   }
 
   /**
@@ -325,7 +326,7 @@ public final class ShapeOps {
    * @return the size of the specified dimension
    */
   public Operand<TInt32> size(Shape<TInt32> shape, Operand<TInt32> dim) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, shape, dim);
+    return Shapes.size(scope, shape, dim);
   }
 
   /**
@@ -338,8 +339,9 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the size of the specified dimension
    */
-  public <U extends TNumber> Operand<U> size(Operand input, Operand<U> dim, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, input, dim, dType);
+  public <T extends TType, U extends TNumber> Operand<U> size(Operand<T> input, Operand<U> dim,
+      DataType<U> dType) {
+    return Shapes.size(scope, input, dim, dType);
   }
 
   /**
@@ -353,7 +355,7 @@ public final class ShapeOps {
    * @return the size of the specified dimension
    */
   public <U extends TNumber> Operand<U> size(Shape<U> shape, Operand<U> dim, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.size(scope, shape, dim, dType);
+    return Shapes.size(scope, shape, dim, dType);
   }
 
   /**
@@ -364,7 +366,7 @@ public final class ShapeOps {
    * @return the squeezed shape
    */
   public Operand<TInt32> squeeze(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.squeeze(scope, shape);
+    return Shapes.squeeze(scope, shape);
   }
 
   /**
@@ -377,20 +379,20 @@ public final class ShapeOps {
    * @return the squeezed shape
    */
   public <U extends TNumber> Operand<U> squeeze(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.squeeze(scope, shape, dType);
+    return Shapes.squeeze(scope, shape, dType);
   }
 
   /**
-   * Creates  a 1-dimensional Operand that contains the dimension matching the last dimension of
-   *  the Shape.
+   * Creates a 1-dimensional Operand that contains the dimension matching the last dimension of the
+   *  Shape.
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @return a 1-dimensional Operand that contains the dimension matching the last dimension of
-   *      the Shape
+   * @return a 1-dimensional Operand that contains the dimension matching the last dimension of the
+   *      Shape
    */
   public Operand<TInt32> tail(Shape<TInt32> shape) {
-    return org.tensorflow.op.core.ShapeOps.tail(scope, shape);
+    return Shapes.tail(scope, shape);
   }
 
   /**
@@ -401,11 +403,11 @@ public final class ShapeOps {
    * @param shape the TensorFlow shape
    * @param dType the shape datatype.
    * @param <U> the shape datatype.
-   * @return a 1-dimensional Operand that contains the dimension matching the last dimension of
-   *      the Shape
+   * @return a 1-dimensional Operand that contains the dimension matching the last dimension of the
+   *      Shape
    */
   public <U extends TNumber> Operand<U> tail(Shape<U> shape, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.tail(scope, shape, dType);
+    return Shapes.tail(scope, shape, dType);
   }
 
   /**
@@ -419,11 +421,11 @@ public final class ShapeOps {
    *      shape
    */
   public Operand<TInt32> take(Shape<TInt32> shape, Operand<TInt32> n) {
-    return org.tensorflow.op.core.ShapeOps.take(scope, shape, n);
+    return Shapes.take(scope, shape, n);
   }
 
   /**
-   * Creates  a 1-dimensional operand containin the dimensions matching the first n dimensions of the
+   * Creates a 1-dimensional operand containin the dimensions matching the first n dimensions of the
    *  shape.
    *
    * @param scope current scope
@@ -435,7 +437,7 @@ public final class ShapeOps {
    *      shape
    */
   public <U extends TNumber> Operand<U> take(Shape<U> shape, Operand<U> n, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.take(scope, shape, n, dType);
+    return Shapes.take(scope, shape, n, dType);
   }
 
   /**
@@ -449,7 +451,7 @@ public final class ShapeOps {
    *      shape
    */
   public <U extends TNumber> Operand<TInt32> takeLast(Shape<TInt32> shape, Operand<TInt32> n) {
-    return org.tensorflow.op.core.ShapeOps.takeLast(scope, shape, n);
+    return Shapes.takeLast(scope, shape, n);
   }
 
   /**
@@ -465,6 +467,6 @@ public final class ShapeOps {
    *      shape
    */
   public <U extends TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n, DataType<U> dType) {
-    return org.tensorflow.op.core.ShapeOps.takeLast(scope, shape, n, dType);
+    return Shapes.takeLast(scope, shape, n, dType);
   }
 }
