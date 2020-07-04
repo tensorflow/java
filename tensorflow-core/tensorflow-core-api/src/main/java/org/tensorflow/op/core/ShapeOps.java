@@ -515,7 +515,7 @@ public abstract class ShapeOps {
    */
   @Endpoint(name = "prepend")
   public static Operand<TInt32> prepend(Scope scope, Shape<TInt32> shape, int firstDimension) {
-    Operand<TInt32> dim = Constant.arrayOf(scope, 0);
+    Operand<TInt32> dim = Constant.arrayOf(scope, firstDimension);
     return Concat.create(scope, Arrays.asList(dim, shape), Constant.scalarOf(scope, 0));
   }
 
