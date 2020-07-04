@@ -31,9 +31,9 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
-public class ShapeOpsTest {
+public class ShapesTest {
 
-  /** Test of flatten method, of class ShapeOps. */
+  /** Test of flatten method, of class Shapes. */
   @Test
   public void testFlatten_Operand() {
     try (Graph g = new Graph();
@@ -43,7 +43,7 @@ public class ShapeOpsTest {
       Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.DTYPE);
       Operand<TFloat32> reshaped =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
-      Operand actual = ShapeOps.flatten(scope, reshaped);
+      Operand actual = Shapes.flatten(scope, reshaped);
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
 
       AtomicInteger index = new AtomicInteger();
@@ -60,7 +60,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of flatten method, of class ShapeOps. */
+  /** Test of flatten method, of class Shapes. */
   @Test
   public void testFlatten_Shape() {
     try (EagerSession session = EagerSession.create()) {
@@ -70,7 +70,7 @@ public class ShapeOpsTest {
       Operand actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> flattened = ShapeOps.flatten(scope, tfshape, TInt64.DTYPE);
+      Operand<TInt64> flattened = Shapes.flatten(scope, tfshape, TInt64.DTYPE);
 
       AtomicInteger index = new AtomicInteger();
       flattened
@@ -84,7 +84,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of size method, of class ShapeOps. */
+  /** Test of size method, of class Shapes. */
   @Test
   public void testSize_Shape() {
     try (Graph g = new Graph();
@@ -94,7 +94,7 @@ public class ShapeOpsTest {
       Operand actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> size = ShapeOps.size(scope, tfshape, TInt64.DTYPE);
+      Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.DTYPE);
 
       AtomicInteger index = new AtomicInteger();
       try (Tensor<TInt64> result1 =
@@ -104,7 +104,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of size method, of class ShapeOps. */
+  /** Test of size method, of class Shapes. */
   @Test
   public void testSize_Shape_Operand() {
     try (Graph g = new Graph();
@@ -115,19 +115,19 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> size = ShapeOps.size(scope, tfshape, Constant.scalarOf(scope, 0));
+      Operand<TInt32> size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 0));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
-      size = ShapeOps.size(scope, tfshape, Constant.scalarOf(scope, 1));
+      size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 1));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
-      size = ShapeOps.size(scope, tfshape, Constant.scalarOf(scope, 2));
+      size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 2));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(1, s.getInt()));
@@ -135,7 +135,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of size method, of class ShapeOps. */
+  /** Test of size method, of class Shapes. */
   @Test
   public void testSize_Operand_Operand() {
     try (Graph g = new Graph();
@@ -145,19 +145,19 @@ public class ShapeOpsTest {
       Operand actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
 
-      Operand<TInt32> size = ShapeOps.size(scope, actual, Constant.scalarOf(scope, 0));
+      Operand<TInt32> size = Shapes.size(scope, actual, Constant.scalarOf(scope, 0));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
-      size = ShapeOps.size(scope, actual, Constant.scalarOf(scope, 1));
+      size = Shapes.size(scope, actual, Constant.scalarOf(scope, 1));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
-      size = ShapeOps.size(scope, actual, Constant.scalarOf(scope, 2));
+      size = Shapes.size(scope, actual, Constant.scalarOf(scope, 2));
       try (Tensor<TInt32> result =
           session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(1, s.getInt()));
@@ -165,7 +165,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of numDimensions method, of class ShapeOps. */
+  /** Test of numDimensions method, of class Shapes. */
   @Test
   public void testNumDimensions() {
     try (Graph g = new Graph();
@@ -176,7 +176,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> nDims = ShapeOps.numDimensions(scope, tfshape);
+      Operand<TInt32> nDims = Shapes.numDimensions(scope, tfshape);
       try (Tensor<TInt32> result =
           session.runner().fetch(nDims.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
         result.data().scalars().forEach(s -> assertEquals(3, s.getInt()));
@@ -184,7 +184,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of reduceDims method, of class ShapeOps. */
+  /** Test of reduceDims method, of class Shapes. */
   @Test
   public void testReduceDims_Operand_Operand() {
     try (EagerSession session = EagerSession.create()) {
@@ -194,7 +194,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TFloat32> reduced = ShapeOps.reduceDims(scope, actual, Constant.scalarOf(scope, 0));
+      Operand<TFloat32> reduced = Shapes.reduceDims(scope, actual, Constant.scalarOf(scope, 0));
       Shape<TInt32> reducedShape = Shape.create(scope, reduced);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {8};
@@ -209,7 +209,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of reduceDims method, of class ShapeOps. */
+  /** Test of reduceDims method, of class Shapes. */
   @Test
   public void testReduceDims_Shape_Operand() {
     try (EagerSession session = EagerSession.create()) {
@@ -219,7 +219,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand reduced = ShapeOps.reduceDims(scope, actual, Constant.scalarOf(scope, 0));
+      Operand reduced = Shapes.reduceDims(scope, actual, Constant.scalarOf(scope, 0));
       Shape<TInt32> reducedShape = Shape.create(scope, reduced);
       AtomicInteger index = new AtomicInteger();
       int[] expected1 = {8};
@@ -232,7 +232,7 @@ public class ShapeOpsTest {
               });
       assertEquals(expected1.length, index.get());
 
-      reduced = ShapeOps.reduceDims(scope, actual, Constant.scalarOf(scope, 1));
+      reduced = Shapes.reduceDims(scope, actual, Constant.scalarOf(scope, 1));
       reducedShape = Shape.create(scope, reduced);
       index.set(0);
       int[] expected2 = {2, 4};
@@ -245,7 +245,7 @@ public class ShapeOpsTest {
               });
       assertEquals(expected2.length, index.get());
 
-      reduced = ShapeOps.reduceDims(scope, actual, Constant.scalarOf(scope, -1));
+      reduced = Shapes.reduceDims(scope, actual, Constant.scalarOf(scope, -1));
       reducedShape = Shape.create(scope, reduced);
       index.set(0);
       int[] expected3 = {2, 2, 2};
@@ -260,7 +260,7 @@ public class ShapeOpsTest {
     }
   }
 
-  /** Test of squeeze method, of class ShapeOps. */
+  /** Test of squeeze method, of class Shapes. */
   @Test
   public void testSqueeze() {
     try (Graph g = new Graph();
@@ -271,7 +271,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> squeezed = ShapeOps.squeeze(scope, tfshape);
+      Operand<TInt32> squeezed = Shapes.squeeze(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2};
       try (Tensor<TInt32> result =
@@ -298,7 +298,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> head = ShapeOps.head(scope, tfshape);
+      Operand<TInt32> head = Shapes.head(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4};
       try (Tensor<TInt32> result =
@@ -325,7 +325,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> take = ShapeOps.take(scope, tfshape, Constant.scalarOf(scope, 2));
+      Operand<TInt32> take = Shapes.take(scope, tfshape, Constant.scalarOf(scope, 2));
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 1};
       try (Tensor<TInt32> result =
@@ -352,7 +352,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> tail = ShapeOps.tail(scope, tfshape);
+      Operand<TInt32> tail = Shapes.tail(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1};
       try (Tensor<TInt32> result =
@@ -379,7 +379,7 @@ public class ShapeOpsTest {
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> takeLast = ShapeOps.takeLast(scope, tfshape, Constant.scalarOf(scope, 3));
+      Operand<TInt32> takeLast = Shapes.takeLast(scope, tfshape, Constant.scalarOf(scope, 3));
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1, 2, 1};
       try (Tensor<TInt32> result =
@@ -405,7 +405,7 @@ public class ShapeOpsTest {
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> prepend = ShapeOps.prepend(scope, tfshape, 3);
+      Operand<TInt32> prepend = Shapes.prepend(scope, tfshape, 3);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {3, 4, 2};
       try (Tensor<TInt32> result =
@@ -431,7 +431,7 @@ public class ShapeOpsTest {
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
 
-      Operand<TInt64> prepend = ShapeOps.prepend(scope, tfshape, 1L);
+      Operand<TInt64> prepend = Shapes.prepend(scope, tfshape, 1L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {1, 4, 2};
       try (Tensor<TInt64> result =
@@ -462,7 +462,7 @@ public class ShapeOpsTest {
       Shape<TInt32> tfshape1 = Shape.create(scope, actual1);
       Shape<TInt32> tfshape2 = Shape.create(scope, actual2);
 
-      Operand<TInt32> prepend = ShapeOps.prepend(scope, tfshape1, tfshape2);
+      Operand<TInt32> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {2, 4, 4, 2};
       try (Tensor<TInt32> result =
@@ -493,7 +493,7 @@ public class ShapeOpsTest {
       Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
       Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
 
-      Operand<TInt64> prepend = ShapeOps.prepend(scope, tfshape1, tfshape2);
+      Operand<TInt64> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {2, 4, 4, 2};
       try (Tensor<TInt64> result =
@@ -519,7 +519,7 @@ public class ShapeOpsTest {
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
 
-      Operand<TInt64> append = ShapeOps.append(scope, tfshape, 2L);
+      Operand<TInt64> append = Shapes.append(scope, tfshape, 2L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4L, 2L, 2L};
       try (Tensor<TInt64> result =
@@ -545,7 +545,7 @@ public class ShapeOpsTest {
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
-      Operand<TInt32> append = ShapeOps.append(scope, tfshape, 2);
+      Operand<TInt32> append = Shapes.append(scope, tfshape, 2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2};
       try (Tensor<TInt32> result =
@@ -576,7 +576,7 @@ public class ShapeOpsTest {
       Shape<TInt32> tfshape1 = Shape.create(scope, actual1);
       Shape<TInt32> tfshape2 = Shape.create(scope, actual2);
 
-      Operand<TInt32> append = ShapeOps.append(scope, tfshape1, tfshape2);
+      Operand<TInt32> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2, 4};
       try (Tensor<TInt32> result =
@@ -607,7 +607,7 @@ public class ShapeOpsTest {
       Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
       Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
 
-      Operand<TInt64> append = ShapeOps.append(scope, tfshape1, tfshape2);
+      Operand<TInt64> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4, 2, 2, 4};
       try (Tensor<TInt64> result =

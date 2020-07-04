@@ -56,7 +56,7 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 @Operator(group = "shape")
-public abstract class ShapeOps {
+public abstract class Shapes {
 
   /**
    * Flatten the operand to 1 dimension.
