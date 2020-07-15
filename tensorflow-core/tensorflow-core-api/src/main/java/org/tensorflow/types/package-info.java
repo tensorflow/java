@@ -30,13 +30,15 @@
  * this type as an operation argument. For example, metadata about TensorFlow int32 type is
  * found in {@link org.tensorflow.types.TInt32#DTYPE TInt32.DTYPE}.
  *
- * <p>Instances of tensor types must also implement the {@link org.tensorflow.tools.ndarray.NdArray NdArray}
+ * <p>Instances of tensor types must also implement the {@link org.tensorflow.ndarray.NdArray NdArray}
  * interface so a user can access directly the tensor data in a n-dimensional space by invoking
  * {@link org.tensorflow.Tensor#data() Tensor.data()}.
  *
  * <p>Note that while it is always possible to allocate a tensor using the
- * {@link org.tensorflow.Tensor#of(org.tensorflow.DataType, org.tensorflow.tools.Shape) Tensor.of(...)}
+ * {@link org.tensorflow.Tensor#of(org.tensorflow.DataType, Shape) Tensor.of(...)}
  * method, most tensor types expose factory methods that simplify the creation process, like
  * {@code scalarOf(...)}, {@code vectorOf(...)}, {@code tensorOf(...)}, etc.
  */
 package org.tensorflow.types;
+
+import org.tensorflow.ndarray.Shape;

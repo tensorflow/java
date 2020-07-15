@@ -23,7 +23,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 

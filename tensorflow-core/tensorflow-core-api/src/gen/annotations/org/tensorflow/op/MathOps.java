@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.math.Abs;
 import org.tensorflow.op.math.AccumulateN;
 import org.tensorflow.op.math.Acos;
@@ -123,7 +124,6 @@ import org.tensorflow.op.math.Xlog1py;
 import org.tensorflow.op.math.Xlogy;
 import org.tensorflow.op.math.Zeta;
 import org.tensorflow.op.math.erfinv;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;

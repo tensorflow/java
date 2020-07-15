@@ -16,9 +16,8 @@
 package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.tensorflow.tools.ndarray.IntNdArray;
-import org.tensorflow.tools.ndarray.StdArrays;
-
+import org.tensorflow.ndarray.IntNdArray;
+import org.tensorflow.ndarray.StdArrays;
 
 public class DatasetTestBase {
 

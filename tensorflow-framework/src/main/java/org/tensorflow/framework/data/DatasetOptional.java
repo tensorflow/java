@@ -17,9 +17,8 @@ package org.tensorflow.framework.data;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TBool;
 
 import java.util.ArrayList;

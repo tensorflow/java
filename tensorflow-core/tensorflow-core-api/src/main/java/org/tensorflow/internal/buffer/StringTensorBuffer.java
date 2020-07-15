@@ -19,12 +19,12 @@ package org.tensorflow.internal.buffer;
 
 import java.nio.ReadOnlyBufferException;
 import java.util.function.Function;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
-import org.tensorflow.tools.buffer.DataBuffer;
-import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.buffer.impl.AbstractDataBuffer;
-import org.tensorflow.tools.buffer.impl.Validator;
-import org.tensorflow.tools.ndarray.NdArray;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
+import org.tensorflow.ndarray.NdArray;
 
 /**
  * Buffer for storing string tensor data.

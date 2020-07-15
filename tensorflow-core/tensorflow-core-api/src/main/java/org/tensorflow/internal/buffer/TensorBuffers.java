@@ -24,15 +24,15 @@ import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.buffer.BooleanDataBuffer;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
-import org.tensorflow.tools.buffer.DataBuffers;
-import org.tensorflow.tools.buffer.DoubleDataBuffer;
-import org.tensorflow.tools.buffer.FloatDataBuffer;
-import org.tensorflow.tools.buffer.IntDataBuffer;
-import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.buffer.ShortDataBuffer;
-import org.tensorflow.tools.buffer.layout.DataLayouts;
+import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 
 /**
  * Maps native tensor memory into {@link DataBuffers}, allowing I/O operations from the JVM.

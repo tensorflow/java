@@ -26,7 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.tensorflow.tools.ndarray.index.Indices.range;
+import static org.tensorflow.ndarray.index.Indices.range;
 
 public class BatchDatasetTest extends DatasetTestBase {
 

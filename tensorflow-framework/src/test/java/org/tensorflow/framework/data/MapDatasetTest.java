@@ -24,8 +24,8 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.ndarray.IntNdArray;
-import org.tensorflow.tools.ndarray.StdArrays;
+import org.tensorflow.ndarray.IntNdArray;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;

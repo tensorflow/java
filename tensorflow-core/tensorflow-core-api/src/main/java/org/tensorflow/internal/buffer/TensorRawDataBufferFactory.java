@@ -18,14 +18,14 @@
 package org.tensorflow.internal.buffer;
 
 import org.bytedeco.javacpp.Pointer;
-import org.tensorflow.tools.buffer.BooleanDataBuffer;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
-import org.tensorflow.tools.buffer.DoubleDataBuffer;
-import org.tensorflow.tools.buffer.FloatDataBuffer;
-import org.tensorflow.tools.buffer.IntDataBuffer;
-import org.tensorflow.tools.buffer.LongDataBuffer;
-import org.tensorflow.tools.buffer.ShortDataBuffer;
-import org.tensorflow.tools.buffer.impl.raw.RawDataBufferFactory;
+import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.raw.RawDataBufferFactory;
 
 class TensorRawDataBufferFactory extends RawDataBufferFactory {
 

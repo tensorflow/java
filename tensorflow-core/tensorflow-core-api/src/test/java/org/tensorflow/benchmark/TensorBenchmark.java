@@ -1,6 +1,6 @@
 package org.tensorflow.benchmark;
 
-import static org.tensorflow.tools.ndarray.NdArrays.vectorOf;
+import static org.tensorflow.ndarray.NdArrays.vectorOf;
 
 import java.io.IOException;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -12,10 +12,10 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.RunnerException;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.buffer.DataBuffers;
-import org.tensorflow.tools.buffer.IntDataBuffer;
-import org.tensorflow.tools.ndarray.StdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.types.TInt32;
 
 @Fork(value = 1, jvmArgs = {"-Xms4G", "-Xmx4G"})

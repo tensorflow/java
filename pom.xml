@@ -5,7 +5,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -29,7 +29,7 @@
   </scm>
 
   <modules>
-    <module>tensorflow-tools</module>
+    <module>ndarray</module>
     <module>tensorflow-core</module>
     <module>tensorflow-framework</module>
   </modules>
@@ -40,6 +40,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <junit.version>5.6.2</junit.version>
     <jmh.version>1.21</jmh.version>
+    <versions-plugin.version>2.7</versions-plugin.version>
     <skipAssembly>true</skipAssembly>
   </properties>
 
@@ -155,6 +156,16 @@
           </execution>
         </executions>
       </plugin-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>${versions-plugin.version}</version>
+        <configuration>
+          <generateBackupPoms>false</generateBackupPoms>
+          <processAllModules>true</processAllModules>
+          <updateMatchingVersions>true</updateMatchingVersions>
+        </configuration>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>

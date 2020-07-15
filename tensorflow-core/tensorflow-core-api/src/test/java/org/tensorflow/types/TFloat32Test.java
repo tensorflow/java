@@ -18,7 +18,7 @@
 package org.tensorflow.types;
 
 import org.tensorflow.Tensor;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 public class TFloat32Test extends NumericTypesTestBase<TFloat32, Float> {
 

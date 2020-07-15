@@ -24,8 +24,9 @@ import java.util.function.Consumer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.tools.Shape;
-import org.tensorflow.tools.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -243,7 +244,7 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * Returns the data of this tensor.
    *
    * <p>This method returns an accessor to the tensor data as an instance of {@code T}, which
-   * commonly maps this data to an {@link org.tensorflow.tools.ndarray.NdArray NdArray}. Input and
+   * commonly maps this data to an {@link NdArray NdArray}. Input and
    * output operations performed on the returned n-dimensional array are applied directly to the
    * tensor native memory. For example:
    *
@@ -263,13 +264,13 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * }
    * }</pre>
    *
-   * <p>Please refer to the documentation of the {@link org.tensorflow.tools.ndarray.NdArray NdArray}
+   * <p>Please refer to the documentation of the {@link NdArray NdArray}
    * classes for more information on the various techniques to read or write data in an
    * n-dimensional space using this data structure.
    *
    * @return the tensor data mapped to an n-dimensional space
    * @throws IllegalStateException if the tensor has been closed
-   * @see org.tensorflow.tools.ndarray.NdArray
+   * @see NdArray
    */
   public T data() {
     if (data == null) {

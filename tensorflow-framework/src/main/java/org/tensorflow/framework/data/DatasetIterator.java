@@ -18,16 +18,13 @@ package org.tensorflow.framework.data;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.data.impl.MapIterator;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Represents the state of an iteration through a tf.data Datset. DatasetIterator is not a

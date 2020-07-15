@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.xla.BroadcastHelper;
 import org.tensorflow.op.xla.ClusterOutput;
 import org.tensorflow.op.xla.Conv;
@@ -37,7 +38,6 @@ import org.tensorflow.op.xla.Send;
 import org.tensorflow.op.xla.Sharding;
 import org.tensorflow.op.xla.Sort;
 import org.tensorflow.op.xla.Svd;
-import org.tensorflow.tools.Shape;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 

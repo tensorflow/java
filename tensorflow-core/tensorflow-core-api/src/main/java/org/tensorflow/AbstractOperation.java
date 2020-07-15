@@ -16,7 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.bytedeco.javacpp.Pointer;
-import org.tensorflow.tools.Shape;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.family.TType;
 
 /**
