@@ -19,7 +19,6 @@ package org.tensorflow.ndarray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.Test;
 
 public abstract class ShortNdArrayTestBase extends NdArrayTestBase<Short> {
 

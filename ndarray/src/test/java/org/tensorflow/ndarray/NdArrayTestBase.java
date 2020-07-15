@@ -32,7 +32,7 @@ import static org.tensorflow.ndarray.index.Indices.to;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 
 public abstract class NdArrayTestBase<T> {
