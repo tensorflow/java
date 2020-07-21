@@ -62,8 +62,8 @@ public class NdArrayBenchmark {
 		for (int y = 0, pixelIdx = 0; y < image.getHeight(); ++y) {
 			for (int x = 0; x < image.getWidth(); ++x, ++pixelIdx) {
 				imageData.getPixel(x, y, pixel);
-				StdArrays.copyTo(pixels.get(pixelIdx), pixel);
-				StdArrays.copyTo(channels.slice(all(), at(pixelIdx)), pixel);
+				StdArrays.copyTo(pixel, pixels.get(pixelIdx));
+				StdArrays.copyTo(pixel, channels.slice(all(), at(pixelIdx)));
 			}
 		}
 		batches = NdArrays.ofFloats(Shape.of(BATCH_SIZE, 3, numPixels));

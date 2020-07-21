@@ -322,11 +322,11 @@ public abstract class NdArrayTestBase<T> {
         { { valueOf(0L), valueOf(1L) }, { valueOf(2L), valueOf(0L) } }
     });
 
-    StdArrays.copyTo(array1, values[0]);
-    StdArrays.copyTo(array2, values[0]);
-    StdArrays.copyTo(array3, values[0]);
+    StdArrays.copyTo(values[0], array1);
+    StdArrays.copyTo(values[0], array2);
+    StdArrays.copyTo(values[0], array3);
     array3.setObject(valueOf(0L), 0, 1);
-    StdArrays.copyTo(array4, values);
+    StdArrays.copyTo(values, array4);
 
     assertEquals(array1, array2);
     assertEquals(array1.hashCode(), array2.hashCode());

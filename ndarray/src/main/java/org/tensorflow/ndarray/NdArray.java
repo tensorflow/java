@@ -106,7 +106,10 @@ public interface NdArray<T> {
    *    });
    * }</pre>
    *
+   * @params dimensionIdx index of the dimension
    * @return an {@code NdArray} sequence
+   * @throws IllegalArgumentException if {@code dimensionIdx} is greater or equal to the total
+   *                                  number of dimensions of this array
    */
   NdArraySequence<? extends NdArray<T>> elements(int dimensionIdx);
 

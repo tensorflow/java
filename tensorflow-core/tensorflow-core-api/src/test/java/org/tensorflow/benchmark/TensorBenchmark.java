@@ -65,7 +65,7 @@ public class TensorBenchmark {
             }
         }
     };
-    TInt32.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(d, data));
+    TInt32.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data, d));
   }
 
   @Benchmark
