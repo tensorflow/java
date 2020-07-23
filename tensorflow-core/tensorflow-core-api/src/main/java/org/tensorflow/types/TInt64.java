@@ -59,7 +59,7 @@ public interface TInt64 extends LongNdArray, TNumber {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**

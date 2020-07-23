@@ -29,9 +29,7 @@
 
   <name>TensorFlow NdArray Library</name>
   <description>
-    Utility library used by TensorFlow Java for n-dimensional data I/O operations. This library does
-    not depend on the TensorFlow runtime and therefore can be included by any other projects outside
-    the TensorFlow organization.
+    Utility library for N-dimensional data I/O operations.
   </description>
 
   <dependencies>

@@ -72,7 +72,7 @@ public interface TBfloat16 extends FloatNdArray, TNumber {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(data, values));
+    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
