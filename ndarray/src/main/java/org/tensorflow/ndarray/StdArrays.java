@@ -11,7 +11,7 @@ import org.tensorflow.ndarray.buffer.DataBuffers;
 public final class StdArrays {
 
   /**
-   * Copy a single-dimension array of ints in a new {@link IntNdArray}
+   * Copy an array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -23,7 +23,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of ints in a new {@link IntNdArray}
+   * Copy a 2-dimensional array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -35,7 +35,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of ints in a new {@link IntNdArray}
+   * Copy a 3-dimensional array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -47,7 +47,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of ints in a new {@link IntNdArray}
+   * Copy a 4-dimensional array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -59,7 +59,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of ints in a new {@link IntNdArray}
+   * Copy a 5-dimensional array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -71,7 +71,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of ints in a new {@link IntNdArray}
+   * Copy a 6-dimensional array of ints in a new {@link IntNdArray}
    *
    * @param array source array
    * @return the {@code IntNdArray} copy
@@ -83,7 +83,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of longs in a new {@link LongNdArray}
+   * Copy an array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -95,7 +95,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of longs in a new {@link LongNdArray}
+   * Copy a 2-dimensional array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -107,7 +107,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of longs in a new {@link LongNdArray}
+   * Copy a 3-dimensional array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -119,7 +119,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of longs in a new {@link LongNdArray}
+   * Copy a 4-dimensional array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -131,7 +131,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of longs in a new {@link LongNdArray}
+   * Copy a 5-dimensional array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -143,7 +143,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of longs in a new {@link LongNdArray}
+   * Copy a 6-dimensional array of longs in a new {@link LongNdArray}
    *
    * @param array source array
    * @return the {@code LongNdArray} copy
@@ -155,7 +155,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of floats in a new {@link FloatNdArray}
+   * Copy an array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -167,7 +167,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of floats in a new {@link FloatNdArray}
+   * Copy a 2-dimensional array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -179,7 +179,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of floats in a new {@link FloatNdArray}
+   * Copy a 3-dimensional array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -191,7 +191,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of floats in a new {@link FloatNdArray}
+   * Copy a 4-dimensional array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -203,7 +203,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of floats in a new {@link FloatNdArray}
+   * Copy a 5-dimensional array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -215,7 +215,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of floats in a new {@link FloatNdArray}
+   * Copy a 6-dimensional array of floats in a new {@link FloatNdArray}
    *
    * @param array source array
    * @return the {@code FloatNdArray} copy
@@ -227,7 +227,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of doubles in a new {@link DoubleNdArray}
+   * Copy an array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -239,7 +239,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of doubles in a new {@link DoubleNdArray}
+   * Copy a 2-dimensional array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -251,7 +251,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of doubles in a new {@link DoubleNdArray}
+   * Copy a 3-dimensional array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -263,7 +263,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of doubles in a new {@link DoubleNdArray}
+   * Copy a 4-dimensional array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -275,7 +275,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of doubles in a new {@link DoubleNdArray}
+   * Copy a 5-dimensional array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -287,7 +287,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of doubles in a new {@link DoubleNdArray}
+   * Copy a 6-dimensional array of doubles in a new {@link DoubleNdArray}
    *
    * @param array source array
    * @return the {@code DoubleNdArray} copy
@@ -299,7 +299,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of bytes in a new {@link ByteNdArray}
+   * Copy an array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -311,7 +311,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of bytes in a new {@link ByteNdArray}
+   * Copy a 2-dimensional array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -323,7 +323,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of bytes in a new {@link ByteNdArray}
+   * Copy a 3-dimensional array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -335,7 +335,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of bytes in a new {@link ByteNdArray}
+   * Copy a 4-dimensional array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -347,7 +347,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of bytes in a new {@link ByteNdArray}
+   * Copy a 5-dimensional array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -359,7 +359,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of bytes in a new {@link ByteNdArray}
+   * Copy a 6-dimensional array of bytes in a new {@link ByteNdArray}
    *
    * @param array source array
    * @return the {@code ByteNdArray} copy
@@ -371,7 +371,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of shorts in a new {@link ShortNdArray}
+   * Copy an array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -383,7 +383,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of shorts in a new {@link ShortNdArray}
+   * Copy a 2-dimensional array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -395,7 +395,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of shorts in a new {@link ShortNdArray}
+   * Copy a 3-dimensional array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -407,7 +407,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of shorts in a new {@link ShortNdArray}
+   * Copy a 4-dimensional array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -419,7 +419,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of shorts in a new {@link ShortNdArray}
+   * Copy a 5-dimensional array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -431,7 +431,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of shorts in a new {@link ShortNdArray}
+   * Copy a 6-dimensional array of shorts in a new {@link ShortNdArray}
    *
    * @param array source array
    * @return the {@code ShortNdArray} copy
@@ -443,7 +443,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of booleans in a new {@link BooleanNdArray}
+   * Copy an array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -455,7 +455,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of booleans in a new {@link BooleanNdArray}
+   * Copy a 2-dimensional array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -467,7 +467,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of booleans in a new {@link BooleanNdArray}
+   * Copy a 3-dimensional array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -479,7 +479,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of booleans in a new {@link BooleanNdArray}
+   * Copy a 4-dimensional array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -491,7 +491,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of booleans in a new {@link BooleanNdArray}
+   * Copy a 5-dimensional array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -503,7 +503,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of booleans in a new {@link BooleanNdArray}
+   * Copy a 6-dimensional array of booleans in a new {@link BooleanNdArray}
    *
    * @param array source array
    * @return the {@code BooleanNdArray} copy
@@ -515,7 +515,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of objects in a new {@link NdArray}
+   * Copy an array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -528,7 +528,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of objects in a new {@link NdArray}
+   * Copy a 2-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -541,7 +541,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of objects in a new {@link NdArray}
+   * Copy a 3-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -554,7 +554,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of objects in a new {@link NdArray}
+   * Copy a 4-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -567,7 +567,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of objects in a new {@link NdArray}
+   * Copy a 5-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -580,7 +580,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of objects in a new {@link NdArray}
+   * Copy a 6-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
    * @return the {@code NdArray} copy
@@ -1321,7 +1321,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of ints into the {@code dst} {@link NdArray}
+   * Copy an array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1333,7 +1333,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of ints into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1347,7 +1347,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of ints into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1361,7 +1361,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of ints into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1375,7 +1375,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of ints into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1389,7 +1389,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of ints into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of ints into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1403,7 +1403,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of longs into the {@code dst} {@link NdArray}
+   * Copy an array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1415,7 +1415,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of longs into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1429,7 +1429,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of longs into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1443,7 +1443,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of longs into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1457,7 +1457,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of longs into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1471,7 +1471,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of longs into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of longs into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1485,7 +1485,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of floats into the {@code dst} {@link NdArray}
+   * Copy an array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1497,7 +1497,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of floats into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1511,7 +1511,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of floats into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1525,7 +1525,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of floats into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1539,7 +1539,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of floats into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1553,7 +1553,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of floats into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of floats into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1567,7 +1567,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of doubles into the {@code dst} {@link NdArray}
+   * Copy an array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1579,7 +1579,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of doubles into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1593,7 +1593,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of doubles into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1607,7 +1607,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of doubles into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1621,7 +1621,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of doubles into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1635,7 +1635,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of doubles into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of doubles into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1649,7 +1649,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of bytes into the {@code dst} {@link NdArray}
+   * Copy an array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1661,7 +1661,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of bytes into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1675,7 +1675,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of bytes into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1689,7 +1689,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of bytes into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1703,7 +1703,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of bytes into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1717,7 +1717,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of bytes into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of bytes into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1731,7 +1731,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of shorts into the {@code dst} {@link NdArray}
+   * Copy an array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1743,7 +1743,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of shorts into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1757,7 +1757,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of shorts into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1771,7 +1771,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of shorts into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1785,7 +1785,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of shorts into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1799,7 +1799,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of shorts into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of shorts into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1813,7 +1813,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of booleans into the {@code dst} {@link NdArray}
+   * Copy an array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1825,7 +1825,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of booleans into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1839,7 +1839,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of booleans into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1853,7 +1853,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of booleans into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1867,7 +1867,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of booleans into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1881,7 +1881,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of booleans into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of booleans into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1895,7 +1895,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a single-dimension array of objects into the {@code dst} {@link NdArray}
+   * Copy an array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-1 array
@@ -1907,7 +1907,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 2-dimensions array of objects into the {@code dst} {@link NdArray}
+   * Copy a 2-dimensional array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-2 array
@@ -1921,7 +1921,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 3-dimensions array of objects into the {@code dst} {@link NdArray}
+   * Copy a 3-dimensional array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-3 array
@@ -1935,7 +1935,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 4-dimensions array of objects into the {@code dst} {@link NdArray}
+   * Copy a 4-dimensional array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-4 array
@@ -1949,7 +1949,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 5-dimensions array of objects into the {@code dst} {@link NdArray}
+   * Copy a 5-dimensional array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-5 array
@@ -1963,7 +1963,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a 6-dimensions array of objects into the {@code dst} {@link NdArray}
+   * Copy a 6-dimensional array of objects into the {@code dst} {@link NdArray}
    *
    * @param src source array
    * @param dst destination rank-6 array
@@ -1978,7 +1978,7 @@ public final class StdArrays {
 
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of ints
+   * Copy a {@link NdArray} to an array of ints
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -1996,7 +1996,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of ints
+   * Copy a {@link NdArray} to a 2-dimensional array of ints
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2013,7 +2013,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of ints
+   * Copy a {@link NdArray} to a 3-dimensional array of ints
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2030,7 +2030,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of ints
+   * Copy a {@link NdArray} to a 4-dimensional array of ints
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2047,7 +2047,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of ints
+   * Copy a {@link NdArray} to a 5-dimensional array of ints
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2064,7 +2064,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of ints
+   * Copy a {@link NdArray} to a 6-dimensional array of ints
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2081,7 +2081,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of longs
+   * Copy a {@link NdArray} to an array of longs
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2099,7 +2099,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of longs
+   * Copy a {@link NdArray} to a 2-dimensional array of longs
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2116,7 +2116,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of longs
+   * Copy a {@link NdArray} to a 3-dimensional array of longs
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2133,7 +2133,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of longs
+   * Copy a {@link NdArray} to a 4-dimensional array of longs
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2150,7 +2150,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of longs
+   * Copy a {@link NdArray} to a 5-dimensional array of longs
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2167,7 +2167,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of longs
+   * Copy a {@link NdArray} to a 6-dimensional array of longs
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2184,7 +2184,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of floats
+   * Copy a {@link NdArray} to an array of floats
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2202,7 +2202,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of floats
+   * Copy a {@link NdArray} to a 2-dimensional array of floats
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2219,7 +2219,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of floats
+   * Copy a {@link NdArray} to a 3-dimensional array of floats
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2236,7 +2236,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of floats
+   * Copy a {@link NdArray} to a 4-dimensional array of floats
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2253,7 +2253,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of floats
+   * Copy a {@link NdArray} to a 5-dimensional array of floats
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2270,7 +2270,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of floats
+   * Copy a {@link NdArray} to a 6-dimensional array of floats
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2287,7 +2287,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of doubles
+   * Copy a {@link NdArray} to an array of doubles
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2305,7 +2305,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of doubles
+   * Copy a {@link NdArray} to a 2-dimensional array of doubles
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2322,7 +2322,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of doubles
+   * Copy a {@link NdArray} to a 3-dimensional array of doubles
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2339,7 +2339,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of doubles
+   * Copy a {@link NdArray} to a 4-dimensional array of doubles
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2356,7 +2356,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of doubles
+   * Copy a {@link NdArray} to a 5-dimensional array of doubles
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2373,7 +2373,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of doubles
+   * Copy a {@link NdArray} to a 6-dimensional array of doubles
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2390,7 +2390,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of bytes
+   * Copy a {@link NdArray} to an array of bytes
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2408,7 +2408,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of bytes
+   * Copy a {@link NdArray} to a 2-dimensional array of bytes
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2425,7 +2425,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of bytes
+   * Copy a {@link NdArray} to a 3-dimensional array of bytes
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2442,7 +2442,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of bytes
+   * Copy a {@link NdArray} to a 4-dimensional array of bytes
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2459,7 +2459,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of bytes
+   * Copy a {@link NdArray} to a 5-dimensional array of bytes
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2476,7 +2476,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of bytes
+   * Copy a {@link NdArray} to a 6-dimensional array of bytes
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2493,7 +2493,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of shorts
+   * Copy a {@link NdArray} to an array of shorts
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2511,7 +2511,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of shorts
+   * Copy a {@link NdArray} to a 2-dimensional array of shorts
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2528,7 +2528,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of shorts
+   * Copy a {@link NdArray} to a 3-dimensional array of shorts
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2545,7 +2545,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of shorts
+   * Copy a {@link NdArray} to a 4-dimensional array of shorts
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2562,7 +2562,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of shorts
+   * Copy a {@link NdArray} to a 5-dimensional array of shorts
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2579,7 +2579,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of shorts
+   * Copy a {@link NdArray} to a 6-dimensional array of shorts
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2596,7 +2596,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of booleans.
+   * Copy a {@link NdArray} to an array of booleans.
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2614,7 +2614,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of booleans
+   * Copy a {@link NdArray} to a 2-dimensional array of booleans
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2631,7 +2631,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of booleans
+   * Copy a {@link NdArray} to a 3-dimensional array of booleans
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2648,7 +2648,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of booleans
+   * Copy a {@link NdArray} to a 4-dimensional array of booleans
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2665,7 +2665,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of booleans
+   * Copy a {@link NdArray} to a 5-dimensional array of booleans
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2682,7 +2682,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of booleans
+   * Copy a {@link NdArray} to a 6-dimensional array of booleans
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2699,7 +2699,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a single-dimension array of objects
+   * Copy a {@link NdArray} to an array of objects
    *
    * @param src source rank-1 array
    * @param dst destination array
@@ -2717,7 +2717,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 2-dimensions array of objects
+   * Copy a {@link NdArray} to a 2-dimensional array of objects
    *
    * @param src source rank-2 array
    * @param dst destination array
@@ -2734,7 +2734,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 3-dimensions array of objects
+   * Copy a {@link NdArray} to a 3-dimensional array of objects
    *
    * @param src source rank-3 array
    * @param dst destination array
@@ -2751,7 +2751,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 4-dimensions array of objects
+   * Copy a {@link NdArray} to a 4-dimensional array of objects
    *
    * @param src source rank-4 array
    * @param dst destination array
@@ -2768,7 +2768,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 5-dimensions array of objects
+   * Copy a {@link NdArray} to a 5-dimensional array of objects
    *
    * @param src source rank-5 array
    * @param dst destination array
@@ -2785,7 +2785,7 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray} to a 6-dimensions array of objects
+   * Copy a {@link NdArray} to a 6-dimensional array of objects
    *
    * @param src source rank-6 array
    * @param dst destination array
@@ -2802,7 +2802,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension int array.
+   * Compute the shape of an int array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -2812,7 +2812,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions int array.
+   * Compute the shape of a 2-dimensional int array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -2822,7 +2822,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions int array.
+   * Compute the shape of a 3-dimensional int array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -2832,7 +2832,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions int array.
+   * Compute the shape of a 4-dimensional int array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -2842,7 +2842,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions int array.
+   * Compute the shape of a 5-dimensional int array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -2852,7 +2852,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions int array.
+   * Compute the shape of a 6-dimensional int array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -2862,7 +2862,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension long array.
+   * Compute the shape of a long array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -2872,7 +2872,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions long array.
+   * Compute the shape of a 2-dimensional long array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -2882,7 +2882,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions long array.
+   * Compute the shape of a 3-dimensional long array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -2892,7 +2892,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions long array.
+   * Compute the shape of a 4-dimensional long array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -2902,7 +2902,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions long array.
+   * Compute the shape of a 5-dimensional long array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -2912,7 +2912,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions long array.
+   * Compute the shape of a 6-dimensional long array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -2922,7 +2922,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension float array.
+   * Compute the shape of a float array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -2932,7 +2932,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions float array.
+   * Compute the shape of a 2-dimensional float array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -2942,7 +2942,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions float array.
+   * Compute the shape of a 3-dimensional float array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -2952,7 +2952,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions float array.
+   * Compute the shape of a 4-dimensional float array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -2962,7 +2962,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions float array.
+   * Compute the shape of a 5-dimensional float array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -2972,7 +2972,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions float array.
+   * Compute the shape of a 6-dimensional float array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -2982,7 +2982,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension double array.
+   * Compute the shape of a double array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -2992,7 +2992,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions double array.
+   * Compute the shape of a 2-dimensional double array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -3002,7 +3002,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions double array.
+   * Compute the shape of a 3-dimensional double array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -3012,7 +3012,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions double array.
+   * Compute the shape of a 4-dimensional double array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -3022,7 +3022,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions double array.
+   * Compute the shape of a 5-dimensional double array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -3032,7 +3032,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions double array.
+   * Compute the shape of a 6-dimensional double array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -3042,7 +3042,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension byte array.
+   * Compute the shape of a byte array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -3052,7 +3052,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions byte array.
+   * Compute the shape of a 2-dimensional byte array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -3062,7 +3062,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions byte array.
+   * Compute the shape of a 3-dimensional byte array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -3072,7 +3072,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions byte array.
+   * Compute the shape of a 4-dimensional byte array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -3082,7 +3082,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions byte array.
+   * Compute the shape of a 5-dimensional byte array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -3092,7 +3092,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions byte array.
+   * Compute the shape of a 6-dimensional byte array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -3102,7 +3102,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension short array.
+   * Compute the shape of a short array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -3112,7 +3112,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions short array.
+   * Compute the shape of a 2-dimensional short array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -3122,7 +3122,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions short array.
+   * Compute the shape of a 3-dimensional short array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -3132,7 +3132,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions short array.
+   * Compute the shape of a 4-dimensional short array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -3142,7 +3142,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions short array.
+   * Compute the shape of a 5-dimensional short array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -3152,7 +3152,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions short array.
+   * Compute the shape of a 6-dimensional short array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -3162,7 +3162,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension boolean array.
+   * Compute the shape of a boolean array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -3172,7 +3172,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions boolean array.
+   * Compute the shape of a 2-dimensional boolean array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -3182,7 +3182,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions boolean array.
+   * Compute the shape of a 3-dimensional boolean array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -3192,7 +3192,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions boolean array.
+   * Compute the shape of a 4-dimensional boolean array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -3202,7 +3202,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions boolean array.
+   * Compute the shape of a 5-dimensional boolean array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -3212,7 +3212,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions boolean array.
+   * Compute the shape of a 6-dimensional boolean array.
    *
    * @param array 6D array
    * @return shape of the array
@@ -3222,7 +3222,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a single-dimension object array.
+   * Compute the shape of an object array.
    *
    * @param array 1D array
    * @return shape of the array
@@ -3232,7 +3232,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions object array.
+   * Compute the shape of a 2-dimensional object array.
    *
    * @param array 2D array
    * @return shape of the array
@@ -3242,7 +3242,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 3-dimensions object array.
+   * Compute the shape of a 3-dimensional object array.
    *
    * @param array 3D array
    * @return shape of the array
@@ -3252,7 +3252,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 4-dimensions object array.
+   * Compute the shape of a 4-dimensional object array.
    *
    * @param array 4D array
    * @return shape of the array
@@ -3262,7 +3262,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 5-dimensions object array.
+   * Compute the shape of a 5-dimensional object array.
    *
    * @param array 5D array
    * @return shape of the array
@@ -3272,7 +3272,7 @@ public final class StdArrays {
   }
 
   /**
-   * Compute the shape of a 6-dimensions object array.
+   * Compute the shape of a 6-dimensional object array.
    *
    * @param array 6D array
    * @return shape of the array
