@@ -100,10 +100,23 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- Two profiles are used:
-       ossrh - deploys to ossrh/maven central
-       bintray - deploys to bintray/jcenter. -->
   <profiles>
+    <!--
+    Profile dev
+        The 'dev' profile is used for local development or PR compilation check only.
+        Here, we enable the `tensorflow-keras` module only under this profile, until
+        it is mature enough for being deployed and distributed for the end users.
+    -->
+    <profile>
+      <id>dev</id>
+      <modules>
+        <module>tensorflow-keras</module>
+      </modules>
+    </profile>
+    <!--
+    Profile ossrh
+        Deploys to ossrh/maven central
+    -->
     <profile>
       <id>ossrh</id>
       <distributionManagement>
@@ -118,6 +131,10 @@
         </repository>
       </distributionManagement>
     </profile>
+    <!--
+    Profile bintray
+        Deploys to bintray/jcenter
+    -->
     <profile>
       <id>bintray</id>
       <distributionManagement>
