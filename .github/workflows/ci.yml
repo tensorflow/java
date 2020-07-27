@@ -99,6 +99,8 @@ jobs:
         shell: cmd
         run: |
           python -m pip install six
+          echo Removing broken version of Bash from WSL
+          rm.exe "C:/WINDOWS/system32/bash.EXE"
           echo Removing some unused stuff to avoid running out of disk space
           rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
           echo Removing old versions of MSVC that interfere with Bazel
@@ -129,6 +131,7 @@ jobs:
           set "TEMP=C:\tmp"
           set "TMP=C:\tmp"
           mkdir C:\tmp
+          bash --version
           git --version
           cl
           call mvn -version
