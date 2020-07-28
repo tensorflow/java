@@ -43,8 +43,17 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.NoOp;
+import org.tensorflow.op.core.Placeholder;
+import org.tensorflow.op.train.Restore;
+import org.tensorflow.op.train.Save;
 import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.types.TString;
 
 
 /**
@@ -65,6 +74,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
+  }
+
+  Graph(TF_Graph nativeHandle, SaverDef saverDef) {
+    this(nativeHandle);
+    this.saverDef = saverDef;
   }
 
   /**
@@ -402,9 +416,27 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+  /**
+   * Return the {@link SaverDef} instance used to save the state of all variables present in
+   * this graph.
+   *
+   * <p/>On the first call of this method, all nodes necessary to save and restore the state of the
+   * variables are added to the graph. Consequently, any variables that are added to the graph after
+   * this call could not be saved nor restored using this {@link SaverDef}.
+   *
+   * @return a {@link SaverDef} instance
+   */
+  synchronized SaverDef saverDef() {
+    if (saverDef == null) {
+      saverDef = addVariableSaver(this);
+    }
+    return saverDef;
+  }
+
   private final Object nativeHandleLock = new Object();
   private TF_Graph nativeHandle;
   private int refcount = 0;
+  private SaverDef saverDef;
 
   private final List<Op> initializers = new ArrayList<>();
 
@@ -724,6 +756,53 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
       return outputHandlesAndIndices;
     }
+  }
+
+  private static SaverDef addVariableSaver(Graph graph) {
+    Ops tf = Ops.create(graph).withSubScope("save");
+
+    List<String> varNames = new ArrayList<>();
+    List<Operand<?>> varOutputs = new ArrayList<>();
+    List<DataType<?>> varTypes = new ArrayList<>();
+
+    for (Iterator<Operation> iter = graph.operations(); iter.hasNext();) {
+      Operation op = iter.next();
+      if (op.type().equals("VariableV2")) {
+        varNames.add(op.name());
+        varOutputs.add(op.output(0));
+        varTypes.add(op.output(0).dataType());
+      }
+    }
+
+    // FIXME Need an easier way to initialize an NdArray from a list
+    String[] tmp = new String[varNames.size()];
+    Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
+    Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
+
+    Placeholder<TString> saveFilename = tf.placeholder(TString.DTYPE);
+    Save saveVariables = tf.train.save(
+        saveFilename,
+        varNamesTensor,
+        varSlices,
+        varOutputs
+    );
+    Restore restoreVariables = tf.train.restore(
+        saveFilename,
+        varNamesTensor,
+        varSlices,
+        varTypes
+    );
+    List<Op> restoreOps = new ArrayList<>(varOutputs.size());
+    for (int i = 0; i < varOutputs.size(); ++i) {
+      restoreOps.add(tf.assign(varOutputs.get(i), (Operand) restoreVariables.tensors().get(i)));
+    }
+    NoOp restoreAll = tf.withControlDependencies(restoreOps).noOp();
+
+    return SaverDef.newBuilder()
+        .setFilenameTensorName(saveFilename.op().name())
+        .setSaveTensorName(saveVariables.op().name())
+        .setRestoreOpName(restoreAll.op().name())
+        .build();
   }
 
   static {
