@@ -20,6 +20,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -32,6 +35,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.RunOptions;
+import org.tensorflow.proto.framework.SignatureDef;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
@@ -95,6 +99,101 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
+   * SignatureToNodeName finds the node names in the {@link Graph} corresponding to the
+   * input / output parameters of a <a
+   * href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a>
+   */
+  public static final class SignatureToNodeName {
+
+    public SignatureToNodeName(SavedModelBundle savedModelBundle) {
+      loadSignatures(savedModelBundle);
+    }
+
+    /**
+     * Given a tf.function signature name, find the node names corresponding
+     * to the input arguments
+     *
+     * @param functionSignatureName tf.function signature name
+     * @return a map from input arguments to node names in the {@link Graph}
+     */
+    public Map<String, String> inputNameToNode(String functionSignatureName) {
+      NameContainer nc = this.functionMap.get(functionSignatureName);
+      return (nc == null) ? null : nc.inputNameToNode();
+    }
+
+    /**
+     * Given a tf.function signature name, find the node names corresponding
+     * to the output arguments
+     *
+     * @param functionSignatureName tf.function signature name
+     * @return a map from output arguments to node names in the {@link Graph}
+     */
+    public Map<String, String> outputNameToNode(String functionSignatureName) {
+      NameContainer nc = this.functionMap.get(functionSignatureName);
+      return (nc == null) ? null : nc.outputNameToNode();
+    }
+
+    /**
+     * Given a tf.function signature name, find the method name
+     */
+    public String methodName(String functionSignatureName) {
+      NameContainer nc = this.functionMap.get(functionSignatureName);
+      return (nc == null) ? null : nc.methodName();
+    }
+
+    private void loadSignatures(SavedModelBundle savedModelBundle) {
+      MetaGraphDef metaGraph = savedModelBundle.metaGraphDef();
+      Map<String, SignatureDef> signatureMap = metaGraph.getSignatureDefMap();
+
+      // A saved model can contain multiple SignatureDef
+      for (Map.Entry<String, SignatureDef> entry : signatureMap.entrySet()) {
+        NameContainer nc = new NameContainer(entry.getValue());
+        this.functionMap.put(entry.getKey(), nc);
+      }
+    }
+
+    private Map<String, NameContainer> functionMap = new HashMap<>();
+
+    private static final class NameContainer {
+       NameContainer(SignatureDef sd) {
+         this.inputNameToNodeName = sd.getInputsMap()
+           .entrySet()
+           .stream()
+           .collect(Collectors.toMap(
+              e -> e.getKey(),
+              e -> e.getValue().getName()
+          ));
+
+         this.outputNameToNodeName = sd.getOutputsMap()
+           .entrySet()
+           .stream()
+           .collect(Collectors.toMap(
+              e -> e.getKey(),
+              e -> e.getValue().getName()
+          ));
+
+         this.method = sd.getMethodName();
+       }
+
+       public Map<String, String> inputNameToNode() {
+         return this.inputNameToNodeName;
+       }
+
+       public Map<String, String> outputNameToNode() {
+         return this.outputNameToNodeName;
+       }
+
+       public String methodName() {
+         return this.method;
+       }
+
+       private Map<String, String> inputNameToNodeName;
+       private Map<String, String> outputNameToNodeName;
+       private String method;
+    }
+  }
+
+  /**
    * Load a saved model from an export directory. The model that is being loaded should be created
    * using the <a href="https://www.tensorflow.org/api_docs/python/tf/saved_model">Saved Model
    * API</a>.
@@ -149,6 +248,34 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
+   * Returns the {@link SignatureToNodeName} translator for the model.
+   *
+   * @return SignatureToNodeName translator
+   */
+  public SignatureToNodeName getSignatureToNodeName() {
+    if (this.sigToNodeName == null) {
+      // no need to lock, ok to create multiple instances
+      this.sigToNodeName = new SignatureToNodeName(this);
+    }
+    return this.sigToNodeName;
+  }
+
+  /**
+   * Return a {@link TfFunction} corresponding to the function signature.
+   *
+   * <pre>{@code
+   * TfFunction myFunction = savedModelBundle.function("myFunctionSignatureName");
+   * Map<String, Tensor<?>> outputTensorMap = myFunction.call(inputTensorMap);
+   * }</pre>
+   *
+   * @param functionSignatureName name of the {@code SignatureDef} in the saved model.
+   * @return TfFunction object that can be used to make calls to the tf.function
+   */
+  public TfFunction function(String functionSignatureName) {
+    return new TfFunction(functionSignatureName, this.getSignatureToNodeName(), this.session);
+  }
+
+  /**
    * Releases resources (the {@link Graph} and {@link Session}) associated with the saved model
    * bundle.
    */
@@ -161,6 +288,7 @@ public class SavedModelBundle implements AutoCloseable {
   private final Graph graph;
   private final Session session;
   private final MetaGraphDef metaGraphDef;
+  private SignatureToNodeName sigToNodeName;
 
   private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef) {
     this.graph = graph;
