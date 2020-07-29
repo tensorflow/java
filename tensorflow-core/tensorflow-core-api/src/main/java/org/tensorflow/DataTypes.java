@@ -43,8 +43,8 @@ final class DataTypes {
    * @return data type for this code
    * @throws IllegalArgumentException if the code matches no registered data type
    */
-  static DataType<?> fromNativeCode(int nativeCode) {
-    DataType<?> dataType = DATA_TYPE_REGISTRY.get(nativeCode);
+  static DataType<? extends Tensor> fromNativeCode(int nativeCode) {
+    DataType<? extends Tensor> dataType = DATA_TYPE_REGISTRY.get(nativeCode);
     if (dataType == null) {
       throw new IllegalArgumentException(
           "DataType " + nativeCode + " is not recognized in Java (version " + TensorFlow.version() + ")");
@@ -52,7 +52,7 @@ final class DataTypes {
     return dataType;
   }
 
-  private static final Map<Integer, DataType<?>> DATA_TYPE_REGISTRY = new HashMap<>();
+  private static final Map<Integer, DataType<? extends Tensor>> DATA_TYPE_REGISTRY = new HashMap<>();
 
   static {
     register(TBool.DTYPE);
@@ -68,7 +68,7 @@ final class DataTypes {
 
   // TODO (karllessard): Right now this method is private but we might want to expose it
   //      to allow user to register custom data types?
-  private static void register(DataType<?> dataType) {
+  private static void register(DataType<? extends Tensor> dataType) {
     DATA_TYPE_REGISTRY.put(dataType.nativeCode(), dataType);
     DATA_TYPE_REGISTRY.put(dataType.nativeCode() + 100, dataType);
   }

@@ -162,7 +162,13 @@ class EagerOperation extends AbstractOperation {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      return Tensor.fromHandle(tensor, session);
+      Tensor<?> t = Tensors.fromHandle(tensor);
+      session.attach(t.nativeHandle());
+      // Now that the tensor life is attached to the eager session scope, closing it will
+      // implicitly detach it from its previous internal scope
+      // FIXME TENSOR REFACT : is that right and ok?
+      t.close();
+      return t;
     }
   }
 

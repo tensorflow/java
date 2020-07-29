@@ -23,21 +23,19 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
+import org.tensorflow.types.family.TFloat;
 
 /**
  * IEEE-754 double-precision 64-bit float tensor type.
  */
-public interface TFloat64 extends DoubleNdArray, TNumber {
+public interface TFloat64 extends DoubleTensor<TFloat64>, TFloat {
 
   /** Type metadata */
-  DataType<TFloat64> DTYPE = DataType.create("DOUBLE", 2, 8, TFloat64Impl::mapTensor);
+  DataType<TFloat64> DTYPE = DataType.create("DOUBLE", 2, 8, TFloat64Impl::new);
 
   /**
    * Allocates a new tensor for storing a single double value.
@@ -45,8 +43,8 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @param value double to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat64> scalarOf(double value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setDouble(value));
+  static TFloat64 scalarOf(double value) {
+    return Tensor.of(DTYPE, Shape.scalar(), t -> t.setDouble(value));
   }
 
   /**
@@ -55,11 +53,11 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @param values doubles to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat64> vectorOf(double... values) {
+  static TFloat64 vectorOf(double... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -70,7 +68,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat64> tensorOf(NdArray<Double> src) {
+  static TFloat64 tensorOf(NdArray<Double> src) {
     return Tensor.of(DTYPE, src.shape(), src::copyTo);
   }
 
@@ -80,7 +78,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TFloat64> tensorOf(Shape shape) {
+  static TFloat64 tensorOf(Shape shape) {
     return Tensor.of(DTYPE, shape);
   }
 
@@ -91,33 +89,29 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
    * @param data buffer of doubles to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TFloat64> tensorOf(Shape shape, DoubleDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  static TFloat64 tensorOf(Shape shape, DoubleDataBuffer data) {
+    return Tensor.of(DTYPE, shape, t -> t.write(data));
   }
 
   /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
    * @param shape shape of the tensor to allocate
-   * @param dataInit tensor data initializer
+   * @param tensorInit tensor data initializer
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TFloat64> tensorOf(Shape shape, Consumer<TFloat64> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
+  static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> tensorInit) {
+    return Tensor.of(DTYPE, shape, tensorInit);
   }
 }
 
 /**
  * Hidden implementation of a {@code TFloat64}
  */
-class TFloat64Impl extends DoubleDenseNdArray implements TFloat64 {
+class TFloat64Impl extends DoubleTensorImpl<TFloat64> implements TFloat64 {
 
-  static TFloat64 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TFloat64Impl(TensorBuffers.toDoubles(nativeTensor), shape);
-  }
-
-  private TFloat64Impl(DoubleDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  TFloat64Impl(TF_Tensor nativeTensor, Shape shape) {
+    super(nativeTensor, DTYPE, shape, TensorBuffers.toDoubles(nativeTensor));
   }
 }

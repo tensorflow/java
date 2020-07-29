@@ -23,7 +23,7 @@ import org.tensorflow.types.family.TType;
 public final class DataType<T extends TType> {
 
   @FunctionalInterface
-  public interface TensorMapper<T> {
+  public interface TensorInstantiator<T> {
 
     /**
      * Maps tensor memory to a data structure for manipulating elements of this type.
@@ -41,10 +41,10 @@ public final class DataType<T extends TType> {
    * @param name readable-name for this type
    * @param value must match the corresponding TF_* value in the TensorFlow C API.
    * @param byteSize size of an element of this type, in bytes, -1 if unknown
-   * @param tensorMapper method for mapping tensor memory to elements of this type
+   * @param tensorMapper method for instantiating tensor from a native reference
    */
-  public static <T extends TType> DataType<T> create(String name, int value, int byteSize, TensorMapper<T> tensorMapper) {
-    return new DataType<>(name, value, byteSize, tensorMapper);
+  public static <T extends TType> DataType<T> create(String name, int value, int byteSize, TensorInstantiator<T> instantiator) {
+    return new DataType<>(name, value, byteSize, instantiator);
   }
 
   /**
@@ -76,29 +76,29 @@ public final class DataType<T extends TType> {
   /**
    * Returns the numeric code for this datatype, as recognized by the native library (C API)
    */
-  int nativeCode() {
+  public int nativeCode() {
     return nativeCode;
   }
 
   /**
-   * Maps a tensor to a data structure for manipulating elements of this type.
+   * Instantiate a tensor of this datatype from the provided native handle
    *
-   * @param tensor tensor to map
-   * @return data structure of elements of this type
+   * @param handle tensor native handle
+   * @return a tensor of this datatype
    */
-  T map(Tensor<T> tensor) {
-    return tensorMapper.apply(tensor.nativeHandle(), tensor.shape());
+  T instantiateTensor(TF_Tensor handle, Shape shape) {
+    return tensorInstantiator.apply(handle, shape);
   }
 
   private final int nativeCode;
   private final int byteSize;
   private final String name;
-  private final TensorMapper<T> tensorMapper;
+  private final TensorInstantiator<T> tensorInstantiator;
 
-  private DataType(String name, int nativeCode, int byteSize, TensorMapper<T> tensorMapper) {
+  private DataType(String name, int nativeCode, int byteSize, TensorInstantiator<T> tensorInstantiator) {
     this.name = name;
     this.nativeCode = nativeCode;
     this.byteSize = byteSize;
-    this.tensorMapper = tensorMapper;
+    this.tensorInstantiator = tensorInstantiator;
   }
 }

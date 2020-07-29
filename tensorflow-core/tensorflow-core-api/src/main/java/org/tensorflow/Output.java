@@ -80,8 +80,8 @@ public final class Output<T extends TType> implements Operand<T> {
    * @see EagerSession
    */
   @SuppressWarnings("unchecked")
-  public Tensor<T> tensor() {
-    return (Tensor<T>) operation.tensor(index);
+  public T tensor() {
+    return (T)operation.tensor(index);
   }
 
   @Override

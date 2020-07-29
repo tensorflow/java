@@ -1004,9 +1004,9 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *     buffer
    */
   @Endpoint
-  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+  public static <T extends TType & Tensor> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
       ByteDataBuffer data) {
-    try (Tensor<T> value = Tensor.of(type, shape, data)) {
+    try (T value = Tensor.of(type, shape, data)) {
       return create(scope, value);
     }
   }

@@ -504,7 +504,7 @@ public class TensorTest {
     // close() on both Tensors.
     final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
     try (Tensor<TFloat32> src = TFloat32.tensorOf(matrix)) {
-      Tensor<TFloat32> cpy = Tensor.fromHandle(src.nativeHandle()).expect(TFloat32.DTYPE);
+      Tensor<TFloat32> cpy = Tensors.fromHandle(src.nativeHandle()).expect(TFloat32.DTYPE);
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
       assertEquals(src.shape(), cpy.shape());
