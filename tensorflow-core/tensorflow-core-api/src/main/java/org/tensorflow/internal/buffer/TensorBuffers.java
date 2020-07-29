@@ -156,7 +156,7 @@ public final class TensorBuffers {
    * @param nativeTensor native reference to the tensor
    * @return a string buffer
    */
-  public static StringTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
+  public static ByteSequenceTensorBuffer toStrings(TF_Tensor nativeTensor, long numElements) {
     Pointer tensorMemory = tensorMemory(nativeTensor);
     if (TensorRawDataBufferFactory.canBeUsed()) {
       return TensorRawDataBufferFactory.mapTensorToStrings(tensorMemory, numElements);
@@ -173,7 +173,7 @@ public final class TensorBuffers {
     dataBuffer.position((int)numElements * Long.BYTES);
     ByteDataBuffer data = DataBuffers.of(dataBuffer.slice());
 
-    return new StringTensorBuffer(offsets, data);
+    return new ByteSequenceTensorBuffer(offsets, data);
   }
 
   private static Pointer tensorMemory(TF_Tensor nativeTensor) {

@@ -1872,7 +1872,7 @@ public final class Ops {
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *      buffer
    */
-  public <T extends TType> Constant<T> constant(DataType<T> type, Shape shape,
+  public <T extends TType & Tensor> Constant<T> constant(DataType<T> type, Shape shape,
       ByteDataBuffer data) {
     return Constant.tensorOf(scope, type, shape, data);
   }

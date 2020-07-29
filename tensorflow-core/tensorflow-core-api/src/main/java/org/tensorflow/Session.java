@@ -667,7 +667,7 @@ public final class Session implements AutoCloseable {
 
       for (int i = 0; i < noutputs; ++i) {
         TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputTensors.add(Tensor.fromHandle(h));
+        outputTensors.add(Tensors.fromHandle(h));
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

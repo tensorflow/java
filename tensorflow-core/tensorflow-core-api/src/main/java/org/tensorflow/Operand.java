@@ -60,7 +60,7 @@ public interface Operand<T extends TType> extends Op {
    * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
    */
-  default Tensor<T> asTensor() {
+  default T asTensor() {
     return asOutput().tensor();
   }
 
@@ -72,8 +72,10 @@ public interface Operand<T extends TType> extends Op {
    *
    * @return the tensor data
    * @throws IllegalStateException if this is an operand of a graph
+   * @deprecated use {@link #asTensor()} instead
    */
+  @Deprecated
   default T data() {
-    return asOutput().tensor().data();
+    return asTensor();
   }
 }
