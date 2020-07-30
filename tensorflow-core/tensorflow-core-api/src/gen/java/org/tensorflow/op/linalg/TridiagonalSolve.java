@@ -36,6 +36,7 @@ import org.tensorflow.types.family.TType;
  *   On CPU, solution is computed via Gaussian elimination with or without partial
  *   pivoting, depending on `partial_pivoting` attribute. On GPU, Nvidia's cuSPARSE
  *   library is used: https://docs.nvidia.com/cuda/cusparse/index.html#gtsv
+ *   Partial pivoting is not yet supported by XLA backends.
  * 
  * @param <T> data type for {@code output()} output
  */

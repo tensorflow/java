@@ -98,7 +98,7 @@ public final class ImageOps {
    * Adjust the hue of one or more images.
    *  <p>
    *  `images` is a tensor of at least 3 dimensions.  The last dimension is
-   *  interpretted as channels, and must be three.
+   *  interpreted as channels, and must be three.
    *  <p>
    *  The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A delta is then applied all the hue values,
@@ -117,7 +117,7 @@ public final class ImageOps {
    * Adjust the saturation of one or more images.
    *  <p>
    *  `images` is a tensor of at least 3 dimensions.  The last dimension is
-   *  interpretted as channels, and must be three.
+   *  interpreted as channels, and must be three.
    *  <p>
    *  The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A scale is then applied all the saturation
@@ -347,7 +347,7 @@ public final class ImageOps {
    *      convert $src.gif -coalesce $dst.gif
    *  <p>
    *  This op also supports decoding JPEGs and PNGs, though it is cleaner to use
-   *  `tf.image.decode_image`.
+   *  `tf.io.decode_image`.
    *
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
@@ -382,7 +382,7 @@ public final class ImageOps {
    *  downscaling the image later.
    *  <p>
    *  This op also supports decoding PNGs and non-animated GIFs since the interface is
-   *  the same, though it is cleaner to use `tf.image.decode_image`.
+   *  the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param contents 0-D.  The JPEG-encoded image.
    * @param options carries optional attributes values
@@ -417,7 +417,7 @@ public final class ImageOps {
    *  of color channels.
    *  <p>
    *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.image.decode_image`.
+   *  is the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param <T> data type for {@code image()} output
    * @param contents 0-D.  The PNG-encoded image.
@@ -453,7 +453,7 @@ public final class ImageOps {
    *  of color channels.
    *  <p>
    *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.image.decode_image`.
+   *  is the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param <T> data type for {@code image()} output
    * @param contents 0-D.  The PNG-encoded image.

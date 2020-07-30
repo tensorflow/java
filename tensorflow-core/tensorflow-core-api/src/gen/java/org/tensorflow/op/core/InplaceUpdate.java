@@ -29,9 +29,12 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- *     Updates specified rows with values in `v`.
+ * Updates specified rows 'i' with values 'v'.
  * <p>
- *     Computes `x[i, :] = v; return x`.
+ * Computes `x[i, :] = v; return x`.
+ * <p>
+ * Originally this function is mutative however for compilation we make this
+ * operation create / operate on a copy of `x`.
  * 
  * @param <T> data type for {@code y()} output
  */

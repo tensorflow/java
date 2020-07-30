@@ -44,4 +44,28 @@ public interface DebugMetadataOrBuilder extends
    */
   com.google.protobuf.ByteString
       getFileVersionBytes();
+
+  /**
+   * <pre>
+   * A unique ID for the current run of tfdbg.
+   * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+   * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+   * have the same ID.
+   * </pre>
+   *
+   * <code>string tfdbg_run_id = 3;</code>
+   */
+  java.lang.String getTfdbgRunId();
+  /**
+   * <pre>
+   * A unique ID for the current run of tfdbg.
+   * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+   * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+   * have the same ID.
+   * </pre>
+   *
+   * <code>string tfdbg_run_id = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getTfdbgRunIdBytes();
 }

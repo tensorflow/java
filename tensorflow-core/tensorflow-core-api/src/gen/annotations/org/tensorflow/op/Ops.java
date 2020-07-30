@@ -68,8 +68,10 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
 import org.tensorflow.op.core.CountUpTo;
+import org.tensorflow.op.core.DataServiceDataset;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
+import org.tensorflow.op.core.DenseBincount;
 import org.tensorflow.op.core.DestroyResourceOp;
 import org.tensorflow.op.core.DestroyTemporaryVariable;
 import org.tensorflow.op.core.DynamicPartition;
@@ -101,7 +103,6 @@ import org.tensorflow.op.core.InplaceAdd;
 import org.tensorflow.op.core.InplaceSub;
 import org.tensorflow.op.core.InplaceUpdate;
 import org.tensorflow.op.core.IsVariableInitialized;
-import org.tensorflow.op.core.LinSpace;
 import org.tensorflow.op.core.LookupTableExport;
 import org.tensorflow.op.core.LookupTableFind;
 import org.tensorflow.op.core.LookupTableImport;
@@ -144,6 +145,7 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
+import org.tensorflow.op.core.RaggedBincount;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.ReadVariableOp;
@@ -167,6 +169,8 @@ import org.tensorflow.op.core.ResourceScatterMax;
 import org.tensorflow.op.core.ResourceScatterMin;
 import org.tensorflow.op.core.ResourceScatterMul;
 import org.tensorflow.op.core.ResourceScatterNdAdd;
+import org.tensorflow.op.core.ResourceScatterNdMax;
+import org.tensorflow.op.core.ResourceScatterNdMin;
 import org.tensorflow.op.core.ResourceScatterNdSub;
 import org.tensorflow.op.core.ResourceScatterNdUpdate;
 import org.tensorflow.op.core.ResourceScatterSub;
@@ -197,6 +201,9 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
+import org.tensorflow.op.core.SparseBincount;
+import org.tensorflow.op.core.SparseCrossHashed;
+import org.tensorflow.op.core.SparseCrossV2;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -242,6 +249,8 @@ import org.tensorflow.op.core.TensorListScatterIntoExistingList;
 import org.tensorflow.op.core.TensorListSetItem;
 import org.tensorflow.op.core.TensorListSplit;
 import org.tensorflow.op.core.TensorListStack;
+import org.tensorflow.op.core.TensorScatterMax;
+import org.tensorflow.op.core.TensorScatterMin;
 import org.tensorflow.op.core.TensorScatterNdAdd;
 import org.tensorflow.op.core.TensorScatterNdSub;
 import org.tensorflow.op.core.TensorScatterNdUpdate;
@@ -261,6 +270,8 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
+import org.tensorflow.op.core.XlaSpmdFullToShardShape;
+import org.tensorflow.op.core.XlaSpmdShardToFullShape;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -338,9 +349,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -362,8 +373,8 @@ public final class Ops {
     math = new MathOps(scope);
     audio = new AudioOps(scope);
     signal = new SignalOps(scope);
-    quantization = new QuantizationOps(scope);
     train = new TrainOps(scope);
+    quantization = new QuantizationOps(scope);
   }
 
   /**
@@ -1019,6 +1030,15 @@ public final class Ops {
    *  <p>
    *  In the above example, the input Tensor with the shape of `[1, 3]`
    *  is broadcasted to output Tensor with shape of `[3, 3]`.
+   *  <p>
+   *  When doing broadcasted operations such as multiplying a tensor
+   *  by a scalar, broadcasting (usually) confers some time or space
+   *  benefit, as the broadcasted tensor is never materialized.
+   *  <p>
+   *  However, `broadcast_to` does not carry with it any such benefits.
+   *  The newly-created tensor takes the full memory of the broadcasted
+   *  shape. (In a graph context, `broadcast_to` might be fused to
+   *  subsequent operation and then be optimized away, however.)
    *
    * @param <T> data type for {@code output()} output
    * @param input A Tensor to broadcast.
@@ -1901,6 +1921,28 @@ public final class Ops {
   }
 
   /**
+   *
+   * @param datasetId
+   * @param processingMode
+   * @param address
+   * @param protocol
+   * @param jobName
+   * @param maxOutstandingRequests
+   * @param iterationCounter
+   * @param outputTypes
+   * @param outputShapes
+   * @param options carries optional attributes values
+   * @return a new instance of DataServiceDataset
+   */
+  public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
+      Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
+      Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter,
+      List<DataType<?>> outputTypes, List<Shape> outputShapes,
+      DataServiceDataset.Options... options) {
+    return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
+  }
+
+  /**
    * Makes a copy of `x`.
    *
    * @param <T> data type for {@code y()} output
@@ -1919,6 +1961,31 @@ public final class Ops {
    */
   public DeleteSessionTensor deleteSessionTensor(Operand<TString> handle) {
     return DeleteSessionTensor.create(scope, handle);
+  }
+
+  /**
+   * Counts the number of occurrences of each value in an integer array.
+   *  <p>
+   *  Outputs a vector with length `size` and the same dtype as `weights`. If
+   *  `weights` are empty, then index `i` stores the number of times the value `i` is
+   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
+   *  the value in `weights` at each index where the corresponding value in `arr` is
+   *  `i`.
+   *  <p>
+   *  Values in `arr` outside of the range [0, size) are ignored.
+   *
+   * @param <U> data type for {@code output()} output
+   * @param input 1D or 2D int `Tensor`.
+   * @param size non-negative int scalar `Tensor`.
+   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
+   *  shape as `arr`, or a length-0 `Tensor`, in which case it acts as all weights
+   *  equal to 1.
+   * @param options carries optional attributes values
+   * @return a new instance of DenseBincount
+   */
+  public <U extends TNumber, T extends TNumber> DenseBincount<U> denseBincount(Operand<T> input,
+      Operand<T> size, Operand<U> weights, DenseBincount.Options... options) {
+    return DenseBincount.create(scope, input, size, weights, options);
   }
 
   /**
@@ -2304,8 +2371,8 @@ public final class Ops {
    * Gather slices from `params` axis `axis` according to `indices`.
    *  <p>
    *  `indices` must be an integer tensor of any dimension (usually 0-D or 1-D).
-   *  Produces an output tensor with shape `params.shape[:axis] + indices.shape +
-   *  params.shape[axis + 1:]` where:
+   *  Produces an output tensor with shape `params.shape[:axis] +
+   *  indices.shape[batch_dims:] + params.shape[axis + 1:]` where:
    *  <pre>{@code
    *      # Scalar indices (output is rank(params) - 1).
    *      output[a_0, ..., a_n, b_0, ..., b_n] =
@@ -2816,9 +2883,12 @@ public final class Ops {
   }
 
   /**
-   *     Updates specified rows with values in `v`.
+   * Updates specified rows 'i' with values 'v'.
    *  <p>
-   *      Computes `x[i, :] = v; return x`.
+   *  Computes `x[i, :] = v; return x`.
+   *  <p>
+   *  Originally this function is mutative however for compilation we make this
+   *  operation create / operate on a copy of `x`.
    *
    * @param <T> data type for {@code y()} output
    * @param x A tensor of type `T`.
@@ -2841,29 +2911,6 @@ public final class Ops {
    */
   public <T extends TType> IsVariableInitialized isVariableInitialized(Operand<T> ref) {
     return IsVariableInitialized.create(scope, ref);
-  }
-
-  /**
-   * Generates values in an interval.
-   *  <p>
-   *  A sequence of `num` evenly-spaced values are generated beginning at `start`.
-   *  If `num > 1`, the values in the sequence increase by `stop - start / num - 1`,
-   *  so that the last one is exactly `stop`.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
-   *  tf.linspace(10.0, 12.0, 3, name="linspace") => [ 10.0  11.0  12.0]
-   *  }</pre>
-   *
-   * @param <T> data type for {@code output()} output
-   * @param start 0-D tensor. First entry in the range.
-   * @param stop 0-D tensor. Last entry in the range.
-   * @param num 0-D tensor. Number of values to generate.
-   * @return a new instance of LinSpace
-   */
-  public <T extends TNumber, U extends TNumber> LinSpace<T> linSpace(Operand<T> start,
-      Operand<T> stop, Operand<U> num) {
-    return LinSpace.create(scope, start, stop, num);
   }
 
   /**
@@ -3183,7 +3230,7 @@ public final class Ops {
    *  '''
    *
    * @tf.function def foo(x, y):
-   *    return = mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
+   *    return mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
    *
    *  graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
    *  }</pre>
@@ -3755,6 +3802,33 @@ public final class Ops {
   public <T extends TType, U extends TNumber> QuantizedReshape<T> quantizedReshape(
       Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
+  }
+
+  /**
+   * Counts the number of occurrences of each value in an integer array.
+   *  <p>
+   *  Outputs a vector with length `size` and the same dtype as `weights`. If
+   *  `weights` are empty, then index `i` stores the number of times the value `i` is
+   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
+   *  the value in `weights` at each index where the corresponding value in `arr` is
+   *  `i`.
+   *  <p>
+   *  Values in `arr` outside of the range [0, size) are ignored.
+   *
+   * @param <U> data type for {@code output()} output
+   * @param splits 1D int64 `Tensor`.
+   * @param values 2D int `Tensor`.
+   * @param size non-negative int scalar `Tensor`.
+   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
+   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
+   *  equal to 1.
+   * @param options carries optional attributes values
+   * @return a new instance of RaggedBincount
+   */
+  public <U extends TNumber, T extends TNumber> RaggedBincount<U> raggedBincount(
+      Operand<TInt64> splits, Operand<T> values, Operand<T> size, Operand<U> weights,
+      RaggedBincount.Options... options) {
+    return RaggedBincount.create(scope, splits, values, size, weights, options);
   }
 
   /**
@@ -4342,6 +4416,38 @@ public final class Ops {
       Operand<?> ref, Operand<T> indices, Operand<U> updates,
       ResourceScatterNdAdd.Options... options) {
     return ResourceScatterNdAdd.create(scope, ref, indices, updates, options);
+  }
+
+  /**
+   *
+   * @param ref A resource handle. Must be from a VarHandleOp.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of
+   *  values whose element wise max is taken with ref
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceScatterNdMax
+   */
+  public <T extends TNumber, U extends TType> ResourceScatterNdMax resourceScatterNdMax(
+      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+      ResourceScatterNdMax.Options... options) {
+    return ResourceScatterNdMax.create(scope, ref, indices, updates, options);
+  }
+
+  /**
+   *
+   * @param ref A resource handle. Must be from a VarHandleOp.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of
+   *  values whose element wise min is taken with ref.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceScatterNdMin
+   */
+  public <T extends TNumber, U extends TType> ResourceScatterNdMin resourceScatterNdMin(
+      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+      ResourceScatterNdMin.Options... options) {
+    return ResourceScatterNdMin.create(scope, ref, indices, updates, options);
   }
 
   /**
@@ -5673,6 +5779,143 @@ public final class Ops {
   }
 
   /**
+   * Counts the number of occurrences of each value in an integer array.
+   *  <p>
+   *  Outputs a vector with length `size` and the same dtype as `weights`. If
+   *  `weights` are empty, then index `i` stores the number of times the value `i` is
+   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
+   *  the value in `weights` at each index where the corresponding value in `arr` is
+   *  `i`.
+   *  <p>
+   *  Values in `arr` outside of the range [0, size) are ignored.
+   *
+   * @param <U> data type for {@code output()} output
+   * @param indices 2D int64 `Tensor`.
+   * @param values 1D int `Tensor`.
+   * @param denseShape 1D int64 `Tensor`.
+   * @param size non-negative int scalar `Tensor`.
+   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
+   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
+   *  equal to 1.
+   * @param options carries optional attributes values
+   * @return a new instance of SparseBincount
+   */
+  public <U extends TNumber, T extends TNumber> SparseBincount<U> sparseBincount(
+      Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> size,
+      Operand<U> weights, SparseBincount.Options... options) {
+    return SparseBincount.create(scope, indices, values, denseShape, size, weights, options);
+  }
+
+  /**
+   * Generates sparse cross from a list of sparse and dense tensors.
+   *  <p>
+   *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
+   *  representing features of one feature column. It outputs a 2D `SparseTensor` with
+   *  the batchwise crosses of these features.
+   *  <p>
+   *  For example, if the inputs are
+   *  <p>
+   *      inputs[0]: SparseTensor with shape = [2, 2]
+   *      [0, 0]: "a"
+   *      [1, 0]: "b"
+   *      [1, 1]: "c"
+   *  <p>
+   *      inputs[1]: SparseTensor with shape = [2, 1]
+   *      [0, 0]: "d"
+   *      [1, 0]: "e"
+   *  <p>
+   *      inputs[2]: Tensor [["f"], ["g"]]
+   *  <p>
+   *  then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: "a_X_d_X_f"
+   *      [1, 0]: "b_X_e_X_g"
+   *      [1, 1]: "c_X_e_X_g"
+   *  <p>
+   *  if hashed_output=true then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: FingerprintCat64(
+   *                  Fingerprint64("f"), FingerprintCat64(
+   *                      Fingerprint64("d"), Fingerprint64("a")))
+   *      [1, 0]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("b")))
+   *      [1, 1]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("c")))
+   *
+   * @param indices 2-D.  Indices of each input `SparseTensor`.
+   * @param values 1-D.   values of each `SparseTensor`.
+   * @param shapes 1-D.   Shapes of each `SparseTensor`.
+   * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
+   * @param numBuckets It is used if hashed_output is true.
+   *  output = hashed_value%num_buckets if num_buckets > 0 else hashed_value.
+   * @param strongHash boolean, if true, siphash with salt will be used instead of farmhash.
+   * @param salt Specify the salt that will be used by the siphash function.
+   * @return a new instance of SparseCrossHashed
+   */
+  public SparseCrossHashed sparseCrossHashed(Iterable<Operand<TInt64>> indices,
+      Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes,
+      Iterable<Operand<?>> denseInputs, Operand<TInt64> numBuckets, Operand<TBool> strongHash,
+      Operand<TInt64> salt) {
+    return SparseCrossHashed.create(scope, indices, values, shapes, denseInputs, numBuckets, strongHash, salt);
+  }
+
+  /**
+   * Generates sparse cross from a list of sparse and dense tensors.
+   *  <p>
+   *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
+   *  representing features of one feature column. It outputs a 2D `SparseTensor` with
+   *  the batchwise crosses of these features.
+   *  <p>
+   *  For example, if the inputs are
+   *  <p>
+   *      inputs[0]: SparseTensor with shape = [2, 2]
+   *      [0, 0]: "a"
+   *      [1, 0]: "b"
+   *      [1, 1]: "c"
+   *  <p>
+   *      inputs[1]: SparseTensor with shape = [2, 1]
+   *      [0, 0]: "d"
+   *      [1, 0]: "e"
+   *  <p>
+   *      inputs[2]: Tensor [["f"], ["g"]]
+   *  <p>
+   *  then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: "a_X_d_X_f"
+   *      [1, 0]: "b_X_e_X_g"
+   *      [1, 1]: "c_X_e_X_g"
+   *  <p>
+   *  if hashed_output=true then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: FingerprintCat64(
+   *                  Fingerprint64("f"), FingerprintCat64(
+   *                      Fingerprint64("d"), Fingerprint64("a")))
+   *      [1, 0]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("b")))
+   *      [1, 1]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("c")))
+   *
+   * @param indices 2-D.  Indices of each input `SparseTensor`.
+   * @param values 1-D.   values of each `SparseTensor`.
+   * @param shapes 1-D.   Shapes of each `SparseTensor`.
+   * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
+   * @param sep string used when joining a list of string inputs, can be used as separator later.
+   * @return a new instance of SparseCrossV2
+   */
+  public SparseCrossV2 sparseCrossV2(Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values,
+      Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Operand<TString> sep) {
+    return SparseCrossV2.create(scope, indices, values, shapes, denseInputs, sep);
+  }
+
+  /**
    * Splits a tensor into `num_split` tensors along one dimension.
    *
    * @param <T> data type for {@code output()} output
@@ -5903,11 +6146,11 @@ public final class Ops {
    *  begin = [1, 2, x, x, 0, x] # x denotes don't care (usually 0)
    *  end = [2, 4, x, x, -3, x]
    *  strides = [1, 1, x, x, -1, 1]
-   *  begin_mask = 1<<4 | 1 << 5 = 48
+   *  begin_mask = 1<<4 | 1<<5 = 48
    *  end_mask = 1<<5 = 32
    *  ellipsis_mask = 1<<3 = 8
-   *  new_axis_mask = 1<<2 4
-   *  shrink_axis_mask = 1<<0
+   *  new_axis_mask = 1<<2 = 4
+   *  shrink_axis_mask = 1<<0 = 1
    *  }</pre>
    *  In this case if `foo.shape` is (5, 5, 5, 5, 5, 5) the final shape of
    *  the slice becomes (2, 1, 5, 5, 2, 5).
@@ -6654,6 +6897,32 @@ public final class Ops {
   }
 
   /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterMax
+   */
+  public <T extends TType, U extends TNumber> TensorScatterMax<T> tensorScatterMax(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterMax.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterMin
+   */
+  public <T extends TType, U extends TNumber> TensorScatterMin<T> tensorScatterMin(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterMin.create(scope, tensor, indices, updates);
+  }
+
+  /**
    * Adds sparse `updates` to an existing tensor according to `indices`.
    *  <p>
    *  This operation creates a new tensor by adding sparse `updates` to the passed
@@ -6663,16 +6932,17 @@ public final class Ops {
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>
    *  `indices` is an integer tensor containing indices into a new tensor of shape
-   *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
+   *  `tensor.shape`.  The last dimension of `indices` can be at most the rank of
+   *  `tensor.shape`:
    *  <p>
-   *      indices.shape[-1] <= shape.rank
+   *      indices.shape[-1] <= tensor.shape.rank
    *  <p>
    *  The last dimension of `indices` corresponds to indices into elements
-   *  (if `indices.shape[-1] = shape.rank`) or slices
-   *  (if `indices.shape[-1] < shape.rank`) along dimension `indices.shape[-1]` of
-   *  `shape`.  `updates` is a tensor with shape
+   *  (if `indices.shape[-1] = tensor.shape.rank`) or slices
+   *  (if `indices.shape[-1] < tensor.shape.rank`) along dimension
+   *  `indices.shape[-1]` of `tensor.shape`.  `updates` is a tensor with shape
    *  <p>
-   *      indices.shape[:-1] + shape[indices.shape[-1]:]
+   *      indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
    *  <p>
    *  The simplest form of tensor_scatter_add is to add individual elements to a
    *  tensor by index. For example, say we want to add 4 elements in a rank-1
@@ -7560,6 +7830,42 @@ public final class Ops {
    */
   public <T extends TType> Where where(Operand<T> condition) {
     return Where.create(scope, condition);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from automatic partitioning to
+   *  <p>
+   *  manual partitioning. It annotates the input (full-shape, to be automatically
+   *  partitioned) with the same sharding used by manual partitioning, and outputs a
+   *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
+   *  shape is not evenly partitionable, the padding region will be masked with 0s.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param manualSharding
+   * @return a new instance of XlaSpmdFullToShardShape
+   */
+  public <T extends TType> XlaSpmdFullToShardShape<T> xlaSpmdFullToShardShape(Operand<T> input,
+      String manualSharding) {
+    return XlaSpmdFullToShardShape.create(scope, input, manualSharding);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from manual partitioning to
+   *  <p>
+   *  automatic partitioning. It converts the shard-shaped, manually partitioned input
+   *  into full-shaped tensor to be partitioned automatically with the same sharding
+   *  used by manual partitioning.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param manualSharding
+   * @param fullShape
+   * @return a new instance of XlaSpmdShardToFullShape
+   */
+  public <T extends TType> XlaSpmdShardToFullShape<T> xlaSpmdShardToFullShape(Operand<T> input,
+      String manualSharding, Shape fullShape) {
+    return XlaSpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
   }
 
   /**

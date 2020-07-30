@@ -57,8 +57,17 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
       return this;
     }
     
+    /**
+     * @param timeoutSeconds 
+     */
+    public Options timeoutSeconds(Float timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
+    
     private List<Long> waitFor;
     private String communicationHint;
+    private Float timeoutSeconds;
     
     private Options() {
     }
@@ -105,6 +114,9 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
         if (opts.communicationHint != null) {
           opBuilder.setAttr("communication_hint", opts.communicationHint);
         }
+        if (opts.timeoutSeconds != null) {
+          opBuilder.setAttr("timeout_seconds", opts.timeoutSeconds);
+        }
       }
     }
     return new AllReduce<T>(opBuilder.build());
@@ -122,6 +134,13 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
    */
   public static Options communicationHint(String communicationHint) {
     return new Options().communicationHint(communicationHint);
+  }
+  
+  /**
+   * @param timeoutSeconds 
+   */
+  public static Options timeoutSeconds(Float timeoutSeconds) {
+    return new Options().timeoutSeconds(timeoutSeconds);
   }
   
   /**

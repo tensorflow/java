@@ -192,6 +192,14 @@ private static final long serialVersionUID = 0L;
      * <code>VARIABLE_SPEC = 9;</code>
      */
     VARIABLE_SPEC(9),
+    /**
+     * <pre>
+     * RowPartitionSpec from ragged/row_partition.py
+     * </pre>
+     *
+     * <code>ROW_PARTITION_SPEC = 10;</code>
+     */
+    ROW_PARTITION_SPEC(10),
     UNRECOGNIZED(-1),
     ;
 
@@ -271,6 +279,14 @@ private static final long serialVersionUID = 0L;
      * <code>VARIABLE_SPEC = 9;</code>
      */
     public static final int VARIABLE_SPEC_VALUE = 9;
+    /**
+     * <pre>
+     * RowPartitionSpec from ragged/row_partition.py
+     * </pre>
+     *
+     * <code>ROW_PARTITION_SPEC = 10;</code>
+     */
+    public static final int ROW_PARTITION_SPEC_VALUE = 10;
 
 
     public final int getNumber() {
@@ -301,6 +317,7 @@ private static final long serialVersionUID = 0L;
         case 7: return OPTIONAL_SPEC;
         case 8: return PER_REPLICA_SPEC;
         case 9: return VARIABLE_SPEC;
+        case 10: return ROW_PARTITION_SPEC;
         default: return null;
       }
     }

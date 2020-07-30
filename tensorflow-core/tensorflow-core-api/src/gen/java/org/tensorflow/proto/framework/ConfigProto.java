@@ -445,6 +445,18 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * Whether to enable the MLIR-based Graph optimizations.
+     * This will become a part of standard Tensorflow graph optimization
+     * pipeline, currently this is only used for gradual migration and testing
+     * new passes that are replacing existing optimizations in Grappler.
+     * </pre>
+     *
+     * <code>bool enable_mlir_graph_optimization = 16;</code>
+     */
+    boolean getEnableMlirGraphOptimization();
+
+    /**
+     * <pre>
      * If true, the session will not store an additional copy of the graph for
      * each subgraph.
      * If this option is set to true when a session is created, the
@@ -598,6 +610,11 @@ private static final long serialVersionUID = 0L;
             case 120: {
 
               xlaFusionAutotunerThresh_ = input.readInt64();
+              break;
+            }
+            case 128: {
+
+              enableMlirGraphOptimization_ = input.readBool();
               break;
             }
             default: {
@@ -916,6 +933,22 @@ private static final long serialVersionUID = 0L;
       return enableMlirBridge_;
     }
 
+    public static final int ENABLE_MLIR_GRAPH_OPTIMIZATION_FIELD_NUMBER = 16;
+    private boolean enableMlirGraphOptimization_;
+    /**
+     * <pre>
+     * Whether to enable the MLIR-based Graph optimizations.
+     * This will become a part of standard Tensorflow graph optimization
+     * pipeline, currently this is only used for gradual migration and testing
+     * new passes that are replacing existing optimizations in Grappler.
+     * </pre>
+     *
+     * <code>bool enable_mlir_graph_optimization = 16;</code>
+     */
+    public boolean getEnableMlirGraphOptimization() {
+      return enableMlirGraphOptimization_;
+    }
+
     public static final int DISABLE_OUTPUT_PARTITION_GRAPHS_FIELD_NUMBER = 14;
     private boolean disableOutputPartitionGraphs_;
     /**
@@ -1004,6 +1037,9 @@ private static final long serialVersionUID = 0L;
       if (xlaFusionAutotunerThresh_ != 0L) {
         output.writeInt64(15, xlaFusionAutotunerThresh_);
       }
+      if (enableMlirGraphOptimization_ != false) {
+        output.writeBool(16, enableMlirGraphOptimization_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1067,6 +1103,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(15, xlaFusionAutotunerThresh_);
       }
+      if (enableMlirGraphOptimization_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(16, enableMlirGraphOptimization_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1109,6 +1149,8 @@ private static final long serialVersionUID = 0L;
           != other.getOptimizeForStaticGraph()) return false;
       if (getEnableMlirBridge()
           != other.getEnableMlirBridge()) return false;
+      if (getEnableMlirGraphOptimization()
+          != other.getEnableMlirGraphOptimization()) return false;
       if (getDisableOutputPartitionGraphs()
           != other.getDisableOutputPartitionGraphs()) return false;
       if (getXlaFusionAutotunerThresh()
@@ -1158,6 +1200,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + ENABLE_MLIR_BRIDGE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getEnableMlirBridge());
+      hash = (37 * hash) + ENABLE_MLIR_GRAPH_OPTIMIZATION_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getEnableMlirGraphOptimization());
       hash = (37 * hash) + DISABLE_OUTPUT_PARTITION_GRAPHS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getDisableOutputPartitionGraphs());
@@ -1331,6 +1376,8 @@ private static final long serialVersionUID = 0L;
 
         enableMlirBridge_ = false;
 
+        enableMlirGraphOptimization_ = false;
+
         disableOutputPartitionGraphs_ = false;
 
         xlaFusionAutotunerThresh_ = 0L;
@@ -1377,6 +1424,7 @@ private static final long serialVersionUID = 0L;
         }
         result.optimizeForStaticGraph_ = optimizeForStaticGraph_;
         result.enableMlirBridge_ = enableMlirBridge_;
+        result.enableMlirGraphOptimization_ = enableMlirGraphOptimization_;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         onBuilt();
@@ -1464,6 +1512,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getEnableMlirBridge() != false) {
           setEnableMlirBridge(other.getEnableMlirBridge());
+        }
+        if (other.getEnableMlirGraphOptimization() != false) {
+          setEnableMlirGraphOptimization(other.getEnableMlirGraphOptimization());
         }
         if (other.getDisableOutputPartitionGraphs() != false) {
           setDisableOutputPartitionGraphs(other.getDisableOutputPartitionGraphs());
@@ -2318,6 +2369,53 @@ private static final long serialVersionUID = 0L;
       public Builder clearEnableMlirBridge() {
         
         enableMlirBridge_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean enableMlirGraphOptimization_ ;
+      /**
+       * <pre>
+       * Whether to enable the MLIR-based Graph optimizations.
+       * This will become a part of standard Tensorflow graph optimization
+       * pipeline, currently this is only used for gradual migration and testing
+       * new passes that are replacing existing optimizations in Grappler.
+       * </pre>
+       *
+       * <code>bool enable_mlir_graph_optimization = 16;</code>
+       */
+      public boolean getEnableMlirGraphOptimization() {
+        return enableMlirGraphOptimization_;
+      }
+      /**
+       * <pre>
+       * Whether to enable the MLIR-based Graph optimizations.
+       * This will become a part of standard Tensorflow graph optimization
+       * pipeline, currently this is only used for gradual migration and testing
+       * new passes that are replacing existing optimizations in Grappler.
+       * </pre>
+       *
+       * <code>bool enable_mlir_graph_optimization = 16;</code>
+       */
+      public Builder setEnableMlirGraphOptimization(boolean value) {
+        
+        enableMlirGraphOptimization_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether to enable the MLIR-based Graph optimizations.
+       * This will become a part of standard Tensorflow graph optimization
+       * pipeline, currently this is only used for gradual migration and testing
+       * new passes that are replacing existing optimizations in Grappler.
+       * </pre>
+       *
+       * <code>bool enable_mlir_graph_optimization = 16;</code>
+       */
+      public Builder clearEnableMlirGraphOptimization() {
+        
+        enableMlirGraphOptimization_ = false;
         onChanged();
         return this;
       }

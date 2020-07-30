@@ -358,7 +358,7 @@ public final class StringsOps {
    *  <p>
    * `ValueError`: If the first argument cannot be converted to a
    *       Tensor of `dtype string`.
-   * `InvalidArgumentError`: If indicies are out of range.
+   * `InvalidArgumentError`: If indices are out of range.
    * `ValueError`: If `pos` and `len` are not the same shape.
    *
    * @param input Tensor of strings

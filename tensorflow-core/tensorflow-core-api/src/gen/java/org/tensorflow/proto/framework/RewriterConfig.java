@@ -25,6 +25,7 @@ private static final long serialVersionUID = 0L;
     constantFolding_ = 0;
     shapeOptimization_ = 0;
     remapping_ = 0;
+    commonSubgraphElimination_ = 0;
     arithmeticOptimization_ = 0;
     dependencyOptimization_ = 0;
     loopOptimization_ = 0;
@@ -34,6 +35,7 @@ private static final long serialVersionUID = 0L;
     pinToHostOptimization_ = 0;
     implementationSelector_ = 0;
     autoMixedPrecision_ = 0;
+    autoMixedPrecisionMkl_ = 0;
     metaOptimizerIterations_ = 0;
     memoryOptimization_ = 0;
     memoryOptimizerTargetNodeNameScope_ = "";
@@ -217,6 +219,18 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             autoMixedPrecision_ = rawValue;
+            break;
+          }
+          case 192: {
+            int rawValue = input.readEnum();
+
+            commonSubgraphElimination_ = rawValue;
+            break;
+          }
+          case 200: {
+            int rawValue = input.readEnum();
+
+            autoMixedPrecisionMkl_ = rawValue;
             break;
           }
           case 802: {
@@ -1729,6 +1743,33 @@ private static final long serialVersionUID = 0L;
     return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
   }
 
+  public static final int COMMON_SUBGRAPH_ELIMINATION_FIELD_NUMBER = 24;
+  private int commonSubgraphElimination_;
+  /**
+   * <pre>
+   * Common subgraph elimination (default is ON)
+   * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+   */
+  public int getCommonSubgraphEliminationValue() {
+    return commonSubgraphElimination_;
+  }
+  /**
+   * <pre>
+   * Common subgraph elimination (default is ON)
+   * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getCommonSubgraphElimination() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(commonSubgraphElimination_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
   public static final int ARITHMETIC_OPTIMIZATION_FIELD_NUMBER = 7;
   private int arithmeticOptimization_;
   /**
@@ -1954,8 +1995,8 @@ private static final long serialVersionUID = 0L;
   private int autoMixedPrecision_;
   /**
    * <pre>
-   * Optimize data types (default is OFF).
-   * e.g., This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA (default is OFF).
+   * This will try to use float16 on GPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>
@@ -1967,8 +2008,8 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Optimize data types (default is OFF).
-   * e.g., This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA (default is OFF).
+   * This will try to use float16 on GPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>
@@ -1978,6 +2019,35 @@ private static final long serialVersionUID = 0L;
   public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecision() {
     @SuppressWarnings("deprecation")
     org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecision_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
+  public static final int AUTO_MIXED_PRECISION_MKL_FIELD_NUMBER = 25;
+  private int autoMixedPrecisionMkl_;
+  /**
+   * <pre>
+   * Optimize data types for MKL (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+   */
+  public int getAutoMixedPrecisionMklValue() {
+    return autoMixedPrecisionMkl_;
+  }
+  /**
+   * <pre>
+   * Optimize data types for MKL (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionMkl() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionMkl_);
     return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
   }
 
@@ -2497,6 +2567,12 @@ private static final long serialVersionUID = 0L;
     if (autoMixedPrecision_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
       output.writeEnum(23, autoMixedPrecision_);
     }
+    if (commonSubgraphElimination_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(24, commonSubgraphElimination_);
+    }
+    if (autoMixedPrecisionMkl_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(25, autoMixedPrecisionMkl_);
+    }
     for (int i = 0; i < optimizers_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 100, optimizers_.getRaw(i));
     }
@@ -2609,6 +2685,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(23, autoMixedPrecision_);
     }
+    if (commonSubgraphElimination_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(24, commonSubgraphElimination_);
+    }
+    if (autoMixedPrecisionMkl_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(25, autoMixedPrecisionMkl_);
+    }
     {
       int dataSize = 0;
       for (int i = 0; i < optimizers_.size(); i++) {
@@ -2648,6 +2732,7 @@ private static final long serialVersionUID = 0L;
     if (constantFolding_ != other.constantFolding_) return false;
     if (shapeOptimization_ != other.shapeOptimization_) return false;
     if (remapping_ != other.remapping_) return false;
+    if (commonSubgraphElimination_ != other.commonSubgraphElimination_) return false;
     if (arithmeticOptimization_ != other.arithmeticOptimization_) return false;
     if (dependencyOptimization_ != other.dependencyOptimization_) return false;
     if (loopOptimization_ != other.loopOptimization_) return false;
@@ -2659,6 +2744,7 @@ private static final long serialVersionUID = 0L;
     if (pinToHostOptimization_ != other.pinToHostOptimization_) return false;
     if (implementationSelector_ != other.implementationSelector_) return false;
     if (autoMixedPrecision_ != other.autoMixedPrecision_) return false;
+    if (autoMixedPrecisionMkl_ != other.autoMixedPrecisionMkl_) return false;
     if (getDisableMetaOptimizer()
         != other.getDisableMetaOptimizer()) return false;
     if (metaOptimizerIterations_ != other.metaOptimizerIterations_) return false;
@@ -2714,6 +2800,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + shapeOptimization_;
     hash = (37 * hash) + REMAPPING_FIELD_NUMBER;
     hash = (53 * hash) + remapping_;
+    hash = (37 * hash) + COMMON_SUBGRAPH_ELIMINATION_FIELD_NUMBER;
+    hash = (53 * hash) + commonSubgraphElimination_;
     hash = (37 * hash) + ARITHMETIC_OPTIMIZATION_FIELD_NUMBER;
     hash = (53 * hash) + arithmeticOptimization_;
     hash = (37 * hash) + DEPENDENCY_OPTIMIZATION_FIELD_NUMBER;
@@ -2735,6 +2823,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + implementationSelector_;
     hash = (37 * hash) + AUTO_MIXED_PRECISION_FIELD_NUMBER;
     hash = (53 * hash) + autoMixedPrecision_;
+    hash = (37 * hash) + AUTO_MIXED_PRECISION_MKL_FIELD_NUMBER;
+    hash = (53 * hash) + autoMixedPrecisionMkl_;
     hash = (37 * hash) + DISABLE_META_OPTIMIZER_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisableMetaOptimizer());
@@ -2923,6 +3013,8 @@ private static final long serialVersionUID = 0L;
 
       remapping_ = 0;
 
+      commonSubgraphElimination_ = 0;
+
       arithmeticOptimization_ = 0;
 
       dependencyOptimization_ = 0;
@@ -2942,6 +3034,8 @@ private static final long serialVersionUID = 0L;
       implementationSelector_ = 0;
 
       autoMixedPrecision_ = 0;
+
+      autoMixedPrecisionMkl_ = 0;
 
       disableMetaOptimizer_ = false;
 
@@ -3020,6 +3114,7 @@ private static final long serialVersionUID = 0L;
       result.constantFolding_ = constantFolding_;
       result.shapeOptimization_ = shapeOptimization_;
       result.remapping_ = remapping_;
+      result.commonSubgraphElimination_ = commonSubgraphElimination_;
       result.arithmeticOptimization_ = arithmeticOptimization_;
       result.dependencyOptimization_ = dependencyOptimization_;
       result.loopOptimization_ = loopOptimization_;
@@ -3030,6 +3125,7 @@ private static final long serialVersionUID = 0L;
       result.pinToHostOptimization_ = pinToHostOptimization_;
       result.implementationSelector_ = implementationSelector_;
       result.autoMixedPrecision_ = autoMixedPrecision_;
+      result.autoMixedPrecisionMkl_ = autoMixedPrecisionMkl_;
       result.disableMetaOptimizer_ = disableMetaOptimizer_;
       result.metaOptimizerIterations_ = metaOptimizerIterations_;
       result.minGraphNodes_ = minGraphNodes_;
@@ -3131,6 +3227,9 @@ private static final long serialVersionUID = 0L;
       if (other.remapping_ != 0) {
         setRemappingValue(other.getRemappingValue());
       }
+      if (other.commonSubgraphElimination_ != 0) {
+        setCommonSubgraphEliminationValue(other.getCommonSubgraphEliminationValue());
+      }
       if (other.arithmeticOptimization_ != 0) {
         setArithmeticOptimizationValue(other.getArithmeticOptimizationValue());
       }
@@ -3160,6 +3259,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.autoMixedPrecision_ != 0) {
         setAutoMixedPrecisionValue(other.getAutoMixedPrecisionValue());
+      }
+      if (other.autoMixedPrecisionMkl_ != 0) {
+        setAutoMixedPrecisionMklValue(other.getAutoMixedPrecisionMklValue());
       }
       if (other.getDisableMetaOptimizer() != false) {
         setDisableMetaOptimizer(other.getDisableMetaOptimizer());
@@ -3542,6 +3644,76 @@ private static final long serialVersionUID = 0L;
     public Builder clearRemapping() {
       
       remapping_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int commonSubgraphElimination_ = 0;
+    /**
+     * <pre>
+     * Common subgraph elimination (default is ON)
+     * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+     */
+    public int getCommonSubgraphEliminationValue() {
+      return commonSubgraphElimination_;
+    }
+    /**
+     * <pre>
+     * Common subgraph elimination (default is ON)
+     * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+     */
+    public Builder setCommonSubgraphEliminationValue(int value) {
+      commonSubgraphElimination_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Common subgraph elimination (default is ON)
+     * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getCommonSubgraphElimination() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(commonSubgraphElimination_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Common subgraph elimination (default is ON)
+     * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+     */
+    public Builder setCommonSubgraphElimination(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      commonSubgraphElimination_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Common subgraph elimination (default is ON)
+     * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+     */
+    public Builder clearCommonSubgraphElimination() {
+      
+      commonSubgraphElimination_ = 0;
       onChanged();
       return this;
     }
@@ -4127,8 +4299,8 @@ private static final long serialVersionUID = 0L;
     private int autoMixedPrecision_ = 0;
     /**
      * <pre>
-     * Optimize data types (default is OFF).
-     * e.g., This will try to use float16 on GPU which is faster.
+     * Optimize data types for CUDA (default is OFF).
+     * This will try to use float16 on GPU which is faster.
      * Note that this can change the numerical stability of the graph and may
      * require the use of loss scaling to maintain model convergence.
      * </pre>
@@ -4140,8 +4312,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types (default is OFF).
-     * e.g., This will try to use float16 on GPU which is faster.
+     * Optimize data types for CUDA (default is OFF).
+     * This will try to use float16 on GPU which is faster.
      * Note that this can change the numerical stability of the graph and may
      * require the use of loss scaling to maintain model convergence.
      * </pre>
@@ -4155,8 +4327,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types (default is OFF).
-     * e.g., This will try to use float16 on GPU which is faster.
+     * Optimize data types for CUDA (default is OFF).
+     * This will try to use float16 on GPU which is faster.
      * Note that this can change the numerical stability of the graph and may
      * require the use of loss scaling to maintain model convergence.
      * </pre>
@@ -4170,8 +4342,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types (default is OFF).
-     * e.g., This will try to use float16 on GPU which is faster.
+     * Optimize data types for CUDA (default is OFF).
+     * This will try to use float16 on GPU which is faster.
      * Note that this can change the numerical stability of the graph and may
      * require the use of loss scaling to maintain model convergence.
      * </pre>
@@ -4189,8 +4361,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types (default is OFF).
-     * e.g., This will try to use float16 on GPU which is faster.
+     * Optimize data types for CUDA (default is OFF).
+     * This will try to use float16 on GPU which is faster.
      * Note that this can change the numerical stability of the graph and may
      * require the use of loss scaling to maintain model convergence.
      * </pre>
@@ -4200,6 +4372,81 @@ private static final long serialVersionUID = 0L;
     public Builder clearAutoMixedPrecision() {
       
       autoMixedPrecision_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int autoMixedPrecisionMkl_ = 0;
+    /**
+     * <pre>
+     * Optimize data types for MKL (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+     */
+    public int getAutoMixedPrecisionMklValue() {
+      return autoMixedPrecisionMkl_;
+    }
+    /**
+     * <pre>
+     * Optimize data types for MKL (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+     */
+    public Builder setAutoMixedPrecisionMklValue(int value) {
+      autoMixedPrecisionMkl_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimize data types for MKL (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionMkl() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionMkl_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Optimize data types for MKL (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+     */
+    public Builder setAutoMixedPrecisionMkl(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      autoMixedPrecisionMkl_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimize data types for MKL (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+     */
+    public Builder clearAutoMixedPrecisionMkl() {
+      
+      autoMixedPrecisionMkl_ = 0;
       onChanged();
       return this;
     }

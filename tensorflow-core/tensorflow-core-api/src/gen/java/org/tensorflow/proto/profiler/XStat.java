@@ -8,7 +8,7 @@ package org.tensorflow.proto.profiler;
  * An XStat is a named value associated with an XEvent, e.g., a performance
  * counter value, a metric computed by a formula applied over nested XEvents
  * and XStats.
- * Next ID: 6
+ * Next ID: 8
  * </pre>
  *
  * Protobuf type {@code tensorflow.profiler.XStat}
@@ -81,6 +81,16 @@ private static final long serialVersionUID = 0L;
             value_ = s;
             break;
           }
+          case 50: {
+            valueCase_ = 6;
+            value_ = input.readBytes();
+            break;
+          }
+          case 56: {
+            valueCase_ = 7;
+            value_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -121,6 +131,8 @@ private static final long serialVersionUID = 0L;
     UINT64_VALUE(3),
     INT64_VALUE(4),
     STR_VALUE(5),
+    BYTES_VALUE(6),
+    REF_VALUE(7),
     VALUE_NOT_SET(0);
     private final int value;
     private ValueCase(int value) {
@@ -140,6 +152,8 @@ private static final long serialVersionUID = 0L;
         case 3: return UINT64_VALUE;
         case 4: return INT64_VALUE;
         case 5: return STR_VALUE;
+        case 6: return BYTES_VALUE;
+        case 7: return REF_VALUE;
         case 0: return VALUE_NOT_SET;
         default: return null;
       }
@@ -244,6 +258,32 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int BYTES_VALUE_FIELD_NUMBER = 6;
+  /**
+   * <code>bytes bytes_value = 6;</code>
+   */
+  public com.google.protobuf.ByteString getBytesValue() {
+    if (valueCase_ == 6) {
+      return (com.google.protobuf.ByteString) value_;
+    }
+    return com.google.protobuf.ByteString.EMPTY;
+  }
+
+  public static final int REF_VALUE_FIELD_NUMBER = 7;
+  /**
+   * <pre>
+   * A string value that stored in XStatMetadata::name.
+   * </pre>
+   *
+   * <code>uint64 ref_value = 7;</code>
+   */
+  public long getRefValue() {
+    if (valueCase_ == 7) {
+      return (java.lang.Long) value_;
+    }
+    return 0L;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -276,6 +316,14 @@ private static final long serialVersionUID = 0L;
     if (valueCase_ == 5) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, value_);
     }
+    if (valueCase_ == 6) {
+      output.writeBytes(
+          6, (com.google.protobuf.ByteString) value_);
+    }
+    if (valueCase_ == 7) {
+      output.writeUInt64(
+          7, (long)((java.lang.Long) value_));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -306,6 +354,16 @@ private static final long serialVersionUID = 0L;
     }
     if (valueCase_ == 5) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, value_);
+    }
+    if (valueCase_ == 6) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(
+            6, (com.google.protobuf.ByteString) value_);
+    }
+    if (valueCase_ == 7) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(
+            7, (long)((java.lang.Long) value_));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -343,6 +401,14 @@ private static final long serialVersionUID = 0L;
         if (!getStrValue()
             .equals(other.getStrValue())) return false;
         break;
+      case 6:
+        if (!getBytesValue()
+            .equals(other.getBytesValue())) return false;
+        break;
+      case 7:
+        if (getRefValue()
+            != other.getRefValue()) return false;
+        break;
       case 0:
       default:
     }
@@ -379,6 +445,15 @@ private static final long serialVersionUID = 0L;
       case 5:
         hash = (37 * hash) + STR_VALUE_FIELD_NUMBER;
         hash = (53 * hash) + getStrValue().hashCode();
+        break;
+      case 6:
+        hash = (37 * hash) + BYTES_VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getBytesValue().hashCode();
+        break;
+      case 7:
+        hash = (37 * hash) + REF_VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getRefValue());
         break;
       case 0:
       default:
@@ -483,7 +558,7 @@ private static final long serialVersionUID = 0L;
    * An XStat is a named value associated with an XEvent, e.g., a performance
    * counter value, a metric computed by a formula applied over nested XEvents
    * and XStats.
-   * Next ID: 6
+   * Next ID: 8
    * </pre>
    *
    * Protobuf type {@code tensorflow.profiler.XStat}
@@ -566,6 +641,12 @@ private static final long serialVersionUID = 0L;
       if (valueCase_ == 5) {
         result.value_ = value_;
       }
+      if (valueCase_ == 6) {
+        result.value_ = value_;
+      }
+      if (valueCase_ == 7) {
+        result.value_ = value_;
+      }
       result.valueCase_ = valueCase_;
       onBuilt();
       return result;
@@ -635,6 +716,14 @@ private static final long serialVersionUID = 0L;
           valueCase_ = 5;
           value_ = other.value_;
           onChanged();
+          break;
+        }
+        case BYTES_VALUE: {
+          setBytesValue(other.getBytesValue());
+          break;
+        }
+        case REF_VALUE: {
+          setRefValue(other.getRefValue());
           break;
         }
         case VALUE_NOT_SET: {
@@ -890,6 +979,81 @@ private static final long serialVersionUID = 0L;
       valueCase_ = 5;
       value_ = value;
       onChanged();
+      return this;
+    }
+
+    /**
+     * <code>bytes bytes_value = 6;</code>
+     */
+    public com.google.protobuf.ByteString getBytesValue() {
+      if (valueCase_ == 6) {
+        return (com.google.protobuf.ByteString) value_;
+      }
+      return com.google.protobuf.ByteString.EMPTY;
+    }
+    /**
+     * <code>bytes bytes_value = 6;</code>
+     */
+    public Builder setBytesValue(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  valueCase_ = 6;
+      value_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes bytes_value = 6;</code>
+     */
+    public Builder clearBytesValue() {
+      if (valueCase_ == 6) {
+        valueCase_ = 0;
+        value_ = null;
+        onChanged();
+      }
+      return this;
+    }
+
+    /**
+     * <pre>
+     * A string value that stored in XStatMetadata::name.
+     * </pre>
+     *
+     * <code>uint64 ref_value = 7;</code>
+     */
+    public long getRefValue() {
+      if (valueCase_ == 7) {
+        return (java.lang.Long) value_;
+      }
+      return 0L;
+    }
+    /**
+     * <pre>
+     * A string value that stored in XStatMetadata::name.
+     * </pre>
+     *
+     * <code>uint64 ref_value = 7;</code>
+     */
+    public Builder setRefValue(long value) {
+      valueCase_ = 7;
+      value_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * A string value that stored in XStatMetadata::name.
+     * </pre>
+     *
+     * <code>uint64 ref_value = 7;</code>
+     */
+    public Builder clearRefValue() {
+      if (valueCase_ == 7) {
+        valueCase_ = 0;
+        value_ = null;
+        onChanged();
+      }
       return this;
     }
     @java.lang.Override

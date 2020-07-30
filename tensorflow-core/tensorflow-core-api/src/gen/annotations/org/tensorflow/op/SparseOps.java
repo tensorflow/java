@@ -870,8 +870,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentMean
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMean<T> sparseSegmentMean(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMean<T> sparseSegmentMean(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentMean.create(scope, data, indices, segmentIds);
   }
 
@@ -888,8 +888,8 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentMean op.
    * @return a new instance of SparseSegmentMeanGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
-      Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
+      Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentMeanGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
@@ -897,7 +897,7 @@ public final class SparseOps {
    * Computes the mean along sparse segments of a tensor.
    *  <p>
    *  Like `SparseSegmentMean`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
@@ -910,8 +910,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentMeanWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 
@@ -928,8 +928,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSqrtN
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentSqrtN.create(scope, data, indices, segmentIds);
   }
 
@@ -946,8 +946,8 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentSqrtN op.
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
-      Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
+      Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
@@ -957,7 +957,7 @@ public final class SparseOps {
    *  N is the size of the segment being reduced.
    *  <p>
    *  Like `SparseSegmentSqrtN`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
@@ -970,8 +970,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentSqrtNWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 
@@ -1013,8 +1013,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSum
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSum<T> sparseSegmentSum(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSum<T> sparseSegmentSum(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentSum.create(scope, data, indices, segmentIds);
   }
 
@@ -1022,7 +1022,7 @@ public final class SparseOps {
    * Computes the sum along sparse segments of a tensor.
    *  <p>
    *  Like `SparseSegmentSum`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/sparse#Segmentation)
@@ -1055,8 +1055,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSumWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentSumWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 

@@ -153,7 +153,7 @@ public final class TestLogProtos {
       "ryInfo\"\221\001\n\020RunConfiguration\022\020\n\010argument\030" +
       "\001 \003(\t\022;\n\010env_vars\030\002 \003(\0132).tensorflow.Run" +
       "Configuration.EnvVarsEntry\032.\n\014EnvVarsEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\274\004\n\013T" +
+      "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\320\004\n\013T" +
       "estResults\022\016\n\006target\030\001 \001(\t\022-\n\007entries\030\002 " +
       "\001(\0132\034.tensorflow.BenchmarkEntries\022;\n\023bui" +
       "ld_configuration\030\003 \001(\0132\036.tensorflow.Buil" +
@@ -165,11 +165,12 @@ public final class TestLogProtos {
       "unConfiguration\022\014\n\004name\030\t \001(\t\022=\n\016benchma" +
       "rk_type\030\n \001(\0162%.tensorflow.TestResults.B" +
       "enchmarkType\022\020\n\010run_mode\030\013 \001(\t\022\022\n\ntf_ver" +
-      "sion\030\014 \001(\t\"u\n\rBenchmarkType\022\013\n\007UNKNOWN\020\000" +
-      "\022\026\n\022CPP_MICROBENCHMARK\020\001\022\024\n\020PYTHON_BENCH" +
-      "MARK\020\002\022\025\n\021ANDROID_BENCHMARK\020\003\022\022\n\016EDGE_BE" +
-      "NCHMARK\020\004B7\n!org.tensorflow.proto.util.t" +
-      "estlogB\rTestLogProtosP\001\370\001\001b\006proto3"
+      "sion\030\014 \001(\t\"\210\001\n\rBenchmarkType\022\013\n\007UNKNOWN\020" +
+      "\000\022\026\n\022CPP_MICROBENCHMARK\020\001\022\024\n\020PYTHON_BENC" +
+      "HMARK\020\002\022\025\n\021ANDROID_BENCHMARK\020\003\022\022\n\016EDGE_B" +
+      "ENCHMARK\020\004\022\021\n\rIOS_BENCHMARK\020\005B7\n!org.ten" +
+      "sorflow.proto.util.testlogB\rTestLogProto" +
+      "sP\001\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

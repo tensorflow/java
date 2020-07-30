@@ -29,16 +29,8 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Computes the Bessel i1e function of `x` element-wise.
- * <p>
- * Exponentially scaled modified Bessel function of order 0 defined as
- * `bessel_i1e(x) = exp(-abs(x)) bessel_i1(x)`.
- * <p>
- * This function is faster and numerically stabler than `bessel_i1(x)`.
- * 
  * @param <T> data type for {@code y()} output
  */
-@Operator(group = "math")
 public final class BesselI1e<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**

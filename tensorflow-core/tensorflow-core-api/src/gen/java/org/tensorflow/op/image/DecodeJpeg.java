@@ -54,7 +54,7 @@ import org.tensorflow.types.TUint8;
  * downscaling the image later.
  * <p>
  * This op also supports decoding PNGs and non-animated GIFs since the interface is
- * the same, though it is cleaner to use `tf.image.decode_image`.
+ * the same, though it is cleaner to use `tf.io.decode_image`.
  */
 @Operator(group = "image")
 public final class DecodeJpeg extends RawOp implements Operand<TUint8> {

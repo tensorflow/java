@@ -31,8 +31,8 @@ import org.tensorflow.types.family.TType;
  * Update '*var' according to the Ftrl-proximal scheme.
  * <p>
  * grad_with_shrinkage = grad + 2 * l2_shrinkage * var
- * accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
- * linear += grad_with_shrinkage +
+ * accum_new = accum + grad * grad
+ * linear += grad_with_shrinkage -
  *     (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
  * quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
  * var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
@@ -58,7 +58,16 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
       return this;
     }
     
+    /**
+     * @param multiplyLinearByLr 
+     */
+    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+      this.multiplyLinearByLr = multiplyLinearByLr;
+      return this;
+    }
+    
     private Boolean useLocking;
+    private Boolean multiplyLinearByLr;
     
     private Options() {
     }
@@ -98,6 +107,9 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
         if (opts.useLocking != null) {
           opBuilder.setAttr("use_locking", opts.useLocking);
         }
+        if (opts.multiplyLinearByLr != null) {
+          opBuilder.setAttr("multiply_linear_by_lr", opts.multiplyLinearByLr);
+        }
       }
     }
     return new ApplyFtrl<T>(opBuilder.build());
@@ -110,6 +122,13 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
+  }
+  
+  /**
+   * @param multiplyLinearByLr 
+   */
+  public static Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+    return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
   
   /**

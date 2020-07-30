@@ -49,7 +49,16 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
       return this;
     }
     
+    /**
+     * @param timeoutSeconds 
+     */
+    public Options timeoutSeconds(Float timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
+    
     private String communicationHint;
+    private Float timeoutSeconds;
     
     private Options() {
     }
@@ -81,6 +90,9 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
         if (opts.communicationHint != null) {
           opBuilder.setAttr("communication_hint", opts.communicationHint);
         }
+        if (opts.timeoutSeconds != null) {
+          opBuilder.setAttr("timeout_seconds", opts.timeoutSeconds);
+        }
       }
     }
     return new CollectiveGather<T>(opBuilder.build());
@@ -91,6 +103,13 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
    */
   public static Options communicationHint(String communicationHint) {
     return new Options().communicationHint(communicationHint);
+  }
+  
+  /**
+   * @param timeoutSeconds 
+   */
+  public static Options timeoutSeconds(Float timeoutSeconds) {
+    return new Options().timeoutSeconds(timeoutSeconds);
   }
   
   /**

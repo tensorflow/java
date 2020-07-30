@@ -27,7 +27,7 @@ public interface RemoteTensorHandleOrBuilder extends
 
   /**
    * <pre>
-   * Device of the operation that produced this tensor. Cannot be empty.
+   * Device where the tensor is located. Cannot be empty.
    * For multi-device functions, it's the default device passed to placer.
    * </pre>
    *
@@ -36,7 +36,7 @@ public interface RemoteTensorHandleOrBuilder extends
   java.lang.String getDevice();
   /**
    * <pre>
-   * Device of the operation that produced this tensor. Cannot be empty.
+   * Device where the tensor is located. Cannot be empty.
    * For multi-device functions, it's the default device passed to placer.
    * </pre>
    *
@@ -47,8 +47,8 @@ public interface RemoteTensorHandleOrBuilder extends
 
   /**
    * <pre>
-   * Device where the tensor is located. Can be empty if the operation producing
-   * this tensor is a multi-device function.
+   * Device of the operation producing this tensor. Can be empty if the
+   * operation producing this tensor is a multi-device function.
    * </pre>
    *
    * <code>string op_device = 4;</code>
@@ -56,8 +56,8 @@ public interface RemoteTensorHandleOrBuilder extends
   java.lang.String getOpDevice();
   /**
    * <pre>
-   * Device where the tensor is located. Can be empty if the operation producing
-   * this tensor is a multi-device function.
+   * Device of the operation producing this tensor. Can be empty if the
+   * operation producing this tensor is a multi-device function.
    * </pre>
    *
    * <code>string op_device = 4;</code>

@@ -48,7 +48,16 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
       return this;
     }
     
+    /**
+     * @param timeoutSeconds 
+     */
+    public Options timeoutSeconds(Float timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
+    
     private String communicationHint;
+    private Float timeoutSeconds;
     
     private Options() {
     }
@@ -80,6 +89,9 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
         if (opts.communicationHint != null) {
           opBuilder.setAttr("communication_hint", opts.communicationHint);
         }
+        if (opts.timeoutSeconds != null) {
+          opBuilder.setAttr("timeout_seconds", opts.timeoutSeconds);
+        }
       }
     }
     return new BroadcastSend<T>(opBuilder.build());
@@ -90,6 +102,13 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
    */
   public static Options communicationHint(String communicationHint) {
     return new Options().communicationHint(communicationHint);
+  }
+  
+  /**
+   * @param timeoutSeconds 
+   */
+  public static Options timeoutSeconds(Float timeoutSeconds) {
+    return new Options().timeoutSeconds(timeoutSeconds);
   }
   
   /**

@@ -41,5 +41,19 @@ public interface XStatOrBuilder extends
   com.google.protobuf.ByteString
       getStrValueBytes();
 
+  /**
+   * <code>bytes bytes_value = 6;</code>
+   */
+  com.google.protobuf.ByteString getBytesValue();
+
+  /**
+   * <pre>
+   * A string value that stored in XStatMetadata::name.
+   * </pre>
+   *
+   * <code>uint64 ref_value = 7;</code>
+   */
+  long getRefValue();
+
   public org.tensorflow.proto.profiler.XStat.ValueCase getValueCase();
 }

@@ -30,6 +30,11 @@ public final class SavedObjectGraphProtos {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tensorflow_SavedObject_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tensorflow_SavedObject_SaveableObjectsEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tensorflow_SavedObject_SaveableObjectsEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tensorflow_SavedUserObject_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -74,6 +79,11 @@ public final class SavedObjectGraphProtos {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tensorflow_SavedResource_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tensorflow_SaveableObject_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tensorflow_SaveableObject_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -97,7 +107,7 @@ public final class SavedObjectGraphProtos {
       "Graph.ConcreteFunctionsEntry\032[\n\026Concrete" +
       "FunctionsEntry\022\013\n\003key\030\001 \001(\t\0220\n\005value\030\002 \001" +
       "(\0132!.tensorflow.SavedConcreteFunction:\0028" +
-      "\001\"\275\004\n\013SavedObject\022R\n\010children\030\001 \003(\0132@.te" +
+      "\001\"\331\005\n\013SavedObject\022R\n\010children\030\001 \003(\0132@.te" +
       "nsorflow.TrackableObjectGraph.TrackableO" +
       "bject.ObjectReference\022^\n\016slot_variables\030" +
       "\003 \003(\0132F.tensorflow.TrackableObjectGraph." +
@@ -110,37 +120,42 @@ public final class SavedObjectGraphProtos {
       "e_function\030\010 \001(\0132%.tensorflow.SavedBareC" +
       "oncreteFunctionH\000\022-\n\010constant\030\t \001(\0132\031.te" +
       "nsorflow.SavedConstantH\000\022-\n\010resource\030\n \001" +
-      "(\0132\031.tensorflow.SavedResourceH\000B\006\n\004kindJ" +
-      "\004\010\002\020\003R\nattributes\"`\n\017SavedUserObject\022\022\n\n" +
-      "identifier\030\001 \001(\t\022\'\n\007version\030\002 \001(\0132\026.tens" +
-      "orflow.VersionDef\022\020\n\010metadata\030\003 \001(\t\"*\n\nS" +
-      "avedAsset\022\034\n\024asset_file_def_index\030\001 \001(\005\"" +
-      "\\\n\rSavedFunction\022\032\n\022concrete_functions\030\001" +
-      " \003(\t\022/\n\rfunction_spec\030\002 \001(\0132\030.tensorflow" +
-      ".FunctionSpec\"\250\001\n\025SavedConcreteFunction\022" +
-      "\024\n\014bound_inputs\030\002 \003(\005\022B\n\035canonicalized_i" +
-      "nput_signature\030\003 \001(\0132\033.tensorflow.Struct" +
-      "uredValue\0225\n\020output_signature\030\004 \001(\0132\033.te" +
-      "nsorflow.StructuredValue\"|\n\031SavedBareCon" +
-      "creteFunction\022\036\n\026concrete_function_name\030" +
-      "\001 \001(\t\022\031\n\021argument_keywords\030\002 \003(\t\022$\n\034allo" +
-      "wed_positional_arguments\030\003 \001(\003\"\"\n\rSavedC" +
-      "onstant\022\021\n\toperation\030\001 \001(\t\"\366\001\n\rSavedVari" +
-      "able\022#\n\005dtype\030\001 \001(\0162\024.tensorflow.DataTyp" +
-      "e\022+\n\005shape\030\002 \001(\0132\034.tensorflow.TensorShap" +
-      "eProto\022\021\n\ttrainable\030\003 \001(\010\022<\n\017synchroniza" +
-      "tion\030\004 \001(\0162#.tensorflow.VariableSynchron" +
-      "ization\0224\n\013aggregation\030\005 \001(\0162\037.tensorflo" +
-      "w.VariableAggregation\022\014\n\004name\030\006 \001(\t\"\225\001\n\014" +
-      "FunctionSpec\0220\n\013fullargspec\030\001 \001(\0132\033.tens" +
-      "orflow.StructuredValue\022\021\n\tis_method\030\002 \001(" +
-      "\010\0224\n\017input_signature\030\005 \001(\0132\033.tensorflow." +
-      "StructuredValueJ\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSavedReso" +
-      "urce\022\016\n\006device\030\001 \001(\tB\207\001\n\036org.tensorflow." +
-      "proto.frameworkB\026SavedObjectGraphProtosP" +
-      "\001ZHgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/core_protos_go_proto\370\001\001b\006" +
-      "proto3"
+      "(\0132\031.tensorflow.SavedResourceH\000\022F\n\020savea" +
+      "ble_objects\030\013 \003(\0132,.tensorflow.SavedObje" +
+      "ct.SaveableObjectsEntry\032R\n\024SaveableObjec" +
+      "tsEntry\022\013\n\003key\030\001 \001(\t\022)\n\005value\030\002 \001(\0132\032.te" +
+      "nsorflow.SaveableObject:\0028\001B\006\n\004kindJ\004\010\002\020" +
+      "\003R\nattributes\"`\n\017SavedUserObject\022\022\n\niden" +
+      "tifier\030\001 \001(\t\022\'\n\007version\030\002 \001(\0132\026.tensorfl" +
+      "ow.VersionDef\022\020\n\010metadata\030\003 \001(\t\"*\n\nSaved" +
+      "Asset\022\034\n\024asset_file_def_index\030\001 \001(\005\"\\\n\rS" +
+      "avedFunction\022\032\n\022concrete_functions\030\001 \003(\t" +
+      "\022/\n\rfunction_spec\030\002 \001(\0132\030.tensorflow.Fun" +
+      "ctionSpec\"\250\001\n\025SavedConcreteFunction\022\024\n\014b" +
+      "ound_inputs\030\002 \003(\005\022B\n\035canonicalized_input" +
+      "_signature\030\003 \001(\0132\033.tensorflow.Structured" +
+      "Value\0225\n\020output_signature\030\004 \001(\0132\033.tensor" +
+      "flow.StructuredValue\"|\n\031SavedBareConcret" +
+      "eFunction\022\036\n\026concrete_function_name\030\001 \001(" +
+      "\t\022\031\n\021argument_keywords\030\002 \003(\t\022$\n\034allowed_" +
+      "positional_arguments\030\003 \001(\003\"\"\n\rSavedConst" +
+      "ant\022\021\n\toperation\030\001 \001(\t\"\366\001\n\rSavedVariable" +
+      "\022#\n\005dtype\030\001 \001(\0162\024.tensorflow.DataType\022+\n" +
+      "\005shape\030\002 \001(\0132\034.tensorflow.TensorShapePro" +
+      "to\022\021\n\ttrainable\030\003 \001(\010\022<\n\017synchronization" +
+      "\030\004 \001(\0162#.tensorflow.VariableSynchronizat" +
+      "ion\0224\n\013aggregation\030\005 \001(\0162\037.tensorflow.Va" +
+      "riableAggregation\022\014\n\004name\030\006 \001(\t\"\225\001\n\014Func" +
+      "tionSpec\0220\n\013fullargspec\030\001 \001(\0132\033.tensorfl" +
+      "ow.StructuredValue\022\021\n\tis_method\030\002 \001(\010\0224\n" +
+      "\017input_signature\030\005 \001(\0132\033.tensorflow.Stru" +
+      "cturedValueJ\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSavedResource" +
+      "\022\016\n\006device\030\001 \001(\t\"A\n\016SaveableObject\022\025\n\rsa" +
+      "ve_function\030\002 \001(\005\022\030\n\020restore_function\030\003 " +
+      "\001(\005B\207\001\n\036org.tensorflow.proto.frameworkB\026" +
+      "SavedObjectGraphProtosP\001ZHgithub.com/ten" +
+      "sorflow/tensorflow/tensorflow/go/core/co" +
+      "re_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -169,7 +184,13 @@ public final class SavedObjectGraphProtos {
     internal_static_tensorflow_SavedObject_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_SavedObject_descriptor,
-        new java.lang.String[] { "Children", "SlotVariables", "UserObject", "Asset", "Function", "Variable", "BareConcreteFunction", "Constant", "Resource", "Kind", });
+        new java.lang.String[] { "Children", "SlotVariables", "UserObject", "Asset", "Function", "Variable", "BareConcreteFunction", "Constant", "Resource", "SaveableObjects", "Kind", });
+    internal_static_tensorflow_SavedObject_SaveableObjectsEntry_descriptor =
+      internal_static_tensorflow_SavedObject_descriptor.getNestedTypes().get(0);
+    internal_static_tensorflow_SavedObject_SaveableObjectsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tensorflow_SavedObject_SaveableObjectsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_tensorflow_SavedUserObject_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_tensorflow_SavedUserObject_fieldAccessorTable = new
@@ -224,6 +245,12 @@ public final class SavedObjectGraphProtos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_SavedResource_descriptor,
         new java.lang.String[] { "Device", });
+    internal_static_tensorflow_SaveableObject_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_tensorflow_SaveableObject_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tensorflow_SaveableObject_descriptor,
+        new java.lang.String[] { "SaveFunction", "RestoreFunction", });
     org.tensorflow.proto.framework.TensorShapeProtos.getDescriptor();
     org.tensorflow.proto.framework.TypesProtos.getDescriptor();
     org.tensorflow.proto.framework.VariableProtos.getDescriptor();

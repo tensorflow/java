@@ -5,7 +5,7 @@ package org.tensorflow.proto.framework;
 
 /**
  * <pre>
- * A protobuf to tf.TensorSpec.
+ * A protobuf to represent tf.TensorSpec.
  * </pre>
  *
  * Protobuf type {@code tensorflow.TensorSpecProto}
@@ -365,7 +365,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * A protobuf to tf.TensorSpec.
+   * A protobuf to represent tf.TensorSpec.
    * </pre>
    *
    * Protobuf type {@code tensorflow.TensorSpecProto}

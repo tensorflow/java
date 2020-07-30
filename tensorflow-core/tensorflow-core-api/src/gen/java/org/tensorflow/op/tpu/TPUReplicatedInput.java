@@ -68,8 +68,17 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
       return this;
     }
     
+    /**
+     * @param isPacked 
+     */
+    public Options isPacked(Boolean isPacked) {
+      this.isPacked = isPacked;
+      return this;
+    }
+    
     private Boolean isMirroredVariable;
     private Long index;
+    private Boolean isPacked;
     
     private Options() {
     }
@@ -96,6 +105,9 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
         if (opts.index != null) {
           opBuilder.setAttr("index", opts.index);
         }
+        if (opts.isPacked != null) {
+          opBuilder.setAttr("is_packed", opts.isPacked);
+        }
       }
     }
     return new TPUReplicatedInput<T>(opBuilder.build());
@@ -113,6 +125,13 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
    */
   public static Options index(Long index) {
     return new Options().index(index);
+  }
+  
+  /**
+   * @param isPacked 
+   */
+  public static Options isPacked(Boolean isPacked) {
+    return new Options().isPacked(isPacked);
   }
   
   /**

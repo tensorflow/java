@@ -30,4 +30,74 @@ public interface XSpaceOrBuilder extends
    */
   org.tensorflow.proto.profiler.XPlaneOrBuilder getPlanesOrBuilder(
       int index);
+
+  /**
+   * <pre>
+   * Errors (if any) in the generation of planes.
+   * </pre>
+   *
+   * <code>repeated string errors = 2;</code>
+   */
+  java.util.List<java.lang.String>
+      getErrorsList();
+  /**
+   * <pre>
+   * Errors (if any) in the generation of planes.
+   * </pre>
+   *
+   * <code>repeated string errors = 2;</code>
+   */
+  int getErrorsCount();
+  /**
+   * <pre>
+   * Errors (if any) in the generation of planes.
+   * </pre>
+   *
+   * <code>repeated string errors = 2;</code>
+   */
+  java.lang.String getErrors(int index);
+  /**
+   * <pre>
+   * Errors (if any) in the generation of planes.
+   * </pre>
+   *
+   * <code>repeated string errors = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getErrorsBytes(int index);
+
+  /**
+   * <pre>
+   * Warnings (if any) in the generation of planes;
+   * </pre>
+   *
+   * <code>repeated string warnings = 3;</code>
+   */
+  java.util.List<java.lang.String>
+      getWarningsList();
+  /**
+   * <pre>
+   * Warnings (if any) in the generation of planes;
+   * </pre>
+   *
+   * <code>repeated string warnings = 3;</code>
+   */
+  int getWarningsCount();
+  /**
+   * <pre>
+   * Warnings (if any) in the generation of planes;
+   * </pre>
+   *
+   * <code>repeated string warnings = 3;</code>
+   */
+  java.lang.String getWarnings(int index);
+  /**
+   * <pre>
+   * Warnings (if any) in the generation of planes;
+   * </pre>
+   *
+   * <code>repeated string warnings = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getWarningsBytes(int index);
 }
