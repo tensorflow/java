@@ -35,8 +35,6 @@ import org.tensorflow.op.math.Asinh;
 import org.tensorflow.op.math.Atan;
 import org.tensorflow.op.math.Atan2;
 import org.tensorflow.op.math.Atanh;
-import org.tensorflow.op.math.BesselI0e;
-import org.tensorflow.op.math.BesselI1e;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
@@ -527,38 +525,6 @@ public final class MathOps {
    */
   public <T extends TType> Atanh<T> atanh(Operand<T> x) {
     return Atanh.create(scope, x);
-  }
-
-  /**
-   * Computes the Bessel i0e function of `x` element-wise.
-   *  <p>
-   *  Exponentially scaled modified Bessel function of order 0 defined as
-   *  `bessel_i0e(x) = exp(-abs(x)) bessel_i0(x)`.
-   *  <p>
-   *  This function is faster and numerically stabler than `bessel_i0(x)`.
-   *
-   * @param <T> data type for {@code y()} output
-   * @param x
-   * @return a new instance of BesselI0e
-   */
-  public <T extends TNumber> BesselI0e<T> besselI0e(Operand<T> x) {
-    return BesselI0e.create(scope, x);
-  }
-
-  /**
-   * Computes the Bessel i1e function of `x` element-wise.
-   *  <p>
-   *  Exponentially scaled modified Bessel function of order 0 defined as
-   *  `bessel_i1e(x) = exp(-abs(x)) bessel_i1(x)`.
-   *  <p>
-   *  This function is faster and numerically stabler than `bessel_i1(x)`.
-   *
-   * @param <T> data type for {@code y()} output
-   * @param x
-   * @return a new instance of BesselI1e
-   */
-  public <T extends TNumber> BesselI1e<T> besselI1e(Operand<T> x) {
-    return BesselI1e.create(scope, x);
   }
 
   /**

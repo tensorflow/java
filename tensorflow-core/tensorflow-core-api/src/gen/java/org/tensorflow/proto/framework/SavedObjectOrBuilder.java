@@ -211,5 +211,39 @@ public interface SavedObjectOrBuilder extends
    */
   org.tensorflow.proto.framework.SavedResourceOrBuilder getResourceOrBuilder();
 
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+  int getSaveableObjectsCount();
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+  boolean containsSaveableObjects(
+      java.lang.String key);
+  /**
+   * Use {@link #getSaveableObjectsMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+  getSaveableObjects();
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+  java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+  getSaveableObjectsMap();
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrDefault(
+      java.lang.String key,
+      org.tensorflow.proto.framework.SaveableObject defaultValue);
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrThrow(
+      java.lang.String key);
+
   public org.tensorflow.proto.framework.SavedObject.KindCase getKindCase();
 }

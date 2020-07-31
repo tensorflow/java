@@ -27,7 +27,6 @@ private static final long serialVersionUID = 0L;
     name_ = "";
     maybeTypeName_ = "";
     dtypesAndShapes_ = java.util.Collections.emptyList();
-    allowedDevices_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -99,15 +98,6 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.parser(), extensionRegistry));
             break;
           }
-          case 58: {
-            java.lang.String s = input.readStringRequireUtf8();
-            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-              allowedDevices_ = new com.google.protobuf.LazyStringArrayList();
-              mutable_bitField0_ |= 0x00000002;
-            }
-            allowedDevices_.add(s);
-            break;
-          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -125,9 +115,6 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
         dtypesAndShapes_ = java.util.Collections.unmodifiableList(dtypesAndShapes_);
-      }
-      if (((mutable_bitField0_ & 0x00000002) != 0)) {
-        allowedDevices_ = allowedDevices_.getUnmodifiableView();
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -1099,55 +1086,6 @@ private static final long serialVersionUID = 0L;
     return dtypesAndShapes_.get(index);
   }
 
-  public static final int ALLOWED_DEVICES_FIELD_NUMBER = 7;
-  private com.google.protobuf.LazyStringList allowedDevices_;
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  public com.google.protobuf.ProtocolStringList
-      getAllowedDevicesList() {
-    return allowedDevices_;
-  }
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  public int getAllowedDevicesCount() {
-    return allowedDevices_.size();
-  }
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  public java.lang.String getAllowedDevices(int index) {
-    return allowedDevices_.get(index);
-  }
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  public com.google.protobuf.ByteString
-      getAllowedDevicesBytes(int index) {
-    return allowedDevices_.getByteString(index);
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -1180,9 +1118,6 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < dtypesAndShapes_.size(); i++) {
       output.writeMessage(6, dtypesAndShapes_.get(i));
     }
-    for (int i = 0; i < allowedDevices_.size(); i++) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, allowedDevices_.getRaw(i));
-    }
     unknownFields.writeTo(output);
   }
 
@@ -1212,14 +1147,6 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, dtypesAndShapes_.get(i));
     }
-    {
-      int dataSize = 0;
-      for (int i = 0; i < allowedDevices_.size(); i++) {
-        dataSize += computeStringSizeNoTag(allowedDevices_.getRaw(i));
-      }
-      size += dataSize;
-      size += 1 * getAllowedDevicesList().size();
-    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -1247,8 +1174,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMaybeTypeName())) return false;
     if (!getDtypesAndShapesList()
         .equals(other.getDtypesAndShapesList())) return false;
-    if (!getAllowedDevicesList()
-        .equals(other.getAllowedDevicesList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1274,10 +1199,6 @@ private static final long serialVersionUID = 0L;
     if (getDtypesAndShapesCount() > 0) {
       hash = (37 * hash) + DTYPES_AND_SHAPES_FIELD_NUMBER;
       hash = (53 * hash) + getDtypesAndShapesList().hashCode();
-    }
-    if (getAllowedDevicesCount() > 0) {
-      hash = (37 * hash) + ALLOWED_DEVICES_FIELD_NUMBER;
-      hash = (53 * hash) + getAllowedDevicesList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1435,8 +1356,6 @@ private static final long serialVersionUID = 0L;
       } else {
         dtypesAndShapesBuilder_.clear();
       }
-      allowedDevices_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -1478,11 +1397,6 @@ private static final long serialVersionUID = 0L;
       } else {
         result.dtypesAndShapes_ = dtypesAndShapesBuilder_.build();
       }
-      if (((bitField0_ & 0x00000002) != 0)) {
-        allowedDevices_ = allowedDevices_.getUnmodifiableView();
-        bitField0_ = (bitField0_ & ~0x00000002);
-      }
-      result.allowedDevices_ = allowedDevices_;
       onBuilt();
       return result;
     }
@@ -1575,16 +1489,6 @@ private static final long serialVersionUID = 0L;
             dtypesAndShapesBuilder_.addAllMessages(other.dtypesAndShapes_);
           }
         }
-      }
-      if (!other.allowedDevices_.isEmpty()) {
-        if (allowedDevices_.isEmpty()) {
-          allowedDevices_ = other.allowedDevices_;
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          ensureAllowedDevicesIsMutable();
-          allowedDevices_.addAll(other.allowedDevices_);
-        }
-        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -2328,145 +2232,6 @@ private static final long serialVersionUID = 0L;
         dtypesAndShapes_ = null;
       }
       return dtypesAndShapesBuilder_;
-    }
-
-    private com.google.protobuf.LazyStringList allowedDevices_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    private void ensureAllowedDevicesIsMutable() {
-      if (!((bitField0_ & 0x00000002) != 0)) {
-        allowedDevices_ = new com.google.protobuf.LazyStringArrayList(allowedDevices_);
-        bitField0_ |= 0x00000002;
-       }
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public com.google.protobuf.ProtocolStringList
-        getAllowedDevicesList() {
-      return allowedDevices_.getUnmodifiableView();
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public int getAllowedDevicesCount() {
-      return allowedDevices_.size();
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public java.lang.String getAllowedDevices(int index) {
-      return allowedDevices_.get(index);
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAllowedDevicesBytes(int index) {
-      return allowedDevices_.getByteString(index);
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public Builder setAllowedDevices(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureAllowedDevicesIsMutable();
-      allowedDevices_.set(index, value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public Builder addAllowedDevices(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureAllowedDevicesIsMutable();
-      allowedDevices_.add(value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public Builder addAllAllowedDevices(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureAllowedDevicesIsMutable();
-      com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, allowedDevices_);
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public Builder clearAllowedDevices() {
-      allowedDevices_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000002);
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * A set of devices containing the resource. If empty, the resource only
-     * exists on `device`.
-     * </pre>
-     *
-     * <code>repeated string allowed_devices = 7;</code>
-     */
-    public Builder addAllowedDevicesBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      ensureAllowedDevicesIsMutable();
-      allowedDevices_.add(value);
-      onChanged();
-      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

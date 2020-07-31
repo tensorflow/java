@@ -56,7 +56,7 @@ import org.tensorflow.types.family.TType;
  * of color channels.
  * <p>
  * This op also supports decoding JPEGs and non-animated GIFs since the interface
- * is the same, though it is cleaner to use `tf.image.decode_image`.
+ * is the same, though it is cleaner to use `tf.io.decode_image`.
  * 
  * @param <T> data type for {@code image()} output
  */

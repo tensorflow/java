@@ -101,6 +101,11 @@ private static final long serialVersionUID = 0L;
             input.popLimit(oldLimit);
             break;
           }
+          case 48: {
+
+            numElements_ = input.readInt64();
+            break;
+          }
           case 8000: {
 
             finalized_ = input.readBool();
@@ -319,6 +324,19 @@ private static final long serialVersionUID = 0L;
   }
   private int dtypeMemoizedSerializedSize;
 
+  public static final int NUM_ELEMENTS_FIELD_NUMBER = 6;
+  private long numElements_;
+  /**
+   * <pre>
+   * The number of elements in the snapshot.
+   * </pre>
+   *
+   * <code>int64 num_elements = 6;</code>
+   */
+  public long getNumElements() {
+    return numElements_;
+  }
+
   public static final int FINALIZED_FIELD_NUMBER = 1000;
   private boolean finalized_;
   /**
@@ -362,6 +380,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < dtype_.size(); i++) {
       output.writeEnumNoTag(dtype_.get(i));
     }
+    if (numElements_ != 0L) {
+      output.writeInt64(6, numElements_);
+    }
     if (finalized_ != false) {
       output.writeBool(1000, finalized_);
     }
@@ -400,6 +421,10 @@ private static final long serialVersionUID = 0L;
           .computeUInt32SizeNoTag(dataSize);
       }dtypeMemoizedSerializedSize = dataSize;
     }
+    if (numElements_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(6, numElements_);
+    }
     if (finalized_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(1000, finalized_);
@@ -428,6 +453,8 @@ private static final long serialVersionUID = 0L;
     if (getVersion()
         != other.getVersion()) return false;
     if (!dtype_.equals(other.dtype_)) return false;
+    if (getNumElements()
+        != other.getNumElements()) return false;
     if (getFinalized()
         != other.getFinalized()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
@@ -455,6 +482,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DTYPE_FIELD_NUMBER;
       hash = (53 * hash) + dtype_.hashCode();
     }
+    hash = (37 * hash) + NUM_ELEMENTS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getNumElements());
     hash = (37 * hash) + FINALIZED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getFinalized());
@@ -605,6 +635,8 @@ private static final long serialVersionUID = 0L;
 
       dtype_ = java.util.Collections.emptyList();
       bitField0_ = (bitField0_ & ~0x00000001);
+      numElements_ = 0L;
+
       finalized_ = false;
 
       return this;
@@ -643,6 +675,7 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.dtype_ = dtype_;
+      result.numElements_ = numElements_;
       result.finalized_ = finalized_;
       onBuilt();
       return result;
@@ -715,6 +748,9 @@ private static final long serialVersionUID = 0L;
           dtype_.addAll(other.dtype_);
         }
         onChanged();
+      }
+      if (other.getNumElements() != 0L) {
+        setNumElements(other.getNumElements());
       }
       if (other.getFinalized() != false) {
         setFinalized(other.getFinalized());
@@ -1170,6 +1206,44 @@ private static final long serialVersionUID = 0L;
       for (int value : values) {
         dtype_.add(value);
       }
+      onChanged();
+      return this;
+    }
+
+    private long numElements_ ;
+    /**
+     * <pre>
+     * The number of elements in the snapshot.
+     * </pre>
+     *
+     * <code>int64 num_elements = 6;</code>
+     */
+    public long getNumElements() {
+      return numElements_;
+    }
+    /**
+     * <pre>
+     * The number of elements in the snapshot.
+     * </pre>
+     *
+     * <code>int64 num_elements = 6;</code>
+     */
+    public Builder setNumElements(long value) {
+      
+      numElements_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The number of elements in the snapshot.
+     * </pre>
+     *
+     * <code>int64 num_elements = 6;</code>
+     */
+    public Builder clearNumElements() {
+      
+      numElements_ = 0L;
       onChanged();
       return this;
     }

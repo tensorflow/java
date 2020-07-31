@@ -57,7 +57,16 @@ public final class ResourceSparseApplyFtrl extends RawOp {
       return this;
     }
     
+    /**
+     * @param multiplyLinearByLr 
+     */
+    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+      this.multiplyLinearByLr = multiplyLinearByLr;
+      return this;
+    }
+    
     private Boolean useLocking;
+    private Boolean multiplyLinearByLr;
     
     private Options() {
     }
@@ -99,6 +108,9 @@ public final class ResourceSparseApplyFtrl extends RawOp {
         if (opts.useLocking != null) {
           opBuilder.setAttr("use_locking", opts.useLocking);
         }
+        if (opts.multiplyLinearByLr != null) {
+          opBuilder.setAttr("multiply_linear_by_lr", opts.multiplyLinearByLr);
+        }
       }
     }
     return new ResourceSparseApplyFtrl(opBuilder.build());
@@ -111,6 +123,13 @@ public final class ResourceSparseApplyFtrl extends RawOp {
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
+  }
+  
+  /**
+   * @param multiplyLinearByLr 
+   */
+  public static Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+    return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
   
   

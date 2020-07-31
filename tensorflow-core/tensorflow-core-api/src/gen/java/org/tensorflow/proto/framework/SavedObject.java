@@ -167,6 +167,19 @@ private static final long serialVersionUID = 0L;
             kindCase_ = 10;
             break;
           }
+          case 90: {
+            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+              saveableObjects_ = com.google.protobuf.MapField.newMapField(
+                  SaveableObjectsDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000004;
+            }
+            com.google.protobuf.MapEntry<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+            saveableObjects__ = input.readMessage(
+                SaveableObjectsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            saveableObjects_.getMutableMap().put(
+                saveableObjects__.getKey(), saveableObjects__.getValue());
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -197,6 +210,18 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.framework.SavedObjectGraphProtos.internal_static_tensorflow_SavedObject_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  @java.lang.Override
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 11:
+        return internalGetSaveableObjects();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -570,6 +595,82 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.framework.SavedResource.getDefaultInstance();
   }
 
+  public static final int SAVEABLE_OBJECTS_FIELD_NUMBER = 11;
+  private static final class SaveableObjectsDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.String, org.tensorflow.proto.framework.SaveableObject> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.String, org.tensorflow.proto.framework.SaveableObject>newDefaultInstance(
+                org.tensorflow.proto.framework.SavedObjectGraphProtos.internal_static_tensorflow_SavedObject_SaveableObjectsEntry_descriptor, 
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "",
+                com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                org.tensorflow.proto.framework.SaveableObject.getDefaultInstance());
+  }
+  private com.google.protobuf.MapField<
+      java.lang.String, org.tensorflow.proto.framework.SaveableObject> saveableObjects_;
+  private com.google.protobuf.MapField<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+  internalGetSaveableObjects() {
+    if (saveableObjects_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          SaveableObjectsDefaultEntryHolder.defaultEntry);
+    }
+    return saveableObjects_;
+  }
+
+  public int getSaveableObjectsCount() {
+    return internalGetSaveableObjects().getMap().size();
+  }
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  public boolean containsSaveableObjects(
+      java.lang.String key) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    return internalGetSaveableObjects().getMap().containsKey(key);
+  }
+  /**
+   * Use {@link #getSaveableObjectsMap()} instead.
+   */
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> getSaveableObjects() {
+    return getSaveableObjectsMap();
+  }
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  public java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> getSaveableObjectsMap() {
+    return internalGetSaveableObjects().getMap();
+  }
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  public org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrDefault(
+      java.lang.String key,
+      org.tensorflow.proto.framework.SaveableObject defaultValue) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> map =
+        internalGetSaveableObjects().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+   */
+
+  public org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrThrow(
+      java.lang.String key) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> map =
+        internalGetSaveableObjects().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
+    }
+    return map.get(key);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -611,6 +712,12 @@ private static final long serialVersionUID = 0L;
     if (kindCase_ == 10) {
       output.writeMessage(10, (org.tensorflow.proto.framework.SavedResource) kind_);
     }
+    com.google.protobuf.GeneratedMessageV3
+      .serializeStringMapTo(
+        output,
+        internalGetSaveableObjects(),
+        SaveableObjectsDefaultEntryHolder.defaultEntry,
+        11);
     unknownFields.writeTo(output);
   }
 
@@ -656,6 +763,16 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(10, (org.tensorflow.proto.framework.SavedResource) kind_);
     }
+    for (java.util.Map.Entry<java.lang.String, org.tensorflow.proto.framework.SaveableObject> entry
+         : internalGetSaveableObjects().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+      saveableObjects__ = SaveableObjectsDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(11, saveableObjects__);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -675,6 +792,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getChildrenList())) return false;
     if (!getSlotVariablesList()
         .equals(other.getSlotVariablesList())) return false;
+    if (!internalGetSaveableObjects().equals(
+        other.internalGetSaveableObjects())) return false;
     if (!getKindCase().equals(other.getKindCase())) return false;
     switch (kindCase_) {
       case 4:
@@ -726,6 +845,10 @@ private static final long serialVersionUID = 0L;
     if (getSlotVariablesCount() > 0) {
       hash = (37 * hash) + SLOT_VARIABLES_FIELD_NUMBER;
       hash = (53 * hash) + getSlotVariablesList().hashCode();
+    }
+    if (!internalGetSaveableObjects().getMap().isEmpty()) {
+      hash = (37 * hash) + SAVEABLE_OBJECTS_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetSaveableObjects().hashCode();
     }
     switch (kindCase_) {
       case 4:
@@ -866,6 +989,28 @@ private static final long serialVersionUID = 0L;
       return org.tensorflow.proto.framework.SavedObjectGraphProtos.internal_static_tensorflow_SavedObject_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 11:
+          return internalGetSaveableObjects();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 11:
+          return internalGetMutableSaveableObjects();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -906,6 +1051,7 @@ private static final long serialVersionUID = 0L;
       } else {
         slotVariablesBuilder_.clear();
       }
+      internalGetMutableSaveableObjects().clear();
       kindCase_ = 0;
       kind_ = null;
       return this;
@@ -1002,6 +1148,8 @@ private static final long serialVersionUID = 0L;
           result.kind_ = resourceBuilder_.build();
         }
       }
+      result.saveableObjects_ = internalGetSaveableObjects();
+      result.saveableObjects_.makeImmutable();
       result.kindCase_ = kindCase_;
       onBuilt();
       return result;
@@ -1103,6 +1251,8 @@ private static final long serialVersionUID = 0L;
           }
         }
       }
+      internalGetMutableSaveableObjects().mergeFrom(
+          other.internalGetSaveableObjects());
       switch (other.getKindCase()) {
         case USER_OBJECT: {
           mergeUserObject(other.getUserObject());
@@ -2845,6 +2995,129 @@ private static final long serialVersionUID = 0L;
       kindCase_ = 10;
       onChanged();;
       return resourceBuilder_;
+    }
+
+    private com.google.protobuf.MapField<
+        java.lang.String, org.tensorflow.proto.framework.SaveableObject> saveableObjects_;
+    private com.google.protobuf.MapField<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+    internalGetSaveableObjects() {
+      if (saveableObjects_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            SaveableObjectsDefaultEntryHolder.defaultEntry);
+      }
+      return saveableObjects_;
+    }
+    private com.google.protobuf.MapField<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+    internalGetMutableSaveableObjects() {
+      onChanged();;
+      if (saveableObjects_ == null) {
+        saveableObjects_ = com.google.protobuf.MapField.newMapField(
+            SaveableObjectsDefaultEntryHolder.defaultEntry);
+      }
+      if (!saveableObjects_.isMutable()) {
+        saveableObjects_ = saveableObjects_.copy();
+      }
+      return saveableObjects_;
+    }
+
+    public int getSaveableObjectsCount() {
+      return internalGetSaveableObjects().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public boolean containsSaveableObjects(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetSaveableObjects().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getSaveableObjectsMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> getSaveableObjects() {
+      return getSaveableObjectsMap();
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> getSaveableObjectsMap() {
+      return internalGetSaveableObjects().getMap();
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrDefault(
+        java.lang.String key,
+        org.tensorflow.proto.framework.SaveableObject defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> map =
+          internalGetSaveableObjects().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> map =
+          internalGetSaveableObjects().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public Builder clearSaveableObjects() {
+      internalGetMutableSaveableObjects().getMutableMap()
+          .clear();
+      return this;
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public Builder removeSaveableObjects(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      internalGetMutableSaveableObjects().getMutableMap()
+          .remove(key);
+      return this;
+    }
+    /**
+     * Use alternate mutation accessors instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
+    getMutableSaveableObjects() {
+      return internalGetMutableSaveableObjects().getMutableMap();
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+    public Builder putSaveableObjects(
+        java.lang.String key,
+        org.tensorflow.proto.framework.SaveableObject value) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      if (value == null) { throw new java.lang.NullPointerException(); }
+      internalGetMutableSaveableObjects().getMutableMap()
+          .put(key, value);
+      return this;
+    }
+    /**
+     * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
+     */
+
+    public Builder putAllSaveableObjects(
+        java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject> values) {
+      internalGetMutableSaveableObjects().getMutableMap()
+          .putAll(values);
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

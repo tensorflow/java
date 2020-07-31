@@ -87,6 +87,25 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
+   * Common subgraph elimination (default is ON)
+   * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+   */
+  int getCommonSubgraphEliminationValue();
+  /**
+   * <pre>
+   * Common subgraph elimination (default is ON)
+   * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle common_subgraph_elimination = 24;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getCommonSubgraphElimination();
+
+  /**
+   * <pre>
    * Arithmetic optimizations (default is ON)
    * e.g. Simplify arithmetic ops; merge ops with same value (like constants).
    * </pre>
@@ -240,8 +259,8 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
-   * Optimize data types (default is OFF).
-   * e.g., This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA (default is OFF).
+   * This will try to use float16 on GPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>
@@ -251,8 +270,8 @@ public interface RewriterConfigOrBuilder extends
   int getAutoMixedPrecisionValue();
   /**
    * <pre>
-   * Optimize data types (default is OFF).
-   * e.g., This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA (default is OFF).
+   * This will try to use float16 on GPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>
@@ -260,6 +279,27 @@ public interface RewriterConfigOrBuilder extends
    * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision = 23;</code>
    */
   org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecision();
+
+  /**
+   * <pre>
+   * Optimize data types for MKL (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+   */
+  int getAutoMixedPrecisionMklValue();
+  /**
+   * <pre>
+   * Optimize data types for MKL (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionMkl();
 
   /**
    * <pre>

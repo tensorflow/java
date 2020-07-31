@@ -44,6 +44,14 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
   public static class Options {
     
     /**
+     * @param explicitPaddings 
+     */
+    public Options explicitPaddings(List<Long> explicitPaddings) {
+      this.explicitPaddings = explicitPaddings;
+      return this;
+    }
+    
+    /**
      * @param dataFormat Specify the data format of the input and output data. With the
      * default format "NHWC", the data is stored in the order of:
      *     [batch, height, width, channels].
@@ -67,6 +75,7 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
       return this;
     }
     
+    private List<Long> explicitPaddings;
     private String dataFormat;
     private List<Long> dilations;
     
@@ -108,6 +117,13 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {
+        if (opts.explicitPaddings != null) {
+          long[] explicitPaddingsArray = new long[opts.explicitPaddings.size()];
+          for (int i = 0; i < explicitPaddingsArray.length; ++i) {
+            explicitPaddingsArray[i] = opts.explicitPaddings.get(i);
+          }
+          opBuilder.setAttr("explicit_paddings", explicitPaddingsArray);
+        }
         if (opts.dataFormat != null) {
           opBuilder.setAttr("data_format", opts.dataFormat);
         }
@@ -121,6 +137,13 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
       }
     }
     return new DepthwiseConv2dNativeBackpropInput<T>(opBuilder.build());
+  }
+  
+  /**
+   * @param explicitPaddings 
+   */
+  public static Options explicitPaddings(List<Long> explicitPaddings) {
+    return new Options().explicitPaddings(explicitPaddings);
   }
   
   /**

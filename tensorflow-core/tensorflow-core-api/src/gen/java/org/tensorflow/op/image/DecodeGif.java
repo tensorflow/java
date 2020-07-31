@@ -38,7 +38,7 @@ import org.tensorflow.types.TUint8;
  *     convert $src.gif -coalesce $dst.gif
  * <p>
  * This op also supports decoding JPEGs and PNGs, though it is cleaner to use
- * `tf.image.decode_image`.
+ * `tf.io.decode_image`.
  */
 @Operator(group = "image")
 public final class DecodeGif extends RawOp implements Operand<TUint8> {

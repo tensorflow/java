@@ -43,7 +43,6 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-@Operator
 public final class LinSpace<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**

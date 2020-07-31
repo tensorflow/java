@@ -155,7 +155,7 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object device_;
   /**
    * <pre>
-   * Device of the operation that produced this tensor. Cannot be empty.
+   * Device where the tensor is located. Cannot be empty.
    * For multi-device functions, it's the default device passed to placer.
    * </pre>
    *
@@ -175,7 +175,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Device of the operation that produced this tensor. Cannot be empty.
+   * Device where the tensor is located. Cannot be empty.
    * For multi-device functions, it's the default device passed to placer.
    * </pre>
    *
@@ -199,8 +199,8 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object opDevice_;
   /**
    * <pre>
-   * Device where the tensor is located. Can be empty if the operation producing
-   * this tensor is a multi-device function.
+   * Device of the operation producing this tensor. Can be empty if the
+   * operation producing this tensor is a multi-device function.
    * </pre>
    *
    * <code>string op_device = 4;</code>
@@ -219,8 +219,8 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Device where the tensor is located. Can be empty if the operation producing
-   * this tensor is a multi-device function.
+   * Device of the operation producing this tensor. Can be empty if the
+   * operation producing this tensor is a multi-device function.
    * </pre>
    *
    * <code>string op_device = 4;</code>
@@ -825,7 +825,7 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object device_ = "";
     /**
      * <pre>
-     * Device of the operation that produced this tensor. Cannot be empty.
+     * Device where the tensor is located. Cannot be empty.
      * For multi-device functions, it's the default device passed to placer.
      * </pre>
      *
@@ -845,7 +845,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device of the operation that produced this tensor. Cannot be empty.
+     * Device where the tensor is located. Cannot be empty.
      * For multi-device functions, it's the default device passed to placer.
      * </pre>
      *
@@ -866,7 +866,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device of the operation that produced this tensor. Cannot be empty.
+     * Device where the tensor is located. Cannot be empty.
      * For multi-device functions, it's the default device passed to placer.
      * </pre>
      *
@@ -884,7 +884,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device of the operation that produced this tensor. Cannot be empty.
+     * Device where the tensor is located. Cannot be empty.
      * For multi-device functions, it's the default device passed to placer.
      * </pre>
      *
@@ -898,7 +898,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device of the operation that produced this tensor. Cannot be empty.
+     * Device where the tensor is located. Cannot be empty.
      * For multi-device functions, it's the default device passed to placer.
      * </pre>
      *
@@ -919,8 +919,8 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object opDevice_ = "";
     /**
      * <pre>
-     * Device where the tensor is located. Can be empty if the operation producing
-     * this tensor is a multi-device function.
+     * Device of the operation producing this tensor. Can be empty if the
+     * operation producing this tensor is a multi-device function.
      * </pre>
      *
      * <code>string op_device = 4;</code>
@@ -939,8 +939,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device where the tensor is located. Can be empty if the operation producing
-     * this tensor is a multi-device function.
+     * Device of the operation producing this tensor. Can be empty if the
+     * operation producing this tensor is a multi-device function.
      * </pre>
      *
      * <code>string op_device = 4;</code>
@@ -960,8 +960,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device where the tensor is located. Can be empty if the operation producing
-     * this tensor is a multi-device function.
+     * Device of the operation producing this tensor. Can be empty if the
+     * operation producing this tensor is a multi-device function.
      * </pre>
      *
      * <code>string op_device = 4;</code>
@@ -978,8 +978,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device where the tensor is located. Can be empty if the operation producing
-     * this tensor is a multi-device function.
+     * Device of the operation producing this tensor. Can be empty if the
+     * operation producing this tensor is a multi-device function.
      * </pre>
      *
      * <code>string op_device = 4;</code>
@@ -992,8 +992,8 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Device where the tensor is located. Can be empty if the operation producing
-     * this tensor is a multi-device function.
+     * Device of the operation producing this tensor. Can be empty if the
+     * operation producing this tensor is a multi-device function.
      * </pre>
      *
      * <code>string op_device = 4;</code>

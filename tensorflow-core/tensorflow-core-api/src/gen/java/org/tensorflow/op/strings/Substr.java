@@ -104,7 +104,7 @@ import org.tensorflow.types.family.TType;
  * <p>
  *   * `ValueError`: If the first argument cannot be converted to a
  *      Tensor of `dtype string`.
- *   * `InvalidArgumentError`: If indicies are out of range.
+ *   * `InvalidArgumentError`: If indices are out of range.
  *   * `ValueError`: If `pos` and `len` are not the same shape.
  * 
  */

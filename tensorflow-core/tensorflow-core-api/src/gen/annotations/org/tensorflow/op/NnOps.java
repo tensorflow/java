@@ -1328,7 +1328,7 @@ public final class NnOps {
   }
 
   /**
-   * Computes gradients of max pooling function.
+   * Computes gradients of 3D max pooling function.
    *
    * @param <U> data type for {@code output()} output
    * @param origInput The original input tensor.

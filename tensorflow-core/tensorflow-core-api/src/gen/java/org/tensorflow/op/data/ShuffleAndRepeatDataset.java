@@ -39,6 +39,25 @@ import org.tensorflow.types.family.TType;
 public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TType> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.data.ShuffleAndRepeatDataset}
+   */
+  public static class Options {
+    
+    /**
+     * @param reshuffleEachIteration 
+     */
+    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+      this.reshuffleEachIteration = reshuffleEachIteration;
+      return this;
+    }
+    
+    private Boolean reshuffleEachIteration;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new ShuffleAndRepeatDataset operation.
    * 
    * @param scope current scope
@@ -54,10 +73,11 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
    * should be repeated. The default is `-1`, which results in infinite repetition.
    * @param outputTypes 
    * @param outputShapes 
+   * @param options carries optional attributes values
    * @return a new instance of ShuffleAndRepeatDataset
    */
   @Endpoint(describeByClass = true)
-  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDataset", scope.makeOpName("ShuffleAndRepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
@@ -75,7 +95,21 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.reshuffleEachIteration != null) {
+          opBuilder.setAttr("reshuffle_each_iteration", opts.reshuffleEachIteration);
+        }
+      }
+    }
     return new ShuffleAndRepeatDataset(opBuilder.build());
+  }
+  
+  /**
+   * @param reshuffleEachIteration 
+   */
+  public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+    return new Options().reshuffleEachIteration(reshuffleEachIteration);
   }
   
   /**

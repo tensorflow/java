@@ -83,9 +83,7 @@ public final class LinalgOps {
   }
 
   /**
-   * Copy a tensor setting everything outside a central band in each innermost matrix
-   *  <p>
-   *  to zero.
+   * Copy a tensor setting everything outside a central band in each innermost matrix to zero.
    *  <p>
    *  The `band` part is computed as follows:
    *  Assume `input` has `k` dimensions `[I, J, K, ..., M, N]`, then the output is a

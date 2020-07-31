@@ -22,6 +22,7 @@ private static final long serialVersionUID = 0L;
   private DebugMetadata() {
     tensorflowVersion_ = "";
     fileVersion_ = "";
+    tfdbgRunId_ = "";
   }
 
   @java.lang.Override
@@ -64,6 +65,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             fileVersion_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            tfdbgRunId_ = s;
             break;
           }
           default: {
@@ -184,6 +191,54 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int TFDBG_RUN_ID_FIELD_NUMBER = 3;
+  private volatile java.lang.Object tfdbgRunId_;
+  /**
+   * <pre>
+   * A unique ID for the current run of tfdbg.
+   * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+   * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+   * have the same ID.
+   * </pre>
+   *
+   * <code>string tfdbg_run_id = 3;</code>
+   */
+  public java.lang.String getTfdbgRunId() {
+    java.lang.Object ref = tfdbgRunId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      tfdbgRunId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * A unique ID for the current run of tfdbg.
+   * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+   * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+   * have the same ID.
+   * </pre>
+   *
+   * <code>string tfdbg_run_id = 3;</code>
+   */
+  public com.google.protobuf.ByteString
+      getTfdbgRunIdBytes() {
+    java.lang.Object ref = tfdbgRunId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      tfdbgRunId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -204,6 +259,9 @@ private static final long serialVersionUID = 0L;
     if (!getFileVersionBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, fileVersion_);
     }
+    if (!getTfdbgRunIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, tfdbgRunId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -218,6 +276,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getFileVersionBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, fileVersion_);
+    }
+    if (!getTfdbgRunIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, tfdbgRunId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -238,6 +299,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getTensorflowVersion())) return false;
     if (!getFileVersion()
         .equals(other.getFileVersion())) return false;
+    if (!getTfdbgRunId()
+        .equals(other.getTfdbgRunId())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -253,6 +316,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getTensorflowVersion().hashCode();
     hash = (37 * hash) + FILE_VERSION_FIELD_NUMBER;
     hash = (53 * hash) + getFileVersion().hashCode();
+    hash = (37 * hash) + TFDBG_RUN_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getTfdbgRunId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -394,6 +459,8 @@ private static final long serialVersionUID = 0L;
 
       fileVersion_ = "";
 
+      tfdbgRunId_ = "";
+
       return this;
     }
 
@@ -422,6 +489,7 @@ private static final long serialVersionUID = 0L;
       org.tensorflow.proto.util.DebugMetadata result = new org.tensorflow.proto.util.DebugMetadata(this);
       result.tensorflowVersion_ = tensorflowVersion_;
       result.fileVersion_ = fileVersion_;
+      result.tfdbgRunId_ = tfdbgRunId_;
       onBuilt();
       return result;
     }
@@ -476,6 +544,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getFileVersion().isEmpty()) {
         fileVersion_ = other.fileVersion_;
+        onChanged();
+      }
+      if (!other.getTfdbgRunId().isEmpty()) {
+        tfdbgRunId_ = other.tfdbgRunId_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -686,6 +758,110 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       fileVersion_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object tfdbgRunId_ = "";
+    /**
+     * <pre>
+     * A unique ID for the current run of tfdbg.
+     * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+     * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+     * have the same ID.
+     * </pre>
+     *
+     * <code>string tfdbg_run_id = 3;</code>
+     */
+    public java.lang.String getTfdbgRunId() {
+      java.lang.Object ref = tfdbgRunId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        tfdbgRunId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * A unique ID for the current run of tfdbg.
+     * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+     * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+     * have the same ID.
+     * </pre>
+     *
+     * <code>string tfdbg_run_id = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTfdbgRunIdBytes() {
+      java.lang.Object ref = tfdbgRunId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        tfdbgRunId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * A unique ID for the current run of tfdbg.
+     * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+     * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+     * have the same ID.
+     * </pre>
+     *
+     * <code>string tfdbg_run_id = 3;</code>
+     */
+    public Builder setTfdbgRunId(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      tfdbgRunId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * A unique ID for the current run of tfdbg.
+     * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+     * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+     * have the same ID.
+     * </pre>
+     *
+     * <code>string tfdbg_run_id = 3;</code>
+     */
+    public Builder clearTfdbgRunId() {
+      
+      tfdbgRunId_ = getDefaultInstance().getTfdbgRunId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * A unique ID for the current run of tfdbg.
+     * A run of tfdbg is defined as a TensorFlow job instrumented by tfdbg.
+     * Multiple hosts in a distributed TensorFlow job instrumented by tfdbg
+     * have the same ID.
+     * </pre>
+     *
+     * <code>string tfdbg_run_id = 3;</code>
+     */
+    public Builder setTfdbgRunIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      tfdbgRunId_ = value;
       onChanged();
       return this;
     }

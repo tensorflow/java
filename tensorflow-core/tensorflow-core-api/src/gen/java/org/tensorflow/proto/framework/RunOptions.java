@@ -285,6 +285,19 @@ private static final long serialVersionUID = 0L;
      * <code>bool use_run_handler_pool = 2;</code>
      */
     boolean getUseRunHandlerPool();
+
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    boolean hasRunHandlerPoolOptions();
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getRunHandlerPoolOptions();
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder getRunHandlerPoolOptionsOrBuilder();
   }
   /**
    * <pre>
@@ -347,6 +360,19 @@ private static final long serialVersionUID = 0L;
               useRunHandlerPool_ = input.readBool();
               break;
             }
+            case 26: {
+              org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder subBuilder = null;
+              if (runHandlerPoolOptions_ != null) {
+                subBuilder = runHandlerPoolOptions_.toBuilder();
+              }
+              runHandlerPoolOptions_ = input.readMessage(org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(runHandlerPoolOptions_);
+                runHandlerPoolOptions_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -377,6 +403,520 @@ private static final long serialVersionUID = 0L;
       return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.tensorflow.proto.framework.RunOptions.Experimental.class, org.tensorflow.proto.framework.RunOptions.Experimental.Builder.class);
+    }
+
+    public interface RunHandlerPoolOptionsOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:tensorflow.RunOptions.Experimental.RunHandlerPoolOptions)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <pre>
+       * Priority of the request. The run handler thread pool will schedule ops
+       * based on the priority number. The larger number means higher priority.
+       * </pre>
+       *
+       * <code>int64 priority = 1;</code>
+       */
+      long getPriority();
+    }
+    /**
+     * <pre>
+     * Options for run handler thread pool.
+     * </pre>
+     *
+     * Protobuf type {@code tensorflow.RunOptions.Experimental.RunHandlerPoolOptions}
+     */
+    public  static final class RunHandlerPoolOptions extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:tensorflow.RunOptions.Experimental.RunHandlerPoolOptions)
+        RunHandlerPoolOptionsOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use RunHandlerPoolOptions.newBuilder() to construct.
+      private RunHandlerPoolOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private RunHandlerPoolOptions() {
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new RunHandlerPoolOptions();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private RunHandlerPoolOptions(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+
+                priority_ = input.readInt64();
+                break;
+              }
+              default: {
+                if (!parseUnknownField(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_RunHandlerPoolOptions_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_RunHandlerPoolOptions_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.class, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder.class);
+      }
+
+      public static final int PRIORITY_FIELD_NUMBER = 1;
+      private long priority_;
+      /**
+       * <pre>
+       * Priority of the request. The run handler thread pool will schedule ops
+       * based on the priority number. The larger number means higher priority.
+       * </pre>
+       *
+       * <code>int64 priority = 1;</code>
+       */
+      public long getPriority() {
+        return priority_;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (priority_ != 0L) {
+          output.writeInt64(1, priority_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (priority_ != 0L) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(1, priority_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions)) {
+          return super.equals(obj);
+        }
+        org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions other = (org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions) obj;
+
+        if (getPriority()
+            != other.getPriority()) return false;
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + PRIORITY_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getPriority());
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * <pre>
+       * Options for run handler thread pool.
+       * </pre>
+       *
+       * Protobuf type {@code tensorflow.RunOptions.Experimental.RunHandlerPoolOptions}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:tensorflow.RunOptions.Experimental.RunHandlerPoolOptions)
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_RunHandlerPoolOptions_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_RunHandlerPoolOptions_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.class, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder.class);
+        }
+
+        // Construct using org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          priority_ = 0L;
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_RunOptions_Experimental_RunHandlerPoolOptions_descriptor;
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getDefaultInstanceForType() {
+          return org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions build() {
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions buildPartial() {
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions result = new org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions(this);
+          result.priority_ = priority_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions) {
+            return mergeFrom((org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions other) {
+          if (other == org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.getDefaultInstance()) return this;
+          if (other.getPriority() != 0L) {
+            setPriority(other.getPriority());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private long priority_ ;
+        /**
+         * <pre>
+         * Priority of the request. The run handler thread pool will schedule ops
+         * based on the priority number. The larger number means higher priority.
+         * </pre>
+         *
+         * <code>int64 priority = 1;</code>
+         */
+        public long getPriority() {
+          return priority_;
+        }
+        /**
+         * <pre>
+         * Priority of the request. The run handler thread pool will schedule ops
+         * based on the priority number. The larger number means higher priority.
+         * </pre>
+         *
+         * <code>int64 priority = 1;</code>
+         */
+        public Builder setPriority(long value) {
+          
+          priority_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Priority of the request. The run handler thread pool will schedule ops
+         * based on the priority number. The larger number means higher priority.
+         * </pre>
+         *
+         * <code>int64 priority = 1;</code>
+         */
+        public Builder clearPriority() {
+          
+          priority_ = 0L;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:tensorflow.RunOptions.Experimental.RunHandlerPoolOptions)
+      }
+
+      // @@protoc_insertion_point(class_scope:tensorflow.RunOptions.Experimental.RunHandlerPoolOptions)
+      private static final org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions();
+      }
+
+      public static org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<RunHandlerPoolOptions>
+          PARSER = new com.google.protobuf.AbstractParser<RunHandlerPoolOptions>() {
+        @java.lang.Override
+        public RunHandlerPoolOptions parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new RunHandlerPoolOptions(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<RunHandlerPoolOptions> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<RunHandlerPoolOptions> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
     }
 
     public static final int COLLECTIVE_GRAPH_KEY_FIELD_NUMBER = 1;
@@ -411,6 +951,27 @@ private static final long serialVersionUID = 0L;
       return useRunHandlerPool_;
     }
 
+    public static final int RUN_HANDLER_POOL_OPTIONS_FIELD_NUMBER = 3;
+    private org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions runHandlerPoolOptions_;
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    public boolean hasRunHandlerPoolOptions() {
+      return runHandlerPoolOptions_ != null;
+    }
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getRunHandlerPoolOptions() {
+      return runHandlerPoolOptions_ == null ? org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.getDefaultInstance() : runHandlerPoolOptions_;
+    }
+    /**
+     * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder getRunHandlerPoolOptionsOrBuilder() {
+      return getRunHandlerPoolOptions();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -431,6 +992,9 @@ private static final long serialVersionUID = 0L;
       if (useRunHandlerPool_ != false) {
         output.writeBool(2, useRunHandlerPool_);
       }
+      if (runHandlerPoolOptions_ != null) {
+        output.writeMessage(3, getRunHandlerPoolOptions());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -447,6 +1011,10 @@ private static final long serialVersionUID = 0L;
       if (useRunHandlerPool_ != false) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, useRunHandlerPool_);
+      }
+      if (runHandlerPoolOptions_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getRunHandlerPoolOptions());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -467,6 +1035,11 @@ private static final long serialVersionUID = 0L;
           != other.getCollectiveGraphKey()) return false;
       if (getUseRunHandlerPool()
           != other.getUseRunHandlerPool()) return false;
+      if (hasRunHandlerPoolOptions() != other.hasRunHandlerPoolOptions()) return false;
+      if (hasRunHandlerPoolOptions()) {
+        if (!getRunHandlerPoolOptions()
+            .equals(other.getRunHandlerPoolOptions())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -484,6 +1057,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USE_RUN_HANDLER_POOL_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseRunHandlerPool());
+      if (hasRunHandlerPoolOptions()) {
+        hash = (37 * hash) + RUN_HANDLER_POOL_OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getRunHandlerPoolOptions().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -627,6 +1204,12 @@ private static final long serialVersionUID = 0L;
 
         useRunHandlerPool_ = false;
 
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          runHandlerPoolOptions_ = null;
+        } else {
+          runHandlerPoolOptions_ = null;
+          runHandlerPoolOptionsBuilder_ = null;
+        }
         return this;
       }
 
@@ -655,6 +1238,11 @@ private static final long serialVersionUID = 0L;
         org.tensorflow.proto.framework.RunOptions.Experimental result = new org.tensorflow.proto.framework.RunOptions.Experimental(this);
         result.collectiveGraphKey_ = collectiveGraphKey_;
         result.useRunHandlerPool_ = useRunHandlerPool_;
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          result.runHandlerPoolOptions_ = runHandlerPoolOptions_;
+        } else {
+          result.runHandlerPoolOptions_ = runHandlerPoolOptionsBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -708,6 +1296,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getUseRunHandlerPool() != false) {
           setUseRunHandlerPool(other.getUseRunHandlerPool());
+        }
+        if (other.hasRunHandlerPoolOptions()) {
+          mergeRunHandlerPoolOptions(other.getRunHandlerPoolOptions());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -830,6 +1421,123 @@ private static final long serialVersionUID = 0L;
         useRunHandlerPool_ = false;
         onChanged();
         return this;
+      }
+
+      private org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions runHandlerPoolOptions_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder> runHandlerPoolOptionsBuilder_;
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public boolean hasRunHandlerPoolOptions() {
+        return runHandlerPoolOptionsBuilder_ != null || runHandlerPoolOptions_ != null;
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions getRunHandlerPoolOptions() {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          return runHandlerPoolOptions_ == null ? org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.getDefaultInstance() : runHandlerPoolOptions_;
+        } else {
+          return runHandlerPoolOptionsBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public Builder setRunHandlerPoolOptions(org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions value) {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          runHandlerPoolOptions_ = value;
+          onChanged();
+        } else {
+          runHandlerPoolOptionsBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public Builder setRunHandlerPoolOptions(
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder builderForValue) {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          runHandlerPoolOptions_ = builderForValue.build();
+          onChanged();
+        } else {
+          runHandlerPoolOptionsBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public Builder mergeRunHandlerPoolOptions(org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions value) {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          if (runHandlerPoolOptions_ != null) {
+            runHandlerPoolOptions_ =
+              org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.newBuilder(runHandlerPoolOptions_).mergeFrom(value).buildPartial();
+          } else {
+            runHandlerPoolOptions_ = value;
+          }
+          onChanged();
+        } else {
+          runHandlerPoolOptionsBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public Builder clearRunHandlerPoolOptions() {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          runHandlerPoolOptions_ = null;
+          onChanged();
+        } else {
+          runHandlerPoolOptions_ = null;
+          runHandlerPoolOptionsBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder getRunHandlerPoolOptionsBuilder() {
+        
+        onChanged();
+        return getRunHandlerPoolOptionsFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      public org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder getRunHandlerPoolOptionsOrBuilder() {
+        if (runHandlerPoolOptionsBuilder_ != null) {
+          return runHandlerPoolOptionsBuilder_.getMessageOrBuilder();
+        } else {
+          return runHandlerPoolOptions_ == null ?
+              org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.getDefaultInstance() : runHandlerPoolOptions_;
+        }
+      }
+      /**
+       * <code>.tensorflow.RunOptions.Experimental.RunHandlerPoolOptions run_handler_pool_options = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder> 
+          getRunHandlerPoolOptionsFieldBuilder() {
+        if (runHandlerPoolOptionsBuilder_ == null) {
+          runHandlerPoolOptionsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptions.Builder, org.tensorflow.proto.framework.RunOptions.Experimental.RunHandlerPoolOptionsOrBuilder>(
+                  getRunHandlerPoolOptions(),
+                  getParentForChildren(),
+                  isClean());
+          runHandlerPoolOptions_ = null;
+        }
+        return runHandlerPoolOptionsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
