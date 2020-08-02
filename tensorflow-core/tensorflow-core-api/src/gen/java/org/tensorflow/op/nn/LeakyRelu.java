@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear: `max(features, features * alpha)`.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand<T> {
+public final class LeakyRelu<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LeakyRelu}
@@ -64,7 +64,7 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
    * @return a new instance of LeakyRelu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
+  public static <T extends Tensor & TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

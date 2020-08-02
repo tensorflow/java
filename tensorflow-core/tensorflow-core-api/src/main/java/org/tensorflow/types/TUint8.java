@@ -21,18 +21,20 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.ByteTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.tensor.ByteTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 8-bit unsigned integer tensor type.
  */
-public interface TUint8 extends ByteTensor<TUint8>, TNumber {
+public interface TUint8 extends ByteTensor, TNumber {
 
   /** readable-name for the data type */
   static final String NAME = "UINT8";
@@ -112,7 +114,7 @@ public interface TUint8 extends ByteTensor<TUint8>, TNumber {
 /**
  * Hidden implementation of a {@code TUint8}
  */
-class TUint8Impl extends ByteTensorImpl<TUint8> implements TUint8 {
+class TUint8Impl extends ByteTensorImpl implements TUint8 {
 
   TUint8Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toBytes(nativeTensor));

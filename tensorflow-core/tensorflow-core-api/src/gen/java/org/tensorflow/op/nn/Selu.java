@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes scaled exponential linear: `scale * alpha * (exp(features) - 1)`
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Selu<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Selu operation.
@@ -52,7 +52,7 @@ public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
    * @return a new instance of Selu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
+  public static <T extends Tensor & TNumber> Selu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

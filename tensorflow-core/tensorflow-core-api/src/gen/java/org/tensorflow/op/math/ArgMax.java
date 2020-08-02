@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the index with the largest value across dimensions of a tensor.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V> {
+public final class ArgMax<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new ArgMax operation.
@@ -63,7 +63,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMax
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
+  public static <V extends Tensor & TNumber, T extends Tensor, U extends Tensor & TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
@@ -83,7 +83,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
+  public static <T extends Tensor, U extends Tensor & TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
     return create(scope, input, dimension, TInt64.DTYPE);
   }
   

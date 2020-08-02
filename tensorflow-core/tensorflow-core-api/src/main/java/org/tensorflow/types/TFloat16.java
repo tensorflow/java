@@ -21,14 +21,16 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.FloatTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.types.family.TFloat;
+import org.tensorflow.tensor.FloatTensor;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 half-precision 16-bit float tensor type.
@@ -43,7 +45,7 @@ import org.tensorflow.types.family.TFloat;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
-public interface TFloat16 extends FloatTensor<TFloat16>, TFloat {
+public interface TFloat16 extends FloatTensor, TFloating {
 
   /** readable-name for the data type */
   static final String NAME = "FLOAT16";
@@ -123,7 +125,7 @@ public interface TFloat16 extends FloatTensor<TFloat16>, TFloat {
 /**
  * Hidden implementation of a {@code TFloat16}
  */
-class TFloat16Impl extends FloatTensorImpl<TFloat16> implements TFloat16 {
+class TFloat16Impl extends FloatTensorImpl implements TFloat16 {
 
   TFloat16Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, mapMemory(nativeTensor));

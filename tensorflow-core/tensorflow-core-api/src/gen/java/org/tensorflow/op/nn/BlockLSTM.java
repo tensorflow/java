@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the LSTM cell forward propagation for all the time steps.
@@ -56,7 +56,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code i()} output
  */
-public final class BlockLSTM<T extends TNumber> extends RawOp {
+public final class BlockLSTM<T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.BlockLSTM}
@@ -104,7 +104,7 @@ public final class BlockLSTM<T extends TNumber> extends RawOp {
    * @return a new instance of BlockLSTM
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BlockLSTM<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  public static <T extends Tensor & TNumber> BlockLSTM<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMV2", scope.makeOpName("BlockLSTM"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());

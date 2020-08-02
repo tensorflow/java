@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Extract `patches` from `images` and put them in the "depth" output dimension.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code patches()} output
  */
 @Operator(group = "image")
-public final class ExtractImagePatches<T extends TType> extends RawOp implements Operand<T> {
+public final class ExtractImagePatches<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExtractImagePatches operation.
@@ -54,7 +54,7 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
    * @return a new instance of ExtractImagePatches
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
+  public static <T extends Tensor> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
     opBuilder.addInput(images.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

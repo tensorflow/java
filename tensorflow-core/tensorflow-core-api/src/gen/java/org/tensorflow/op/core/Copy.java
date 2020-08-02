@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Copy a tensor from CPU-to-CPU or GPU-to-GPU.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class Copy<T extends TType> extends RawOp implements Operand<T> {
+public final class Copy<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Copy}
@@ -85,7 +85,7 @@ public final class Copy<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Copy
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Copy<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> Copy<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Copy", scope.makeOpName("Copy"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

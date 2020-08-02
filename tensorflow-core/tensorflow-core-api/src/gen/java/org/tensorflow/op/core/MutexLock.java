@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Locks a mutex resource.  The output is the lock.  So long as the lock tensor
@@ -67,7 +67,7 @@ import org.tensorflow.types.family.TType;
  * wish to ensure the usage is exclusive.
  */
 @Operator
-public final class MutexLock extends RawOp implements Operand<TType> {
+public final class MutexLock extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new MutexLock operation.
@@ -95,8 +95,8 @@ public final class MutexLock extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) mutexLock;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) mutexLock;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

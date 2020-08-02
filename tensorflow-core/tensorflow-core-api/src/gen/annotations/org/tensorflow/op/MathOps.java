@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.math.Abs;
 import org.tensorflow.op.math.AccumulateN;
@@ -35,6 +36,8 @@ import org.tensorflow.op.math.Asinh;
 import org.tensorflow.op.math.Atan;
 import org.tensorflow.op.math.Atan2;
 import org.tensorflow.op.math.Atanh;
+import org.tensorflow.op.math.BesselI0e;
+import org.tensorflow.op.math.BesselI1e;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
@@ -45,7 +48,6 @@ import org.tensorflow.op.math.Cos;
 import org.tensorflow.op.math.Cosh;
 import org.tensorflow.op.math.Cumprod;
 import org.tensorflow.op.math.Cumsum;
-import org.tensorflow.op.math.DenseBincount;
 import org.tensorflow.op.math.Digamma;
 import org.tensorflow.op.math.Div;
 import org.tensorflow.op.math.DivNoNan;
@@ -128,7 +130,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code math} operations as {@link Op Op}s
@@ -153,7 +154,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Abs
    */
-  public <T extends TNumber> Abs<T> abs(Operand<T> x) {
+  public <T extends Tensor & TNumber> Abs<T> abs(Operand<T> x) {
     return Abs.create(scope, x);
   }
 
@@ -174,7 +175,7 @@ public final class MathOps {
    * @param shape Shape of elements of `inputs`.
    * @return a new instance of AccumulateN
    */
-  public <T extends TType> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
+  public <T extends Tensor> AccumulateN<T> accumulateN(Iterable<Operand<T>> inputs, Shape shape) {
     return AccumulateN.create(scope, inputs, shape);
   }
 
@@ -185,7 +186,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Acos
    */
-  public <T extends TType> Acos<T> acos(Operand<T> x) {
+  public <T extends Tensor> Acos<T> acos(Operand<T> x) {
     return Acos.create(scope, x);
   }
 
@@ -203,7 +204,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Acosh
    */
-  public <T extends TType> Acosh<T> acosh(Operand<T> x) {
+  public <T extends Tensor> Acosh<T> acosh(Operand<T> x) {
     return Acosh.create(scope, x);
   }
 
@@ -218,7 +219,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Add
    */
-  public <T extends TType> Add<T> add(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Add<T> add(Operand<T> x, Operand<T> y) {
     return Add.create(scope, x, y);
   }
 
@@ -236,7 +237,7 @@ public final class MathOps {
    * @param inputs
    * @return a new instance of AddN
    */
-  public <T extends TType> AddN<T> addN(Iterable<Operand<T>> inputs) {
+  public <T extends Tensor> AddN<T> addN(Iterable<Operand<T>> inputs) {
     return AddN.create(scope, inputs);
   }
 
@@ -262,7 +263,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Angle
    */
-  public <T extends TType> Angle<TFloat32> angle(Operand<T> input) {
+  public <T extends Tensor> Angle<TFloat32> angle(Operand<T> input) {
     return Angle.create(scope, input);
   }
 
@@ -289,7 +290,8 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Angle
    */
-  public <U extends TNumber, T extends TType> Angle<U> angle(Operand<T> input, DataType<U> Tout) {
+  public <U extends Tensor & TNumber, T extends Tensor> Angle<U> angle(Operand<T> input,
+      DataType<U> Tout) {
     return Angle.create(scope, input, Tout);
   }
 
@@ -301,7 +303,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of ApproximateEqual
    */
-  public <T extends TType> ApproximateEqual approximateEqual(Operand<T> x, Operand<T> y,
+  public <T extends Tensor> ApproximateEqual approximateEqual(Operand<T> x, Operand<T> y,
       ApproximateEqual.Options... options) {
     return ApproximateEqual.create(scope, x, y, options);
   }
@@ -328,7 +330,7 @@ public final class MathOps {
    *  use dimension = 0.
    * @return a new instance of ArgMax
    */
-  public <T extends TType, U extends TNumber> ArgMax<TInt64> argMax(Operand<T> input,
+  public <T extends Tensor, U extends Tensor & TNumber> ArgMax<TInt64> argMax(Operand<T> input,
       Operand<U> dimension) {
     return ArgMax.create(scope, input, dimension);
   }
@@ -356,8 +358,8 @@ public final class MathOps {
    * @param outputType
    * @return a new instance of ArgMax
    */
-  public <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
+  public <V extends Tensor & TNumber, T extends Tensor, U extends Tensor & TNumber> ArgMax<V> argMax(
+      Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     return ArgMax.create(scope, input, dimension, outputType);
   }
 
@@ -383,7 +385,7 @@ public final class MathOps {
    *  use dimension = 0.
    * @return a new instance of ArgMin
    */
-  public <T extends TType, U extends TNumber> ArgMin<TInt64> argMin(Operand<T> input,
+  public <T extends Tensor, U extends Tensor & TNumber> ArgMin<TInt64> argMin(Operand<T> input,
       Operand<U> dimension) {
     return ArgMin.create(scope, input, dimension);
   }
@@ -411,8 +413,8 @@ public final class MathOps {
    * @param outputType
    * @return a new instance of ArgMin
    */
-  public <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> argMin(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
+  public <V extends Tensor & TNumber, T extends Tensor, U extends Tensor & TNumber> ArgMin<V> argMin(
+      Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     return ArgMin.create(scope, input, dimension, outputType);
   }
 
@@ -438,7 +440,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Asin
    */
-  public <T extends TType> Asin<T> asin(Operand<T> x) {
+  public <T extends Tensor> Asin<T> asin(Operand<T> x) {
     return Asin.create(scope, x);
   }
 
@@ -458,7 +460,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Asinh
    */
-  public <T extends TType> Asinh<T> asinh(Operand<T> x) {
+  public <T extends Tensor> Asinh<T> asinh(Operand<T> x) {
     return Asinh.create(scope, x);
   }
 
@@ -484,7 +486,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Atan
    */
-  public <T extends TType> Atan<T> atan(Operand<T> x) {
+  public <T extends Tensor> Atan<T> atan(Operand<T> x) {
     return Atan.create(scope, x);
   }
 
@@ -502,7 +504,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Atan2
    */
-  public <T extends TNumber> Atan2<T> atan2(Operand<T> y, Operand<T> x) {
+  public <T extends Tensor & TNumber> Atan2<T> atan2(Operand<T> y, Operand<T> x) {
     return Atan2.create(scope, y, x);
   }
 
@@ -524,8 +526,40 @@ public final class MathOps {
    * @param x
    * @return a new instance of Atanh
    */
-  public <T extends TType> Atanh<T> atanh(Operand<T> x) {
+  public <T extends Tensor> Atanh<T> atanh(Operand<T> x) {
     return Atanh.create(scope, x);
+  }
+
+  /**
+   * Computes the Bessel i0e function of `x` element-wise.
+   *  <p>
+   *  Exponentially scaled modified Bessel function of order 0 defined as
+   *  `bessel_i0e(x) = exp(-abs(x)) bessel_i0(x)`.
+   *  <p>
+   *  This function is faster and numerically stabler than `bessel_i0(x)`.
+   *
+   * @param <T> data type for {@code y()} output
+   * @param x
+   * @return a new instance of BesselI0e
+   */
+  public <T extends Tensor & TNumber> BesselI0e<T> besselI0e(Operand<T> x) {
+    return BesselI0e.create(scope, x);
+  }
+
+  /**
+   * Computes the Bessel i1e function of `x` element-wise.
+   *  <p>
+   *  Exponentially scaled modified Bessel function of order 0 defined as
+   *  `bessel_i1e(x) = exp(-abs(x)) bessel_i1(x)`.
+   *  <p>
+   *  This function is faster and numerically stabler than `bessel_i1(x)`.
+   *
+   * @param <T> data type for {@code y()} output
+   * @param x
+   * @return a new instance of BesselI1e
+   */
+  public <T extends Tensor & TNumber> BesselI1e<T> besselI1e(Operand<T> x) {
+    return BesselI1e.create(scope, x);
   }
 
   /**
@@ -548,7 +582,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Betainc
    */
-  public <T extends TNumber> Betainc<T> betainc(Operand<T> a, Operand<T> b, Operand<T> x) {
+  public <T extends Tensor & TNumber> Betainc<T> betainc(Operand<T> a, Operand<T> b, Operand<T> x) {
     return Betainc.create(scope, a, b, x);
   }
 
@@ -571,8 +605,8 @@ public final class MathOps {
    *  equal to 1.
    * @return a new instance of Bincount
    */
-  public <T extends TNumber> Bincount<T> bincount(Operand<TInt32> arr, Operand<TInt32> size,
-      Operand<T> weights) {
+  public <T extends Tensor & TNumber> Bincount<T> bincount(Operand<TInt32> arr,
+      Operand<TInt32> size, Operand<T> weights) {
     return Bincount.create(scope, arr, size, weights);
   }
 
@@ -583,7 +617,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Ceil
    */
-  public <T extends TNumber> Ceil<T> ceil(Operand<T> x) {
+  public <T extends Tensor & TNumber> Ceil<T> ceil(Operand<T> x) {
     return Ceil.create(scope, x);
   }
 
@@ -616,7 +650,7 @@ public final class MathOps {
    * @param threshold Threshold to compare against.
    * @return a new instance of CompareAndBitpack
    */
-  public <T extends TType> CompareAndBitpack compareAndBitpack(Operand<T> input,
+  public <T extends Tensor> CompareAndBitpack compareAndBitpack(Operand<T> input,
       Operand<T> threshold) {
     return CompareAndBitpack.create(scope, input, threshold);
   }
@@ -633,7 +667,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of ComplexAbs
    */
-  public <T extends TType> ComplexAbs<TFloat32> complexAbs(Operand<T> x) {
+  public <T extends Tensor> ComplexAbs<TFloat32> complexAbs(Operand<T> x) {
     return ComplexAbs.create(scope, x);
   }
 
@@ -650,7 +684,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of ComplexAbs
    */
-  public <U extends TNumber, T extends TType> ComplexAbs<U> complexAbs(Operand<T> x,
+  public <U extends Tensor & TNumber, T extends Tensor> ComplexAbs<U> complexAbs(Operand<T> x,
       DataType<U> Tout) {
     return ComplexAbs.create(scope, x, Tout);
   }
@@ -675,7 +709,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Conj
    */
-  public <T extends TType> Conj<T> conj(Operand<T> input) {
+  public <T extends Tensor> Conj<T> conj(Operand<T> input) {
     return Conj.create(scope, input);
   }
 
@@ -696,7 +730,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Cos
    */
-  public <T extends TType> Cos<T> cos(Operand<T> x) {
+  public <T extends Tensor> Cos<T> cos(Operand<T> x) {
     return Cos.create(scope, x);
   }
 
@@ -716,7 +750,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Cosh
    */
-  public <T extends TType> Cosh<T> cosh(Operand<T> x) {
+  public <T extends Tensor> Cosh<T> cosh(Operand<T> x) {
     return Cosh.create(scope, x);
   }
 
@@ -754,8 +788,8 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Cumprod
    */
-  public <T extends TType, U extends TNumber> Cumprod<T> cumprod(Operand<T> x, Operand<U> axis,
-      Cumprod.Options... options) {
+  public <T extends Tensor, U extends Tensor & TNumber> Cumprod<T> cumprod(Operand<T> x,
+      Operand<U> axis, Cumprod.Options... options) {
     return Cumprod.create(scope, x, axis, options);
   }
 
@@ -793,34 +827,9 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Cumsum
    */
-  public <T extends TType, U extends TNumber> Cumsum<T> cumsum(Operand<T> x, Operand<U> axis,
-      Cumsum.Options... options) {
+  public <T extends Tensor, U extends Tensor & TNumber> Cumsum<T> cumsum(Operand<T> x,
+      Operand<U> axis, Cumsum.Options... options) {
     return Cumsum.create(scope, x, axis, options);
-  }
-
-  /**
-   * Counts the number of occurrences of each value in an integer array.
-   *  <p>
-   *  Outputs a vector with length `size` and the same dtype as `weights`. If
-   *  `weights` are empty, then index `i` stores the number of times the value `i` is
-   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
-   *  the value in `weights` at each index where the corresponding value in `arr` is
-   *  `i`.
-   *  <p>
-   *  Values in `arr` outside of the range [0, size) are ignored.
-   *
-   * @param <U> data type for {@code output()} output
-   * @param input 1D or 2D int `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   *  shape as `arr`, or a length-0 `Tensor`, in which case it acts as all weights
-   *  equal to 1.
-   * @param options carries optional attributes values
-   * @return a new instance of DenseBincount
-   */
-  public <U extends TNumber, T extends TNumber> DenseBincount<U> denseBincount(Operand<T> input,
-      Operand<T> size, Operand<U> weights, DenseBincount.Options... options) {
-    return DenseBincount.create(scope, input, size, weights, options);
   }
 
   /**
@@ -832,7 +841,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Digamma
    */
-  public <T extends TNumber> Digamma<T> digamma(Operand<T> x) {
+  public <T extends Tensor & TNumber> Digamma<T> digamma(Operand<T> x) {
     return Digamma.create(scope, x);
   }
 
@@ -847,7 +856,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Div
    */
-  public <T extends TType> Div<T> div(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Div<T> div(Operand<T> x, Operand<T> y) {
     return Div.create(scope, x, y);
   }
 
@@ -863,7 +872,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of DivNoNan
    */
-  public <T extends TType> DivNoNan<T> divNoNan(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> DivNoNan<T> divNoNan(Operand<T> x, Operand<T> y) {
     return DivNoNan.create(scope, x, y);
   }
 
@@ -887,7 +896,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Equal
    */
-  public <T extends TType> Equal equal(Operand<T> x, Operand<T> y, Equal.Options... options) {
+  public <T extends Tensor> Equal equal(Operand<T> x, Operand<T> y, Equal.Options... options) {
     return Equal.create(scope, x, y, options);
   }
 
@@ -898,7 +907,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Erf
    */
-  public <T extends TNumber> Erf<T> erf(Operand<T> x) {
+  public <T extends Tensor & TNumber> Erf<T> erf(Operand<T> x) {
     return Erf.create(scope, x);
   }
 
@@ -909,7 +918,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Erfc
    */
-  public <T extends TNumber> Erfc<T> erfc(Operand<T> x) {
+  public <T extends Tensor & TNumber> Erfc<T> erfc(Operand<T> x) {
     return Erfc.create(scope, x);
   }
 
@@ -919,7 +928,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of erfinv
    */
-  public <T extends TNumber> erfinv<T> erfinv(Operand<T> x) {
+  public <T extends Tensor & TNumber> erfinv<T> erfinv(Operand<T> x) {
     return erfinv.create(scope, x);
   }
 
@@ -955,7 +964,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Exp
    */
-  public <T extends TType> Exp<T> exp(Operand<T> x) {
+  public <T extends Tensor> Exp<T> exp(Operand<T> x) {
     return Exp.create(scope, x);
   }
 
@@ -980,7 +989,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Expm1
    */
-  public <T extends TType> Expm1<T> expm1(Operand<T> x) {
+  public <T extends Tensor> Expm1<T> expm1(Operand<T> x) {
     return Expm1.create(scope, x);
   }
 
@@ -1000,7 +1009,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Floor
    */
-  public <T extends TNumber> Floor<T> floor(Operand<T> x) {
+  public <T extends Tensor & TNumber> Floor<T> floor(Operand<T> x) {
     return Floor.create(scope, x);
   }
 
@@ -1015,7 +1024,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of FloorDiv
    */
-  public <T extends TType> FloorDiv<T> floorDiv(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> FloorDiv<T> floorDiv(Operand<T> x, Operand<T> y) {
     return FloorDiv.create(scope, x, y);
   }
 
@@ -1033,7 +1042,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of FloorMod
    */
-  public <T extends TNumber> FloorMod<T> floorMod(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> FloorMod<T> floorMod(Operand<T> x, Operand<T> y) {
     return FloorMod.create(scope, x, y);
   }
 
@@ -1058,7 +1067,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Greater
    */
-  public <T extends TNumber> Greater greater(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> Greater greater(Operand<T> x, Operand<T> y) {
     return Greater.create(scope, x, y);
   }
 
@@ -1083,7 +1092,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of GreaterEqual
    */
-  public <T extends TNumber> GreaterEqual greaterEqual(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> GreaterEqual greaterEqual(Operand<T> x, Operand<T> y) {
     return GreaterEqual.create(scope, x, y);
   }
 
@@ -1108,7 +1117,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Igamma
    */
-  public <T extends TNumber> Igamma<T> igamma(Operand<T> a, Operand<T> x) {
+  public <T extends Tensor & TNumber> Igamma<T> igamma(Operand<T> a, Operand<T> x) {
     return Igamma.create(scope, a, x);
   }
 
@@ -1133,7 +1142,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Igammac
    */
-  public <T extends TNumber> Igammac<T> igammac(Operand<T> a, Operand<T> x) {
+  public <T extends Tensor & TNumber> Igammac<T> igammac(Operand<T> a, Operand<T> x) {
     return Igammac.create(scope, a, x);
   }
 
@@ -1155,7 +1164,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Imag
    */
-  public <T extends TType> Imag<TFloat32> imag(Operand<T> input) {
+  public <T extends Tensor> Imag<TFloat32> imag(Operand<T> input) {
     return Imag.create(scope, input);
   }
 
@@ -1178,7 +1187,8 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Imag
    */
-  public <U extends TNumber, T extends TType> Imag<U> imag(Operand<T> input, DataType<U> Tout) {
+  public <U extends Tensor & TNumber, T extends Tensor> Imag<U> imag(Operand<T> input,
+      DataType<U> Tout) {
     return Imag.create(scope, input, Tout);
   }
 
@@ -1204,7 +1214,7 @@ public final class MathOps {
    * @param x 1-D.
    * @return a new instance of InvertPermutation
    */
-  public <T extends TNumber> InvertPermutation<T> invertPermutation(Operand<T> x) {
+  public <T extends Tensor & TNumber> InvertPermutation<T> invertPermutation(Operand<T> x) {
     return InvertPermutation.create(scope, x);
   }
 
@@ -1222,7 +1232,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsFinite
    */
-  public <T extends TNumber> IsFinite isFinite(Operand<T> x) {
+  public <T extends Tensor & TNumber> IsFinite isFinite(Operand<T> x) {
     return IsFinite.create(scope, x);
   }
 
@@ -1240,7 +1250,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsInf
    */
-  public <T extends TNumber> IsInf isInf(Operand<T> x) {
+  public <T extends Tensor & TNumber> IsInf isInf(Operand<T> x) {
     return IsInf.create(scope, x);
   }
 
@@ -1258,7 +1268,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsNan
    */
-  public <T extends TNumber> IsNan isNan(Operand<T> x) {
+  public <T extends Tensor & TNumber> IsNan isNan(Operand<T> x) {
     return IsNan.create(scope, x);
   }
 
@@ -1283,7 +1293,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Less
    */
-  public <T extends TNumber> Less less(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> Less less(Operand<T> x, Operand<T> y) {
     return Less.create(scope, x, y);
   }
 
@@ -1308,7 +1318,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of LessEqual
    */
-  public <T extends TNumber> LessEqual lessEqual(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> LessEqual lessEqual(Operand<T> x, Operand<T> y) {
     return LessEqual.create(scope, x, y);
   }
 
@@ -1328,7 +1338,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Lgamma
    */
-  public <T extends TNumber> Lgamma<T> lgamma(Operand<T> x) {
+  public <T extends Tensor & TNumber> Lgamma<T> lgamma(Operand<T> x) {
     return Lgamma.create(scope, x);
   }
 
@@ -1347,7 +1357,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Log
    */
-  public <T extends TType> Log<T> log(Operand<T> x) {
+  public <T extends Tensor> Log<T> log(Operand<T> x) {
     return Log.create(scope, x);
   }
 
@@ -1366,7 +1376,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Log1p
    */
-  public <T extends TType> Log1p<T> log1p(Operand<T> x) {
+  public <T extends Tensor> Log1p<T> log1p(Operand<T> x) {
     return Log1p.create(scope, x);
   }
 
@@ -1419,7 +1429,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Maximum
    */
-  public <T extends TNumber> Maximum<T> maximum(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> Maximum<T> maximum(Operand<T> x, Operand<T> y) {
     return Maximum.create(scope, x, y);
   }
 
@@ -1438,8 +1448,8 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Mean
    */
-  public <T extends TType, U extends TNumber> Mean<T> mean(Operand<T> input, Operand<U> axis,
-      Mean.Options... options) {
+  public <T extends Tensor, U extends Tensor & TNumber> Mean<T> mean(Operand<T> input,
+      Operand<U> axis, Mean.Options... options) {
     return Mean.create(scope, input, axis, options);
   }
 
@@ -1454,7 +1464,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Minimum
    */
-  public <T extends TNumber> Minimum<T> minimum(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> Minimum<T> minimum(Operand<T> x, Operand<T> y) {
     return Minimum.create(scope, x, y);
   }
 
@@ -1472,7 +1482,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Mod
    */
-  public <T extends TNumber> Mod<T> mod(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> Mod<T> mod(Operand<T> x, Operand<T> y) {
     return Mod.create(scope, x, y);
   }
 
@@ -1487,7 +1497,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Mul
    */
-  public <T extends TType> Mul<T> mul(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Mul<T> mul(Operand<T> x, Operand<T> y) {
     return Mul.create(scope, x, y);
   }
 
@@ -1502,7 +1512,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of MulNoNan
    */
-  public <T extends TType> MulNoNan<T> mulNoNan(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> MulNoNan<T> mulNoNan(Operand<T> x, Operand<T> y) {
     return MulNoNan.create(scope, x, y);
   }
 
@@ -1512,7 +1522,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Ndtri
    */
-  public <T extends TNumber> Ndtri<T> ndtri(Operand<T> x) {
+  public <T extends Tensor & TNumber> Ndtri<T> ndtri(Operand<T> x) {
     return Ndtri.create(scope, x);
   }
 
@@ -1525,7 +1535,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Neg
    */
-  public <T extends TType> Neg<T> neg(Operand<T> x) {
+  public <T extends Tensor> Neg<T> neg(Operand<T> x) {
     return Neg.create(scope, x);
   }
 
@@ -1544,7 +1554,7 @@ public final class MathOps {
    * @param x2
    * @return a new instance of NextAfter
    */
-  public <T extends TNumber> NextAfter<T> nextAfter(Operand<T> x1, Operand<T> x2) {
+  public <T extends Tensor & TNumber> NextAfter<T> nextAfter(Operand<T> x1, Operand<T> x2) {
     return NextAfter.create(scope, x1, x2);
   }
 
@@ -1559,7 +1569,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of NotEqual
    */
-  public <T extends TType> NotEqual notEqual(Operand<T> x, Operand<T> y,
+  public <T extends Tensor> NotEqual notEqual(Operand<T> x, Operand<T> y,
       NotEqual.Options... options) {
     return NotEqual.create(scope, x, y, options);
   }
@@ -1579,7 +1589,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Polygamma
    */
-  public <T extends TNumber> Polygamma<T> polygamma(Operand<T> a, Operand<T> x) {
+  public <T extends Tensor & TNumber> Polygamma<T> polygamma(Operand<T> a, Operand<T> x) {
     return Polygamma.create(scope, a, x);
   }
 
@@ -1596,7 +1606,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of PopulationCount
    */
-  public <T extends TNumber> PopulationCount populationCount(Operand<T> x) {
+  public <T extends Tensor & TNumber> PopulationCount populationCount(Operand<T> x) {
     return PopulationCount.create(scope, x);
   }
 
@@ -1616,7 +1626,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Pow
    */
-  public <T extends TType> Pow<T> pow(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Pow<T> pow(Operand<T> x, Operand<T> y) {
     return Pow.create(scope, x, y);
   }
 
@@ -1633,7 +1643,7 @@ public final class MathOps {
    * @param Toutput
    * @return a new instance of QuantizedAdd
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
+  public <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedAdd<V> quantizedAdd(
       Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
       Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
     return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
@@ -1652,7 +1662,7 @@ public final class MathOps {
    * @param Toutput
    * @return a new instance of QuantizedMul
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
+  public <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedMul<V> quantizedMul(
       Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
       Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
     return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
@@ -1676,7 +1686,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Real
    */
-  public <T extends TType> Real<TFloat32> real(Operand<T> input) {
+  public <T extends Tensor> Real<TFloat32> real(Operand<T> input) {
     return Real.create(scope, input);
   }
 
@@ -1699,7 +1709,8 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Real
    */
-  public <U extends TNumber, T extends TType> Real<U> real(Operand<T> input, DataType<U> Tout) {
+  public <U extends Tensor & TNumber, T extends Tensor> Real<U> real(Operand<T> input,
+      DataType<U> Tout) {
     return Real.create(scope, input, Tout);
   }
 
@@ -1716,7 +1727,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of RealDiv
    */
-  public <T extends TType> RealDiv<T> realDiv(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> RealDiv<T> realDiv(Operand<T> x, Operand<T> y) {
     return RealDiv.create(scope, x, y);
   }
 
@@ -1729,7 +1740,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Reciprocal
    */
-  public <T extends TType> Reciprocal<T> reciprocal(Operand<T> x) {
+  public <T extends Tensor> Reciprocal<T> reciprocal(Operand<T> x) {
     return Reciprocal.create(scope, x);
   }
 
@@ -1749,7 +1760,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Rint
    */
-  public <T extends TNumber> Rint<T> rint(Operand<T> x) {
+  public <T extends Tensor & TNumber> Rint<T> rint(Operand<T> x) {
     return Rint.create(scope, x);
   }
 
@@ -1763,7 +1774,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Round
    */
-  public <T extends TType> Round<T> round(Operand<T> x) {
+  public <T extends Tensor> Round<T> round(Operand<T> x) {
     return Round.create(scope, x);
   }
 
@@ -1776,7 +1787,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Rsqrt
    */
-  public <T extends TType> Rsqrt<T> rsqrt(Operand<T> x) {
+  public <T extends Tensor> Rsqrt<T> rsqrt(Operand<T> x) {
     return Rsqrt.create(scope, x);
   }
 
@@ -1811,8 +1822,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMax
    */
-  public <T extends TNumber, U extends TNumber> SegmentMax<T> segmentMax(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SegmentMax<T> segmentMax(
+      Operand<T> data, Operand<U> segmentIds) {
     return SegmentMax.create(scope, data, segmentIds);
   }
 
@@ -1848,7 +1859,7 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMean
    */
-  public <T extends TType, U extends TNumber> SegmentMean<T> segmentMean(Operand<T> data,
+  public <T extends Tensor, U extends Tensor & TNumber> SegmentMean<T> segmentMean(Operand<T> data,
       Operand<U> segmentIds) {
     return SegmentMean.create(scope, data, segmentIds);
   }
@@ -1884,8 +1895,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMin
    */
-  public <T extends TNumber, U extends TNumber> SegmentMin<T> segmentMin(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SegmentMin<T> segmentMin(
+      Operand<T> data, Operand<U> segmentIds) {
     return SegmentMin.create(scope, data, segmentIds);
   }
 
@@ -1920,7 +1931,7 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentProd
    */
-  public <T extends TType, U extends TNumber> SegmentProd<T> segmentProd(Operand<T> data,
+  public <T extends Tensor, U extends Tensor & TNumber> SegmentProd<T> segmentProd(Operand<T> data,
       Operand<U> segmentIds) {
     return SegmentProd.create(scope, data, segmentIds);
   }
@@ -1956,7 +1967,7 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentSum
    */
-  public <T extends TType, U extends TNumber> SegmentSum<T> segmentSum(Operand<T> data,
+  public <T extends Tensor, U extends Tensor & TNumber> SegmentSum<T> segmentSum(Operand<T> data,
       Operand<U> segmentIds) {
     return SegmentSum.create(scope, data, segmentIds);
   }
@@ -1970,7 +1981,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Sigmoid
    */
-  public <T extends TType> Sigmoid<T> sigmoid(Operand<T> x) {
+  public <T extends Tensor> Sigmoid<T> sigmoid(Operand<T> x) {
     return Sigmoid.create(scope, x);
   }
 
@@ -1989,7 +2000,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Sign
    */
-  public <T extends TType> Sign<T> sign(Operand<T> x) {
+  public <T extends Tensor> Sign<T> sign(Operand<T> x) {
     return Sign.create(scope, x);
   }
 
@@ -2009,7 +2020,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Sin
    */
-  public <T extends TType> Sin<T> sin(Operand<T> x) {
+  public <T extends Tensor> Sin<T> sin(Operand<T> x) {
     return Sin.create(scope, x);
   }
 
@@ -2029,7 +2040,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Sinh
    */
-  public <T extends TType> Sinh<T> sinh(Operand<T> x) {
+  public <T extends Tensor> Sinh<T> sinh(Operand<T> x) {
     return Sinh.create(scope, x);
   }
 
@@ -2040,7 +2051,7 @@ public final class MathOps {
    * @param features
    * @return a new instance of Softplus
    */
-  public <T extends TNumber> Softplus<T> softplus(Operand<T> features) {
+  public <T extends Tensor & TNumber> Softplus<T> softplus(Operand<T> features) {
     return Softplus.create(scope, features);
   }
 
@@ -2053,7 +2064,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Sqrt
    */
-  public <T extends TType> Sqrt<T> sqrt(Operand<T> x) {
+  public <T extends Tensor> Sqrt<T> sqrt(Operand<T> x) {
     return Sqrt.create(scope, x);
   }
 
@@ -2066,7 +2077,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Square
    */
-  public <T extends TType> Square<T> square(Operand<T> x) {
+  public <T extends Tensor> Square<T> square(Operand<T> x) {
     return Square.create(scope, x);
   }
 
@@ -2081,7 +2092,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of SquaredDifference
    */
-  public <T extends TType> SquaredDifference<T> squaredDifference(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> SquaredDifference<T> squaredDifference(Operand<T> x, Operand<T> y) {
     return SquaredDifference.create(scope, x, y);
   }
 
@@ -2096,7 +2107,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Sub
    */
-  public <T extends TType> Sub<T> sub(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Sub<T> sub(Operand<T> x, Operand<T> y) {
     return Sub.create(scope, x, y);
   }
 
@@ -2117,7 +2128,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Tan
    */
-  public <T extends TType> Tan<T> tan(Operand<T> x) {
+  public <T extends Tensor> Tan<T> tan(Operand<T> x) {
     return Tan.create(scope, x);
   }
 
@@ -2137,7 +2148,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of Tanh
    */
-  public <T extends TType> Tanh<T> tanh(Operand<T> x) {
+  public <T extends Tensor> Tanh<T> tanh(Operand<T> x) {
     return Tanh.create(scope, x);
   }
 
@@ -2157,7 +2168,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of TruncateDiv
    */
-  public <T extends TType> TruncateDiv<T> truncateDiv(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> TruncateDiv<T> truncateDiv(Operand<T> x, Operand<T> y) {
     return TruncateDiv.create(scope, x, y);
   }
 
@@ -2175,7 +2186,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of TruncateMod
    */
-  public <T extends TNumber> TruncateMod<T> truncateMod(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> TruncateMod<T> truncateMod(Operand<T> x, Operand<T> y) {
     return TruncateMod.create(scope, x, y);
   }
 
@@ -2218,7 +2229,7 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentMax
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMax<T> unsortedSegmentMax(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> UnsortedSegmentMax<T> unsortedSegmentMax(
       Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     return UnsortedSegmentMax.create(scope, data, segmentIds, numSegments);
   }
@@ -2257,7 +2268,7 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentMin
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMin<T> unsortedSegmentMin(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> UnsortedSegmentMin<T> unsortedSegmentMin(
       Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     return UnsortedSegmentMin.create(scope, data, segmentIds, numSegments);
   }
@@ -2295,7 +2306,7 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentProd
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> unsortedSegmentProd(
+  public <T extends Tensor, U extends Tensor & TNumber, V extends Tensor & TNumber> UnsortedSegmentProd<T> unsortedSegmentProd(
       Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     return UnsortedSegmentProd.create(scope, data, segmentIds, numSegments);
   }
@@ -2335,7 +2346,7 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentSum
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> unsortedSegmentSum(
+  public <T extends Tensor, U extends Tensor & TNumber, V extends Tensor & TNumber> UnsortedSegmentSum<T> unsortedSegmentSum(
       Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
     return UnsortedSegmentSum.create(scope, data, segmentIds, numSegments);
   }
@@ -2348,7 +2359,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Xdivy
    */
-  public <T extends TType> Xdivy<T> xdivy(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Xdivy<T> xdivy(Operand<T> x, Operand<T> y) {
     return Xdivy.create(scope, x, y);
   }
 
@@ -2360,7 +2371,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Xlog1py
    */
-  public <T extends TType> Xlog1py<T> xlog1py(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Xlog1py<T> xlog1py(Operand<T> x, Operand<T> y) {
     return Xlog1py.create(scope, x, y);
   }
 
@@ -2372,7 +2383,7 @@ public final class MathOps {
    * @param y
    * @return a new instance of Xlogy
    */
-  public <T extends TType> Xlogy<T> xlogy(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor> Xlogy<T> xlogy(Operand<T> x, Operand<T> y) {
     return Xlogy.create(scope, x, y);
   }
 
@@ -2388,7 +2399,7 @@ public final class MathOps {
    * @param q
    * @return a new instance of Zeta
    */
-  public <T extends TNumber> Zeta<T> zeta(Operand<T> x, Operand<T> q) {
+  public <T extends Tensor & TNumber> Zeta<T> zeta(Operand<T> x, Operand<T> q) {
     return Zeta.create(scope, x, q);
   }
 }

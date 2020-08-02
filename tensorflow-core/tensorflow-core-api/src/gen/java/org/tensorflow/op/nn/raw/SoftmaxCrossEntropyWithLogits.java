@@ -15,18 +15,18 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.nn.raw;
+package org.tensorflow.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
@@ -35,8 +35,8 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code loss()} output
  */
-@Operator(group = "nn.raw")
-public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawOp {
+@Operator(group = "nn")
+public final class SoftmaxCrossEntropyWithLogits<T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SoftmaxCrossEntropyWithLogits operation.
@@ -49,7 +49,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
    * @return a new instance of SoftmaxCrossEntropyWithLogits
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
+  public static <T extends Tensor & TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
@@ -70,9 +70,6 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
   public Output<T> backprop() {
     return backprop;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SoftmaxCrossEntropyWithLogits";
   
   private Output<T> loss;
   private Output<T> backprop;

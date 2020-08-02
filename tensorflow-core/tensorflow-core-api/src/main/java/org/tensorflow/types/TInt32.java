@@ -20,18 +20,20 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.IntTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.tensor.IntTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 32-bit signed integer tensor type.
  */
-public interface TInt32 extends IntTensor<TInt32>, TNumber {
+public interface TInt32 extends IntTensor, TNumber {
 
   /** readable-name for the data type */
   static final String NAME = "INT32";
@@ -111,7 +113,7 @@ public interface TInt32 extends IntTensor<TInt32>, TNumber {
 /**
  * Hidden implementation of a {@code TInt32}
  */
-class TInt32Impl extends IntTensorImpl<TInt32> implements TInt32 {
+class TInt32Impl extends IntTensorImpl implements TInt32 {
 
   TInt32Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toInts(nativeTensor));

@@ -20,6 +20,7 @@ package org.tensorflow.op.summary;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -28,7 +29,6 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  */
@@ -66,7 +66,7 @@ public final class WriteImageSummary extends RawOp {
    * @return a new instance of WriteImageSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> tensor, Operand<TUint8> badColor, Options... options) {
+  public static <T extends Tensor & TNumber> WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> tensor, Operand<TUint8> badColor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteImageSummary", scope.makeOpName("WriteImageSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());

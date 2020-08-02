@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the `index`th element of `inputs` to `output`.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class RefSelect<T extends TType> extends RawOp implements Operand<T> {
+public final class RefSelect<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefSelect operation.
@@ -46,7 +46,7 @@ public final class RefSelect<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of RefSelect
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
+  public static <T extends Tensor> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
     opBuilder.addInput(index.asOutput());
     opBuilder.addInputList(Operands.asOutputs(inputs));

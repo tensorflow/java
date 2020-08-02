@@ -17,17 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
 
 /**
  * Generates sparse cross from a list of sparse and dense tensors.
@@ -68,9 +69,11 @@ import org.tensorflow.types.TString;
  *     [1, 1]: FingerprintCat64(
  *                 Fingerprint64("g"), FingerprintCat64(
  *                     Fingerprint64("e"), Fingerprint64("c")))
+ * 
+ * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseCross extends RawOp {
+public final class SparseCross<T extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseCross operation.
@@ -80,19 +83,30 @@ public final class SparseCross extends RawOp {
    * @param values 1-D.   values of each `SparseTensor`.
    * @param shapes 1-D.   Shapes of each `SparseTensor`.
    * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
-   * @param sep string used when joining a list of string inputs, can be used as separator later.
+   * @param hashedOutput If true, returns the hash of the cross instead of the string.
+   * This will allow us avoiding string manipulations.
+   * @param numBuckets It is used if hashed_output is true.
+   * output = hashed_value%num_buckets if num_buckets > 0 else hashed_value.
+   * @param hashKey Specify the hash_key that will be used by the `FingerprintCat64`
+   * function to combine the crosses fingerprints.
+   * @param outType 
+   * @param internalType 
    * @return a new instance of SparseCross
    */
   @Endpoint(describeByClass = true)
-  public static SparseCross create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Operand<TString> sep) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseCrossV2", scope.makeOpName("SparseCross"));
+  public static <T extends Tensor, U extends Tensor> SparseCross<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SparseCross", scope.makeOpName("SparseCross"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(shapes));
     opBuilder.addInputList(Operands.asOutputs(denseInputs));
-    opBuilder.addInput(sep.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
-    return new SparseCross(opBuilder.build());
+    opBuilder.setAttr("hashed_output", hashedOutput);
+    opBuilder.setAttr("num_buckets", numBuckets);
+    opBuilder.setAttr("hash_key", hashKey);
+    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("internal_type", internalType);
+    return new SparseCross<T>(opBuilder.build());
   }
   
   /**
@@ -106,7 +120,7 @@ public final class SparseCross extends RawOp {
    * 1-D.  Non-empty values of the concatenated or hashed
    * `SparseTensor`.
    */
-  public Output<TString> outputValues() {
+  public Output<T> outputValues() {
     return outputValues;
   }
   
@@ -117,11 +131,8 @@ public final class SparseCross extends RawOp {
     return outputShape;
   }
   
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseCrossV2";
-  
   private Output<TInt64> outputIndices;
-  private Output<TString> outputValues;
+  private Output<T> outputValues;
   private Output<TInt64> outputShape;
   
   private SparseCross(Operation operation) {

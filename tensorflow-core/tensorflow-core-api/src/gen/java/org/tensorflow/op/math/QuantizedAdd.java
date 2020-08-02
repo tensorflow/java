@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns x + y element-wise, working on quantized buffers.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class QuantizedAdd<V extends TType> extends RawOp {
+public final class QuantizedAdd<V extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedAdd operation.
@@ -51,7 +51,7 @@ public final class QuantizedAdd<V extends TType> extends RawOp {
    * @return a new instance of QuantizedAdd
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+  public static <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAdd", scope.makeOpName("QuantizedAdd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

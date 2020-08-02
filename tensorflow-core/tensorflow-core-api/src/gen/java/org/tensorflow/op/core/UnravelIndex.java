@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts an array of flat indices into a tuple of coordinate arrays.
@@ -53,7 +53,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class UnravelIndex<T extends TNumber> extends RawOp implements Operand<T> {
+public final class UnravelIndex<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new UnravelIndex operation.
@@ -66,7 +66,7 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
    * @return a new instance of UnravelIndex
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
+  public static <T extends Tensor & TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(dims.asOutput());

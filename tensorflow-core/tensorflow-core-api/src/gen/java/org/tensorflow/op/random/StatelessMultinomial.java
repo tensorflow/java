@@ -22,6 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -29,7 +30,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Draws samples from a multinomial distribution.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessMultinomial<V extends TNumber> extends RawOp implements Operand<V> {
+public final class StatelessMultinomial<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessMultinomial operation.
@@ -51,7 +51,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * @return a new instance of StatelessMultinomial
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
+  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
@@ -72,7 +72,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * @return a new instance of StatelessMultinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
     return create(scope, logits, numSamples, seed, TInt64.DTYPE);
   }
   

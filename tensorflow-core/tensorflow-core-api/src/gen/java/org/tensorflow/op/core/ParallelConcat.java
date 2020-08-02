@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates a list of `N` tensors along the first dimension.
@@ -50,7 +50,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ParallelConcat<T extends TType> extends RawOp implements Operand<T> {
+public final class ParallelConcat<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ParallelConcat operation.
@@ -63,7 +63,7 @@ public final class ParallelConcat<T extends TType> extends RawOp implements Oper
    * @return a new instance of ParallelConcat
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ParallelConcat<T> create(Scope scope, Iterable<Operand<T>> values, Shape shape) {
+  public static <T extends Tensor> ParallelConcat<T> create(Scope scope, Iterable<Operand<T>> values, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParallelConcat", scope.makeOpName("ParallelConcat"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.applyControlDependencies(opBuilder);

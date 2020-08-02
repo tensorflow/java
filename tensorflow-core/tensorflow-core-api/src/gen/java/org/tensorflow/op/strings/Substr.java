@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return substrings from `Tensor` of strings.
@@ -145,7 +145,7 @@ public final class Substr extends RawOp implements Operand<TString> {
    * @return a new instance of Substr
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
+  public static <T extends Tensor & TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Substr", scope.makeOpName("Substr"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pos.asOutput());

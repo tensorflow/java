@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Assigns sparse updates to the variable referenced by `resource`.
@@ -54,7 +54,7 @@ public final class ResourceScatterUpdate extends RawOp {
    * @return a new instance of ResourceScatterUpdate
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> ResourceScatterUpdate create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public static <T extends Tensor & TNumber, U extends Tensor> ResourceScatterUpdate create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterUpdate", scope.makeOpName("ResourceScatterUpdate"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());

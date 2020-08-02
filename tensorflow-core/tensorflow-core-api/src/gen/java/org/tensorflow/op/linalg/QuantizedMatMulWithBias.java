@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs a quantized matrix multiplication of `a` by the matrix `b` with bias
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <W> data type for {@code out()} output
  */
-public final class QuantizedMatMulWithBias<W extends TType> extends RawOp {
+public final class QuantizedMatMulWithBias<W extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.QuantizedMatMulWithBias}
@@ -97,7 +97,7 @@ public final class QuantizedMatMulWithBias<W extends TType> extends RawOp {
    * @return a new instance of QuantizedMatMulWithBias
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBias<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<W> Toutput, Options... options) {
+  public static <W extends Tensor, T extends Tensor, U extends Tensor, V extends Tensor> QuantizedMatMulWithBias<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBias", scope.makeOpName("QuantizedMatMulWithBias"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

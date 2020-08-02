@@ -22,18 +22,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Convert a (possibly batched) CSRSparseMatrix to dense.
  * 
  * @param <T> data type for {@code denseOutput()} output
  */
-public final class CSRSparseMatrixToDense<T extends TType> extends RawOp implements Operand<T> {
+public final class CSRSparseMatrixToDense<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CSRSparseMatrixToDense operation.
@@ -44,7 +44,7 @@ public final class CSRSparseMatrixToDense<T extends TType> extends RawOp impleme
    * @return a new instance of CSRSparseMatrixToDense
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope, Operand<?> sparseInput, DataType<T> type) {
+  public static <T extends Tensor> CSRSparseMatrixToDense<T> create(Scope scope, Operand<?> sparseInput, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToDense", scope.makeOpName("CSRSparseMatrixToDense"));
     opBuilder.addInput(sparseInput.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

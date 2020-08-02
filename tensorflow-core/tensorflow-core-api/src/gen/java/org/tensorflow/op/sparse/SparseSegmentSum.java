@@ -21,12 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum along sparse segments of a tensor.
@@ -64,7 +65,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentSum<T extends TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentSum<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentSum operation.
@@ -76,7 +77,7 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
    * @return a new instance of SparseSegmentSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSum", scope.makeOpName("SparseSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -97,9 +98,6 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSegmentSum";
   
   private Output<T> output;
   

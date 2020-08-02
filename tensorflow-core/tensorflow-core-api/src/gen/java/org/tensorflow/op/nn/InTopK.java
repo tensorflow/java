@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -28,7 +29,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Says whether the targets are in the top `K` predictions.
@@ -61,7 +61,7 @@ public final class InTopK extends RawOp implements Operand<TBool> {
    * @return a new instance of InTopK
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions, Operand<T> targets, Operand<T> k) {
+  public static <T extends Tensor & TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions, Operand<T> targets, Operand<T> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("InTopKV2", scope.makeOpName("InTopK"));
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());

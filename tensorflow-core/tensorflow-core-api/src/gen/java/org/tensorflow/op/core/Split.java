@@ -24,12 +24,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Splits a tensor into `num_split` tensors along one dimension.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Split<T extends TType> extends RawOp implements Iterable<Operand<T>> {
+public final class Split<T extends Tensor> extends RawOp implements Iterable<Operand<T>> {
   
   /**
    * Factory method to create a class wrapping a new Split operation.
@@ -51,7 +51,7 @@ public final class Split<T extends TType> extends RawOp implements Iterable<Oper
    * @return a new instance of Split
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Split<T> create(Scope scope, Operand<TInt32> axis, Operand<T> value, Long numSplit) {
+  public static <T extends Tensor> Split<T> create(Scope scope, Operand<TInt32> axis, Operand<T> value, Long numSplit) {
     OperationBuilder opBuilder = scope.env().opBuilder("Split", scope.makeOpName("Split"));
     opBuilder.addInput(axis.asOutput());
     opBuilder.addInput(value.asOutput());

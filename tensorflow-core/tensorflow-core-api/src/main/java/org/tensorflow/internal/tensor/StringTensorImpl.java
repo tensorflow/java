@@ -1,8 +1,8 @@
-package org.tensorflow.types;
+package org.tensorflow.internal.tensor;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
+import org.tensorflow.internal.tensor.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -11,33 +11,9 @@ import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.impl.dense.DenseNdArray;
-import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.tensor.StringTensor;
 
-public interface StringTensor<T extends StringTensor & TType> extends NdArray<String>, Tensor<T> {
-
-  /**
-   * @return the tensor data as a n-dimensional array of raw byte sequences.
-   */
-  NdArray<byte[]> asBytes();
-
-  @Override
-  T set(NdArray<String> src, long... coordinates);
-
-  @Override
-  T setObject(String value, long... coordinates);
-
-  @Override
-  T copyTo(NdArray<String> dst);
-
-  @Override
-  T read(DataBuffer<String> dst);
-
-  @Override
-  T write(DataBuffer<String> src);
-}
-
-class StringTensorImpl<T extends StringTensor & TType> extends DenseNdArray<String> implements StringTensor<T> {
+public class StringTensorImpl extends DenseNdArray<String> implements StringTensor {
 
   @Override
   public NdArray<byte[]> asBytes() {
@@ -50,7 +26,7 @@ class StringTensorImpl<T extends StringTensor & TType> extends DenseNdArray<Stri
   }
 
   @Override
-  public DataType<T> dataType() {
+  public DataType<Tensor<String>> dataType() {
     return rawTensor.dataType();
   }
 
@@ -80,37 +56,37 @@ class StringTensorImpl<T extends StringTensor & TType> extends DenseNdArray<Stri
   }
 
   @Override
-  public T setObject(String value, long... coordinates) {
-    return (T)super.setObject(value, coordinates);
+  public Tensor<String> setObject(String value, long... coordinates) {
+    return (Tensor<String>)super.setObject(value, coordinates);
   }
 
   @Override
-  public T set(NdArray<String> src, long... coordinates) {
-    return (T)super.set(src, coordinates);
+  public Tensor<String> set(NdArray<String> src, long... coordinates) {
+    return (Tensor<String>)super.set(src, coordinates);
   }
 
   @Override
-  public T copyTo(NdArray<String> dst) {
-    return (T)super.copyTo(dst);
+  public Tensor<String> copyTo(NdArray<String> dst) {
+    return (Tensor<String>)super.copyTo(dst);
   }
 
   @Override
-  public T read(DataBuffer<String> dst) {
-    return (T)super.read(dst);
+  public Tensor<String> read(DataBuffer<String> dst) {
+    return (Tensor<String>)super.read(dst);
   }
 
   @Override
-  public T write(DataBuffer<String> src) {
-    return (T)super.write(src);
+  public Tensor<String> write(DataBuffer<String> src) {
+    return (Tensor<String>)super.write(src);
   }
 
   protected ByteSequenceTensorBuffer rawBuffer() {
     return rawBuffer;
   }
 
-  StringTensorImpl(
+  public StringTensorImpl(
       TF_Tensor nativeHandle,
-      DataType<T> dataType,
+      DataType<?> dataType,
       Shape shape,
       DataLayout<DataBuffer<byte[]>, String> layout,
       ByteSequenceTensorBuffer buffer

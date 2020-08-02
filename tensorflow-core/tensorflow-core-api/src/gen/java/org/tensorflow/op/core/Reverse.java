@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reverses specific dimensions of a tensor.
@@ -81,7 +81,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Reverse<T extends TType> extends RawOp implements Operand<T> {
+public final class Reverse<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Reverse operation.
@@ -93,7 +93,7 @@ public final class Reverse<T extends TType> extends RawOp implements Operand<T> 
    * @return a new instance of Reverse
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Reverse<T> create(Scope scope, Operand<T> tensor, Operand<U> axis) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Reverse<T> create(Scope scope, Operand<T> tensor, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseV2", scope.makeOpName("Reverse"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());

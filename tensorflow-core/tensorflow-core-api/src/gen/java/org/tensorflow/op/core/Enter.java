@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates or finds a child frame, and makes `data` available to the child frame.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class Enter<T extends TType> extends RawOp implements Operand<T> {
+public final class Enter<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Enter}
@@ -78,7 +78,7 @@ public final class Enter<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Enter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Enter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
+  public static <T extends Tensor> Enter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Enter", scope.makeOpName("Enter"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

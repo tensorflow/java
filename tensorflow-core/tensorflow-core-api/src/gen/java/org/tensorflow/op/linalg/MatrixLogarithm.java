@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the matrix logarithm of one or more square matrices:
@@ -48,7 +48,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class MatrixLogarithm<T extends TType> extends RawOp implements Operand<T> {
+public final class MatrixLogarithm<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MatrixLogarithm operation.
@@ -58,7 +58,7 @@ public final class MatrixLogarithm<T extends TType> extends RawOp implements Ope
    * @return a new instance of MatrixLogarithm
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> MatrixLogarithm<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> MatrixLogarithm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixLogarithm", scope.makeOpName("MatrixLogarithm"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

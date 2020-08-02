@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the LSTM cell forward propagation for 1 time step.
@@ -58,7 +58,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code i()} output
  */
-public final class LSTMBlockCell<T extends TNumber> extends RawOp {
+public final class LSTMBlockCell<T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LSTMBlockCell}
@@ -113,7 +113,7 @@ public final class LSTMBlockCell<T extends TNumber> extends RawOp {
    * @return a new instance of LSTMBlockCell
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  public static <T extends Tensor & TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());

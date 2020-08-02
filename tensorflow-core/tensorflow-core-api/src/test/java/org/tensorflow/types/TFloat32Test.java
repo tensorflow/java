@@ -23,7 +23,7 @@ import org.tensorflow.ndarray.Shape;
 public class TFloat32Test extends NumericTypesTestBase<TFloat32, Float> {
 
   @Override
-  Tensor<TFloat32> allocateTensor(Shape shape) {
+  TFloat32 allocateTensor(Shape shape) {
     return TFloat32.tensorOf(shape);
   }
 

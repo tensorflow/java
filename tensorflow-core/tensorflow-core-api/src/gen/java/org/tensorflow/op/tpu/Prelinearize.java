@@ -22,17 +22,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * An op which linearizes one Tensor value to an opaque variant tensor.
  */
-public final class Prelinearize extends RawOp implements Operand<TType> {
+public final class Prelinearize extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.Prelinearize}
@@ -73,7 +73,7 @@ public final class Prelinearize extends RawOp implements Operand<TType> {
    * @return a new instance of Prelinearize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prelinearize", scope.makeOpName("Prelinearize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -118,8 +118,8 @@ public final class Prelinearize extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) output;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

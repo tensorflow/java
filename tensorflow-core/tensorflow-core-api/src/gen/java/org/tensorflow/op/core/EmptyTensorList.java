@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates and returns an empty tensor list.
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * element_shape: a shape compatible with that of elements in the list.
  */
 @Operator
-public final class EmptyTensorList extends RawOp implements Operand<TType> {
+public final class EmptyTensorList extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new EmptyTensorList operation.
@@ -53,7 +53,7 @@ public final class EmptyTensorList extends RawOp implements Operand<TType> {
    * @return a new instance of EmptyTensorList
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
+  public static <T extends Tensor & TNumber, U extends Tensor> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
@@ -70,8 +70,8 @@ public final class EmptyTensorList extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) handle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

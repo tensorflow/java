@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts the given `resource_handle` representing an iterator to a variant tensor.
  */
 @Operator(group = "data")
-public final class SerializeIterator extends RawOp implements Operand<TType> {
+public final class SerializeIterator extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.SerializeIterator}
@@ -92,8 +92,8 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) serialized;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) serialized;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

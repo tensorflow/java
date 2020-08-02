@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts each entry in the given tensor to strings.
@@ -116,7 +116,7 @@ public final class AsString extends RawOp implements Operand<TString> {
    * @return a new instance of AsString
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AsString create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> AsString create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AsString", scope.makeOpName("AsString"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

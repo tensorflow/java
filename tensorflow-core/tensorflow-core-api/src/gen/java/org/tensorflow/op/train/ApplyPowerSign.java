@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AddSign update.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyPowerSign<T extends TType> extends RawOp implements Operand<T> {
+public final class ApplyPowerSign<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyPowerSign}
@@ -75,7 +75,7 @@ public final class ApplyPowerSign<T extends TType> extends RawOp implements Oper
    * @return a new instance of ApplyPowerSign
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyPowerSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
+  public static <T extends Tensor> ApplyPowerSign<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyPowerSign", scope.makeOpName("ApplyPowerSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

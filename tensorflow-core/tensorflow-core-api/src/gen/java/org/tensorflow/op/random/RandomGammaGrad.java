@@ -21,19 +21,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the derivative of a Gamma random sample w.r.t. `alpha`.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RandomGammaGrad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class RandomGammaGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RandomGammaGrad operation.
@@ -44,7 +44,7 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
    * @return a new instance of RandomGammaGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> RandomGammaGrad<T> create(Scope scope, Operand<T> alpha, Operand<T> sample) {
+  public static <T extends Tensor & TNumber> RandomGammaGrad<T> create(Scope scope, Operand<T> alpha, Operand<T> sample) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGammaGrad", scope.makeOpName("RandomGammaGrad"));
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(sample.asOutput());

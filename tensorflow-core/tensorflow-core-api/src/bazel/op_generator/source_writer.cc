@@ -321,8 +321,15 @@ SourceWriter& SourceWriter::WriteGenerics(
       Append(", ");
     }
     Append(pt->name());
-    if (!pt->supertypes().empty()) {
-      Append(" extends ").AppendType(pt->supertypes().front());
+    bool first_bound = true;
+    for (const Type& bound : pt->supertypes()) {
+      if (first_bound) {
+        Append(" extends ");
+        first_bound = false;
+      } else {
+        Append(" & ");
+      }
+      AppendType(bound);
     }
     first = false;
   }

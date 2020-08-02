@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListSetItem extends RawOp implements Operand<TType> {
+public final class TensorListSetItem extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new TensorListSetItem operation.
@@ -43,7 +43,7 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
    * @return a new instance of TensorListSetItem
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
+  public static <T extends Tensor> TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<T> item) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSetItem", scope.makeOpName("TensorListSetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -60,8 +60,8 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) outputHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the ref tensor `data` to the output port determined by `pred`.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code outputFalse()} output
  */
 @Operator
-public final class RefSwitch<T extends TType> extends RawOp {
+public final class RefSwitch<T extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new RefSwitch operation.
@@ -50,7 +50,7 @@ public final class RefSwitch<T extends TType> extends RawOp {
    * @return a new instance of RefSwitch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RefSwitch<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
+  public static <T extends Tensor> RefSwitch<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefSwitch", scope.makeOpName("RefSwitch"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(pred.asOutput());

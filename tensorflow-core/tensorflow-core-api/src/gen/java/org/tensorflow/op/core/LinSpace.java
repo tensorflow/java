@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generates values in an interval.
@@ -43,7 +43,8 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class LinSpace<T extends TNumber> extends RawOp implements Operand<T> {
+@Operator
+public final class LinSpace<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new LinSpace operation.
@@ -55,7 +56,7 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of LinSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
     OperationBuilder opBuilder = scope.env().opBuilder("LinSpace", scope.makeOpName("LinSpace"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
@@ -75,9 +76,6 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LinSpace";
   
   private Output<T> output;
   

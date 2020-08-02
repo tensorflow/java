@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * tf.concat(split, tf.constant(0));
  * }</pre>
  */
-public interface Operand<T extends TType> extends Op {
+public interface Operand<T extends Tensor> extends Op {
 
   /**
    * Returns the symbolic handle of the tensor.

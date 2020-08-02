@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns element-wise remainder of division. When `x < 0` xor `y < 0` is
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class FloorMod<T extends TNumber> extends RawOp implements Operand<T> {
+public final class FloorMod<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new FloorMod operation.
@@ -51,7 +51,7 @@ public final class FloorMod<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of FloorMod
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends Tensor & TNumber> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("FloorMod", scope.makeOpName("FloorMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the singular value decompositions of one or more matrices.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code s()} output
  */
 @Operator(group = "linalg")
-public final class Svd<T extends TType> extends RawOp {
+public final class Svd<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.Svd}
@@ -89,7 +89,7 @@ public final class Svd<T extends TType> extends RawOp {
    * @return a new instance of Svd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Svd<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> Svd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Svd", scope.makeOpName("Svd"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

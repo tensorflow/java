@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a normal distribution. The parameters may each be a
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp implements Operand<U> {
+public final class ParameterizedTruncatedNormal<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.ParameterizedTruncatedNormal}
@@ -83,7 +83,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
    * @return a new instance of ParameterizedTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> ParameterizedTruncatedNormal<U> create(Scope scope, Operand<T> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals, Options... options) {
+  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> ParameterizedTruncatedNormal<U> create(Scope scope, Operand<T> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParameterizedTruncatedNormal", scope.makeOpName("ParameterizedTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(means.asOutput());

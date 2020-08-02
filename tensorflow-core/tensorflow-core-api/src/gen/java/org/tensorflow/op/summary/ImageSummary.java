@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs a `Summary` protocol buffer with images.
@@ -122,7 +121,7 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
    * @return a new instance of ImageSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ImageSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Options... options) {
+  public static <T extends Tensor & TNumber> ImageSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImageSummary", scope.makeOpName("ImageSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());

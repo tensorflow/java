@@ -15,18 +15,18 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.nn.raw;
+package org.tensorflow.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
@@ -40,8 +40,8 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code loss()} output
  */
-@Operator(group = "nn.raw")
-public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawOp {
+@Operator(group = "nn")
+public final class SparseSoftmaxCrossEntropyWithLogits<T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSoftmaxCrossEntropyWithLogits operation.
@@ -53,7 +53,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
    * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<U> labels) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<U> labels) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
@@ -74,9 +74,6 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
   public Output<T> backprop() {
     return backprop;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSoftmaxCrossEntropyWithLogits";
   
   private Output<T> loss;
   private Output<T> backprop;

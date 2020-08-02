@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes Quantized Rectified Linear: `max(features, 0)`
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class QuantizedRelu<U extends TType> extends RawOp {
+public final class QuantizedRelu<U extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedRelu operation.
@@ -48,7 +48,7 @@ public final class QuantizedRelu<U extends TType> extends RawOp {
    * @return a new instance of QuantizedRelu
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
+  public static <U extends Tensor, T extends Tensor> QuantizedRelu<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());

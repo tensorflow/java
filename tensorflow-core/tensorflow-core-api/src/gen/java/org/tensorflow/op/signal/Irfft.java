@@ -22,6 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -29,7 +30,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Inverse real-valued fast Fourier transform.
@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Irfft<U extends TNumber> extends RawOp implements Operand<U> {
+public final class Irfft<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Irfft operation.
@@ -63,7 +63,7 @@ public final class Irfft<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Irfft
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Irfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
+  public static <U extends Tensor & TNumber, T extends Tensor> Irfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT", scope.makeOpName("Irfft"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
@@ -81,7 +81,7 @@ public final class Irfft<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Irfft
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Irfft<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
+  public static <T extends Tensor> Irfft<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.DTYPE);
   }
   

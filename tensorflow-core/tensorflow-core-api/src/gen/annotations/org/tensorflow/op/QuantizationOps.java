@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.quantization.Dequantize;
 import org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs;
 import org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient;
@@ -35,7 +36,6 @@ import org.tensorflow.op.quantization.Requantize;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code quantization} operations as {@link Op Op}s
@@ -107,7 +107,7 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public <T extends TType> Dequantize<TFloat32> dequantize(Operand<T> input,
+  public <T extends Tensor> Dequantize<TFloat32> dequantize(Operand<T> input,
       Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, options);
   }
@@ -172,7 +172,7 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public <U extends TNumber, T extends TType> Dequantize<U> dequantize(Operand<T> input,
+  public <U extends Tensor & TNumber, T extends Tensor> Dequantize<U> dequantize(Operand<T> input,
       Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype,
       Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, dtype, options);
@@ -503,8 +503,9 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of Quantize
    */
-  public <T extends TType> Quantize<T> quantize(Operand<TFloat32> input, Operand<TFloat32> minRange,
-      Operand<TFloat32> maxRange, DataType<T> T, Quantize.Options... options) {
+  public <T extends Tensor> Quantize<T> quantize(Operand<TFloat32> input,
+      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T,
+      Quantize.Options... options) {
     return Quantize.create(scope, input, minRange, maxRange, T, options);
   }
 
@@ -522,8 +523,8 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizeAndDequantize
    */
-  public <T extends TNumber> QuantizeAndDequantize<T> quantizeAndDequantize(Operand<T> input,
-      Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits,
+  public <T extends Tensor & TNumber> QuantizeAndDequantize<T> quantizeAndDequantize(
+      Operand<T> input, Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits,
       QuantizeAndDequantize.Options... options) {
     return QuantizeAndDequantize.create(scope, input, inputMin, inputMax, numBits, options);
   }
@@ -561,7 +562,7 @@ public final class QuantizationOps {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of QuantizeDownAndShrinkRange
    */
-  public <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> quantizeDownAndShrinkRange(
+  public <U extends Tensor, T extends Tensor> QuantizeDownAndShrinkRange<U> quantizeDownAndShrinkRange(
       Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
       DataType<U> outType) {
     return QuantizeDownAndShrinkRange.create(scope, input, inputMin, inputMax, outType);
@@ -579,7 +580,7 @@ public final class QuantizationOps {
    * @param inputMaxes The maximum scalar values for each of the input tensors.
    * @return a new instance of QuantizedConcat
    */
-  public <T extends TType> QuantizedConcat<T> quantizedConcat(Operand<TInt32> concatDim,
+  public <T extends Tensor> QuantizedConcat<T> quantizedConcat(Operand<TInt32> concatDim,
       Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins,
       Iterable<Operand<TFloat32>> inputMaxes) {
     return QuantizedConcat.create(scope, concatDim, values, inputMins, inputMaxes);
@@ -598,7 +599,7 @@ public final class QuantizationOps {
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
    */
-  public <T extends TType> RequantizationRange requantizationRange(Operand<T> input,
+  public <T extends Tensor> RequantizationRange requantizationRange(Operand<T> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return RequantizationRange.create(scope, input, inputMin, inputMax);
   }
@@ -623,7 +624,7 @@ public final class QuantizationOps {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of Requantize
    */
-  public <U extends TType, T extends TType> Requantize<U> requantize(Operand<T> input,
+  public <U extends Tensor, T extends Tensor> Requantize<U> requantize(Operand<T> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin,
       Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     return Requantize.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);

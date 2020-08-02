@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Adds a value to the current value of a variable.
@@ -44,7 +44,7 @@ public final class AssignAddVariableOp extends RawOp {
    * @return a new instance of AssignAddVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AssignAddVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static <T extends Tensor> AssignAddVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignAddVariableOp", scope.makeOpName("AssignAddVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());

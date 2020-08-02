@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Debug Identity V2 Op.
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class DebugIdentity<T extends TType> extends RawOp implements Operand<T> {
+public final class DebugIdentity<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.debugging.DebugIdentity}
@@ -130,7 +130,7 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
    * @return a new instance of DebugIdentity
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugIdentity<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> DebugIdentity<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugIdentityV2", scope.makeOpName("DebugIdentity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

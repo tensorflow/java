@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Element-wise multiplication of a sparse matrix with a dense tensor.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * <b>NOTE</b> even if `b` is zero, the sparsity structure of the output does not
  * change.
  */
-public final class SparseMatrixMul extends RawOp implements Operand<TType> {
+public final class SparseMatrixMul extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixMul operation.
@@ -50,7 +50,7 @@ public final class SparseMatrixMul extends RawOp implements Operand<TType> {
    * @return a new instance of SparseMatrixMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixMul create(Scope scope, Operand<?> a, Operand<T> b) {
+  public static <T extends Tensor> SparseMatrixMul create(Scope scope, Operand<?> a, Operand<T> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixMul", scope.makeOpName("SparseMatrixMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -67,8 +67,8 @@ public final class SparseMatrixMul extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) output;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

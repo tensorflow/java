@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorList which, when stacked, has the value of `tensor`.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * output_handle: The list.
  */
 @Operator
-public final class TensorListFromTensor extends RawOp implements Operand<TType> {
+public final class TensorListFromTensor extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new TensorListFromTensor operation.
@@ -48,7 +48,7 @@ public final class TensorListFromTensor extends RawOp implements Operand<TType> 
    * @return a new instance of TensorListFromTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
+  public static <T extends Tensor, U extends Tensor & TNumber> TensorListFromTensor create(Scope scope, Operand<T> tensor, Operand<U> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
@@ -64,8 +64,8 @@ public final class TensorListFromTensor extends RawOp implements Operand<TType> 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) outputHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

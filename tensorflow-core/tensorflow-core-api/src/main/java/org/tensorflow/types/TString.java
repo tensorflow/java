@@ -22,15 +22,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.ByteSequenceTensorBuffer;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.StringTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.tensor.StringTensor;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -42,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
-public interface TString extends StringTensor<TString>, TType {
+public interface TString extends StringTensor, TType {
 
   /** readable-name for the data type */
   static final String NAME = "STRING";
@@ -219,7 +221,7 @@ public interface TString extends StringTensor<TString>, TType {
 /**
  * Hidden implementation of a {@code TString}
  */
-class TStringImpl extends StringTensorImpl<TString> implements TString {
+class TStringImpl extends StringTensorImpl implements TString {
 
   @Override
   public TString using(Charset charset) {

@@ -22,20 +22,20 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradients of the average pooling function.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class AvgPoolGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.AvgPoolGrad}
@@ -74,7 +74,7 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
    * @return a new instance of AvgPoolGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> AvgPoolGrad<T> create(Scope scope, Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends Tensor & TNumber> AvgPoolGrad<T> create(Scope scope, Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPoolGrad", scope.makeOpName("AvgPoolGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the determinant of one or more square matrices.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Det<T extends TType> extends RawOp implements Operand<T> {
+public final class Det<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Det operation.
@@ -47,7 +47,7 @@ public final class Det<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Det
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Det<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> Det<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDeterminant", scope.makeOpName("Det"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

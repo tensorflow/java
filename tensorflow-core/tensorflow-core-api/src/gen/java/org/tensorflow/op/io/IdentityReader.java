@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the queued work as both the key and value.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * work string and output (work, work).
  */
 @Operator(group = "io")
-public final class IdentityReader extends RawOp implements Operand<TType> {
+public final class IdentityReader extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.IdentityReader}
@@ -115,8 +115,8 @@ public final class IdentityReader extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) readerHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) readerHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

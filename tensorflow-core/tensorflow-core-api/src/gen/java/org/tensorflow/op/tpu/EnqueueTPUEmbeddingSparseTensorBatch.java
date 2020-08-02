@@ -21,6 +21,7 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -28,7 +29,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Eases the porting of code that uses tf.nn.embedding_lookup_sparse().
@@ -112,7 +112,7 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
    * @return a new instance of EnqueueTPUEmbeddingSparseTensorBatch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> EnqueueTPUEmbeddingSparseTensorBatch create(Scope scope, Iterable<Operand<T>> sampleIndices, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<TString> modeOverride, List<Long> tableIds, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> EnqueueTPUEmbeddingSparseTensorBatch create(Scope scope, Iterable<Operand<T>> sampleIndices, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<TString> modeOverride, List<Long> tableIds, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingSparseTensorBatch", scope.makeOpName("EnqueueTPUEmbeddingSparseTensorBatch"));
     opBuilder.addInputList(Operands.asOutputs(sampleIndices));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));

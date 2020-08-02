@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Assign `value` to the sliced l-value reference of `ref`.
@@ -108,7 +108,7 @@ public final class ResourceStridedSliceAssign extends RawOp {
    * @return a new instance of ResourceStridedSliceAssign
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceStridedSliceAssign", scope.makeOpName("ResourceStridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(begin.asOutput());

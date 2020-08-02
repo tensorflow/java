@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns a copy of the input tensor.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Snapshot<T extends TType> extends RawOp implements Operand<T> {
+public final class Snapshot<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Snapshot operation.
@@ -43,7 +43,7 @@ public final class Snapshot<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of Snapshot
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Snapshot<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> Snapshot<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Snapshot", scope.makeOpName("Snapshot"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

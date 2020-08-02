@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Transposes the inner (matrix) dimensions of a CSRSparseMatrix.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * Transposes the inner (matrix) dimensions of a SparseMatrix and optionally
  * conjugates its values.
  */
-public final class SparseMatrixTranspose extends RawOp implements Operand<TType> {
+public final class SparseMatrixTranspose extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixTranspose}
@@ -65,7 +65,7 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
    * @return a new instance of SparseMatrixTranspose
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
+  public static <T extends Tensor> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixTranspose", scope.makeOpName("SparseMatrixTranspose"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -96,8 +96,8 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) output;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

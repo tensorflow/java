@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor of ones with the same shape and type as x.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class OnesLike<T extends TType> extends RawOp implements Operand<T> {
+public final class OnesLike<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new OnesLike operation.
@@ -43,7 +43,7 @@ public final class OnesLike<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of OnesLike
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> OnesLike<T> create(Scope scope, Operand<T> x) {
+  public static <T extends Tensor> OnesLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("OnesLike", scope.makeOpName("OnesLike"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

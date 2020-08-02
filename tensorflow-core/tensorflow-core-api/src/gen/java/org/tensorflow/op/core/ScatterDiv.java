@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Divides a variable reference by sparse updates.
@@ -53,7 +53,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class ScatterDiv<T extends TType> extends RawOp implements Operand<T> {
+public final class ScatterDiv<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScatterDiv}
@@ -86,7 +86,7 @@ public final class ScatterDiv<T extends TType> extends RawOp implements Operand<
    * @return a new instance of ScatterDiv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ScatterDiv<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends Tensor, U extends Tensor & TNumber> ScatterDiv<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterDiv", scope.makeOpName("ScatterDiv"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

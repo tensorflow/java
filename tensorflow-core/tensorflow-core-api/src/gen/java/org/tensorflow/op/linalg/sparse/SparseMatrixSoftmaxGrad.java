@@ -22,17 +22,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Calculates the gradient of the SparseMatrixSoftmax op.
  */
-public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TType> {
+public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixSoftmaxGrad operation.
@@ -44,7 +44,7 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
    * @return a new instance of SparseMatrixSoftmaxGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SparseMatrixSoftmaxGrad create(Scope scope, Operand<?> softmax, Operand<?> gradSoftmax, DataType<T> type) {
+  public static <T extends Tensor & TNumber> SparseMatrixSoftmaxGrad create(Scope scope, Operand<?> softmax, Operand<?> gradSoftmax, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmaxGrad", scope.makeOpName("SparseMatrixSoftmaxGrad"));
     opBuilder.addInput(softmax.asOutput());
     opBuilder.addInput(gradSoftmax.asOutput());
@@ -62,8 +62,8 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) gradient;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) gradient;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Gather operator documented at
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Gather<T extends TType> extends RawOp implements Operand<T> {
+public final class Gather<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Gather operation.
@@ -50,7 +50,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Gather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Gather<T> create(Scope scope, Operand<T> operand, Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers, Boolean indicesAreSorted) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Gather<T> create(Scope scope, Operand<T> operand, Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers, Boolean indicesAreSorted) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaGather", scope.makeOpName("Gather"));
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(startIndices.asOutput());

@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sparse Cholesky decomposition of `input`.
@@ -103,7 +103,7 @@ import org.tensorflow.types.family.TType;
  * permutation: A `Tensor`.
  * type: The type of `input`.
  */
-public final class SparseMatrixSparseCholesky extends RawOp implements Operand<TType> {
+public final class SparseMatrixSparseCholesky extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixSparseCholesky operation.
@@ -115,7 +115,7 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
    * @return a new instance of SparseMatrixSparseCholesky
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, DataType<T> type) {
+  public static <T extends Tensor> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(permutation.asOutput());
@@ -133,8 +133,8 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) output;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

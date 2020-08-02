@@ -21,17 +21,25 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
+ * Computes the Bessel i0e function of `x` element-wise.
+ * <p>
+ * Exponentially scaled modified Bessel function of order 0 defined as
+ * `bessel_i0e(x) = exp(-abs(x)) bessel_i0(x)`.
+ * <p>
+ * This function is faster and numerically stabler than `bessel_i0(x)`.
+ * 
  * @param <T> data type for {@code y()} output
  */
-public final class BesselI0e<T extends TNumber> extends RawOp implements Operand<T> {
+@Operator(group = "math")
+public final class BesselI0e<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BesselI0e operation.
@@ -41,7 +49,7 @@ public final class BesselI0e<T extends TNumber> extends RawOp implements Operand
    * @return a new instance of BesselI0e
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BesselI0e<T> create(Scope scope, Operand<T> x) {
+  public static <T extends Tensor & TNumber> BesselI0e<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("BesselI0e", scope.makeOpName("BesselI0e"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -58,9 +66,6 @@ public final class BesselI0e<T extends TNumber> extends RawOp implements Operand
   public Output<T> asOutput() {
     return y;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BesselI0e";
   
   private Output<T> y;
   

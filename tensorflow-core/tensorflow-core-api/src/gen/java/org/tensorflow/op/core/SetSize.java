@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Number of unique elements along last dimension of input `set`.
@@ -72,7 +72,7 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
    * @return a new instance of SetSize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
+  public static <T extends Tensor> SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<T> setValues, Operand<TInt64> setShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetSize", scope.makeOpName("SetSize"));
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());

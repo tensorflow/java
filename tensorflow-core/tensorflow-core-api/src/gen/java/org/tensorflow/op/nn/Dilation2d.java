@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the grayscale dilation of 4-D `input` and 3-D `filter` tensors.
@@ -59,7 +59,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class Dilation2d<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Dilation2d<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Dilation2d operation.
@@ -75,7 +75,7 @@ public final class Dilation2d<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of Dilation2d
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Dilation2d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, List<Long> rates, String padding) {
+  public static <T extends Tensor & TNumber> Dilation2d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2D", scope.makeOpName("Dilation2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

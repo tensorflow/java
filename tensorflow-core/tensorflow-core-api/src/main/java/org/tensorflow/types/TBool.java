@@ -21,13 +21,15 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.BooleanTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.tensor.BooleanTensor;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -37,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * explicit mapping between Java boolean values and byte buffers using the {@link DataLayouts#BOOL
  * BOOL} layout, which may impact I/O performances.
  */
-public interface TBool extends BooleanTensor<TBool>, TType {
+public interface TBool extends BooleanTensor, TType {
 
   /** readable-name for the data type */
   static final String NAME = "BOOL";
@@ -117,7 +119,7 @@ public interface TBool extends BooleanTensor<TBool>, TType {
 /**
  * Hidden implementation of a {@code TBool}
  */
-class TBoolImpl extends BooleanTensorImpl<TBool> implements TBool {
+class TBoolImpl extends BooleanTensorImpl implements TBool {
 
   TBoolImpl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toBooleans(nativeTensor));

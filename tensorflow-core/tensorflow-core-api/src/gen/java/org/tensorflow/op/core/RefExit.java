@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Exits the current frame to its parent frame.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefExit<T extends TType> extends RawOp implements Operand<T> {
+public final class RefExit<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefExit operation.
@@ -44,7 +44,7 @@ public final class RefExit<T extends TType> extends RawOp implements Operand<T> 
    * @return a new instance of RefExit
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RefExit<T> create(Scope scope, Operand<T> data) {
+  public static <T extends Tensor> RefExit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefExit", scope.makeOpName("RefExit"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

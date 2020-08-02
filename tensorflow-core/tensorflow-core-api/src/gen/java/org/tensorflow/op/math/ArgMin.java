@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the index with the smallest value across dimensions of a tensor.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V> {
+public final class ArgMin<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new ArgMin operation.
@@ -63,7 +63,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMin
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
+  public static <V extends Tensor & TNumber, T extends Tensor, U extends Tensor & TNumber> ArgMin<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMin", scope.makeOpName("ArgMin"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
@@ -83,7 +83,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ArgMin<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
+  public static <T extends Tensor, U extends Tensor & TNumber> ArgMin<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
     return create(scope, input, dimension, TInt64.DTYPE);
   }
   

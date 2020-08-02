@@ -21,16 +21,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a BoostedTreesEnsembleResource
  */
-public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements Operand<TType> {
+public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.estimator.BoostedTreesEnsembleResourceHandleOp}
@@ -106,8 +106,8 @@ public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) resource;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) resource;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

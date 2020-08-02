@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA DotGeneral operator, documented at
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Dot<T extends TType> extends RawOp implements Operand<T> {
+public final class Dot<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Dot operation.
@@ -49,7 +49,7 @@ public final class Dot<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Dot
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, String dimensionNumbers, String precisionConfig) {
+  public static <T extends Tensor> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, String dimensionNumbers, String precisionConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDot", scope.makeOpName("Dot"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());

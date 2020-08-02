@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -28,7 +29,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input boxes tensor.
@@ -79,7 +79,7 @@ public final class CropAndResizeGradBoxes extends RawOp implements Operand<TFloa
    * @return a new instance of CropAndResizeGradBoxes
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CropAndResizeGradBoxes create(Scope scope, Operand<TFloat32> grads, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Options... options) {
+  public static <T extends Tensor & TNumber> CropAndResizeGradBoxes create(Scope scope, Operand<TFloat32> grads, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradBoxes", scope.makeOpName("CropAndResizeGradBoxes"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(image.asOutput());

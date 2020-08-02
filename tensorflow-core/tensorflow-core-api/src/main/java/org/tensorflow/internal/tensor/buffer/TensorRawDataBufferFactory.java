@@ -15,7 +15,7 @@
  *  =======================================================================
  */
 
-package org.tensorflow.internal.buffer;
+package org.tensorflow.internal.tensor.buffer;
 
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;

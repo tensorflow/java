@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Scatters tensor at indices in an input list.
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TType;
  * output_handle: The TensorList.
  */
 @Operator
-public final class TensorListScatterIntoExistingList extends RawOp implements Operand<TType> {
+public final class TensorListScatterIntoExistingList extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new TensorListScatterIntoExistingList operation.
@@ -52,7 +52,7 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
    * @return a new instance of TensorListScatterIntoExistingList
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
+  public static <T extends Tensor> TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -69,8 +69,8 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) outputHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

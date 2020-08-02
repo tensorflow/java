@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Stops gradient computation.
@@ -58,7 +58,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class StopGradient<T extends TType> extends RawOp implements Operand<T> {
+public final class StopGradient<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new StopGradient operation.
@@ -68,7 +68,7 @@ public final class StopGradient<T extends TType> extends RawOp implements Operan
    * @return a new instance of StopGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> StopGradient<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> StopGradient<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StopGradient", scope.makeOpName("StopGradient"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

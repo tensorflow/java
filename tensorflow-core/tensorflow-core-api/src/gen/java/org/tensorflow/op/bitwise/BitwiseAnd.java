@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Elementwise computes the bitwise AND of `x` and `y`.
@@ -54,7 +54,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "bitwise")
-public final class BitwiseAnd<T extends TNumber> extends RawOp implements Operand<T> {
+public final class BitwiseAnd<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BitwiseAnd operation.
@@ -65,7 +65,7 @@ public final class BitwiseAnd<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of BitwiseAnd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BitwiseAnd<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends Tensor & TNumber> BitwiseAnd<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseAnd", scope.makeOpName("BitwiseAnd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

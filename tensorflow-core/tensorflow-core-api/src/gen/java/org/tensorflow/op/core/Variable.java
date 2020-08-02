@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Holds state in the form of a tensor that persists across steps.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code ref()} output
  */
 @Operator
-public final class Variable<T extends TType> extends RawOp implements Operand<T> {
+public final class Variable<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Variable}
@@ -81,7 +81,7 @@ public final class Variable<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of Variable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
+  public static <T extends Tensor> Variable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableV2", scope.makeOpName("Variable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return the shape of s0 op s1 with broadcast.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code r0()} output
  */
 @Operator
-public final class BroadcastDynamicShape<T extends TNumber> extends RawOp implements Operand<T> {
+public final class BroadcastDynamicShape<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BroadcastDynamicShape operation.
@@ -48,7 +48,7 @@ public final class BroadcastDynamicShape<T extends TNumber> extends RawOp implem
    * @return a new instance of BroadcastDynamicShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
+  public static <T extends Tensor & TNumber> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastArgs", scope.makeOpName("BroadcastDynamicShape"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());

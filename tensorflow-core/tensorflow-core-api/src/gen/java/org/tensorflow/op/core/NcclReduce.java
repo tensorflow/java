@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reduces `input` from `num_devices` using `reduction` to a single device.
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class NcclReduce<T extends TNumber> extends RawOp implements Operand<T> {
+public final class NcclReduce<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclReduce operation.
@@ -54,7 +54,7 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of NcclReduce
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
+  public static <T extends Tensor & TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.applyControlDependencies(opBuilder);

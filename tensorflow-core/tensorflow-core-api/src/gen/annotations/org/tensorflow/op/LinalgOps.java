@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.linalg.BandPart;
 import org.tensorflow.op.linalg.BatchCholesky;
 import org.tensorflow.op.linalg.BatchCholeskyGrad;
@@ -68,7 +69,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code linalg} operations as {@link Op Op}s
@@ -128,7 +128,7 @@ public final class LinalgOps {
    *  entire upper triangle.
    * @return a new instance of BandPart
    */
-  public <T extends TType, U extends TNumber> BandPart<T> bandPart(Operand<T> input,
+  public <T extends Tensor, U extends Tensor & TNumber> BandPart<T> bandPart(Operand<T> input,
       Operand<U> numLower, Operand<U> numUpper) {
     return BandPart.create(scope, input, numLower, numUpper);
   }
@@ -139,7 +139,7 @@ public final class LinalgOps {
    * @param input
    * @return a new instance of BatchCholesky
    */
-  public <T extends TNumber> BatchCholesky<T> batchCholesky(Operand<T> input) {
+  public <T extends Tensor & TNumber> BatchCholesky<T> batchCholesky(Operand<T> input) {
     return BatchCholesky.create(scope, input);
   }
 
@@ -150,7 +150,8 @@ public final class LinalgOps {
    * @param grad
    * @return a new instance of BatchCholeskyGrad
    */
-  public <T extends TNumber> BatchCholeskyGrad<T> batchCholeskyGrad(Operand<T> l, Operand<T> grad) {
+  public <T extends Tensor & TNumber> BatchCholeskyGrad<T> batchCholeskyGrad(Operand<T> l,
+      Operand<T> grad) {
     return BatchCholeskyGrad.create(scope, l, grad);
   }
 
@@ -162,7 +163,7 @@ public final class LinalgOps {
    * @param numUpper
    * @return a new instance of BatchMatrixBandPart
    */
-  public <T extends TType> BatchMatrixBandPart<T> batchMatrixBandPart(Operand<T> input,
+  public <T extends Tensor> BatchMatrixBandPart<T> batchMatrixBandPart(Operand<T> input,
       Operand<TInt64> numLower, Operand<TInt64> numUpper) {
     return BatchMatrixBandPart.create(scope, input, numLower, numUpper);
   }
@@ -173,7 +174,7 @@ public final class LinalgOps {
    * @param input
    * @return a new instance of BatchMatrixDeterminant
    */
-  public <T extends TType> BatchMatrixDeterminant<T> batchMatrixDeterminant(Operand<T> input) {
+  public <T extends Tensor> BatchMatrixDeterminant<T> batchMatrixDeterminant(Operand<T> input) {
     return BatchMatrixDeterminant.create(scope, input);
   }
 
@@ -183,7 +184,7 @@ public final class LinalgOps {
    * @param diagonal
    * @return a new instance of BatchMatrixDiag
    */
-  public <T extends TType> BatchMatrixDiag<T> batchMatrixDiag(Operand<T> diagonal) {
+  public <T extends Tensor> BatchMatrixDiag<T> batchMatrixDiag(Operand<T> diagonal) {
     return BatchMatrixDiag.create(scope, diagonal);
   }
 
@@ -193,7 +194,7 @@ public final class LinalgOps {
    * @param input
    * @return a new instance of BatchMatrixDiagPart
    */
-  public <T extends TType> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
+  public <T extends Tensor> BatchMatrixDiagPart<T> batchMatrixDiagPart(Operand<T> input) {
     return BatchMatrixDiagPart.create(scope, input);
   }
 
@@ -204,7 +205,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixInverse
    */
-  public <T extends TNumber> BatchMatrixInverse<T> batchMatrixInverse(Operand<T> input,
+  public <T extends Tensor & TNumber> BatchMatrixInverse<T> batchMatrixInverse(Operand<T> input,
       BatchMatrixInverse.Options... options) {
     return BatchMatrixInverse.create(scope, input, options);
   }
@@ -216,7 +217,7 @@ public final class LinalgOps {
    * @param diagonal
    * @return a new instance of BatchMatrixSetDiag
    */
-  public <T extends TType> BatchMatrixSetDiag<T> batchMatrixSetDiag(Operand<T> input,
+  public <T extends Tensor> BatchMatrixSetDiag<T> batchMatrixSetDiag(Operand<T> input,
       Operand<T> diagonal) {
     return BatchMatrixSetDiag.create(scope, input, diagonal);
   }
@@ -229,8 +230,8 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixSolve
    */
-  public <T extends TNumber> BatchMatrixSolve<T> batchMatrixSolve(Operand<T> matrix, Operand<T> rhs,
-      BatchMatrixSolve.Options... options) {
+  public <T extends Tensor & TNumber> BatchMatrixSolve<T> batchMatrixSolve(Operand<T> matrix,
+      Operand<T> rhs, BatchMatrixSolve.Options... options) {
     return BatchMatrixSolve.create(scope, matrix, rhs, options);
   }
 
@@ -243,7 +244,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixSolveLs
    */
-  public <T extends TNumber> BatchMatrixSolveLs<T> batchMatrixSolveLs(Operand<T> matrix,
+  public <T extends Tensor & TNumber> BatchMatrixSolveLs<T> batchMatrixSolveLs(Operand<T> matrix,
       Operand<T> rhs, Operand<TFloat64> l2Regularizer, BatchMatrixSolveLs.Options... options) {
     return BatchMatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
   }
@@ -256,7 +257,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchMatrixTriangularSolve
    */
-  public <T extends TNumber> BatchMatrixTriangularSolve<T> batchMatrixTriangularSolve(
+  public <T extends Tensor & TNumber> BatchMatrixTriangularSolve<T> batchMatrixTriangularSolve(
       Operand<T> matrix, Operand<T> rhs, BatchMatrixTriangularSolve.Options... options) {
     return BatchMatrixTriangularSolve.create(scope, matrix, rhs, options);
   }
@@ -268,7 +269,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchSelfAdjointEig
    */
-  public <T extends TNumber> BatchSelfAdjointEig<T> batchSelfAdjointEig(Operand<T> input,
+  public <T extends Tensor & TNumber> BatchSelfAdjointEig<T> batchSelfAdjointEig(Operand<T> input,
       BatchSelfAdjointEig.Options... options) {
     return BatchSelfAdjointEig.create(scope, input, options);
   }
@@ -280,7 +281,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of BatchSvd
    */
-  public <T extends TType> BatchSvd<T> batchSvd(Operand<T> input, BatchSvd.Options... options) {
+  public <T extends Tensor> BatchSvd<T> batchSvd(Operand<T> input, BatchSvd.Options... options) {
     return BatchSvd.create(scope, input, options);
   }
 
@@ -305,7 +306,7 @@ public final class LinalgOps {
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Cholesky
    */
-  public <T extends TType> Cholesky<T> cholesky(Operand<T> input) {
+  public <T extends Tensor> Cholesky<T> cholesky(Operand<T> input) {
     return Cholesky.create(scope, input);
   }
 
@@ -324,7 +325,7 @@ public final class LinalgOps {
    *  this tensor.
    * @return a new instance of CholeskyGrad
    */
-  public <T extends TNumber> CholeskyGrad<T> choleskyGrad(Operand<T> l, Operand<T> grad) {
+  public <T extends Tensor & TNumber> CholeskyGrad<T> choleskyGrad(Operand<T> l, Operand<T> grad) {
     return CholeskyGrad.create(scope, l, grad);
   }
 
@@ -340,8 +341,8 @@ public final class LinalgOps {
    * @param perm
    * @return a new instance of ConjugateTranspose
    */
-  public <T extends TType, U extends TNumber> ConjugateTranspose<T> conjugateTranspose(Operand<T> x,
-      Operand<U> perm) {
+  public <T extends Tensor, U extends Tensor & TNumber> ConjugateTranspose<T> conjugateTranspose(
+      Operand<T> x, Operand<U> perm) {
     return ConjugateTranspose.create(scope, x, perm);
   }
 
@@ -357,7 +358,7 @@ public final class LinalgOps {
    * @param b Another tensor, of same type and shape as `a`.
    * @return a new instance of Cross
    */
-  public <T extends TNumber> Cross<T> cross(Operand<T> a, Operand<T> b) {
+  public <T extends Tensor & TNumber> Cross<T> cross(Operand<T> a, Operand<T> b) {
     return Cross.create(scope, a, b);
   }
 
@@ -372,7 +373,7 @@ public final class LinalgOps {
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Det
    */
-  public <T extends TType> Det<T> det(Operand<T> input) {
+  public <T extends Tensor> Det<T> det(Operand<T> input) {
     return Det.create(scope, input);
   }
 
@@ -396,7 +397,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Eig
    */
-  public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, DataType<U> Tout,
+  public <U extends Tensor, T extends Tensor> Eig<U> eig(Operand<T> input, DataType<U> Tout,
       Eig.Options... options) {
     return Eig.create(scope, input, Tout, options);
   }
@@ -484,7 +485,7 @@ public final class LinalgOps {
    * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
    * @return a new instance of Einsum
    */
-  public <T extends TType> Einsum<T> einsum(Iterable<Operand<T>> inputs, String equation) {
+  public <T extends Tensor> Einsum<T> einsum(Iterable<Operand<T>> inputs, String equation) {
     return Einsum.create(scope, inputs, equation);
   }
 
@@ -503,8 +504,8 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of EuclideanNorm
    */
-  public <T extends TType, U extends TNumber> EuclideanNorm<T> euclideanNorm(Operand<T> input,
-      Operand<U> axis, EuclideanNorm.Options... options) {
+  public <T extends Tensor, U extends Tensor & TNumber> EuclideanNorm<T> euclideanNorm(
+      Operand<T> input, Operand<U> axis, EuclideanNorm.Options... options) {
     return EuclideanNorm.create(scope, input, axis, options);
   }
 
@@ -528,7 +529,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Inv
    */
-  public <T extends TType> Inv<T> inv(Operand<T> input, Inv.Options... options) {
+  public <T extends Tensor> Inv<T> inv(Operand<T> input, Inv.Options... options) {
     return Inv.create(scope, input, options);
   }
 
@@ -618,7 +619,7 @@ public final class LinalgOps {
    * @param input Shape is `[N, M, M]`.
    * @return a new instance of LogMatrixDeterminant
    */
-  public <T extends TType> LogMatrixDeterminant<T> logMatrixDeterminant(Operand<T> input) {
+  public <T extends Tensor> LogMatrixDeterminant<T> logMatrixDeterminant(Operand<T> input) {
     return LogMatrixDeterminant.create(scope, input);
   }
 
@@ -649,7 +650,7 @@ public final class LinalgOps {
    *  size `[M, M]`.
    * @return a new instance of Lu
    */
-  public <T extends TType> Lu<T, TInt32> lu(Operand<T> input) {
+  public <T extends Tensor> Lu<T, TInt32> lu(Operand<T> input) {
     return Lu.create(scope, input);
   }
 
@@ -681,7 +682,7 @@ public final class LinalgOps {
    * @param outputIdxType
    * @return a new instance of Lu
    */
-  public <T extends TType, U extends TNumber> Lu<T, U> lu(Operand<T> input,
+  public <T extends Tensor, U extends Tensor & TNumber> Lu<T, U> lu(Operand<T> input,
       DataType<U> outputIdxType) {
     return Lu.create(scope, input, outputIdxType);
   }
@@ -703,7 +704,8 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of MatMul
    */
-  public <T extends TType> MatMul<T> matMul(Operand<T> a, Operand<T> b, MatMul.Options... options) {
+  public <T extends Tensor> MatMul<T> matMul(Operand<T> a, Operand<T> b,
+      MatMul.Options... options) {
     return MatMul.create(scope, a, b, options);
   }
 
@@ -810,7 +812,7 @@ public final class LinalgOps {
    *  Default is 0.
    * @return a new instance of MatrixDiag
    */
-  public <T extends TType> MatrixDiag<T> matrixDiag(Operand<T> diagonal, Operand<TInt32> k,
+  public <T extends Tensor> MatrixDiag<T> matrixDiag(Operand<T> diagonal, Operand<TInt32> k,
       Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
     return MatrixDiag.create(scope, diagonal, k, numRows, numCols, paddingValue);
   }
@@ -894,7 +896,7 @@ public final class LinalgOps {
    *  Default is 0.
    * @return a new instance of MatrixDiagPart
    */
-  public <T extends TType> MatrixDiagPart<T> matrixDiagPart(Operand<T> input, Operand<TInt32> k,
+  public <T extends Tensor> MatrixDiagPart<T> matrixDiagPart(Operand<T> input, Operand<TInt32> k,
       Operand<T> paddingValue) {
     return MatrixDiagPart.create(scope, input, k, paddingValue);
   }
@@ -1010,8 +1012,8 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of MatrixDiagPartV3
    */
-  public <T extends TType> MatrixDiagPartV3<T> matrixDiagPartV3(Operand<T> input, Operand<TInt32> k,
-      Operand<T> paddingValue, MatrixDiagPartV3.Options... options) {
+  public <T extends Tensor> MatrixDiagPartV3<T> matrixDiagPartV3(Operand<T> input,
+      Operand<TInt32> k, Operand<T> paddingValue, MatrixDiagPartV3.Options... options) {
     return MatrixDiagPartV3.create(scope, input, k, paddingValue, options);
   }
 
@@ -1148,7 +1150,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of MatrixDiagV3
    */
-  public <T extends TType> MatrixDiagV3<T> matrixDiagV3(Operand<T> diagonal, Operand<TInt32> k,
+  public <T extends Tensor> MatrixDiagV3<T> matrixDiagV3(Operand<T> diagonal, Operand<TInt32> k,
       Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue,
       MatrixDiagV3.Options... options) {
     return MatrixDiagV3.create(scope, diagonal, k, numRows, numCols, paddingValue, options);
@@ -1269,7 +1271,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of MatrixSetDiag
    */
-  public <T extends TType> MatrixSetDiag<T> matrixSetDiag(Operand<T> input, Operand<T> diagonal,
+  public <T extends Tensor> MatrixSetDiag<T> matrixSetDiag(Operand<T> input, Operand<T> diagonal,
       Operand<TInt32> k, MatrixSetDiag.Options... options) {
     return MatrixSetDiag.create(scope, input, diagonal, k, options);
   }
@@ -1322,7 +1324,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of MatrixSolveLs
    */
-  public <T extends TType> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
+  public <T extends Tensor> MatrixSolveLs<T> matrixSolveLs(Operand<T> matrix, Operand<T> rhs,
       Operand<TFloat64> l2Regularizer, MatrixSolveLs.Options... options) {
     return MatrixSolveLs.create(scope, matrix, rhs, l2Regularizer, options);
   }
@@ -1346,7 +1348,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Qr
    */
-  public <T extends TType> Qr<T> qr(Operand<T> input, Qr.Options... options) {
+  public <T extends Tensor> Qr<T> qr(Operand<T> input, Qr.Options... options) {
     return Qr.create(scope, input, options);
   }
 
@@ -1371,7 +1373,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMul
    */
-  public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
+  public <V extends Tensor, T extends Tensor, U extends Tensor, W extends Tensor> QuantizedMatMul<V> quantizedMatMul(
       Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA,
       Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<V> Toutput, DataType<W> Tactivation,
       QuantizedMatMul.Options... options) {
@@ -1397,7 +1399,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of SelfAdjointEig
    */
-  public <T extends TType> SelfAdjointEig<T> selfAdjointEig(Operand<T> input,
+  public <T extends Tensor> SelfAdjointEig<T> selfAdjointEig(Operand<T> input,
       SelfAdjointEig.Options... options) {
     return SelfAdjointEig.create(scope, input, options);
   }
@@ -1418,7 +1420,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Solve
    */
-  public <T extends TType> Solve<T> solve(Operand<T> matrix, Operand<T> rhs,
+  public <T extends Tensor> Solve<T> solve(Operand<T> matrix, Operand<T> rhs,
       Solve.Options... options) {
     return Solve.create(scope, matrix, rhs, options);
   }
@@ -1446,7 +1448,7 @@ public final class LinalgOps {
    * @param input Shape is `[..., M, M]`.
    * @return a new instance of Sqrtm
    */
-  public <T extends TType> Sqrtm<T> sqrtm(Operand<T> input) {
+  public <T extends Tensor> Sqrtm<T> sqrtm(Operand<T> input) {
     return Sqrtm.create(scope, input);
   }
 
@@ -1470,7 +1472,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Svd
    */
-  public <T extends TType> Svd<T> svd(Operand<T> input, Svd.Options... options) {
+  public <T extends Tensor> Svd<T> svd(Operand<T> input, Svd.Options... options) {
     return Svd.create(scope, input, options);
   }
 
@@ -1498,7 +1500,7 @@ public final class LinalgOps {
    * @param diagonal Rank k tensor where k is at most 1.
    * @return a new instance of TensorDiag
    */
-  public <T extends TType> TensorDiag<T> tensorDiag(Operand<T> diagonal) {
+  public <T extends Tensor> TensorDiag<T> tensorDiag(Operand<T> diagonal) {
     return TensorDiag.create(scope, diagonal);
   }
 
@@ -1527,7 +1529,7 @@ public final class LinalgOps {
    * @param input Rank k tensor where k is even and not zero.
    * @return a new instance of TensorDiagPart
    */
-  public <T extends TType> TensorDiagPart<T> tensorDiagPart(Operand<T> input) {
+  public <T extends Tensor> TensorDiagPart<T> tensorDiagPart(Operand<T> input) {
     return TensorDiagPart.create(scope, input);
   }
 
@@ -1542,7 +1544,7 @@ public final class LinalgOps {
    * @param perm
    * @return a new instance of Transpose
    */
-  public <T extends TType, U extends TNumber> Transpose<T> transpose(Operand<T> x,
+  public <T extends Tensor, U extends Tensor & TNumber> Transpose<T> transpose(Operand<T> x,
       Operand<U> perm) {
     return Transpose.create(scope, x, perm);
   }
@@ -1602,7 +1604,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of TriangularSolve
    */
-  public <T extends TType> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
+  public <T extends Tensor> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
       TriangularSolve.Options... options) {
     return TriangularSolve.create(scope, matrix, rhs, options);
   }

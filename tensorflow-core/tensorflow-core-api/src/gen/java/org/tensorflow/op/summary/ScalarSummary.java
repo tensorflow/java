@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs a `Summary` protocol buffer with scalar values.
@@ -47,7 +47,7 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
    * @return a new instance of ScalarSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ScalarSummary create(Scope scope, Operand<TString> tags, Operand<T> values) {
+  public static <T extends Tensor & TNumber> ScalarSummary create(Scope scope, Operand<TString> tags, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
     opBuilder.addInput(tags.asOutput());
     opBuilder.addInput(values.asOutput());

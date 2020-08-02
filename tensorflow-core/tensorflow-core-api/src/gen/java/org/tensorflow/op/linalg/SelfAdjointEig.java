@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of one or more square self-adjoint matrices.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code e()} output
  */
 @Operator(group = "linalg")
-public final class SelfAdjointEig<T extends TType> extends RawOp {
+public final class SelfAdjointEig<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.SelfAdjointEig}
@@ -76,7 +76,7 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
    * @return a new instance of SelfAdjointEig
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelfAdjointEigV2", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

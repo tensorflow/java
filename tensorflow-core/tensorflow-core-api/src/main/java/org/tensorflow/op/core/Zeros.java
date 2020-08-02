@@ -18,6 +18,7 @@ import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -25,7 +26,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An operator creating a constant initialized with zeros of the shape given by `dims`.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> constant type
  */
 @Operator
-public final class Zeros<T extends TType> implements Op, Operand<T> {
+public final class Zeros<T extends Tensor> implements Op, Operand<T> {
 
   /**
    * Creates a zeroed tensor given its type and shape.
@@ -51,7 +51,7 @@ public final class Zeros<T extends TType> implements Op, Operand<T> {
    */
   @Endpoint
   @SuppressWarnings("unchecked")
-  public static <T extends TType, U extends TNumber> Zeros<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Zeros<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
     Scope zerosScope = scope.withSubScope("Zeros");
     Operand<T> zero;
     if (type == TString.DTYPE) {

@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Dequeues `n` tuples of one or more tensors from the given queue.
@@ -54,7 +54,7 @@ import org.tensorflow.types.family.TType;
  * component of the dequeued tuple.
  */
 @Operator(group = "io")
-public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<TType>> {
+public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<Tensor>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.QueueDequeueUpTo}
@@ -126,7 +126,7 @@ public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<TT
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
+  public Iterator<Operand<Tensor>> iterator() {
     return (Iterator) components.iterator();
   }
   

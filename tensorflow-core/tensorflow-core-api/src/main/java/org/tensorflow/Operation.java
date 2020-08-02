@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.types.family.TType;
-
 /**
  * Performs computation on Tensors.
  *
@@ -70,7 +68,7 @@ public interface Operation {
    * @param <T> The expected element type of the tensors produced by this output.
    * @param idx The index of the output among the outputs produced by this operation.
    */
-  <T extends TType> Output<T> output(int idx);
+  <T extends Tensor> Output<T> output(int idx);
 
   /**
    * Returns the size of the given inputs list of Tensors for this operation.

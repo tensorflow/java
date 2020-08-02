@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of morphological 2-D dilation with respect to the filter.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code filterBackprop()} output
  */
 @Operator(group = "nn")
-public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Dilation2dBackpropFilter<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Dilation2dBackpropFilter operation.
@@ -52,7 +52,7 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
    * @return a new instance of Dilation2dBackpropFilter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Dilation2dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates, String padding) {
+  public static <T extends Tensor & TNumber> Dilation2dBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2DBackpropFilter", scope.makeOpName("Dilation2dBackpropFilter"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

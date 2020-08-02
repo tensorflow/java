@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Create a dense tensor from a ragged tensor, possibly altering its shape.
@@ -58,7 +58,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <U> data type for {@code result()} output
  */
-public final class RaggedTensorToTensor<U extends TType> extends RawOp implements Operand<U> {
+public final class RaggedTensorToTensor<U extends Tensor> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorToTensor operation.
@@ -106,7 +106,7 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
    * @return a new instance of RaggedTensorToTensor
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber, V extends TNumber> RaggedTensorToTensor<U> create(Scope scope, Operand<T> shape, Operand<U> values, Operand<U> defaultValue, Iterable<Operand<V>> rowPartitionTensors, List<String> rowPartitionTypes) {
+  public static <U extends Tensor, T extends Tensor & TNumber, V extends Tensor & TNumber> RaggedTensorToTensor<U> create(Scope scope, Operand<T> shape, Operand<U> values, Operand<U> defaultValue, Iterable<Operand<V>> rowPartitionTensors, List<String> rowPartitionTypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToTensor", scope.makeOpName("RaggedTensorToTensor"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(values.asOutput());

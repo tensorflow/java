@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes softplus: `log(exp(features) + 1)`.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "math")
-public final class Softplus<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Softplus<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Softplus operation.
@@ -44,7 +44,7 @@ public final class Softplus<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of Softplus
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
+  public static <T extends Tensor & TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softplus", scope.makeOpName("Softplus"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

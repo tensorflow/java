@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the mean of elements across dimensions of a tensor.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class Mean<T extends TType> extends RawOp implements Operand<T> {
+public final class Mean<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.math.Mean}
@@ -71,7 +71,7 @@ public final class Mean<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Mean
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Mean<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Mean<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mean", scope.makeOpName("Mean"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

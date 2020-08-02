@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An Op to sum inputs across replicated TPU instances.
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CrossReplicaSum<T extends TNumber> extends RawOp implements Operand<T> {
+public final class CrossReplicaSum<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CrossReplicaSum operation.
@@ -54,7 +54,7 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
    * @return a new instance of CrossReplicaSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
+  public static <T extends Tensor & TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());

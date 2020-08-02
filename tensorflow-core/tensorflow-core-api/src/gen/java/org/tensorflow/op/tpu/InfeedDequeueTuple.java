@@ -25,17 +25,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Fetches multiple values from infeed as an XLA tuple.
  */
-public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<TType>> {
+public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<Tensor>> {
   
   /**
    * Factory method to create a class wrapping a new InfeedDequeueTuple operation.
@@ -71,7 +71,7 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
+  public Iterator<Operand<Tensor>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

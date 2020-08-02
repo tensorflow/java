@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Connects N inputs to an N-way replicated TPU computation.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TPUReplicatedInput<T extends TType> extends RawOp implements Operand<T> {
+public final class TPUReplicatedInput<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.TPUReplicatedInput}
@@ -93,7 +93,7 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
    * @return a new instance of TPUReplicatedInput
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TPUReplicatedInput<T> create(Scope scope, Iterable<Operand<T>> inputs, Options... options) {
+  public static <T extends Tensor> TPUReplicatedInput<T> create(Scope scope, Iterable<Operand<T>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedInput", scope.makeOpName("TPUReplicatedInput"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

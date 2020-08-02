@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Deserialize `SparseTensor` objects.
@@ -77,7 +77,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code sparseValues()} output
  */
 @Operator(group = "sparse")
-public final class DeserializeSparse<U extends TType> extends RawOp {
+public final class DeserializeSparse<U extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new DeserializeSparse operation.
@@ -89,7 +89,7 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
    * @return a new instance of DeserializeSparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> DeserializeSparse<U> create(Scope scope, Operand<T> serializedSparse, DataType<U> dtype) {
+  public static <U extends Tensor, T extends Tensor> DeserializeSparse<U> create(Scope scope, Operand<T> serializedSparse, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
     opBuilder.addInput(serializedSparse.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

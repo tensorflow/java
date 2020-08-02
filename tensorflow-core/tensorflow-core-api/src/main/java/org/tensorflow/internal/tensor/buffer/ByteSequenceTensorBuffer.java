@@ -15,7 +15,7 @@
  *  =======================================================================
  */
 
-package org.tensorflow.internal.buffer;
+package org.tensorflow.internal.tensor.buffer;
 
 import java.nio.ReadOnlyBufferException;
 import java.util.function.Function;

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from the Gamma distribution(s) described by alpha.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomGamma<U extends TNumber> extends RawOp implements Operand<U> {
+public final class RandomGamma<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomGamma}
@@ -82,7 +82,7 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
    * @return a new instance of RandomGamma
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
+  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(alpha.asOutput());

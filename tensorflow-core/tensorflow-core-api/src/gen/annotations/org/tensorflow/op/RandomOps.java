@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.random.AllCandidateSampler;
 import org.tensorflow.op.random.LogUniformCandidateSampler;
 import org.tensorflow.op.random.Multinomial;
@@ -42,7 +43,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code random} operations as {@link Op Op}s
@@ -124,7 +124,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  public <T extends TNumber> Multinomial<TInt64> multinomial(Operand<T> logits,
+  public <T extends Tensor & TNumber> Multinomial<TInt64> multinomial(Operand<T> logits,
       Operand<TInt32> numSamples, Multinomial.Options... options) {
     return Multinomial.create(scope, logits, numSamples, options);
   }
@@ -140,8 +140,9 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of Multinomial
    */
-  public <U extends TNumber, T extends TNumber> Multinomial<U> multinomial(Operand<T> logits,
-      Operand<TInt32> numSamples, DataType<U> outputDtype, Multinomial.Options... options) {
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> Multinomial<U> multinomial(
+      Operand<T> logits, Operand<TInt32> numSamples, DataType<U> outputDtype,
+      Multinomial.Options... options) {
     return Multinomial.create(scope, logits, numSamples, outputDtype, options);
   }
 
@@ -161,7 +162,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of ParameterizedTruncatedNormal
    */
-  public <U extends TNumber, T extends TNumber> ParameterizedTruncatedNormal<U> parameterizedTruncatedNormal(
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> ParameterizedTruncatedNormal<U> parameterizedTruncatedNormal(
       Operand<T> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals,
       ParameterizedTruncatedNormal.Options... options) {
     return ParameterizedTruncatedNormal.create(scope, shape, means, stdevs, minvals, maxvals, options);
@@ -182,8 +183,8 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomGamma
    */
-  public <U extends TNumber, T extends TNumber> RandomGamma<U> randomGamma(Operand<T> shape,
-      Operand<U> alpha, RandomGamma.Options... options) {
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomGamma<U> randomGamma(
+      Operand<T> shape, Operand<U> alpha, RandomGamma.Options... options) {
     return RandomGamma.create(scope, shape, alpha, options);
   }
 
@@ -208,7 +209,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  public <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> randomPoisson(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> RandomPoisson<TInt64> randomPoisson(
       Operand<T> shape, Operand<U> rate, RandomPoisson.Options... options) {
     return RandomPoisson.create(scope, shape, rate, options);
   }
@@ -235,7 +236,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomPoisson
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> randomPoisson(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> RandomPoisson<V> randomPoisson(
       Operand<T> shape, Operand<U> rate, DataType<V> dtype, RandomPoisson.Options... options) {
     return RandomPoisson.create(scope, shape, rate, dtype, options);
   }
@@ -257,7 +258,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffle
    */
-  public <T extends TType> RandomShuffle<T> randomShuffle(Operand<T> value,
+  public <T extends Tensor> RandomShuffle<T> randomShuffle(Operand<T> value,
       RandomShuffle.Options... options) {
     return RandomShuffle.create(scope, value, options);
   }
@@ -273,7 +274,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomStandardNormal
    */
-  public <U extends TNumber, T extends TNumber> RandomStandardNormal<U> randomStandardNormal(
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomStandardNormal<U> randomStandardNormal(
       Operand<T> shape, DataType<U> dtype, RandomStandardNormal.Options... options) {
     return RandomStandardNormal.create(scope, shape, dtype, options);
   }
@@ -290,8 +291,8 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomUniform
    */
-  public <U extends TNumber, T extends TNumber> RandomUniform<U> randomUniform(Operand<T> shape,
-      DataType<U> dtype, RandomUniform.Options... options) {
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomUniform<U> randomUniform(
+      Operand<T> shape, DataType<U> dtype, RandomUniform.Options... options) {
     return RandomUniform.create(scope, shape, dtype, options);
   }
 
@@ -313,7 +314,7 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomUniformInt
    */
-  public <U extends TNumber, T extends TNumber> RandomUniformInt<U> randomUniformInt(
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomUniformInt<U> randomUniformInt(
       Operand<T> shape, Operand<U> minval, Operand<U> maxval, RandomUniformInt.Options... options) {
     return RandomUniformInt.create(scope, shape, minval, maxval, options);
   }
@@ -339,7 +340,7 @@ public final class RandomOps {
    * @param probs
    * @return a new instance of StatefulRandomBinomial
    */
-  public <T extends TNumber, U extends TNumber> StatefulRandomBinomial<TInt64> statefulRandomBinomial(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> StatefulRandomBinomial<TInt64> statefulRandomBinomial(
       Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts,
       Operand<U> probs) {
     return StatefulRandomBinomial.create(scope, resource, algorithm, shape, counts, probs);
@@ -356,7 +357,7 @@ public final class RandomOps {
    * @param dtype
    * @return a new instance of StatefulRandomBinomial
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatefulRandomBinomial<V> statefulRandomBinomial(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatefulRandomBinomial<V> statefulRandomBinomial(
       Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts,
       Operand<U> probs, DataType<V> dtype) {
     return StatefulRandomBinomial.create(scope, resource, algorithm, shape, counts, probs, dtype);
@@ -373,7 +374,7 @@ public final class RandomOps {
    * @param shape The shape of the output tensor.
    * @return a new instance of StatefulStandardNormal
    */
-  public <T extends TType> StatefulStandardNormal<TFloat32> statefulStandardNormal(
+  public <T extends Tensor> StatefulStandardNormal<TFloat32> statefulStandardNormal(
       Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return StatefulStandardNormal.create(scope, resource, algorithm, shape);
   }
@@ -390,7 +391,7 @@ public final class RandomOps {
    * @param dtype The type of the output.
    * @return a new instance of StatefulStandardNormal
    */
-  public <U extends TType, T extends TType> StatefulStandardNormal<U> statefulStandardNormal(
+  public <U extends Tensor, T extends Tensor> StatefulStandardNormal<U> statefulStandardNormal(
       Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     return StatefulStandardNormal.create(scope, resource, algorithm, shape, dtype);
   }
@@ -405,7 +406,7 @@ public final class RandomOps {
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessMultinomial
    */
-  public <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> statelessMultinomial(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessMultinomial<TInt64> statelessMultinomial(
       Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
     return StatelessMultinomial.create(scope, logits, numSamples, seed);
   }
@@ -421,7 +422,7 @@ public final class RandomOps {
    * @param outputDtype
    * @return a new instance of StatelessMultinomial
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> statelessMultinomial(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessMultinomial<V> statelessMultinomial(
       Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
     return StatelessMultinomial.create(scope, logits, numSamples, seed, outputDtype);
   }
@@ -438,7 +439,7 @@ public final class RandomOps {
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomNormal
    */
-  public <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> statelessRandomNormal(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomNormal<TFloat32> statelessRandomNormal(
       Operand<T> shape, Operand<U> seed) {
     return StatelessRandomNormal.create(scope, shape, seed);
   }
@@ -456,7 +457,7 @@ public final class RandomOps {
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomNormal
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> statelessRandomNormal(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomNormal<V> statelessRandomNormal(
       Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     return StatelessRandomNormal.create(scope, shape, seed, dtype);
   }
@@ -474,7 +475,7 @@ public final class RandomOps {
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomUniform
    */
-  public <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> statelessRandomUniform(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomUniform<TFloat32> statelessRandomUniform(
       Operand<T> shape, Operand<U> seed) {
     return StatelessRandomUniform.create(scope, shape, seed);
   }
@@ -493,7 +494,7 @@ public final class RandomOps {
    * @param dtype The type of the output.
    * @return a new instance of StatelessRandomUniform
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> statelessRandomUniform(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomUniform<V> statelessRandomUniform(
       Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     return StatelessRandomUniform.create(scope, shape, seed, dtype);
   }
@@ -512,7 +513,7 @@ public final class RandomOps {
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessTruncatedNormal
    */
-  public <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> statelessTruncatedNormal(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessTruncatedNormal<TFloat32> statelessTruncatedNormal(
       Operand<T> shape, Operand<U> seed) {
     return StatelessTruncatedNormal.create(scope, shape, seed);
   }
@@ -532,7 +533,7 @@ public final class RandomOps {
    * @param dtype The type of the output.
    * @return a new instance of StatelessTruncatedNormal
    */
-  public <V extends TNumber, T extends TNumber, U extends TNumber> StatelessTruncatedNormal<V> statelessTruncatedNormal(
+  public <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessTruncatedNormal<V> statelessTruncatedNormal(
       Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     return StatelessTruncatedNormal.create(scope, shape, seed, dtype);
   }
@@ -550,8 +551,8 @@ public final class RandomOps {
    * @param options carries optional attributes values
    * @return a new instance of TruncatedNormal
    */
-  public <U extends TNumber, T extends TNumber> TruncatedNormal<U> truncatedNormal(Operand<T> shape,
-      DataType<U> dtype, TruncatedNormal.Options... options) {
+  public <U extends Tensor & TNumber, T extends Tensor & TNumber> TruncatedNormal<U> truncatedNormal(
+      Operand<T> shape, DataType<U> dtype, TruncatedNormal.Options... options) {
     return TruncatedNormal.create(scope, shape, dtype, options);
   }
 

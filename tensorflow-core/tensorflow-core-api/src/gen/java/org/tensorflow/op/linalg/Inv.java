@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the inverse of one or more square invertible matrices or their
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Inv<T extends TType> extends RawOp implements Operand<T> {
+public final class Inv<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.Inv}
@@ -75,7 +75,7 @@ public final class Inv<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Inv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Inv<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> Inv<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixInverse", scope.makeOpName("Inv"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

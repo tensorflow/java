@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns a `RaggedTensor` containing the specified sequences of numbers.
@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code rtNestedSplits()} output
  * @param <T> data type for {@code rtDenseValues()} output
  */
-public final class RaggedRange<U extends TNumber, T extends TNumber> extends RawOp {
+public final class RaggedRange<U extends Tensor & TNumber, T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedRange operation.
@@ -64,7 +64,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    * @return a new instance of RaggedRange
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, DataType<U> Tsplits) {
+  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput());
     opBuilder.addInput(limits.asOutput());
@@ -84,7 +84,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    * @return a new instance of RaggedRange
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
+  public static <T extends Tensor & TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
     return create(scope, starts, limits, deltas, TInt64.DTYPE);
   }
   

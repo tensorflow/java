@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Matrix-multiplies a sparse matrix with a dense matrix.
@@ -57,7 +57,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class SparseMatrixMatMul<T extends TType> extends RawOp implements Operand<T> {
+public final class SparseMatrixMatMul<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixMatMul}
@@ -133,7 +133,7 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
    * @return a new instance of SparseMatrixMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixMatMul<T> create(Scope scope, Operand<?> a, Operand<T> b, Options... options) {
+  public static <T extends Tensor> SparseMatrixMatMul<T> create(Scope scope, Operand<?> a, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixMatMul", scope.makeOpName("SparseMatrixMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

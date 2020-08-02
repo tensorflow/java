@@ -21,16 +21,20 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.FloatTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.tensor.FloatTensor;
+import org.tensorflow.types.family.TFloating;
 
-/** IEEE-754 single-precision 32-bit float tensor type. */
-public interface TFloat32 extends FloatNdArray, TNumber {
+/**
+ * IEEE-754 single-precision 32-bit float tensor type.
+ */
+public interface TFloat32 extends FloatTensor, TFloating {
 
   /** readable-name for the data type */
   static final String NAME = "FLOAT";
@@ -110,7 +114,7 @@ public interface TFloat32 extends FloatNdArray, TNumber {
 /**
  * Hidden implementation of a {@code TFloat32}
  */
-class TFloat32Impl extends FloatTensorImpl<TFloat32> implements TFloat32 {
+class TFloat32Impl extends FloatTensorImpl implements TFloat32 {
 
   TFloat32Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toFloats(nativeTensor));
