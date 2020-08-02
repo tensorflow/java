@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Ftrl-proximal scheme.
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T> {
+public final class ApplyFtrl<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyFtrl}
@@ -81,7 +81,7 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of ApplyFtrl
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
+  public static <T extends Tensor> ApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyFtrlV2", scope.makeOpName("ApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

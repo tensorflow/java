@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradients for SparseSegmentMean.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentMeanGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentMeanGrad operation.
@@ -51,7 +51,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
    * @return a new instance of SparseSegmentMeanGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanGrad", scope.makeOpName("SparseSegmentMeanGrad"));
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());

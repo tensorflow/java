@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA ConvGeneralDilated operator, documented at
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Conv<T extends TType> extends RawOp implements Operand<T> {
+public final class Conv<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Conv operation.
@@ -55,7 +55,7 @@ public final class Conv<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Conv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Conv<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation, Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers, String precisionConfig) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Conv<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation, Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers, String precisionConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaConv", scope.makeOpName("Conv"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());

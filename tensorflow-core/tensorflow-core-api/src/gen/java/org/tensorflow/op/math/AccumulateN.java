@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise sum of a list of tensors.
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code sum()} output
  */
 @Operator(group = "math")
-public final class AccumulateN<T extends TType> extends RawOp implements Operand<T> {
+public final class AccumulateN<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AccumulateN operation.
@@ -55,7 +55,7 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
    * @return a new instance of AccumulateN
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs, Shape shape) {
+  public static <T extends Tensor> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulateNV2", scope.makeOpName("AccumulateN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);

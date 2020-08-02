@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Sparse addition of two CSR matrices, C = alpha * A + beta * B.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * The gradients of SparseMatrixAdd outputs with respect to alpha and beta are not
  * currently defined (TensorFlow will return zeros for these entries).
  */
-public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
+public final class SparseMatrixAdd extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixAdd operation.
@@ -46,7 +46,7 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
    * @return a new instance of SparseMatrixAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixAdd create(Scope scope, Operand<?> a, Operand<?> b, Operand<T> alpha, Operand<T> beta) {
+  public static <T extends Tensor> SparseMatrixAdd create(Scope scope, Operand<?> a, Operand<?> b, Operand<T> alpha, Operand<T> beta) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixAdd", scope.makeOpName("SparseMatrixAdd"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -65,8 +65,8 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) c;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) c;
   }
   
   private Output<?> c;

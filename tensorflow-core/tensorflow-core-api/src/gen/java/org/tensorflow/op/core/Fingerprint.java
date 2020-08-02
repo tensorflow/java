@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generates fingerprint values.
@@ -74,7 +74,7 @@ public final class Fingerprint extends RawOp implements Operand<TUint8> {
    * @return a new instance of Fingerprint
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
+  public static <T extends Tensor> Fingerprint create(Scope scope, Operand<T> data, Operand<TString> method) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(method.asOutput());

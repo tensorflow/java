@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Debug NaN Value Counter Op.
@@ -97,7 +97,7 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
    * @return a new instance of DebugNanCount
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugNanCount create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> DebugNanCount create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNanCount", scope.makeOpName("DebugNanCount"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

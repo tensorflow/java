@@ -1,5 +1,5 @@
 package org.tensorflow.types.family;
 
-public interface TFloat {
+public interface TFloating extends TNumber {
 
 }

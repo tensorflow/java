@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts a SparseTensor to a (possibly batched) CSRSparseMatrix.
  */
-public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operand<TType> {
+public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseTensorToCSRSparseMatrix operation.
@@ -43,7 +43,7 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
    * @return a new instance of SparseTensorToCSRSparseMatrix
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
+  public static <T extends Tensor> SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorToCSRSparseMatrix", scope.makeOpName("SparseTensorToCSRSparseMatrix"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -61,8 +61,8 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) sparseMatrix;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) sparseMatrix;
   }
   
   private Output<?> sparseMatrix;

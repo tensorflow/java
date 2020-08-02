@@ -17,10 +17,10 @@ package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Container class for core methods which add or perform several operations
@@ -45,7 +45,7 @@ public abstract class Helpers {
      * @return a new instance of Variable
      */
     @Endpoint(name = "variable")
-    public static <T extends TType> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
+    public static <T extends Tensor> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
         Output<T> initOutput = init.asOutput();
         Variable<T> newVar = Variable.create(scope,initOutput.shape(), initOutput.dataType(), options);
         Assign<T> assignOp = Assign.create(scope, newVar, init);

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reduces sparse updates into a variable reference using the `max` operation.
@@ -57,7 +57,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class ScatterMax<T extends TNumber> extends RawOp implements Operand<T> {
+public final class ScatterMax<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.ScatterMax}
@@ -90,7 +90,7 @@ public final class ScatterMax<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of ScatterMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> ScatterMax<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> ScatterMax<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMax", scope.makeOpName("ScatterMax"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

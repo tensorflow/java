@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -28,7 +29,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts a `RaggedTensor` into a `SparseTensor` with the same values.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <U> data type for {@code sparseValues()} output
  */
-public final class RaggedTensorToSparse<U extends TType> extends RawOp {
+public final class RaggedTensorToSparse<U extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorToSparse operation.
@@ -50,7 +50,7 @@ public final class RaggedTensorToSparse<U extends TType> extends RawOp {
    * @return a new instance of RaggedTensorToSparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
+  public static <U extends Tensor, T extends Tensor & TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());

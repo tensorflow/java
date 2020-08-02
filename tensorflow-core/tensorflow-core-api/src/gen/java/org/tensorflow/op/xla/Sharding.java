@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * An op which shards the input based on the given sharding attribute.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Sharding<T extends TType> extends RawOp implements Operand<T> {
+public final class Sharding<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sharding operation.
@@ -43,7 +43,7 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of Sharding
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> Sharding<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSharding", scope.makeOpName("Sharding"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

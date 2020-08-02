@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op that passes through `input` when its output is not fed.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class PlaceholderWithDefault<T extends TType> extends RawOp implements Operand<T> {
+public final class PlaceholderWithDefault<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new PlaceholderWithDefault operation.
@@ -45,7 +45,7 @@ public final class PlaceholderWithDefault<T extends TType> extends RawOp impleme
    * @return a new instance of PlaceholderWithDefault
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends Tensor> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("PlaceholderWithDefault", scope.makeOpName("PlaceholderWithDefault"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

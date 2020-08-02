@@ -21,18 +21,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixSolve<T extends TNumber> extends RawOp implements Operand<T> {
+public final class BatchMatrixSolve<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolve}
@@ -63,7 +63,7 @@ public final class BatchMatrixSolve<T extends TNumber> extends RawOp implements 
    * @return a new instance of BatchMatrixSolve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  public static <T extends Tensor & TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolve", scope.makeOpName("BatchMatrixSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

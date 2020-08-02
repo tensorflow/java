@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the inverse permutation of a tensor.
@@ -50,7 +50,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class InvertPermutation<T extends TNumber> extends RawOp implements Operand<T> {
+public final class InvertPermutation<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InvertPermutation operation.
@@ -60,7 +60,7 @@ public final class InvertPermutation<T extends TNumber> extends RawOp implements
    * @return a new instance of InvertPermutation
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
+  public static <T extends Tensor & TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvertPermutation", scope.makeOpName("InvertPermutation"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

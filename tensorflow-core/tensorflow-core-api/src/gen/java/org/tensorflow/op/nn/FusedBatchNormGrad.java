@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Gradient for batch normalization.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code scaleBackprop()} output
  */
 @Operator(group = "nn")
-public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> extends RawOp {
+public final class FusedBatchNormGrad<T extends Tensor & TNumber, U extends Tensor & TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FusedBatchNormGrad}
@@ -103,7 +103,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
    * @return a new instance of FusedBatchNormGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());

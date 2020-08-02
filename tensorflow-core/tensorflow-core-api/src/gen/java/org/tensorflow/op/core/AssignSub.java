@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Update 'ref' by subtracting 'value' from it.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class AssignSub<T extends TType> extends RawOp implements Operand<T> {
+public final class AssignSub<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.AssignSub}
@@ -68,7 +68,7 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of AssignSub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
+  public static <T extends Tensor> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSub", scope.makeOpName("AssignSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());

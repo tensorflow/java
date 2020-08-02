@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Resize quantized `images` to `size` using quantized bilinear interpolation.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code resizedImages()} output
  */
 @Operator(group = "image")
-public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
+public final class QuantizedResizeBilinear<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.QuantizedResizeBilinear}
@@ -81,7 +81,7 @@ public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
    * @return a new instance of QuantizedResizeBilinear
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
+  public static <T extends Tensor> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());

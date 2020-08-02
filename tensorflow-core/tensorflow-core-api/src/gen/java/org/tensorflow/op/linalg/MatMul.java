@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Multiply the matrix "a" by the matrix "b".
@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code product()} output
  */
 @Operator(group = "linalg")
-public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
+public final class MatMul<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.MatMul}
@@ -81,7 +81,7 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of MatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> MatMul<T> create(Scope scope, Operand<T> a, Operand<T> b, Options... options) {
+  public static <T extends Tensor> MatMul<T> create(Scope scope, Operand<T> a, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatMul", scope.makeOpName("MatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

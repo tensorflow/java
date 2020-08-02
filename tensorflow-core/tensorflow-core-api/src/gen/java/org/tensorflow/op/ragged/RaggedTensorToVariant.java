@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Encodes a `RaggedTensor` into a `variant` Tensor.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * corresponding decoding logic.
  * 
  */
-public final class RaggedTensorToVariant extends RawOp implements Operand<TType> {
+public final class RaggedTensorToVariant extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorToVariant operation.
@@ -58,7 +58,7 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
    * @return a new instance of RaggedTensorToVariant
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
+  public static <T extends Tensor & TNumber, U extends Tensor> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());
@@ -76,8 +76,8 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) encodedRagged;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) encodedRagged;
   }
   
   private Output<?> encodedRagged;

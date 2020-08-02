@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts a tensor to a scalar predicate.
@@ -54,7 +54,7 @@ public final class ToBool extends RawOp implements Operand<TBool> {
    * @return a new instance of ToBool
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ToBool create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> ToBool create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("ToBool", scope.makeOpName("ToBool"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

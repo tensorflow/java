@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code diagonal()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements Operand<T> {
+public final class BatchMatrixDiagPart<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchMatrixDiagPart operation.
@@ -41,7 +41,7 @@ public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements
    * @return a new instance of BatchMatrixDiagPart
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiagPart", scope.makeOpName("BatchMatrixDiagPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

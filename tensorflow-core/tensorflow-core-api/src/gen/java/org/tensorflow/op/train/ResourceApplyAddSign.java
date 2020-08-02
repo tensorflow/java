@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AddSign update.
@@ -72,7 +72,7 @@ public final class ResourceApplyAddSign extends RawOp {
    * @return a new instance of ResourceApplyAddSign
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAddSign create(Scope scope, Operand<?> var, Operand<?> m, Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
+  public static <T extends Tensor> ResourceApplyAddSign create(Scope scope, Operand<?> var, Operand<?> m, Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAddSign", scope.makeOpName("ResourceApplyAddSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

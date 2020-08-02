@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * DepthToSpace for tensors of type T.
@@ -113,7 +113,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthToSpace<T extends TType> extends RawOp implements Operand<T> {
+public final class DepthToSpace<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthToSpace}
@@ -144,7 +144,7 @@ public final class DepthToSpace<T extends TType> extends RawOp implements Operan
    * @return a new instance of DepthToSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DepthToSpace<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
+  public static <T extends Tensor> DepthToSpace<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthToSpace", scope.makeOpName("DepthToSpace"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

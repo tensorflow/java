@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return a tensor with the same shape and contents as the input tensor or value.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Identity<T extends TType> extends RawOp implements Operand<T> {
+public final class Identity<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Identity operation.
@@ -43,7 +43,7 @@ public final class Identity<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of Identity
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends Tensor> Identity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

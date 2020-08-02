@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes log softmax activations.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code logsoftmax()} output
  */
 @Operator(group = "nn")
-public final class LogSoftmax<T extends TNumber> extends RawOp implements Operand<T> {
+public final class LogSoftmax<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new LogSoftmax operation.
@@ -48,7 +48,7 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of LogSoftmax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
+  public static <T extends Tensor & TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
     opBuilder.addInput(logits.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

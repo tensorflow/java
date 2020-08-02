@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Removes keys and its associated values from a table.
@@ -43,7 +43,7 @@ public final class LookupTableRemove extends RawOp {
    * @return a new instance of LookupTableRemove
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
+  public static <T extends Tensor> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

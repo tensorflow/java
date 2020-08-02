@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a tensor has been initialized.
@@ -44,7 +44,7 @@ public final class IsVariableInitialized extends RawOp implements Operand<TBool>
    * @return a new instance of IsVariableInitialized
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> IsVariableInitialized create(Scope scope, Operand<T> ref) {
+  public static <T extends Tensor> IsVariableInitialized create(Scope scope, Operand<T> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

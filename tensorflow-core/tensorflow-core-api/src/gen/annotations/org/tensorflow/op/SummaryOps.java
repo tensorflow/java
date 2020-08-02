@@ -18,6 +18,7 @@
 package org.tensorflow.op;
 
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.summary.AudioSummary;
 import org.tensorflow.op.summary.HistogramSummary;
 import org.tensorflow.op.summary.ImageSummary;
@@ -27,7 +28,6 @@ import org.tensorflow.op.summary.TensorSummary;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code summary} operations as {@link Op Op}s
@@ -83,7 +83,7 @@ public final class SummaryOps {
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
-  public <T extends TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
+  public <T extends Tensor & TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
       Operand<T> values) {
     return HistogramSummary.create(scope, tag, values);
   }
@@ -144,8 +144,8 @@ public final class SummaryOps {
    * @param options carries optional attributes values
    * @return a new instance of ImageSummary
    */
-  public <T extends TNumber> ImageSummary imageSummary(Operand<TString> tag, Operand<T> tensor,
-      ImageSummary.Options... options) {
+  public <T extends Tensor & TNumber> ImageSummary imageSummary(Operand<TString> tag,
+      Operand<T> tensor, ImageSummary.Options... options) {
     return ImageSummary.create(scope, tag, tensor, options);
   }
 
@@ -178,7 +178,8 @@ public final class SummaryOps {
    * @param values Same shape as `tags.  Values for the summary.
    * @return a new instance of ScalarSummary
    */
-  public <T extends TNumber> ScalarSummary scalarSummary(Operand<TString> tags, Operand<T> values) {
+  public <T extends Tensor & TNumber> ScalarSummary scalarSummary(Operand<TString> tags,
+      Operand<T> values) {
     return ScalarSummary.create(scope, tags, values);
   }
 
@@ -191,7 +192,7 @@ public final class SummaryOps {
    *  data.
    * @return a new instance of TensorSummary
    */
-  public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
+  public <T extends Tensor> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
       Operand<TString> serializedSummaryMetadata) {
     return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
   }

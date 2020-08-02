@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns immutable tensor from memory region.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator
-public final class ImmutableConst<T extends TType> extends RawOp implements Operand<T> {
+public final class ImmutableConst<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ImmutableConst operation.
@@ -50,7 +50,7 @@ public final class ImmutableConst<T extends TType> extends RawOp implements Oper
    * @return a new instance of ImmutableConst
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ImmutableConst<T> create(Scope scope, DataType<T> dtype, Shape shape, String memoryRegionName) {
+  public static <T extends Tensor> ImmutableConst<T> create(Scope scope, DataType<T> dtype, Shape shape, String memoryRegionName) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImmutableConst", scope.makeOpName("ImmutableConst"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

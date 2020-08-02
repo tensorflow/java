@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * A queue that randomizes the order of elements.
  */
 @Operator(group = "io")
-public final class RandomShuffleQueue extends RawOp implements Operand<TType> {
+public final class RandomShuffleQueue extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.RandomShuffleQueue}
@@ -234,8 +234,8 @@ public final class RandomShuffleQueue extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) handle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) handle;
   }
   
   private Output<?> handle;

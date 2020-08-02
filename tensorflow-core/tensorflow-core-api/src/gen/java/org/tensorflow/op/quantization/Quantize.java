@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Quantize the 'input' tensor of type float to 'output' tensor of type 'T'.
@@ -145,7 +145,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class Quantize<T extends TType> extends RawOp {
+public final class Quantize<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Quantize}
@@ -220,7 +220,7 @@ public final class Quantize<T extends TType> extends RawOp {
    * @return a new instance of Quantize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
+  public static <T extends Tensor> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());

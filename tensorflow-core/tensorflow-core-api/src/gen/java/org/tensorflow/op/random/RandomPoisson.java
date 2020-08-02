@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from the Poisson distribution(s) described by rate.
@@ -46,7 +46,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomPoisson<V extends TNumber> extends RawOp implements Operand<V> {
+public final class RandomPoisson<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomPoisson}
@@ -91,7 +91,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
    * @return a new instance of RandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, DataType<V> dtype, Options... options) {
+  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> RandomPoisson<V> create(Scope scope, Operand<T> shape, Operand<U> rate, DataType<V> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(rate.asOutput());
@@ -122,7 +122,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
    * @return a new instance of RandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> RandomPoisson<TInt64> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> RandomPoisson<TInt64> create(Scope scope, Operand<T> shape, Operand<U> rate, Options... options) {
     return create(scope, shape, rate, TInt64.DTYPE, options);
   }
   

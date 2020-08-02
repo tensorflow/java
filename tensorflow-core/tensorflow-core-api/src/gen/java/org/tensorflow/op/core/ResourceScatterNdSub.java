@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse subtraction to individual values or slices in a Variable.
@@ -97,7 +97,7 @@ public final class ResourceScatterNdSub extends RawOp {
    * @return a new instance of ResourceScatterNdSub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> ResourceScatterNdSub create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor> ResourceScatterNdSub create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdSub", scope.makeOpName("ResourceScatterNdSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

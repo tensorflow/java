@@ -23,7 +23,7 @@ import org.tensorflow.ndarray.Shape;
 public class TUint8Test extends NumericTypesTestBase<TUint8, Byte> {
 
   @Override
-  Tensor<TUint8> allocateTensor(Shape shape) {
+  TUint8 allocateTensor(Shape shape) {
     return TUint8.tensorOf(shape);
   }
 

@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.sparse.AddManySparseToTensorsMap;
 import org.tensorflow.op.sparse.AddSparseToTensorsMap;
@@ -67,7 +68,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code sparse} operations as {@link Op Op}s
@@ -114,7 +114,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of AddManySparseToTensorsMap
    */
-  public <T extends TType> AddManySparseToTensorsMap addManySparseToTensorsMap(
+  public <T extends Tensor> AddManySparseToTensorsMap addManySparseToTensorsMap(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
       AddManySparseToTensorsMap.Options... options) {
     return AddManySparseToTensorsMap.create(scope, sparseIndices, sparseValues, sparseShape, options);
@@ -144,7 +144,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of AddSparseToTensorsMap
    */
-  public <T extends TType> AddSparseToTensorsMap addSparseToTensorsMap(
+  public <T extends Tensor> AddSparseToTensorsMap addSparseToTensorsMap(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
       AddSparseToTensorsMap.Options... options) {
     return AddSparseToTensorsMap.create(scope, sparseIndices, sparseValues, sparseShape, options);
@@ -170,7 +170,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of DenseToDenseSetOperation
    */
-  public <T extends TType> DenseToDenseSetOperation<T> denseToDenseSetOperation(Operand<T> set1,
+  public <T extends Tensor> DenseToDenseSetOperation<T> denseToDenseSetOperation(Operand<T> set1,
       Operand<T> set2, String setOperation, DenseToDenseSetOperation.Options... options) {
     return DenseToDenseSetOperation.create(scope, set1, set2, setOperation, options);
   }
@@ -208,7 +208,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of DenseToSparseSetOperation
    */
-  public <T extends TType> DenseToSparseSetOperation<T> denseToSparseSetOperation(Operand<T> set1,
+  public <T extends Tensor> DenseToSparseSetOperation<T> denseToSparseSetOperation(Operand<T> set1,
       Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape,
       String setOperation, DenseToSparseSetOperation.Options... options) {
     return DenseToSparseSetOperation.create(scope, set1, set2Indices, set2Values, set2Shape, setOperation, options);
@@ -265,7 +265,7 @@ public final class SparseOps {
    * @param dtype The `dtype` of the serialized `SparseTensor` objects.
    * @return a new instance of DeserializeSparse
    */
-  public <U extends TType, T extends TType> DeserializeSparse<U> deserializeSparse(
+  public <U extends Tensor, T extends Tensor> DeserializeSparse<U> deserializeSparse(
       Operand<T> serializedSparse, DataType<U> dtype) {
     return DeserializeSparse.create(scope, serializedSparse, dtype);
   }
@@ -288,7 +288,7 @@ public final class SparseOps {
    *  case the input is ignored during validation.
    * @return a new instance of SparseAccumulatorApplyGradient
    */
-  public <T extends TType> SparseAccumulatorApplyGradient sparseAccumulatorApplyGradient(
+  public <T extends Tensor> SparseAccumulatorApplyGradient sparseAccumulatorApplyGradient(
       Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices,
       Operand<T> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
     return SparseAccumulatorApplyGradient.create(scope, handle, localStep, gradientIndices, gradientValues, gradientShape, hasKnownShape);
@@ -311,7 +311,7 @@ public final class SparseOps {
    *  of the accumulator.
    * @return a new instance of SparseAccumulatorTakeGradient
    */
-  public <T extends TType> SparseAccumulatorTakeGradient<T> sparseAccumulatorTakeGradient(
+  public <T extends Tensor> SparseAccumulatorTakeGradient<T> sparseAccumulatorTakeGradient(
       Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     return SparseAccumulatorTakeGradient.create(scope, handle, numRequired, dtype);
   }
@@ -344,9 +344,9 @@ public final class SparseOps {
    *  pair takes space.
    * @return a new instance of SparseAdd
    */
-  public <T extends TType, U extends TNumber> SparseAdd<T> sparseAdd(Operand<TInt64> aIndices,
-      Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues,
-      Operand<TInt64> bShape, Operand<U> thresh) {
+  public <T extends Tensor, U extends Tensor & TNumber> SparseAdd<T> sparseAdd(
+      Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape,
+      Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
     return SparseAdd.create(scope, aIndices, aValues, aShape, bIndices, bValues, bShape, thresh);
   }
 
@@ -367,7 +367,7 @@ public final class SparseOps {
    *  `[nnz(sum), ndims]`.
    * @return a new instance of SparseAddGrad
    */
-  public <T extends TType> SparseAddGrad<T> sparseAddGrad(Operand<T> backpropValGrad,
+  public <T extends Tensor> SparseAddGrad<T> sparseAddGrad(Operand<T> backpropValGrad,
       Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
     return SparseAddGrad.create(scope, backpropValGrad, aIndices, bIndices, sumIndices);
   }
@@ -425,7 +425,7 @@ public final class SparseOps {
    *  where rank is the number of dimensions in each input `SparseTensor`.
    * @return a new instance of SparseConcat
    */
-  public <T extends TType> SparseConcat<T> sparseConcat(Iterable<Operand<TInt64>> indices,
+  public <T extends Tensor> SparseConcat<T> sparseConcat(Iterable<Operand<TInt64>> indices,
       Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
     return SparseConcat.create(scope, indices, values, shapes, concatDim);
   }
@@ -445,7 +445,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseConditionalAccumulator
    */
-  public <T extends TType> SparseConditionalAccumulator sparseConditionalAccumulator(
+  public <T extends Tensor> SparseConditionalAccumulator sparseConditionalAccumulator(
       DataType<T> dtype, Shape shape, SparseConditionalAccumulator.Options... options) {
     return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
@@ -505,7 +505,7 @@ public final class SparseOps {
    * @param internalType
    * @return a new instance of SparseCross
    */
-  public <T extends TType, U extends TType> SparseCross<T> sparseCross(
+  public <T extends Tensor, U extends Tensor> SparseCross<T> sparseCross(
       Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values,
       Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput,
       Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
@@ -532,7 +532,7 @@ public final class SparseOps {
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseAdd
    */
-  public <T extends TType> SparseDenseCwiseAdd<T> sparseDenseCwiseAdd(Operand<TInt64> spIndices,
+  public <T extends Tensor> SparseDenseCwiseAdd<T> sparseDenseCwiseAdd(Operand<TInt64> spIndices,
       Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     return SparseDenseCwiseAdd.create(scope, spIndices, spValues, spShape, dense);
   }
@@ -551,7 +551,7 @@ public final class SparseOps {
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseDiv
    */
-  public <T extends TType> SparseDenseCwiseDiv<T> sparseDenseCwiseDiv(Operand<TInt64> spIndices,
+  public <T extends Tensor> SparseDenseCwiseDiv<T> sparseDenseCwiseDiv(Operand<TInt64> spIndices,
       Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     return SparseDenseCwiseDiv.create(scope, spIndices, spValues, spShape, dense);
   }
@@ -574,7 +574,7 @@ public final class SparseOps {
    * @param dense `R`-D.  The dense Tensor operand.
    * @return a new instance of SparseDenseCwiseMul
    */
-  public <T extends TType> SparseDenseCwiseMul<T> sparseDenseCwiseMul(Operand<TInt64> spIndices,
+  public <T extends Tensor> SparseDenseCwiseMul<T> sparseDenseCwiseMul(Operand<TInt64> spIndices,
       Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     return SparseDenseCwiseMul.create(scope, spIndices, spValues, spShape, dense);
   }
@@ -628,7 +628,7 @@ public final class SparseOps {
    *  output indices: 2-D. the indices of the filled sparse tensor.
    * @return a new instance of SparseFillEmptyRows
    */
-  public <T extends TType> SparseFillEmptyRows<T> sparseFillEmptyRows(Operand<TInt64> indices,
+  public <T extends Tensor> SparseFillEmptyRows<T> sparseFillEmptyRows(Operand<TInt64> indices,
       Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     return SparseFillEmptyRows.create(scope, indices, values, denseShape, defaultValue);
   }
@@ -650,7 +650,7 @@ public final class SparseOps {
    * @param gradValues 1-D.  The gradients from backprop.
    * @return a new instance of SparseFillEmptyRowsGrad
    */
-  public <T extends TType> SparseFillEmptyRowsGrad<T> sparseFillEmptyRowsGrad(
+  public <T extends Tensor> SparseFillEmptyRowsGrad<T> sparseFillEmptyRowsGrad(
       Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
     return SparseFillEmptyRowsGrad.create(scope, reverseIndexMap, gradValues);
   }
@@ -673,8 +673,8 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseMatMul
    */
-  public <T extends TNumber, U extends TNumber> SparseMatMul sparseMatMul(Operand<T> a,
-      Operand<U> b, SparseMatMul.Options... options) {
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseMatMul sparseMatMul(
+      Operand<T> a, Operand<U> b, SparseMatMul.Options... options) {
     return SparseMatMul.create(scope, a, b, options);
   }
 
@@ -703,9 +703,9 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceMax
    */
-  public <T extends TNumber> SparseReduceMax<T> sparseReduceMax(Operand<TInt64> inputIndices,
-      Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes,
-      SparseReduceMax.Options... options) {
+  public <T extends Tensor & TNumber> SparseReduceMax<T> sparseReduceMax(
+      Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
+      Operand<TInt32> reductionAxes, SparseReduceMax.Options... options) {
     return SparseReduceMax.create(scope, inputIndices, inputValues, inputShape, reductionAxes, options);
   }
 
@@ -734,7 +734,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceMaxSparse
    */
-  public <T extends TNumber> SparseReduceMaxSparse<T> sparseReduceMaxSparse(
+  public <T extends Tensor & TNumber> SparseReduceMaxSparse<T> sparseReduceMaxSparse(
       Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
       Operand<TInt32> reductionAxes, SparseReduceMaxSparse.Options... options) {
     return SparseReduceMaxSparse.create(scope, inputIndices, inputValues, inputShape, reductionAxes, options);
@@ -765,7 +765,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceSum
    */
-  public <T extends TType> SparseReduceSum<T> sparseReduceSum(Operand<TInt64> inputIndices,
+  public <T extends Tensor> SparseReduceSum<T> sparseReduceSum(Operand<TInt64> inputIndices,
       Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes,
       SparseReduceSum.Options... options) {
     return SparseReduceSum.create(scope, inputIndices, inputValues, inputShape, reductionAxes, options);
@@ -796,7 +796,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseReduceSumSparse
    */
-  public <T extends TType> SparseReduceSumSparse<T> sparseReduceSumSparse(
+  public <T extends Tensor> SparseReduceSumSparse<T> sparseReduceSumSparse(
       Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
       Operand<TInt32> reductionAxes, SparseReduceSumSparse.Options... options) {
     return SparseReduceSumSparse.create(scope, inputIndices, inputValues, inputShape, reductionAxes, options);
@@ -821,7 +821,7 @@ public final class SparseOps {
    * @param inputShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseReorder
    */
-  public <T extends TType> SparseReorder<T> sparseReorder(Operand<TInt64> inputIndices,
+  public <T extends Tensor> SparseReorder<T> sparseReorder(Operand<TInt64> inputIndices,
       Operand<T> inputValues, Operand<TInt64> inputShape) {
     return SparseReorder.create(scope, inputIndices, inputValues, inputShape);
   }
@@ -870,7 +870,7 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentMean
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMean<T> sparseSegmentMean(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentMean<T> sparseSegmentMean(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     return SparseSegmentMean.create(scope, data, indices, segmentIds);
   }
@@ -888,7 +888,7 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentMean op.
    * @return a new instance of SparseSegmentMeanGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
       Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentMeanGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
@@ -910,7 +910,7 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     return SparseSegmentMeanWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
@@ -928,7 +928,7 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSqrtN
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     return SparseSegmentSqrtN.create(scope, data, indices, segmentIds);
   }
@@ -946,7 +946,7 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentSqrtN op.
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
       Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
@@ -970,7 +970,7 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     return SparseSegmentSqrtNWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
@@ -1013,7 +1013,7 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSum
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSum<T> sparseSegmentSum(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSum<T> sparseSegmentSum(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     return SparseSegmentSum.create(scope, data, indices, segmentIds);
   }
@@ -1055,7 +1055,7 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSumWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
+  public <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
       Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     return SparseSegmentSumWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
@@ -1089,7 +1089,7 @@ public final class SparseOps {
    *  sparse tensors.
    * @return a new instance of SparseSlice
    */
-  public <T extends TType> SparseSlice<T> sparseSlice(Operand<TInt64> indices, Operand<T> values,
+  public <T extends Tensor> SparseSlice<T> sparseSlice(Operand<TInt64> indices, Operand<T> values,
       Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> size) {
     return SparseSlice.create(scope, indices, values, shape, start, size);
   }
@@ -1109,7 +1109,7 @@ public final class SparseOps {
    * @param outputIndices 2-D.  The `indices` of the sliced `SparseTensor`.
    * @return a new instance of SparseSliceGrad
    */
-  public <T extends TType> SparseSliceGrad<T> sparseSliceGrad(Operand<T> backpropValGrad,
+  public <T extends Tensor> SparseSliceGrad<T> sparseSliceGrad(Operand<T> backpropValGrad,
       Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
     return SparseSliceGrad.create(scope, backpropValGrad, inputIndices, inputStart, outputIndices);
   }
@@ -1140,7 +1140,7 @@ public final class SparseOps {
    * @param spShape 1-D.  Shape of the input SparseTensor.
    * @return a new instance of SparseSoftmax
    */
-  public <T extends TNumber> SparseSoftmax<T> sparseSoftmax(Operand<TInt64> spIndices,
+  public <T extends Tensor & TNumber> SparseSoftmax<T> sparseSoftmax(Operand<TInt64> spIndices,
       Operand<T> spValues, Operand<TInt64> spShape) {
     return SparseSoftmax.create(scope, spIndices, spValues, spShape);
   }
@@ -1160,9 +1160,9 @@ public final class SparseOps {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMaximum
    */
-  public <T extends TNumber> SparseSparseMaximum<T> sparseSparseMaximum(Operand<TInt64> aIndices,
-      Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues,
-      Operand<TInt64> bShape) {
+  public <T extends Tensor & TNumber> SparseSparseMaximum<T> sparseSparseMaximum(
+      Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape,
+      Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     return SparseSparseMaximum.create(scope, aIndices, aValues, aShape, bIndices, bValues, bShape);
   }
 
@@ -1181,7 +1181,7 @@ public final class SparseOps {
    * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
    * @return a new instance of SparseSparseMinimum
    */
-  public <T extends TType> SparseSparseMinimum<T> sparseSparseMinimum(Operand<TInt64> aIndices,
+  public <T extends Tensor> SparseSparseMinimum<T> sparseSparseMinimum(Operand<TInt64> aIndices,
       Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues,
       Operand<TInt64> bShape) {
     return SparseSparseMinimum.create(scope, aIndices, aValues, aShape, bIndices, bValues, bShape);
@@ -1219,7 +1219,7 @@ public final class SparseOps {
    * @param numSplit The number of ways to split.
    * @return a new instance of SparseSplit
    */
-  public <T extends TType> SparseSplit<T> sparseSplit(Operand<TInt64> splitDim,
+  public <T extends Tensor> SparseSplit<T> sparseSplit(Operand<TInt64> splitDim,
       Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
     return SparseSplit.create(scope, splitDim, indices, values, shape, numSplit);
   }
@@ -1236,7 +1236,7 @@ public final class SparseOps {
    * @param b `ndims`-D Tensor.  With shape `a_shape`.
    * @return a new instance of SparseTensorDenseAdd
    */
-  public <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> sparseTensorDenseAdd(
+  public <U extends Tensor, T extends Tensor & TNumber> SparseTensorDenseAdd<U> sparseTensorDenseAdd(
       Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     return SparseTensorDenseAdd.create(scope, aIndices, aValues, aShape, b);
   }
@@ -1262,7 +1262,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseTensorDenseMatMul
    */
-  public <U extends TType, T extends TNumber> SparseTensorDenseMatMul<U> sparseTensorDenseMatMul(
+  public <U extends Tensor, T extends Tensor & TNumber> SparseTensorDenseMatMul<U> sparseTensorDenseMatMul(
       Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b,
       SparseTensorDenseMatMul.Options... options) {
     return SparseTensorDenseMatMul.create(scope, aIndices, aValues, aShape, b, options);
@@ -1300,7 +1300,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseToDense
    */
-  public <U extends TType, T extends TNumber> SparseToDense<U> sparseToDense(
+  public <U extends Tensor, T extends Tensor & TNumber> SparseToDense<U> sparseToDense(
       Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues,
       Operand<U> defaultValue, SparseToDense.Options... options) {
     return SparseToDense.create(scope, sparseIndices, outputShape, sparseValues, defaultValue, options);
@@ -1352,7 +1352,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseToSparseSetOperation
    */
-  public <T extends TType> SparseToSparseSetOperation<T> sparseToSparseSetOperation(
+  public <T extends Tensor> SparseToSparseSetOperation<T> sparseToSparseSetOperation(
       Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape,
       Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape,
       String setOperation, SparseToSparseSetOperation.Options... options) {
@@ -1414,7 +1414,7 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of TakeManySparseFromTensorsMap
    */
-  public <T extends TType> TakeManySparseFromTensorsMap<T> takeManySparseFromTensorsMap(
+  public <T extends Tensor> TakeManySparseFromTensorsMap<T> takeManySparseFromTensorsMap(
       Operand<TInt64> sparseHandles, DataType<T> dtype,
       TakeManySparseFromTensorsMap.Options... options) {
     return TakeManySparseFromTensorsMap.create(scope, sparseHandles, dtype, options);

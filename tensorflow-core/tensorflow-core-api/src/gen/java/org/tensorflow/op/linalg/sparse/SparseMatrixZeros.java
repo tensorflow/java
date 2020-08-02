@@ -22,17 +22,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates an all-zeros CSRSparseMatrix with shape `dense_shape`.
  */
-public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
+public final class SparseMatrixZeros extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixZeros operation.
@@ -43,7 +43,7 @@ public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
    * @return a new instance of SparseMatrixZeros
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, DataType<T> type) {
+  public static <T extends Tensor> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixZeros", scope.makeOpName("SparseMatrixZeros"));
     opBuilder.addInput(denseShape.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -60,8 +60,8 @@ public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) sparseMatrix;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) sparseMatrix;
   }
   
   private Output<?> sparseMatrix;

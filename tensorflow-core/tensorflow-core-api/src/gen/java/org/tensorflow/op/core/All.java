@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the "logical and" of elements across dimensions of a tensor.
@@ -70,7 +70,7 @@ public final class All extends RawOp implements Operand<TBool> {
    * @return a new instance of All
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> All create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
+  public static <T extends Tensor & TNumber> All create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("All"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

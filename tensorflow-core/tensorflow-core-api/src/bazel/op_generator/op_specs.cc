@@ -87,7 +87,7 @@ class TypeResolver {
       next_generic_letter_ = 'A';
     }
     return Type::Generic(string(1, generic_letter))
-        .add_supertype(Type::Class("TType", "org.tensorflow.types.family"));
+        .add_supertype(Type::Interface("Tensor", "org.tensorflow"));
   }
 };
 
@@ -158,7 +158,7 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
   } else if (attr_type == "type") {
     Type type = *iterable_out ? Type::Wildcard() : NextGeneric();
     if (IsRealNumbers(attr_def.allowed_values())) {
-      type.add_supertype(Type::Class("TNumber", "org.tensorflow.types.family"));
+      type.add_supertype(Type::Interface("TNumber", "org.tensorflow.types.family"));
     }
     types = MakeTypePair(type, Type::Enum("DataType", "org.tensorflow"));
 

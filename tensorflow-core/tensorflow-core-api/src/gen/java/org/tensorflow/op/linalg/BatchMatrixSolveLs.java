@@ -21,19 +21,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implements Operand<T> {
+public final class BatchMatrixSolveLs<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolveLs}
@@ -65,7 +65,7 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implement
    * @return a new instance of BatchMatrixSolveLs
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
+  public static <T extends Tensor & TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolveLs", scope.makeOpName("BatchMatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

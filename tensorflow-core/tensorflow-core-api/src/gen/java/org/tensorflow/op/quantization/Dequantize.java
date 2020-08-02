@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Dequantize the 'input' tensor into a float or bfloat16 Tensor.
@@ -85,7 +85,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class Dequantize<U extends TNumber> extends RawOp implements Operand<U> {
+public final class Dequantize<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
@@ -137,7 +137,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of Dequantize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Dequantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype, Options... options) {
+  public static <U extends Tensor & TNumber, T extends Tensor> Dequantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
@@ -171,7 +171,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of Dequantize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Dequantize<TFloat32> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
+  public static <T extends Tensor> Dequantize<TFloat32> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
     return create(scope, input, minRange, maxRange, TFloat32.DTYPE, options);
   }
   

@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Debug Numeric Summary V2 Op.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class DebugNumericsSummary<U extends TNumber> extends RawOp implements Operand<U> {
+public final class DebugNumericsSummary<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.debugging.DebugNumericsSummary}
@@ -132,7 +132,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    * @return a new instance of DebugNumericsSummary
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, DataType<U> outputDtype, Options... options) {
+  public static <U extends Tensor & TNumber, T extends Tensor> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, DataType<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummaryV2", scope.makeOpName("DebugNumericsSummary"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -159,7 +159,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    * @return a new instance of DebugNumericsSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugNumericsSummary<TFloat32> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> DebugNumericsSummary<TFloat32> create(Scope scope, Operand<T> input, Options... options) {
     return create(scope, input, TFloat32.DTYPE, options);
   }
   

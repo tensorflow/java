@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes exponential linear: `exp(features) - 1` if < 0, `features` otherwise.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Elu<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Elu<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Elu operation.
@@ -47,7 +47,7 @@ public final class Elu<T extends TNumber> extends RawOp implements Operand<T> {
    * @return a new instance of Elu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Elu<T> create(Scope scope, Operand<T> features) {
+  public static <T extends Tensor & TNumber> Elu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Elu", scope.makeOpName("Elu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

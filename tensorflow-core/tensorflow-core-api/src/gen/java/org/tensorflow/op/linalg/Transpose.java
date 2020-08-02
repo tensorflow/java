@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Shuffle dimensions of x according to a permutation.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "linalg")
-public final class Transpose<T extends TType> extends RawOp implements Operand<T> {
+public final class Transpose<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Transpose operation.
@@ -48,7 +48,7 @@ public final class Transpose<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of Transpose
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Transpose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
+  public static <T extends Tensor, U extends Tensor & TNumber> Transpose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());

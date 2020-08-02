@@ -15,7 +15,7 @@
  *  =======================================================================
  */
 
-package org.tensorflow.internal.buffer;
+package org.tensorflow.internal.tensor.buffer;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorData;

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * An op which supports basic einsum op with 2 inputs and 1 output.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code product()} output
  */
 @Operator(group = "xla")
-public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
+public final class Einsum<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Einsum operation.
@@ -48,7 +48,7 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Einsum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Einsum<T> create(Scope scope, Operand<T> a, Operand<T> b, String equation) {
+  public static <T extends Tensor> Einsum<T> create(Scope scope, Operand<T> a, Operand<T> b, String equation) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaEinsum", scope.makeOpName("Einsum"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

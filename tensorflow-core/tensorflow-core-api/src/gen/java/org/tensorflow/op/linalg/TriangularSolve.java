@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Solves systems of linear equations with upper or lower triangular matrices by backsubstitution.
@@ -80,7 +80,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class TriangularSolve<T extends TType> extends RawOp implements Operand<T> {
+public final class TriangularSolve<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.TriangularSolve}
@@ -126,7 +126,7 @@ public final class TriangularSolve<T extends TType> extends RawOp implements Ope
    * @return a new instance of TriangularSolve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  public static <T extends Tensor> TriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixTriangularSolve", scope.makeOpName("TriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());

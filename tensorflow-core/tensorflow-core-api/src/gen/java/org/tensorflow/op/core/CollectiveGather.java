@@ -21,20 +21,20 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Mutually accumulates multiple tensors of identical type and shape.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CollectiveGather<T extends TNumber> extends RawOp implements Operand<T> {
+public final class CollectiveGather<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.CollectiveGather}
@@ -68,7 +68,7 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
    * @return a new instance of CollectiveGather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
+  public static <T extends Tensor & TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGather", scope.makeOpName("CollectiveGather"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes element-wise population count (a.k.a. popcount, bitsum, bitcount).
@@ -50,7 +50,7 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
    * @return a new instance of PopulationCount
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
+  public static <T extends Tensor & TNumber> PopulationCount create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

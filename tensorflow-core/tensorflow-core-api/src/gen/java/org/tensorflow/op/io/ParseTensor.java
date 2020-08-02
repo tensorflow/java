@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "io")
-public final class ParseTensor<T extends TType> extends RawOp implements Operand<T> {
+public final class ParseTensor<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ParseTensor operation.
@@ -47,7 +47,7 @@ public final class ParseTensor<T extends TType> extends RawOp implements Operand
    * @return a new instance of ParseTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ParseTensor<T> create(Scope scope, Operand<TString> serialized, DataType<T> outType) {
+  public static <T extends Tensor> ParseTensor<T> create(Scope scope, Operand<TString> serialized, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseTensor", scope.makeOpName("ParseTensor"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

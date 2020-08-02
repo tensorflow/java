@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Multiply matrix "a" by matrix "b".
@@ -101,7 +101,7 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
    * @return a new instance of SparseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

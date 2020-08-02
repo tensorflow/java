@@ -25,13 +25,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Op removes and returns the values associated with the key
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TType;
  * does not contain this key, the op will block until it does.
  */
 @Operator
-public final class MapUnstage extends RawOp implements Iterable<Operand<TType>> {
+public final class MapUnstage extends RawOp implements Iterable<Operand<Tensor>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MapUnstage}
@@ -164,7 +164,7 @@ public final class MapUnstage extends RawOp implements Iterable<Operand<TType>> 
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
+  public Iterator<Operand<Tensor>> iterator() {
     return (Iterator) values.iterator();
   }
   

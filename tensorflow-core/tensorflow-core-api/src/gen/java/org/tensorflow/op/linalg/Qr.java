@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the QR decompositions of one or more matrices.
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code q()} output
  */
 @Operator(group = "linalg")
-public final class Qr<T extends TType> extends RawOp {
+public final class Qr<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.Qr}
@@ -76,7 +76,7 @@ public final class Qr<T extends TType> extends RawOp {
    * @return a new instance of Qr
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Qr<T> create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> Qr<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Qr", scope.makeOpName("Qr"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Component-wise divides a SparseTensor by a dense Tensor.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseDenseCwiseDiv<T extends TType> extends RawOp implements Operand<T> {
+public final class SparseDenseCwiseDiv<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseDenseCwiseDiv operation.
@@ -51,7 +51,7 @@ public final class SparseDenseCwiseDiv<T extends TType> extends RawOp implements
    * @return a new instance of SparseDenseCwiseDiv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseDenseCwiseDiv<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
+  public static <T extends Tensor> SparseDenseCwiseDiv<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseDiv", scope.makeOpName("SparseDenseCwiseDiv"));
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());

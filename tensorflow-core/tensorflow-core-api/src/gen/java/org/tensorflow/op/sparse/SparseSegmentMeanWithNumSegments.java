@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the mean along sparse segments of a tensor.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentMeanWithNumSegments<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentMeanWithNumSegments operation.
@@ -55,7 +55,7 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> SparseSegmentMeanWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanWithNumSegments", scope.makeOpName("SparseSegmentMeanWithNumSegments"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());

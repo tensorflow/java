@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generates a MultiDeviceIterator resource from its provided string handle.
  */
-public final class MultiDeviceIteratorFromStringHandle extends RawOp implements Operand<TType> {
+public final class MultiDeviceIteratorFromStringHandle extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle}
@@ -104,8 +104,8 @@ public final class MultiDeviceIteratorFromStringHandle extends RawOp implements 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) multiDeviceIterator;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) multiDeviceIterator;
   }
   
   private Output<?> multiDeviceIterator;

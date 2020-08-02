@@ -1,19 +1,16 @@
-package org.tensorflow.types;
+package org.tensorflow.internal.tensor;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
 
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.DataType;
-import org.tensorflow.Tensor;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.types.family.TType;
 
-class RawTensor<T extends TType> implements Tensor<T> {
+class RawTensor<T> {
 
-  @Override
   public TF_Tensor nativeHandle() {
     if (nativeHandle.isNull()) {
       throw new IllegalStateException("Tensor has been already released");
@@ -21,27 +18,22 @@ class RawTensor<T extends TType> implements Tensor<T> {
     return nativeHandle;
   }
 
-  @Override
-  public DataType<T> dataType() {
+  public DataType<?> dataType() {
     return dtype;
   }
 
-  @Override
   public Shape shape() {
     return shape;
   }
 
-  @Override
   public long numBytes() {
     return TF_TensorByteSize(nativeHandle);
   }
 
-  @Override
   public ByteDataBuffer rawData() {
     return TensorBuffers.toBytes(nativeHandle, true);
   }
 
-  @Override
   public void close() {
     tensorScope.close();
   }
@@ -54,10 +46,10 @@ class RawTensor<T extends TType> implements Tensor<T> {
 
   private final PointerScope tensorScope = new PointerScope();
   private final TF_Tensor nativeHandle;
-  private final DataType<T> dtype;
+  private final DataType<?> dtype;
   private final Shape shape;
 
-  RawTensor(TF_Tensor nativeHandle, DataType<T> dtype, Shape shape) {
+  RawTensor(TF_Tensor nativeHandle, DataType<?> dtype, Shape shape) {
     this.nativeHandle = nativeHandle;
     this.dtype = dtype;
     this.shape = shape;

@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
 
 /**
  * Restores a tensor from checkpoint files.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator(group = "train")
-public final class RestoreSlice<T extends TType> extends RawOp implements Operand<T> {
+public final class RestoreSlice<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.RestoreSlice}
@@ -79,7 +79,7 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
    * @return a new instance of RestoreSlice
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
+  public static <T extends Tensor> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());

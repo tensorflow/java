@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "io")
-public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T> {
+public final class DecodeRaw<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.DecodeRaw}
@@ -68,7 +68,7 @@ public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of DecodeRaw
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
+  public static <T extends Tensor> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeRaw", scope.makeOpName("DecodeRaw"));
     opBuilder.addInput(bytes.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

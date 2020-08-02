@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Batch normalization.
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code result()} output
  */
 @Operator(group = "nn")
-public final class BatchNormWithGlobalNormalization<T extends TType> extends RawOp implements Operand<T> {
+public final class BatchNormWithGlobalNormalization<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchNormWithGlobalNormalization operation.
@@ -59,7 +59,7 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
    * @return a new instance of BatchNormWithGlobalNormalization
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <T extends Tensor> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalization", scope.makeOpName("BatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());

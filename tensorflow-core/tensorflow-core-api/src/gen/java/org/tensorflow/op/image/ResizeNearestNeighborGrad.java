@@ -21,20 +21,20 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of nearest neighbor interpolation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class ResizeNearestNeighborGrad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class ResizeNearestNeighborGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ResizeNearestNeighborGrad}
@@ -76,7 +76,7 @@ public final class ResizeNearestNeighborGrad<T extends TNumber> extends RawOp im
    * @return a new instance of ResizeNearestNeighborGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResizeNearestNeighborGrad<T> create(Scope scope, Operand<T> grads, Operand<TInt32> size, Options... options) {
+  public static <T extends Tensor & TNumber> ResizeNearestNeighborGrad<T> create(Scope scope, Operand<T> grads, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighborGrad", scope.makeOpName("ResizeNearestNeighborGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(size.asOutput());

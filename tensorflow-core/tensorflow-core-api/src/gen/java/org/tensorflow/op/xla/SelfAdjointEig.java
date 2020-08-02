@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of a batch of self-adjoint matrices
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code w()} output
  */
 @Operator(group = "xla")
-public final class SelfAdjointEig<T extends TType> extends RawOp {
+public final class SelfAdjointEig<T extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SelfAdjointEig operation.
@@ -56,7 +56,7 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
    * @return a new instance of SelfAdjointEig
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower, Long maxIter, Float epsilon) {
+  public static <T extends Tensor> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower, Long maxIter, Float epsilon) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSelfAdjointEig", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(a.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

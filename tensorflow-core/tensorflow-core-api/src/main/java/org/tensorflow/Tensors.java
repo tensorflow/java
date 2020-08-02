@@ -11,7 +11,7 @@ import org.tensorflow.types.family.TType;
 
 final class Tensors {
 
-  static <T extends TType> T allocate(DataType<T> dataType, Shape shape, long size) {
+  static <T extends Tensor> T allocate(DataType<T> dataType, Shape shape, long size) {
     // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
     // we only validate them for fixed length datatypes
     if (!dataType.isVariableLength() && shape.size() * dataType.byteSize() > size) {

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Pads a tensor with mirrored values.
@@ -60,7 +60,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class MirrorPad<T extends TType> extends RawOp implements Operand<T> {
+public final class MirrorPad<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MirrorPad operation.
@@ -77,7 +77,7 @@ public final class MirrorPad<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of MirrorPad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T extends Tensor, U extends Tensor & TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPad", scope.makeOpName("MirrorPad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

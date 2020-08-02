@@ -21,18 +21,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Constructs an Optional variant from a tuple of tensors.
  */
 @Operator(group = "data")
-public final class OptionalFromValue extends RawOp implements Operand<TType> {
+public final class OptionalFromValue extends RawOp implements Operand<Tensor> {
   
   /**
    * Factory method to create a class wrapping a new OptionalFromValue operation.
@@ -57,8 +57,8 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) optional;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) optional;
   }
   
   private Output<?> optional;

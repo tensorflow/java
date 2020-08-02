@@ -22,6 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -29,7 +30,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "io")
-public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements Operand<T> {
+public final class DecodePaddedRaw<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.DecodePaddedRaw}
@@ -71,7 +71,7 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
    * @return a new instance of DecodePaddedRaw
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
+  public static <T extends Tensor & TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());
     opBuilder.addInput(fixedLength.asOutput());

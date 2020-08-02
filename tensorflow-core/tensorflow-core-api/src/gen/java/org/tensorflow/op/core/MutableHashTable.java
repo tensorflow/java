@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates an empty hash table.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * the insert operations. It does not support the initialization operation.
  */
 @Operator
-public final class MutableHashTable extends RawOp implements Operand<TType> {
+public final class MutableHashTable extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MutableHashTable}
@@ -88,7 +88,7 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
    * @return a new instance of MutableHashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
+  public static <T extends Tensor, U extends Tensor> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);
@@ -142,8 +142,8 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) tableHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) tableHandle;
   }
   
   private Output<?> tableHandle;

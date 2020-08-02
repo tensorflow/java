@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Perform a quantized matrix multiplication of  `a` by the matrix `b` with bias
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <W> data type for {@code out()} output
  */
-public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> extends RawOp {
+public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.QuantizedMatMulWithBiasAndReluAndRequantize}
@@ -101,7 +101,7 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> 
    * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> Toutput, Options... options) {
+  public static <W extends Tensor, T extends Tensor, U extends Tensor, V extends Tensor> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndReluAndRequantize"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

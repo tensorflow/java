@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Real-valued fast Fourier transform.
@@ -47,7 +47,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
+public final class Rfft<U extends Tensor> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Rfft operation.
@@ -59,7 +59,7 @@ public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
    * @return a new instance of Rfft
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> Rfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
+  public static <U extends Tensor, T extends Tensor & TNumber> Rfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT", scope.makeOpName("Rfft"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());

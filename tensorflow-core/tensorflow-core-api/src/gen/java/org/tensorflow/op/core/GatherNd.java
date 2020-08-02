@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Gather slices from `params` into a Tensor with shape specified by `indices`.
@@ -127,7 +127,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class GatherNd<T extends TType> extends RawOp implements Operand<T> {
+public final class GatherNd<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new GatherNd operation.
@@ -138,7 +138,7 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
    * @return a new instance of GatherNd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> GatherNd<T> create(Scope scope, Operand<T> params, Operand<U> indices) {
+  public static <T extends Tensor, U extends Tensor & TNumber> GatherNd<T> create(Scope scope, Operand<T> params, Operand<U> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());

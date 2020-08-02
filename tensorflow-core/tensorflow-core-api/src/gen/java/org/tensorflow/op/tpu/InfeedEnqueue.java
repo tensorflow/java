@@ -21,12 +21,12 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * An op which feeds a single Tensor value into the computation.
@@ -83,7 +83,7 @@ public final class InfeedEnqueue extends RawOp {
    * @return a new instance of InfeedEnqueue
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
+  public static <T extends Tensor> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueue", scope.makeOpName("InfeedEnqueue"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

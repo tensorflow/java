@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -28,7 +29,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the max of elements across dimensions of a SparseTensor.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReduceMaxSparse<T extends TNumber> extends RawOp {
+public final class SparseReduceMaxSparse<T extends Tensor & TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceMaxSparse}
@@ -83,7 +83,7 @@ public final class SparseReduceMaxSparse<T extends TNumber> extends RawOp {
    * @return a new instance of SparseReduceMaxSparse
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SparseReduceMaxSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
+  public static <T extends Tensor & TNumber> SparseReduceMaxSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceMaxSparse", scope.makeOpName("SparseReduceMaxSparse"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());

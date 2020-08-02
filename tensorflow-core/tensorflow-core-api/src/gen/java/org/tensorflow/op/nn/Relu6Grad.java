@@ -21,19 +21,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear 6 gradients for a Relu6 operation.
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class Relu6Grad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Relu6Grad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Relu6Grad operation.
@@ -45,7 +45,7 @@ public final class Relu6Grad<T extends TNumber> extends RawOp implements Operand
    * @return a new instance of Relu6Grad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Relu6Grad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
+  public static <T extends Tensor & TNumber> Relu6Grad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6Grad", scope.makeOpName("Relu6Grad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());

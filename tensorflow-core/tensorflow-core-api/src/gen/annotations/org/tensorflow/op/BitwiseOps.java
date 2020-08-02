@@ -18,6 +18,7 @@
 package org.tensorflow.op;
 
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.bitwise.BitwiseAnd;
 import org.tensorflow.op.bitwise.BitwiseOr;
 import org.tensorflow.op.bitwise.BitwiseXor;
@@ -65,7 +66,7 @@ public final class BitwiseOps {
    * @param y
    * @return a new instance of BitwiseAnd
    */
-  public <T extends TNumber> BitwiseAnd<T> bitwiseAnd(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> BitwiseAnd<T> bitwiseAnd(Operand<T> x, Operand<T> y) {
     return BitwiseAnd.create(scope, x, y);
   }
 
@@ -96,7 +97,7 @@ public final class BitwiseOps {
    * @param y
    * @return a new instance of BitwiseOr
    */
-  public <T extends TNumber> BitwiseOr<T> bitwiseOr(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> BitwiseOr<T> bitwiseOr(Operand<T> x, Operand<T> y) {
     return BitwiseOr.create(scope, x, y);
   }
 
@@ -127,7 +128,7 @@ public final class BitwiseOps {
    * @param y
    * @return a new instance of BitwiseXor
    */
-  public <T extends TNumber> BitwiseXor<T> bitwiseXor(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> BitwiseXor<T> bitwiseXor(Operand<T> x, Operand<T> y) {
     return BitwiseXor.create(scope, x, y);
   }
 
@@ -178,7 +179,7 @@ public final class BitwiseOps {
    * @param x
    * @return a new instance of Invert
    */
-  public <T extends TNumber> Invert<T> invert(Operand<T> x) {
+  public <T extends Tensor & TNumber> Invert<T> invert(Operand<T> x) {
     return Invert.create(scope, x);
   }
 
@@ -220,7 +221,7 @@ public final class BitwiseOps {
    * @param y
    * @return a new instance of LeftShift
    */
-  public <T extends TNumber> LeftShift<T> leftShift(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> LeftShift<T> leftShift(Operand<T> x, Operand<T> y) {
     return LeftShift.create(scope, x, y);
   }
 
@@ -265,7 +266,7 @@ public final class BitwiseOps {
    * @param y
    * @return a new instance of RightShift
    */
-  public <T extends TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {
+  public <T extends Tensor & TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {
     return RightShift.create(scope, x, y);
   }
 }

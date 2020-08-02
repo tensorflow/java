@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Randomly shuffles a tensor along its first dimension.
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomShuffle<T extends TType> extends RawOp implements Operand<T> {
+public final class RandomShuffle<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomShuffle}
@@ -84,7 +84,7 @@ public final class RandomShuffle<T extends TType> extends RawOp implements Opera
    * @return a new instance of RandomShuffle
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
+  public static <T extends Tensor> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffle", scope.makeOpName("RandomShuffle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradients of convolution with respect to the input.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Conv2dBackpropInput<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.Conv2dBackpropInput}
@@ -113,7 +113,7 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
    * @return a new instance of Conv2dBackpropInput
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Conv2dBackpropInput<T> create(Scope scope, Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
+  public static <T extends Tensor & TNumber> Conv2dBackpropInput<T> create(Scope scope, Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2DBackpropInput", scope.makeOpName("Conv2dBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());

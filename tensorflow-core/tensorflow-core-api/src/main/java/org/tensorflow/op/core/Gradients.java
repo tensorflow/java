@@ -22,12 +22,11 @@ import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.op.Op;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
@@ -158,7 +157,7 @@ public final class Gradients implements Iterable<Operand<?>> {
    * @param index The index of the output among the gradients added by this operation
    */
   @SuppressWarnings("unchecked")
-  public <T extends TType> Output<T> dy(int index) {
+  public <T extends Tensor> Output<T> dy(int index) {
     return (Output<T>) dy.get(index);
   }
 

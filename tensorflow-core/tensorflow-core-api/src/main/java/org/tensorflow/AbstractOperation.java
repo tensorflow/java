@@ -17,7 +17,6 @@ package org.tensorflow;
 
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.types.family.TType;
 
 /**
  * Base class for {@link Operation} implementations.
@@ -37,7 +36,7 @@ abstract class AbstractOperation implements Operation {
   }
 
   @Override
-  public <T extends TType> Output<T> output(int idx) {
+  public <T extends Tensor> Output<T> output(int idx) {
     return new Output<>(this, idx);
   }
 

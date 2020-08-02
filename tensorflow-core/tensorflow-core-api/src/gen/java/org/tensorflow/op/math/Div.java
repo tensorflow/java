@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns x / y element-wise.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Div<T extends TType> extends RawOp implements Operand<T> {
+public final class Div<T extends Tensor> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Div operation.
@@ -47,7 +47,7 @@ public final class Div<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Div
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Div<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends Tensor> Div<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Div", scope.makeOpName("Div"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

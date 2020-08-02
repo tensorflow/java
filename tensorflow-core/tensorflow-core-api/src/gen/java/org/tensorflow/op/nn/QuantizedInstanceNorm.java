@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Quantized Instance normalization.
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class QuantizedInstanceNorm<T extends TType> extends RawOp {
+public final class QuantizedInstanceNorm<T extends Tensor> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.QuantizedInstanceNorm}
@@ -104,7 +104,7 @@ public final class QuantizedInstanceNorm<T extends TType> extends RawOp {
    * @return a new instance of QuantizedInstanceNorm
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat32> xMin, Operand<TFloat32> xMax, Options... options) {
+  public static <T extends Tensor> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x, Operand<TFloat32> xMin, Operand<TFloat32> xMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedInstanceNorm", scope.makeOpName("QuantizedInstanceNorm"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(xMin.asOutput());

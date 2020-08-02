@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random integers from a uniform distribution.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class StatefulUniformFullInt<U extends TType> extends RawOp implements Operand<U> {
+public final class StatefulUniformFullInt<U extends Tensor> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new StatefulUniformFullInt operation.
@@ -49,7 +49,7 @@ public final class StatefulUniformFullInt<U extends TType> extends RawOp impleme
    * @return a new instance of StatefulUniformFullInt
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends Tensor, T extends Tensor> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformFullInt", scope.makeOpName("StatefulUniformFullInt"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());

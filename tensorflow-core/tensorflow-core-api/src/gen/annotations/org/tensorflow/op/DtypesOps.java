@@ -19,11 +19,11 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.dtypes.AsString;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.dtypes.Complex;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code dtypes} operations as {@link Op Op}s
@@ -57,7 +57,7 @@ public final class DtypesOps {
    * @param options carries optional attributes values
    * @return a new instance of AsString
    */
-  public <T extends TType> AsString asString(Operand<T> input, AsString.Options... options) {
+  public <T extends Tensor> AsString asString(Operand<T> input, AsString.Options... options) {
     return AsString.create(scope, input, options);
   }
 
@@ -70,7 +70,7 @@ public final class DtypesOps {
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, DataType<U> DstT,
+  public <U extends Tensor, T extends Tensor> Cast<U> cast(Operand<T> x, DataType<U> DstT,
       Cast.Options... options) {
     return Cast.create(scope, x, DstT, options);
   }
@@ -98,8 +98,8 @@ public final class DtypesOps {
    * @param Tout
    * @return a new instance of Complex
    */
-  public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
-      DataType<U> Tout) {
+  public <U extends Tensor, T extends Tensor & TNumber> Complex<U> complex(Operand<T> real,
+      Operand<T> imag, DataType<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
   }
 }

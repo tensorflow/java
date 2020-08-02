@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
 
 /**
  * Quantized Batch normalization.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TType;
  * @param <U> data type for {@code result()} output
  */
 @Operator(group = "nn")
-public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> extends RawOp {
+public final class QuantizedBatchNormWithGlobalNormalization<U extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedBatchNormWithGlobalNormalization operation.
@@ -73,7 +73,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m, Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin, Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax, Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  public static <U extends Tensor, T extends Tensor> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m, Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin, Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax, Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, DataType<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBatchNormWithGlobalNormalization", scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());

@@ -21,18 +21,20 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.LongTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.tensor.LongTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 64-bit signed integer tensor type.
  */
-public interface TInt64 extends LongTensor<TInt64>, TNumber {
+public interface TInt64 extends LongTensor, TNumber {
 
   /** Type metadata */
   DataType<TInt64> DTYPE = DataType.create("INT64", 9, 8, TInt64Impl::new);
@@ -109,7 +111,7 @@ public interface TInt64 extends LongTensor<TInt64>, TNumber {
 /**
  * Hidden implementation of a {@code TInt64}
  */
-class TInt64Impl extends LongTensorImpl<TInt64> implements TInt64 {
+class TInt64Impl extends LongTensorImpl implements TInt64 {
 
   TInt64Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toLongs(nativeTensor));

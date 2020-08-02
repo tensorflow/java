@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Bucketizes 'input' based on 'boundaries'.
@@ -56,7 +56,7 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
    * @return a new instance of Bucketize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
+  public static <T extends Tensor & TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom values from a truncated normal distribution.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TType;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessTruncatedNormal<V extends TNumber> extends RawOp implements Operand<V> {
+public final class StatelessTruncatedNormal<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessTruncatedNormal operation.
@@ -54,7 +54,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends RawOp imp
    * @return a new instance of StatelessTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessTruncatedNormal", scope.makeOpName("StatelessTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
@@ -72,7 +72,7 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends RawOp imp
    * @return a new instance of StatelessTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatelessTruncatedNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessTruncatedNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }
   

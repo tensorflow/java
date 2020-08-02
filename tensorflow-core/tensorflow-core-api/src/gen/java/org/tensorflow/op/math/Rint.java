@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns element-wise integer closest to x.
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Rint<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Rint<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Rint operation.
@@ -54,7 +54,7 @@ public final class Rint<T extends TNumber> extends RawOp implements Operand<T> {
    * @return a new instance of Rint
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Rint<T> create(Scope scope, Operand<T> x) {
+  public static <T extends Tensor & TNumber> Rint<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rint", scope.makeOpName("Rint"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

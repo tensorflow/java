@@ -50,7 +50,7 @@ public class GraphOperationBuilderTest {
   @Test
   public void failOnUseAfterBuild() {
     try (Graph g = new Graph();
-        Tensor<TInt32> t = TInt32.scalarOf(1)) {
+        TInt32 t = TInt32.scalarOf(1)) {
       OperationBuilder b =
           g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
       b.build();
@@ -66,7 +66,7 @@ public class GraphOperationBuilderTest {
   public void failOnUseAfterGraphClose() {
     OperationBuilder b = null;
     try (Graph g = new Graph();
-        Tensor<TInt32> t = TInt32.scalarOf(1)) {
+        TInt32 t = TInt32.scalarOf(1)) {
       b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
     }
     try {
@@ -88,7 +88,7 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
       // dtype, tensor attributes.
-      try (Tensor<TInt32> t = TInt32.scalarOf(1)) {
+      try (TInt32 t = TInt32.scalarOf(1)) {
         g.opBuilder("Const", "DataTypeAndTensor")
             .setAttr("dtype", TInt32.DTYPE)
             .setAttr("value", t)
@@ -169,8 +169,8 @@ public class GraphOperationBuilderTest {
   public void addControlInput() {
     try (Graph g = new Graph();
         Session s = new Session(g);
-        Tensor<TBool> yes = TBool.scalarOf(true);
-        Tensor<TBool> no = TBool.scalarOf(false)) {
+        TBool yes = TBool.scalarOf(true);
+        TBool no = TBool.scalarOf(false)) {
       Ops tf = Ops.create(g);
       Output<TBool> placeholder = tf.placeholder(TBool.DTYPE).asOutput();
       GraphOperation check =

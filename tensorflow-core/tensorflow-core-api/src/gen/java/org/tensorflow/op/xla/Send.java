@@ -20,11 +20,11 @@ package org.tensorflow.op.xla;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Sends the named tensor to another XLA computation. Wraps the XLA Send operator
@@ -44,7 +44,7 @@ public final class Send extends RawOp {
    * @return a new instance of Send
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName) {
+  public static <T extends Tensor> Send create(Scope scope, Operand<T> tensor, String tensorName) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSend", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

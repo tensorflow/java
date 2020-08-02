@@ -21,18 +21,20 @@ import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.tensor.DoubleTensorImpl;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.types.family.TFloat;
+import org.tensorflow.tensor.DoubleTensor;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 double-precision 64-bit float tensor type.
  */
-public interface TFloat64 extends DoubleTensor<TFloat64>, TFloat {
+public interface TFloat64 extends DoubleTensor, TFloating {
 
   /** Type metadata */
   DataType<TFloat64> DTYPE = DataType.create("DOUBLE", 2, 8, TFloat64Impl::new);
@@ -109,7 +111,7 @@ public interface TFloat64 extends DoubleTensor<TFloat64>, TFloat {
 /**
  * Hidden implementation of a {@code TFloat64}
  */
-class TFloat64Impl extends DoubleTensorImpl<TFloat64> implements TFloat64 {
+class TFloat64Impl extends DoubleTensorImpl implements TFloat64 {
 
   TFloat64Impl(TF_Tensor nativeTensor, Shape shape) {
     super(nativeTensor, DTYPE, shape, TensorBuffers.toDoubles(nativeTensor));

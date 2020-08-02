@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Adam algorithm.
@@ -78,7 +78,7 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
    * @return a new instance of ResourceApplyAdamWithAmsgrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAdamWithAmsgrad create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<?> vhat, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends Tensor> ResourceApplyAdamWithAmsgrad create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<?> vhat, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdamWithAmsgrad", scope.makeOpName("ResourceApplyAdamWithAmsgrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());

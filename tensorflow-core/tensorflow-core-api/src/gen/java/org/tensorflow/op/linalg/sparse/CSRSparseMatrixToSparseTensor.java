@@ -22,19 +22,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts a (possibly batched) CSRSparesMatrix to a SparseTensor.
  * 
  * @param <T> data type for {@code values()} output
  */
-public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp {
+public final class CSRSparseMatrixToSparseTensor<T extends Tensor> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new CSRSparseMatrixToSparseTensor operation.
@@ -45,7 +45,7 @@ public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp 
    * @return a new instance of CSRSparseMatrixToSparseTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, DataType<T> type) {
+  public static <T extends Tensor> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
     opBuilder.addInput(sparseMatrix.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);

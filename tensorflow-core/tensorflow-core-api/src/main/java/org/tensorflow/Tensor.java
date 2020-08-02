@@ -15,16 +15,12 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
-
 import java.util.function.Consumer;
-import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.types.family.TType;
 
 /**
  * A statically typed multi-dimensional array whose elements are of a type described by T.
@@ -41,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * }
  * }</pre>
  */
-public interface Tensor<T extends TType> extends AutoCloseable {
+public interface Tensor<T> extends NdArray<T>, AutoCloseable {
 
   /**
    * Allocates a tensor of a given datatype and shape.
@@ -65,7 +61,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    * @return an allocated but uninitialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType & Tensor> T of(DataType<T> dtype, Shape shape) {
+  static <T extends Tensor> T of(DataType<T> dtype, Shape shape) {
     return of(dtype, shape, shape.size() * dtype.byteSize());
   }
 
@@ -88,7 +84,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType & Tensor> T of(DataType<T> dtype, Shape shape, long size) {
+  static <T extends Tensor> T of(DataType<T> dtype, Shape shape, long size) {
     return Tensors.allocate(dtype, shape, size);
   }
 
@@ -116,7 +112,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    * @return an allocated and initialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType & Tensor> T of(DataType<T> dtype, Shape shape, Consumer<T> dataInitializer) {
+  static <T extends Tensor> T of(DataType<T> dtype, Shape shape, Consumer<T> dataInitializer) {
     return of(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
   }
 
@@ -140,7 +136,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType & Tensor> T of(DataType<T> dtype, Shape shape, long size, Consumer<T> tensorInit) {
+  static <T extends Tensor> T of(DataType<T> dtype, Shape shape, long size, Consumer<T> tensorInit) {
     T tensor = of(dtype, shape, size);
     try {
       tensorInit.accept(tensor);
@@ -164,7 +160,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    * @throws IllegalArgumentException if {@code rawData} is not large enough to contain the tensor data
    * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
-  static <T extends TType & Tensor> T of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
+  static <T extends Tensor> T of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
     T tensor = of(dtype, shape, rawData.size());
     rawData.copyTo(TensorBuffers.toBytes(tensor.nativeHandle()), rawData.size());
     return tensor;
@@ -179,7 +175,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    *     {@code U}.
    */
   @SuppressWarnings("unchecked")
-  default <U extends TType & Tensor> U expect(DataType<U> dt) {
+  default <U extends Tensor> U expect(DataType<U> dt) {
     if (!dt.equals(dataType())) {
       throw new IllegalArgumentException(
           "Cannot cast from tensor of " + dataType() + " to tensor of " + dt);
@@ -199,7 +195,7 @@ public interface Tensor<T extends TType> extends AutoCloseable {
   void close();
 
   /** Returns the {@link DataType} of elements stored in the Tensor. */
-  DataType<T> dataType();
+  DataType<?> dataType();
 
   /** Returns the size, in bytes, of the tensor data. */
   long numBytes();
@@ -243,10 +239,12 @@ public interface Tensor<T extends TType> extends AutoCloseable {
    * @return the tensor data mapped to an n-dimensional space
    * @throws IllegalStateException if the tensor has been closed
    * @see NdArray
+   * @deprecated since tensor implements {@code NdArray}
    */
-  default T data() {
+  @Deprecated
+  default Tensor<T> data() {
     nativeHandle(); // make sure native handle is still valid
-    return (T) this;
+    return this;
   }
 
   /**

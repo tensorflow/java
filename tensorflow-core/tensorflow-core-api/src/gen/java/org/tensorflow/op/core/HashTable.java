@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates a non-initialized hash table.
@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * table will be immutable.
  */
 @Operator
-public final class HashTable extends RawOp implements Operand<TType> {
+public final class HashTable extends RawOp implements Operand<Tensor> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.HashTable}
@@ -88,7 +88,7 @@ public final class HashTable extends RawOp implements Operand<TType> {
    * @return a new instance of HashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> HashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
+  public static <T extends Tensor, U extends Tensor> HashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("HashTableV2", scope.makeOpName("HashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);
@@ -142,8 +142,8 @@ public final class HashTable extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) tableHandle;
+  public Output<Tensor> asOutput() {
+    return (Output<Tensor>) tableHandle;
   }
   
   private Output<?> tableHandle;
