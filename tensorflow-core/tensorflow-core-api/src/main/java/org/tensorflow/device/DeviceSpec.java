@@ -1,10 +1,9 @@
 package org.tensorflow.device;
 
-import com.google.auto.value.AutoValue;
-import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.base.Joiner;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Represents a (possibly partial) specification for a TensorFlow device.
@@ -14,8 +13,7 @@ import javax.annotation.Nullable;
  * @see <a
  *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/framework/device_spec.py">device_spec.py</a>.
  */
-@AutoValue
-public abstract class DeviceSpec {
+public final class DeviceSpec {
   private static final String JOB_PREFIX = "/job:";
   private static final String REPLICA_PREFIX = "/replica:";
   private static final String TASK_PREFIX = "/task:";
@@ -28,22 +26,62 @@ public abstract class DeviceSpec {
     CUSTOM
   }
 
-  @Nullable
-  public abstract String job();
+  @Nullable private final String job;
+
+  @Nullable private final Integer replica;
+
+  @Nullable private final Integer task;
+
+  @Nullable private final Integer deviceIndex;
+
+  @Nullable private final DeviceSpec.DeviceType deviceType;
 
   @Nullable
-  public abstract Integer replica();
+  public String job() {
+    return job;
+  }
 
   @Nullable
-  public abstract Integer task();
+  public Integer replica() {
+    return replica;
+  }
 
   @Nullable
-  public abstract Integer deviceIndex();
+  public Integer task() {
+    return task;
+  }
 
   @Nullable
-  public abstract DeviceType deviceType();
+  public Integer deviceIndex() {
+    return deviceIndex;
+  }
 
-  @Memoized
+  @Nullable
+  public DeviceSpec.DeviceType deviceType() {
+    return deviceType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof DeviceSpec) {
+      DeviceSpec that = (DeviceSpec) o;
+      return Objects.equals(job, that.job)
+          && Objects.equals(replica, that.replica)
+          && Objects.equals(task, that.task)
+          && Objects.equals(deviceIndex, that.deviceIndex)
+          && Objects.equals(deviceType, that.deviceType);
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(job, replica, task, deviceIndex, deviceType);
+  }
+
   @Override
   public String toString() {
     Joiner specJoiner = Joiner.on("").skipNulls();
@@ -59,24 +97,21 @@ public abstract class DeviceSpec {
         NullOrWithPrefix(deviceString, DEVICE_PREFIX));
   }
 
-  static Builder builder() {
-    return new AutoValue_DeviceSpec.Builder();
+  private DeviceSpec(
+      @Nullable String job,
+      @Nullable Integer replica,
+      @Nullable Integer task,
+      @Nullable Integer deviceIndex,
+      @Nullable DeviceSpec.DeviceType deviceType) {
+    this.job = job;
+    this.replica = replica;
+    this.task = task;
+    this.deviceIndex = deviceIndex;
+    this.deviceType = deviceType;
   }
 
-  // Builder
-  @AutoValue.Builder
-  abstract static class Builder {
-    abstract Builder job(String job);
-
-    abstract Builder replica(Integer replica);
-
-    abstract Builder task(Integer task);
-
-    abstract Builder deviceIndex(Integer deviceIndex);
-
-    abstract Builder deviceType(DeviceType deviceType);
-
-    abstract DeviceSpec build();
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   @Nullable
@@ -87,5 +122,45 @@ public abstract class DeviceSpec {
   @Nullable
   private static String NullOrWithPrefix(@Nullable Integer i, String prefix) {
     return i == null ? null : prefix + i.toString();
+  }
+
+  /** A Builder class for building {@link DeviceSpec} class. */
+  static class Builder {
+    private String job = null;
+    private Integer replica = null;
+    private Integer task = null;
+    private Integer deviceIndex = null;
+    private DeviceSpec.DeviceType deviceType = null;
+
+    private Builder() {}
+
+    Builder job(String job) {
+      this.job = job;
+      return this;
+    }
+
+    Builder replica(Integer replica) {
+      this.replica = replica;
+      return this;
+    }
+
+    Builder task(Integer task) {
+      this.task = task;
+      return this;
+    }
+
+    Builder deviceIndex(Integer deviceIndex) {
+      this.deviceIndex = deviceIndex;
+      return this;
+    }
+
+    Builder deviceType(DeviceSpec.DeviceType deviceType) {
+      this.deviceType = deviceType;
+      return this;
+    }
+
+    public DeviceSpec build() {
+      return new DeviceSpec(this.job, this.replica, this.task, this.deviceIndex, this.deviceType);
+    }
   }
 }

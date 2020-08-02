@@ -17,7 +17,6 @@
   <properties>
     <!-- Match version used by TensorFlow, in tensorflow/workspace.bzl -->
     <protobuf.version>3.8.0</protobuf.version>
-    <auto_value.version>1.7.3</auto_value.version>
   </properties>
 
   <dependencies>
@@ -37,17 +36,6 @@
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>${protobuf.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>${auto_value.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value-annotations</artifactId>
-      <version>${auto_value.version}</version>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
@@ -154,7 +142,6 @@
             <id>default-compile</id>
             <configuration>
               <annotationProcessors>
-                <annotationProcessor>com.google.auto.value.processor.AutoValueProcessor</annotationProcessor>
                 <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
               </annotationProcessors>
               <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
