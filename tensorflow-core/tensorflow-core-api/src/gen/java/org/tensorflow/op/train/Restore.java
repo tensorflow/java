@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Restores tensors from a V2 checkpoint.
@@ -50,7 +50,7 @@ import org.tensorflow.types.TString;
  * Callers must ensure all the named tensors are indeed stored in the checkpoint.
  */
 @Operator(group = "train")
-public final class Restore extends RawOp implements Iterable<Operand<Tensor>> {
+public final class Restore extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new Restore operation.
@@ -67,9 +67,9 @@ public final class Restore extends RawOp implements Iterable<Operand<Tensor>> {
   @Endpoint(describeByClass = true)
   public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<DataType<?>> dtypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreV2", scope.makeOpName("Restore"));
-    opBuilder.addInput(prefix.asOutput());
-    opBuilder.addInput(tensorNames.asOutput());
-    opBuilder.addInput(shapeAndSlices.asOutput());
+    opBuilder.addInput(prefix.asOutput(scope));
+    opBuilder.addInput(tensorNames.asOutput(scope));
+    opBuilder.addInput(shapeAndSlices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
@@ -89,7 +89,7 @@ public final class Restore extends RawOp implements Iterable<Operand<Tensor>> {
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) tensors.iterator();
   }
   

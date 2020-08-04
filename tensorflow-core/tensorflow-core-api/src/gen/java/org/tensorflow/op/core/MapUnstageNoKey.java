@@ -98,7 +98,7 @@ public final class MapUnstageNoKey extends RawOp {
   @Endpoint(describeByClass = true)
   public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

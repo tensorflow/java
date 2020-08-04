@@ -47,7 +47,7 @@ public final class MatchingFiles extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static MatchingFiles create(Scope scope, Operand<TString> pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFiles", scope.makeOpName("MatchingFiles"));
-    opBuilder.addInput(pattern.asOutput());
+    opBuilder.addInput(pattern.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MatchingFiles(opBuilder.build());
   }
@@ -60,7 +60,7 @@ public final class MatchingFiles extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return filenames;
   }
   

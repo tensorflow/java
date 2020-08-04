@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -36,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class DataFormatDimMap<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DataFormatDimMap<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DataFormatDimMap}
@@ -76,9 +75,9 @@ public final class DataFormatDimMap<T extends Tensor & TNumber> extends RawOp im
    * @return a new instance of DataFormatDimMap
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
+  public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatDimMap", scope.makeOpName("DataFormatDimMap"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -115,7 +114,7 @@ public final class DataFormatDimMap<T extends Tensor & TNumber> extends RawOp im
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

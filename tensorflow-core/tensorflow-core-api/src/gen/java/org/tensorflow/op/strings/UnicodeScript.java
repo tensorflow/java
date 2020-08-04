@@ -54,7 +54,7 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
   @Endpoint(describeByClass = true)
   public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new UnicodeScript(opBuilder.build());
   }
@@ -67,7 +67,7 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return output;
   }
   

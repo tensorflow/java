@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Performs max pooling on the input.
@@ -34,7 +34,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPool<T extends Tensor> extends RawOp implements Operand<T> {
+public final class MaxPool<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPool}
@@ -72,11 +72,11 @@ public final class MaxPool<T extends Tensor> extends RawOp implements Operand<T>
    * @return a new instance of MaxPool
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> MaxPool<T> create(Scope scope, Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
+  public static <T extends TType> MaxPool<T> create(Scope scope, Operand<T> input, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolV2", scope.makeOpName("MaxPool"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(ksize.asOutput());
-    opBuilder.addInput(strides.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(ksize.asOutput(scope));
+    opBuilder.addInput(strides.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
@@ -108,7 +108,7 @@ public final class MaxPool<T extends Tensor> extends RawOp implements Operand<T>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

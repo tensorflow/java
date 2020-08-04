@@ -33,7 +33,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * Transforms a vector of tf.io.SequenceExample protos (as strings) into
@@ -155,16 +154,16 @@ public final class ParseSequenceExample extends RawOp {
   @Endpoint(describeByClass = true)
   public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Operand<TString> contextSparseKeys, Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys, Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys, Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty, Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes, List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExampleV2", scope.makeOpName("ParseSequenceExample"));
-    opBuilder.addInput(serialized.asOutput());
-    opBuilder.addInput(debugName.asOutput());
-    opBuilder.addInput(contextSparseKeys.asOutput());
-    opBuilder.addInput(contextDenseKeys.asOutput());
-    opBuilder.addInput(contextRaggedKeys.asOutput());
-    opBuilder.addInput(featureListSparseKeys.asOutput());
-    opBuilder.addInput(featureListDenseKeys.asOutput());
-    opBuilder.addInput(featureListRaggedKeys.asOutput());
-    opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
+    opBuilder.addInput(serialized.asOutput(scope));
+    opBuilder.addInput(debugName.asOutput(scope));
+    opBuilder.addInput(contextSparseKeys.asOutput(scope));
+    opBuilder.addInput(contextDenseKeys.asOutput(scope));
+    opBuilder.addInput(contextRaggedKeys.asOutput(scope));
+    opBuilder.addInput(featureListSparseKeys.asOutput(scope));
+    opBuilder.addInput(featureListDenseKeys.asOutput(scope));
+    opBuilder.addInput(featureListRaggedKeys.asOutput(scope));
+    opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, contextDenseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {

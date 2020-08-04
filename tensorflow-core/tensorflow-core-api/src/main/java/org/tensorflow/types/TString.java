@@ -21,11 +21,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.tensorflow.DataType;
-import org.tensorflow.Tensor;
-import org.tensorflow.internal.tensor.buffer.ByteSequenceTensorBuffer;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.Tensors;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.tensor.StringTensorImpl;
+import org.tensorflow.internal.tensor.buffer.ByteSequenceTensorBuffer;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
-public interface TString extends StringTensor, TType {
+public interface TString extends StringTensor, TType<TString, String> {
 
   /** readable-name for the data type */
   static final String NAME = "STRING";
@@ -225,12 +225,12 @@ class TStringImpl extends StringTensorImpl implements TString {
 
   @Override
   public TString using(Charset charset) {
-    return new TStringImpl(nativeHandle(), shape(), DataLayouts.ofStrings(charset), rawBuffer());
+    return new TStringImpl(nativeHandle, shape(), DataLayouts.ofStrings(charset), rawBuffer());
   }
 
   static <T> TString createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
     long size = ByteSequenceTensorBuffer.computeSize(src, getBytes);
-    return Tensor.of(TString.DTYPE, src.shape(), size, t ->
+    return Tensors.of(TString.DTYPE, src.shape(), size, t ->
         ((TStringImpl)t).rawBuffer().init(src, getBytes)
     );
   }

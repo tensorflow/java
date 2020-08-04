@@ -50,9 +50,9 @@ public final class NearestNeighbors extends RawOp {
   @Endpoint(describeByClass = true)
   public static NearestNeighbors create(Scope scope, Operand<TFloat32> points, Operand<TFloat32> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
-    opBuilder.addInput(points.asOutput());
-    opBuilder.addInput(centers.asOutput());
-    opBuilder.addInput(k.asOutput());
+    opBuilder.addInput(points.asOutput(scope));
+    opBuilder.addInput(centers.asOutput(scope));
+    opBuilder.addInput(k.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NearestNeighbors(opBuilder.build());
   }

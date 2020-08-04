@@ -23,17 +23,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <X> data type for {@code output()} output
  */
-public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends Tensor> extends RawOp {
+public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2DWithBiasSumAndReluAndRequantize}
@@ -86,20 +86,20 @@ public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends Tens
    * @return a new instance of QuantizedConv2DWithBiasSumAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <X extends Tensor, T extends Tensor, U extends Tensor, V extends Tensor, W extends Tensor> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Operand<W> summand, Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
+  public static <X extends TType, T extends TType, U extends TType, V extends TType, W extends TType> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Operand<W> summand, Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasSumAndReluAndRequantize"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(filter.asOutput());
-    opBuilder.addInput(bias.asOutput());
-    opBuilder.addInput(minInput.asOutput());
-    opBuilder.addInput(maxInput.asOutput());
-    opBuilder.addInput(minFilter.asOutput());
-    opBuilder.addInput(maxFilter.asOutput());
-    opBuilder.addInput(minFreezedOutput.asOutput());
-    opBuilder.addInput(maxFreezedOutput.asOutput());
-    opBuilder.addInput(summand.asOutput());
-    opBuilder.addInput(minSummand.asOutput());
-    opBuilder.addInput(maxSummand.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(filter.asOutput(scope));
+    opBuilder.addInput(bias.asOutput(scope));
+    opBuilder.addInput(minInput.asOutput(scope));
+    opBuilder.addInput(maxInput.asOutput(scope));
+    opBuilder.addInput(minFilter.asOutput(scope));
+    opBuilder.addInput(maxFilter.asOutput(scope));
+    opBuilder.addInput(minFreezedOutput.asOutput(scope));
+    opBuilder.addInput(maxFreezedOutput.asOutput(scope));
+    opBuilder.addInput(summand.asOutput(scope));
+    opBuilder.addInput(minSummand.asOutput(scope));
+    opBuilder.addInput(maxSummand.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

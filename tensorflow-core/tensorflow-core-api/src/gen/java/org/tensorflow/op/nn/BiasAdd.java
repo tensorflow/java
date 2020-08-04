@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds `bias` to `value`.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class BiasAdd<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BiasAdd<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.BiasAdd}
@@ -73,10 +73,10 @@ public final class BiasAdd<T extends Tensor> extends RawOp implements Operand<T>
    * @return a new instance of BiasAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias, Options... options) {
+  public static <T extends TType> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAdd", scope.makeOpName("BiasAdd"));
-    opBuilder.addInput(value.asOutput());
-    opBuilder.addInput(bias.asOutput());
+    opBuilder.addInput(value.asOutput(scope));
+    opBuilder.addInput(bias.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -109,7 +109,7 @@ public final class BiasAdd<T extends Tensor> extends RawOp implements Operand<T>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

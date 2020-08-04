@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Component-wise multiplies a SparseTensor by a dense Tensor.
@@ -41,7 +41,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseDenseCwiseMul<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SparseDenseCwiseMul<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseDenseCwiseMul operation.
@@ -55,12 +55,12 @@ public final class SparseDenseCwiseMul<T extends Tensor> extends RawOp implement
    * @return a new instance of SparseDenseCwiseMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseDenseCwiseMul<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
+  public static <T extends TType> SparseDenseCwiseMul<T> create(Scope scope, Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseDenseCwiseMul", scope.makeOpName("SparseDenseCwiseMul"));
-    opBuilder.addInput(spIndices.asOutput());
-    opBuilder.addInput(spValues.asOutput());
-    opBuilder.addInput(spShape.asOutput());
-    opBuilder.addInput(dense.asOutput());
+    opBuilder.addInput(spIndices.asOutput(scope));
+    opBuilder.addInput(spValues.asOutput(scope));
+    opBuilder.addInput(spShape.asOutput(scope));
+    opBuilder.addInput(dense.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseDenseCwiseMul<T>(opBuilder.build());
   }
@@ -73,7 +73,7 @@ public final class SparseDenseCwiseMul<T extends Tensor> extends RawOp implement
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

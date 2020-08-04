@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code elementShape()} output
  */
 @Operator
-public final class TensorListElementShape<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class TensorListElementShape<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorListElementShape operation.
@@ -49,9 +48,9 @@ public final class TensorListElementShape<T extends Tensor & TNumber> extends Ra
    * @return a new instance of TensorListElementShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
+  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
-    opBuilder.addInput(inputHandle.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape_type", shapeType);
     return new TensorListElementShape<T>(opBuilder.build());
@@ -64,7 +63,7 @@ public final class TensorListElementShape<T extends Tensor & TNumber> extends Ra
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return elementShape;
   }
   

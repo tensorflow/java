@@ -79,7 +79,7 @@ public class TStringTest {
     TString tensor = TString.tensorOf(NdArrays.scalarOfObject(BABY_CHICK));
     byte[] bytes = tensor.asBytes().getObject();
     assertArrayEquals(new byte[] { (byte)0xF0, (byte)0x9F, (byte)0x90, (byte)0xA5 }, bytes);
-    assertEquals(BABY_CHICK, tensor.data().getObject());
+    assertEquals(BABY_CHICK, tensor.getObject());
   }
 
   @Test

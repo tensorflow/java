@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -33,7 +32,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class LocalResponseNormalizationGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class LocalResponseNormalizationGrad<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LocalResponseNormalizationGrad}
@@ -92,11 +91,11 @@ public final class LocalResponseNormalizationGrad<T extends Tensor & TNumber> ex
    * @return a new instance of LocalResponseNormalizationGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> LocalResponseNormalizationGrad<T> create(Scope scope, Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
+  public static <T extends TNumber> LocalResponseNormalizationGrad<T> create(Scope scope, Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRNGrad", scope.makeOpName("LocalResponseNormalizationGrad"));
-    opBuilder.addInput(inputGrads.asOutput());
-    opBuilder.addInput(inputImage.asOutput());
-    opBuilder.addInput(outputImage.asOutput());
+    opBuilder.addInput(inputGrads.asOutput(scope));
+    opBuilder.addInput(inputImage.asOutput(scope));
+    opBuilder.addInput(outputImage.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -153,7 +152,7 @@ public final class LocalResponseNormalizationGrad<T extends Tensor & TNumber> ex
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
@@ -70,14 +70,14 @@ public final class ResourceApplyProximalAdagrad extends RawOp {
    * @return a new instance of ResourceApplyProximalAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ResourceApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Options... options) {
+  public static <T extends TType> ResourceApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyProximalAdagrad", scope.makeOpName("ResourceApplyProximalAdagrad"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(l1.asOutput());
-    opBuilder.addInput(l2.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(l1.asOutput(scope));
+    opBuilder.addInput(l2.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

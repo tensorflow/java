@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts a dense tensor to a (possibly batched) CSRSparseMatrix.
  */
-public final class DenseToCSRSparseMatrix extends RawOp implements Operand<Tensor> {
+public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new DenseToCSRSparseMatrix operation.
@@ -42,10 +42,10 @@ public final class DenseToCSRSparseMatrix extends RawOp implements Operand<Tenso
    * @return a new instance of DenseToCSRSparseMatrix
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DenseToCSRSparseMatrix create(Scope scope, Operand<T> denseInput, Operand<TInt64> indices) {
+  public static <T extends TType> DenseToCSRSparseMatrix create(Scope scope, Operand<T> denseInput, Operand<TInt64> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToCSRSparseMatrix", scope.makeOpName("DenseToCSRSparseMatrix"));
-    opBuilder.addInput(denseInput.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(denseInput.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DenseToCSRSparseMatrix(opBuilder.build());
   }
@@ -59,8 +59,8 @@ public final class DenseToCSRSparseMatrix extends RawOp implements Operand<Tenso
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) sparseOutput;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) sparseOutput;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

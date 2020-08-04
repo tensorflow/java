@@ -44,7 +44,7 @@ public final class AccumulatorNumAccumulated extends RawOp implements Operand<TI
   @Endpoint(describeByClass = true)
   public static AccumulatorNumAccumulated create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorNumAccumulated", scope.makeOpName("AccumulatorNumAccumulated"));
-    opBuilder.addInput(handle.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AccumulatorNumAccumulated(opBuilder.build());
   }
@@ -57,7 +57,7 @@ public final class AccumulatorNumAccumulated extends RawOp implements Operand<TI
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return numAccumulated;
   }
   

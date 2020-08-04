@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Store the input tensor in the state of the current session.
  */
 @Operator
-public final class GetSessionHandle extends RawOp implements Operand<Tensor> {
+public final class GetSessionHandle extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new GetSessionHandle operation.
@@ -41,9 +41,9 @@ public final class GetSessionHandle extends RawOp implements Operand<Tensor> {
    * @return a new instance of GetSessionHandle
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> GetSessionHandle create(Scope scope, Operand<T> value) {
+  public static <T extends TType> GetSessionHandle create(Scope scope, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionHandleV2", scope.makeOpName("GetSessionHandle"));
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new GetSessionHandle(opBuilder.build());
   }
@@ -58,8 +58,8 @@ public final class GetSessionHandle extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

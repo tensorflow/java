@@ -19,11 +19,11 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
-import org.tensorflow.Tensor;
+import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.tensor.ByteTensorImpl;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * 8-bit unsigned integer tensor type.
  */
-public interface TUint8 extends ByteTensor, TNumber {
+public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
 
   /** readable-name for the data type */
   static final String NAME = "UINT8";
@@ -49,7 +49,7 @@ public interface TUint8 extends ByteTensor, TNumber {
    * @return the new tensor
    */
   static TUint8 scalarOf(byte value) {
-    return Tensor.of(DTYPE, Shape.scalar(), t -> t.setByte(value));
+    return Tensors.of(DTYPE, Shape.scalar(), t -> t.setByte(value));
   }
 
   /**
@@ -62,7 +62,7 @@ public interface TUint8 extends ByteTensor, TNumber {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
+    return Tensors.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -74,7 +74,7 @@ public interface TUint8 extends ByteTensor, TNumber {
    * @return the new tensor
    */
   static TUint8 tensorOf(NdArray<Byte> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+    return Tensors.of(DTYPE, src.shape(), src::copyTo);
   }
 
   /**
@@ -84,7 +84,7 @@ public interface TUint8 extends ByteTensor, TNumber {
    * @return the new tensor
    */
   static TUint8 tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+    return Tensors.of(DTYPE, shape);
   }
 
   /**
@@ -95,7 +95,7 @@ public interface TUint8 extends ByteTensor, TNumber {
    * @return the new tensor
    */
   static TUint8 tensorOf(Shape shape, ByteDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+    return Tensors.of(DTYPE, shape, d -> d.write(data));
   }
 
   /**
@@ -107,7 +107,7 @@ public interface TUint8 extends ByteTensor, TNumber {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TUint8 tensorOf(Shape shape, Consumer<TUint8> tensorInit) {
-    return Tensor.of(DTYPE, shape, tensorInit);
+    return Tensors.of(DTYPE, shape, tensorInit);
   }
 }
 

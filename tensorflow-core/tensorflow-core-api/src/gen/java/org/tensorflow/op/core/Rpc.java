@@ -138,9 +138,9 @@ public final class Rpc extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Rpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rpc", scope.makeOpName("Rpc"));
-    opBuilder.addInput(address.asOutput());
-    opBuilder.addInput(method.asOutput());
-    opBuilder.addInput(request.asOutput());
+    opBuilder.addInput(address.asOutput(scope));
+    opBuilder.addInput(method.asOutput(scope));
+    opBuilder.addInput(request.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -192,7 +192,7 @@ public final class Rpc extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return response;
   }
   

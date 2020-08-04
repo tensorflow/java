@@ -25,7 +25,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -33,11 +32,12 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets next element for the provided shard number.
  */
-public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements Iterable<Operand<Tensor>> {
+public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorGetNextFromShard operation.
@@ -53,9 +53,9 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
   @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorGetNextFromShard create(Scope scope, Operand<?> multiDeviceIterator, Operand<TInt32> shardNum, Operand<TInt64> incarnationId, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorGetNextFromShard", scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
-    opBuilder.addInput(multiDeviceIterator.asOutput());
-    opBuilder.addInput(shardNum.asOutput());
-    opBuilder.addInput(incarnationId.asOutput());
+    opBuilder.addInput(multiDeviceIterator.asOutput(scope));
+    opBuilder.addInput(shardNum.asOutput(scope));
+    opBuilder.addInput(incarnationId.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -79,7 +79,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

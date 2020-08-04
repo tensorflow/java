@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -30,6 +29,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Extracts the average sparse gradient in a SparseConditionalAccumulator.
@@ -44,7 +44,7 @@ import org.tensorflow.types.TString;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "sparse")
-public final class SparseAccumulatorTakeGradient<T extends Tensor> extends RawOp {
+public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseAccumulatorTakeGradient operation.
@@ -57,10 +57,10 @@ public final class SparseAccumulatorTakeGradient<T extends Tensor> extends RawOp
    * @return a new instance of SparseAccumulatorTakeGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(numRequired.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(numRequired.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new SparseAccumulatorTakeGradient<T>(opBuilder.build());

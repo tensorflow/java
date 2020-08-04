@@ -69,7 +69,7 @@ public final class Lower extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Lower create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLower", scope.makeOpName("Lower"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -95,7 +95,7 @@ public final class Lower extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

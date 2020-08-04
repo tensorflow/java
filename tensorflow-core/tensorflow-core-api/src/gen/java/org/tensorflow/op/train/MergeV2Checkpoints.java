@@ -73,8 +73,8 @@ public final class MergeV2Checkpoints extends RawOp {
   @Endpoint(describeByClass = true)
   public static MergeV2Checkpoints create(Scope scope, Operand<TString> checkpointPrefixes, Operand<TString> destinationPrefix, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeV2Checkpoints", scope.makeOpName("MergeV2Checkpoints"));
-    opBuilder.addInput(checkpointPrefixes.asOutput());
-    opBuilder.addInput(destinationPrefix.asOutput());
+    opBuilder.addInput(checkpointPrefixes.asOutput(scope));
+    opBuilder.addInput(destinationPrefix.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

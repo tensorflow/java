@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA DynamicSlice operator, documented at
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class DynamicSlice<T extends Tensor> extends RawOp implements Operand<T> {
+public final class DynamicSlice<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DynamicSlice operation.
@@ -58,11 +58,11 @@ public final class DynamicSlice<T extends Tensor> extends RawOp implements Opera
    * @return a new instance of DynamicSlice
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> DynamicSlice<T> create(Scope scope, Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
+  public static <T extends TType, U extends TNumber> DynamicSlice<T> create(Scope scope, Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDynamicSlice", scope.makeOpName("DynamicSlice"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(startIndices.asOutput());
-    opBuilder.addInput(sizeIndices.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(startIndices.asOutput(scope));
+    opBuilder.addInput(sizeIndices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DynamicSlice<T>(opBuilder.build());
   }
@@ -74,7 +74,7 @@ public final class DynamicSlice<T extends Tensor> extends RawOp implements Opera
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

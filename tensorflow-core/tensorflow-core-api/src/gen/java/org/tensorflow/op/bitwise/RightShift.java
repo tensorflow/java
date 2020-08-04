@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -68,7 +67,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "bitwise")
-public final class RightShift<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class RightShift<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RightShift operation.
@@ -79,10 +78,10 @@ public final class RightShift<T extends Tensor & TNumber> extends RawOp implemen
    * @return a new instance of RightShift
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> RightShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TNumber> RightShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("RightShift", scope.makeOpName("RightShift"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(y.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(y.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RightShift<T>(opBuilder.build());
   }
@@ -94,7 +93,7 @@ public final class RightShift<T extends Tensor & TNumber> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

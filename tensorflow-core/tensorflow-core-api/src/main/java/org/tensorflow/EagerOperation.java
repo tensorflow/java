@@ -135,7 +135,7 @@ class EagerOperation extends AbstractOperation {
     // instead.
     Tensor<?> tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      session.detach(tensor.nativeHandle());
+      session.detach(((AbstractTensor)tensor).nativeHandle());
       tensor = outputTensors.get(outputIndex);
     }
     return tensor;
@@ -160,14 +160,10 @@ class EagerOperation extends AbstractOperation {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
+      TF_Tensor nativeTensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      Tensor<?> t = Tensors.fromHandle(tensor);
-      session.attach(t.nativeHandle());
-      // Now that the tensor life is attached to the eager session scope, closing it will
-      // implicitly detach it from its previous internal scope
-      // FIXME TENSOR REFACT : is that right and ok?
-      t.close();
+      Tensor<?> t = Tensors.fromHandle(nativeTensor);
+      ((AbstractTensor)t).attachTo(session);
       return t;
     }
   }

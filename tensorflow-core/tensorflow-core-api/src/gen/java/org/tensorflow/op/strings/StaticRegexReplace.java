@@ -67,7 +67,7 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
   @Endpoint(describeByClass = true)
   public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern, String rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexReplace", scope.makeOpName("StaticRegexReplace"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("pattern", pattern);
     opBuilder.setAttr("rewrite", rewrite);
@@ -97,7 +97,7 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

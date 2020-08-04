@@ -23,20 +23,20 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset by applying optimizations to `input_dataset`.
  * <p>
  * Creates a dataset by applying optimizations to `input_dataset`.
  */
-public final class OptimizeDataset extends RawOp implements Operand<Tensor> {
+public final class OptimizeDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.OptimizeDataset}
@@ -71,8 +71,8 @@ public final class OptimizeDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static OptimizeDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> optimizations, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptimizeDataset", scope.makeOpName("OptimizeDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(optimizations.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(optimizations.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -113,8 +113,8 @@ public final class OptimizeDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

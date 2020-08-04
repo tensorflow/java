@@ -20,7 +20,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.nn.AvgPool;
 import org.tensorflow.op.nn.AvgPool3d;
 import org.tensorflow.op.nn.AvgPool3dGrad;
@@ -96,6 +95,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code nn} operations as {@link Op Op}s
@@ -123,7 +123,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of AvgPool
    */
-  public <T extends Tensor & TNumber> AvgPool<T> avgPool(Operand<T> value, List<Long> ksize,
+  public <T extends TNumber> AvgPool<T> avgPool(Operand<T> value, List<Long> ksize,
       List<Long> strides, String padding, AvgPool.Options... options) {
     return AvgPool.create(scope, value, ksize, strides, padding, options);
   }
@@ -141,7 +141,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of AvgPool3d
    */
-  public <T extends Tensor & TNumber> AvgPool3d<T> avgPool3d(Operand<T> input, List<Long> ksize,
+  public <T extends TNumber> AvgPool3d<T> avgPool3d(Operand<T> input, List<Long> ksize,
       List<Long> strides, String padding, AvgPool3d.Options... options) {
     return AvgPool3d.create(scope, input, ksize, strides, padding, options);
   }
@@ -160,7 +160,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of AvgPool3dGrad
    */
-  public <T extends Tensor & TNumber> AvgPool3dGrad<T> avgPool3dGrad(Operand<TInt32> origInputShape,
+  public <T extends TNumber> AvgPool3dGrad<T> avgPool3dGrad(Operand<TInt32> origInputShape,
       Operand<T> grad, List<Long> ksize, List<Long> strides, String padding,
       AvgPool3dGrad.Options... options) {
     return AvgPool3dGrad.create(scope, origInputShape, grad, ksize, strides, padding, options);
@@ -189,7 +189,7 @@ public final class NnOps {
    *  needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalization
    */
-  public <T extends Tensor> BatchNormWithGlobalNormalization<T> batchNormWithGlobalNormalization(
+  public <T extends TType> BatchNormWithGlobalNormalization<T> batchNormWithGlobalNormalization(
       Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma,
       Float varianceEpsilon, Boolean scaleAfterNormalization) {
     return BatchNormWithGlobalNormalization.create(scope, t, m, v, beta, gamma, varianceEpsilon, scaleAfterNormalization);
@@ -217,7 +217,7 @@ public final class NnOps {
    *  needs to be multiplied with gamma.
    * @return a new instance of BatchNormWithGlobalNormalizationGrad
    */
-  public <T extends Tensor> BatchNormWithGlobalNormalizationGrad<T> batchNormWithGlobalNormalizationGrad(
+  public <T extends TType> BatchNormWithGlobalNormalizationGrad<T> batchNormWithGlobalNormalizationGrad(
       Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop,
       Float varianceEpsilon, Boolean scaleAfterNormalization) {
     return BatchNormWithGlobalNormalizationGrad.create(scope, t, m, v, gamma, backprop, varianceEpsilon, scaleAfterNormalization);
@@ -235,7 +235,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of BiasAdd
    */
-  public <T extends Tensor> BiasAdd<T> biasAdd(Operand<T> value, Operand<T> bias,
+  public <T extends TType> BiasAdd<T> biasAdd(Operand<T> value, Operand<T> bias,
       BiasAdd.Options... options) {
     return BiasAdd.create(scope, value, bias, options);
   }
@@ -252,7 +252,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of BiasAddGrad
    */
-  public <T extends Tensor> BiasAddGrad<T> biasAddGrad(Operand<T> outBackprop,
+  public <T extends TType> BiasAddGrad<T> biasAddGrad(Operand<T> outBackprop,
       BiasAddGrad.Options... options) {
     return BiasAddGrad.create(scope, outBackprop, options);
   }
@@ -313,7 +313,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv2d
    */
-  public <T extends Tensor & TNumber> Conv2d<T> conv2d(Operand<T> input, Operand<T> filter,
+  public <T extends TNumber> Conv2d<T> conv2d(Operand<T> input, Operand<T> filter,
       List<Long> strides, String padding, Conv2d.Options... options) {
     return Conv2d.create(scope, input, filter, strides, padding, options);
   }
@@ -335,7 +335,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv2dBackpropFilter
    */
-  public <T extends Tensor & TNumber> Conv2dBackpropFilter<T> conv2dBackpropFilter(Operand<T> input,
+  public <T extends TNumber> Conv2dBackpropFilter<T> conv2dBackpropFilter(Operand<T> input,
       Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding,
       Conv2dBackpropFilter.Options... options) {
     return Conv2dBackpropFilter.create(scope, input, filterSizes, outBackprop, strides, padding, options);
@@ -358,9 +358,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv2dBackpropInput
    */
-  public <T extends Tensor & TNumber> Conv2dBackpropInput<T> conv2dBackpropInput(
-      Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
-      String padding, Conv2dBackpropInput.Options... options) {
+  public <T extends TNumber> Conv2dBackpropInput<T> conv2dBackpropInput(Operand<TInt32> inputSizes,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
+      Conv2dBackpropInput.Options... options) {
     return Conv2dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
   }
 
@@ -383,7 +383,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv3d
    */
-  public <T extends Tensor & TNumber> Conv3d<T> conv3d(Operand<T> input, Operand<T> filter,
+  public <T extends TNumber> Conv3d<T> conv3d(Operand<T> input, Operand<T> filter,
       List<Long> strides, String padding, Conv3d.Options... options) {
     return Conv3d.create(scope, input, filter, strides, padding, options);
   }
@@ -405,7 +405,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv3dBackpropFilter
    */
-  public <T extends Tensor & TNumber> Conv3dBackpropFilter<T> conv3dBackpropFilter(Operand<T> input,
+  public <T extends TNumber> Conv3dBackpropFilter<T> conv3dBackpropFilter(Operand<T> input,
       Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding,
       Conv3dBackpropFilter.Options... options) {
     return Conv3dBackpropFilter.create(scope, input, filterSizes, outBackprop, strides, padding, options);
@@ -428,7 +428,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv3dBackpropInput
    */
-  public <U extends Tensor & TNumber, T extends Tensor & TNumber> Conv3dBackpropInput<U> conv3dBackpropInput(
+  public <U extends TNumber, T extends TNumber> Conv3dBackpropInput<U> conv3dBackpropInput(
       Operand<T> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides,
       String padding, Conv3dBackpropInput.Options... options) {
     return Conv3dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
@@ -451,8 +451,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CtcBeamSearchDecoder
    */
-  public <T extends Tensor & TNumber> CtcBeamSearchDecoder<T> ctcBeamSearchDecoder(
-      Operand<T> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths,
+  public <T extends TNumber> CtcBeamSearchDecoder<T> ctcBeamSearchDecoder(Operand<T> inputs,
+      Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths,
       CtcBeamSearchDecoder.Options... options) {
     return CtcBeamSearchDecoder.create(scope, inputs, sequenceLength, beamWidth, topPaths, options);
   }
@@ -476,7 +476,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CtcGreedyDecoder
    */
-  public <T extends Tensor & TNumber> CtcGreedyDecoder<T> ctcGreedyDecoder(Operand<T> inputs,
+  public <T extends TNumber> CtcGreedyDecoder<T> ctcGreedyDecoder(Operand<T> inputs,
       Operand<TInt32> sequenceLength, CtcGreedyDecoder.Options... options) {
     return CtcGreedyDecoder.create(scope, inputs, sequenceLength, options);
   }
@@ -497,9 +497,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CtcLoss
    */
-  public <T extends Tensor & TNumber> CtcLoss<T> ctcLoss(Operand<T> inputs,
-      Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength,
-      CtcLoss.Options... options) {
+  public <T extends TNumber> CtcLoss<T> ctcLoss(Operand<T> inputs, Operand<TInt64> labelsIndices,
+      Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, CtcLoss.Options... options) {
     return CtcLoss.create(scope, inputs, labelsIndices, labelsValues, sequenceLength, options);
   }
 
@@ -546,7 +545,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNCanonicalToParams
    */
-  public <T extends Tensor & TNumber> CudnnRNNCanonicalToParams<T> cudnnRNNCanonicalToParams(
+  public <T extends TNumber> CudnnRNNCanonicalToParams<T> cudnnRNNCanonicalToParams(
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
       Iterable<Operand<T>> weights, Iterable<Operand<T>> biases,
       CudnnRNNCanonicalToParams.Options... options) {
@@ -597,7 +596,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRNNParamsToCanonical
    */
-  public <T extends Tensor & TNumber> CudnnRNNParamsToCanonical<T> cudnnRNNParamsToCanonical(
+  public <T extends TNumber> CudnnRNNParamsToCanonical<T> cudnnRNNParamsToCanonical(
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
       Operand<T> params, Long numParamsWeights, Long numParamsBiases,
       CudnnRNNParamsToCanonical.Options... options) {
@@ -638,7 +637,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of CudnnRnnParamsSize
    */
-  public <U extends Tensor & TNumber, T extends Tensor & TNumber> CudnnRnnParamsSize<U> cudnnRnnParamsSize(
+  public <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> cudnnRnnParamsSize(
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T,
       DataType<U> S, CudnnRnnParamsSize.Options... options) {
     return CudnnRnnParamsSize.create(scope, numLayers, numUnits, inputSize, T, S, options);
@@ -655,7 +654,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DataFormatDimMap
    */
-  public <T extends Tensor & TNumber> DataFormatDimMap<T> dataFormatDimMap(Operand<T> x,
+  public <T extends TNumber> DataFormatDimMap<T> dataFormatDimMap(Operand<T> x,
       DataFormatDimMap.Options... options) {
     return DataFormatDimMap.create(scope, x, options);
   }
@@ -670,7 +669,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DataFormatVecPermute
    */
-  public <T extends Tensor & TNumber> DataFormatVecPermute<T> dataFormatVecPermute(Operand<T> x,
+  public <T extends TNumber> DataFormatVecPermute<T> dataFormatVecPermute(Operand<T> x,
       DataFormatVecPermute.Options... options) {
     return DataFormatVecPermute.create(scope, x, options);
   }
@@ -763,7 +762,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DepthToSpace
    */
-  public <T extends Tensor> DepthToSpace<T> depthToSpace(Operand<T> input, Long blockSize,
+  public <T extends TType> DepthToSpace<T> depthToSpace(Operand<T> input, Long blockSize,
       DepthToSpace.Options... options) {
     return DepthToSpace.create(scope, input, blockSize, options);
   }
@@ -797,8 +796,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNative
    */
-  public <T extends Tensor & TNumber> DepthwiseConv2dNative<T> depthwiseConv2dNative(
-      Operand<T> input, Operand<T> filter, List<Long> strides, String padding,
+  public <T extends TNumber> DepthwiseConv2dNative<T> depthwiseConv2dNative(Operand<T> input,
+      Operand<T> filter, List<Long> strides, String padding,
       DepthwiseConv2dNative.Options... options) {
     return DepthwiseConv2dNative.create(scope, input, filter, strides, padding, options);
   }
@@ -823,7 +822,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNativeBackpropFilter
    */
-  public <T extends Tensor & TNumber> DepthwiseConv2dNativeBackpropFilter<T> depthwiseConv2dNativeBackpropFilter(
+  public <T extends TNumber> DepthwiseConv2dNativeBackpropFilter<T> depthwiseConv2dNativeBackpropFilter(
       Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides,
       String padding, DepthwiseConv2dNativeBackpropFilter.Options... options) {
     return DepthwiseConv2dNativeBackpropFilter.create(scope, input, filterSizes, outBackprop, strides, padding, options);
@@ -848,7 +847,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of DepthwiseConv2dNativeBackpropInput
    */
-  public <T extends Tensor & TNumber> DepthwiseConv2dNativeBackpropInput<T> depthwiseConv2dNativeBackpropInput(
+  public <T extends TNumber> DepthwiseConv2dNativeBackpropInput<T> depthwiseConv2dNativeBackpropInput(
       Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
       String padding, DepthwiseConv2dNativeBackpropInput.Options... options) {
     return DepthwiseConv2dNativeBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
@@ -891,7 +890,7 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2d
    */
-  public <T extends Tensor & TNumber> Dilation2d<T> dilation2d(Operand<T> input, Operand<T> filter,
+  public <T extends TNumber> Dilation2d<T> dilation2d(Operand<T> input, Operand<T> filter,
       List<Long> strides, List<Long> rates, String padding) {
     return Dilation2d.create(scope, input, filter, strides, rates, padding);
   }
@@ -910,9 +909,9 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2dBackpropFilter
    */
-  public <T extends Tensor & TNumber> Dilation2dBackpropFilter<T> dilation2dBackpropFilter(
-      Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
-      List<Long> rates, String padding) {
+  public <T extends TNumber> Dilation2dBackpropFilter<T> dilation2dBackpropFilter(Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates,
+      String padding) {
     return Dilation2dBackpropFilter.create(scope, input, filter, outBackprop, strides, rates, padding);
   }
 
@@ -930,9 +929,9 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of Dilation2dBackpropInput
    */
-  public <T extends Tensor & TNumber> Dilation2dBackpropInput<T> dilation2dBackpropInput(
-      Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
-      List<Long> rates, String padding) {
+  public <T extends TNumber> Dilation2dBackpropInput<T> dilation2dBackpropInput(Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, List<Long> rates,
+      String padding) {
     return Dilation2dBackpropInput.create(scope, input, filter, outBackprop, strides, rates, padding);
   }
 
@@ -946,7 +945,7 @@ public final class NnOps {
    * @param features
    * @return a new instance of Elu
    */
-  public <T extends Tensor & TNumber> Elu<T> elu(Operand<T> features) {
+  public <T extends TNumber> Elu<T> elu(Operand<T> features) {
     return Elu.create(scope, features);
   }
 
@@ -1004,7 +1003,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of FractionalAvgPool
    */
-  public <T extends Tensor & TNumber> FractionalAvgPool<T> fractionalAvgPool(Operand<T> value,
+  public <T extends TNumber> FractionalAvgPool<T> fractionalAvgPool(Operand<T> value,
       List<Float> poolingRatio, FractionalAvgPool.Options... options) {
     return FractionalAvgPool.create(scope, value, poolingRatio, options);
   }
@@ -1052,7 +1051,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of FractionalMaxPool
    */
-  public <T extends Tensor & TNumber> FractionalMaxPool<T> fractionalMaxPool(Operand<T> value,
+  public <T extends TNumber> FractionalMaxPool<T> fractionalMaxPool(Operand<T> value,
       List<Float> poolingRatio, FractionalMaxPool.Options... options) {
     return FractionalMaxPool.create(scope, value, poolingRatio, options);
   }
@@ -1075,8 +1074,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNorm
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> FusedBatchNorm<T, U> fusedBatchNorm(
-      Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance,
+  public <T extends TNumber, U extends TNumber> FusedBatchNorm<T, U> fusedBatchNorm(Operand<T> x,
+      Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance,
       FusedBatchNorm.Options... options) {
     return FusedBatchNorm.create(scope, x, scale, offset, mean, variance, options);
   }
@@ -1107,7 +1106,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of FusedBatchNormGrad
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> FusedBatchNormGrad<T, U> fusedBatchNormGrad(
+  public <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> fusedBatchNormGrad(
       Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1,
       Operand<U> reserveSpace2, Operand<U> reserveSpace3, FusedBatchNormGrad.Options... options) {
     return FusedBatchNormGrad.create(scope, yBackprop, x, scale, reserveSpace1, reserveSpace2, reserveSpace3, options);
@@ -1140,7 +1139,7 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of FusedPadConv2d
    */
-  public <T extends Tensor & TNumber> FusedPadConv2d<T> fusedPadConv2d(Operand<T> input,
+  public <T extends TNumber> FusedPadConv2d<T> fusedPadConv2d(Operand<T> input,
       Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides,
       String padding) {
     return FusedPadConv2d.create(scope, input, paddings, filter, mode, strides, padding);
@@ -1175,9 +1174,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of FusedResizeAndPadConv2d
    */
-  public <T extends Tensor & TNumber> FusedResizeAndPadConv2d<T> fusedResizeAndPadConv2d(
-      Operand<T> input, Operand<TInt32> size, Operand<TInt32> paddings, Operand<T> filter,
-      String mode, List<Long> strides, String padding, FusedResizeAndPadConv2d.Options... options) {
+  public <T extends TNumber> FusedResizeAndPadConv2d<T> fusedResizeAndPadConv2d(Operand<T> input,
+      Operand<TInt32> size, Operand<TInt32> paddings, Operand<T> filter, String mode,
+      List<Long> strides, String padding, FusedResizeAndPadConv2d.Options... options) {
     return FusedResizeAndPadConv2d.create(scope, input, size, paddings, filter, mode, strides, padding, options);
   }
 
@@ -1204,8 +1203,8 @@ public final class NnOps {
    * @param k Number of top elements to look at for computing precision.
    * @return a new instance of InTopK
    */
-  public <T extends Tensor & TNumber> InTopK inTopK(Operand<TFloat32> predictions,
-      Operand<T> targets, Operand<T> k) {
+  public <T extends TNumber> InTopK inTopK(Operand<TFloat32> predictions, Operand<T> targets,
+      Operand<T> k) {
     return InTopK.create(scope, predictions, targets, k);
   }
 
@@ -1220,7 +1219,7 @@ public final class NnOps {
    * @param t Typically 2-D, but may have any dimensions.
    * @return a new instance of L2Loss
    */
-  public <T extends Tensor & TNumber> L2Loss<T> l2Loss(Operand<T> t) {
+  public <T extends TNumber> L2Loss<T> l2Loss(Operand<T> t) {
     return L2Loss.create(scope, t);
   }
 
@@ -1287,7 +1286,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of LocalResponseNormalization
    */
-  public <T extends Tensor & TNumber> LocalResponseNormalization<T> localResponseNormalization(
+  public <T extends TNumber> LocalResponseNormalization<T> localResponseNormalization(
       Operand<T> input, LocalResponseNormalization.Options... options) {
     return LocalResponseNormalization.create(scope, input, options);
   }
@@ -1303,7 +1302,7 @@ public final class NnOps {
    * @param logits 2-D with shape `[batch_size, num_classes]`.
    * @return a new instance of LogSoftmax
    */
-  public <T extends Tensor & TNumber> LogSoftmax<T> logSoftmax(Operand<T> logits) {
+  public <T extends TNumber> LogSoftmax<T> logSoftmax(Operand<T> logits) {
     return LogSoftmax.create(scope, logits);
   }
 
@@ -1319,7 +1318,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPool
    */
-  public <T extends Tensor> MaxPool<T> maxPool(Operand<T> input, Operand<TInt32> ksize,
+  public <T extends TType> MaxPool<T> maxPool(Operand<T> input, Operand<TInt32> ksize,
       Operand<TInt32> strides, String padding, MaxPool.Options... options) {
     return MaxPool.create(scope, input, ksize, strides, padding, options);
   }
@@ -1337,7 +1336,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3d
    */
-  public <T extends Tensor & TNumber> MaxPool3d<T> maxPool3d(Operand<T> input, List<Long> ksize,
+  public <T extends TNumber> MaxPool3d<T> maxPool3d(Operand<T> input, List<Long> ksize,
       List<Long> strides, String padding, MaxPool3d.Options... options) {
     return MaxPool3d.create(scope, input, ksize, strides, padding, options);
   }
@@ -1357,9 +1356,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3dGrad
    */
-  public <U extends Tensor & TNumber, T extends Tensor & TNumber> MaxPool3dGrad<U> maxPool3dGrad(
-      Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize,
-      List<Long> strides, String padding, MaxPool3dGrad.Options... options) {
+  public <U extends TNumber, T extends TNumber> MaxPool3dGrad<U> maxPool3dGrad(Operand<T> origInput,
+      Operand<T> origOutput, Operand<U> grad, List<Long> ksize, List<Long> strides, String padding,
+      MaxPool3dGrad.Options... options) {
     return MaxPool3dGrad.create(scope, origInput, origOutput, grad, ksize, strides, padding, options);
   }
 
@@ -1378,7 +1377,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPool3dGradGrad
    */
-  public <T extends Tensor & TNumber> MaxPool3dGradGrad<T> maxPool3dGradGrad(Operand<T> origInput,
+  public <T extends TNumber> MaxPool3dGradGrad<T> maxPool3dGradGrad(Operand<T> origInput,
       Operand<T> origOutput, Operand<T> grad, List<Long> ksize, List<Long> strides, String padding,
       MaxPool3dGradGrad.Options... options) {
     return MaxPool3dGradGrad.create(scope, origInput, origOutput, grad, ksize, strides, padding, options);
@@ -1398,9 +1397,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGrad
    */
-  public <T extends Tensor & TNumber> MaxPoolGrad<T> maxPoolGrad(Operand<T> origInput,
-      Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides,
-      String padding, MaxPoolGrad.Options... options) {
+  public <T extends TNumber> MaxPoolGrad<T> maxPoolGrad(Operand<T> origInput, Operand<T> origOutput,
+      Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides, String padding,
+      MaxPoolGrad.Options... options) {
     return MaxPoolGrad.create(scope, origInput, origOutput, grad, ksize, strides, padding, options);
   }
 
@@ -1418,7 +1417,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradGrad
    */
-  public <T extends Tensor & TNumber> MaxPoolGradGrad<T> maxPoolGradGrad(Operand<T> origInput,
+  public <T extends TNumber> MaxPoolGradGrad<T> maxPoolGradGrad(Operand<T> origInput,
       Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides,
       String padding, MaxPoolGradGrad.Options... options) {
     return MaxPoolGradGrad.create(scope, origInput, origOutput, grad, ksize, strides, padding, options);
@@ -1439,7 +1438,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradGradWithArgmax
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> MaxPoolGradGradWithArgmax<T> maxPoolGradGradWithArgmax(
+  public <T extends TNumber, U extends TNumber> MaxPoolGradGradWithArgmax<T> maxPoolGradGradWithArgmax(
       Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides,
       String padding, MaxPoolGradGradWithArgmax.Options... options) {
     return MaxPoolGradGradWithArgmax.create(scope, input, grad, argmax, ksize, strides, padding, options);
@@ -1468,9 +1467,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolWithArgmax
    */
-  public <T extends Tensor & TNumber> MaxPoolWithArgmax<T, TInt64> maxPoolWithArgmax(
-      Operand<T> input, List<Long> ksize, List<Long> strides, String padding,
-      MaxPoolWithArgmax.Options... options) {
+  public <T extends TNumber> MaxPoolWithArgmax<T, TInt64> maxPoolWithArgmax(Operand<T> input,
+      List<Long> ksize, List<Long> strides, String padding, MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, padding, options);
   }
 
@@ -1498,7 +1496,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolWithArgmax
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> MaxPoolWithArgmax<T, U> maxPoolWithArgmax(
+  public <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> maxPoolWithArgmax(
       Operand<T> input, List<Long> ksize, List<Long> strides, DataType<U> Targmax, String padding,
       MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, Targmax, padding, options);
@@ -1522,7 +1520,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of NthElement
    */
-  public <T extends Tensor & TNumber> NthElement<T> nthElement(Operand<T> input, Operand<TInt32> n,
+  public <T extends TNumber> NthElement<T> nthElement(Operand<T> input, Operand<TInt32> n,
       NthElement.Options... options) {
     return NthElement.create(scope, input, n, options);
   }
@@ -1541,7 +1539,7 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedAvgPool
    */
-  public <T extends Tensor> QuantizedAvgPool<T> quantizedAvgPool(Operand<T> input,
+  public <T extends TType> QuantizedAvgPool<T> quantizedAvgPool(Operand<T> input,
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides,
       String padding) {
     return QuantizedAvgPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
@@ -1582,7 +1580,7 @@ public final class NnOps {
    *  needs to be multiplied with gamma.
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
-  public <U extends Tensor, T extends Tensor> QuantizedBatchNormWithGlobalNormalization<U> quantizedBatchNormWithGlobalNormalization(
+  public <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> quantizedBatchNormWithGlobalNormalization(
       Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m,
       Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin,
       Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax,
@@ -1606,7 +1604,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedBiasAdd
    */
-  public <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedBiasAdd<V> quantizedBiasAdd(
+  public <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> quantizedBiasAdd(
       Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
       Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
     return QuantizedBiasAdd.create(scope, input, bias, minInput, maxInput, minBias, maxBias, outType);
@@ -1634,7 +1632,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2d
    */
-  public <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedConv2d<V> quantizedConv2d(
+  public <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> quantizedConv2d(
       Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
       Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType,
       List<Long> strides, String padding, QuantizedConv2d.Options... options) {
@@ -1651,7 +1649,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedInstanceNorm
    */
-  public <T extends Tensor> QuantizedInstanceNorm<T> quantizedInstanceNorm(Operand<T> x,
+  public <T extends TType> QuantizedInstanceNorm<T> quantizedInstanceNorm(Operand<T> x,
       Operand<TFloat32> xMin, Operand<TFloat32> xMax, QuantizedInstanceNorm.Options... options) {
     return QuantizedInstanceNorm.create(scope, x, xMin, xMax, options);
   }
@@ -1670,7 +1668,7 @@ public final class NnOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of QuantizedMaxPool
    */
-  public <T extends Tensor> QuantizedMaxPool<T> quantizedMaxPool(Operand<T> input,
+  public <T extends TType> QuantizedMaxPool<T> quantizedMaxPool(Operand<T> input,
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides,
       String padding) {
     return QuantizedMaxPool.create(scope, input, minInput, maxInput, ksize, strides, padding);
@@ -1686,7 +1684,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedRelu
    */
-  public <U extends Tensor, T extends Tensor> QuantizedRelu<U> quantizedRelu(Operand<T> features,
+  public <U extends TType, T extends TType> QuantizedRelu<U> quantizedRelu(Operand<T> features,
       Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     return QuantizedRelu.create(scope, features, minFeatures, maxFeatures, outType);
   }
@@ -1701,7 +1699,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedRelu6
    */
-  public <U extends Tensor, T extends Tensor> QuantizedRelu6<U> quantizedRelu6(Operand<T> features,
+  public <U extends TType, T extends TType> QuantizedRelu6<U> quantizedRelu6(Operand<T> features,
       Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
     return QuantizedRelu6.create(scope, features, minFeatures, maxFeatures, outType);
   }
@@ -1717,7 +1715,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedReluX
    */
-  public <U extends Tensor, T extends Tensor> QuantizedReluX<U> quantizedReluX(Operand<T> features,
+  public <U extends TType, T extends TType> QuantizedReluX<U> quantizedReluX(Operand<T> features,
       Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures,
       DataType<U> outType) {
     return QuantizedReluX.create(scope, features, maxValue, minFeatures, maxFeatures, outType);
@@ -1735,7 +1733,7 @@ public final class NnOps {
    * @param features
    * @return a new instance of Relu
    */
-  public <T extends Tensor> Relu<T> relu(Operand<T> features) {
+  public <T extends TType> Relu<T> relu(Operand<T> features) {
     return Relu.create(scope, features);
   }
 
@@ -1746,7 +1744,7 @@ public final class NnOps {
    * @param features
    * @return a new instance of Relu6
    */
-  public <T extends Tensor & TNumber> Relu6<T> relu6(Operand<T> features) {
+  public <T extends TNumber> Relu6<T> relu6(Operand<T> features) {
     return Relu6.create(scope, features);
   }
 
@@ -1765,7 +1763,7 @@ public final class NnOps {
    * @param features
    * @return a new instance of Selu
    */
-  public <T extends Tensor & TNumber> Selu<T> selu(Operand<T> features) {
+  public <T extends TNumber> Selu<T> selu(Operand<T> features) {
     return Selu.create(scope, features);
   }
 
@@ -1780,7 +1778,7 @@ public final class NnOps {
    * @param logits 2-D with shape `[batch_size, num_classes]`.
    * @return a new instance of Softmax
    */
-  public <T extends Tensor & TNumber> Softmax<T> softmax(Operand<T> logits) {
+  public <T extends TNumber> Softmax<T> softmax(Operand<T> logits) {
     return Softmax.create(scope, logits);
   }
 
@@ -1796,7 +1794,7 @@ public final class NnOps {
    *  probability distribution.
    * @return a new instance of SoftmaxCrossEntropyWithLogits
    */
-  public <T extends Tensor & TNumber> SoftmaxCrossEntropyWithLogits<T> softmaxCrossEntropyWithLogits(
+  public <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> softmaxCrossEntropyWithLogits(
       Operand<T> features, Operand<T> labels) {
     return SoftmaxCrossEntropyWithLogits.create(scope, features, labels);
   }
@@ -1808,7 +1806,7 @@ public final class NnOps {
    * @param features
    * @return a new instance of Softsign
    */
-  public <T extends Tensor & TNumber> Softsign<T> softsign(Operand<T> features) {
+  public <T extends TNumber> Softsign<T> softsign(Operand<T> features) {
     return Softsign.create(scope, features);
   }
 
@@ -1897,8 +1895,8 @@ public final class NnOps {
    * @param blockSize
    * @return a new instance of SpaceToBatch
    */
-  public <T extends Tensor, U extends Tensor & TNumber> SpaceToBatch<T> spaceToBatch(
-      Operand<T> input, Operand<U> paddings, Long blockSize) {
+  public <T extends TType, U extends TNumber> SpaceToBatch<T> spaceToBatch(Operand<T> input,
+      Operand<U> paddings, Long blockSize) {
     return SpaceToBatch.create(scope, input, paddings, blockSize);
   }
 
@@ -1984,7 +1982,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of SpaceToDepth
    */
-  public <T extends Tensor> SpaceToDepth<T> spaceToDepth(Operand<T> input, Long blockSize,
+  public <T extends TType> SpaceToDepth<T> spaceToDepth(Operand<T> input, Long blockSize,
       SpaceToDepth.Options... options) {
     return SpaceToDepth.create(scope, input, blockSize, options);
   }
@@ -2005,7 +2003,7 @@ public final class NnOps {
    *  This is the label for the given minibatch entry.
    * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
+  public <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
       Operand<T> features, Operand<U> labels) {
     return SparseSoftmaxCrossEntropyWithLogits.create(scope, features, labels);
   }
@@ -2031,7 +2029,7 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of TopK
    */
-  public <T extends Tensor & TNumber> TopK<T> topK(Operand<T> input, Operand<TInt32> k,
+  public <T extends TNumber> TopK<T> topK(Operand<T> input, Operand<TInt32> k,
       TopK.Options... options) {
     return TopK.create(scope, input, k, options);
   }

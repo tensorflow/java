@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the lines of a file delimited by '\n'.
  */
 @Operator(group = "io")
-public final class TextLineReader extends RawOp implements Operand<Tensor> {
+public final class TextLineReader extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.TextLineReader}
@@ -131,8 +131,8 @@ public final class TextLineReader extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) readerHandle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) readerHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

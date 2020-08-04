@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise min of two SparseTensors.
@@ -36,7 +36,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseSparseMinimum<T extends Tensor> extends RawOp {
+public final class SparseSparseMinimum<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseSparseMinimum operation.
@@ -52,14 +52,14 @@ public final class SparseSparseMinimum<T extends Tensor> extends RawOp {
    * @return a new instance of SparseSparseMinimum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseSparseMinimum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
+  public static <T extends TType> SparseSparseMinimum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMinimum", scope.makeOpName("SparseSparseMinimum"));
-    opBuilder.addInput(aIndices.asOutput());
-    opBuilder.addInput(aValues.asOutput());
-    opBuilder.addInput(aShape.asOutput());
-    opBuilder.addInput(bIndices.asOutput());
-    opBuilder.addInput(bValues.asOutput());
-    opBuilder.addInput(bShape.asOutput());
+    opBuilder.addInput(aIndices.asOutput(scope));
+    opBuilder.addInput(aValues.asOutput(scope));
+    opBuilder.addInput(aShape.asOutput(scope));
+    opBuilder.addInput(bIndices.asOutput(scope));
+    opBuilder.addInput(bValues.asOutput(scope));
+    opBuilder.addInput(bShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSparseMinimum<T>(opBuilder.build());
   }

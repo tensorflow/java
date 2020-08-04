@@ -45,8 +45,8 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
   @Endpoint(describeByClass = true)
   public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(flowIn.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(flowIn.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArraySize(opBuilder.build());
   }
@@ -59,7 +59,7 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return size;
   }
   

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Makes its input available to the next iteration.
@@ -33,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class NextIteration<T extends Tensor> extends RawOp implements Operand<T> {
+public final class NextIteration<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NextIteration operation.
@@ -43,9 +43,9 @@ public final class NextIteration<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of NextIteration
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> NextIteration<T> create(Scope scope, Operand<T> data) {
+  public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
-    opBuilder.addInput(data.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NextIteration<T>(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class NextIteration<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

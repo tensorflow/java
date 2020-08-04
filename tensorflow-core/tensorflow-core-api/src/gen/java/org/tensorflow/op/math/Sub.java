@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x - y element-wise.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Sub<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Sub<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sub operation.
@@ -47,10 +47,10 @@ public final class Sub<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Sub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Sub<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> Sub<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sub", scope.makeOpName("Sub"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(y.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(y.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sub<T>(opBuilder.build());
   }
@@ -62,7 +62,7 @@ public final class Sub<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

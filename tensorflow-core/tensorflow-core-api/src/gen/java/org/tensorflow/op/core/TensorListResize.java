@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Resizes the list.
@@ -37,7 +37,7 @@ import org.tensorflow.types.TInt32;
  * 
  */
 @Operator
-public final class TensorListResize extends RawOp implements Operand<Tensor> {
+public final class TensorListResize extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListResize operation.
@@ -50,8 +50,8 @@ public final class TensorListResize extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static TensorListResize create(Scope scope, Operand<?> inputHandle, Operand<TInt32> size) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListResize", scope.makeOpName("TensorListResize"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListResize(opBuilder.build());
   }
@@ -64,8 +64,8 @@ public final class TensorListResize extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) outputHandle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

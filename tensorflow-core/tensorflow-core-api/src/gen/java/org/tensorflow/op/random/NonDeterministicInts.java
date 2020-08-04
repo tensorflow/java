@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Non-deterministically generates some integers.
@@ -36,7 +36,7 @@ import org.tensorflow.types.TInt64;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class NonDeterministicInts<U extends Tensor> extends RawOp implements Operand<U> {
+public final class NonDeterministicInts<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new NonDeterministicInts operation.
@@ -47,9 +47,9 @@ public final class NonDeterministicInts<U extends Tensor> extends RawOp implemen
    * @return a new instance of NonDeterministicInts
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonDeterministicInts", scope.makeOpName("NonDeterministicInts"));
-    opBuilder.addInput(shape.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new NonDeterministicInts<U>(opBuilder.build());
@@ -63,7 +63,7 @@ public final class NonDeterministicInts<U extends Tensor> extends RawOp implemen
    * @return a new instance of NonDeterministicInts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> NonDeterministicInts<TInt64> create(Scope scope, Operand<T> shape) {
+  public static <T extends TType> NonDeterministicInts<TInt64> create(Scope scope, Operand<T> shape) {
     return create(scope, shape, TInt64.DTYPE);
   }
   
@@ -75,7 +75,7 @@ public final class NonDeterministicInts<U extends Tensor> extends RawOp implemen
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

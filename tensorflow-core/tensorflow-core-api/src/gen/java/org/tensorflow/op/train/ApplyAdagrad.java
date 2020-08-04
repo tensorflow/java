@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adagrad scheme.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAdagrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ApplyAdagrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagrad}
@@ -80,12 +80,12 @@ public final class ApplyAdagrad<T extends Tensor> extends RawOp implements Opera
    * @return a new instance of ApplyAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagrad", scope.makeOpName("ApplyAdagrad"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -124,7 +124,7 @@ public final class ApplyAdagrad<T extends Tensor> extends RawOp implements Opera
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

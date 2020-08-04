@@ -20,13 +20,13 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies a gradient to a given accumulator.
@@ -46,11 +46,11 @@ public final class AccumulatorApplyGradient extends RawOp {
    * @return a new instance of AccumulatorApplyGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<T> gradient) {
+  public static <T extends TType> AccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<T> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorApplyGradient", scope.makeOpName("AccumulatorApplyGradient"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(localStep.asOutput());
-    opBuilder.addInput(gradient.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(localStep.asOutput(scope));
+    opBuilder.addInput(gradient.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AccumulatorApplyGradient(opBuilder.build());
   }

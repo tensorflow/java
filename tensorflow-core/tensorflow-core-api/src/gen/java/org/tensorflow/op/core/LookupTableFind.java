@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Looks up keys in a table, outputs the corresponding values.
@@ -39,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code values()} output
  */
 @Operator
-public final class LookupTableFind<U extends Tensor> extends RawOp implements Operand<U> {
+public final class LookupTableFind<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new LookupTableFind operation.
@@ -51,11 +51,11 @@ public final class LookupTableFind<U extends Tensor> extends RawOp implements Op
    * @return a new instance of LookupTableFind
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
+  public static <U extends TType, T extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
-    opBuilder.addInput(tableHandle.asOutput());
-    opBuilder.addInput(keys.asOutput());
-    opBuilder.addInput(defaultValue.asOutput());
+    opBuilder.addInput(tableHandle.asOutput(scope));
+    opBuilder.addInput(keys.asOutput(scope));
+    opBuilder.addInput(defaultValue.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LookupTableFind<U>(opBuilder.build());
   }
@@ -69,7 +69,7 @@ public final class LookupTableFind<U extends Tensor> extends RawOp implements Op
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return values;
   }
   

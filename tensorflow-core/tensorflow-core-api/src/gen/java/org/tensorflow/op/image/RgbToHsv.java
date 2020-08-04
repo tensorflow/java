@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -54,7 +53,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class RgbToHsv<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class RgbToHsv<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RgbToHsv operation.
@@ -64,9 +63,9 @@ public final class RgbToHsv<T extends Tensor & TNumber> extends RawOp implements
    * @return a new instance of RgbToHsv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> RgbToHsv<T> create(Scope scope, Operand<T> images) {
+  public static <T extends TNumber> RgbToHsv<T> create(Scope scope, Operand<T> images) {
     OperationBuilder opBuilder = scope.env().opBuilder("RGBToHSV", scope.makeOpName("RgbToHsv"));
-    opBuilder.addInput(images.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RgbToHsv<T>(opBuilder.build());
   }
@@ -79,7 +78,7 @@ public final class RgbToHsv<T extends Tensor & TNumber> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

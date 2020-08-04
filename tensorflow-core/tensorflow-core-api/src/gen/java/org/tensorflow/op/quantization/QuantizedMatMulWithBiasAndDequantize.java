@@ -22,18 +22,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <W> data type for {@code out()} output
  */
-public final class QuantizedMatMulWithBiasAndDequantize<W extends Tensor & TNumber> extends RawOp implements Operand<W> {
+public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> extends RawOp implements Operand<W> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.quantization.QuantizedMatMulWithBiasAndDequantize}
@@ -90,17 +90,17 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends Tensor & TNumb
    * @return a new instance of QuantizedMatMulWithBiasAndDequantize
    */
   @Endpoint(describeByClass = true)
-  public static <W extends Tensor & TNumber, T extends Tensor, U extends Tensor, V extends Tensor> QuantizedMatMulWithBiasAndDequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> Toutput, Options... options) {
+  public static <W extends TNumber, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndDequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndDequantize", scope.makeOpName("QuantizedMatMulWithBiasAndDequantize"));
-    opBuilder.addInput(a.asOutput());
-    opBuilder.addInput(b.asOutput());
-    opBuilder.addInput(bias.asOutput());
-    opBuilder.addInput(minA.asOutput());
-    opBuilder.addInput(maxA.asOutput());
-    opBuilder.addInput(minB.asOutput());
-    opBuilder.addInput(maxB.asOutput());
-    opBuilder.addInput(minFreezedOutput.asOutput());
-    opBuilder.addInput(maxFreezedOutput.asOutput());
+    opBuilder.addInput(a.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
+    opBuilder.addInput(bias.asOutput(scope));
+    opBuilder.addInput(minA.asOutput(scope));
+    opBuilder.addInput(maxA.asOutput(scope));
+    opBuilder.addInput(minB.asOutput(scope));
+    opBuilder.addInput(maxB.asOutput(scope));
+    opBuilder.addInput(minFreezedOutput.asOutput(scope));
+    opBuilder.addInput(maxFreezedOutput.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {
@@ -147,7 +147,7 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends Tensor & TNumb
   }
   
   @Override
-  public Output<W> asOutput() {
+  public Output<W> asOutput(Scope scope) {
     return out;
   }
   

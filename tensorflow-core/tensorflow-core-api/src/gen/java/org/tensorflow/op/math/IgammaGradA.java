@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -33,7 +32,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code z()} output
  */
-public final class IgammaGradA<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class IgammaGradA<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new IgammaGradA operation.
@@ -44,10 +43,10 @@ public final class IgammaGradA<T extends Tensor & TNumber> extends RawOp impleme
    * @return a new instance of IgammaGradA
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
+  public static <T extends TNumber> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
-    opBuilder.addInput(a.asOutput());
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(a.asOutput(scope));
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IgammaGradA<T>(opBuilder.build());
   }
@@ -59,7 +58,7 @@ public final class IgammaGradA<T extends Tensor & TNumber> extends RawOp impleme
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

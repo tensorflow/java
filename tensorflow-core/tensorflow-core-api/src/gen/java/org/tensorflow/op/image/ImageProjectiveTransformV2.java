@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -41,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code transformedImages()} output
  */
-public final class ImageProjectiveTransformV2<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.ImageProjectiveTransformV2}
@@ -76,11 +75,11 @@ public final class ImageProjectiveTransformV2<T extends Tensor & TNumber> extend
    * @return a new instance of ImageProjectiveTransformV2
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ImageProjectiveTransformV2<T> create(Scope scope, Operand<T> images, Operand<TFloat32> transforms, Operand<TInt32> outputShape, String interpolation, Options... options) {
+  public static <T extends TNumber> ImageProjectiveTransformV2<T> create(Scope scope, Operand<T> images, Operand<TFloat32> transforms, Operand<TInt32> outputShape, String interpolation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImageProjectiveTransformV2", scope.makeOpName("ImageProjectiveTransformV2"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(transforms.asOutput());
-    opBuilder.addInput(outputShape.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(transforms.asOutput(scope));
+    opBuilder.addInput(outputShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("interpolation", interpolation);
     if (options != null) {
@@ -109,7 +108,7 @@ public final class ImageProjectiveTransformV2<T extends Tensor & TNumber> extend
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return transformedImages;
   }
   

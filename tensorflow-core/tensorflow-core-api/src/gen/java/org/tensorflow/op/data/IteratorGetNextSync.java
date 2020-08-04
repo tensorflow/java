@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gets the next output from the given iterator.
@@ -41,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * operations (e.g. in eager mode).
  */
 @Operator(group = "data")
-public final class IteratorGetNextSync extends RawOp implements Iterable<Operand<Tensor>> {
+public final class IteratorGetNextSync extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IteratorGetNextSync operation.
@@ -55,7 +55,7 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
   @Endpoint(describeByClass = true)
   public static IteratorGetNextSync create(Scope scope, Operand<?> iterator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
-    opBuilder.addInput(iterator.asOutput());
+    opBuilder.addInput(iterator.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -78,7 +78,7 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

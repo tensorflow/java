@@ -71,7 +71,7 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static DecodeCompressed create(Scope scope, Operand<TString> bytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCompressed", scope.makeOpName("DecodeCompressed"));
-    opBuilder.addInput(bytes.asOutput());
+    opBuilder.addInput(bytes.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -100,7 +100,7 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

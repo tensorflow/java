@@ -90,7 +90,7 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
   @Endpoint(describeByClass = true)
   public static SparseMatrixOrderingAMD create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixOrderingAMD", scope.makeOpName("SparseMatrixOrderingAMD"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseMatrixOrderingAMD(opBuilder.build());
   }
@@ -103,7 +103,7 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return output;
   }
   

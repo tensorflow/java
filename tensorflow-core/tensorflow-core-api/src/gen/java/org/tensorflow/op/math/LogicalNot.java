@@ -43,7 +43,7 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
   @Endpoint(describeByClass = true)
   public static LogicalNot create(Scope scope, Operand<TBool> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalNot", scope.makeOpName("LogicalNot"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LogicalNot(opBuilder.build());
   }
@@ -56,7 +56,7 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return y;
   }
   

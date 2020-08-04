@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts the quantized `input` tensor into a lower-precision `output`.
@@ -43,7 +43,7 @@ import org.tensorflow.types.TFloat32;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class Requantize<U extends Tensor> extends RawOp {
+public final class Requantize<U extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new Requantize operation.
@@ -58,13 +58,13 @@ public final class Requantize<U extends Tensor> extends RawOp {
    * @return a new instance of Requantize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Requantize", scope.makeOpName("Requantize"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(inputMin.asOutput());
-    opBuilder.addInput(inputMax.asOutput());
-    opBuilder.addInput(requestedOutputMin.asOutput());
-    opBuilder.addInput(requestedOutputMax.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(inputMin.asOutput(scope));
+    opBuilder.addInput(inputMax.asOutput(scope));
+    opBuilder.addInput(requestedOutputMin.asOutput(scope));
+    opBuilder.addInput(requestedOutputMax.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new Requantize<U>(opBuilder.build());

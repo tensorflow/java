@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates an empty hash table that uses tensors as the backing store.
@@ -40,7 +40,7 @@ import org.tensorflow.op.annotation.Operator;
  * the insert operations. It does not support the initialization operation.
  */
 @Operator
-public final class MutableDenseHashTable extends RawOp implements Operand<Tensor> {
+public final class MutableDenseHashTable extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MutableDenseHashTable}
@@ -122,10 +122,10 @@ public final class MutableDenseHashTable extends RawOp implements Operand<Tensor
    * @return a new instance of MutableDenseHashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
-    opBuilder.addInput(emptyKey.asOutput());
-    opBuilder.addInput(deletedKey.asOutput());
+    opBuilder.addInput(emptyKey.asOutput(scope));
+    opBuilder.addInput(deletedKey.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {
@@ -208,8 +208,8 @@ public final class MutableDenseHashTable extends RawOp implements Operand<Tensor
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) tableHandle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) tableHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

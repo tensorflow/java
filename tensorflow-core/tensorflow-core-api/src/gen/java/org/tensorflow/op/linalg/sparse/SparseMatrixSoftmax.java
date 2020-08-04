@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Calculates the softmax of a CSRSparseMatrix.
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * the output has the same sparsity structure as the input (though missing values
  * in the output may now be treated as having probability zero).
  */
-public final class SparseMatrixSoftmax extends RawOp implements Operand<Tensor> {
+public final class SparseMatrixSoftmax extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new SparseMatrixSoftmax operation.
@@ -49,9 +49,9 @@ public final class SparseMatrixSoftmax extends RawOp implements Operand<Tensor> 
    * @return a new instance of SparseMatrixSoftmax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> SparseMatrixSoftmax create(Scope scope, Operand<?> logits, DataType<T> type) {
+  public static <T extends TNumber> SparseMatrixSoftmax create(Scope scope, Operand<?> logits, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmax", scope.makeOpName("SparseMatrixSoftmax"));
-    opBuilder.addInput(logits.asOutput());
+    opBuilder.addInput(logits.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     return new SparseMatrixSoftmax(opBuilder.build());
@@ -66,8 +66,8 @@ public final class SparseMatrixSoftmax extends RawOp implements Operand<Tensor> 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) softmax;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) softmax;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

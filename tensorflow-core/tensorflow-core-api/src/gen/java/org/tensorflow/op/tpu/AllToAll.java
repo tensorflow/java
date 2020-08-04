@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * An Op to exchange data across TPU replicas.
@@ -50,7 +50,7 @@ import org.tensorflow.types.TInt32;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class AllToAll<T extends Tensor> extends RawOp implements Operand<T> {
+public final class AllToAll<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AllToAll operation.
@@ -67,10 +67,10 @@ public final class AllToAll<T extends Tensor> extends RawOp implements Operand<T
    * @return a new instance of AllToAll
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AllToAll<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
+  public static <T extends TType> AllToAll<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
     OperationBuilder opBuilder = scope.env().opBuilder("AllToAll", scope.makeOpName("AllToAll"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(groupAssignment.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(groupAssignment.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("concat_dimension", concatDimension);
     opBuilder.setAttr("split_dimension", splitDimension);
@@ -86,7 +86,7 @@ public final class AllToAll<T extends Tensor> extends RawOp implements Operand<T
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

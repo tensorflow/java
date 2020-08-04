@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Destroys the temporary variable and returns its final value.
@@ -41,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class DestroyTemporaryVariable<T extends Tensor> extends RawOp implements Operand<T> {
+public final class DestroyTemporaryVariable<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DestroyTemporaryVariable operation.
@@ -53,9 +53,9 @@ public final class DestroyTemporaryVariable<T extends Tensor> extends RawOp impl
    * @return a new instance of DestroyTemporaryVariable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref, String varName) {
+  public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref, String varName) {
     OperationBuilder opBuilder = scope.env().opBuilder("DestroyTemporaryVariable", scope.makeOpName("DestroyTemporaryVariable"));
-    opBuilder.addInput(ref.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("var_name", varName);
     return new DestroyTemporaryVariable<T>(opBuilder.build());
@@ -68,7 +68,7 @@ public final class DestroyTemporaryVariable<T extends Tensor> extends RawOp impl
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return value;
   }
   

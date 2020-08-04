@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -43,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class NcclReduce<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class NcclReduce<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclReduce operation.
@@ -54,9 +53,9 @@ public final class NcclReduce<T extends Tensor & TNumber> extends RawOp implemen
    * @return a new instance of NcclReduce
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
+  public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
-    opBuilder.addInputList(Operands.asOutputs(input));
+    opBuilder.addInputList(Operands.asOutputs(scope, input));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("reduction", reduction);
     return new NcclReduce<T>(opBuilder.build());
@@ -69,7 +68,7 @@ public final class NcclReduce<T extends Tensor & TNumber> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

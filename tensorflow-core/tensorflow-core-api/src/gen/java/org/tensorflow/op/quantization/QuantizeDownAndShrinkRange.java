@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Convert the quantized 'input' tensor into a lower-precision 'output', using the
@@ -58,7 +58,7 @@ import org.tensorflow.types.TFloat32;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class QuantizeDownAndShrinkRange<U extends Tensor> extends RawOp {
+public final class QuantizeDownAndShrinkRange<U extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizeDownAndShrinkRange operation.
@@ -71,11 +71,11 @@ public final class QuantizeDownAndShrinkRange<U extends Tensor> extends RawOp {
    * @return a new instance of QuantizeDownAndShrinkRange
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(inputMin.asOutput());
-    opBuilder.addInput(inputMax.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(inputMin.asOutput(scope));
+    opBuilder.addInput(inputMax.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizeDownAndShrinkRange<U>(opBuilder.build());

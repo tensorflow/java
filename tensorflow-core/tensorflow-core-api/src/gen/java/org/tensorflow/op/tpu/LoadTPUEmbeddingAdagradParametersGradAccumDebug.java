@@ -89,9 +89,9 @@ public final class LoadTPUEmbeddingAdagradParametersGradAccumDebug extends RawOp
   @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingAdagradParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdagradParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingAdagradParametersGradAccumDebug"));
-    opBuilder.addInput(parameters.asOutput());
-    opBuilder.addInput(accumulators.asOutput());
-    opBuilder.addInput(gradientAccumulators.asOutput());
+    opBuilder.addInput(parameters.asOutput(scope));
+    opBuilder.addInput(accumulators.asOutput(scope));
+    opBuilder.addInput(gradientAccumulators.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

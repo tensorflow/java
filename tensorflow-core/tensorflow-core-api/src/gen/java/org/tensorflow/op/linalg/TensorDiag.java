@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a diagonal tensor with a given diagonal values.
@@ -51,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class TensorDiag<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorDiag<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorDiag operation.
@@ -61,9 +61,9 @@ public final class TensorDiag<T extends Tensor> extends RawOp implements Operand
    * @return a new instance of TensorDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
+  public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
-    opBuilder.addInput(diagonal.asOutput());
+    opBuilder.addInput(diagonal.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorDiag<T>(opBuilder.build());
   }
@@ -75,7 +75,7 @@ public final class TensorDiag<T extends Tensor> extends RawOp implements Operand
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

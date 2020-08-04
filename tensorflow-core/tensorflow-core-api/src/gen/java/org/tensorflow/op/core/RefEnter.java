@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates or finds a child frame, and makes `data` available to the child frame.
@@ -37,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefEnter<T extends Tensor> extends RawOp implements Operand<T> {
+public final class RefEnter<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.RefEnter}
@@ -77,9 +77,9 @@ public final class RefEnter<T extends Tensor> extends RawOp implements Operand<T
    * @return a new instance of RefEnter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
+  public static <T extends TType> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefEnter", scope.makeOpName("RefEnter"));
-    opBuilder.addInput(data.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("frame_name", frameName);
     if (options != null) {
@@ -117,7 +117,7 @@ public final class RefEnter<T extends Tensor> extends RawOp implements Operand<T
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

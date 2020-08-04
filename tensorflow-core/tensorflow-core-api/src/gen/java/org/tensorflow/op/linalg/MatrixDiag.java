@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a batched diagonal tensor with given batched diagonal values.
@@ -119,7 +119,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class MatrixDiag<T extends Tensor> extends RawOp implements Operand<T> {
+public final class MatrixDiag<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new MatrixDiag operation.
@@ -141,13 +141,13 @@ public final class MatrixDiag<T extends Tensor> extends RawOp implements Operand
    * @return a new instance of MatrixDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> MatrixDiag<T> create(Scope scope, Operand<T> diagonal, Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
+  public static <T extends TType> MatrixDiag<T> create(Scope scope, Operand<T> diagonal, Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagV2", scope.makeOpName("MatrixDiag"));
-    opBuilder.addInput(diagonal.asOutput());
-    opBuilder.addInput(k.asOutput());
-    opBuilder.addInput(numRows.asOutput());
-    opBuilder.addInput(numCols.asOutput());
-    opBuilder.addInput(paddingValue.asOutput());
+    opBuilder.addInput(diagonal.asOutput(scope));
+    opBuilder.addInput(k.asOutput(scope));
+    opBuilder.addInput(numRows.asOutput(scope));
+    opBuilder.addInput(numCols.asOutput(scope));
+    opBuilder.addInput(paddingValue.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MatrixDiag<T>(opBuilder.build());
   }
@@ -160,7 +160,7 @@ public final class MatrixDiag<T extends Tensor> extends RawOp implements Operand
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

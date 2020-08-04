@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Helper operator for performing XLA-style broadcasts
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code lhsOutput()} output
  */
 @Operator(group = "xla")
-public final class BroadcastHelper<T extends Tensor> extends RawOp {
+public final class BroadcastHelper<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BroadcastHelper operation.
@@ -50,11 +50,11 @@ public final class BroadcastHelper<T extends Tensor> extends RawOp {
    * @return a new instance of BroadcastHelper
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> BroadcastHelper<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> broadcastDims) {
+  public static <T extends TType, U extends TNumber> BroadcastHelper<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> broadcastDims) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaBroadcastHelper", scope.makeOpName("BroadcastHelper"));
-    opBuilder.addInput(lhs.asOutput());
-    opBuilder.addInput(rhs.asOutput());
-    opBuilder.addInput(broadcastDims.asOutput());
+    opBuilder.addInput(lhs.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
+    opBuilder.addInput(broadcastDims.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BroadcastHelper<T>(opBuilder.build());
   }

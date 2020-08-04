@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Add a `SparseTensor` to a `SparseTensorsMap` return its handle.
@@ -89,11 +89,11 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
    * @return a new instance of AddSparseToTensorsMap
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
+  public static <T extends TType> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddSparseToTensorsMap", scope.makeOpName("AddSparseToTensorsMap"));
-    opBuilder.addInput(sparseIndices.asOutput());
-    opBuilder.addInput(sparseValues.asOutput());
-    opBuilder.addInput(sparseShape.asOutput());
+    opBuilder.addInput(sparseIndices.asOutput(scope));
+    opBuilder.addInput(sparseValues.asOutput(scope));
+    opBuilder.addInput(sparseShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -132,7 +132,7 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return sparseHandle;
   }
   

@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <W> data type for {@code output()} output
  */
-public final class StatelessRandomPoisson<W extends Tensor & TNumber> extends RawOp implements Operand<W> {
+public final class StatelessRandomPoisson<W extends TNumber> extends RawOp implements Operand<W> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomPoisson operation.
@@ -52,11 +51,11 @@ public final class StatelessRandomPoisson<W extends Tensor & TNumber> extends Ra
    * @return a new instance of StatelessRandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <W extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, DataType<W> dtype) {
+  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, DataType<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomPoisson", scope.makeOpName("StatelessRandomPoisson"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(lam.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(lam.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomPoisson<W>(opBuilder.build());
@@ -70,7 +69,7 @@ public final class StatelessRandomPoisson<W extends Tensor & TNumber> extends Ra
   }
   
   @Override
-  public Output<W> asOutput() {
+  public Output<W> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum of elements across dimensions of a SparseTensor.
@@ -48,7 +48,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReduceSumSparse<T extends Tensor> extends RawOp {
+public final class SparseReduceSumSparse<T extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceSumSparse}
@@ -82,12 +82,12 @@ public final class SparseReduceSumSparse<T extends Tensor> extends RawOp {
    * @return a new instance of SparseReduceSumSparse
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseReduceSumSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
+  public static <T extends TType> SparseReduceSumSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceSumSparse", scope.makeOpName("SparseReduceSumSparse"));
-    opBuilder.addInput(inputIndices.asOutput());
-    opBuilder.addInput(inputValues.asOutput());
-    opBuilder.addInput(inputShape.asOutput());
-    opBuilder.addInput(reductionAxes.asOutput());
+    opBuilder.addInput(inputIndices.asOutput(scope));
+    opBuilder.addInput(inputValues.asOutput(scope));
+    opBuilder.addInput(inputShape.asOutput(scope));
+    opBuilder.addInput(reductionAxes.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

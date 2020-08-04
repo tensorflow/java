@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentSqrtNGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentSqrtNGrad<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentSqrtNGrad operation.
@@ -51,12 +50,12 @@ public final class SparseSegmentSqrtNGrad<T extends Tensor & TNumber> extends Ra
    * @return a new instance of SparseSegmentSqrtNGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public static <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNGrad", scope.makeOpName("SparseSegmentSqrtNGrad"));
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(segmentIds.asOutput());
-    opBuilder.addInput(outputDim0.asOutput());
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(segmentIds.asOutput(scope));
+    opBuilder.addInput(outputDim0.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentSqrtNGrad<T>(opBuilder.build());
   }
@@ -68,7 +67,7 @@ public final class SparseSegmentSqrtNGrad<T extends Tensor & TNumber> extends Ra
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

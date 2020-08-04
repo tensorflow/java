@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * BatchToSpace for 4-D tensors of type T.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class BatchToSpace<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BatchToSpace<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchToSpace operation.
@@ -61,10 +61,10 @@ public final class BatchToSpace<T extends Tensor> extends RawOp implements Opera
    * @return a new instance of BatchToSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
+  public static <T extends TType, U extends TNumber> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpace", scope.makeOpName("BatchToSpace"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(crops.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(crops.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     return new BatchToSpace<T>(opBuilder.build());
@@ -130,7 +130,7 @@ public final class BatchToSpace<T extends Tensor> extends RawOp implements Opera
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -39,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code loss()} output
  */
 @Operator(group = "nn")
-public final class CtcLoss<T extends Tensor & TNumber> extends RawOp {
+public final class CtcLoss<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CtcLoss}
@@ -97,12 +96,12 @@ public final class CtcLoss<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of CtcLoss
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
+  public static <T extends TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
-    opBuilder.addInput(inputs.asOutput());
-    opBuilder.addInput(labelsIndices.asOutput());
-    opBuilder.addInput(labelsValues.asOutput());
-    opBuilder.addInput(sequenceLength.asOutput());
+    opBuilder.addInput(inputs.asOutput(scope));
+    opBuilder.addInput(labelsIndices.asOutput(scope));
+    opBuilder.addInput(labelsValues.asOutput(scope));
+    opBuilder.addInput(sequenceLength.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

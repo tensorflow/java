@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Pad operator, documented at
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Pad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Pad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Pad operation.
@@ -51,13 +51,13 @@ public final class Pad<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Pad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> Pad<T> create(Scope scope, Operand<T> input, Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh, Operand<U> paddingInterior) {
+  public static <T extends TType, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input, Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh, Operand<U> paddingInterior) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaPad", scope.makeOpName("Pad"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(paddingValue.asOutput());
-    opBuilder.addInput(paddingLow.asOutput());
-    opBuilder.addInput(paddingHigh.asOutput());
-    opBuilder.addInput(paddingInterior.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(paddingValue.asOutput(scope));
+    opBuilder.addInput(paddingLow.asOutput(scope));
+    opBuilder.addInput(paddingHigh.asOutput(scope));
+    opBuilder.addInput(paddingInterior.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Pad<T>(opBuilder.build());
   }
@@ -70,7 +70,7 @@ public final class Pad<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

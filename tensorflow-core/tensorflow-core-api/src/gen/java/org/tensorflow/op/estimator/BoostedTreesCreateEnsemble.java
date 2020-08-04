@@ -44,9 +44,9 @@ public final class BoostedTreesCreateEnsemble extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesCreateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt64> stampToken, Operand<TString> treeEnsembleSerialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCreateEnsemble", scope.makeOpName("BoostedTreesCreateEnsemble"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInput(stampToken.asOutput());
-    opBuilder.addInput(treeEnsembleSerialized.asOutput());
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInput(stampToken.asOutput(scope));
+    opBuilder.addInput(treeEnsembleSerialized.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesCreateEnsemble(opBuilder.build());
   }

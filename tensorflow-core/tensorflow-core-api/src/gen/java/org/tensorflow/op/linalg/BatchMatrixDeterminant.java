@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixDeterminant<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BatchMatrixDeterminant<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchMatrixDeterminant operation.
@@ -41,9 +41,9 @@ public final class BatchMatrixDeterminant<T extends Tensor> extends RawOp implem
    * @return a new instance of BatchMatrixDeterminant
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BatchMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> BatchMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDeterminant", scope.makeOpName("BatchMatrixDeterminant"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchMatrixDeterminant<T>(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class BatchMatrixDeterminant<T extends Tensor> extends RawOp implem
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

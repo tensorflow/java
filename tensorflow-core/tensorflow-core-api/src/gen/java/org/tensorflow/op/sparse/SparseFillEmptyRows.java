@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Fills empty rows in the input 2-D `SparseTensor` with a default value.
@@ -72,7 +72,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseFillEmptyRows<T extends Tensor> extends RawOp {
+public final class SparseFillEmptyRows<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseFillEmptyRows operation.
@@ -87,12 +87,12 @@ public final class SparseFillEmptyRows<T extends Tensor> extends RawOp {
    * @return a new instance of SparseFillEmptyRows
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
+  public static <T extends TType> SparseFillEmptyRows<T> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRows", scope.makeOpName("SparseFillEmptyRows"));
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(denseShape.asOutput());
-    opBuilder.addInput(defaultValue.asOutput());
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
+    opBuilder.addInput(denseShape.asOutput(scope));
+    opBuilder.addInput(defaultValue.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseFillEmptyRows<T>(opBuilder.build());
   }

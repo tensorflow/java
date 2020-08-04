@@ -42,8 +42,8 @@ public final class TensorForestTreeDeserialize extends RawOp {
   @Endpoint(describeByClass = true)
   public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
-    opBuilder.addInput(treeHandle.asOutput());
-    opBuilder.addInput(treeConfig.asOutput());
+    opBuilder.addInput(treeHandle.asOutput(scope));
+    opBuilder.addInput(treeConfig.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorForestTreeDeserialize(opBuilder.build());
   }

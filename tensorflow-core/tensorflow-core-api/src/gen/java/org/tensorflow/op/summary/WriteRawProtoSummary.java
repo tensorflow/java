@@ -43,9 +43,9 @@ public final class WriteRawProtoSummary extends RawOp {
   @Endpoint(describeByClass = true)
   public static WriteRawProtoSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteRawProtoSummary", scope.makeOpName("WriteRawProtoSummary"));
-    opBuilder.addInput(writer.asOutput());
-    opBuilder.addInput(step.asOutput());
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
+    opBuilder.addInput(step.asOutput(scope));
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new WriteRawProtoSummary(opBuilder.build());
   }

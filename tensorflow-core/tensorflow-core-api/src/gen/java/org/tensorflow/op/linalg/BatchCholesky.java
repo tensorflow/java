@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -32,7 +31,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchCholesky<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class BatchCholesky<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchCholesky operation.
@@ -42,9 +41,9 @@ public final class BatchCholesky<T extends Tensor & TNumber> extends RawOp imple
    * @return a new instance of BatchCholesky
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> BatchCholesky<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TNumber> BatchCholesky<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchCholesky", scope.makeOpName("BatchCholesky"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchCholesky<T>(opBuilder.build());
   }
@@ -56,7 +55,7 @@ public final class BatchCholesky<T extends Tensor & TNumber> extends RawOp imple
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

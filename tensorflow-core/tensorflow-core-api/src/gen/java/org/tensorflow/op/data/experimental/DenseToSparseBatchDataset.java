@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that batches input elements into a SparseTensor.
  */
-public final class DenseToSparseBatchDataset extends RawOp implements Operand<Tensor> {
+public final class DenseToSparseBatchDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new DenseToSparseBatchDataset operation.
@@ -53,9 +53,9 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<Te
   @Endpoint(describeByClass = true)
   public static DenseToSparseBatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TInt64> rowShape, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDenseToSparseBatchDataset", scope.makeOpName("DenseToSparseBatchDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(batchSize.asOutput());
-    opBuilder.addInput(rowShape.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(batchSize.asOutput(scope));
+    opBuilder.addInput(rowShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -78,8 +78,8 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<Te
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

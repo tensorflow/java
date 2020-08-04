@@ -23,19 +23,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes quantized depthwise Conv2D.
  * 
  * @param <V> data type for {@code output()} output
  */
-public final class QuantizedDepthwiseConv2D<V extends Tensor> extends RawOp {
+public final class QuantizedDepthwiseConv2D<V extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.QuantizedDepthwiseConv2D}
@@ -73,14 +73,14 @@ public final class QuantizedDepthwiseConv2D<V extends Tensor> extends RawOp {
    * @return a new instance of QuantizedDepthwiseConv2D
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedDepthwiseConv2D<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedDepthwiseConv2D<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2D", scope.makeOpName("QuantizedDepthwiseConv2D"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(filter.asOutput());
-    opBuilder.addInput(minInput.asOutput());
-    opBuilder.addInput(maxInput.asOutput());
-    opBuilder.addInput(minFilter.asOutput());
-    opBuilder.addInput(maxFilter.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(filter.asOutput(scope));
+    opBuilder.addInput(minInput.asOutput(scope));
+    opBuilder.addInput(maxInput.asOutput(scope));
+    opBuilder.addInput(minFilter.asOutput(scope));
+    opBuilder.addInput(maxFilter.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

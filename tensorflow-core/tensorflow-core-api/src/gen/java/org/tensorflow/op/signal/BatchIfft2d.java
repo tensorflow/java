@@ -21,16 +21,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator(group = "signal")
-public final class BatchIfft2d extends RawOp implements Operand<Tensor> {
+public final class BatchIfft2d extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new BatchIfft2d operation.
@@ -42,7 +42,7 @@ public final class BatchIfft2d extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static BatchIfft2d create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchIFFT2D", scope.makeOpName("BatchIfft2d"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchIfft2d(opBuilder.build());
   }
@@ -55,8 +55,8 @@ public final class BatchIfft2d extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) output;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

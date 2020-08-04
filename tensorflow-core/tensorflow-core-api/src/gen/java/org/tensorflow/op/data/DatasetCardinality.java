@@ -44,7 +44,7 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
   @Endpoint(describeByClass = true)
   public static DatasetCardinality create(Scope scope, Operand<?> inputDataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetCardinality", scope.makeOpName("DatasetCardinality"));
-    opBuilder.addInput(inputDataset.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DatasetCardinality(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return cardinality;
   }
   

@@ -30,9 +30,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import org.junit.jupiter.api.Test;
-import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -40,7 +37,10 @@ import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -71,14 +71,14 @@ public class TensorTest {
 
     // validate creating a tensor using a raw data byte buffers
     {
-      try (TBool t = Tensor.of(TBool.DTYPE, bools_shape, DataBuffers.of(bools_))) {
+      try (TBool t = Tensors.of(TBool.DTYPE, bools_shape, DataBuffers.of(bools_))) {
         boolean[] actual = new boolean[bools_.length];
         t.read(DataBuffers.of(actual));
         assertArrayEquals(bools, actual);
       }
 
       // note: the buffer is expected to contain raw TF_STRING (as per C API)
-      try (TString t = Tensor.of(TString.DTYPE, strings_shape, DataBuffers.of(strings_))) {
+      try (TString t = Tensors.of(TString.DTYPE, strings_shape, DataBuffers.of(strings_))) {
         assertEquals(strings, t.getObject());
       }
     }
@@ -95,7 +95,7 @@ public class TensorTest {
     }
 
     // validate shape checking
-    try (TBool t = Tensor.of(TBool.DTYPE, Shape.of(bools_.length * 2), DataBuffers.of(bools_))) {
+    try (TBool t = Tensors.of(TBool.DTYPE, Shape.of(bools_.length * 2), DataBuffers.of(bools_))) {
       fail("should have failed on incompatible buffer");
     } catch (IllegalArgumentException e) {
       // expected
@@ -445,29 +445,17 @@ public class TensorTest {
 
   @Test
   public void allocateTensorWithSize() {
-    try (TInt32 t = Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize())) {
+    try (TInt32 t = Tensors.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize())) {
       // ok
     }
-    try (TInt32 t = Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 9 * TInt32.DTYPE.byteSize())) {
+    try (TInt32 t = Tensors.of(TInt32.DTYPE, Shape.of(2, 2, 2), 9 * TInt32.DTYPE.byteSize())) {
       // ok (size requested is larger that minimum space required)
     }
     try {
-      Tensor.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize() - 1);
+      Tensors.of(TInt32.DTYPE, Shape.of(2, 2, 2), 8 * TInt32.DTYPE.byteSize() - 1);
       fail();
     } catch (IllegalArgumentException e) {
       // as expected
-    }
-  }
-
-  @Test
-  public void useAfterClose() {
-    int n = 4;
-    Tensor<?> t = TInt32.scalarOf(n);
-    t.close();
-    try {
-      t.data();
-    } catch (IllegalStateException e) {
-      // The expected exception.
     }
   }
 
@@ -477,11 +465,11 @@ public class TensorTest {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
       sum = tf.math.add(tf.constant(10), tf.constant(20)).asTensor();
-      sum.nativeHandle(); // does not throw
+      ((AbstractTensor)sum).nativeHandle(); // does not throw
       assertEquals(30, sum.getInt());
     }
     try {
-      sum.nativeHandle();
+      ((AbstractTensor)sum).nativeHandle();
       fail("Tensor native handle should have been closed by ending eager session");
     } catch (IllegalStateException e) {
       // as expected
@@ -504,7 +492,7 @@ public class TensorTest {
     // close() on both Tensors.
     final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
     try (TFloat32 src = TFloat32.tensorOf(matrix)) {
-      TFloat32 cpy = Tensors.fromHandle(src.nativeHandle()).expect(TFloat32.DTYPE);
+      TFloat32 cpy = Tensors.fromHandle(((AbstractTensor)src).nativeHandle()).expect(TFloat32.DTYPE);
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
       assertEquals(src.shape(), cpy.shape());

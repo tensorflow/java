@@ -43,7 +43,7 @@ public final class Strip extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Strip create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringStrip", scope.makeOpName("Strip"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Strip(opBuilder.build());
   }
@@ -61,7 +61,7 @@ public final class Strip extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

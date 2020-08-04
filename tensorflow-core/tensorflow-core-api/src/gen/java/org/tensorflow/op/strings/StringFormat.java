@@ -84,7 +84,7 @@ public final class StringFormat extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static StringFormat create(Scope scope, Iterable<Operand<?>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringFormat", scope.makeOpName("StringFormat"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -131,7 +131,7 @@ public final class StringFormat extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

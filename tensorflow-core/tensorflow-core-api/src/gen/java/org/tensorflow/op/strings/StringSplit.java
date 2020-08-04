@@ -89,8 +89,8 @@ public final class StringSplit extends RawOp {
   @Endpoint(describeByClass = true)
   public static StringSplit create(Scope scope, Operand<TString> input, Operand<TString> sep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(sep.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(sep.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

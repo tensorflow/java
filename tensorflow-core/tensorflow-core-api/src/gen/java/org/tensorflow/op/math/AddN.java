@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Add all input tensors element wise.
@@ -42,7 +42,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code sum()} output
  */
 @Operator(group = "math")
-public final class AddN<T extends Tensor> extends RawOp implements Operand<T> {
+public final class AddN<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AddN operation.
@@ -52,9 +52,9 @@ public final class AddN<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of AddN
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+  public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AddN<T>(opBuilder.build());
   }
@@ -66,7 +66,7 @@ public final class AddN<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return sum;
   }
   

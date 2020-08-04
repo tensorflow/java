@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -37,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class CholeskyGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class CholeskyGrad<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CholeskyGrad operation.
@@ -52,10 +51,10 @@ public final class CholeskyGrad<T extends Tensor & TNumber> extends RawOp implem
    * @return a new instance of CholeskyGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
+  public static <T extends TNumber> CholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
     OperationBuilder opBuilder = scope.env().opBuilder("CholeskyGrad", scope.makeOpName("CholeskyGrad"));
-    opBuilder.addInput(l.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(l.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CholeskyGrad<T>(opBuilder.build());
   }
@@ -68,7 +67,7 @@ public final class CholeskyGrad<T extends Tensor & TNumber> extends RawOp implem
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

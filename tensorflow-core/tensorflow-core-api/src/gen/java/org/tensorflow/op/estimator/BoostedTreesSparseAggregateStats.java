@@ -58,12 +58,12 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> featureIndices, Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseAggregateStats", scope.makeOpName("BoostedTreesSparseAggregateStats"));
-    opBuilder.addInput(nodeIds.asOutput());
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(hessians.asOutput());
-    opBuilder.addInput(featureIndices.asOutput());
-    opBuilder.addInput(featureValues.asOutput());
-    opBuilder.addInput(featureShape.asOutput());
+    opBuilder.addInput(nodeIds.asOutput(scope));
+    opBuilder.addInput(gradients.asOutput(scope));
+    opBuilder.addInput(hessians.asOutput(scope));
+    opBuilder.addInput(featureIndices.asOutput(scope));
+    opBuilder.addInput(featureValues.asOutput(scope));
+    opBuilder.addInput(featureShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     opBuilder.setAttr("num_buckets", numBuckets);

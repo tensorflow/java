@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the imaginary part of a complex number.
@@ -48,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class Imag<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
+public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Imag operation.
@@ -59,9 +59,9 @@ public final class Imag<U extends Tensor & TNumber> extends RawOp implements Ope
    * @return a new instance of Imag
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor> Imag<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Imag<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Imag", scope.makeOpName("Imag"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Imag<U>(opBuilder.build());
@@ -75,7 +75,7 @@ public final class Imag<U extends Tensor & TNumber> extends RawOp implements Ope
    * @return a new instance of Imag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Imag<TFloat32> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Imag<TFloat32> create(Scope scope, Operand<T> input) {
     return create(scope, input, TFloat32.DTYPE);
   }
   
@@ -86,7 +86,7 @@ public final class Imag<U extends Tensor & TNumber> extends RawOp implements Ope
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

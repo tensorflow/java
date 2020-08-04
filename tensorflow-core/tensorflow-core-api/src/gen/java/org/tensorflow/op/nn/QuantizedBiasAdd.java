@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
@@ -37,7 +37,7 @@ import org.tensorflow.types.TFloat32;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedBiasAdd<V extends Tensor> extends RawOp {
+public final class QuantizedBiasAdd<V extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedBiasAdd operation.
@@ -53,14 +53,14 @@ public final class QuantizedBiasAdd<V extends Tensor> extends RawOp {
    * @return a new instance of QuantizedBiasAdd
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor, T extends Tensor, U extends Tensor> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> create(Scope scope, Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBiasAdd", scope.makeOpName("QuantizedBiasAdd"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(bias.asOutput());
-    opBuilder.addInput(minInput.asOutput());
-    opBuilder.addInput(maxInput.asOutput());
-    opBuilder.addInput(minBias.asOutput());
-    opBuilder.addInput(maxBias.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(bias.asOutput(scope));
+    opBuilder.addInput(minInput.asOutput(scope));
+    opBuilder.addInput(maxInput.asOutput(scope));
+    opBuilder.addInput(minBias.asOutput(scope));
+    opBuilder.addInput(maxBias.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizedBiasAdd<V>(opBuilder.build());

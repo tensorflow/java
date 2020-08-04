@@ -44,7 +44,7 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp
   @Endpoint(describeByClass = true)
   public static IsBoostedTreesQuantileStreamResourceInitialized create(Scope scope, Operand<?> quantileStreamResourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesQuantileStreamResourceInitialized", scope.makeOpName("IsBoostedTreesQuantileStreamResourceInitialized"));
-    opBuilder.addInput(quantileStreamResourceHandle.asOutput());
+    opBuilder.addInput(quantileStreamResourceHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IsBoostedTreesQuantileStreamResourceInitialized(opBuilder.build());
   }
@@ -57,7 +57,7 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return isInitialized;
   }
   

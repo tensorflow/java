@@ -68,11 +68,11 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
   @Endpoint(describeByClass = true)
   public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat32> overlaps, Operand<TFloat32> scores, Operand<TInt32> maxOutputSize, Operand<TFloat32> overlapThreshold, Operand<TFloat32> scoreThreshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionWithOverlaps", scope.makeOpName("NonMaxSuppressionWithOverlaps"));
-    opBuilder.addInput(overlaps.asOutput());
-    opBuilder.addInput(scores.asOutput());
-    opBuilder.addInput(maxOutputSize.asOutput());
-    opBuilder.addInput(overlapThreshold.asOutput());
-    opBuilder.addInput(scoreThreshold.asOutput());
+    opBuilder.addInput(overlaps.asOutput(scope));
+    opBuilder.addInput(scores.asOutput(scope));
+    opBuilder.addInput(maxOutputSize.asOutput(scope));
+    opBuilder.addInput(overlapThreshold.asOutput(scope));
+    opBuilder.addInput(scoreThreshold.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NonMaxSuppressionWithOverlaps(opBuilder.build());
   }
@@ -86,7 +86,7 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return selectedIndices;
   }
   

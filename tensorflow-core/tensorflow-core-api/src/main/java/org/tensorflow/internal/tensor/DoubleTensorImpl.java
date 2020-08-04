@@ -1,96 +1,143 @@
 package org.tensorflow.internal.tensor;
 
+import org.tensorflow.AbstractTensor;
 import org.tensorflow.DataType;
+import org.tensorflow.Tensor;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArraySequence;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
+import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.tensor.DoubleTensor;
 
-public class DoubleTensorImpl extends DoubleDenseNdArray implements DoubleTensor {
+public class DoubleTensorImpl extends AbstractTensor<Double> implements DoubleTensor {
 
-  @Override
-  public TF_Tensor nativeHandle() {
-    return rawTensor.nativeHandle();
+  private final DoubleNdArray data;
+
+  public DoubleTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
+      DoubleDataBuffer buffer) {
+    super(nativeHandle, dataType);
+    data = NdArrays.wrap(shape, buffer);
   }
 
   @Override
-  public DataType<?> dataType() {
-    return rawTensor.dataType();
-  }
-
-  @Override
-  public Shape shape() {
-    return rawTensor.shape();
-  }
-
-  @Override
-  public long numBytes() {
-    return rawTensor.numBytes();
-  }
-
-  @Override
-  public ByteDataBuffer rawData() {
-    return rawTensor.rawData();
-  }
-
-  @Override
-  public void close() {
-    rawTensor.close();
-  }
-
-  @Override
-  public String toString() {
-    return rawTensor.toString();
+  public double getDouble(long... coordinates) {
+    requireHandle(nativeHandle);
+    return data.getDouble(coordinates);
   }
 
   @Override
   public DoubleTensor setDouble(double value, long... coordinates) {
-    return (DoubleTensor)super.setDouble(value, coordinates);
+    requireHandle(nativeHandle);
+    data.setDouble(value, coordinates);
+    return this;
   }
 
   @Override
-  public DoubleTensor setObject(Double value, long... coordinates) {
-    return (DoubleTensor)super.setObject(value, coordinates);
+  public DoubleNdArray slice(Index... coordinates) {
+    requireHandle(nativeHandle);
+    return data.slice(coordinates);
+  }
+
+  @Override
+  public DoubleTensor get(long... coordinates) {
+    requireHandle(nativeHandle);
+    data.get(coordinates);
+    return this;
   }
 
   @Override
   public DoubleTensor set(NdArray<Double> src, long... coordinates) {
-    return (DoubleTensor)super.set(src, coordinates);
+    requireHandle(nativeHandle);
+    data.set(src, coordinates);
+    return this;
+  }
+
+  @Override
+  public Double getObject(long... coordinates) {
+    requireHandle(nativeHandle);
+    return data.getObject(coordinates);
+  }
+
+  @Override
+  public DoubleTensor setObject(Double value, long... coordinates) {
+    requireHandle(nativeHandle);
+    data.setObject(value, coordinates);
+    return this;
+  }
+
+  @Override
+  public NdArraySequence<DoubleNdArray> elements(int dimensionIdx) {
+    requireHandle(nativeHandle);
+    return data.elements(dimensionIdx);
+  }
+
+  @Override
+  public NdArraySequence<DoubleNdArray> scalars() {
+    requireHandle(nativeHandle);
+    return data.scalars();
   }
 
   @Override
   public DoubleTensor copyTo(NdArray<Double> dst) {
-    return (DoubleTensor)super.copyTo(dst);
+    requireHandle(nativeHandle);
+    data.copyTo(dst);
+    return this;
   }
 
   @Override
   public DoubleTensor read(DataBuffer<Double> dst) {
-    return (DoubleTensor)super.read(dst);
+    requireHandle(nativeHandle);
+    data.read(dst);
+    return this;
   }
 
   @Override
   public DoubleTensor read(DoubleDataBuffer dst) {
-    return (DoubleTensor)super.read(dst);
+    requireHandle(nativeHandle);
+    data.read(dst);
+    return this;
   }
 
   @Override
   public DoubleTensor write(DataBuffer<Double> src) {
-    return (DoubleTensor)super.write(src);
+    requireHandle(nativeHandle);
+    data.write(src);
+    return this;
   }
 
   @Override
   public DoubleTensor write(DoubleDataBuffer src) {
-    return (DoubleTensor)super.write(src);
+    requireHandle(nativeHandle);
+    data.write(src);
+    return this;
   }
 
-  public DoubleTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape, DoubleDataBuffer buffer) {
-    super(buffer, shape);
-    this.rawTensor = new RawTensor(nativeHandle, dataType, shape);
+  @Override
+  public Shape shape() {
+    requireHandle(nativeHandle);
+    return data.shape();
   }
 
-  private final RawTensor rawTensor;
+  @Override
+  public int rank() {
+    requireHandle(nativeHandle);
+    return data.rank();
+  }
+
+  @Override
+  public long size() {
+    requireHandle(nativeHandle);
+    return data.size();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    requireHandle(nativeHandle);
+    return data.equals(obj);
+  }
 }

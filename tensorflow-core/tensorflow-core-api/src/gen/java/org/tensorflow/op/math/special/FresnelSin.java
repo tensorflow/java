@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -31,7 +30,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * @param <T> data type for {@code y()} output
  */
-public final class FresnelSin<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class FresnelSin<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new FresnelSin operation.
@@ -41,9 +40,9 @@ public final class FresnelSin<T extends Tensor & TNumber> extends RawOp implemen
    * @return a new instance of FresnelSin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> FresnelSin<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> FresnelSin<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("FresnelSin", scope.makeOpName("FresnelSin"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new FresnelSin<T>(opBuilder.build());
   }
@@ -55,7 +54,7 @@ public final class FresnelSin<T extends Tensor & TNumber> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

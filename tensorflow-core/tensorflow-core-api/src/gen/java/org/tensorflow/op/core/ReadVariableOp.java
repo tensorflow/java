@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reads the value of a variable.
@@ -41,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class ReadVariableOp<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ReadVariableOp<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ReadVariableOp operation.
@@ -52,9 +52,9 @@ public final class ReadVariableOp<T extends Tensor> extends RawOp implements Ope
    * @return a new instance of ReadVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
+  public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
-    opBuilder.addInput(resource.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new ReadVariableOp<T>(opBuilder.build());
@@ -67,7 +67,7 @@ public final class ReadVariableOp<T extends Tensor> extends RawOp implements Ope
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return value;
   }
   

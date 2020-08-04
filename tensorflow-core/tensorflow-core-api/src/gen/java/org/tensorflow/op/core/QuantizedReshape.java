@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reshapes a quantized tensor as per the Reshape op.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class QuantizedReshape<T extends Tensor> extends RawOp {
+public final class QuantizedReshape<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedReshape operation.
@@ -50,12 +50,12 @@ public final class QuantizedReshape<T extends Tensor> extends RawOp {
    * @return a new instance of QuantizedReshape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+  public static <T extends TType, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(inputMin.asOutput());
-    opBuilder.addInput(inputMax.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(inputMin.asOutput(scope));
+    opBuilder.addInput(inputMax.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new QuantizedReshape<T>(opBuilder.build());
   }

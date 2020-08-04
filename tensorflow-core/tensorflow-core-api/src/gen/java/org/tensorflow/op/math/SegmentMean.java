@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the mean along segments of a tensor.
@@ -58,7 +58,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class SegmentMean<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SegmentMean<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SegmentMean operation.
@@ -70,10 +70,10 @@ public final class SegmentMean<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of SegmentMean
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TType, U extends TNumber> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
+    opBuilder.addInput(segmentIds.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SegmentMean<T>(opBuilder.build());
   }
@@ -87,7 +87,7 @@ public final class SegmentMean<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

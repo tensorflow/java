@@ -100,8 +100,8 @@ public final class BarrierTakeMany extends RawOp {
   @Endpoint(describeByClass = true)
   public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(numElements.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(numElements.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {

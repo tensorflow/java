@@ -1,16 +1,14 @@
-package org.tensorflow.tensor;
+package org.tensorflow.types.tensor;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
-import org.tensorflow.ndarray.impl.dense.LongDenseNdArray;
 
+/**
+ * A {@link Tensor} of longs.
+ */
 public interface LongTensor extends LongNdArray, Tensor<Long> {
 
   @Override
@@ -37,4 +35,3 @@ public interface LongTensor extends LongNdArray, Tensor<Long> {
   @Override
   LongTensor write(LongDataBuffer src);
 }
-

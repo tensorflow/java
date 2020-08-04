@@ -21,18 +21,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Return the same ref tensor as the input ref tensor.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class RefIdentity<T extends Tensor> extends RawOp implements Operand<T> {
+public final class RefIdentity<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RefIdentity operation.
@@ -42,9 +42,9 @@ public final class RefIdentity<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of RefIdentity
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> RefIdentity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> RefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefIdentity", scope.makeOpName("RefIdentity"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RefIdentity<T>(opBuilder.build());
   }
@@ -56,7 +56,7 @@ public final class RefIdentity<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

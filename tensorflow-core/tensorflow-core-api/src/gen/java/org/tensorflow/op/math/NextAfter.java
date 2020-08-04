@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -42,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "math")
-public final class NextAfter<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class NextAfter<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NextAfter operation.
@@ -53,10 +52,10 @@ public final class NextAfter<T extends Tensor & TNumber> extends RawOp implement
    * @return a new instance of NextAfter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
+  public static <T extends TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
-    opBuilder.addInput(x1.asOutput());
-    opBuilder.addInput(x2.asOutput());
+    opBuilder.addInput(x1.asOutput(scope));
+    opBuilder.addInput(x2.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NextAfter<T>(opBuilder.build());
   }
@@ -68,7 +67,7 @@ public final class NextAfter<T extends Tensor & TNumber> extends RawOp implement
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

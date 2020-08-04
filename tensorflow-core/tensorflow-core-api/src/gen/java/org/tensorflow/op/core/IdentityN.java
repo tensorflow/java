@@ -24,12 +24,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a list of tensors with the same shapes and contents as the input
@@ -51,7 +51,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class IdentityN extends RawOp implements Iterable<Operand<Tensor>> {
+public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new IdentityN operation.
@@ -63,7 +63,7 @@ public final class IdentityN extends RawOp implements Iterable<Operand<Tensor>> 
   @Endpoint(describeByClass = true)
   public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IdentityN", scope.makeOpName("IdentityN"));
-    opBuilder.addInputList(Operands.asOutputs(input));
+    opBuilder.addInputList(Operands.asOutputs(scope, input));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IdentityN(opBuilder.build());
   }
@@ -76,7 +76,7 @@ public final class IdentityN extends RawOp implements Iterable<Operand<Tensor>> 
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
   }
   

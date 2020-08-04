@@ -100,8 +100,8 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static ReduceJoin create(Scope scope, Operand<TString> inputs, Operand<TInt32> reductionIndices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReduceJoin", scope.makeOpName("ReduceJoin"));
-    opBuilder.addInput(inputs.asOutput());
-    opBuilder.addInput(reductionIndices.asOutput());
+    opBuilder.addInput(inputs.asOutput(scope));
+    opBuilder.addInput(reductionIndices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -139,7 +139,7 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

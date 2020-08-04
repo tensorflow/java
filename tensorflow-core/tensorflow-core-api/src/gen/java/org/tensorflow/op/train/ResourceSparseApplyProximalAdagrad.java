@@ -20,12 +20,12 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
@@ -74,15 +74,15 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalAdagrad", scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(l1.asOutput());
-    opBuilder.addInput(l2.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(l1.asOutput(scope));
+    opBuilder.addInput(l2.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

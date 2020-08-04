@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the (possibly normalized) Levenshtein Edit Distance.
@@ -82,14 +82,14 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
    * @return a new instance of EditDistance
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> EditDistance create(Scope scope, Operand<TInt64> hypothesisIndices, Operand<T> hypothesisValues, Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices, Operand<T> truthValues, Operand<TInt64> truthShape, Options... options) {
+  public static <T extends TType> EditDistance create(Scope scope, Operand<TInt64> hypothesisIndices, Operand<T> hypothesisValues, Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices, Operand<T> truthValues, Operand<TInt64> truthShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EditDistance", scope.makeOpName("EditDistance"));
-    opBuilder.addInput(hypothesisIndices.asOutput());
-    opBuilder.addInput(hypothesisValues.asOutput());
-    opBuilder.addInput(hypothesisShape.asOutput());
-    opBuilder.addInput(truthIndices.asOutput());
-    opBuilder.addInput(truthValues.asOutput());
-    opBuilder.addInput(truthShape.asOutput());
+    opBuilder.addInput(hypothesisIndices.asOutput(scope));
+    opBuilder.addInput(hypothesisValues.asOutput(scope));
+    opBuilder.addInput(hypothesisShape.asOutput(scope));
+    opBuilder.addInput(truthIndices.asOutput(scope));
+    opBuilder.addInput(truthValues.asOutput(scope));
+    opBuilder.addInput(truthShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -147,7 +147,7 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return output;
   }
   

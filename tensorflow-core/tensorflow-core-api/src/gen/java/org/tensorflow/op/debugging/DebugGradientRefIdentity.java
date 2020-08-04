@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Identity op for gradient debugging.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class DebugGradientRefIdentity<T extends Tensor> extends RawOp implements Operand<T> {
+public final class DebugGradientRefIdentity<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DebugGradientRefIdentity operation.
@@ -46,9 +46,9 @@ public final class DebugGradientRefIdentity<T extends Tensor> extends RawOp impl
    * @return a new instance of DebugGradientRefIdentity
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> DebugGradientRefIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientRefIdentity", scope.makeOpName("DebugGradientRefIdentity"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DebugGradientRefIdentity<T>(opBuilder.build());
   }
@@ -60,7 +60,7 @@ public final class DebugGradientRefIdentity<T extends Tensor> extends RawOp impl
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

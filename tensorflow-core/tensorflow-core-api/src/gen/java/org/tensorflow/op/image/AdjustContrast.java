@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -45,7 +44,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class AdjustContrast<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class AdjustContrast<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AdjustContrast operation.
@@ -56,10 +55,10 @@ public final class AdjustContrast<T extends Tensor & TNumber> extends RawOp impl
    * @return a new instance of AdjustContrast
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> AdjustContrast<T> create(Scope scope, Operand<T> images, Operand<TFloat32> contrastFactor) {
+  public static <T extends TNumber> AdjustContrast<T> create(Scope scope, Operand<T> images, Operand<TFloat32> contrastFactor) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustContrastv2", scope.makeOpName("AdjustContrast"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(contrastFactor.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(contrastFactor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AdjustContrast<T>(opBuilder.build());
   }
@@ -72,7 +71,7 @@ public final class AdjustContrast<T extends Tensor & TNumber> extends RawOp impl
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -35,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code r0()} output
  */
-public final class BroadcastGradientArgs<T extends Tensor & TNumber> extends RawOp {
+public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BroadcastGradientArgs operation.
@@ -46,10 +45,10 @@ public final class BroadcastGradientArgs<T extends Tensor & TNumber> extends Raw
    * @return a new instance of BroadcastGradientArgs
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
+  public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
-    opBuilder.addInput(s0.asOutput());
-    opBuilder.addInput(s1.asOutput());
+    opBuilder.addInput(s0.asOutput(scope));
+    opBuilder.addInput(s1.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BroadcastGradientArgs<T>(opBuilder.build());
   }

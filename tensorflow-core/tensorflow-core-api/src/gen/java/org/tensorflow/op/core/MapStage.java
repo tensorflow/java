@@ -99,9 +99,9 @@ public final class MapStage extends RawOp {
   @Endpoint(describeByClass = true)
   public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
-    opBuilder.addInput(key.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(values));
+    opBuilder.addInput(key.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, values));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

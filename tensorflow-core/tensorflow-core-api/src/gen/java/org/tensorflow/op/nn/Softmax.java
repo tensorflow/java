@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code softmax()} output
  */
 @Operator(group = "nn")
-public final class Softmax<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class Softmax<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Softmax operation.
@@ -48,9 +47,9 @@ public final class Softmax<T extends Tensor & TNumber> extends RawOp implements 
    * @return a new instance of Softmax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
+  public static <T extends TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softmax", scope.makeOpName("Softmax"));
-    opBuilder.addInput(logits.asOutput());
+    opBuilder.addInput(logits.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Softmax<T>(opBuilder.build());
   }
@@ -63,7 +62,7 @@ public final class Softmax<T extends Tensor & TNumber> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return softmax;
   }
   

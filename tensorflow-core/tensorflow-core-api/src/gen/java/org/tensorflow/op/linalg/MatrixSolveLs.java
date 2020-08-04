@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Solves one or more linear least-squares problems.
@@ -69,7 +69,7 @@ import org.tensorflow.types.TFloat64;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class MatrixSolveLs<T extends Tensor> extends RawOp implements Operand<T> {
+public final class MatrixSolveLs<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.MatrixSolveLs}
@@ -105,11 +105,11 @@ public final class MatrixSolveLs<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of MatrixSolveLs
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
+  public static <T extends TType> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolveLs", scope.makeOpName("MatrixSolveLs"));
-    opBuilder.addInput(matrix.asOutput());
-    opBuilder.addInput(rhs.asOutput());
-    opBuilder.addInput(l2Regularizer.asOutput());
+    opBuilder.addInput(matrix.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
+    opBuilder.addInput(l2Regularizer.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -136,7 +136,7 @@ public final class MatrixSolveLs<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

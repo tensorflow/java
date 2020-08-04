@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concats all tensors in the list along the 0th dimension.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code tensor()} output
  */
 @Operator
-public final class TensorListConcat<U extends Tensor> extends RawOp {
+public final class TensorListConcat<U extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new TensorListConcat operation.
@@ -62,11 +62,11 @@ public final class TensorListConcat<U extends Tensor> extends RawOp {
    * @return a new instance of TensorListConcat
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor & TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
+  public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcat"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
-    opBuilder.addInput(leadingDims.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(elementShape.asOutput(scope));
+    opBuilder.addInput(leadingDims.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcat<U>(opBuilder.build());

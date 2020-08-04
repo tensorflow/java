@@ -81,14 +81,14 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesSparseCalculateBestFeatureSplit create(Scope scope, Operand<TInt32> nodeIdRange, Operand<TInt32> statsSummaryIndices, Operand<TFloat32> statsSummaryValues, Operand<TInt32> statsSummaryShape, Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight, Long logitsDimension, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseCalculateBestFeatureSplit", scope.makeOpName("BoostedTreesSparseCalculateBestFeatureSplit"));
-    opBuilder.addInput(nodeIdRange.asOutput());
-    opBuilder.addInput(statsSummaryIndices.asOutput());
-    opBuilder.addInput(statsSummaryValues.asOutput());
-    opBuilder.addInput(statsSummaryShape.asOutput());
-    opBuilder.addInput(l1.asOutput());
-    opBuilder.addInput(l2.asOutput());
-    opBuilder.addInput(treeComplexity.asOutput());
-    opBuilder.addInput(minNodeWeight.asOutput());
+    opBuilder.addInput(nodeIdRange.asOutput(scope));
+    opBuilder.addInput(statsSummaryIndices.asOutput(scope));
+    opBuilder.addInput(statsSummaryValues.asOutput(scope));
+    opBuilder.addInput(statsSummaryShape.asOutput(scope));
+    opBuilder.addInput(l1.asOutput(scope));
+    opBuilder.addInput(l2.asOutput(scope));
+    opBuilder.addInput(treeComplexity.asOutput(scope));
+    opBuilder.addInput(minNodeWeight.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     if (options != null) {

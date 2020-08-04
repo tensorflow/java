@@ -46,7 +46,7 @@ public final class DecodeBase64 extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static DecodeBase64 create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBase64", scope.makeOpName("DecodeBase64"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DecodeBase64(opBuilder.build());
   }
@@ -59,7 +59,7 @@ public final class DecodeBase64 extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

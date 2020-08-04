@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Forwards `data` to the output port determined by `pred`.
@@ -39,7 +39,7 @@ import org.tensorflow.types.TBool;
  * @param <T> data type for {@code outputFalse()} output
  */
 @Operator
-public final class SwitchCond<T extends Tensor> extends RawOp {
+public final class SwitchCond<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SwitchCond operation.
@@ -50,10 +50,10 @@ public final class SwitchCond<T extends Tensor> extends RawOp {
    * @return a new instance of SwitchCond
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
+  public static <T extends TType> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
     OperationBuilder opBuilder = scope.env().opBuilder("Switch", scope.makeOpName("SwitchCond"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(pred.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
+    opBuilder.addInput(pred.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SwitchCond<T>(opBuilder.build());
   }

@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Scatter the data from the input value into specific TensorArray elements.
@@ -48,12 +48,12 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
    * @return a new instance of TensorArrayScatter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
+  public static <T extends TType> TensorArrayScatter create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(value.asOutput());
-    opBuilder.addInput(flowIn.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(value.asOutput(scope));
+    opBuilder.addInput(flowIn.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArrayScatter(opBuilder.build());
   }
@@ -66,7 +66,7 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return flowOut;
   }
   

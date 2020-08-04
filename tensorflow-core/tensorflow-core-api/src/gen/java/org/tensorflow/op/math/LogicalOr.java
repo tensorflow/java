@@ -47,8 +47,8 @@ public final class LogicalOr extends RawOp implements Operand<TBool> {
   @Endpoint(describeByClass = true)
   public static LogicalOr create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalOr", scope.makeOpName("LogicalOr"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(y.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(y.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LogicalOr(opBuilder.build());
   }
@@ -60,7 +60,7 @@ public final class LogicalOr extends RawOp implements Operand<TBool> {
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return z;
   }
   

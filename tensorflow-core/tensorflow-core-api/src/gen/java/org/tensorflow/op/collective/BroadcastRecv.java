@@ -22,19 +22,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Receives a tensor value broadcast from another device.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class BroadcastRecv<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BroadcastRecv<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.collective.BroadcastRecv}
@@ -77,7 +77,7 @@ public final class BroadcastRecv<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of BroadcastRecv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
+  public static <T extends TType> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("T", T);
@@ -119,7 +119,7 @@ public final class BroadcastRecv<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

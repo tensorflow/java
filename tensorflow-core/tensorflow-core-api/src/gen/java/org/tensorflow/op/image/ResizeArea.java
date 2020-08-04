@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -79,10 +78,10 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
    * @return a new instance of ResizeArea
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ResizeArea create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
+  public static <T extends TNumber> ResizeArea create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeArea", scope.makeOpName("ResizeArea"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -111,7 +110,7 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return resizedImages;
   }
   

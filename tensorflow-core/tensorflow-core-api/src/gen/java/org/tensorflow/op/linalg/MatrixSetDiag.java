@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a batched matrix tensor with new batched diagonal values.
@@ -136,7 +136,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class MatrixSetDiag<T extends Tensor> extends RawOp implements Operand<T> {
+public final class MatrixSetDiag<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.MatrixSetDiag}
@@ -178,11 +178,11 @@ public final class MatrixSetDiag<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of MatrixSetDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> MatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k, Options... options) {
+  public static <T extends TType> MatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal, Operand<TInt32> k, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV3", scope.makeOpName("MatrixSetDiag"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(diagonal.asOutput());
-    opBuilder.addInput(k.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(diagonal.asOutput(scope));
+    opBuilder.addInput(k.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -215,7 +215,7 @@ public final class MatrixSetDiag<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -42,8 +42,8 @@ public final class AnonymousRandomSeedGenerator extends RawOp {
   @Endpoint(describeByClass = true)
   public static AnonymousRandomSeedGenerator create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousRandomSeedGenerator", scope.makeOpName("AnonymousRandomSeedGenerator"));
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(seed2.asOutput());
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(seed2.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AnonymousRandomSeedGenerator(opBuilder.build());
   }

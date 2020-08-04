@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies set operation along last dimension of 2 `Tensor` inputs.
@@ -42,7 +42,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code resultValues()} output
  */
 @Operator(group = "sparse")
-public final class DenseToDenseSetOperation<T extends Tensor> extends RawOp {
+public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.DenseToDenseSetOperation}
@@ -76,10 +76,10 @@ public final class DenseToDenseSetOperation<T extends Tensor> extends RawOp {
    * @return a new instance of DenseToDenseSetOperation
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
+  public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToDenseSetOperation", scope.makeOpName("DenseToDenseSetOperation"));
-    opBuilder.addInput(set1.asOutput());
-    opBuilder.addInput(set2.asOutput());
+    opBuilder.addInput(set1.asOutput(scope));
+    opBuilder.addInput(set2.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("set_operation", setOperation);
     if (options != null) {

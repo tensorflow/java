@@ -20,7 +20,6 @@ package org.tensorflow.op.summary;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -44,12 +43,12 @@ public final class WriteHistogramSummary extends RawOp {
    * @return a new instance of WriteHistogramSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> WriteHistogramSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> values) {
+  public static <T extends TNumber> WriteHistogramSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteHistogramSummary", scope.makeOpName("WriteHistogramSummary"));
-    opBuilder.addInput(writer.asOutput());
-    opBuilder.addInput(step.asOutput());
-    opBuilder.addInput(tag.asOutput());
-    opBuilder.addInput(values.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
+    opBuilder.addInput(step.asOutput(scope));
+    opBuilder.addInput(tag.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new WriteHistogramSummary(opBuilder.build());
   }

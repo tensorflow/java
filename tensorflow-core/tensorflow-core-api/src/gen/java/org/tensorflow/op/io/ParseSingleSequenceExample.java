@@ -124,14 +124,14 @@ public final class ParseSingleSequenceExample extends RawOp {
   @Endpoint(describeByClass = true)
   public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> featureListDenseMissingAssumedEmpty, Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys, Iterable<Operand<TString>> featureListSparseKeys, Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults, Operand<TString> debugName, List<DataType<?>> contextSparseTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleSequenceExample", scope.makeOpName("ParseSingleSequenceExample"));
-    opBuilder.addInput(serialized.asOutput());
-    opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(contextSparseKeys));
-    opBuilder.addInputList(Operands.asOutputs(contextDenseKeys));
-    opBuilder.addInputList(Operands.asOutputs(featureListSparseKeys));
-    opBuilder.addInputList(Operands.asOutputs(featureListDenseKeys));
-    opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
-    opBuilder.addInput(debugName.asOutput());
+    opBuilder.addInput(serialized.asOutput(scope));
+    opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, contextSparseKeys));
+    opBuilder.addInputList(Operands.asOutputs(scope, contextDenseKeys));
+    opBuilder.addInputList(Operands.asOutputs(scope, featureListSparseKeys));
+    opBuilder.addInputList(Operands.asOutputs(scope, featureListDenseKeys));
+    opBuilder.addInputList(Operands.asOutputs(scope, contextDenseDefaults));
+    opBuilder.addInput(debugName.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {

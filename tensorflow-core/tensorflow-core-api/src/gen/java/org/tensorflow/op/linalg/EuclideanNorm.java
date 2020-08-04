@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the euclidean norm of elements across dimensions of a tensor.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class EuclideanNorm<T extends Tensor> extends RawOp implements Operand<T> {
+public final class EuclideanNorm<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.EuclideanNorm}
@@ -71,10 +71,10 @@ public final class EuclideanNorm<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of EuclideanNorm
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> EuclideanNorm<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType, U extends TNumber> EuclideanNorm<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EuclideanNorm", scope.makeOpName("EuclideanNorm"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(axis.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(axis.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -101,7 +101,7 @@ public final class EuclideanNorm<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

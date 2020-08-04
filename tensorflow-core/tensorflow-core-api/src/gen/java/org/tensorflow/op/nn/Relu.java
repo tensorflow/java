@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear: `max(features, 0)`.
@@ -38,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Relu<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Relu<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Relu operation.
@@ -48,9 +48,9 @@ public final class Relu<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Relu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Relu<T> create(Scope scope, Operand<T> features) {
+  public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
-    opBuilder.addInput(features.asOutput());
+    opBuilder.addInput(features.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Relu<T>(opBuilder.build());
   }
@@ -62,7 +62,7 @@ public final class Relu<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return activations;
   }
   

@@ -42,7 +42,7 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
   @Endpoint(describeByClass = true)
   public static IsBoostedTreesEnsembleInitialized create(Scope scope, Operand<?> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesEnsembleInitialized", scope.makeOpName("IsBoostedTreesEnsembleInitialized"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IsBoostedTreesEnsembleInitialized(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return isInitialized;
   }
   

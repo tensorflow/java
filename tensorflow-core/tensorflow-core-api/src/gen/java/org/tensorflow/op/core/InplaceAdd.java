@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  *     Adds v into specified rows of x.
@@ -36,7 +36,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class InplaceAdd<T extends Tensor> extends RawOp implements Operand<T> {
+public final class InplaceAdd<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InplaceAdd operation.
@@ -48,11 +48,11 @@ public final class InplaceAdd<T extends Tensor> extends RawOp implements Operand
    * @return a new instance of InplaceAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> InplaceAdd<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
+  public static <T extends TType> InplaceAdd<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceAdd", scope.makeOpName("InplaceAdd"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(i.asOutput());
-    opBuilder.addInput(v.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(i.asOutput(scope));
+    opBuilder.addInput(v.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new InplaceAdd<T>(opBuilder.build());
   }
@@ -65,7 +65,7 @@ public final class InplaceAdd<T extends Tensor> extends RawOp implements Operand
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

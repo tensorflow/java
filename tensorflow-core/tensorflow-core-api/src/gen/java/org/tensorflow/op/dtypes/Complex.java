@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts two real numbers to a complex number.
@@ -50,7 +50,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code out()} output
  */
 @Operator(group = "dtypes")
-public final class Complex<U extends Tensor> extends RawOp implements Operand<U> {
+public final class Complex<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Complex operation.
@@ -62,10 +62,10 @@ public final class Complex<U extends Tensor> extends RawOp implements Operand<U>
    * @return a new instance of Complex
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor & TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
+  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
-    opBuilder.addInput(real.asOutput());
-    opBuilder.addInput(imag.asOutput());
+    opBuilder.addInput(real.asOutput(scope));
+    opBuilder.addInput(imag.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Complex<U>(opBuilder.build());
@@ -78,7 +78,7 @@ public final class Complex<U extends Tensor> extends RawOp implements Operand<U>
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return out;
   }
   

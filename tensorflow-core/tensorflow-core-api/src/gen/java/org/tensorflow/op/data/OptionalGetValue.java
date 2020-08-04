@@ -25,18 +25,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the value stored in an Optional variant or raises an error if none exists.
  */
 @Operator(group = "data")
-public final class OptionalGetValue extends RawOp implements Iterable<Operand<Tensor>> {
+public final class OptionalGetValue extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new OptionalGetValue operation.
@@ -50,7 +50,7 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<Te
   @Endpoint(describeByClass = true)
   public static OptionalGetValue create(Scope scope, Operand<?> optional, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
-    opBuilder.addInput(optional.asOutput());
+    opBuilder.addInput(optional.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -73,7 +73,7 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<Te
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

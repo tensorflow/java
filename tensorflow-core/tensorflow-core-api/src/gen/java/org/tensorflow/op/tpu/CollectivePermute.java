@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * An Op to permute tensors across replicated TPU instances.
@@ -39,7 +39,7 @@ import org.tensorflow.types.TInt32;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CollectivePermute<T extends Tensor> extends RawOp implements Operand<T> {
+public final class CollectivePermute<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CollectivePermute operation.
@@ -51,10 +51,10 @@ public final class CollectivePermute<T extends Tensor> extends RawOp implements 
    * @return a new instance of CollectivePermute
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
+  public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(sourceTargetPairs.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(sourceTargetPairs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CollectivePermute<T>(opBuilder.build());
   }
@@ -67,7 +67,7 @@ public final class CollectivePermute<T extends Tensor> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

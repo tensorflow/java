@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reshapes a tensor.
@@ -94,7 +94,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Reshape<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Reshape<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Reshape operation.
@@ -105,10 +105,10 @@ public final class Reshape<T extends Tensor> extends RawOp implements Operand<T>
    * @return a new instance of Reshape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> Reshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape) {
+  public static <T extends TType, U extends TNumber> Reshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("Reshape", scope.makeOpName("Reshape"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(shape.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
+    opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Reshape<T>(opBuilder.build());
   }
@@ -120,7 +120,7 @@ public final class Reshape<T extends Tensor> extends RawOp implements Operand<T>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -61,7 +60,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code image()} output
  */
 @Operator(group = "image")
-public final class DecodePng<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DecodePng<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.DecodePng}
@@ -92,9 +91,9 @@ public final class DecodePng<T extends Tensor & TNumber> extends RawOp implement
    * @return a new instance of DecodePng
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
+  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
-    opBuilder.addInput(contents.asOutput());
+    opBuilder.addInput(contents.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
@@ -135,7 +134,7 @@ public final class DecodePng<T extends Tensor & TNumber> extends RawOp implement
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return image;
   }
   

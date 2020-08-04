@@ -152,7 +152,7 @@ public final class OrderedMapIncompleteSize extends RawOp implements Operand<TIn
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return size;
   }
   

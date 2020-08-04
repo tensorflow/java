@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -44,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class NcclBroadcast<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class NcclBroadcast<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new NcclBroadcast operation.
@@ -55,9 +54,9 @@ public final class NcclBroadcast<T extends Tensor & TNumber> extends RawOp imple
    * @return a new instance of NcclBroadcast
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new NcclBroadcast<T>(opBuilder.build());
@@ -70,7 +69,7 @@ public final class NcclBroadcast<T extends Tensor & TNumber> extends RawOp imple
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

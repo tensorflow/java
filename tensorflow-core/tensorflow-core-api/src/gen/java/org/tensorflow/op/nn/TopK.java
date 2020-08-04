@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -46,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "nn")
-public final class TopK<T extends Tensor & TNumber> extends RawOp {
+public final class TopK<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.TopK}
@@ -79,10 +78,10 @@ public final class TopK<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of TopK
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k, Options... options) {
+  public static <T extends TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKV2", scope.makeOpName("TopK"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(k.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(k.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

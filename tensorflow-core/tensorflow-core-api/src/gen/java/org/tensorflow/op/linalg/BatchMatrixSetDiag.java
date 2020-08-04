@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixSetDiag<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BatchMatrixSetDiag<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchMatrixSetDiag operation.
@@ -42,10 +42,10 @@ public final class BatchMatrixSetDiag<T extends Tensor> extends RawOp implements
    * @return a new instance of BatchMatrixSetDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
+  public static <T extends TType> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSetDiag", scope.makeOpName("BatchMatrixSetDiag"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(diagonal.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(diagonal.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchMatrixSetDiag<T>(opBuilder.build());
   }
@@ -57,7 +57,7 @@ public final class BatchMatrixSetDiag<T extends Tensor> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

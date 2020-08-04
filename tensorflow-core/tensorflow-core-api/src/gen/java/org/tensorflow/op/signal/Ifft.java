@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Inverse fast Fourier transform.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Ifft<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Ifft<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Ifft operation.
@@ -46,9 +46,9 @@ public final class Ifft<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Ifft
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Ifft<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Ifft<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IFFT", scope.makeOpName("Ifft"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Ifft<T>(opBuilder.build());
   }
@@ -66,7 +66,7 @@ public final class Ifft<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

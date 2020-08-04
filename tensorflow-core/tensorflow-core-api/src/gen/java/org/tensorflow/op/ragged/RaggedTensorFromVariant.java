@@ -24,13 +24,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Decodes a `variant` Tensor into a `RaggedTensor`.
@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code outputNestedSplits()} output
  * @param <T> data type for {@code outputDenseValues()} output
  */
-public final class RaggedTensorFromVariant<U extends Tensor & TNumber, T extends Tensor> extends RawOp {
+public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new RaggedTensorFromVariant operation.
@@ -67,9 +67,9 @@ public final class RaggedTensorFromVariant<U extends Tensor & TNumber, T extends
    * @return a new instance of RaggedTensorFromVariant
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
+  public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
-    opBuilder.addInput(encodedRagged.asOutput());
+    opBuilder.addInput(encodedRagged.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("input_ragged_rank", inputRaggedRank);
     opBuilder.setAttr("output_ragged_rank", outputRaggedRank);
@@ -91,7 +91,7 @@ public final class RaggedTensorFromVariant<U extends Tensor & TNumber, T extends
    * @return a new instance of RaggedTensorFromVariant
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues) {
+  public static <T extends TType> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues) {
     return create(scope, encodedRagged, inputRaggedRank, outputRaggedRank, Tvalues, TInt64.DTYPE);
   }
   

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Sort operator, documented at
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code sortedValues()} output
  */
 @Operator(group = "xla")
-public final class KeyValueSort<T extends Tensor & TNumber, U extends Tensor> extends RawOp {
+public final class KeyValueSort<T extends TNumber, U extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new KeyValueSort operation.
@@ -51,10 +51,10 @@ public final class KeyValueSort<T extends Tensor & TNumber, U extends Tensor> ex
    * @return a new instance of KeyValueSort
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor> KeyValueSort<T, U> create(Scope scope, Operand<T> keys, Operand<U> values) {
+  public static <T extends TNumber, U extends TType> KeyValueSort<T, U> create(Scope scope, Operand<T> keys, Operand<U> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaKeyValueSort", scope.makeOpName("KeyValueSort"));
-    opBuilder.addInput(keys.asOutput());
-    opBuilder.addInput(values.asOutput());
+    opBuilder.addInput(keys.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new KeyValueSort<T, U>(opBuilder.build());
   }

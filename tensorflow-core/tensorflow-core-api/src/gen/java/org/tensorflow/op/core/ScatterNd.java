@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Scatter `updates` into a new tensor according to `indices`.
@@ -111,7 +111,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ScatterNd<U extends Tensor> extends RawOp implements Operand<U> {
+public final class ScatterNd<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new ScatterNd operation.
@@ -123,11 +123,11 @@ public final class ScatterNd<U extends Tensor> extends RawOp implements Operand<
    * @return a new instance of ScatterNd
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor & TNumber> ScatterNd<U> create(Scope scope, Operand<T> indices, Operand<U> updates, Operand<T> shape) {
+  public static <U extends TType, T extends TNumber> ScatterNd<U> create(Scope scope, Operand<T> indices, Operand<U> updates, Operand<T> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNd", scope.makeOpName("ScatterNd"));
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
-    opBuilder.addInput(shape.asOutput());
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
+    opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ScatterNd<U>(opBuilder.build());
   }
@@ -141,7 +141,7 @@ public final class ScatterNd<U extends Tensor> extends RawOp implements Operand<
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

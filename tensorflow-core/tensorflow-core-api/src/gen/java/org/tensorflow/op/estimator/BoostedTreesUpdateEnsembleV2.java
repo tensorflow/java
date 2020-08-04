@@ -85,18 +85,18 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesUpdateEnsembleV2 create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> featureIds, Iterable<Operand<TInt32>> dimensionIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Iterable<Operand<TString>> splitTypes, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Operand<TInt32> pruningMode, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsembleV2", scope.makeOpName("BoostedTreesUpdateEnsembleV2"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(featureIds));
-    opBuilder.addInputList(Operands.asOutputs(dimensionIds));
-    opBuilder.addInputList(Operands.asOutputs(nodeIds));
-    opBuilder.addInputList(Operands.asOutputs(gains));
-    opBuilder.addInputList(Operands.asOutputs(thresholds));
-    opBuilder.addInputList(Operands.asOutputs(leftNodeContribs));
-    opBuilder.addInputList(Operands.asOutputs(rightNodeContribs));
-    opBuilder.addInputList(Operands.asOutputs(splitTypes));
-    opBuilder.addInput(maxDepth.asOutput());
-    opBuilder.addInput(learningRate.asOutput());
-    opBuilder.addInput(pruningMode.asOutput());
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, featureIds));
+    opBuilder.addInputList(Operands.asOutputs(scope, dimensionIds));
+    opBuilder.addInputList(Operands.asOutputs(scope, nodeIds));
+    opBuilder.addInputList(Operands.asOutputs(scope, gains));
+    opBuilder.addInputList(Operands.asOutputs(scope, thresholds));
+    opBuilder.addInputList(Operands.asOutputs(scope, leftNodeContribs));
+    opBuilder.addInputList(Operands.asOutputs(scope, rightNodeContribs));
+    opBuilder.addInputList(Operands.asOutputs(scope, splitTypes));
+    opBuilder.addInput(maxDepth.asOutput(scope));
+    opBuilder.addInput(learningRate.asOutput(scope));
+    opBuilder.addInput(pruningMode.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

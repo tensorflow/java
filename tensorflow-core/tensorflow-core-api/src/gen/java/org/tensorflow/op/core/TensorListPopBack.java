@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the last element of the input list as well as a list with all but that element.
@@ -42,7 +42,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator
-public final class TensorListPopBack<T extends Tensor> extends RawOp {
+public final class TensorListPopBack<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new TensorListPopBack operation.
@@ -54,10 +54,10 @@ public final class TensorListPopBack<T extends Tensor> extends RawOp {
    * @return a new instance of TensorListPopBack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListPopBack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListPopBack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPopBack", scope.makeOpName("TensorListPopBack"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(elementShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListPopBack<T>(opBuilder.build());

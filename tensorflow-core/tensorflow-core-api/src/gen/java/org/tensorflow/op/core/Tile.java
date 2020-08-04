@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Constructs a tensor by tiling a given tensor.
@@ -61,7 +61,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Tile<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Tile<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Tile operation.
@@ -72,10 +72,10 @@ public final class Tile<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Tile
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> Tile<T> create(Scope scope, Operand<T> input, Operand<U> multiples) {
+  public static <T extends TType, U extends TNumber> Tile<T> create(Scope scope, Operand<T> input, Operand<U> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("Tile", scope.makeOpName("Tile"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(multiples.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(multiples.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Tile<T>(opBuilder.build());
   }
@@ -87,7 +87,7 @@ public final class Tile<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

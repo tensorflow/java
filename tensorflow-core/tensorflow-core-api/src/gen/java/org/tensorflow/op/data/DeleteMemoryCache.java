@@ -40,8 +40,8 @@ public final class DeleteMemoryCache extends RawOp {
   @Endpoint(describeByClass = true)
   public static DeleteMemoryCache create(Scope scope, Operand<?> handle, Operand<?> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMemoryCache", scope.makeOpName("DeleteMemoryCache"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(deleter.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(deleter.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DeleteMemoryCache(opBuilder.build());
   }

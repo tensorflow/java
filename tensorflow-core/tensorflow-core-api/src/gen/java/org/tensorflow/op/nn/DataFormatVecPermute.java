@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -36,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "nn")
-public final class DataFormatVecPermute<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DataFormatVecPermute<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DataFormatVecPermute}
@@ -75,9 +74,9 @@ public final class DataFormatVecPermute<T extends Tensor & TNumber> extends RawO
    * @return a new instance of DataFormatVecPermute
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
+  public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatVecPermute", scope.makeOpName("DataFormatVecPermute"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -114,7 +113,7 @@ public final class DataFormatVecPermute<T extends Tensor & TNumber> extends RawO
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

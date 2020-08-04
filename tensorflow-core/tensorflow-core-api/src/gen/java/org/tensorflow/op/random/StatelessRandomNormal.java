@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -40,7 +39,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatelessRandomNormal<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
+public final class StatelessRandomNormal<V extends TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomNormal operation.
@@ -52,10 +51,10 @@ public final class StatelessRandomNormal<V extends Tensor & TNumber> extends Raw
    * @return a new instance of StatelessRandomNormal
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomNormal<V>(opBuilder.build());
@@ -70,7 +69,7 @@ public final class StatelessRandomNormal<V extends Tensor & TNumber> extends Raw
    * @return a new instance of StatelessRandomNormal
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+  public static <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
     return create(scope, shape, seed, TFloat32.DTYPE);
   }
   
@@ -82,7 +81,7 @@ public final class StatelessRandomNormal<V extends Tensor & TNumber> extends Raw
   }
   
   @Override
-  public Output<V> asOutput() {
+  public Output<V> asOutput(Scope scope) {
     return output;
   }
   

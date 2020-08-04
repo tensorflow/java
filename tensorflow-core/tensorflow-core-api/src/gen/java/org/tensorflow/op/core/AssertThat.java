@@ -67,8 +67,8 @@ public final class AssertThat extends RawOp {
   @Endpoint(describeByClass = true)
   public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Assert", scope.makeOpName("AssertThat"));
-    opBuilder.addInput(condition.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(data));
+    opBuilder.addInput(condition.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, data));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

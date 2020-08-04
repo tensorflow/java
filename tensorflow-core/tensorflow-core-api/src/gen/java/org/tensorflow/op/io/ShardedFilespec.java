@@ -45,8 +45,8 @@ public final class ShardedFilespec extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static ShardedFilespec create(Scope scope, Operand<TString> basename, Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilespec", scope.makeOpName("ShardedFilespec"));
-    opBuilder.addInput(basename.asOutput());
-    opBuilder.addInput(numShards.asOutput());
+    opBuilder.addInput(basename.asOutput(scope));
+    opBuilder.addInput(numShards.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ShardedFilespec(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class ShardedFilespec extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return filename;
   }
   

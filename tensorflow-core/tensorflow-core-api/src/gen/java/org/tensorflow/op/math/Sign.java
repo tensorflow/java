@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns an element-wise indication of the sign of a number.
@@ -41,7 +41,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Sign<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Sign<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sign operation.
@@ -51,9 +51,9 @@ public final class Sign<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Sign
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Sign<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sign<T>(opBuilder.build());
   }
@@ -65,7 +65,7 @@ public final class Sign<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

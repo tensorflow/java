@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -30,6 +29,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Inverse 2D real-valued fast Fourier transform.
@@ -52,7 +52,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Irfft2d<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
+public final class Irfft2d<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Irfft2d operation.
@@ -64,10 +64,10 @@ public final class Irfft2d<U extends Tensor & TNumber> extends RawOp implements 
    * @return a new instance of Irfft2d
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor> Irfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
+  public static <U extends TNumber, T extends TType> Irfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT2D", scope.makeOpName("Irfft2d"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(fftLength.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(fftLength.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Treal", Treal);
     return new Irfft2d<U>(opBuilder.build());
@@ -82,7 +82,7 @@ public final class Irfft2d<U extends Tensor & TNumber> extends RawOp implements 
    * @return a new instance of Irfft2d
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Irfft2d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
+  public static <T extends TType> Irfft2d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.DTYPE);
   }
   
@@ -100,7 +100,7 @@ public final class Irfft2d<U extends Tensor & TNumber> extends RawOp implements 
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -35,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class MaxPool3dGrad<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
+public final class MaxPool3dGrad<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.MaxPool3dGrad}
@@ -76,11 +75,11 @@ public final class MaxPool3dGrad<U extends Tensor & TNumber> extends RawOp imple
    * @return a new instance of MaxPool3dGrad
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> MaxPool3dGrad<U> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <U extends TNumber, T extends TNumber> MaxPool3dGrad<U> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPool3DGrad", scope.makeOpName("MaxPool3dGrad"));
-    opBuilder.addInput(origInput.asOutput());
-    opBuilder.addInput(origOutput.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(origInput.asOutput(scope));
+    opBuilder.addInput(origOutput.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
@@ -121,7 +120,7 @@ public final class MaxPool3dGrad<U extends Tensor & TNumber> extends RawOp imple
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

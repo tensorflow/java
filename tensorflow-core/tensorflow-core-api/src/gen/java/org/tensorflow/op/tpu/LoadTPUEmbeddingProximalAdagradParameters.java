@@ -88,8 +88,8 @@ public final class LoadTPUEmbeddingProximalAdagradParameters extends RawOp {
   @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingProximalAdagradParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingProximalAdagradParameters", scope.makeOpName("LoadTPUEmbeddingProximalAdagradParameters"));
-    opBuilder.addInput(parameters.asOutput());
-    opBuilder.addInput(accumulators.asOutput());
+    opBuilder.addInput(parameters.asOutput(scope));
+    opBuilder.addInput(accumulators.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

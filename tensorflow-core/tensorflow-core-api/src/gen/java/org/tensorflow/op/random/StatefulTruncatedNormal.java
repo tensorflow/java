@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a truncated normal distribution.
@@ -39,7 +39,7 @@ import org.tensorflow.types.TInt64;
  * 
  * @param <U> data type for {@code output()} output
  */
-public final class StatefulTruncatedNormal<U extends Tensor> extends RawOp implements Operand<U> {
+public final class StatefulTruncatedNormal<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new StatefulTruncatedNormal operation.
@@ -52,11 +52,11 @@ public final class StatefulTruncatedNormal<U extends Tensor> extends RawOp imple
    * @return a new instance of StatefulTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> StatefulTruncatedNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulTruncatedNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulTruncatedNormal", scope.makeOpName("StatefulTruncatedNormal"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(algorithm.asOutput());
-    opBuilder.addInput(shape.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(algorithm.asOutput(scope));
+    opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatefulTruncatedNormal<U>(opBuilder.build());
@@ -72,7 +72,7 @@ public final class StatefulTruncatedNormal<U extends Tensor> extends RawOp imple
    * @return a new instance of StatefulTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> StatefulTruncatedNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+  public static <T extends TType> StatefulTruncatedNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
   }
   
@@ -84,7 +84,7 @@ public final class StatefulTruncatedNormal<U extends Tensor> extends RawOp imple
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

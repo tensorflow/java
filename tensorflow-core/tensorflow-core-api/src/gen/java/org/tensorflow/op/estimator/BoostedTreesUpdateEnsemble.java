@@ -62,15 +62,15 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesUpdateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Long pruningMode) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsemble", scope.makeOpName("BoostedTreesUpdateEnsemble"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInput(featureIds.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(nodeIds));
-    opBuilder.addInputList(Operands.asOutputs(gains));
-    opBuilder.addInputList(Operands.asOutputs(thresholds));
-    opBuilder.addInputList(Operands.asOutputs(leftNodeContribs));
-    opBuilder.addInputList(Operands.asOutputs(rightNodeContribs));
-    opBuilder.addInput(maxDepth.asOutput());
-    opBuilder.addInput(learningRate.asOutput());
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInput(featureIds.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, nodeIds));
+    opBuilder.addInputList(Operands.asOutputs(scope, gains));
+    opBuilder.addInputList(Operands.asOutputs(scope, thresholds));
+    opBuilder.addInputList(Operands.asOutputs(scope, leftNodeContribs));
+    opBuilder.addInputList(Operands.asOutputs(scope, rightNodeContribs));
+    opBuilder.addInput(maxDepth.asOutput(scope));
+    opBuilder.addInput(learningRate.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("pruning_mode", pruningMode);
     return new BoostedTreesUpdateEnsemble(opBuilder.build());

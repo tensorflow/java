@@ -1,16 +1,14 @@
-package org.tensorflow.tensor;
+package org.tensorflow.types.tensor;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.impl.dense.BooleanDenseNdArray;
 
+/**
+ * A {@link Tensor} of booleans.
+ */
 public interface BooleanTensor extends BooleanNdArray, Tensor<Boolean> {
 
   @Override
@@ -37,4 +35,3 @@ public interface BooleanTensor extends BooleanNdArray, Tensor<Boolean> {
   @Override
   BooleanTensor write(BooleanDataBuffer src);
 }
-

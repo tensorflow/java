@@ -24,11 +24,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Unpacks a given dimension of a rank-`R` tensor into `num` rank-`(R-1)` tensors.
@@ -49,7 +49,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Unstack<T extends Tensor> extends RawOp implements Iterable<Operand<T>> {
+public final class Unstack<T extends TType> extends RawOp implements Iterable<Operand<T>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Unstack}
@@ -81,9 +81,9 @@ public final class Unstack<T extends Tensor> extends RawOp implements Iterable<O
    * @return a new instance of Unstack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
+  public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num", num);
     if (options != null) {

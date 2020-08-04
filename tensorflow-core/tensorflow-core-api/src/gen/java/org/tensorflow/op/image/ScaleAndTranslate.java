@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -75,12 +74,12 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
    * @return a new instance of ScaleAndTranslate
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
+  public static <T extends TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslate", scope.makeOpName("ScaleAndTranslate"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder.addInput(scale.asOutput());
-    opBuilder.addInput(translation.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
+    opBuilder.addInput(scale.asOutput(scope));
+    opBuilder.addInput(translation.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -116,7 +115,7 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return resizedImages;
   }
   

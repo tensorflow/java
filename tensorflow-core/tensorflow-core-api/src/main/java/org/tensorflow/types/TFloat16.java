@@ -19,11 +19,11 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
-import org.tensorflow.Tensor;
+import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.tensor.FloatTensorImpl;
+import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TFloating;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
-public interface TFloat16 extends FloatTensor, TFloating {
+public interface TFloat16 extends FloatTensor, TFloating<TFloat16, Float> {
 
   /** readable-name for the data type */
   static final String NAME = "FLOAT16";
@@ -60,7 +60,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
    * @return the new tensor
    */
   static TFloat16 scalarOf(float value) {
-    return Tensor.of(DTYPE, Shape.scalar(), t -> t.setFloat(value));
+    return Tensors.of(DTYPE, Shape.scalar(), t -> t.setFloat(value));
   }
 
   /**
@@ -73,7 +73,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
+    return Tensors.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -85,7 +85,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
    * @return the new tensor
    */
   static TFloat16 tensorOf(NdArray<Float> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+    return Tensors.of(DTYPE, src.shape(), src::copyTo);
   }
 
   /**
@@ -95,7 +95,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
    * @return the new tensor
    */
   static TFloat16 tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+    return Tensors.of(DTYPE, shape);
   }
 
   /**
@@ -106,7 +106,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
    * @return the new tensor
    */
   static TFloat16 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(DTYPE, shape, t -> t.write(data));
+    return Tensors.of(DTYPE, shape, t -> t.write(data));
   }
 
   /**
@@ -118,7 +118,7 @@ public interface TFloat16 extends FloatTensor, TFloating {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TFloat16 tensorOf(Shape shape, Consumer<TFloat16> tensorInit) {
-    return Tensor.of(DTYPE, shape, tensorInit);
+    return Tensors.of(DTYPE, shape, tensorInit);
   }
 }
 

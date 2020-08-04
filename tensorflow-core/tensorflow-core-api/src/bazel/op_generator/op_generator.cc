@@ -237,12 +237,12 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
   writer->EndLine();
   for (const ArgumentSpec& input : op.inputs()) {
     if (input.iterable()) {
-      writer->Append("opBuilder.addInputList(Operands.asOutputs(" +
+      writer->Append("opBuilder.addInputList(Operands.asOutputs(scope, " +
                      input.var().name() + "));");
       writer->EndLine();
     } else {
       writer->Append("opBuilder.addInput(" + input.var().name() +
-                     ".asOutput());");
+                     ".asOutput(scope));");
       writer->EndLine();
     }
   }
@@ -348,8 +348,9 @@ void RenderInterfaceImpl(const OpSpec& op, RenderMode mode,
   if (mode == OPERAND) {
     bool cast2obj = output.type().wildcard();
     Type return_type = Type::Class("Output", "org.tensorflow")
-        .add_parameter(cast2obj ? Type::Interface("Tensor", "org.tensorflow") : output.type());
+        .add_parameter(cast2obj ? Type::Interface("TType", "org.tensorflow.types.family") : output.type());
     Method as_output = Method::Create("asOutput", return_type)
+        .add_argument(Variable::Create("scope", Type::Class("Scope", "org.tensorflow.op")))
         .add_annotation(Annotation::Create("Override"));
     if (cast2obj) {
       as_output.add_annotation(
@@ -366,7 +367,7 @@ void RenderInterfaceImpl(const OpSpec& op, RenderMode mode,
   } else if (mode == LIST_OPERAND) {
     Type operand = Type::Interface("Operand", "org.tensorflow");
     if (output.type().wildcard()) {
-      operand.add_parameter(Type::Interface("Tensor", "org.tensorflow"));
+      operand.add_parameter(Type::Interface("TType", "org.tensorflow.types.family"));
     } else {
       operand.add_parameter(output.type());
     }
@@ -430,7 +431,7 @@ void GenerateOp(const OpSpec& op, const EndpointSpec& endpoint,
   RenderMode mode = DEFAULT;
   if (op.outputs().size() == 1) {
     const ArgumentSpec& output = op.outputs().front();
-    Type operand_type(output.type().wildcard() ? Type::Interface("Tensor", "org.tensorflow")
+    Type operand_type(output.type().wildcard() ? Type::Interface("TType", "org.tensorflow.types.family")
                                                : output.type());
     Type operand_inf(Type::Interface("Operand", "org.tensorflow").add_parameter(operand_type));
     if (output.iterable()) {

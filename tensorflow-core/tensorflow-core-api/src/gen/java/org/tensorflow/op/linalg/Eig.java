@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of one or more square matrices.
@@ -46,7 +46,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code e()} output
  */
 @Operator(group = "linalg")
-public final class Eig<U extends Tensor> extends RawOp {
+public final class Eig<U extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.Eig}
@@ -78,9 +78,9 @@ public final class Eig<U extends Tensor> extends RawOp {
    * @return a new instance of Eig
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> Eig<U> create(Scope scope, Operand<T> input, DataType<U> Tout, Options... options) {
+  public static <U extends TType, T extends TType> Eig<U> create(Scope scope, Operand<T> input, DataType<U> Tout, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Eig", scope.makeOpName("Eig"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     if (options != null) {

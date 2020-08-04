@@ -57,7 +57,7 @@ public final class TPUOrdinalSelector extends RawOp implements Operand<TInt32> {
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return deviceOrdinals;
   }
   

@@ -21,18 +21,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Select<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Select<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Select operation.
@@ -44,11 +44,11 @@ public final class Select<T extends Tensor> extends RawOp implements Operand<T> 
    * @return a new instance of Select
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Select<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
+  public static <T extends TType> Select<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("Select"));
-    opBuilder.addInput(condition.asOutput());
-    opBuilder.addInput(t.asOutput());
-    opBuilder.addInput(e.asOutput());
+    opBuilder.addInput(condition.asOutput(scope));
+    opBuilder.addInput(t.asOutput(scope));
+    opBuilder.addInput(e.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Select<T>(opBuilder.build());
   }
@@ -60,7 +60,7 @@ public final class Select<T extends Tensor> extends RawOp implements Operand<T> 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

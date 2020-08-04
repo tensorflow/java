@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a `Dataset` that includes only 1/`num_shards` of this dataset.
  */
-public final class ShardDataset extends RawOp implements Operand<Tensor> {
+public final class ShardDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.ShardDataset}
@@ -70,9 +70,9 @@ public final class ShardDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static ShardDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numShards, Operand<TInt64> index, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardDataset", scope.makeOpName("ShardDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(numShards.asOutput());
-    opBuilder.addInput(index.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(numShards.asOutput(scope));
+    opBuilder.addInput(index.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -109,8 +109,8 @@ public final class ShardDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

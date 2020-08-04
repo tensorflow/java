@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the momentum scheme.
@@ -82,13 +82,13 @@ public final class ResourceApplyMomentum extends RawOp {
    * @return a new instance of ResourceApplyMomentum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ResourceApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
+  public static <T extends TType> ResourceApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyMomentum", scope.makeOpName("ResourceApplyMomentum"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(momentum.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(momentum.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

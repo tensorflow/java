@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Sends the named tensor from send_device to recv_device.
@@ -66,9 +66,9 @@ public final class Send extends RawOp {
    * @return a new instance of Send
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Send create(Scope scope, Operand<T> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
+  public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Send", scope.makeOpName("Send"));
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("tensor_name", tensorName);
     opBuilder.setAttr("send_device", sendDevice);

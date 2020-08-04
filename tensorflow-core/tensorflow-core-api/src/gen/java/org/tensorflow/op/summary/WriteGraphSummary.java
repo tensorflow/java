@@ -43,9 +43,9 @@ public final class WriteGraphSummary extends RawOp {
   @Endpoint(describeByClass = true)
   public static WriteGraphSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteGraphSummary", scope.makeOpName("WriteGraphSummary"));
-    opBuilder.addInput(writer.asOutput());
-    opBuilder.addInput(step.asOutput());
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
+    opBuilder.addInput(step.asOutput(scope));
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new WriteGraphSummary(opBuilder.build());
   }

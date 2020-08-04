@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Execute a sub graph on a remote processor.
@@ -44,7 +44,7 @@ import org.tensorflow.op.annotation.Operator;
  * will be passed to consumer nodes as outputs of this node.
  */
 @Operator
-public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Operand<Tensor>> {
+public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new RemoteFusedGraphExecute operation.
@@ -59,7 +59,7 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
   @Endpoint(describeByClass = true)
   public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] ToutputsArray = new DataType[Toutputs.size()];
     for (int i = 0; i < ToutputsArray.length; ++i) {
@@ -79,7 +79,7 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

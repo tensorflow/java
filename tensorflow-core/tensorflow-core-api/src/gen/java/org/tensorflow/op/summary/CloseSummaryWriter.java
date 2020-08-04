@@ -39,7 +39,7 @@ public final class CloseSummaryWriter extends RawOp {
   @Endpoint(describeByClass = true)
   public static CloseSummaryWriter create(Scope scope, Operand<?> writer) {
     OperationBuilder opBuilder = scope.env().opBuilder("CloseSummaryWriter", scope.makeOpName("CloseSummaryWriter"));
-    opBuilder.addInput(writer.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CloseSummaryWriter(opBuilder.build());
   }

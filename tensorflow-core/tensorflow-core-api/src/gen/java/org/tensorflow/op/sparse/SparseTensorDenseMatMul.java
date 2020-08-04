@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Multiply SparseTensor (of rank 2) "A" by dense matrix "B".
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code product()} output
  */
 @Operator(group = "sparse")
-public final class SparseTensorDenseMatMul<U extends Tensor> extends RawOp implements Operand<U> {
+public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.SparseTensorDenseMatMul}
@@ -89,12 +89,12 @@ public final class SparseTensorDenseMatMul<U extends Tensor> extends RawOp imple
    * @return a new instance of SparseTensorDenseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor & TNumber> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
+  public static <U extends TType, T extends TNumber> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseMatMul", scope.makeOpName("SparseTensorDenseMatMul"));
-    opBuilder.addInput(aIndices.asOutput());
-    opBuilder.addInput(aValues.asOutput());
-    opBuilder.addInput(aShape.asOutput());
-    opBuilder.addInput(b.asOutput());
+    opBuilder.addInput(aIndices.asOutput(scope));
+    opBuilder.addInput(aValues.asOutput(scope));
+    opBuilder.addInput(aShape.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -132,7 +132,7 @@ public final class SparseTensorDenseMatMul<U extends Tensor> extends RawOp imple
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return product;
   }
   

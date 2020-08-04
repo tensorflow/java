@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -33,7 +32,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code backprops()} output
  */
-public final class ReluGrad<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class ReluGrad<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ReluGrad operation.
@@ -45,10 +44,10 @@ public final class ReluGrad<T extends Tensor & TNumber> extends RawOp implements
    * @return a new instance of ReluGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
+  public static <T extends TNumber> ReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReluGrad", scope.makeOpName("ReluGrad"));
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(features.asOutput());
+    opBuilder.addInput(gradients.asOutput(scope));
+    opBuilder.addInput(features.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReluGrad<T>(opBuilder.build());
   }
@@ -61,7 +60,7 @@ public final class ReluGrad<T extends Tensor & TNumber> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return backprops;
   }
   

@@ -44,7 +44,7 @@ public final class SdcaFprint extends RawOp implements Operand<TInt64> {
   @Endpoint(describeByClass = true)
   public static SdcaFprint create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaFprint", scope.makeOpName("SdcaFprint"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SdcaFprint(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class SdcaFprint extends RawOp implements Operand<TInt64> {
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return output;
   }
   

@@ -177,7 +177,7 @@ public final class Barrier extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return handle;
   }
   

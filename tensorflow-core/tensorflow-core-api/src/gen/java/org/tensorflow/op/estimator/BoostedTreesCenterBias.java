@@ -47,11 +47,11 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
   @Endpoint(describeByClass = true)
   public static BoostedTreesCenterBias create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TFloat32> meanGradients, Operand<TFloat32> meanHessians, Operand<TFloat32> l1, Operand<TFloat32> l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCenterBias", scope.makeOpName("BoostedTreesCenterBias"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInput(meanGradients.asOutput());
-    opBuilder.addInput(meanHessians.asOutput());
-    opBuilder.addInput(l1.asOutput());
-    opBuilder.addInput(l2.asOutput());
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInput(meanGradients.asOutput(scope));
+    opBuilder.addInput(meanHessians.asOutput(scope));
+    opBuilder.addInput(l1.asOutput(scope));
+    opBuilder.addInput(l2.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesCenterBias(opBuilder.build());
   }
@@ -64,7 +64,7 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return continueCentering;
   }
   

@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -30,6 +29,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gather specific elements from the TensorArray into output `value`.
@@ -39,7 +39,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class TensorArrayGather<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorArrayGather<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorArrayGather}
@@ -74,11 +74,11 @@ public final class TensorArrayGather<T extends Tensor> extends RawOp implements 
    * @return a new instance of TensorArrayGather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(flowIn.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(flowIn.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
@@ -109,7 +109,7 @@ public final class TensorArrayGather<T extends Tensor> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return value;
   }
   

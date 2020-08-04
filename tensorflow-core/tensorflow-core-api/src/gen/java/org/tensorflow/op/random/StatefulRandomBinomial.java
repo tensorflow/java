@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -34,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <V> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class StatefulRandomBinomial<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
+public final class StatefulRandomBinomial<V extends TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatefulRandomBinomial operation.
@@ -49,13 +48,13 @@ public final class StatefulRandomBinomial<V extends Tensor & TNumber> extends Ra
    * @return a new instance of StatefulRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatefulRandomBinomial<V> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs, DataType<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatefulRandomBinomial<V> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs, DataType<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulRandomBinomial", scope.makeOpName("StatefulRandomBinomial"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(algorithm.asOutput());
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(counts.asOutput());
-    opBuilder.addInput(probs.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(algorithm.asOutput(scope));
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(counts.asOutput(scope));
+    opBuilder.addInput(probs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatefulRandomBinomial<V>(opBuilder.build());
@@ -73,7 +72,7 @@ public final class StatefulRandomBinomial<V extends Tensor & TNumber> extends Ra
    * @return a new instance of StatefulRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> StatefulRandomBinomial<TInt64> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs) {
+  public static <T extends TNumber, U extends TNumber> StatefulRandomBinomial<TInt64> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs) {
     return create(scope, resource, algorithm, shape, counts, probs, TInt64.DTYPE);
   }
   
@@ -84,7 +83,7 @@ public final class StatefulRandomBinomial<V extends Tensor & TNumber> extends Ra
   }
   
   @Override
-  public Output<V> asOutput() {
+  public Output<V> asOutput(Scope scope) {
     return output;
   }
   

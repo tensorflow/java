@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorList by indexing into a Tensor.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * output_handle: The TensorList.
  */
 @Operator
-public final class TensorListScatter extends RawOp implements Operand<Tensor> {
+public final class TensorListScatter extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListScatter operation.
@@ -58,12 +58,12 @@ public final class TensorListScatter extends RawOp implements Operand<Tensor> {
    * @return a new instance of TensorListScatter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
+  public static <T extends TType, U extends TNumber> TensorListScatter create(Scope scope, Operand<T> tensor, Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatter"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
-    opBuilder.addInput(numElements.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(elementShape.asOutput(scope));
+    opBuilder.addInput(numElements.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListScatter(opBuilder.build());
   }
@@ -76,8 +76,8 @@ public final class TensorListScatter extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) outputHandle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

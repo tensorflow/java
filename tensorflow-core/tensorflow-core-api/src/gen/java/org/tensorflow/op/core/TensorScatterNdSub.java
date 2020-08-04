@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Subtracts sparse `updates` from an existing tensor according to `indices`.
@@ -93,7 +93,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class TensorScatterNdSub<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorScatterNdSub<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorScatterNdSub operation.
@@ -105,11 +105,11 @@ public final class TensorScatterNdSub<T extends Tensor> extends RawOp implements
    * @return a new instance of TensorScatterNdSub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> TensorScatterNdSub<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType, U extends TNumber> TensorScatterNdSub<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterSub", scope.makeOpName("TensorScatterNdSub"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorScatterNdSub<T>(opBuilder.build());
   }
@@ -122,7 +122,7 @@ public final class TensorScatterNdSub<T extends Tensor> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -42,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator(group = "random")
-public final class RandomUniformInt<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
+public final class RandomUniformInt<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.random.RandomUniformInt}
@@ -85,11 +84,11 @@ public final class RandomUniformInt<U extends Tensor & TNumber> extends RawOp im
    * @return a new instance of RandomUniformInt
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> RandomUniformInt<U> create(Scope scope, Operand<T> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
+  public static <U extends TNumber, T extends TNumber> RandomUniformInt<U> create(Scope scope, Operand<T> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomUniformInt", scope.makeOpName("RandomUniformInt"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(minval.asOutput());
-    opBuilder.addInput(maxval.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(minval.asOutput(scope));
+    opBuilder.addInput(maxval.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -128,7 +127,7 @@ public final class RandomUniformInt<U extends Tensor & TNumber> extends RawOp im
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
@@ -39,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Placeholder<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Placeholder<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.Placeholder}
@@ -70,7 +70,7 @@ public final class Placeholder<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of Placeholder
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
+  public static <T extends TType> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
@@ -100,7 +100,7 @@ public final class Placeholder<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

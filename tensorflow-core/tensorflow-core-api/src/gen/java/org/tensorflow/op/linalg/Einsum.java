@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Tensor contraction according to Einstein summation convention.
@@ -111,7 +111,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class Einsum<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Einsum operation.
@@ -122,9 +122,9 @@ public final class Einsum<T extends Tensor> extends RawOp implements Operand<T> 
    * @return a new instance of Einsum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Einsum<T> create(Scope scope, Iterable<Operand<T>> inputs, String equation) {
+  public static <T extends TType> Einsum<T> create(Scope scope, Iterable<Operand<T>> inputs, String equation) {
     OperationBuilder opBuilder = scope.env().opBuilder("Einsum", scope.makeOpName("Einsum"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("equation", equation);
     return new Einsum<T>(opBuilder.build());
@@ -138,7 +138,7 @@ public final class Einsum<T extends Tensor> extends RawOp implements Operand<T> 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

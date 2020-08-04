@@ -90,10 +90,10 @@ public final class LoadTPUEmbeddingAdadeltaParametersGradAccumDebug extends RawO
   @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingAdadeltaParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> updates, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdadeltaParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingAdadeltaParametersGradAccumDebug"));
-    opBuilder.addInput(parameters.asOutput());
-    opBuilder.addInput(accumulators.asOutput());
-    opBuilder.addInput(updates.asOutput());
-    opBuilder.addInput(gradientAccumulators.asOutput());
+    opBuilder.addInput(parameters.asOutput(scope));
+    opBuilder.addInput(accumulators.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
+    opBuilder.addInput(gradientAccumulators.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

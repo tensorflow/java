@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends R
   @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingStochasticGradientDescentParameters create(Scope scope, Operand<TFloat32> parameters, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParameters"));
-    opBuilder.addInput(parameters.asOutput());
+    opBuilder.addInput(parameters.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

@@ -52,7 +52,7 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
   @Endpoint(describeByClass = true)
   public static ToHashBucket create(Scope scope, Operand<TString> stringTensor, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucket", scope.makeOpName("ToHashBucket"));
-    opBuilder.addInput(stringTensor.asOutput());
+    opBuilder.addInput(stringTensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_buckets", numBuckets);
     return new ToHashBucket(opBuilder.build());
@@ -66,7 +66,7 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return output;
   }
   

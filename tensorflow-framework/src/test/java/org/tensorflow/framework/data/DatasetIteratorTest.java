@@ -56,10 +56,10 @@ public class DatasetIteratorTest extends DatasetTestBase {
           try {
             List<Tensor<?>> outputs = session.runner().fetch(x).fetch(y).run();
 
-            try (Tensor<TInt32> xBatch = outputs.get(0).expect(TInt32.DTYPE);
-                Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
-              assertEquals(testMatrix1.get(batches), xBatch.data());
-              assertEquals(testMatrix2.get(batches), yBatch.data());
+            try (TInt32 xBatch = outputs.get(0).expect(TInt32.DTYPE);
+                TInt32 yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
+              assertEquals(testMatrix1.get(batches), xBatch);
+              assertEquals(testMatrix2.get(batches), yBatch);
               batches++;
             }
           } catch (TFOutOfRangeException e) {
@@ -82,12 +82,10 @@ public class DatasetIteratorTest extends DatasetTestBase {
     Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (Tensor<TInt32> batch1 = outputs.get(0).asTensor().expect(TInt32.DTYPE);
-          Tensor<TInt32> batch2 = outputs.get(1).asTensor().expect(TInt32.DTYPE); ) {
-
-        assertEquals(testMatrix1.get(count), batch1.data());
-        assertEquals(testMatrix2.get(count), batch2.data());
-
+      try (TInt32 batch1 = outputs.get(0).asTensor(TInt32.DTYPE);
+          TInt32 batch2 = outputs.get(1).asTensor(TInt32.DTYPE); ) {
+        assertEquals(testMatrix1.get(count), batch1);
+        assertEquals(testMatrix2.get(count), batch2);
         count++;
       }
     }

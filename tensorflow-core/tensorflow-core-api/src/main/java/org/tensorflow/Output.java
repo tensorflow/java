@@ -18,6 +18,8 @@ package org.tensorflow;
 import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TType;
 
 /**
  * A symbolic handle to a tensor produced by an {@link Operation}.
@@ -28,7 +30,7 @@ import org.tensorflow.ndarray.Shape;
  * <p>By implementing the {@link Operand} interface, instances of this class also act as operands to
  * {@link org.tensorflow.op.Op Op} instances.
  */
-public final class Output<T extends Tensor> implements Operand<T> {
+public final class Output<T extends TType> implements Operand<T> {
 
   /** Returns the index into the outputs of the Operation. */
   public int index() {
@@ -55,7 +57,7 @@ public final class Output<T extends Tensor> implements Operand<T> {
    *     {@code U}.
    */
   @SuppressWarnings("unchecked")
-  public <U extends Tensor> Output<U> expect(DataType<U> dt) {
+  public <U extends TType> Output<U> expect(DataType<U> dt) {
     if (!dt.equals(this.dataType())) {
       throw new IllegalArgumentException(
           "Cannot cast from output of " + this.dataType() + " to output of " + dt);
@@ -89,7 +91,7 @@ public final class Output<T extends Tensor> implements Operand<T> {
   }
 
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return this;
   }
 

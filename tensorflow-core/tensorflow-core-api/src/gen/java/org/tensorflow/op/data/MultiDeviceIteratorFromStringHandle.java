@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Generates a MultiDeviceIterator resource from its provided string handle.
  */
-public final class MultiDeviceIteratorFromStringHandle extends RawOp implements Operand<Tensor> {
+public final class MultiDeviceIteratorFromStringHandle extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle}
@@ -67,7 +67,7 @@ public final class MultiDeviceIteratorFromStringHandle extends RawOp implements 
   @Endpoint(describeByClass = true)
   public static MultiDeviceIteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorFromStringHandle", scope.makeOpName("MultiDeviceIteratorFromStringHandle"));
-    opBuilder.addInput(stringHandle.asOutput());
+    opBuilder.addInput(stringHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -104,8 +104,8 @@ public final class MultiDeviceIteratorFromStringHandle extends RawOp implements 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) multiDeviceIterator;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) multiDeviceIterator;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

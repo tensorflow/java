@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
@@ -51,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class SparseApplyCenteredRmsProp<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SparseApplyCenteredRmsProp<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyCenteredRmsProp}
@@ -92,18 +92,18 @@ public final class SparseApplyCenteredRmsProp<T extends Tensor> extends RawOp im
    * @return a new instance of SparseApplyCenteredRmsProp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> SparseApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyCenteredRMSProp", scope.makeOpName("SparseApplyCenteredRmsProp"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(mg.asOutput());
-    opBuilder.addInput(ms.asOutput());
-    opBuilder.addInput(mom.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(rho.asOutput());
-    opBuilder.addInput(momentum.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(mg.asOutput(scope));
+    opBuilder.addInput(ms.asOutput(scope));
+    opBuilder.addInput(mom.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(rho.asOutput(scope));
+    opBuilder.addInput(momentum.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -132,7 +132,7 @@ public final class SparseApplyCenteredRmsProp<T extends Tensor> extends RawOp im
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -37,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <V> data type for {@code output()} output
  */
-public final class StatelessRandomUniformInt<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
+public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomUniformInt operation.
@@ -50,12 +49,12 @@ public final class StatelessRandomUniformInt<V extends Tensor & TNumber> extends
    * @return a new instance of StatelessRandomUniformInt
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformInt", scope.makeOpName("StatelessRandomUniformInt"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(minval.asOutput());
-    opBuilder.addInput(maxval.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(minval.asOutput(scope));
+    opBuilder.addInput(maxval.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new StatelessRandomUniformInt<V>(opBuilder.build());
   }
@@ -68,7 +67,7 @@ public final class StatelessRandomUniformInt<V extends Tensor & TNumber> extends
   }
   
   @Override
-  public Output<V> asOutput() {
+  public Output<V> asOutput(Scope scope) {
     return output;
   }
   

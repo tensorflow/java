@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Cast x of type SrcT to y of DstT.
@@ -34,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code y()} output
  */
 @Operator(group = "dtypes")
-public final class Cast<U extends Tensor> extends RawOp implements Operand<U> {
+public final class Cast<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.dtypes.Cast}
@@ -65,9 +65,9 @@ public final class Cast<U extends Tensor> extends RawOp implements Operand<U> {
    * @return a new instance of Cast
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
+  public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("DstT", DstT);
     if (options != null) {
@@ -94,7 +94,7 @@ public final class Cast<U extends Tensor> extends RawOp implements Operand<U> {
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return y;
   }
   

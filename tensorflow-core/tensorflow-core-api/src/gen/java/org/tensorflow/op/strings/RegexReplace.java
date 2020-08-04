@@ -71,9 +71,9 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern, Operand<TString> rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexReplace", scope.makeOpName("RegexReplace"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(pattern.asOutput());
-    opBuilder.addInput(rewrite.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(pattern.asOutput(scope));
+    opBuilder.addInput(rewrite.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -102,7 +102,7 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

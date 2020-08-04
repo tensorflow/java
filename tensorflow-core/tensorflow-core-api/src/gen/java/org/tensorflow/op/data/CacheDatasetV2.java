@@ -23,17 +23,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class CacheDatasetV2 extends RawOp implements Operand<Tensor> {
+public final class CacheDatasetV2 extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new CacheDatasetV2 operation.
@@ -49,9 +49,9 @@ public final class CacheDatasetV2 extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static CacheDatasetV2 create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<?> cache, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDatasetV2", scope.makeOpName("CacheDatasetV2"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(filename.asOutput());
-    opBuilder.addInput(cache.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(filename.asOutput(scope));
+    opBuilder.addInput(cache.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -74,8 +74,8 @@ public final class CacheDatasetV2 extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

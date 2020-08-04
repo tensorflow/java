@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -35,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ResourceCountUpTo<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ResourceCountUpTo operation.
@@ -48,9 +47,9 @@ public final class ResourceCountUpTo<T extends Tensor & TNumber> extends RawOp i
    * @return a new instance of ResourceCountUpTo
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
+  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
-    opBuilder.addInput(resource.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("limit", limit);
     opBuilder.setAttr("T", T);
@@ -66,7 +65,7 @@ public final class ResourceCountUpTo<T extends Tensor & TNumber> extends RawOp i
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

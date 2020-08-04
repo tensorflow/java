@@ -21,18 +21,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Constructs an Optional variant from a tuple of tensors.
  */
 @Operator(group = "data")
-public final class OptionalFromValue extends RawOp implements Operand<Tensor> {
+public final class OptionalFromValue extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new OptionalFromValue operation.
@@ -44,7 +44,7 @@ public final class OptionalFromValue extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static OptionalFromValue create(Scope scope, Iterable<Operand<?>> components) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalFromValue", scope.makeOpName("OptionalFromValue"));
-    opBuilder.addInputList(Operands.asOutputs(components));
+    opBuilder.addInputList(Operands.asOutputs(scope, components));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new OptionalFromValue(opBuilder.build());
   }
@@ -57,8 +57,8 @@ public final class OptionalFromValue extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) optional;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) optional;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

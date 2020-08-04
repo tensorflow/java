@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -93,11 +92,11 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
    * @return a new instance of UnsortedSegmentJoin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
+  public static <T extends TNumber, U extends TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
-    opBuilder.addInput(inputs.asOutput());
-    opBuilder.addInput(segmentIds.asOutput());
-    opBuilder.addInput(numSegments.asOutput());
+    opBuilder.addInput(inputs.asOutput(scope));
+    opBuilder.addInput(segmentIds.asOutput(scope));
+    opBuilder.addInput(numSegments.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -123,7 +122,7 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

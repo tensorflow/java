@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a list which has the passed-in `Tensor` as last element and the other elements of the given list in `input_handle`.
@@ -37,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * element_shape: a shape compatible with that of elements in the list.
  */
 @Operator
-public final class TensorListPushBack extends RawOp implements Operand<Tensor> {
+public final class TensorListPushBack extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListPushBack operation.
@@ -48,10 +48,10 @@ public final class TensorListPushBack extends RawOp implements Operand<Tensor> {
    * @return a new instance of TensorListPushBack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<T> tensor) {
+  public static <T extends TType> TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBack", scope.makeOpName("TensorListPushBack"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListPushBack(opBuilder.build());
   }
@@ -64,8 +64,8 @@ public final class TensorListPushBack extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) outputHandle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) outputHandle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

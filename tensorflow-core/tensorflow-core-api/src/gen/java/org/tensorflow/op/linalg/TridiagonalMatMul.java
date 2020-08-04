@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Calculate product with tridiagonal matrix.
@@ -34,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TridiagonalMatMul<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TridiagonalMatMul<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TridiagonalMatMul operation.
@@ -51,12 +51,12 @@ public final class TridiagonalMatMul<T extends Tensor> extends RawOp implements 
    * @return a new instance of TridiagonalMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TridiagonalMatMul<T> create(Scope scope, Operand<T> superdiag, Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
+  public static <T extends TType> TridiagonalMatMul<T> create(Scope scope, Operand<T> superdiag, Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalMatMul", scope.makeOpName("TridiagonalMatMul"));
-    opBuilder.addInput(superdiag.asOutput());
-    opBuilder.addInput(maindiag.asOutput());
-    opBuilder.addInput(subdiag.asOutput());
-    opBuilder.addInput(rhs.asOutput());
+    opBuilder.addInput(superdiag.asOutput(scope));
+    opBuilder.addInput(maindiag.asOutput(scope));
+    opBuilder.addInput(subdiag.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TridiagonalMatMul<T>(opBuilder.build());
   }
@@ -69,7 +69,7 @@ public final class TridiagonalMatMul<T extends Tensor> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

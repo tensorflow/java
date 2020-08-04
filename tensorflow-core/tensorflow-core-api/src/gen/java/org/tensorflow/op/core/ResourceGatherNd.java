@@ -22,18 +22,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ResourceGatherNd<U extends Tensor> extends RawOp implements Operand<U> {
+public final class ResourceGatherNd<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new ResourceGatherNd operation.
@@ -45,10 +45,10 @@ public final class ResourceGatherNd<U extends Tensor> extends RawOp implements O
    * @return a new instance of ResourceGatherNd
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor & TNumber> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
+  public static <U extends TType, T extends TNumber> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGatherNd", scope.makeOpName("ResourceGatherNd"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new ResourceGatherNd<U>(opBuilder.build());
@@ -61,7 +61,7 @@ public final class ResourceGatherNd<U extends Tensor> extends RawOp implements O
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

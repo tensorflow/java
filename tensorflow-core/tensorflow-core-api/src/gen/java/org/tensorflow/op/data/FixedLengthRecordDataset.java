@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class FixedLengthRecordDataset extends RawOp implements Operand<Tensor> {
+public final class FixedLengthRecordDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new FixedLengthRecordDataset operation.
@@ -48,12 +48,12 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<Ten
   @Endpoint(describeByClass = true)
   public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes, Operand<TInt64> bufferSize, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordDatasetV2", scope.makeOpName("FixedLengthRecordDataset"));
-    opBuilder.addInput(filenames.asOutput());
-    opBuilder.addInput(headerBytes.asOutput());
-    opBuilder.addInput(recordBytes.asOutput());
-    opBuilder.addInput(footerBytes.asOutput());
-    opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.addInput(compressionType.asOutput());
+    opBuilder.addInput(filenames.asOutput(scope));
+    opBuilder.addInput(headerBytes.asOutput(scope));
+    opBuilder.addInput(recordBytes.asOutput(scope));
+    opBuilder.addInput(footerBytes.asOutput(scope));
+    opBuilder.addInput(bufferSize.asOutput(scope));
+    opBuilder.addInput(compressionType.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new FixedLengthRecordDataset(opBuilder.build());
   }
@@ -66,8 +66,8 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<Ten
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   /** The name of this op, as known by TensorFlow core engine */

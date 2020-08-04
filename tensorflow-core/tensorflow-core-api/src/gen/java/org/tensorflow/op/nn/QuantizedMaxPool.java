@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produces the max pool of the input tensor for quantized types.
@@ -35,7 +35,7 @@ import org.tensorflow.types.TFloat32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class QuantizedMaxPool<T extends Tensor> extends RawOp {
+public final class QuantizedMaxPool<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedMaxPool operation.
@@ -52,11 +52,11 @@ public final class QuantizedMaxPool<T extends Tensor> extends RawOp {
    * @return a new instance of QuantizedMaxPool
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> QuantizedMaxPool<T> create(Scope scope, Operand<T> input, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides, String padding) {
+  public static <T extends TType> QuantizedMaxPool<T> create(Scope scope, Operand<T> input, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMaxPool", scope.makeOpName("QuantizedMaxPool"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(minInput.asOutput());
-    opBuilder.addInput(maxInput.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(minInput.asOutput(scope));
+    opBuilder.addInput(maxInput.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {

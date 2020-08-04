@@ -54,10 +54,10 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
   @Endpoint(describeByClass = true)
   public static KmeansPlusPlusInitialization create(Scope scope, Operand<TFloat32> points, Operand<TInt64> numToSample, Operand<TInt64> seed, Operand<TInt64> numRetriesPerSample) {
     OperationBuilder opBuilder = scope.env().opBuilder("KmeansPlusPlusInitialization", scope.makeOpName("KmeansPlusPlusInitialization"));
-    opBuilder.addInput(points.asOutput());
-    opBuilder.addInput(numToSample.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(numRetriesPerSample.asOutput());
+    opBuilder.addInput(points.asOutput(scope));
+    opBuilder.addInput(numToSample.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(numRetriesPerSample.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new KmeansPlusPlusInitialization(opBuilder.build());
   }
@@ -70,7 +70,7 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return samples;
   }
   
