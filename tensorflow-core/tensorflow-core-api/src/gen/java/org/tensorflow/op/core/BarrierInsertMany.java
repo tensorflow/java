@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * For each key, assigns the respective value to the specified component.
@@ -50,11 +50,11 @@ public final class BarrierInsertMany extends RawOp {
    * @return a new instance of BarrierInsertMany
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<T> values, Long componentIndex) {
+  public static <T extends TType> BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<T> values, Long componentIndex) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierInsertMany", scope.makeOpName("BarrierInsertMany"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(keys.asOutput());
-    opBuilder.addInput(values.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(keys.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("component_index", componentIndex);
     return new BarrierInsertMany(opBuilder.build());

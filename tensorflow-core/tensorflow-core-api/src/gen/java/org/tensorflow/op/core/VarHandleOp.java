@@ -22,18 +22,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a Variable resource.
  */
 @Operator
-public final class VarHandleOp extends RawOp implements Operand<Tensor> {
+public final class VarHandleOp extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.VarHandleOp}
@@ -74,7 +74,7 @@ public final class VarHandleOp extends RawOp implements Operand<Tensor> {
    * @return a new instance of VarHandleOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
@@ -114,8 +114,8 @@ public final class VarHandleOp extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) resource;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) resource;
   }
   
   private Output<?> resource;

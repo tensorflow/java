@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -58,7 +57,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code i()} output
  */
-public final class LSTMBlockCell<T extends Tensor & TNumber> extends RawOp {
+public final class LSTMBlockCell<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.LSTMBlockCell}
@@ -113,16 +112,16 @@ public final class LSTMBlockCell<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of LSTMBlockCell
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(csPrev.asOutput());
-    opBuilder.addInput(hPrev.asOutput());
-    opBuilder.addInput(w.asOutput());
-    opBuilder.addInput(wci.asOutput());
-    opBuilder.addInput(wcf.asOutput());
-    opBuilder.addInput(wco.asOutput());
-    opBuilder.addInput(b.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(csPrev.asOutput(scope));
+    opBuilder.addInput(hPrev.asOutput(scope));
+    opBuilder.addInput(w.asOutput(scope));
+    opBuilder.addInput(wci.asOutput(scope));
+    opBuilder.addInput(wcf.asOutput(scope));
+    opBuilder.addInput(wco.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

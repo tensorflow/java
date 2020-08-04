@@ -20,7 +20,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.io.DecodeBase64;
 import org.tensorflow.op.io.DecodeCompressed;
@@ -73,6 +72,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code io} operations as {@link Op Op}s
@@ -167,9 +167,8 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of DecodePaddedRaw
    */
-  public <T extends Tensor & TNumber> DecodePaddedRaw<T> decodePaddedRaw(
-      Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType,
-      DecodePaddedRaw.Options... options) {
+  public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
+      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
     return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
   }
 
@@ -182,7 +181,7 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of DecodeRaw
    */
-  public <T extends Tensor> DecodeRaw<T> decodeRaw(Operand<TString> bytes, DataType<T> outType,
+  public <T extends TType> DecodeRaw<T> decodeRaw(Operand<TString> bytes, DataType<T> outType,
       DecodeRaw.Options... options) {
     return DecodeRaw.create(scope, bytes, outType, options);
   }
@@ -238,7 +237,7 @@ public final class IoOps {
    * @param dtype The `dtype` of the serialized `SparseTensor` objects.
    * @return a new instance of DeserializeManySparse
    */
-  public <T extends Tensor> DeserializeManySparse<T> deserializeManySparse(
+  public <T extends TType> DeserializeManySparse<T> deserializeManySparse(
       Operand<TString> serializedSparse, DataType<T> dtype) {
     return DeserializeManySparse.create(scope, serializedSparse, dtype);
   }
@@ -566,7 +565,7 @@ public final class IoOps {
    *  type of the serialized tensor and no implicit conversion will take place.
    * @return a new instance of ParseTensor
    */
-  public <T extends Tensor> ParseTensor<T> parseTensor(Operand<TString> serialized,
+  public <T extends TType> ParseTensor<T> parseTensor(Operand<TString> serialized,
       DataType<T> outType) {
     return ParseTensor.create(scope, serialized, outType);
   }
@@ -889,7 +888,7 @@ public final class IoOps {
    * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
    * @return a new instance of SerializeManySparse
    */
-  public <T extends Tensor> SerializeManySparse<TString> serializeManySparse(
+  public <T extends TType> SerializeManySparse<TString> serializeManySparse(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
     return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
@@ -913,7 +912,7 @@ public final class IoOps {
    *  (default) and `variant`.
    * @return a new instance of SerializeManySparse
    */
-  public <U extends Tensor, T extends Tensor> SerializeManySparse<U> serializeManySparse(
+  public <U extends TType, T extends TType> SerializeManySparse<U> serializeManySparse(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
       DataType<U> outType) {
     return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
@@ -928,7 +927,7 @@ public final class IoOps {
    * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
    * @return a new instance of SerializeSparse
    */
-  public <T extends Tensor> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
+  public <T extends TType> SerializeSparse<TString> serializeSparse(Operand<TInt64> sparseIndices,
       Operand<T> sparseValues, Operand<TInt64> sparseShape) {
     return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape);
   }
@@ -944,7 +943,7 @@ public final class IoOps {
    *  (default) and `variant`.
    * @return a new instance of SerializeSparse
    */
-  public <U extends Tensor, T extends Tensor> SerializeSparse<U> serializeSparse(
+  public <U extends TType, T extends TType> SerializeSparse<U> serializeSparse(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
       DataType<U> outType) {
     return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
@@ -956,7 +955,7 @@ public final class IoOps {
    * @param tensor A Tensor of type `T`.
    * @return a new instance of SerializeTensor
    */
-  public <T extends Tensor> SerializeTensor serializeTensor(Operand<T> tensor) {
+  public <T extends TType> SerializeTensor serializeTensor(Operand<T> tensor) {
     return SerializeTensor.create(scope, tensor);
   }
 

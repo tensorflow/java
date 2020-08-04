@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -65,7 +64,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentSum<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentSum<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentSum operation.
@@ -77,11 +76,11 @@ public final class SparseSegmentSum<T extends Tensor & TNumber> extends RawOp im
    * @return a new instance of SparseSegmentSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public static <T extends TNumber, U extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSum", scope.makeOpName("SparseSegmentSum"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(segmentIds.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentSum<T>(opBuilder.build());
   }
@@ -95,7 +94,7 @@ public final class SparseSegmentSum<T extends Tensor & TNumber> extends RawOp im
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

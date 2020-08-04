@@ -23,7 +23,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -31,6 +30,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  *   Combines (nests of) input elements into a dataset of (nests of) windows.
@@ -76,7 +76,7 @@ import org.tensorflow.types.TInt64;
  *   - `tf.data.Dataset.from_tensor_slices({"a": range(4)}).window(2)`
  *     produces `{{"a": {0, 1}}, {"a": {2, 3}}}`
  */
-public final class WindowDataset extends RawOp implements Operand<Tensor> {
+public final class WindowDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new WindowDataset operation.
@@ -100,11 +100,11 @@ public final class WindowDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static WindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> size, Operand<TInt64> shift, Operand<TInt64> stride, Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("WindowDataset", scope.makeOpName("WindowDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder.addInput(shift.asOutput());
-    opBuilder.addInput(stride.asOutput());
-    opBuilder.addInput(dropRemainder.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
+    opBuilder.addInput(shift.asOutput(scope));
+    opBuilder.addInput(stride.asOutput(scope));
+    opBuilder.addInput(dropRemainder.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -127,8 +127,8 @@ public final class WindowDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

@@ -52,8 +52,8 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
   @Endpoint(describeByClass = true)
   public static BoostedTreesExampleDebugOutputs create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesExampleDebugOutputs", scope.makeOpName("BoostedTreesExampleDebugOutputs"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, bucketizedFeatures));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesExampleDebugOutputs(opBuilder.build());
@@ -67,7 +67,7 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return examplesDebugOutputsSerialized;
   }
   

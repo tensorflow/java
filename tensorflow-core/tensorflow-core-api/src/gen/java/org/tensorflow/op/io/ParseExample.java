@@ -32,7 +32,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * Transforms a vector of tf.Example protos (as strings) into typed tensors.
@@ -99,12 +98,12 @@ public final class ParseExample extends RawOp {
   @Endpoint(describeByClass = true)
   public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
-    opBuilder.addInput(serialized.asOutput());
-    opBuilder.addInput(names.asOutput());
-    opBuilder.addInput(sparseKeys.asOutput());
-    opBuilder.addInput(denseKeys.asOutput());
-    opBuilder.addInput(raggedKeys.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(denseDefaults));
+    opBuilder.addInput(serialized.asOutput(scope));
+    opBuilder.addInput(names.asOutput(scope));
+    opBuilder.addInput(sparseKeys.asOutput(scope));
+    opBuilder.addInput(denseKeys.asOutput(scope));
+    opBuilder.addInput(raggedKeys.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, denseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
     DataType[] sparseTypesArray = new DataType[sparseTypes.size()];

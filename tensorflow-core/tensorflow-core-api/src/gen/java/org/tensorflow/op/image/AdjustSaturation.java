@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -42,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class AdjustSaturation<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class AdjustSaturation<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new AdjustSaturation operation.
@@ -53,10 +52,10 @@ public final class AdjustSaturation<T extends Tensor & TNumber> extends RawOp im
    * @return a new instance of AdjustSaturation
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> AdjustSaturation<T> create(Scope scope, Operand<T> images, Operand<TFloat32> scale) {
+  public static <T extends TNumber> AdjustSaturation<T> create(Scope scope, Operand<T> images, Operand<TFloat32> scale) {
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustSaturation", scope.makeOpName("AdjustSaturation"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(scale.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(scale.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AdjustSaturation<T>(opBuilder.build());
   }
@@ -69,7 +68,7 @@ public final class AdjustSaturation<T extends Tensor & TNumber> extends RawOp im
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

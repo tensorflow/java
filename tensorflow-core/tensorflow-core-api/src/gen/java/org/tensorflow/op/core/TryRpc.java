@@ -141,9 +141,9 @@ public final class TryRpc extends RawOp {
   @Endpoint(describeByClass = true)
   public static TryRpc create(Scope scope, Operand<TString> address, Operand<TString> method, Operand<TString> request, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TryRpc", scope.makeOpName("TryRpc"));
-    opBuilder.addInput(address.asOutput());
-    opBuilder.addInput(method.asOutput());
-    opBuilder.addInput(request.asOutput());
+    opBuilder.addInput(address.asOutput(scope));
+    opBuilder.addInput(method.asOutput(scope));
+    opBuilder.addInput(request.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse `updates` to individual values or slices within a given
@@ -99,11 +99,11 @@ public final class ResourceScatterNdUpdate extends RawOp {
    * @return a new instance of ResourceScatterNdUpdate
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor> ResourceScatterNdUpdate create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
+  public static <T extends TNumber, U extends TType> ResourceScatterNdUpdate create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdUpdate", scope.makeOpName("ResourceScatterNdUpdate"));
-    opBuilder.addInput(ref.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

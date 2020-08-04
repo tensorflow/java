@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates a list of `SparseTensor` along the specified dimension.
@@ -77,7 +77,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseConcat<T extends Tensor> extends RawOp {
+public final class SparseConcat<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseConcat operation.
@@ -91,11 +91,11 @@ public final class SparseConcat<T extends Tensor> extends RawOp {
    * @return a new instance of SparseConcat
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseConcat<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
+  public static <T extends TType> SparseConcat<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
-    opBuilder.addInputList(Operands.asOutputs(indices));
-    opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder.addInputList(Operands.asOutputs(shapes));
+    opBuilder.addInputList(Operands.asOutputs(scope, indices));
+    opBuilder.addInputList(Operands.asOutputs(scope, values));
+    opBuilder.addInputList(Operands.asOutputs(scope, shapes));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("concat_dim", concatDim);
     return new SparseConcat<T>(opBuilder.build());

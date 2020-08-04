@@ -48,8 +48,8 @@ public final class ReaderRead extends RawOp {
   @Endpoint(describeByClass = true)
   public static ReaderRead create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadV2", scope.makeOpName("ReaderRead"));
-    opBuilder.addInput(readerHandle.asOutput());
-    opBuilder.addInput(queueHandle.asOutput());
+    opBuilder.addInput(readerHandle.asOutput(scope));
+    opBuilder.addInput(queueHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderRead(opBuilder.build());
   }

@@ -18,6 +18,8 @@
 package org.tensorflow.types;
 
 import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 
 public class TFloat64Test extends NumericTypesTestBase<TFloat64, Double> {
@@ -25,6 +27,11 @@ public class TFloat64Test extends NumericTypesTestBase<TFloat64, Double> {
   @Override
   TFloat64 allocateTensor(Shape shape) {
     return TFloat64.tensorOf(shape);
+  }
+
+  @Override
+  NdArray<Double> allocateNdArray(Shape shape) {
+    return NdArrays.ofDoubles(shape);
   }
 
   @Override

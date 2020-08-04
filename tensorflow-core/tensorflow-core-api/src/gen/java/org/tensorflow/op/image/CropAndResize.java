@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -108,12 +107,12 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
    * @return a new instance of CropAndResize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
+  public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResize", scope.makeOpName("CropAndResize"));
-    opBuilder.addInput(image.asOutput());
-    opBuilder.addInput(boxes.asOutput());
-    opBuilder.addInput(boxInd.asOutput());
-    opBuilder.addInput(cropSize.asOutput());
+    opBuilder.addInput(image.asOutput(scope));
+    opBuilder.addInput(boxes.asOutput(scope));
+    opBuilder.addInput(boxInd.asOutput(scope));
+    opBuilder.addInput(cropSize.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -152,7 +151,7 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return crops;
   }
   

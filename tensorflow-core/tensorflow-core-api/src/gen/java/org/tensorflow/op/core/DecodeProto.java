@@ -137,7 +137,7 @@ public final class DecodeProto extends RawOp {
   @Endpoint(describeByClass = true)
   public static DecodeProto create(Scope scope, Operand<TString> bytes, String messageType, List<String> fieldNames, List<DataType<?>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeProtoV2", scope.makeOpName("DecodeProto"));
-    opBuilder.addInput(bytes.asOutput());
+    opBuilder.addInput(bytes.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("message_type", messageType);
     String[] fieldNamesArray = new String[fieldNames.size()];

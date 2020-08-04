@@ -47,8 +47,8 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp 
   @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceAddSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> summaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceAddSummaries", scope.makeOpName("BoostedTreesQuantileStreamResourceAddSummaries"));
-    opBuilder.addInput(quantileStreamResourceHandle.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(summaries));
+    opBuilder.addInput(quantileStreamResourceHandle.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, summaries));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesQuantileStreamResourceAddSummaries(opBuilder.build());
   }

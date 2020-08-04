@@ -20,12 +20,12 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reduces sparse updates into the variable referenced by `resource` using the `max` operation.
@@ -63,11 +63,11 @@ public final class ResourceScatterMax extends RawOp {
    * @return a new instance of ResourceScatterMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor> ResourceScatterMax create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public static <T extends TNumber, U extends TType> ResourceScatterMax create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterMax", scope.makeOpName("ResourceScatterMax"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ResourceScatterMax(opBuilder.build());
   }

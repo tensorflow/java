@@ -51,8 +51,8 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
   @Endpoint(describeByClass = true)
   public static BoostedTreesPredict create(Scope scope, Operand<?> treeEnsembleHandle, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesPredict", scope.makeOpName("BoostedTreesPredict"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
+    opBuilder.addInput(treeEnsembleHandle.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, bucketizedFeatures));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesPredict(opBuilder.build());
@@ -66,7 +66,7 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return logits;
   }
   

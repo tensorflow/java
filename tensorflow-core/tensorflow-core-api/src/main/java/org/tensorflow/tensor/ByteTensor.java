@@ -1,15 +1,14 @@
-package org.tensorflow.tensor;
+package org.tensorflow.types.tensor;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
 
+/**
+ * A {@link Tensor} of bytes.
+ */
 public interface ByteTensor extends ByteNdArray, Tensor<Byte> {
 
   @Override
@@ -36,4 +35,3 @@ public interface ByteTensor extends ByteNdArray, Tensor<Byte> {
   @Override
   ByteTensor write(ByteDataBuffer src);
 }
-

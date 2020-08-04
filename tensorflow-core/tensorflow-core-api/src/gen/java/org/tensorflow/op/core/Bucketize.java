@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -56,9 +55,9 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
    * @return a new instance of Bucketize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
+  public static <T extends TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     float[] boundariesArray = new float[boundaries.size()];
     for (int i = 0; i < boundariesArray.length; ++i) {
@@ -80,7 +79,7 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return output;
   }
   

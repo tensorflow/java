@@ -104,12 +104,12 @@ public final class CombinedNonMaxSuppression extends RawOp {
   @Endpoint(describeByClass = true)
   public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat32> boxes, Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize, Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CombinedNonMaxSuppression", scope.makeOpName("CombinedNonMaxSuppression"));
-    opBuilder.addInput(boxes.asOutput());
-    opBuilder.addInput(scores.asOutput());
-    opBuilder.addInput(maxOutputSizePerClass.asOutput());
-    opBuilder.addInput(maxTotalSize.asOutput());
-    opBuilder.addInput(iouThreshold.asOutput());
-    opBuilder.addInput(scoreThreshold.asOutput());
+    opBuilder.addInput(boxes.asOutput(scope));
+    opBuilder.addInput(scores.asOutput(scope));
+    opBuilder.addInput(maxOutputSizePerClass.asOutput(scope));
+    opBuilder.addInput(maxTotalSize.asOutput(scope));
+    opBuilder.addInput(iouThreshold.asOutput(scope));
+    opBuilder.addInput(scoreThreshold.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies set operation along last dimension of `Tensor` and `SparseTensor`.
@@ -50,7 +50,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code resultValues()} output
  */
 @Operator(group = "sparse")
-public final class DenseToSparseSetOperation<T extends Tensor> extends RawOp {
+public final class DenseToSparseSetOperation<T extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.DenseToSparseSetOperation}
@@ -89,12 +89,12 @@ public final class DenseToSparseSetOperation<T extends Tensor> extends RawOp {
    * @return a new instance of DenseToSparseSetOperation
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DenseToSparseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
+  public static <T extends TType> DenseToSparseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToSparseSetOperation", scope.makeOpName("DenseToSparseSetOperation"));
-    opBuilder.addInput(set1.asOutput());
-    opBuilder.addInput(set2Indices.asOutput());
-    opBuilder.addInput(set2Values.asOutput());
-    opBuilder.addInput(set2Shape.asOutput());
+    opBuilder.addInput(set1.asOutput(scope));
+    opBuilder.addInput(set2Indices.asOutput(scope));
+    opBuilder.addInput(set2Values.asOutput(scope));
+    opBuilder.addInput(set2Shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("set_operation", setOperation);
     if (options != null) {

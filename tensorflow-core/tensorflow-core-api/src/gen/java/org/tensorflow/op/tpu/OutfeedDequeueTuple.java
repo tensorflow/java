@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Retrieve multiple values from the computation outfeed.
@@ -38,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * This operation will block indefinitely until data is available. Output `i`
  * corresponds to XLA tuple element `i`.
  */
-public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand<Tensor>> {
+public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.tpu.OutfeedDequeueTuple}
@@ -112,7 +112,7 @@ public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

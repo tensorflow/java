@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -36,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthwiseConv2dNativeBackpropFilter<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter}
@@ -95,11 +94,11 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends Tensor & TNumbe
    * @return a new instance of DepthwiseConv2dNativeBackpropFilter
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DepthwiseConv2dNativeBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> DepthwiseConv2dNativeBackpropFilter<T> create(Scope scope, Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNativeBackpropFilter", scope.makeOpName("DepthwiseConv2dNativeBackpropFilter"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(filterSizes.asOutput());
-    opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(filterSizes.asOutput(scope));
+    opBuilder.addInput(outBackprop.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
@@ -156,7 +155,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends Tensor & TNumbe
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

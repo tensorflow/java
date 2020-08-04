@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse addition to `input` using individual values or slices
@@ -68,7 +68,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ScatterNdNonAliasingAdd<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ScatterNdNonAliasingAdd operation.
@@ -82,11 +82,11 @@ public final class ScatterNdNonAliasingAdd<T extends Tensor> extends RawOp imple
    * @return a new instance of ScatterNdNonAliasingAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType, U extends TNumber> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdNonAliasingAdd", scope.makeOpName("ScatterNdNonAliasingAdd"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ScatterNdNonAliasingAdd<T>(opBuilder.build());
   }
@@ -100,7 +100,7 @@ public final class ScatterNdNonAliasingAdd<T extends Tensor> extends RawOp imple
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

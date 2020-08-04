@@ -42,7 +42,7 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
   @Endpoint(describeByClass = true)
   public static ResourceAccumulatorNumAccumulated create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorNumAccumulated", scope.makeOpName("ResourceAccumulatorNumAccumulated"));
-    opBuilder.addInput(handle.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ResourceAccumulatorNumAccumulated(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
   }
   
   @Override
-  public Output<TInt32> asOutput() {
+  public Output<TInt32> asOutput(Scope scope) {
     return numAccumulated;
   }
   

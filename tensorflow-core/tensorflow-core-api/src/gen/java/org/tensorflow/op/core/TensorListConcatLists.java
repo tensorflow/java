@@ -22,16 +22,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListConcatLists extends RawOp implements Operand<Tensor> {
+public final class TensorListConcatLists extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListConcatLists operation.
@@ -43,10 +43,10 @@ public final class TensorListConcatLists extends RawOp implements Operand<Tensor
    * @return a new instance of TensorListConcatLists
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
-    opBuilder.addInput(inputA.asOutput());
-    opBuilder.addInput(inputB.asOutput());
+    opBuilder.addInput(inputA.asOutput(scope));
+    opBuilder.addInput(inputB.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcatLists(opBuilder.build());
@@ -60,8 +60,8 @@ public final class TensorListConcatLists extends RawOp implements Operand<Tensor
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) output;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

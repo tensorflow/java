@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' by subtracting 'alpha' * 'delta' from it.
@@ -63,11 +63,11 @@ public final class ResourceApplyGradientDescent extends RawOp {
    * @return a new instance of ResourceApplyGradientDescent
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ResourceApplyGradientDescent create(Scope scope, Operand<?> var, Operand<T> alpha, Operand<T> delta, Options... options) {
+  public static <T extends TType> ResourceApplyGradientDescent create(Scope scope, Operand<?> var, Operand<T> alpha, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyGradientDescent", scope.makeOpName("ResourceApplyGradientDescent"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(alpha.asOutput());
-    opBuilder.addInput(delta.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(alpha.asOutput(scope));
+    opBuilder.addInput(delta.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

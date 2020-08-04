@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transposes the inner (matrix) dimensions of a CSRSparseMatrix.
@@ -34,7 +34,7 @@ import org.tensorflow.op.annotation.Operator;
  * Transposes the inner (matrix) dimensions of a SparseMatrix and optionally
  * conjugates its values.
  */
-public final class SparseMatrixTranspose extends RawOp implements Operand<Tensor> {
+public final class SparseMatrixTranspose extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixTranspose}
@@ -65,9 +65,9 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<Tensor
    * @return a new instance of SparseMatrixTranspose
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
+  public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixTranspose", scope.makeOpName("SparseMatrixTranspose"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     if (options != null) {
@@ -96,8 +96,8 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<Tensor
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) output;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) output;
   }
   
   private Output<?> output;

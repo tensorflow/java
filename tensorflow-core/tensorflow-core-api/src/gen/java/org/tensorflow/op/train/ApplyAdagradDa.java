@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the proximal adagrad scheme.
@@ -34,7 +34,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAdagradDa<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ApplyAdagradDa<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradDa}
@@ -72,16 +72,16 @@ public final class ApplyAdagradDa<T extends Tensor> extends RawOp implements Ope
    * @return a new instance of ApplyAdagradDa
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  public static <T extends TType> ApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradDA", scope.makeOpName("ApplyAdagradDa"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(gradientAccumulator.asOutput());
-    opBuilder.addInput(gradientSquaredAccumulator.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(l1.asOutput());
-    opBuilder.addInput(l2.asOutput());
-    opBuilder.addInput(globalStep.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(gradientAccumulator.asOutput(scope));
+    opBuilder.addInput(gradientSquaredAccumulator.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(l1.asOutput(scope));
+    opBuilder.addInput(l2.asOutput(scope));
+    opBuilder.addInput(globalStep.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -109,7 +109,7 @@ public final class ApplyAdagradDa<T extends Tensor> extends RawOp implements Ope
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

@@ -20,19 +20,22 @@ package org.tensorflow.types;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.tensorflow.DataType;
 import org.tensorflow.EagerSession;
-import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.IntNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.math.Add;
+import org.tensorflow.op.math.Pow;
 import org.tensorflow.op.math.Sub;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.IntNdArray;
-import org.tensorflow.ndarray.NdArrays;
-import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.tensor.IntTensor;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
-abstract class NumericTypesTestBase<T extends Tensor<U> & TType, U> {
+abstract class NumericTypesTestBase<T extends TNumber, U> {
 
   @Test
   public void initializeTensorsWithZeros() {
@@ -46,27 +49,31 @@ abstract class NumericTypesTestBase<T extends Tensor<U> & TType, U> {
       Ops tf = Ops.create(session);
 
       // Initialize tensor memory with zeros and take a snapshot
-      tensor.scalars().forEach(scalar -> scalar.setObject(valueOf(0)));
-      Constant<T> x = tf.constant(tensor);
+      tensor.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(0)));
+      Constant<T> x = tf.capture(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
-      tensor.scalars().forEach(scalar -> scalar.setObject(valueOf(1)));
-      Constant<T> y = tf.constant(tensor);
+      tensor.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(1)));
+      Constant<T> y = tf.capture(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
       sub.asTensor().scalars().forEach(scalar ->
-          assertEquals(valueOf(-1), scalar.getObject())
+          assertEquals(valueOf(-1), ((NdArray<U>)scalar).getObject())
       );
     }
   }
 
   @Test
-  public void genericTest() {
-    IntNdArray heapData = NdArrays.vectorOf(0, 1, 2, 3);
+  public void setAndCompute() {
+    NdArray<U> heapData = allocateNdArray(Shape.of(4))
+        .setObject(valueOf(0), 0)
+        .setObject(valueOf(1), 1)
+        .setObject(valueOf(2), 2)
+        .setObject(valueOf(3), 3);
 
     // Creates a 2x2 matrix
-    try (IntTensor tensor = TInt32.tensorOf(Shape.of(2, 2))) {
+    try (T tensor = allocateTensor(Shape.of(2, 2))) {
 
       // Copy first 2 values of the vector to the first row of the matrix
       tensor.set(heapData.slice(Indices.range(0, 2)), 0);
@@ -74,35 +81,36 @@ abstract class NumericTypesTestBase<T extends Tensor<U> & TType, U> {
       // Copy values at an odd position in the vector as the second row of the matrix
       tensor.set(heapData.slice(Indices.odd()), 1);
 
-      assertEquals(0, tensor.getInt(0, 0));
-      assertEquals(1, tensor.getInt(0, 1));
-      assertEquals(1, tensor.getInt(1, 0));
-      assertEquals(3, tensor.getInt(1, 1));
+      assertEquals(valueOf(0), tensor.getObject(0, 0));
+      assertEquals(valueOf(1), tensor.getObject(0, 1));
+      assertEquals(valueOf(1), tensor.getObject(1, 0));
+      assertEquals(valueOf(3), tensor.getObject(1, 1));
 
       // Read rows of the tensor in reverse order
-      IntNdArray reversedTensorData = tensor.slice(Indices.all(), Indices.flip());
+      NdArray<U> flippedData = tensor.slice(Indices.flip(), Indices.flip());
 
-      assertEquals(1, reversedTensorData.getInt(0, 0));
-      assertEquals(0, reversedTensorData.getInt(0, 1));
-      assertEquals(3, reversedTensorData.getInt(1, 0));
-      assertEquals(1, reversedTensorData.getInt(1, 1));
+      assertEquals(valueOf(3), flippedData.getObject(0, 0));
+      assertEquals(valueOf(1), flippedData.getObject(0, 1));
+      assertEquals(valueOf(1), flippedData.getObject(1, 0));
+      assertEquals(valueOf(0), flippedData.getObject(1, 1));
 
       try (EagerSession session = EagerSession.create()) {
         Ops tf = Ops.create(session);
 
-        // Compute the power of the tensor by itself
-        Constant<TInt32> x = tf.constant(tensor);
-        IntNdArray result = tf.math.pow(x, x).data();
+        Add<T> add = tf.math.add(tensor, tensor);
+        T result = add.asTensor();
 
-        // Validate result by computing the same operation in Java
-        tensor.scalars().forEachIndexed((coords, s) ->
-          assertEquals(Math.pow(s.getInt(), s.getInt()), result.getInt(coords), 1e-7f)
-        );
+        assertEquals(valueOf(0), result.getObject(0, 0));
+        assertEquals(valueOf(2), result.getObject(0, 1));
+        assertEquals(valueOf(2), result.getObject(1, 0));
+        assertEquals(valueOf(6), result.getObject(1, 1));
       }
     }
   }
 
   abstract T allocateTensor(Shape shape);
+
+  abstract NdArray<U> allocateNdArray(Shape shape);
 
   abstract U valueOf(Integer value);
 }

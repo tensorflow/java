@@ -44,8 +44,8 @@ public final class TensorForestTreePredict extends RawOp implements Operand<TFlo
   @Endpoint(describeByClass = true)
   public static TensorForestTreePredict create(Scope scope, Operand<?> treeHandle, Operand<TFloat32> denseFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreePredict", scope.makeOpName("TensorForestTreePredict"));
-    opBuilder.addInput(treeHandle.asOutput());
-    opBuilder.addInput(denseFeatures.asOutput());
+    opBuilder.addInput(treeHandle.asOutput(scope));
+    opBuilder.addInput(denseFeatures.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new TensorForestTreePredict(opBuilder.build());
@@ -59,7 +59,7 @@ public final class TensorForestTreePredict extends RawOp implements Operand<TFlo
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return logits;
   }
   

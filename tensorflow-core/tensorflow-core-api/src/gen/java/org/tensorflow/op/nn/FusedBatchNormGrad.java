@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -39,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code scaleBackprop()} output
  */
 @Operator(group = "nn")
-public final class FusedBatchNormGrad<T extends Tensor & TNumber, U extends Tensor & TNumber> extends RawOp {
+public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FusedBatchNormGrad}
@@ -103,14 +102,14 @@ public final class FusedBatchNormGrad<T extends Tensor & TNumber, U extends Tens
    * @return a new instance of FusedBatchNormGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
-    opBuilder.addInput(yBackprop.asOutput());
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(scale.asOutput());
-    opBuilder.addInput(reserveSpace1.asOutput());
-    opBuilder.addInput(reserveSpace2.asOutput());
-    opBuilder.addInput(reserveSpace3.asOutput());
+    opBuilder.addInput(yBackprop.asOutput(scope));
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(scale.asOutput(scope));
+    opBuilder.addInput(reserveSpace1.asOutput(scope));
+    opBuilder.addInput(reserveSpace2.asOutput(scope));
+    opBuilder.addInput(reserveSpace3.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

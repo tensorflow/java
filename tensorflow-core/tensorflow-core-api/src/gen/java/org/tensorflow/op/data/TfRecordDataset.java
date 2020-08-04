@@ -21,19 +21,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that emits the records from one or more TFRecord files.
  */
 @Operator(group = "data")
-public final class TfRecordDataset extends RawOp implements Operand<Tensor> {
+public final class TfRecordDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TfRecordDataset operation.
@@ -50,9 +50,9 @@ public final class TfRecordDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static TfRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordDataset", scope.makeOpName("TfRecordDataset"));
-    opBuilder.addInput(filenames.asOutput());
-    opBuilder.addInput(compressionType.asOutput());
-    opBuilder.addInput(bufferSize.asOutput());
+    opBuilder.addInput(filenames.asOutput(scope));
+    opBuilder.addInput(compressionType.asOutput(scope));
+    opBuilder.addInput(bufferSize.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TfRecordDataset(opBuilder.build());
   }
@@ -65,8 +65,8 @@ public final class TfRecordDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Reorders a SparseTensor into the canonical, row-major ordering.
@@ -43,7 +43,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code outputValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseReorder<T extends Tensor> extends RawOp {
+public final class SparseReorder<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseReorder operation.
@@ -56,11 +56,11 @@ public final class SparseReorder<T extends Tensor> extends RawOp {
    * @return a new instance of SparseReorder
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
+  public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
-    opBuilder.addInput(inputIndices.asOutput());
-    opBuilder.addInput(inputValues.asOutput());
-    opBuilder.addInput(inputShape.asOutput());
+    opBuilder.addInput(inputIndices.asOutput(scope));
+    opBuilder.addInput(inputValues.asOutput(scope));
+    opBuilder.addInput(inputShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseReorder<T>(opBuilder.build());
   }

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -36,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code xGrad()} output
  */
-public final class BlockLSTMGrad<T extends Tensor & TNumber> extends RawOp {
+public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new BlockLSTMGrad operation.
@@ -65,26 +64,26 @@ public final class BlockLSTMGrad<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of BlockLSTMGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+  public static <T extends TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMGradV2", scope.makeOpName("BlockLSTMGrad"));
-    opBuilder.addInput(seqLenMax.asOutput());
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(csPrev.asOutput());
-    opBuilder.addInput(hPrev.asOutput());
-    opBuilder.addInput(w.asOutput());
-    opBuilder.addInput(wci.asOutput());
-    opBuilder.addInput(wcf.asOutput());
-    opBuilder.addInput(wco.asOutput());
-    opBuilder.addInput(b.asOutput());
-    opBuilder.addInput(i.asOutput());
-    opBuilder.addInput(cs.asOutput());
-    opBuilder.addInput(f.asOutput());
-    opBuilder.addInput(o.asOutput());
-    opBuilder.addInput(ci.asOutput());
-    opBuilder.addInput(co.asOutput());
-    opBuilder.addInput(h.asOutput());
-    opBuilder.addInput(csGrad.asOutput());
-    opBuilder.addInput(hGrad.asOutput());
+    opBuilder.addInput(seqLenMax.asOutput(scope));
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(csPrev.asOutput(scope));
+    opBuilder.addInput(hPrev.asOutput(scope));
+    opBuilder.addInput(w.asOutput(scope));
+    opBuilder.addInput(wci.asOutput(scope));
+    opBuilder.addInput(wcf.asOutput(scope));
+    opBuilder.addInput(wco.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
+    opBuilder.addInput(i.asOutput(scope));
+    opBuilder.addInput(cs.asOutput(scope));
+    opBuilder.addInput(f.asOutput(scope));
+    opBuilder.addInput(o.asOutput(scope));
+    opBuilder.addInput(ci.asOutput(scope));
+    opBuilder.addInput(co.asOutput(scope));
+    opBuilder.addInput(h.asOutput(scope));
+    opBuilder.addInput(csGrad.asOutput(scope));
+    opBuilder.addInput(hGrad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
     return new BlockLSTMGrad<T>(opBuilder.build());

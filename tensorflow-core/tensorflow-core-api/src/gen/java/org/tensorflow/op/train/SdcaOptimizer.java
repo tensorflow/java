@@ -106,16 +106,16 @@ public final class SdcaOptimizer extends RawOp {
   @Endpoint(describeByClass = true)
   public static SdcaOptimizer create(Scope scope, Iterable<Operand<TInt64>> sparseExampleIndices, Iterable<Operand<TInt64>> sparseFeatureIndices, Iterable<Operand<TFloat32>> sparseFeatureValues, Iterable<Operand<TFloat32>> denseFeatures, Operand<TFloat32> exampleWeights, Operand<TFloat32> exampleLabels, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights, Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType, Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaOptimizerV2", scope.makeOpName("SdcaOptimizer"));
-    opBuilder.addInputList(Operands.asOutputs(sparseExampleIndices));
-    opBuilder.addInputList(Operands.asOutputs(sparseFeatureIndices));
-    opBuilder.addInputList(Operands.asOutputs(sparseFeatureValues));
-    opBuilder.addInputList(Operands.asOutputs(denseFeatures));
-    opBuilder.addInput(exampleWeights.asOutput());
-    opBuilder.addInput(exampleLabels.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(sparseIndices));
-    opBuilder.addInputList(Operands.asOutputs(sparseWeights));
-    opBuilder.addInputList(Operands.asOutputs(denseWeights));
-    opBuilder.addInput(exampleStateData.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(scope, sparseExampleIndices));
+    opBuilder.addInputList(Operands.asOutputs(scope, sparseFeatureIndices));
+    opBuilder.addInputList(Operands.asOutputs(scope, sparseFeatureValues));
+    opBuilder.addInputList(Operands.asOutputs(scope, denseFeatures));
+    opBuilder.addInput(exampleWeights.asOutput(scope));
+    opBuilder.addInput(exampleLabels.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, sparseIndices));
+    opBuilder.addInputList(Operands.asOutputs(scope, sparseWeights));
+    opBuilder.addInputList(Operands.asOutputs(scope, denseWeights));
+    opBuilder.addInput(exampleStateData.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("loss_type", lossType);
     opBuilder.setAttr("l1", l1);

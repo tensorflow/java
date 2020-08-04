@@ -50,11 +50,11 @@ public final class NegTrain extends RawOp {
   @Endpoint(describeByClass = true)
   public static NegTrain create(Scope scope, Operand<TFloat32> wIn, Operand<TFloat32> wOut, Operand<TInt32> examples, Operand<TInt32> labels, Operand<TFloat32> lr, List<Long> vocabCount, Long numNegativeSamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("NegTrain", scope.makeOpName("NegTrain"));
-    opBuilder.addInput(wIn.asOutput());
-    opBuilder.addInput(wOut.asOutput());
-    opBuilder.addInput(examples.asOutput());
-    opBuilder.addInput(labels.asOutput());
-    opBuilder.addInput(lr.asOutput());
+    opBuilder.addInput(wIn.asOutput(scope));
+    opBuilder.addInput(wOut.asOutput(scope));
+    opBuilder.addInput(examples.asOutput(scope));
+    opBuilder.addInput(labels.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] vocabCountArray = new long[vocabCount.size()];
     for (int i = 0; i < vocabCountArray.length; ++i) {

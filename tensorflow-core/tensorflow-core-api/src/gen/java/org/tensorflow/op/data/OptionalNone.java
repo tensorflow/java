@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates an Optional variant with no value.
  */
 @Operator(group = "data")
-public final class OptionalNone extends RawOp implements Operand<Tensor> {
+public final class OptionalNone extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new OptionalNone operation.
@@ -54,8 +54,8 @@ public final class OptionalNone extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) optional;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) optional;
   }
   
   private Output<?> optional;

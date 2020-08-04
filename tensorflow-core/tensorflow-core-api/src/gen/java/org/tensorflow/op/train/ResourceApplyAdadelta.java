@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adadelta scheme.
@@ -72,15 +72,15 @@ public final class ResourceApplyAdadelta extends RawOp {
    * @return a new instance of ResourceApplyAdadelta
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ResourceApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ResourceApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdadelta", scope.makeOpName("ResourceApplyAdadelta"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(accumUpdate.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(rho.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(accumUpdate.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(rho.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code out()} output
  */
-public final class SparseApplyAdagrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SparseApplyAdagrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.SparseApplyAdagrad}
@@ -83,14 +83,14 @@ public final class SparseApplyAdagrad<T extends Tensor> extends RawOp implements
    * @return a new instance of SparseApplyAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradV2", scope.makeOpName("SparseApplyAdagrad"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -129,7 +129,7 @@ public final class SparseApplyAdagrad<T extends Tensor> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

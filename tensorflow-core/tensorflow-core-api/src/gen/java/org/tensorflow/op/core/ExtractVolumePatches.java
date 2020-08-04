@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -35,7 +34,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code patches()} output
  */
 @Operator
-public final class ExtractVolumePatches<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class ExtractVolumePatches<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExtractVolumePatches operation.
@@ -56,9 +55,9 @@ public final class ExtractVolumePatches<T extends Tensor & TNumber> extends RawO
    * @return a new instance of ExtractVolumePatches
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
+  public static <T extends TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractVolumePatches", scope.makeOpName("ExtractVolumePatches"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] ksizesArray = new long[ksizes.size()];
     for (int i = 0; i < ksizesArray.length; ++i) {
@@ -86,7 +85,7 @@ public final class ExtractVolumePatches<T extends Tensor & TNumber> extends RawO
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return patches;
   }
   

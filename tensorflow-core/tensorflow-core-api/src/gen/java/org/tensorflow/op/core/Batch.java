@@ -143,7 +143,7 @@ public final class Batch extends RawOp {
   @Endpoint(describeByClass = true)
   public static Batch create(Scope scope, Iterable<Operand<?>> inTensors, Long numBatchThreads, Long maxBatchSize, Long batchTimeoutMicros, Long gradTimeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Batch", scope.makeOpName("Batch"));
-    opBuilder.addInputList(Operands.asOutputs(inTensors));
+    opBuilder.addInputList(Operands.asOutputs(scope, inTensors));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_batch_threads", numBatchThreads);
     opBuilder.setAttr("max_batch_size", maxBatchSize);

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * The backward operation for "BiasAdd" on the "bias" tensor.
@@ -37,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class BiasAddGrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BiasAddGrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.BiasAddGrad}
@@ -73,9 +73,9 @@ public final class BiasAddGrad<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of BiasAddGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BiasAddGrad<T> create(Scope scope, Operand<T> outBackprop, Options... options) {
+  public static <T extends TType> BiasAddGrad<T> create(Scope scope, Operand<T> outBackprop, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAddGrad", scope.makeOpName("BiasAddGrad"));
-    opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.addInput(outBackprop.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -108,7 +108,7 @@ public final class BiasAddGrad<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

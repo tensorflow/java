@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Ensures that the tensor's shape matches the expected shape.
@@ -37,7 +37,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class EnsureShape<T extends Tensor> extends RawOp implements Operand<T> {
+public final class EnsureShape<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new EnsureShape operation.
@@ -48,9 +48,9 @@ public final class EnsureShape<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of EnsureShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
+  public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new EnsureShape<T>(opBuilder.build());
@@ -64,7 +64,7 @@ public final class EnsureShape<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

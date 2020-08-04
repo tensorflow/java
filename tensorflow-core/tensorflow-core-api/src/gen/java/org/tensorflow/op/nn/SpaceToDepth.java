@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * SpaceToDepth for tensors of type T.
@@ -107,7 +107,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class SpaceToDepth<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SpaceToDepth<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.SpaceToDepth}
@@ -138,9 +138,9 @@ public final class SpaceToDepth<T extends Tensor> extends RawOp implements Opera
    * @return a new instance of SpaceToDepth
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SpaceToDepth<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
+  public static <T extends TType> SpaceToDepth<T> create(Scope scope, Operand<T> input, Long blockSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToDepth", scope.makeOpName("SpaceToDepth"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     if (options != null) {
@@ -167,7 +167,7 @@ public final class SpaceToDepth<T extends Tensor> extends RawOp implements Opera
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

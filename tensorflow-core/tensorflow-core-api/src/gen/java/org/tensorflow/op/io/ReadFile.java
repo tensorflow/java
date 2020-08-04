@@ -43,7 +43,7 @@ public final class ReadFile extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static ReadFile create(Scope scope, Operand<TString> filename) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadFile", scope.makeOpName("ReadFile"));
-    opBuilder.addInput(filename.asOutput());
+    opBuilder.addInput(filename.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReadFile(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class ReadFile extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return contents;
   }
   

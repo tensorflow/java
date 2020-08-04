@@ -81,12 +81,10 @@ public class MapDatasetTest extends DatasetTestBase {
           try {
             List<Tensor<?>> outputs = session.runner().fetch(X).fetch(y).run();
 
-            try (Tensor<TInt32> XBatch = outputs.get(0).expect(TInt32.DTYPE);
-                Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
-
-              assertEquals(mapped1.get(batches), XBatch.data());
-              assertEquals(mapped2.get(batches), yBatch.data());
-
+            try (TInt32 XBatch = outputs.get(0).expect(TInt32.DTYPE);
+                TInt32 yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
+              assertEquals(mapped1.get(batches), XBatch);
+              assertEquals(mapped2.get(batches), yBatch);
               batches++;
             }
           } catch (TFOutOfRangeException e) {
@@ -114,12 +112,10 @@ public class MapDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (Tensor<TInt32> XBatch = outputs.get(0).asTensor().expect(TInt32.DTYPE);
-          Tensor<TInt32> yBatch = outputs.get(1).asTensor().expect(TInt32.DTYPE); ) {
-
-        assertEquals(mapped1.get(count), XBatch.data());
-        assertEquals(mapped2.get(count), yBatch.data());
-
+      try (TInt32 XBatch = outputs.get(0).asTensor(TInt32.DTYPE);
+          TInt32 yBatch = outputs.get(1).asTensor(TInt32.DTYPE); ) {
+        assertEquals(mapped1.get(count), XBatch);
+        assertEquals(mapped2.get(count), yBatch);
         count++;
       }
     }

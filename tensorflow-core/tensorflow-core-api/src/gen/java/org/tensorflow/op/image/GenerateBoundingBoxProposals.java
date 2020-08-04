@@ -82,13 +82,13 @@ public final class GenerateBoundingBoxProposals extends RawOp {
   @Endpoint(describeByClass = true)
   public static GenerateBoundingBoxProposals create(Scope scope, Operand<TFloat32> scores, Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors, Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateBoundingBoxProposals", scope.makeOpName("GenerateBoundingBoxProposals"));
-    opBuilder.addInput(scores.asOutput());
-    opBuilder.addInput(bboxDeltas.asOutput());
-    opBuilder.addInput(imageInfo.asOutput());
-    opBuilder.addInput(anchors.asOutput());
-    opBuilder.addInput(nmsThreshold.asOutput());
-    opBuilder.addInput(preNmsTopn.asOutput());
-    opBuilder.addInput(minSize.asOutput());
+    opBuilder.addInput(scores.asOutput(scope));
+    opBuilder.addInput(bboxDeltas.asOutput(scope));
+    opBuilder.addInput(imageInfo.asOutput(scope));
+    opBuilder.addInput(anchors.asOutput(scope));
+    opBuilder.addInput(nmsThreshold.asOutput(scope));
+    opBuilder.addInput(preNmsTopn.asOutput(scope));
+    opBuilder.addInput(minSize.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -30,13 +30,18 @@ public final class Operands {
    * <p>Operation wrappers need to convert back a list of inputs into an array of outputs in order
    * to build an operation, see {@link OperationBuilder#addInputList(Output[])}.
    *
+   * <p>If a valid non-null value is provided as the {@code scope} of this operand, the implementor
+   * can program additional computations before returning its output. This might be required if,
+   * for instance, the implementor has not yet been added as a node to the graph.</p>
+   *
+   * @param scope if non-null, scope that can be used an operand to produce a new output
    * @param inputs an iteration of input operands
    * @return an array of outputs
    */
-  public static Output<?>[] asOutputs(Iterable<? extends Operand<?>> inputs) {
+  public static Output<?>[] asOutputs(Scope scope, Iterable<? extends Operand<?>> inputs) {
     List<Output<?>> outputList = new ArrayList<>();
     for (Operand<?> input : inputs) {
-      outputList.add(input.asOutput());
+      outputList.add(input.asOutput(scope));
     }
     return outputList.toArray(new Output<?>[outputList.size()]);
   }

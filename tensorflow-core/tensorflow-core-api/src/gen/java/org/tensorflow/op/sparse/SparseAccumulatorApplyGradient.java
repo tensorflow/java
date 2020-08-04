@@ -20,13 +20,13 @@ package org.tensorflow.op.sparse;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Applies a sparse gradient to a given accumulator.
@@ -54,13 +54,13 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
    * @return a new instance of SparseAccumulatorApplyGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices, Operand<T> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
+  public static <T extends TType> SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices, Operand<T> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorApplyGradient", scope.makeOpName("SparseAccumulatorApplyGradient"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(localStep.asOutput());
-    opBuilder.addInput(gradientIndices.asOutput());
-    opBuilder.addInput(gradientValues.asOutput());
-    opBuilder.addInput(gradientShape.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(localStep.asOutput(scope));
+    opBuilder.addInput(gradientIndices.asOutput(scope));
+    opBuilder.addInput(gradientValues.asOutput(scope));
+    opBuilder.addInput(gradientShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("has_known_shape", hasKnownShape);
     return new SparseAccumulatorApplyGradient(opBuilder.build());

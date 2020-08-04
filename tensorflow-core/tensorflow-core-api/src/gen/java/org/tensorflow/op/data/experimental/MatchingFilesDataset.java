@@ -21,16 +21,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
-public final class MatchingFilesDataset extends RawOp implements Operand<Tensor> {
+public final class MatchingFilesDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new MatchingFilesDataset operation.
@@ -42,7 +42,7 @@ public final class MatchingFilesDataset extends RawOp implements Operand<Tensor>
   @Endpoint(describeByClass = true)
   public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalMatchingFilesDataset", scope.makeOpName("MatchingFilesDataset"));
-    opBuilder.addInput(patterns.asOutput());
+    opBuilder.addInput(patterns.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MatchingFilesDataset(opBuilder.build());
   }
@@ -55,8 +55,8 @@ public final class MatchingFilesDataset extends RawOp implements Operand<Tensor>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

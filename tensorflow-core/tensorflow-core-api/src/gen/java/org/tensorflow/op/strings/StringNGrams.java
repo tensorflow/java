@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -40,7 +39,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code ngramsSplits()} output
  */
 @Operator(group = "strings")
-public final class StringNGrams<T extends Tensor & TNumber> extends RawOp {
+public final class StringNGrams<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new StringNGrams operation.
@@ -63,10 +62,10 @@ public final class StringNGrams<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of StringNGrams
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
+  public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringNGrams", scope.makeOpName("StringNGrams"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(dataSplits.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
+    opBuilder.addInput(dataSplits.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("separator", separator);
     long[] ngramWidthsArray = new long[ngramWidths.size()];

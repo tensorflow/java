@@ -45,8 +45,8 @@ public final class WriteFile extends RawOp {
   @Endpoint(describeByClass = true)
   public static WriteFile create(Scope scope, Operand<TString> filename, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
-    opBuilder.addInput(filename.asOutput());
-    opBuilder.addInput(contents.asOutput());
+    opBuilder.addInput(filename.asOutput(scope));
+    opBuilder.addInput(contents.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new WriteFile(opBuilder.build());
   }

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -46,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class Range<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class Range<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Range operation.
@@ -58,11 +57,11 @@ public final class Range<T extends Tensor & TNumber> extends RawOp implements Op
    * @return a new instance of Range
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Range<T> create(Scope scope, Operand<T> start, Operand<T> limit, Operand<T> delta) {
+  public static <T extends TNumber> Range<T> create(Scope scope, Operand<T> start, Operand<T> limit, Operand<T> delta) {
     OperationBuilder opBuilder = scope.env().opBuilder("Range", scope.makeOpName("Range"));
-    opBuilder.addInput(start.asOutput());
-    opBuilder.addInput(limit.asOutput());
-    opBuilder.addInput(delta.asOutput());
+    opBuilder.addInput(start.asOutput(scope));
+    opBuilder.addInput(limit.asOutput(scope));
+    opBuilder.addInput(delta.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Range<T>(opBuilder.build());
   }
@@ -75,7 +74,7 @@ public final class Range<T extends Tensor & TNumber> extends RawOp implements Op
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * SpaceToBatch for N-D tensors of type T.
@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class SpaceToBatchNd<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SpaceToBatchNd<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SpaceToBatchNd operation.
@@ -147,11 +147,11 @@ public final class SpaceToBatchNd<T extends Tensor> extends RawOp implements Ope
    * @return a new instance of SpaceToBatchNd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber, V extends Tensor & TNumber> SpaceToBatchNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
+  public static <T extends TType, U extends TNumber, V extends TNumber> SpaceToBatchNd<T> create(Scope scope, Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatchND", scope.makeOpName("SpaceToBatchNd"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(blockShape.asOutput());
-    opBuilder.addInput(paddings.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(blockShape.asOutput(scope));
+    opBuilder.addInput(paddings.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SpaceToBatchNd<T>(opBuilder.build());
   }
@@ -163,7 +163,7 @@ public final class SpaceToBatchNd<T extends Tensor> extends RawOp implements Ope
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

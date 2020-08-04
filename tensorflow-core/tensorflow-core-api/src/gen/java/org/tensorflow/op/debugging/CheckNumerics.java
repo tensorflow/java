@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CheckNumerics<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class CheckNumerics<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CheckNumerics operation.
@@ -49,9 +48,9 @@ public final class CheckNumerics<T extends Tensor & TNumber> extends RawOp imple
    * @return a new instance of CheckNumerics
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
+  public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
     OperationBuilder opBuilder = scope.env().opBuilder("CheckNumericsV2", scope.makeOpName("CheckNumerics"));
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("message", message);
     return new CheckNumerics<T>(opBuilder.build());
@@ -64,7 +63,7 @@ public final class CheckNumerics<T extends Tensor & TNumber> extends RawOp imple
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

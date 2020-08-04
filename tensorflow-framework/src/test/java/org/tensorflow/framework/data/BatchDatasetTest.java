@@ -45,14 +45,10 @@ public class BatchDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-      try (Tensor<TInt32> batch1 =
-               components.get(0).asTensor().expect(TInt32.DTYPE);
-           Tensor<TInt32> batch2 =
-               components.get(1).asTensor().expect(TInt32.DTYPE);) {
-
-        assertEquals(testMatrix1.slice(range(count, count + 2)), batch1.data());
-        assertEquals(testMatrix2.slice(range(count, count + 2)), batch2.data());
-
+      try (TInt32 batch1 = components.get(0).asTensor(TInt32.DTYPE);
+           TInt32 batch2 = components.get(1).asTensor(TInt32.DTYPE);) {
+        assertEquals(testMatrix1.slice(range(count, count + 2)), batch1);
+        assertEquals(testMatrix2.slice(range(count, count + 2)), batch2);
         count += 2;
       }
     }
@@ -63,23 +59,16 @@ public class BatchDatasetTest extends DatasetTestBase {
     Ops tf = Ops.create();
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
-            Arrays.asList(
-                tf.constant(testMatrix1),
-                tf.constant(testMatrix2)),
+            Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .batch(3, true);
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-
-      try (Tensor<TInt32> batch1 =
-               components.get(0).asTensor().expect(TInt32.DTYPE);
-           Tensor<TInt32> batch2 =
-               components.get(1).asTensor().expect(TInt32.DTYPE);) {
-
-        assertEquals(testMatrix1.slice(range(count, count + 3)), batch1.data());
-        assertEquals(testMatrix2.slice(range(count, count + 3)), batch2.data());
-
+      try (TInt32 batch1 = components.get(0).asTensor(TInt32.DTYPE);
+          TInt32 batch2 = components.get(1).asTensor(TInt32.DTYPE);) {
+        assertEquals(testMatrix1.slice(range(count, count + 3)), batch1);
+        assertEquals(testMatrix2.slice(range(count, count + 3)), batch2);
         count += 3;
       }
     }
@@ -90,9 +79,7 @@ public class BatchDatasetTest extends DatasetTestBase {
     Ops tf = Ops.create();
     Dataset dataset = Dataset
         .fromTensorSlices(tf,
-            Arrays.asList(
-                tf.constant(testMatrix1),
-                tf.constant(testMatrix2)),
+            Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2)),
             Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
         .batch(3, false);
 
@@ -100,21 +87,15 @@ public class BatchDatasetTest extends DatasetTestBase {
     boolean foundLastBatch = false;
 
     for (List<Operand<?>> components : dataset) {
-      try (Tensor<TInt32> batch1 =
-               components.get(0).asTensor().expect(TInt32.DTYPE);
-           Tensor<TInt32> batch2 =
-               components.get(1).asTensor().expect(TInt32.DTYPE);) {
+      try (TInt32 batch1 = components.get(0).asTensor(TInt32.DTYPE);
+           TInt32 batch2 = components.get(1).asTensor(TInt32.DTYPE);) {
         if (count == 0) {
-          assertEquals(testMatrix1.slice(range(count, count + 3)),
-              batch1.data());
-          assertEquals(testMatrix2.slice(range(count, count + 3)),
-              batch2.data());
+          assertEquals(testMatrix1.slice(range(count, count + 3)), batch1);
+          assertEquals(testMatrix2.slice(range(count, count + 3)), batch2);
           count += 3;
         } else {
-          assertEquals(testMatrix1.slice(range(count, count + 1)),
-              batch1.data());
-          assertEquals(testMatrix2.slice(range(count, count + 1)),
-              batch2.data());
+          assertEquals(testMatrix1.slice(range(count, count + 1)), batch1);
+          assertEquals(testMatrix2.slice(range(count, count + 1)), batch2);
           foundLastBatch = true;
         }
       }

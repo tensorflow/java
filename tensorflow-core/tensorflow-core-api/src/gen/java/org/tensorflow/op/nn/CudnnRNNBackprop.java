@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -82,7 +81,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code inputBackprop()} output
  */
-public final class CudnnRNNBackprop<T extends Tensor & TNumber> extends RawOp {
+public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.CudnnRNNBackprop}
@@ -187,21 +186,21 @@ public final class CudnnRNNBackprop<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of CudnnRNNBackprop
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CudnnRNNBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
+  public static <T extends TNumber> CudnnRNNBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNBackpropV3", scope.makeOpName("CudnnRNNBackprop"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(inputH.asOutput());
-    opBuilder.addInput(inputC.asOutput());
-    opBuilder.addInput(params.asOutput());
-    opBuilder.addInput(sequenceLengths.asOutput());
-    opBuilder.addInput(output.asOutput());
-    opBuilder.addInput(outputH.asOutput());
-    opBuilder.addInput(outputC.asOutput());
-    opBuilder.addInput(outputBackprop.asOutput());
-    opBuilder.addInput(outputHBackprop.asOutput());
-    opBuilder.addInput(outputCBackprop.asOutput());
-    opBuilder.addInput(reserveSpace.asOutput());
-    opBuilder.addInput(hostReserved.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(inputH.asOutput(scope));
+    opBuilder.addInput(inputC.asOutput(scope));
+    opBuilder.addInput(params.asOutput(scope));
+    opBuilder.addInput(sequenceLengths.asOutput(scope));
+    opBuilder.addInput(output.asOutput(scope));
+    opBuilder.addInput(outputH.asOutput(scope));
+    opBuilder.addInput(outputC.asOutput(scope));
+    opBuilder.addInput(outputBackprop.asOutput(scope));
+    opBuilder.addInput(outputHBackprop.asOutput(scope));
+    opBuilder.addInput(outputCBackprop.asOutput(scope));
+    opBuilder.addInput(reserveSpace.asOutput(scope));
+    opBuilder.addInput(hostReserved.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

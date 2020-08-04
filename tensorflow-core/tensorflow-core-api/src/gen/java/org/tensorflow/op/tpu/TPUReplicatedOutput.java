@@ -24,11 +24,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Connects N outputs from an N-way replicated TPU computation.
@@ -45,7 +45,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code outputs()} output
  */
-public final class TPUReplicatedOutput<T extends Tensor> extends RawOp implements Iterable<Operand<T>> {
+public final class TPUReplicatedOutput<T extends TType> extends RawOp implements Iterable<Operand<T>> {
   
   /**
    * Factory method to create a class wrapping a new TPUReplicatedOutput operation.
@@ -56,9 +56,9 @@ public final class TPUReplicatedOutput<T extends Tensor> extends RawOp implement
    * @return a new instance of TPUReplicatedOutput
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
+  public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_replicas", numReplicas);
     return new TPUReplicatedOutput<T>(opBuilder.build());

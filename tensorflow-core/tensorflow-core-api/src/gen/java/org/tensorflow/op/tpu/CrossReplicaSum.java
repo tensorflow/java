@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -41,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class CrossReplicaSum<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class CrossReplicaSum<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CrossReplicaSum operation.
@@ -54,10 +53,10 @@ public final class CrossReplicaSum<T extends Tensor & TNumber> extends RawOp imp
    * @return a new instance of CrossReplicaSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
+  public static <T extends TNumber> CrossReplicaSum<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupAssignment) {
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(groupAssignment.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(groupAssignment.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CrossReplicaSum<T>(opBuilder.build());
   }
@@ -70,7 +69,7 @@ public final class CrossReplicaSum<T extends Tensor & TNumber> extends RawOp imp
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

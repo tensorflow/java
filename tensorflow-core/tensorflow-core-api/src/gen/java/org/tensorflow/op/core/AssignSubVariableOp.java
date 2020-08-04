@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Subtracts a value from the current value of a variable.
@@ -44,10 +44,10 @@ public final class AssignSubVariableOp extends RawOp {
    * @return a new instance of AssignSubVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AssignSubVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static <T extends TType> AssignSubVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSubVariableOp", scope.makeOpName("AssignSubVariableOp"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AssignSubVariableOp(opBuilder.build());
   }

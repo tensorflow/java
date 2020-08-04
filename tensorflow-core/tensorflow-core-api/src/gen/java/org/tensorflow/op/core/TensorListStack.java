@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Stacks all tensors in the list.
@@ -42,7 +42,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code tensor()} output
  */
 @Operator
-public final class TensorListStack<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorListStack<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TensorListStack}
@@ -74,10 +74,10 @@ public final class TensorListStack<T extends Tensor> extends RawOp implements Op
    * @return a new instance of TensorListStack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype, Options... options) {
+  public static <T extends TType> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListStack", scope.makeOpName("TensorListStack"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(elementShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     if (options != null) {
@@ -104,7 +104,7 @@ public final class TensorListStack<T extends Tensor> extends RawOp implements Op
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return tensor;
   }
   

@@ -22,19 +22,19 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class InfeedDequeue<T extends Tensor> extends RawOp implements Operand<T> {
+public final class InfeedDequeue<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new InfeedDequeue operation.
@@ -45,7 +45,7 @@ public final class InfeedDequeue<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of InfeedDequeue
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
+  public static <T extends TType> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
@@ -61,7 +61,7 @@ public final class InfeedDequeue<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

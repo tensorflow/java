@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Bitcasts a tensor from one type to another without copying data.
@@ -85,7 +85,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class Bitcast<U extends Tensor> extends RawOp implements Operand<U> {
+public final class Bitcast<U extends TType> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new Bitcast operation.
@@ -96,9 +96,9 @@ public final class Bitcast<U extends Tensor> extends RawOp implements Operand<U>
    * @return a new instance of Bitcast
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor, T extends Tensor> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
+  public static <U extends TType, T extends TType> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     return new Bitcast<U>(opBuilder.build());
@@ -111,7 +111,7 @@ public final class Bitcast<U extends Tensor> extends RawOp implements Operand<U>
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

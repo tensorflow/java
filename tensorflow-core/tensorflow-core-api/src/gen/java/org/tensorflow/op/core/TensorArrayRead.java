@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Read an element from the TensorArray into output `value`.
@@ -36,7 +36,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code value()} output
  */
 @Operator
-public final class TensorArrayRead<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorArrayRead<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorArrayRead operation.
@@ -49,11 +49,11 @@ public final class TensorArrayRead<T extends Tensor> extends RawOp implements Op
    * @return a new instance of TensorArrayRead
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
+  public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(index.asOutput());
-    opBuilder.addInput(flowIn.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(index.asOutput(scope));
+    opBuilder.addInput(flowIn.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new TensorArrayRead<T>(opBuilder.build());
@@ -67,7 +67,7 @@ public final class TensorArrayRead<T extends Tensor> extends RawOp implements Op
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return value;
   }
   

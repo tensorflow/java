@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Read `SparseTensors` from a `SparseTensorsMap` and concatenate them.
@@ -80,7 +80,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code sparseValues()} output
  */
 @Operator(group = "sparse")
-public final class TakeManySparseFromTensorsMap<T extends Tensor> extends RawOp {
+public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.sparse.TakeManySparseFromTensorsMap}
@@ -124,9 +124,9 @@ public final class TakeManySparseFromTensorsMap<T extends Tensor> extends RawOp 
    * @return a new instance of TakeManySparseFromTensorsMap
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
-    opBuilder.addInput(sparseHandles.asOutput());
+    opBuilder.addInput(sparseHandles.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {

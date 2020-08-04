@@ -50,8 +50,8 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
   @Endpoint(describeByClass = true)
   public static KMC2ChainInitialization create(Scope scope, Operand<TFloat32> distances, Operand<TInt64> seed) {
     OperationBuilder opBuilder = scope.env().opBuilder("KMC2ChainInitialization", scope.makeOpName("KMC2ChainInitialization"));
-    opBuilder.addInput(distances.asOutput());
-    opBuilder.addInput(seed.asOutput());
+    opBuilder.addInput(distances.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new KMC2ChainInitialization(opBuilder.build());
   }
@@ -64,7 +64,7 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return index;
   }
   

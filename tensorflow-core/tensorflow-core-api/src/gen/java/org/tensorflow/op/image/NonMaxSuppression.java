@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -58,7 +57,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code selectedScores()} output
  */
 @Operator(group = "image")
-public final class NonMaxSuppression<T extends Tensor & TNumber> extends RawOp {
+public final class NonMaxSuppression<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.NonMaxSuppression}
@@ -100,14 +99,14 @@ public final class NonMaxSuppression<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of NonMaxSuppression
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> NonMaxSuppression<T> create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold, Operand<T> scoreThreshold, Operand<T> softNmsSigma, Options... options) {
+  public static <T extends TNumber> NonMaxSuppression<T> create(Scope scope, Operand<T> boxes, Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold, Operand<T> scoreThreshold, Operand<T> softNmsSigma, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionV5", scope.makeOpName("NonMaxSuppression"));
-    opBuilder.addInput(boxes.asOutput());
-    opBuilder.addInput(scores.asOutput());
-    opBuilder.addInput(maxOutputSize.asOutput());
-    opBuilder.addInput(iouThreshold.asOutput());
-    opBuilder.addInput(scoreThreshold.asOutput());
-    opBuilder.addInput(softNmsSigma.asOutput());
+    opBuilder.addInput(boxes.asOutput(scope));
+    opBuilder.addInput(scores.asOutput(scope));
+    opBuilder.addInput(maxOutputSize.asOutput(scope));
+    opBuilder.addInput(iouThreshold.asOutput(scope));
+    opBuilder.addInput(scoreThreshold.asOutput(scope));
+    opBuilder.addInput(softNmsSigma.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

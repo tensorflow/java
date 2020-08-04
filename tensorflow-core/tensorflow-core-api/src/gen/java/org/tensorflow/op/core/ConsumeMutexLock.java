@@ -49,7 +49,7 @@ public final class ConsumeMutexLock extends RawOp {
   @Endpoint(describeByClass = true)
   public static ConsumeMutexLock create(Scope scope, Operand<?> mutexLock) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConsumeMutexLock", scope.makeOpName("ConsumeMutexLock"));
-    opBuilder.addInput(mutexLock.asOutput());
+    opBuilder.addInput(mutexLock.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ConsumeMutexLock(opBuilder.build());
   }

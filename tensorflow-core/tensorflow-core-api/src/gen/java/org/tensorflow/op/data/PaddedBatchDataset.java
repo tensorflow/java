@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
@@ -31,11 +30,12 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that batches and pads `batch_size` elements from the input.
  */
-public final class PaddedBatchDataset extends RawOp implements Operand<Tensor> {
+public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.PaddedBatchDataset}
@@ -78,11 +78,11 @@ public final class PaddedBatchDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static PaddedBatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Iterable<Operand<TInt64>> paddedShapes, Iterable<Operand<?>> paddingValues, Operand<TBool> dropRemainder, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddedBatchDatasetV2", scope.makeOpName("PaddedBatchDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(batchSize.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(paddedShapes));
-    opBuilder.addInputList(Operands.asOutputs(paddingValues));
-    opBuilder.addInput(dropRemainder.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(batchSize.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, paddedShapes));
+    opBuilder.addInputList(Operands.asOutputs(scope, paddingValues));
+    opBuilder.addInput(dropRemainder.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
@@ -114,8 +114,8 @@ public final class PaddedBatchDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

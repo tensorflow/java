@@ -20,7 +20,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.image.AdjustContrast;
 import org.tensorflow.op.image.AdjustHue;
 import org.tensorflow.op.image.AdjustSaturation;
@@ -58,6 +57,7 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code image} operations as {@link Op Op}s
@@ -89,7 +89,7 @@ public final class ImageOps {
    * @param contrastFactor A float multiplier for adjusting contrast.
    * @return a new instance of AdjustContrast
    */
-  public <T extends Tensor & TNumber> AdjustContrast<T> adjustContrast(Operand<T> images,
+  public <T extends TNumber> AdjustContrast<T> adjustContrast(Operand<T> images,
       Operand<TFloat32> contrastFactor) {
     return AdjustContrast.create(scope, images, contrastFactor);
   }
@@ -109,8 +109,7 @@ public final class ImageOps {
    * @param delta A float delta to add to the hue.
    * @return a new instance of AdjustHue
    */
-  public <T extends Tensor & TNumber> AdjustHue<T> adjustHue(Operand<T> images,
-      Operand<TFloat32> delta) {
+  public <T extends TNumber> AdjustHue<T> adjustHue(Operand<T> images, Operand<TFloat32> delta) {
     return AdjustHue.create(scope, images, delta);
   }
 
@@ -129,7 +128,7 @@ public final class ImageOps {
    * @param scale A float scale to add to the saturation.
    * @return a new instance of AdjustSaturation
    */
-  public <T extends Tensor & TNumber> AdjustSaturation<T> adjustSaturation(Operand<T> images,
+  public <T extends TNumber> AdjustSaturation<T> adjustSaturation(Operand<T> images,
       Operand<TFloat32> scale) {
     return AdjustSaturation.create(scope, images, scale);
   }
@@ -213,9 +212,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResize
    */
-  public <T extends Tensor & TNumber> CropAndResize cropAndResize(Operand<T> image,
-      Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize,
-      CropAndResize.Options... options) {
+  public <T extends TNumber> CropAndResize cropAndResize(Operand<T> image, Operand<TFloat32> boxes,
+      Operand<TInt32> boxInd, Operand<TInt32> cropSize, CropAndResize.Options... options) {
     return CropAndResize.create(scope, image, boxes, boxInd, cropSize, options);
   }
 
@@ -240,8 +238,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradBoxes
    */
-  public <T extends Tensor & TNumber> CropAndResizeGradBoxes cropAndResizeGradBoxes(
-      Operand<TFloat32> grads, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
+  public <T extends TNumber> CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat32> grads,
+      Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
       CropAndResizeGradBoxes.Options... options) {
     return CropAndResizeGradBoxes.create(scope, grads, image, boxes, boxInd, options);
   }
@@ -270,7 +268,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradImage
    */
-  public <T extends Tensor & TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(
+  public <T extends TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(
       Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
       Operand<TInt32> imageSize, DataType<T> T, CropAndResizeGradImage.Options... options) {
     return CropAndResizeGradImage.create(scope, grads, boxes, boxInd, imageSize, T, options);
@@ -463,8 +461,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  public <T extends Tensor & TNumber> DecodePng<T> decodePng(Operand<TString> contents,
-      DataType<T> dtype, DecodePng.Options... options) {
+  public <T extends TNumber> DecodePng<T> decodePng(Operand<TString> contents, DataType<T> dtype,
+      DecodePng.Options... options) {
     return DecodePng.create(scope, contents, dtype, options);
   }
 
@@ -490,7 +488,7 @@ public final class ImageOps {
    * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
    * @return a new instance of DrawBoundingBoxes
    */
-  public <T extends Tensor & TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
+  public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
       Operand<TFloat32> boxes, Operand<TFloat32> colors) {
     return DrawBoundingBoxes.create(scope, images, boxes, colors);
   }
@@ -574,8 +572,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of EncodePng
    */
-  public <T extends Tensor & TNumber> EncodePng encodePng(Operand<T> image,
-      EncodePng.Options... options) {
+  public <T extends TNumber> EncodePng encodePng(Operand<T> image, EncodePng.Options... options) {
     return EncodePng.create(scope, image, options);
   }
 
@@ -640,7 +637,7 @@ public final class ImageOps {
    * @param padding The type of padding algorithm to use.
    * @return a new instance of ExtractImagePatches
    */
-  public <T extends Tensor> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
+  public <T extends TType> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
       List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     return ExtractImagePatches.create(scope, images, ksizes, strides, rates, padding);
   }
@@ -669,8 +666,8 @@ public final class ImageOps {
    *  Defaults to int32.
    * @return a new instance of ExtractJpegShape
    */
-  public <T extends Tensor & TNumber> ExtractJpegShape<T> extractJpegShape(
-      Operand<TString> contents, DataType<T> outputType) {
+  public <T extends TNumber> ExtractJpegShape<T> extractJpegShape(Operand<TString> contents,
+      DataType<T> outputType) {
     return ExtractJpegShape.create(scope, contents, outputType);
   }
 
@@ -687,7 +684,7 @@ public final class ImageOps {
    * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
    * @return a new instance of HsvToRgb
    */
-  public <T extends Tensor & TNumber> HsvToRgb<T> hsvToRgb(Operand<T> images) {
+  public <T extends TNumber> HsvToRgb<T> hsvToRgb(Operand<T> images) {
     return HsvToRgb.create(scope, images);
   }
 
@@ -733,7 +730,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of NonMaxSuppression
    */
-  public <T extends Tensor & TNumber> NonMaxSuppression<T> nonMaxSuppression(Operand<T> boxes,
+  public <T extends TNumber> NonMaxSuppression<T> nonMaxSuppression(Operand<T> boxes,
       Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold,
       Operand<T> scoreThreshold, Operand<T> softNmsSigma, NonMaxSuppression.Options... options) {
     return NonMaxSuppression.create(scope, boxes, scores, maxOutputSize, iouThreshold, scoreThreshold, softNmsSigma, options);
@@ -789,7 +786,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedResizeBilinear
    */
-  public <T extends Tensor> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
+  public <T extends TType> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
       Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max,
       QuantizedResizeBilinear.Options... options) {
     return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
@@ -811,8 +808,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomCrop
    */
-  public <T extends Tensor & TNumber> RandomCrop<T> randomCrop(Operand<T> image,
-      Operand<TInt64> size, RandomCrop.Options... options) {
+  public <T extends TNumber> RandomCrop<T> randomCrop(Operand<T> image, Operand<TInt64> size,
+      RandomCrop.Options... options) {
     return RandomCrop.create(scope, image, size, options);
   }
 
@@ -837,7 +834,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeArea
    */
-  public <T extends Tensor & TNumber> ResizeArea resizeArea(Operand<T> images, Operand<TInt32> size,
+  public <T extends TNumber> ResizeArea resizeArea(Operand<T> images, Operand<TInt32> size,
       ResizeArea.Options... options) {
     return ResizeArea.create(scope, images, size, options);
   }
@@ -853,8 +850,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeBicubic
    */
-  public <T extends Tensor & TNumber> ResizeBicubic resizeBicubic(Operand<T> images,
-      Operand<TInt32> size, ResizeBicubic.Options... options) {
+  public <T extends TNumber> ResizeBicubic resizeBicubic(Operand<T> images, Operand<TInt32> size,
+      ResizeBicubic.Options... options) {
     return ResizeBicubic.create(scope, images, size, options);
   }
 
@@ -869,8 +866,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinear
    */
-  public <T extends Tensor & TNumber> ResizeBilinear resizeBilinear(Operand<T> images,
-      Operand<TInt32> size, ResizeBilinear.Options... options) {
+  public <T extends TNumber> ResizeBilinear resizeBilinear(Operand<T> images, Operand<TInt32> size,
+      ResizeBilinear.Options... options) {
     return ResizeBilinear.create(scope, images, size, options);
   }
 
@@ -884,8 +881,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeNearestNeighbor
    */
-  public <T extends Tensor & TNumber> ResizeNearestNeighbor<T> resizeNearestNeighbor(
-      Operand<T> images, Operand<TInt32> size, ResizeNearestNeighbor.Options... options) {
+  public <T extends TNumber> ResizeNearestNeighbor<T> resizeNearestNeighbor(Operand<T> images,
+      Operand<TInt32> size, ResizeNearestNeighbor.Options... options) {
     return ResizeNearestNeighbor.create(scope, images, size, options);
   }
 
@@ -915,7 +912,7 @@ public final class ImageOps {
    * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
    * @return a new instance of RgbToHsv
    */
-  public <T extends Tensor & TNumber> RgbToHsv<T> rgbToHsv(Operand<T> images) {
+  public <T extends TNumber> RgbToHsv<T> rgbToHsv(Operand<T> images) {
     return RgbToHsv.create(scope, images);
   }
 
@@ -970,7 +967,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of SampleDistortedBoundingBox
    */
-  public <T extends Tensor & TNumber> SampleDistortedBoundingBox<T> sampleDistortedBoundingBox(
+  public <T extends TNumber> SampleDistortedBoundingBox<T> sampleDistortedBoundingBox(
       Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered,
       SampleDistortedBoundingBox.Options... options) {
     return SampleDistortedBoundingBox.create(scope, imageSize, boundingBoxes, minObjectCovered, options);
@@ -985,7 +982,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslate
    */
-  public <T extends Tensor & TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
+  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
       Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
     return ScaleAndTranslate.create(scope, images, size, scale, translation, options);

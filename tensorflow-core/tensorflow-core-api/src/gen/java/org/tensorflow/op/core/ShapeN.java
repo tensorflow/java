@@ -25,7 +25,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -33,6 +32,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns shape of tensors.
@@ -42,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code output()} output
  */
 @Operator
-public final class ShapeN<U extends Tensor & TNumber> extends RawOp implements Iterable<Operand<U>> {
+public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<Operand<U>> {
   
   /**
    * Factory method to create a class wrapping a new ShapeN operation.
@@ -53,9 +53,9 @@ public final class ShapeN<U extends Tensor & TNumber> extends RawOp implements I
    * @return a new instance of ShapeN
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
-    opBuilder.addInputList(Operands.asOutputs(input));
+    opBuilder.addInputList(Operands.asOutputs(scope, input));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new ShapeN<U>(opBuilder.build());
@@ -69,7 +69,7 @@ public final class ShapeN<U extends Tensor & TNumber> extends RawOp implements I
    * @return a new instance of ShapeN
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
+  public static <T extends TType> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
     return create(scope, input, TInt32.DTYPE);
   }
   

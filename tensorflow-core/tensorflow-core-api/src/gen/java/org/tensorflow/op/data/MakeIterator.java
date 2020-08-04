@@ -45,8 +45,8 @@ public final class MakeIterator extends RawOp {
   @Endpoint(describeByClass = true)
   public static MakeIterator create(Scope scope, Operand<?> dataset, Operand<?> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MakeIterator", scope.makeOpName("MakeIterator"));
-    opBuilder.addInput(dataset.asOutput());
-    opBuilder.addInput(iterator.asOutput());
+    opBuilder.addInput(dataset.asOutput(scope));
+    opBuilder.addInput(iterator.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MakeIterator(opBuilder.build());
   }

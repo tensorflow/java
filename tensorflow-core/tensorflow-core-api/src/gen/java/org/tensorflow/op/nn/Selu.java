@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -42,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code activations()} output
  */
 @Operator(group = "nn")
-public final class Selu<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Selu operation.
@@ -52,9 +51,9 @@ public final class Selu<T extends Tensor & TNumber> extends RawOp implements Ope
    * @return a new instance of Selu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Selu<T> create(Scope scope, Operand<T> features) {
+  public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
-    opBuilder.addInput(features.asOutput());
+    opBuilder.addInput(features.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Selu<T>(opBuilder.build());
   }
@@ -66,7 +65,7 @@ public final class Selu<T extends Tensor & TNumber> extends RawOp implements Ope
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return activations;
   }
   

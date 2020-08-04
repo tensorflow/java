@@ -43,7 +43,7 @@ public final class LookupTableSize extends RawOp implements Operand<TInt64> {
   @Endpoint(describeByClass = true)
   public static LookupTableSize create(Scope scope, Operand<?> tableHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableSizeV2", scope.makeOpName("LookupTableSize"));
-    opBuilder.addInput(tableHandle.asOutput());
+    opBuilder.addInput(tableHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LookupTableSize(opBuilder.build());
   }
@@ -56,7 +56,7 @@ public final class LookupTableSize extends RawOp implements Operand<TInt64> {
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return size;
   }
   

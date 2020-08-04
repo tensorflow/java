@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor of zeros with the same shape and type as x.
@@ -33,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator
-public final class ZerosLike<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ZerosLike<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ZerosLike operation.
@@ -43,9 +43,9 @@ public final class ZerosLike<T extends Tensor> extends RawOp implements Operand<
    * @return a new instance of ZerosLike
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ZerosLike<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> ZerosLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZerosLike", scope.makeOpName("ZerosLike"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ZerosLike<T>(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class ZerosLike<T extends Tensor> extends RawOp implements Operand<
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

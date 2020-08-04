@@ -19,12 +19,12 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.core.Shape;
 import org.tensorflow.op.core.Shapes;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code shape} operations as {@link Op Op}s
@@ -78,8 +78,7 @@ public final class ShapeOps {
    *      operand representing a shape, followed by the dimensions of an operand representing a shape
    *      to append
    */
-  public <T extends Tensor & TNumber> Operand<T> append(Operand<T> shape,
-      Operand<T> shapeToAppend) {
+  public <T extends TNumber> Operand<T> append(Operand<T> shape, Operand<T> shapeToAppend) {
     return Shapes.append(scope, shape, shapeToAppend);
   }
 
@@ -91,7 +90,7 @@ public final class ShapeOps {
    * @param operand the operand to flatten
    * @return the reshaped operand
    */
-  public <T extends Tensor> Operand<T> flatten(Operand<T> operand) {
+  public <T extends TType> Operand<T> flatten(Operand<T> operand) {
     return Shapes.flatten(scope, operand);
   }
 
@@ -116,7 +115,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the reshaped operand
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Operand<T> flatten(Operand<T> operand,
+  public <T extends TType, U extends TNumber> Operand<T> flatten(Operand<T> operand,
       DataType<U> dType) {
     return Shapes.flatten(scope, operand, dType);
   }
@@ -130,7 +129,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the flattened shape
    */
-  public <U extends Tensor & TNumber> Operand<U> flatten(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> flatten(Shape<U> shape, DataType<U> dType) {
     return Shapes.flatten(scope, shape, dType);
   }
 
@@ -154,7 +153,7 @@ public final class ShapeOps {
    * @param <U> the shape datatype.
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
-  public <U extends Tensor & TNumber> Operand<U> head(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> head(Shape<U> shape, DataType<U> dType) {
     return Shapes.head(scope, shape, dType);
   }
 
@@ -178,7 +177,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the number of dimensions
    */
-  public <U extends Tensor & TNumber> Operand<U> numDimensions(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> numDimensions(Shape<U> shape, DataType<U> dType) {
     return Shapes.numDimensions(scope, shape, dType);
   }
 
@@ -222,8 +221,7 @@ public final class ShapeOps {
    *      operand representing the shape to prepend, followed by the dimensions of an operand
    *      representing the shape
    */
-  public <T extends Tensor & TNumber> Operand<T> prepend(Operand<T> shape,
-      Operand<T> shapeToPrepend) {
+  public <T extends TNumber> Operand<T> prepend(Operand<T> shape, Operand<T> shapeToPrepend) {
     return Shapes.prepend(scope, shape, shapeToPrepend);
   }
 
@@ -236,7 +234,7 @@ public final class ShapeOps {
    * @param axis the axis
    * @return the reshaped operand
    */
-  public <T extends Tensor> Operand<T> reduceDims(Operand<T> operand, Operand<TInt32> axis) {
+  public <T extends TType> Operand<T> reduceDims(Operand<T> operand, Operand<TInt32> axis) {
     return Shapes.reduceDims(scope, operand, axis);
   }
 
@@ -263,7 +261,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the reshaped operand
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Operand<T> reduceDims(Operand<T> operand,
+  public <T extends TType, U extends TNumber> Operand<T> reduceDims(Operand<T> operand,
       Operand<U> axis, DataType<U> dType) {
     return Shapes.reduceDims(scope, operand, axis, dType);
   }
@@ -278,7 +276,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the reduced shape
    */
-  public <U extends Tensor & TNumber> Operand<U> reduceDims(Shape<U> shape, Operand<U> axis,
+  public <U extends TNumber> Operand<U> reduceDims(Shape<U> shape, Operand<U> axis,
       DataType<U> dType) {
     return Shapes.reduceDims(scope, shape, axis, dType);
   }
@@ -302,7 +300,7 @@ public final class ShapeOps {
    * @param dim the dimension
    * @return the size of the specified dimension
    */
-  public <T extends Tensor> Operand<TInt32> size(Operand<T> input, Operand<TInt32> dim) {
+  public <T extends TType> Operand<TInt32> size(Operand<T> input, Operand<TInt32> dim) {
     return Shapes.size(scope, input, dim);
   }
 
@@ -315,7 +313,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the size
    */
-  public <U extends Tensor & TNumber> Operand<U> size(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> size(Shape<U> shape, DataType<U> dType) {
     return Shapes.size(scope, shape, dType);
   }
 
@@ -341,8 +339,8 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the size of the specified dimension
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Operand<U> size(Operand<T> input,
-      Operand<U> dim, DataType<U> dType) {
+  public <T extends TType, U extends TNumber> Operand<U> size(Operand<T> input, Operand<U> dim,
+      DataType<U> dType) {
     return Shapes.size(scope, input, dim, dType);
   }
 
@@ -356,8 +354,7 @@ public final class ShapeOps {
    * @param dType the shape datatype
    * @return the size of the specified dimension
    */
-  public <U extends Tensor & TNumber> Operand<U> size(Shape<U> shape, Operand<U> dim,
-      DataType<U> dType) {
+  public <U extends TNumber> Operand<U> size(Shape<U> shape, Operand<U> dim, DataType<U> dType) {
     return Shapes.size(scope, shape, dim, dType);
   }
 
@@ -381,7 +378,7 @@ public final class ShapeOps {
    * @param dType the shape datatype.
    * @return the squeezed shape
    */
-  public <U extends Tensor & TNumber> Operand<U> squeeze(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> squeeze(Shape<U> shape, DataType<U> dType) {
     return Shapes.squeeze(scope, shape, dType);
   }
 
@@ -409,7 +406,7 @@ public final class ShapeOps {
    * @return a 1-dimensional Operand that contains the dimension matching the last dimension of the
    *      Shape
    */
-  public <U extends Tensor & TNumber> Operand<U> tail(Shape<U> shape, DataType<U> dType) {
+  public <U extends TNumber> Operand<U> tail(Shape<U> shape, DataType<U> dType) {
     return Shapes.tail(scope, shape, dType);
   }
 
@@ -439,8 +436,7 @@ public final class ShapeOps {
    * @return a 1-dimensional operand with the dimensions matching * the first n dimensions of the
    *      shape
    */
-  public <U extends Tensor & TNumber> Operand<U> take(Shape<U> shape, Operand<U> n,
-      DataType<U> dType) {
+  public <U extends TNumber> Operand<U> take(Shape<U> shape, Operand<U> n, DataType<U> dType) {
     return Shapes.take(scope, shape, n, dType);
   }
 
@@ -454,8 +450,7 @@ public final class ShapeOps {
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the
    *      shape
    */
-  public <U extends Tensor & TNumber> Operand<TInt32> takeLast(Shape<TInt32> shape,
-      Operand<TInt32> n) {
+  public <U extends TNumber> Operand<TInt32> takeLast(Shape<TInt32> shape, Operand<TInt32> n) {
     return Shapes.takeLast(scope, shape, n);
   }
 
@@ -471,8 +466,7 @@ public final class ShapeOps {
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the
    *      shape
    */
-  public <U extends Tensor & TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n,
-      DataType<U> dType) {
+  public <U extends TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n, DataType<U> dType) {
     return Shapes.takeLast(scope, shape, n, dType);
   }
 }

@@ -25,13 +25,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Op peeks at the values at the specified key.  If the
@@ -40,7 +40,7 @@ import org.tensorflow.types.TInt64;
  * this op will block until it does.
  */
 @Operator
-public final class MapPeek extends RawOp implements Iterable<Operand<Tensor>> {
+public final class MapPeek extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.MapPeek}
@@ -101,8 +101,8 @@ public final class MapPeek extends RawOp implements Iterable<Operand<Tensor>> {
   @Endpoint(describeByClass = true)
   public static MapPeek create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapPeek", scope.makeOpName("MapPeek"));
-    opBuilder.addInput(key.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(key.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
@@ -164,7 +164,7 @@ public final class MapPeek extends RawOp implements Iterable<Operand<Tensor>> {
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
   

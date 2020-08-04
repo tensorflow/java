@@ -176,7 +176,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder setAttr(String name, Tensor<?> value) {
-    setAttrTensor(opHandle, name, value.nativeHandle());
+    setAttrTensor(opHandle, name, ((AbstractTensor)value).nativeHandle());
     return this;
   }
 

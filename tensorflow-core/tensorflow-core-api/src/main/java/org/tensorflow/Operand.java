@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -39,7 +40,22 @@ import org.tensorflow.types.family.TType;
  * tf.concat(split, tf.constant(0));
  * }</pre>
  */
-public interface Operand<T extends Tensor> extends Op {
+public interface Operand<T extends TType> extends Op {
+
+  /**
+   * Returns the symbolic handle of the tensor.
+   *
+   * <p>Inputs to TensorFlow operations are outputs of another TensorFlow operation. This method is
+   * used to obtain a symbolic handle that represents the computation of the input.
+   *
+   * <p>If a valid non-null value is provided as the {@code scope} of this operand, the implementor
+   * can program additional computations before returning its output. This might be required if,
+   * for instance, the implementor has not yet been added as a node to the graph.</p>
+   *
+   * @param scope if non-null, scope that can be used by the operand to produce a new output
+   * @see OperationBuilder#addInput(Output)
+   */
+  Output<T> asOutput(Scope scope);
 
   /**
    * Returns the symbolic handle of the tensor.
@@ -49,7 +65,9 @@ public interface Operand<T extends Tensor> extends Op {
    *
    * @see OperationBuilder#addInput(Output)
    */
-  Output<T> asOutput();
+  default Output<T> asOutput() {
+    return asOutput(null);
+  }
 
   /**
    * Returns this operand as a tensor.
@@ -65,17 +83,16 @@ public interface Operand<T extends Tensor> extends Op {
   }
 
   /**
-   * Returns the data of this operand.
+   * Returns this operand as a tensor of the given type.
    *
    * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asTensor().data()}
+   * <p>This helper method is equivalent to {@code asOutput().tensor()}
    *
-   * @return the tensor data
+   * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
-   * @deprecated use {@link #asTensor()} instead
+   * @throws IllegalArgumentException if the {@code dataType} is incompatible with tensor type
    */
-  @Deprecated
-  default T data() {
-    return asTensor();
+  default <U extends TType> U asTensor(DataType<U> dataType) {
+    return (U)asOutput().tensor().expect(dataType);
   }
 }

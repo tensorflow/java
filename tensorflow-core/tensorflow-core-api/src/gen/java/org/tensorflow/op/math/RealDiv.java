@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns x / y element-wise for real types.
@@ -38,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class RealDiv<T extends Tensor> extends RawOp implements Operand<T> {
+public final class RealDiv<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new RealDiv operation.
@@ -49,10 +49,10 @@ public final class RealDiv<T extends Tensor> extends RawOp implements Operand<T>
    * @return a new instance of RealDiv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> RealDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> RealDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("RealDiv", scope.makeOpName("RealDiv"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(y.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(y.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RealDiv<T>(opBuilder.build());
   }
@@ -64,7 +64,7 @@ public final class RealDiv<T extends Tensor> extends RawOp implements Operand<T>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

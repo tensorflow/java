@@ -24,13 +24,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Convert CSV records to tensors. Each column maps to one tensor.
@@ -40,7 +40,7 @@ import org.tensorflow.types.TString;
  * Note that we allow leading and trailing spaces with int or float field.
  */
 @Operator(group = "io")
-public final class DecodeCsv extends RawOp implements Iterable<Operand<Tensor>> {
+public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.DecodeCsv}
@@ -105,8 +105,8 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<Tensor>> 
   @Endpoint(describeByClass = true)
   public static DecodeCsv create(Scope scope, Operand<TString> records, Iterable<Operand<?>> recordDefaults, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
-    opBuilder.addInput(records.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(recordDefaults));
+    opBuilder.addInput(records.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, recordDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -170,7 +170,7 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<Tensor>> 
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
   }
   

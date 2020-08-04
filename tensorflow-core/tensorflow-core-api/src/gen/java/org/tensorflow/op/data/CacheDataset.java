@@ -23,13 +23,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that caches elements from `input_dataset`.
@@ -39,7 +39,7 @@ import org.tensorflow.types.TString;
  * (e.g. cannot be opened, contains tensors of the wrong shape / size), an error
  * will the returned when used.
  */
-public final class CacheDataset extends RawOp implements Operand<Tensor> {
+public final class CacheDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new CacheDataset operation.
@@ -55,8 +55,8 @@ public final class CacheDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static CacheDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDataset", scope.makeOpName("CacheDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(filename.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(filename.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -79,8 +79,8 @@ public final class CacheDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

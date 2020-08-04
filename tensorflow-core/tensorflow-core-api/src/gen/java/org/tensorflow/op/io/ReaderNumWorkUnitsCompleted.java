@@ -43,7 +43,7 @@ public final class ReaderNumWorkUnitsCompleted extends RawOp implements Operand<
   @Endpoint(describeByClass = true)
   public static ReaderNumWorkUnitsCompleted create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumWorkUnitsCompletedV2", scope.makeOpName("ReaderNumWorkUnitsCompleted"));
-    opBuilder.addInput(readerHandle.asOutput());
+    opBuilder.addInput(readerHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderNumWorkUnitsCompleted(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class ReaderNumWorkUnitsCompleted extends RawOp implements Operand<
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return unitsCompleted;
   }
   

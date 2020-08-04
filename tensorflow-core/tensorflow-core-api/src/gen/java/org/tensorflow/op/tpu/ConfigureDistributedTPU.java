@@ -166,7 +166,7 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return topology;
   }
   

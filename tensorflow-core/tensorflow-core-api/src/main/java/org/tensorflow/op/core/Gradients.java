@@ -27,6 +27,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
@@ -96,13 +97,15 @@ public final class Gradients implements Iterable<Operand<?>> {
     if (options != null) {
       for (Options opts : options) {
         if (opts.dx != null) {
-          dx = Operands.asOutputs(opts.dx);
+          dx = Operands.asOutputs(scope, opts.dx);
         }
       }
     }
-    Output<?>[] dy =
-        graph.addGradients(
-            scope.makeOpName("Gradients"), Operands.asOutputs(y), Operands.asOutputs(x), dx);
+    Output<?>[] dy = graph.addGradients(
+        scope.makeOpName("Gradients"),
+        Operands.asOutputs(scope, y),
+        Operands.asOutputs(scope, x), dx
+    );
     return new Gradients(Arrays.asList(dy));
   }
 
@@ -157,7 +160,7 @@ public final class Gradients implements Iterable<Operand<?>> {
    * @param index The index of the output among the gradients added by this operation
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tensor> Output<T> dy(int index) {
+  public <T extends TType> Output<T> dy(int index) {
     return (Output<T>) dy.get(index);
   }
 

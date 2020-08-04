@@ -272,7 +272,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
 
       @Override
       public boolean hasNext() {
-        return nextOptional.hasValue().data().getBoolean();
+        return nextOptional.hasValue().asTensor().getBoolean();
       }
 
       @Override

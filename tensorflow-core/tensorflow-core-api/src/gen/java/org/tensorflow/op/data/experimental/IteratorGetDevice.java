@@ -42,7 +42,7 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static IteratorGetDevice create(Scope scope, Operand<?> resource) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalIteratorGetDevice", scope.makeOpName("IteratorGetDevice"));
-    opBuilder.addInput(resource.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IteratorGetDevice(opBuilder.build());
   }
@@ -54,7 +54,7 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return device;
   }
   

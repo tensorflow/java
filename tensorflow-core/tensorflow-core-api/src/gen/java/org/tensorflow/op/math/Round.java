@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Rounds the values of a tensor to the nearest integer, element-wise.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "math")
-public final class Round<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Round<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Round operation.
@@ -46,9 +46,9 @@ public final class Round<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Round
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Round<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TType> Round<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Round", scope.makeOpName("Round"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Round<T>(opBuilder.build());
   }
@@ -60,7 +60,7 @@ public final class Round<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

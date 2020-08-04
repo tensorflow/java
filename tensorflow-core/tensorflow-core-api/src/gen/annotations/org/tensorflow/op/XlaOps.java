@@ -19,7 +19,6 @@ package org.tensorflow.op;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.xla.BroadcastHelper;
 import org.tensorflow.op.xla.ClusterOutput;
@@ -40,6 +39,7 @@ import org.tensorflow.op.xla.Sharding;
 import org.tensorflow.op.xla.Sort;
 import org.tensorflow.op.xla.Svd;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code xla} operations as {@link Op Op}s
@@ -66,8 +66,8 @@ public final class XlaOps {
    * @param broadcastDims an XLA-style broadcast dimension specification
    * @return a new instance of BroadcastHelper
    */
-  public <T extends Tensor, U extends Tensor & TNumber> BroadcastHelper<T> broadcastHelper(
-      Operand<T> lhs, Operand<T> rhs, Operand<U> broadcastDims) {
+  public <T extends TType, U extends TNumber> BroadcastHelper<T> broadcastHelper(Operand<T> lhs,
+      Operand<T> rhs, Operand<U> broadcastDims) {
     return BroadcastHelper.create(scope, lhs, rhs, broadcastDims);
   }
 
@@ -78,7 +78,7 @@ public final class XlaOps {
    * @param input
    * @return a new instance of ClusterOutput
    */
-  public <T extends Tensor> ClusterOutput<T> clusterOutput(Operand<T> input) {
+  public <T extends TType> ClusterOutput<T> clusterOutput(Operand<T> input) {
     return ClusterOutput.create(scope, input);
   }
 
@@ -100,7 +100,7 @@ public final class XlaOps {
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
    * @return a new instance of Conv
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Conv<T> conv(Operand<T> lhs, Operand<T> rhs,
+  public <T extends TType, U extends TNumber> Conv<T> conv(Operand<T> lhs, Operand<T> rhs,
       Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation, Operand<U> rhsDilation,
       Operand<U> featureGroupCount, String dimensionNumbers, String precisionConfig) {
     return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig);
@@ -137,7 +137,7 @@ public final class XlaOps {
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
    * @return a new instance of Dot
    */
-  public <T extends Tensor> Dot<T> dot(Operand<T> lhs, Operand<T> rhs, String dimensionNumbers,
+  public <T extends TType> Dot<T> dot(Operand<T> lhs, Operand<T> rhs, String dimensionNumbers,
       String precisionConfig) {
     return Dot.create(scope, lhs, rhs, dimensionNumbers, precisionConfig);
   }
@@ -163,8 +163,8 @@ public final class XlaOps {
    * @param sizeIndices
    * @return a new instance of DynamicSlice
    */
-  public <T extends Tensor, U extends Tensor & TNumber> DynamicSlice<T> dynamicSlice(
-      Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
+  public <T extends TType, U extends TNumber> DynamicSlice<T> dynamicSlice(Operand<T> input,
+      Operand<U> startIndices, Operand<U> sizeIndices) {
     return DynamicSlice.create(scope, input, startIndices, sizeIndices);
   }
 
@@ -188,7 +188,7 @@ public final class XlaOps {
    *  `input`.
    * @return a new instance of DynamicUpdateSlice
    */
-  public <T extends Tensor, U extends Tensor & TNumber> DynamicUpdateSlice<T> dynamicUpdateSlice(
+  public <T extends TType, U extends TNumber> DynamicUpdateSlice<T> dynamicUpdateSlice(
       Operand<T> input, Operand<T> update, Operand<U> indices) {
     return DynamicUpdateSlice.create(scope, input, update, indices);
   }
@@ -205,7 +205,7 @@ public final class XlaOps {
    * @param equation
    * @return a new instance of Einsum
    */
-  public <T extends Tensor> Einsum<T> einsum(Operand<T> a, Operand<T> b, String equation) {
+  public <T extends TType> Einsum<T> einsum(Operand<T> a, Operand<T> b, String equation) {
     return Einsum.create(scope, a, b, equation);
   }
 
@@ -222,7 +222,7 @@ public final class XlaOps {
    * @param indicesAreSorted Boolean indicating if the indices are sorted.
    * @return a new instance of Gather
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Gather<T> gather(Operand<T> operand,
+  public <T extends TType, U extends TNumber> Gather<T> gather(Operand<T> operand,
       Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers,
       Boolean indicesAreSorted) {
     return Gather.create(scope, operand, startIndices, sliceSizes, dimensionNumbers, indicesAreSorted);
@@ -242,8 +242,8 @@ public final class XlaOps {
    * @param values A `Tensor` of type V.
    * @return a new instance of KeyValueSort
    */
-  public <T extends Tensor & TNumber, U extends Tensor> KeyValueSort<T, U> keyValueSort(
-      Operand<T> keys, Operand<U> values) {
+  public <T extends TNumber, U extends TType> KeyValueSort<T, U> keyValueSort(Operand<T> keys,
+      Operand<U> values) {
     return KeyValueSort.create(scope, keys, values);
   }
 
@@ -261,9 +261,8 @@ public final class XlaOps {
    * @param paddingInterior the padding to apply between each input element.
    * @return a new instance of Pad
    */
-  public <T extends Tensor, U extends Tensor & TNumber> Pad<T> pad(Operand<T> input,
-      Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh,
-      Operand<U> paddingInterior) {
+  public <T extends TType, U extends TNumber> Pad<T> pad(Operand<T> input, Operand<T> paddingValue,
+      Operand<U> paddingLow, Operand<U> paddingHigh, Operand<U> paddingInterior) {
     return Pad.create(scope, input, paddingValue, paddingLow, paddingHigh, paddingInterior);
   }
 
@@ -279,7 +278,7 @@ public final class XlaOps {
    * @param shape The shape of the tensor.
    * @return a new instance of Recv
    */
-  public <T extends Tensor> Recv<T> recv(DataType<T> dtype, String tensorName, Shape shape) {
+  public <T extends TType> Recv<T> recv(DataType<T> dtype, String tensorName, Shape shape) {
     return Recv.create(scope, dtype, tensorName, shape);
   }
 
@@ -312,7 +311,7 @@ public final class XlaOps {
    * @param epsilon the tolerance ratio.
    * @return a new instance of SelfAdjointEig
    */
-  public <T extends Tensor> SelfAdjointEig<T> selfAdjointEig(Operand<T> a, Boolean lower,
+  public <T extends TType> SelfAdjointEig<T> selfAdjointEig(Operand<T> a, Boolean lower,
       Long maxIter, Float epsilon) {
     return SelfAdjointEig.create(scope, a, lower, maxIter, epsilon);
   }
@@ -327,7 +326,7 @@ public final class XlaOps {
    * @param tensorName A string key that identifies the channel.
    * @return a new instance of Send
    */
-  public <T extends Tensor> Send send(Operand<T> tensor, String tensorName) {
+  public <T extends TType> Send send(Operand<T> tensor, String tensorName) {
     return Send.create(scope, tensor, tensorName);
   }
 
@@ -338,7 +337,7 @@ public final class XlaOps {
    * @param input
    * @return a new instance of Sharding
    */
-  public <T extends Tensor> Sharding<T> sharding(Operand<T> input) {
+  public <T extends TType> Sharding<T> sharding(Operand<T> input) {
     return Sharding.create(scope, input);
   }
 
@@ -354,7 +353,7 @@ public final class XlaOps {
    * @param input A `Tensor` of type T.
    * @return a new instance of Sort
    */
-  public <T extends Tensor> Sort<T> sort(Operand<T> input) {
+  public <T extends TType> Sort<T> sort(Operand<T> input) {
     return Sort.create(scope, input);
   }
 
@@ -376,7 +375,7 @@ public final class XlaOps {
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
    * @return a new instance of Svd
    */
-  public <T extends Tensor> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
+  public <T extends TType> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
       String precisionConfig) {
     return Svd.create(scope, a, maxIter, epsilon, precisionConfig);
   }

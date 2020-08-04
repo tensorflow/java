@@ -53,7 +53,7 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static MergeSummary create(Scope scope, Iterable<Operand<TString>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeSummary", scope.makeOpName("MergeSummary"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MergeSummary(opBuilder.build());
   }
@@ -66,7 +66,7 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return summary;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -34,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class CountUpTo<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class CountUpTo<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new CountUpTo operation.
@@ -46,9 +45,9 @@ public final class CountUpTo<T extends Tensor & TNumber> extends RawOp implement
    * @return a new instance of CountUpTo
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
+  public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
-    opBuilder.addInput(ref.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("limit", limit);
     return new CountUpTo<T>(opBuilder.build());
@@ -63,7 +62,7 @@ public final class CountUpTo<T extends Tensor & TNumber> extends RawOp implement
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

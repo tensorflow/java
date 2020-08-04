@@ -17,6 +17,14 @@
 
 package org.tensorflow.types.family;
 
+import org.tensorflow.Operand;
+import org.tensorflow.Operation;
+import org.tensorflow.Output;
+import org.tensorflow.Tensor;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
+import org.tensorflow.op.core.Constant;
+
 /**
  * Marker interface for all tensor types.
  *
@@ -25,13 +33,31 @@ package org.tensorflow.types.family;
  * between operands of a computation at compile-time. For example:
  *
  * <pre>{@code
- * Tensor<TFloat32> tensor1 = TFloat32.ofShape(2, 3, 2);
- * Tensor<TFloat32> tensor2 = TFloat32.ofShape(2, 3, 2);
- * Tensor<TInt32> tensor3 = TInt32.ofShape(2, 3, 2);
+ * TFloat32 tensor1 = TFloat32.ofShape(2, 3, 2);
+ * TFloat32 tensor2 = TFloat32.ofShape(2, 3, 2);
+ * TInt32 tensor3 = TInt32.ofShape(2, 3, 2);
  *
  * Ops tf = Ops.create();
- * tf.math.add(tf.constant(tensor1), tf.constant(tensor2));  // OK
- * tf.math.add(tf.constant(tensor1), tf.constant(tensor3));  // Compilation failure
+ * tf.math.add(tensor1, tensor2);  // OK
+ * tf.math.add(tensor1, tensor3);  // Compilation failure
  * }</pre>
  */
-public interface TType {}
+public interface TType<T extends TType, U> extends Tensor<U>, Operand<T> {
+
+  default Constant<T> toConstant(Scope scope) {
+    if (scope == null) {
+      throw new IllegalArgumentException("Scope is required");
+    }
+    return Constant.create(scope, (T)this);
+  }
+
+  @Override
+  default Output<T> asOutput(Scope scope) {
+    return toConstant(scope).asOutput();
+  }
+
+  @Override
+  default Operation op() {
+    throw new IllegalStateException("A tensor is not attached to a specific operation");
+  }
+}

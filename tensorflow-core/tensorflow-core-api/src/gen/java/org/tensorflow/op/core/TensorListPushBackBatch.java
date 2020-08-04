@@ -21,16 +21,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator
-public final class TensorListPushBackBatch extends RawOp implements Operand<Tensor> {
+public final class TensorListPushBackBatch extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListPushBackBatch operation.
@@ -41,10 +41,10 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<Tens
    * @return a new instance of TensorListPushBackBatch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
+  public static <T extends TType> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
-    opBuilder.addInput(inputHandles.asOutput());
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(inputHandles.asOutput(scope));
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListPushBackBatch(opBuilder.build());
   }
@@ -57,8 +57,8 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<Tens
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) outputHandles;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) outputHandles;
   }
   
   private Output<?> outputHandles;

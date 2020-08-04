@@ -46,7 +46,7 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
   @Endpoint(describeByClass = true)
   public static ReaderNumRecordsProduced create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumRecordsProducedV2", scope.makeOpName("ReaderNumRecordsProduced"));
-    opBuilder.addInput(readerHandle.asOutput());
+    opBuilder.addInput(readerHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderNumRecordsProduced(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return recordsProduced;
   }
   

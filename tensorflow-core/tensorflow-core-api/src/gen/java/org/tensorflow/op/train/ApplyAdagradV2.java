@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adagrad scheme.
@@ -35,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code out()} output
  */
-public final class ApplyAdagradV2<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ApplyAdagradV2<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradV2}
@@ -80,13 +80,13 @@ public final class ApplyAdagradV2<T extends Tensor> extends RawOp implements Ope
    * @return a new instance of ApplyAdagradV2
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ApplyAdagradV2<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdagradV2<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradV2", scope.makeOpName("ApplyAdagradV2"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(accum.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(accum.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -125,7 +125,7 @@ public final class ApplyAdagradV2<T extends Tensor> extends RawOp implements Ope
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

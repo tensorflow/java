@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs all keys and values in the table.
@@ -35,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <U> data type for {@code values()} output
  */
 @Operator
-public final class LookupTableExport<T extends Tensor, U extends Tensor> extends RawOp {
+public final class LookupTableExport<T extends TType, U extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new LookupTableExport operation.
@@ -47,9 +47,9 @@ public final class LookupTableExport<T extends Tensor, U extends Tensor> extends
    * @return a new instance of LookupTableExport
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
+  public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
-    opBuilder.addInput(tableHandle.asOutput());
+    opBuilder.addInput(tableHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tkeys", Tkeys);
     opBuilder.setAttr("Tvalues", Tvalues);

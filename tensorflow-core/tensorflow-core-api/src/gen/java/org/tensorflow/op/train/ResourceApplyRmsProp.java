@@ -20,11 +20,11 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the RMSProp algorithm.
@@ -80,16 +80,16 @@ public final class ResourceApplyRmsProp extends RawOp {
    * @return a new instance of ResourceApplyRmsProp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ResourceApplyRmsProp create(Scope scope, Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ResourceApplyRmsProp create(Scope scope, Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyRMSProp", scope.makeOpName("ResourceApplyRmsProp"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(ms.asOutput());
-    opBuilder.addInput(mom.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(rho.asOutput());
-    opBuilder.addInput(momentum.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(ms.asOutput(scope));
+    opBuilder.addInput(mom.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(rho.asOutput(scope));
+    opBuilder.addInput(momentum.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

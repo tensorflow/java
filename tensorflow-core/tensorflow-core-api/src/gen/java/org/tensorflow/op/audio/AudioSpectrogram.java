@@ -93,7 +93,7 @@ public final class AudioSpectrogram extends RawOp implements Operand<TFloat32> {
   @Endpoint(describeByClass = true)
   public static AudioSpectrogram create(Scope scope, Operand<TFloat32> input, Long windowSize, Long stride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AudioSpectrogram", scope.makeOpName("AudioSpectrogram"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("window_size", windowSize);
     opBuilder.setAttr("stride", stride);
@@ -123,7 +123,7 @@ public final class AudioSpectrogram extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return spectrogram;
   }
   

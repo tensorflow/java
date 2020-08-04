@@ -51,10 +51,10 @@ public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand
   @Endpoint(describeByClass = true)
   public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Iterable<Operand<TInt32>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeStatsSummary", scope.makeOpName("BoostedTreesMakeStatsSummary"));
-    opBuilder.addInput(nodeIds.asOutput());
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(hessians.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(bucketizedFeaturesList));
+    opBuilder.addInput(nodeIds.asOutput(scope));
+    opBuilder.addInput(gradients.asOutput(scope));
+    opBuilder.addInput(hessians.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, bucketizedFeaturesList));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     opBuilder.setAttr("num_buckets", numBuckets);
@@ -69,7 +69,7 @@ public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return statsSummary;
   }
   

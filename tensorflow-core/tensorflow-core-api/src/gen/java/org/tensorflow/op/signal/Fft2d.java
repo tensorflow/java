@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * 2D fast Fourier transform.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "signal")
-public final class Fft2d<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Fft2d<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Fft2d operation.
@@ -46,9 +46,9 @@ public final class Fft2d<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Fft2d
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Fft2d<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Fft2d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("FFT2D", scope.makeOpName("Fft2d"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Fft2d<T>(opBuilder.build());
   }
@@ -66,7 +66,7 @@ public final class Fft2d<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

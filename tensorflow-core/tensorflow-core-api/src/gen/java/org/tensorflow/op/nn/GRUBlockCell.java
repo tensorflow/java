@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -78,7 +77,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code r()} output
  */
-public final class GRUBlockCell<T extends Tensor & TNumber> extends RawOp {
+public final class GRUBlockCell<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new GRUBlockCell operation.
@@ -93,14 +92,14 @@ public final class GRUBlockCell<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of GRUBlockCell
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> GRUBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
+  public static <T extends TNumber> GRUBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCell", scope.makeOpName("GRUBlockCell"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(hPrev.asOutput());
-    opBuilder.addInput(wRu.asOutput());
-    opBuilder.addInput(wC.asOutput());
-    opBuilder.addInput(bRu.asOutput());
-    opBuilder.addInput(bC.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(hPrev.asOutput(scope));
+    opBuilder.addInput(wRu.asOutput(scope));
+    opBuilder.addInput(wC.asOutput(scope));
+    opBuilder.addInput(bRu.asOutput(scope));
+    opBuilder.addInput(bC.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new GRUBlockCell<T>(opBuilder.build());
   }

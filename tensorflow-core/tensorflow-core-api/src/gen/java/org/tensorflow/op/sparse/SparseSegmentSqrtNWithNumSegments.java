@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -44,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "sparse")
-public final class SparseSegmentSqrtNWithNumSegments<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SparseSegmentSqrtNWithNumSegments operation.
@@ -57,12 +56,12 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends Tensor & TNumber>
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber, V extends Tensor & TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(segmentIds.asOutput());
-    opBuilder.addInput(numSegments.asOutput());
+    opBuilder.addInput(data.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(segmentIds.asOutput(scope));
+    opBuilder.addInput(numSegments.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentSqrtNWithNumSegments<T>(opBuilder.build());
   }
@@ -76,7 +75,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends Tensor & TNumber>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

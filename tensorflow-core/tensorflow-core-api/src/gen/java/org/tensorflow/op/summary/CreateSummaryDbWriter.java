@@ -44,11 +44,11 @@ public final class CreateSummaryDbWriter extends RawOp {
   @Endpoint(describeByClass = true)
   public static CreateSummaryDbWriter create(Scope scope, Operand<?> writer, Operand<TString> dbUri, Operand<TString> experimentName, Operand<TString> runName, Operand<TString> userName) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryDbWriter", scope.makeOpName("CreateSummaryDbWriter"));
-    opBuilder.addInput(writer.asOutput());
-    opBuilder.addInput(dbUri.asOutput());
-    opBuilder.addInput(experimentName.asOutput());
-    opBuilder.addInput(runName.asOutput());
-    opBuilder.addInput(userName.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
+    opBuilder.addInput(dbUri.asOutput(scope));
+    opBuilder.addInput(experimentName.asOutput(scope));
+    opBuilder.addInput(runName.asOutput(scope));
+    opBuilder.addInput(userName.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CreateSummaryDbWriter(opBuilder.build());
   }

@@ -31,7 +31,7 @@ public class OperandsTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
       Split<?> split = tf.split(tf.constant(0), tf.array(0, 1, 2), 3L);
-      Output<?>[] array = Operands.asOutputs(split.output());
+      Output<?>[] array = Operands.asOutputs(tf.scope(), split.output());
       assertEquals(split.output().size(), array.length);
       assertSame(array[0], split.output().get(0));
       assertSame(array[1], split.output().get(1));

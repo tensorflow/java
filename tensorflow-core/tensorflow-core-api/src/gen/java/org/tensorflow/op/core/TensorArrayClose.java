@@ -44,7 +44,7 @@ public final class TensorArrayClose extends RawOp {
   @Endpoint(describeByClass = true)
   public static TensorArrayClose create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayCloseV3", scope.makeOpName("TensorArrayClose"));
-    opBuilder.addInput(handle.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArrayClose(opBuilder.build());
   }

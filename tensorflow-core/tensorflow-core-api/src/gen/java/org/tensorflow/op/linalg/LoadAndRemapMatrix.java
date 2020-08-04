@@ -122,11 +122,11 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
   @Endpoint(describeByClass = true)
   public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath, Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping, Operand<TFloat32> initializingValues, Long numRows, Long numCols, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
-    opBuilder.addInput(ckptPath.asOutput());
-    opBuilder.addInput(oldTensorName.asOutput());
-    opBuilder.addInput(rowRemapping.asOutput());
-    opBuilder.addInput(colRemapping.asOutput());
-    opBuilder.addInput(initializingValues.asOutput());
+    opBuilder.addInput(ckptPath.asOutput(scope));
+    opBuilder.addInput(oldTensorName.asOutput(scope));
+    opBuilder.addInput(rowRemapping.asOutput(scope));
+    opBuilder.addInput(colRemapping.asOutput(scope));
+    opBuilder.addInput(initializingValues.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_rows", numRows);
     opBuilder.setAttr("num_cols", numCols);
@@ -158,7 +158,7 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return outputMatrix;
   }
   

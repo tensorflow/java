@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Wraps an arbitrary MLIR computation expressed as a module with a main() function.
@@ -66,7 +66,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  */
 @Operator
-public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<Tensor>> {
+public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Factory method to create a class wrapping a new MlirPassthroughOp operation.
@@ -80,7 +80,7 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
   @Endpoint(describeByClass = true)
   public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<DataType<?>> Toutputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MlirPassthroughOp", scope.makeOpName("MlirPassthroughOp"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mlir_module", mlirModule);
     DataType[] ToutputsArray = new DataType[Toutputs.size()];
@@ -99,7 +99,7 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
   

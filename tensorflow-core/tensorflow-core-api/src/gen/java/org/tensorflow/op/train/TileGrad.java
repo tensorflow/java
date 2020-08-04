@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the gradient of `Tile`.
@@ -38,7 +38,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "train")
-public final class TileGrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TileGrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TileGrad operation.
@@ -49,10 +49,10 @@ public final class TileGrad<T extends Tensor> extends RawOp implements Operand<T
    * @return a new instance of TileGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
+  public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(multiples.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(multiples.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TileGrad<T>(opBuilder.build());
   }
@@ -64,7 +64,7 @@ public final class TileGrad<T extends Tensor> extends RawOp implements Operand<T
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

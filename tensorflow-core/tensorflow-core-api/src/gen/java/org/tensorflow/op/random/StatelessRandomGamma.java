@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -37,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <V> data type for {@code output()} output
  */
-public final class StatelessRandomGamma<V extends Tensor & TNumber> extends RawOp implements Operand<V> {
+public final class StatelessRandomGamma<V extends TNumber> extends RawOp implements Operand<V> {
   
   /**
    * Factory method to create a class wrapping a new StatelessRandomGamma operation.
@@ -50,11 +49,11 @@ public final class StatelessRandomGamma<V extends Tensor & TNumber> extends RawO
    * @return a new instance of StatelessRandomGamma
    */
   @Endpoint(describeByClass = true)
-  public static <V extends Tensor & TNumber, T extends Tensor & TNumber, U extends Tensor & TNumber> StatelessRandomGamma<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> alpha) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomGamma<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> alpha) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGammaV2", scope.makeOpName("StatelessRandomGamma"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(alpha.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(alpha.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new StatelessRandomGamma<V>(opBuilder.build());
   }
@@ -67,7 +66,7 @@ public final class StatelessRandomGamma<V extends Tensor & TNumber> extends RawO
   }
   
   @Override
-  public Output<V> asOutput() {
+  public Output<V> asOutput(Scope scope) {
     return output;
   }
   

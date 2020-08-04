@@ -41,8 +41,8 @@ public final class ImportEvent extends RawOp {
   @Endpoint(describeByClass = true)
   public static ImportEvent create(Scope scope, Operand<?> writer, Operand<TString> event) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImportEvent", scope.makeOpName("ImportEvent"));
-    opBuilder.addInput(writer.asOutput());
-    opBuilder.addInput(event.asOutput());
+    opBuilder.addInput(writer.asOutput(scope));
+    opBuilder.addInput(event.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ImportEvent(opBuilder.build());
   }

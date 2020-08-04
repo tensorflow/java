@@ -23,20 +23,20 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that shuffles and repeats elements from `input_dataset`
  * <p>
  * pseudorandomly.
  */
-public final class ShuffleAndRepeatDataset extends RawOp implements Operand<Tensor> {
+public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new ShuffleAndRepeatDataset operation.
@@ -59,11 +59,11 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<Tens
   @Endpoint(describeByClass = true)
   public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDataset", scope.makeOpName("ShuffleAndRepeatDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(seed2.asOutput());
-    opBuilder.addInput(count.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(bufferSize.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(seed2.asOutput(scope));
+    opBuilder.addInput(count.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -86,8 +86,8 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<Tens
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

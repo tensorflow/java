@@ -76,8 +76,8 @@ public final class QueueEnqueueMany extends RawOp {
   @Endpoint(describeByClass = true)
   public static QueueEnqueueMany create(Scope scope, Operand<?> handle, Iterable<Operand<?>> components, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueEnqueueManyV2", scope.makeOpName("QueueEnqueueMany"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(components));
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, components));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

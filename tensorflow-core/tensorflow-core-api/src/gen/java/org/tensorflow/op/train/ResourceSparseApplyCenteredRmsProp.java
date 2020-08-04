@@ -20,12 +20,12 @@ package org.tensorflow.op.train;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
@@ -89,18 +89,18 @@ public final class ResourceSparseApplyCenteredRmsProp extends RawOp {
    * @return a new instance of ResourceSparseApplyCenteredRmsProp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> ResourceSparseApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType, U extends TNumber> ResourceSparseApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyCenteredRMSProp", scope.makeOpName("ResourceSparseApplyCenteredRmsProp"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(mg.asOutput());
-    opBuilder.addInput(ms.asOutput());
-    opBuilder.addInput(mom.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(rho.asOutput());
-    opBuilder.addInput(momentum.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(mg.asOutput(scope));
+    opBuilder.addInput(ms.asOutput(scope));
+    opBuilder.addInput(mom.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(rho.asOutput(scope));
+    opBuilder.addInput(momentum.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

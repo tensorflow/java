@@ -69,8 +69,8 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
   @Endpoint(describeByClass = true)
   public static EnqueueTPUEmbeddingIntegerBatch create(Scope scope, Iterable<Operand<TInt32>> batch, Operand<TString> modeOverride, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingIntegerBatch", scope.makeOpName("EnqueueTPUEmbeddingIntegerBatch"));
-    opBuilder.addInputList(Operands.asOutputs(batch));
-    opBuilder.addInput(modeOverride.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(scope, batch));
+    opBuilder.addInput(modeOverride.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

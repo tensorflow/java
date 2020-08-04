@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Interleave the values from the `data` tensors into a single tensor.
@@ -90,7 +90,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code merged()} output
  */
 @Operator
-public final class DynamicStitch<T extends Tensor> extends RawOp implements Operand<T> {
+public final class DynamicStitch<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DynamicStitch operation.
@@ -101,10 +101,10 @@ public final class DynamicStitch<T extends Tensor> extends RawOp implements Oper
    * @return a new instance of DynamicStitch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> DynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
+  public static <T extends TType> DynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicStitch", scope.makeOpName("DynamicStitch"));
-    opBuilder.addInputList(Operands.asOutputs(indices));
-    opBuilder.addInputList(Operands.asOutputs(data));
+    opBuilder.addInputList(Operands.asOutputs(scope, indices));
+    opBuilder.addInputList(Operands.asOutputs(scope, data));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DynamicStitch<T>(opBuilder.build());
   }
@@ -116,7 +116,7 @@ public final class DynamicStitch<T extends Tensor> extends RawOp implements Oper
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return merged;
   }
   

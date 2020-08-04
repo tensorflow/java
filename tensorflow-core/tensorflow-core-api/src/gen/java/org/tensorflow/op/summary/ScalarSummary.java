@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -47,10 +46,10 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
    * @return a new instance of ScalarSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ScalarSummary create(Scope scope, Operand<TString> tags, Operand<T> values) {
+  public static <T extends TNumber> ScalarSummary create(Scope scope, Operand<TString> tags, Operand<T> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
-    opBuilder.addInput(tags.asOutput());
-    opBuilder.addInput(values.asOutput());
+    opBuilder.addInput(tags.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ScalarSummary(opBuilder.build());
   }
@@ -63,7 +62,7 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return summary;
   }
   

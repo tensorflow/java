@@ -1,16 +1,14 @@
-package org.tensorflow.tensor;
+package org.tensorflow.types.tensor;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 
+/**
+ * A {@link Tensor} of floats.
+ */
 public interface FloatTensor extends FloatNdArray, Tensor<Float> {
 
   @Override
@@ -37,4 +35,3 @@ public interface FloatTensor extends FloatNdArray, Tensor<Float> {
   @Override
   FloatTensor write(FloatDataBuffer src);
 }
-

@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a Tensor into a serialized TensorProto proto.
@@ -42,9 +42,9 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
    * @return a new instance of SerializeTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SerializeTensor create(Scope scope, Operand<T> tensor) {
+  public static <T extends TType> SerializeTensor create(Scope scope, Operand<T> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeTensor", scope.makeOpName("SerializeTensor"));
-    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SerializeTensor(opBuilder.build());
   }
@@ -57,7 +57,7 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return serialized;
   }
   

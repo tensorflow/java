@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TUint8;
+import org.tensorflow.types.family.TType;
 
 /**
  * Compare values of `input` to `threshold` and pack resulting bits into a `uint8`.
@@ -65,10 +65,10 @@ public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
    * @return a new instance of CompareAndBitpack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> CompareAndBitpack create(Scope scope, Operand<T> input, Operand<T> threshold) {
+  public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input, Operand<T> threshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(threshold.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(threshold.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CompareAndBitpack(opBuilder.build());
   }
@@ -81,7 +81,7 @@ public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
   }
   
   @Override
-  public Output<TUint8> asOutput() {
+  public Output<TUint8> asOutput(Scope scope) {
     return output;
   }
   

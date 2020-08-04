@@ -45,7 +45,7 @@ public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static WorkerHeartbeat create(Scope scope, Operand<TString> request) {
     OperationBuilder opBuilder = scope.env().opBuilder("WorkerHeartbeat", scope.makeOpName("WorkerHeartbeat"));
-    opBuilder.addInput(request.asOutput());
+    opBuilder.addInput(request.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new WorkerHeartbeat(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return response;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
@@ -29,6 +28,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates quantized tensors along one dimension.
@@ -36,7 +36,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "quantization")
-public final class QuantizedConcat<T extends Tensor> extends RawOp {
+public final class QuantizedConcat<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new QuantizedConcat operation.
@@ -51,12 +51,12 @@ public final class QuantizedConcat<T extends Tensor> extends RawOp {
    * @return a new instance of QuantizedConcat
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim, Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins, Iterable<Operand<TFloat32>> inputMaxes) {
+  public static <T extends TType> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim, Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins, Iterable<Operand<TFloat32>> inputMaxes) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcat", scope.makeOpName("QuantizedConcat"));
-    opBuilder.addInput(concatDim.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder.addInputList(Operands.asOutputs(inputMins));
-    opBuilder.addInputList(Operands.asOutputs(inputMaxes));
+    opBuilder.addInput(concatDim.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, values));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputMins));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputMaxes));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new QuantizedConcat<T>(opBuilder.build());
   }

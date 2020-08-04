@@ -23,18 +23,18 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that passes a sliding window over `input_dataset`.
  */
-public final class SlidingWindowDataset extends RawOp implements Operand<Tensor> {
+public final class SlidingWindowDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new SlidingWindowDataset operation.
@@ -54,10 +54,10 @@ public final class SlidingWindowDataset extends RawOp implements Operand<Tensor>
   @Endpoint(describeByClass = true)
   public static SlidingWindowDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SlidingWindowDataset", scope.makeOpName("SlidingWindowDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(windowSize.asOutput());
-    opBuilder.addInput(windowShift.asOutput());
-    opBuilder.addInput(windowStride.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(windowSize.asOutput(scope));
+    opBuilder.addInput(windowShift.asOutput(scope));
+    opBuilder.addInput(windowStride.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
@@ -80,8 +80,8 @@ public final class SlidingWindowDataset extends RawOp implements Operand<Tensor>
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

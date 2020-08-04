@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * List of the given size with empty elements.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TNumber;
  * element_dtype: the desired type of elements in the list.
  */
 @Operator
-public final class TensorListReserve extends RawOp implements Operand<Tensor> {
+public final class TensorListReserve extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new TensorListReserve operation.
@@ -51,10 +51,10 @@ public final class TensorListReserve extends RawOp implements Operand<Tensor> {
    * @return a new instance of TensorListReserve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
+  public static <T extends TNumber, U extends TType> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
-    opBuilder.addInput(elementShape.asOutput());
-    opBuilder.addInput(numElements.asOutput());
+    opBuilder.addInput(elementShape.asOutput(scope));
+    opBuilder.addInput(numElements.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListReserve(opBuilder.build());
@@ -68,8 +68,8 @@ public final class TensorListReserve extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

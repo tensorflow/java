@@ -73,7 +73,7 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static DatasetToGraph create(Scope scope, Operand<?> inputDataset, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToGraphV2", scope.makeOpName("DatasetToGraph"));
-    opBuilder.addInput(inputDataset.asOutput());
+    opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -110,7 +110,7 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return graph;
   }
   

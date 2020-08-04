@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Tensor by indexing into the TensorList.
@@ -42,7 +42,7 @@ import org.tensorflow.types.TInt32;
  * @param <T> data type for {@code values()} output
  */
 @Operator
-public final class TensorListGather<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TensorListGather<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new TensorListGather operation.
@@ -55,11 +55,11 @@ public final class TensorListGather<T extends Tensor> extends RawOp implements O
    * @return a new instance of TensorListGather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, DataType<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGather", scope.makeOpName("TensorListGather"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
+    opBuilder.addInput(inputHandle.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(elementShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListGather<T>(opBuilder.build());
@@ -72,7 +72,7 @@ public final class TensorListGather<T extends Tensor> extends RawOp implements O
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return values;
   }
   

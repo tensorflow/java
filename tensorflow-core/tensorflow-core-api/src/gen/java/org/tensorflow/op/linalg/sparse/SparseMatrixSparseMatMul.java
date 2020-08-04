@@ -22,11 +22,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Sparse-matrix-multiplies two CSR matrices `a` and `b`.
@@ -104,7 +104,7 @@ import org.tensorflow.op.annotation.Operator;
  * adjoint_a: If True, `a` adjointed before multiplication.
  * adjoint_b: If True, `b` adjointed before multiplication.
  */
-public final class SparseMatrixSparseMatMul extends RawOp implements Operand<Tensor> {
+public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixSparseMatMul}
@@ -163,10 +163,10 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<Ten
    * @return a new instance of SparseMatrixSparseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
+  public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseMatMul", scope.makeOpName("SparseMatrixSparseMatMul"));
-    opBuilder.addInput(a.asOutput());
-    opBuilder.addInput(b.asOutput());
+    opBuilder.addInput(a.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     if (options != null) {
@@ -225,8 +225,8 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<Ten
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) c;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) c;
   }
   
   private Output<?> c;

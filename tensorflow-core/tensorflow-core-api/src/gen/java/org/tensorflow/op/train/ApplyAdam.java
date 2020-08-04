@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Adam algorithm.
@@ -38,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code out()} output
  */
 @Operator(group = "train")
-public final class ApplyAdam<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ApplyAdam<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.train.ApplyAdam}
@@ -88,18 +88,18 @@ public final class ApplyAdam<T extends Tensor> extends RawOp implements Operand<
    * @return a new instance of ApplyAdam
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> ApplyAdam<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  public static <T extends TType> ApplyAdam<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdam", scope.makeOpName("ApplyAdam"));
-    opBuilder.addInput(var.asOutput());
-    opBuilder.addInput(m.asOutput());
-    opBuilder.addInput(v.asOutput());
-    opBuilder.addInput(beta1Power.asOutput());
-    opBuilder.addInput(beta2Power.asOutput());
-    opBuilder.addInput(lr.asOutput());
-    opBuilder.addInput(beta1.asOutput());
-    opBuilder.addInput(beta2.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(var.asOutput(scope));
+    opBuilder.addInput(m.asOutput(scope));
+    opBuilder.addInput(v.asOutput(scope));
+    opBuilder.addInput(beta1Power.asOutput(scope));
+    opBuilder.addInput(beta2Power.asOutput(scope));
+    opBuilder.addInput(lr.asOutput(scope));
+    opBuilder.addInput(beta1.asOutput(scope));
+    opBuilder.addInput(beta2.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -138,7 +138,7 @@ public final class ApplyAdam<T extends Tensor> extends RawOp implements Operand<
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return out;
   }
   

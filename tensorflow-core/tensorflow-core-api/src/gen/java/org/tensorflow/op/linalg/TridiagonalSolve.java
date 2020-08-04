@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Solves tridiagonal systems of equations.
@@ -39,7 +39,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code output()} output
  */
-public final class TridiagonalSolve<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TridiagonalSolve<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.TridiagonalSolve}
@@ -75,10 +75,10 @@ public final class TridiagonalSolve<T extends Tensor> extends RawOp implements O
    * @return a new instance of TridiagonalSolve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals, Operand<T> rhs, Options... options) {
+  public static <T extends TType> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalSolve", scope.makeOpName("TridiagonalSolve"));
-    opBuilder.addInput(diagonals.asOutput());
-    opBuilder.addInput(rhs.asOutput());
+    opBuilder.addInput(diagonals.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -106,7 +106,7 @@ public final class TridiagonalSolve<T extends Tensor> extends RawOp implements O
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

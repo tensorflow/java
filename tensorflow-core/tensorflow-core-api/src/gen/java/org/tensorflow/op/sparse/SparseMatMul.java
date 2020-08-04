@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -101,10 +100,10 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
    * @return a new instance of SparseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
+  public static <T extends TNumber, U extends TNumber> SparseMatMul create(Scope scope, Operand<T> a, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
-    opBuilder.addInput(a.asOutput());
-    opBuilder.addInput(b.asOutput());
+    opBuilder.addInput(a.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -160,7 +159,7 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return product;
   }
   

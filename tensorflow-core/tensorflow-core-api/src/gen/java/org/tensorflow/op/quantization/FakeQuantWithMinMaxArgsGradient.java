@@ -91,8 +91,8 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
   @Endpoint(describeByClass = true)
   public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(inputs.asOutput());
+    opBuilder.addInput(gradients.asOutput(scope));
+    opBuilder.addInput(inputs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -150,7 +150,7 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return backprops;
   }
   

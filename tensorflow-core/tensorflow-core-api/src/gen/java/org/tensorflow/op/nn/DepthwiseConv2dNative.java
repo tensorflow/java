@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -52,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class DepthwiseConv2dNative<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DepthwiseConv2dNative<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.DepthwiseConv2dNative}
@@ -103,10 +102,10 @@ public final class DepthwiseConv2dNative<T extends Tensor & TNumber> extends Raw
    * @return a new instance of DepthwiseConv2dNative
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(filter.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(filter.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
@@ -160,7 +159,7 @@ public final class DepthwiseConv2dNative<T extends Tensor & TNumber> extends Raw
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

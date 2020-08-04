@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -32,7 +31,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixSolve<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class BatchMatrixSolve<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolve}
@@ -63,10 +62,10 @@ public final class BatchMatrixSolve<T extends Tensor & TNumber> extends RawOp im
    * @return a new instance of BatchMatrixSolve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  public static <T extends TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolve", scope.makeOpName("BatchMatrixSolve"));
-    opBuilder.addInput(matrix.asOutput());
-    opBuilder.addInput(rhs.asOutput());
+    opBuilder.addInput(matrix.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -92,7 +91,7 @@ public final class BatchMatrixSolve<T extends Tensor & TNumber> extends RawOp im
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class L2Loss<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class L2Loss<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new L2Loss operation.
@@ -48,9 +47,9 @@ public final class L2Loss<T extends Tensor & TNumber> extends RawOp implements O
    * @return a new instance of L2Loss
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
+  public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
     OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
-    opBuilder.addInput(t.asOutput());
+    opBuilder.addInput(t.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new L2Loss<T>(opBuilder.build());
   }
@@ -63,7 +62,7 @@ public final class L2Loss<T extends Tensor & TNumber> extends RawOp implements O
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

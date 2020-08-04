@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code product()} output
  */
 @Operator(group = "linalg")
-public final class Cross<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class Cross<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Cross operation.
@@ -49,10 +48,10 @@ public final class Cross<T extends Tensor & TNumber> extends RawOp implements Op
    * @return a new instance of Cross
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
+  public static <T extends TNumber> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cross", scope.makeOpName("Cross"));
-    opBuilder.addInput(a.asOutput());
-    opBuilder.addInput(b.asOutput());
+    opBuilder.addInput(a.asOutput(scope));
+    opBuilder.addInput(b.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Cross<T>(opBuilder.build());
   }
@@ -65,7 +64,7 @@ public final class Cross<T extends Tensor & TNumber> extends RawOp implements Op
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return product;
   }
   

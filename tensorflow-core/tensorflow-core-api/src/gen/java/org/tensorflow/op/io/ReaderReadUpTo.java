@@ -51,9 +51,9 @@ public final class ReaderReadUpTo extends RawOp {
   @Endpoint(describeByClass = true)
   public static ReaderReadUpTo create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle, Operand<TInt64> numRecords) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadUpToV2", scope.makeOpName("ReaderReadUpTo"));
-    opBuilder.addInput(readerHandle.asOutput());
-    opBuilder.addInput(queueHandle.asOutput());
-    opBuilder.addInput(numRecords.asOutput());
+    opBuilder.addInput(readerHandle.asOutput(scope));
+    opBuilder.addInput(queueHandle.asOutput(scope));
+    opBuilder.addInput(numRecords.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderReadUpTo(opBuilder.build());
   }

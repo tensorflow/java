@@ -25,12 +25,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Dequeues `n` tuples of one or more tensors from the given queue.
@@ -54,7 +54,7 @@ import org.tensorflow.types.TInt32;
  * component of the dequeued tuple.
  */
 @Operator(group = "io")
-public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<Tensor>> {
+public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<TType>> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.io.QueueDequeueUpTo}
@@ -90,8 +90,8 @@ public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<Te
   @Endpoint(describeByClass = true)
   public static QueueDequeueUpTo create(Scope scope, Operand<?> handle, Operand<TInt32> n, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueUpToV2", scope.makeOpName("QueueDequeueUpTo"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(n.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(n.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
@@ -126,7 +126,7 @@ public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<Te
   
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<Tensor>> iterator() {
+  public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
   }
   

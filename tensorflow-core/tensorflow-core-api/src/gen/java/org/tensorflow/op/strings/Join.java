@@ -74,7 +74,7 @@ public final class Join extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Join create(Scope scope, Iterable<Operand<TString>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringJoin", scope.makeOpName("Join"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -100,7 +100,7 @@ public final class Join extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return output;
   }
   

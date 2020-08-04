@@ -46,7 +46,7 @@ public final class QueueIsClosed extends RawOp implements Operand<TBool> {
   @Endpoint(describeByClass = true)
   public static QueueIsClosed create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueIsClosedV2", scope.makeOpName("QueueIsClosed"));
-    opBuilder.addInput(handle.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new QueueIsClosed(opBuilder.build());
   }
@@ -58,7 +58,7 @@ public final class QueueIsClosed extends RawOp implements Operand<TBool> {
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return isClosed;
   }
   

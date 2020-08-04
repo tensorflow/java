@@ -42,7 +42,7 @@ public final class TensorForestTreeSerialize extends RawOp implements Operand<TS
   @Endpoint(describeByClass = true)
   public static TensorForestTreeSerialize create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSerialize", scope.makeOpName("TensorForestTreeSerialize"));
-    opBuilder.addInput(treeHandle.asOutput());
+    opBuilder.addInput(treeHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorForestTreeSerialize(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class TensorForestTreeSerialize extends RawOp implements Operand<TS
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return treeConfig;
   }
   

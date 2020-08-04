@@ -55,9 +55,9 @@ public final class TensorArrayGradWithShape extends RawOp {
   @Endpoint(describeByClass = true)
   public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradWithShape", scope.makeOpName("TensorArrayGradWithShape"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder.addInput(flowIn.asOutput());
-    opBuilder.addInput(shapeToPrepend.asOutput());
+    opBuilder.addInput(handle.asOutput(scope));
+    opBuilder.addInput(flowIn.asOutput(scope));
+    opBuilder.addInput(shapeToPrepend.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("source", source);
     return new TensorArrayGradWithShape(opBuilder.build());

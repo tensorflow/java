@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -43,7 +42,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code values()} output
  */
 @Operator(group = "nn")
-public final class NthElement<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class NthElement<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.NthElement}
@@ -76,10 +75,10 @@ public final class NthElement<T extends Tensor & TNumber> extends RawOp implemen
    * @return a new instance of NthElement
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> NthElement<T> create(Scope scope, Operand<T> input, Operand<TInt32> n, Options... options) {
+  public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input, Operand<TInt32> n, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NthElement", scope.makeOpName("NthElement"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(n.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(n.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -107,7 +106,7 @@ public final class NthElement<T extends Tensor & TNumber> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return values;
   }
   

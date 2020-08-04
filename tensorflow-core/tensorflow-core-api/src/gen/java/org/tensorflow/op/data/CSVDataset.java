@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
@@ -32,11 +31,12 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  */
 @Operator(group = "data")
-public final class CSVDataset extends RawOp implements Operand<Tensor> {
+public final class CSVDataset extends RawOp implements Operand<TType> {
   
   /**
    * Factory method to create a class wrapping a new CSVDataset operation.
@@ -57,15 +57,15 @@ public final class CSVDataset extends RawOp implements Operand<Tensor> {
   @Endpoint(describeByClass = true)
   public static CSVDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header, Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue, Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSVDataset", scope.makeOpName("CSVDataset"));
-    opBuilder.addInput(filenames.asOutput());
-    opBuilder.addInput(compressionType.asOutput());
-    opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.addInput(header.asOutput());
-    opBuilder.addInput(fieldDelim.asOutput());
-    opBuilder.addInput(useQuoteDelim.asOutput());
-    opBuilder.addInput(naValue.asOutput());
-    opBuilder.addInput(selectCols.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(recordDefaults));
+    opBuilder.addInput(filenames.asOutput(scope));
+    opBuilder.addInput(compressionType.asOutput(scope));
+    opBuilder.addInput(bufferSize.asOutput(scope));
+    opBuilder.addInput(header.asOutput(scope));
+    opBuilder.addInput(fieldDelim.asOutput(scope));
+    opBuilder.addInput(useQuoteDelim.asOutput(scope));
+    opBuilder.addInput(naValue.asOutput(scope));
+    opBuilder.addInput(selectCols.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, recordDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
@@ -83,8 +83,8 @@ public final class CSVDataset extends RawOp implements Operand<Tensor> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

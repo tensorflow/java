@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -42,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class RandomCrop<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class RandomCrop<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.image.RandomCrop}
@@ -84,10 +83,10 @@ public final class RandomCrop<T extends Tensor & TNumber> extends RawOp implemen
    * @return a new instance of RandomCrop
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<TInt64> size, Options... options) {
+  public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<TInt64> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
-    opBuilder.addInput(image.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(image.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -126,7 +125,7 @@ public final class RandomCrop<T extends Tensor & TNumber> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

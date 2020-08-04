@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -44,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class LinSpace<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class LinSpace<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new LinSpace operation.
@@ -56,11 +55,11 @@ public final class LinSpace<T extends Tensor & TNumber> extends RawOp implements
    * @return a new instance of LinSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber, U extends Tensor & TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
+  public static <T extends TNumber, U extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
     OperationBuilder opBuilder = scope.env().opBuilder("LinSpace", scope.makeOpName("LinSpace"));
-    opBuilder.addInput(start.asOutput());
-    opBuilder.addInput(stop.asOutput());
-    opBuilder.addInput(num.asOutput());
+    opBuilder.addInput(start.asOutput(scope));
+    opBuilder.addInput(stop.asOutput(scope));
+    opBuilder.addInput(num.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LinSpace<T>(opBuilder.build());
   }
@@ -73,7 +72,7 @@ public final class LinSpace<T extends Tensor & TNumber> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -21,17 +21,17 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "linalg")
-public final class BatchMatrixDiag<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BatchMatrixDiag<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BatchMatrixDiag operation.
@@ -41,9 +41,9 @@ public final class BatchMatrixDiag<T extends Tensor> extends RawOp implements Op
    * @return a new instance of BatchMatrixDiag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> BatchMatrixDiag<T> create(Scope scope, Operand<T> diagonal) {
+  public static <T extends TType> BatchMatrixDiag<T> create(Scope scope, Operand<T> diagonal) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiag", scope.makeOpName("BatchMatrixDiag"));
-    opBuilder.addInput(diagonal.asOutput());
+    opBuilder.addInput(diagonal.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchMatrixDiag<T>(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class BatchMatrixDiag<T extends Tensor> extends RawOp implements Op
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

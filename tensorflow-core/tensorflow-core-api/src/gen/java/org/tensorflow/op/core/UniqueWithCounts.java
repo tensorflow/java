@@ -22,13 +22,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Finds unique elements along an axis of a tensor.
@@ -81,7 +81,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <V> data type for {@code idx()} output
  */
 @Operator
-public final class UniqueWithCounts<T extends Tensor, V extends Tensor & TNumber> extends RawOp {
+public final class UniqueWithCounts<T extends TType, V extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new UniqueWithCounts operation.
@@ -94,10 +94,10 @@ public final class UniqueWithCounts<T extends Tensor, V extends Tensor & TNumber
    * @return a new instance of UniqueWithCounts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, V extends Tensor & TNumber, U extends Tensor & TNumber> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
+  public static <T extends TType, V extends TNumber, U extends TNumber> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueWithCountsV2", scope.makeOpName("UniqueWithCounts"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(axis.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(axis.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_idx", outIdx);
     return new UniqueWithCounts<T, V>(opBuilder.build());
@@ -113,7 +113,7 @@ public final class UniqueWithCounts<T extends Tensor, V extends Tensor & TNumber
    * @return a new instance of UniqueWithCounts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> UniqueWithCounts<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
+  public static <T extends TType, U extends TNumber> UniqueWithCounts<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
     return create(scope, x, axis, TInt32.DTYPE);
   }
   

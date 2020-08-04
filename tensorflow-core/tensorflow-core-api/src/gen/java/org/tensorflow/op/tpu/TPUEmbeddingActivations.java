@@ -53,8 +53,8 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
   @Endpoint(describeByClass = true)
   public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable, Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUEmbeddingActivations", scope.makeOpName("TPUEmbeddingActivations"));
-    opBuilder.addInput(embeddingVariable.asOutput());
-    opBuilder.addInput(slicedActivations.asOutput());
+    opBuilder.addInput(embeddingVariable.asOutput(scope));
+    opBuilder.addInput(slicedActivations.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("table_id", tableId);
     opBuilder.setAttr("lookup_id", lookupId);
@@ -68,7 +68,7 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return output;
   }
   

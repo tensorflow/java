@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -47,7 +46,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "strings")
-public final class ToNumber<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class ToNumber<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ToNumber operation.
@@ -58,9 +57,9 @@ public final class ToNumber<T extends Tensor & TNumber> extends RawOp implements
    * @return a new instance of ToNumber
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
+  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToNumber", scope.makeOpName("ToNumber"));
-    opBuilder.addInput(stringTensor.asOutput());
+    opBuilder.addInput(stringTensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new ToNumber<T>(opBuilder.build());
@@ -86,7 +85,7 @@ public final class ToNumber<T extends Tensor & TNumber> extends RawOp implements
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

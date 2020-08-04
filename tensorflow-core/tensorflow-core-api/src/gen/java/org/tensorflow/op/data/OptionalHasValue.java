@@ -43,7 +43,7 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
   @Endpoint(describeByClass = true)
   public static OptionalHasValue create(Scope scope, Operand<?> optional) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalHasValue", scope.makeOpName("OptionalHasValue"));
-    opBuilder.addInput(optional.asOutput());
+    opBuilder.addInput(optional.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new OptionalHasValue(opBuilder.build());
   }
@@ -55,7 +55,7 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return hasValue;
   }
   

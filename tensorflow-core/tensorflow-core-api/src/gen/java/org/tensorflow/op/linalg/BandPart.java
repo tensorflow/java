@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Copy a tensor setting everything outside a central band in each innermost matrix
@@ -72,7 +72,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code band()} output
  */
 @Operator(group = "linalg")
-public final class BandPart<T extends Tensor> extends RawOp implements Operand<T> {
+public final class BandPart<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new BandPart operation.
@@ -86,11 +86,11 @@ public final class BandPart<T extends Tensor> extends RawOp implements Operand<T
    * @return a new instance of BandPart
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
+  public static <T extends TType, U extends TNumber> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixBandPart", scope.makeOpName("BandPart"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(numLower.asOutput());
-    opBuilder.addInput(numUpper.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(numLower.asOutput(scope));
+    opBuilder.addInput(numUpper.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BandPart<T>(opBuilder.build());
   }
@@ -103,7 +103,7 @@ public final class BandPart<T extends Tensor> extends RawOp implements Operand<T
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return band;
   }
   

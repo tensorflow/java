@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -114,7 +113,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code dX()} output
  */
-public final class GRUBlockCellGrad<T extends Tensor & TNumber> extends RawOp {
+public final class GRUBlockCellGrad<T extends TNumber> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new GRUBlockCellGrad operation.
@@ -133,18 +132,18 @@ public final class GRUBlockCellGrad<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of GRUBlockCellGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u, Operand<T> c, Operand<T> dH) {
+  public static <T extends TNumber> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u, Operand<T> c, Operand<T> dH) {
     OperationBuilder opBuilder = scope.env().opBuilder("GRUBlockCellGrad", scope.makeOpName("GRUBlockCellGrad"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(hPrev.asOutput());
-    opBuilder.addInput(wRu.asOutput());
-    opBuilder.addInput(wC.asOutput());
-    opBuilder.addInput(bRu.asOutput());
-    opBuilder.addInput(bC.asOutput());
-    opBuilder.addInput(r.asOutput());
-    opBuilder.addInput(u.asOutput());
-    opBuilder.addInput(c.asOutput());
-    opBuilder.addInput(dH.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(hPrev.asOutput(scope));
+    opBuilder.addInput(wRu.asOutput(scope));
+    opBuilder.addInput(wC.asOutput(scope));
+    opBuilder.addInput(bRu.asOutput(scope));
+    opBuilder.addInput(bC.asOutput(scope));
+    opBuilder.addInput(r.asOutput(scope));
+    opBuilder.addInput(u.asOutput(scope));
+    opBuilder.addInput(c.asOutput(scope));
+    opBuilder.addInput(dH.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new GRUBlockCellGrad<T>(opBuilder.build());
   }

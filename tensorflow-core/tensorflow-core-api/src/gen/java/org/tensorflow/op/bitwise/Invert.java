@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -75,7 +74,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code y()} output
  */
 @Operator(group = "bitwise")
-public final class Invert<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class Invert<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Invert operation.
@@ -85,9 +84,9 @@ public final class Invert<T extends Tensor & TNumber> extends RawOp implements O
    * @return a new instance of Invert
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Invert<T> create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Invert<T>(opBuilder.build());
   }
@@ -99,7 +98,7 @@ public final class Invert<T extends Tensor & TNumber> extends RawOp implements O
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

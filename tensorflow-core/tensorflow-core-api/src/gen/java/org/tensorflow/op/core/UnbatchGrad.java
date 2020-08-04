@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Gradient of Unbatch.
@@ -49,7 +49,7 @@ import org.tensorflow.types.TInt64;
  * @param <T> data type for {@code batchedGrad()} output
  */
 @Operator
-public final class UnbatchGrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class UnbatchGrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.UnbatchGrad}
@@ -91,12 +91,12 @@ public final class UnbatchGrad<T extends Tensor> extends RawOp implements Operan
    * @return a new instance of UnbatchGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
+  public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnbatchGrad", scope.makeOpName("UnbatchGrad"));
-    opBuilder.addInput(originalInput.asOutput());
-    opBuilder.addInput(batchIndex.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder.addInput(id.asOutput());
+    opBuilder.addInput(originalInput.asOutput(scope));
+    opBuilder.addInput(batchIndex.asOutput(scope));
+    opBuilder.addInput(grad.asOutput(scope));
+    opBuilder.addInput(id.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -132,7 +132,7 @@ public final class UnbatchGrad<T extends Tensor> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return batchedGrad;
   }
   

@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -50,9 +49,9 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
    * @return a new instance of PopulationCount
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> PopulationCount create(Scope scope, Operand<T> x) {
+  public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new PopulationCount(opBuilder.build());
   }
@@ -64,7 +63,7 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
   }
   
   @Override
-  public Output<TUint8> asOutput() {
+  public Output<TUint8> asOutput(Scope scope) {
     return y;
   }
   

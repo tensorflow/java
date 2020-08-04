@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
@@ -33,7 +33,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code z()} output
  */
 @Operator(group = "math")
-public final class Xlog1py<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Xlog1py<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Xlog1py operation.
@@ -44,10 +44,10 @@ public final class Xlog1py<T extends Tensor> extends RawOp implements Operand<T>
    * @return a new instance of Xlog1py
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Xlog1py<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+  public static <T extends TType> Xlog1py<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Xlog1py", scope.makeOpName("Xlog1py"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(y.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
+    opBuilder.addInput(y.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Xlog1py<T>(opBuilder.build());
   }
@@ -59,7 +59,7 @@ public final class Xlog1py<T extends Tensor> extends RawOp implements Operand<T>
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

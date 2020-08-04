@@ -58,7 +58,7 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
   }
   
   @Override
-  public Output<TFloat64> asOutput() {
+  public Output<TFloat64> asOutput(Scope scope) {
     return ts;
   }
   

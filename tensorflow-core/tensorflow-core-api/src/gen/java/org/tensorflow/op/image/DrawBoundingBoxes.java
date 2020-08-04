@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -47,7 +46,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "image")
-public final class DrawBoundingBoxes<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class DrawBoundingBoxes<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new DrawBoundingBoxes operation.
@@ -60,11 +59,11 @@ public final class DrawBoundingBoxes<T extends Tensor & TNumber> extends RawOp i
    * @return a new instance of DrawBoundingBoxes
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<TFloat32> boxes, Operand<TFloat32> colors) {
+  public static <T extends TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images, Operand<TFloat32> boxes, Operand<TFloat32> colors) {
     OperationBuilder opBuilder = scope.env().opBuilder("DrawBoundingBoxesV2", scope.makeOpName("DrawBoundingBoxes"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(boxes.asOutput());
-    opBuilder.addInput(colors.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(boxes.asOutput(scope));
+    opBuilder.addInput(colors.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DrawBoundingBoxes<T>(opBuilder.build());
   }
@@ -78,7 +77,7 @@ public final class DrawBoundingBoxes<T extends Tensor & TNumber> extends RawOp i
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

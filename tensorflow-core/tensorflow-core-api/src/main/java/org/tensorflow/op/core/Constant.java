@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
+import org.tensorflow.Tensors;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -42,6 +43,7 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.tensor.BooleanTensor;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -66,7 +68,7 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 @Operator
-public final class Constant<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Constant<T extends TType> extends RawOp implements Operand<T> {
 
   /**
    * Creates a constant containing a single {@code int} element.
@@ -1004,9 +1006,9 @@ public final class Constant<T extends Tensor> extends RawOp implements Operand<T
    *     buffer
    */
   @Endpoint
-  public static <T extends Tensor & TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
       ByteDataBuffer data) {
-    try (T value = Tensor.of(type, shape, data)) {
+    try (T value = Tensors.of(type, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1263,8 +1265,8 @@ public final class Constant<T extends Tensor> extends RawOp implements Operand<T
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  @Endpoint
-  public static <T extends Tensor & TType> Constant<T> create(Scope scope, T tensor) {
+  @Endpoint(name = "capture")
+  public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
     return new Constant<>(
         scope
             .env()
@@ -1275,7 +1277,7 @@ public final class Constant<T extends Tensor> extends RawOp implements Operand<T
   }
 
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
 

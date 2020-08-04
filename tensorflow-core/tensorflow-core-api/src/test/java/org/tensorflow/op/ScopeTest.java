@@ -25,6 +25,7 @@ import org.tensorflow.Output;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
 public class ScopeTest {
@@ -177,7 +178,7 @@ public class ScopeTest {
   }
 
   // "handwritten" sample operator classes
-  private static final class Const<T extends Tensor> {
+  private static final class Const<T extends TType> {
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
@@ -188,7 +189,7 @@ public class ScopeTest {
       return create(s, TInt32.vectorOf(v));
     }
 
-    static <T extends Tensor> Const<T> create(Scope s, T value) {
+    static <T extends TType> Const<T> create(Scope s, T value) {
       return new Const<>(
           s.env()
               .opBuilder("Const", s.makeOpName("Const"))
@@ -207,10 +208,10 @@ public class ScopeTest {
     }
   }
 
-  private static final class Mean<T extends Tensor> {
+  private static final class Mean<T extends TType> {
     private final Output<T> output;
 
-    static <T extends Tensor> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
+    static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
       return new Mean<>(
           s.env()
               .opBuilder("Mean", s.makeOpName("Mean"))
@@ -229,10 +230,10 @@ public class ScopeTest {
     }
   }
 
-  private static final class SquaredDifference<T extends Tensor> {
+  private static final class SquaredDifference<T extends TType> {
     private final Output<T> output;
 
-    static <T extends Tensor> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
+    static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
       return new SquaredDifference<>(
           s.env()
               .opBuilder("SquaredDifference", s.makeOpName("SquaredDifference"))
@@ -251,7 +252,7 @@ public class ScopeTest {
     }
   }
 
-  private static final class Variance<T extends Tensor> {
+  private static final class Variance<T extends TType> {
     private final Output<T> output;
 
     static Variance<TInt32> create(Scope base, Output<TInt32> x) {

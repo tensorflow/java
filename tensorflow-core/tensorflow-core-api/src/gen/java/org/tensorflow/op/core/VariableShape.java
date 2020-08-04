@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -45,7 +44,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class VariableShape<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class VariableShape<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new VariableShape operation.
@@ -56,9 +55,9 @@ public final class VariableShape<T extends Tensor & TNumber> extends RawOp imple
    * @return a new instance of VariableShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
+  public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new VariableShape<T>(opBuilder.build());
@@ -83,7 +82,7 @@ public final class VariableShape<T extends Tensor & TNumber> extends RawOp imple
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

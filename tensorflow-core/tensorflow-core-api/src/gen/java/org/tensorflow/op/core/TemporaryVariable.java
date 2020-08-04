@@ -22,12 +22,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor that may be mutated, but only persists within a single step.
@@ -50,7 +50,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code ref()} output
  */
 @Operator
-public final class TemporaryVariable<T extends Tensor> extends RawOp implements Operand<T> {
+public final class TemporaryVariable<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.TemporaryVariable}
@@ -82,7 +82,7 @@ public final class TemporaryVariable<T extends Tensor> extends RawOp implements 
    * @return a new instance of TemporaryVariable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);
@@ -113,7 +113,7 @@ public final class TemporaryVariable<T extends Tensor> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return ref;
   }
   

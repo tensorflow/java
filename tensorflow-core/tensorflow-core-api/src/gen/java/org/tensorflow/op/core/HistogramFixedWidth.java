@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -52,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <U> data type for {@code out()} output
  */
 @Operator
-public final class HistogramFixedWidth<U extends Tensor & TNumber> extends RawOp implements Operand<U> {
+public final class HistogramFixedWidth<U extends TNumber> extends RawOp implements Operand<U> {
   
   /**
    * Factory method to create a class wrapping a new HistogramFixedWidth operation.
@@ -67,11 +66,11 @@ public final class HistogramFixedWidth<U extends Tensor & TNumber> extends RawOp
    * @return a new instance of HistogramFixedWidth
    */
   @Endpoint(describeByClass = true)
-  public static <U extends Tensor & TNumber, T extends Tensor & TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
+  public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramFixedWidth", scope.makeOpName("HistogramFixedWidth"));
-    opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(valueRange.asOutput());
-    opBuilder.addInput(nbins.asOutput());
+    opBuilder.addInput(values.asOutput(scope));
+    opBuilder.addInput(valueRange.asOutput(scope));
+    opBuilder.addInput(nbins.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new HistogramFixedWidth<U>(opBuilder.build());
@@ -89,7 +88,7 @@ public final class HistogramFixedWidth<U extends Tensor & TNumber> extends RawOp
    * @return a new instance of HistogramFixedWidth
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> HistogramFixedWidth<TInt32> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins) {
+  public static <T extends TNumber> HistogramFixedWidth<TInt32> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins) {
     return create(scope, values, valueRange, nbins, TInt32.DTYPE);
   }
   
@@ -101,7 +100,7 @@ public final class HistogramFixedWidth<U extends Tensor & TNumber> extends RawOp
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return out;
   }
   

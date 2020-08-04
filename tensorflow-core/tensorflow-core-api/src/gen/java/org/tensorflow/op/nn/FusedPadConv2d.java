@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -48,7 +47,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class FusedPadConv2d<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new FusedPadConv2d operation.
@@ -66,11 +65,11 @@ public final class FusedPadConv2d<T extends Tensor & TNumber> extends RawOp impl
    * @return a new instance of FusedPadConv2d
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
+  public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(paddings.asOutput());
-    opBuilder.addInput(filter.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(paddings.asOutput(scope));
+    opBuilder.addInput(filter.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mode", mode);
     long[] stridesArray = new long[strides.size()];
@@ -89,7 +88,7 @@ public final class FusedPadConv2d<T extends Tensor & TNumber> extends RawOp impl
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

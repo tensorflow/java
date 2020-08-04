@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Assigns a new value to a variable.
@@ -44,10 +44,10 @@ public final class AssignVariableOp extends RawOp {
    * @return a new instance of AssignVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static <T extends TType> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignVariableOp", scope.makeOpName("AssignVariableOp"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AssignVariableOp(opBuilder.build());
   }

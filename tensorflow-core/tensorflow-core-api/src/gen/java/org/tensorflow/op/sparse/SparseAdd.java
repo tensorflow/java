@@ -21,13 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Adds two `SparseTensor` objects to produce another `SparseTensor`.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code sumValues()} output
  */
 @Operator(group = "sparse")
-public final class SparseAdd<T extends Tensor> extends RawOp {
+public final class SparseAdd<T extends TType> extends RawOp {
   
   /**
    * Factory method to create a class wrapping a new SparseAdd operation.
@@ -66,15 +66,15 @@ public final class SparseAdd<T extends Tensor> extends RawOp {
    * @return a new instance of SparseAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
+  public static <T extends TType, U extends TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAdd", scope.makeOpName("SparseAdd"));
-    opBuilder.addInput(aIndices.asOutput());
-    opBuilder.addInput(aValues.asOutput());
-    opBuilder.addInput(aShape.asOutput());
-    opBuilder.addInput(bIndices.asOutput());
-    opBuilder.addInput(bValues.asOutput());
-    opBuilder.addInput(bShape.asOutput());
-    opBuilder.addInput(thresh.asOutput());
+    opBuilder.addInput(aIndices.asOutput(scope));
+    opBuilder.addInput(aValues.asOutput(scope));
+    opBuilder.addInput(aShape.asOutput(scope));
+    opBuilder.addInput(bIndices.asOutput(scope));
+    opBuilder.addInput(bValues.asOutput(scope));
+    opBuilder.addInput(bShape.asOutput(scope));
+    opBuilder.addInput(thresh.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseAdd<T>(opBuilder.build());
   }

@@ -23,7 +23,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
@@ -31,12 +30,12 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms `input_dataset` containing `Example` protos as vectors of DT_STRING into a dataset of `Tensor` or `SparseTensor` objects representing the parsed features.
  */
-public final class ParseExampleDataset extends RawOp implements Operand<Tensor> {
+public final class ParseExampleDataset extends RawOp implements Operand<TType> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.data.experimental.ParseExampleDataset}
@@ -104,9 +103,9 @@ public final class ParseExampleDataset extends RawOp implements Operand<Tensor> 
   @Endpoint(describeByClass = true)
   public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleDatasetV2", scope.makeOpName("ParseExampleDataset"));
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(numParallelCalls.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(denseDefaults));
+    opBuilder.addInput(inputDataset.asOutput(scope));
+    opBuilder.addInput(numParallelCalls.asOutput(scope));
+    opBuilder.addInputList(Operands.asOutputs(scope, denseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     String[] sparseKeysArray = new String[sparseKeys.size()];
     for (int i = 0; i < sparseKeysArray.length; ++i) {
@@ -191,8 +190,8 @@ public final class ParseExampleDataset extends RawOp implements Operand<Tensor> 
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<Tensor> asOutput() {
-    return (Output<Tensor>) handle;
+  public Output<TType> asOutput(Scope scope) {
+    return (Output<TType>) handle;
   }
   
   private Output<?> handle;

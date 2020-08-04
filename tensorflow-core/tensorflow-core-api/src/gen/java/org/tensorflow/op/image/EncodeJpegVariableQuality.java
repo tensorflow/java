@@ -50,8 +50,8 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
   @Endpoint(describeByClass = true)
   public static EncodeJpegVariableQuality create(Scope scope, Operand<TUint8> images, Operand<TInt32> quality) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpegVariableQuality", scope.makeOpName("EncodeJpegVariableQuality"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(quality.asOutput());
+    opBuilder.addInput(images.asOutput(scope));
+    opBuilder.addInput(quality.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new EncodeJpegVariableQuality(opBuilder.build());
   }
@@ -64,7 +64,7 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return contents;
   }
   

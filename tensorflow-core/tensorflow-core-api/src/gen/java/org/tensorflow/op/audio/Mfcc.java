@@ -102,8 +102,8 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
   @Endpoint(describeByClass = true)
   public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mfcc", scope.makeOpName("Mfcc"));
-    opBuilder.addInput(spectrogram.asOutput());
-    opBuilder.addInput(sampleRate.asOutput());
+    opBuilder.addInput(spectrogram.asOutput(scope));
+    opBuilder.addInput(sampleRate.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -161,7 +161,7 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return output;
   }
   

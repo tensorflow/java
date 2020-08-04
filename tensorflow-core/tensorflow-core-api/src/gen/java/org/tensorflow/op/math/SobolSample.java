@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -39,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code samples()} output
  */
-public final class SobolSample<T extends Tensor & TNumber> extends RawOp implements Operand<T> {
+public final class SobolSample<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SobolSample operation.
@@ -54,11 +53,11 @@ public final class SobolSample<T extends Tensor & TNumber> extends RawOp impleme
    * @return a new instance of SobolSample
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, DataType<T> dtype) {
+  public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, DataType<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SobolSample", scope.makeOpName("SobolSample"));
-    opBuilder.addInput(dim.asOutput());
-    opBuilder.addInput(numResults.asOutput());
-    opBuilder.addInput(skip.asOutput());
+    opBuilder.addInput(dim.asOutput(scope));
+    opBuilder.addInput(numResults.asOutput(scope));
+    opBuilder.addInput(skip.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new SobolSample<T>(opBuilder.build());
@@ -88,7 +87,7 @@ public final class SobolSample<T extends Tensor & TNumber> extends RawOp impleme
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return samples;
   }
   

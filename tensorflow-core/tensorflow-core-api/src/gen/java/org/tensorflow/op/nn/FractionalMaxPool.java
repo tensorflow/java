@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -65,7 +64,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "nn")
-public final class FractionalMaxPool<T extends Tensor & TNumber> extends RawOp {
+public final class FractionalMaxPool<T extends TNumber> extends RawOp {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.nn.FractionalMaxPool}
@@ -152,9 +151,9 @@ public final class FractionalMaxPool<T extends Tensor & TNumber> extends RawOp {
    * @return a new instance of FractionalMaxPool
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
+  public static <T extends TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPool", scope.makeOpName("FractionalMaxPool"));
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     float[] poolingRatioArray = new float[poolingRatio.size()];
     for (int i = 0; i < poolingRatioArray.length; ++i) {

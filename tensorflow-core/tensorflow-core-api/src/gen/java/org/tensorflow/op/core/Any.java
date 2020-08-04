@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -70,10 +69,10 @@ public final class Any extends RawOp implements Operand<TBool> {
    * @return a new instance of Any
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> Any create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
+  public static <T extends TNumber> Any create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("Any"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(axis.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(axis.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -100,7 +99,7 @@ public final class Any extends RawOp implements Operand<TBool> {
   }
   
   @Override
-  public Output<TBool> asOutput() {
+  public Output<TBool> asOutput(Scope scope) {
     return output;
   }
   

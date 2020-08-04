@@ -18,11 +18,6 @@ package org.tensorflow.op.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
@@ -64,8 +59,8 @@ public class ConstantTest {
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor<?>> t =
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
-        assertEquals(array, t.get(0).expect(TInt32.DTYPE).data());
-        assertEquals(array, t.get(1).expect(TInt32.DTYPE).data());
+        assertEquals(array, t.get(0).expect(TInt32.DTYPE));
+        assertEquals(array, t.get(1).expect(TInt32.DTYPE));
       }
     }
   }
@@ -83,8 +78,8 @@ public class ConstantTest {
       Constant<TFloat32> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor<?>> t =
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
-        assertEquals(array, t.get(0).expect(TFloat32.DTYPE).data());
-        assertEquals(array, t.get(1).expect(TFloat32.DTYPE).data());
+        assertEquals(array, t.get(0).expect(TFloat32.DTYPE));
+        assertEquals(array, t.get(1).expect(TFloat32.DTYPE));
       }
     }
   }
@@ -102,8 +97,8 @@ public class ConstantTest {
       Constant<TFloat64> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor<?>> t =
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
-        assertEquals(array, t.get(0).expect(TFloat64.DTYPE).data());
-        assertEquals(array, t.get(1).expect(TFloat64.DTYPE).data());
+        assertEquals(array, t.get(0).expect(TFloat64.DTYPE));
+        assertEquals(array, t.get(1).expect(TFloat64.DTYPE));
       }
     }
   }
@@ -121,8 +116,8 @@ public class ConstantTest {
       Constant<TInt64> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor<?>> t =
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
-        assertEquals(array, t.get(0).expect(TInt64.DTYPE).data());
-        assertEquals(array, t.get(1).expect(TInt64.DTYPE).data());
+        assertEquals(array, t.get(0).expect(TInt64.DTYPE));
+        assertEquals(array, t.get(1).expect(TInt64.DTYPE));
       }
     }
   }
@@ -140,8 +135,8 @@ public class ConstantTest {
       Constant<TString> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor<?>> t =
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
-        assertEquals(array, t.get(0).expect(TString.DTYPE).data());
-        assertEquals(array, t.get(1).expect(TString.DTYPE).data());
+        assertEquals(array, t.get(0).expect(TString.DTYPE));
+        assertEquals(array, t.get(1).expect(TString.DTYPE));
       }
     }
   }

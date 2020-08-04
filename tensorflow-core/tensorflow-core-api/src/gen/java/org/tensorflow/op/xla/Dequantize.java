@@ -50,7 +50,7 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
   @Endpoint(describeByClass = true)
   public static Dequantize create(Scope scope, Operand<?> input, Float minRange, Float maxRange, String mode, Boolean transposeOutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDequantize", scope.makeOpName("Dequantize"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("min_range", minRange);
     opBuilder.setAttr("max_range", maxRange);
@@ -69,7 +69,7 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
   }
   
   @Override
-  public Output<TBfloat16> asOutput() {
+  public Output<TBfloat16> asOutput(Scope scope) {
     return output;
   }
   

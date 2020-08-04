@@ -21,12 +21,12 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Inserts a dimension of 1 into a tensor's shape.
@@ -63,7 +63,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output()} output
  */
 @Operator
-public final class ExpandDims<T extends Tensor> extends RawOp implements Operand<T> {
+public final class ExpandDims<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new ExpandDims operation.
@@ -76,10 +76,10 @@ public final class ExpandDims<T extends Tensor> extends RawOp implements Operand
    * @return a new instance of ExpandDims
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor, U extends Tensor & TNumber> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<U> axis) {
+  public static <T extends TType, U extends TNumber> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<U> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(axis.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(axis.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ExpandDims<T>(opBuilder.build());
   }
@@ -93,7 +93,7 @@ public final class ExpandDims<T extends Tensor> extends RawOp implements Operand
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

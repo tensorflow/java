@@ -20,7 +20,6 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.strings.Join;
 import org.tensorflow.op.strings.Lower;
 import org.tensorflow.op.strings.ReduceJoin;
@@ -231,7 +230,7 @@ public final class StringsOps {
    * @param preserveShortSequences
    * @return a new instance of StringNGrams
    */
-  public <T extends Tensor & TNumber> StringNGrams<T> stringNGrams(Operand<TString> data,
+  public <T extends TNumber> StringNGrams<T> stringNGrams(Operand<TString> data,
       Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad,
       String rightPad, Long padWidth, Boolean preserveShortSequences) {
     return StringNGrams.create(scope, data, dataSplits, separator, ngramWidths, leftPad, rightPad, padWidth, preserveShortSequences);
@@ -368,8 +367,8 @@ public final class StringsOps {
    * @param options carries optional attributes values
    * @return a new instance of Substr
    */
-  public <T extends Tensor & TNumber> Substr substr(Operand<TString> input, Operand<T> pos,
-      Operand<T> len, Substr.Options... options) {
+  public <T extends TNumber> Substr substr(Operand<TString> input, Operand<T> pos, Operand<T> len,
+      Substr.Options... options) {
     return Substr.create(scope, input, pos, len, options);
   }
 
@@ -484,7 +483,7 @@ public final class StringsOps {
    * @param outType The numeric type to interpret each string in `string_tensor` as.
    * @return a new instance of ToNumber
    */
-  public <T extends Tensor & TNumber> ToNumber<T> toNumber(Operand<TString> stringTensor,
+  public <T extends TNumber> ToNumber<T> toNumber(Operand<TString> stringTensor,
       DataType<T> outType) {
     return ToNumber.create(scope, stringTensor, outType);
   }
@@ -597,7 +596,7 @@ public final class StringsOps {
    * @param options carries optional attributes values
    * @return a new instance of UnsortedSegmentJoin
    */
-  public <T extends Tensor & TNumber, U extends Tensor & TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
+  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
       Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
       UnsortedSegmentJoin.Options... options) {
     return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);

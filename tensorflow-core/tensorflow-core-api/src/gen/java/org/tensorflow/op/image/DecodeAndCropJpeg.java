@@ -143,8 +143,8 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
   @Endpoint(describeByClass = true)
   public static DecodeAndCropJpeg create(Scope scope, Operand<TString> contents, Operand<TInt32> cropWindow, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeAndCropJpeg", scope.makeOpName("DecodeAndCropJpeg"));
-    opBuilder.addInput(contents.asOutput());
-    opBuilder.addInput(cropWindow.asOutput());
+    opBuilder.addInput(contents.asOutput(scope));
+    opBuilder.addInput(cropWindow.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -228,7 +228,7 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
   }
   
   @Override
-  public Output<TUint8> asOutput() {
+  public Output<TUint8> asOutput(Scope scope) {
     return image;
   }
   

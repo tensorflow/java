@@ -65,7 +65,7 @@ public final class DestroyResourceOp extends RawOp {
   @Endpoint(describeByClass = true)
   public static DestroyResourceOp create(Scope scope, Operand<?> resource, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DestroyResourceOp", scope.makeOpName("DestroyResourceOp"));
-    opBuilder.addInput(resource.asOutput());
+    opBuilder.addInput(resource.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient for the sqrt of `x` wrt its input.
@@ -35,7 +35,7 @@ import org.tensorflow.op.annotation.Operator;
  * 
  * @param <T> data type for {@code z()} output
  */
-public final class SqrtGrad<T extends Tensor> extends RawOp implements Operand<T> {
+public final class SqrtGrad<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new SqrtGrad operation.
@@ -46,10 +46,10 @@ public final class SqrtGrad<T extends Tensor> extends RawOp implements Operand<T
    * @return a new instance of SqrtGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> SqrtGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
+  public static <T extends TType> SqrtGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
     OperationBuilder opBuilder = scope.env().opBuilder("SqrtGrad", scope.makeOpName("SqrtGrad"));
-    opBuilder.addInput(y.asOutput());
-    opBuilder.addInput(dy.asOutput());
+    opBuilder.addInput(y.asOutput(scope));
+    opBuilder.addInput(dy.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SqrtGrad<T>(opBuilder.build());
   }
@@ -61,7 +61,7 @@ public final class SqrtGrad<T extends Tensor> extends RawOp implements Operand<T
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return z;
   }
   

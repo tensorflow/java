@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Update 'ref' by adding 'value' to it.
@@ -36,7 +36,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code outputRef()} output
  */
 @Operator
-public final class AssignAdd<T extends Tensor> extends RawOp implements Operand<T> {
+public final class AssignAdd<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Optional attributes for {@link org.tensorflow.op.core.AssignAdd}
@@ -68,10 +68,10 @@ public final class AssignAdd<T extends Tensor> extends RawOp implements Operand<
    * @return a new instance of AssignAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> AssignAdd<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
+  public static <T extends TType> AssignAdd<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignAdd", scope.makeOpName("AssignAdd"));
-    opBuilder.addInput(ref.asOutput());
-    opBuilder.addInput(value.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
+    opBuilder.addInput(value.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -100,7 +100,7 @@ public final class AssignAdd<T extends Tensor> extends RawOp implements Operand<
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return outputRef;
   }
   

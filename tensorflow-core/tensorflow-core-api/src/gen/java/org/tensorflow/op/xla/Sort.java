@@ -21,11 +21,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Sort operator, documented at
@@ -38,7 +38,7 @@ import org.tensorflow.op.annotation.Operator;
  * @param <T> data type for {@code output()} output
  */
 @Operator(group = "xla")
-public final class Sort<T extends Tensor> extends RawOp implements Operand<T> {
+public final class Sort<T extends TType> extends RawOp implements Operand<T> {
   
   /**
    * Factory method to create a class wrapping a new Sort operation.
@@ -48,9 +48,9 @@ public final class Sort<T extends Tensor> extends RawOp implements Operand<T> {
    * @return a new instance of Sort
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor> Sort<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Sort<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSort", scope.makeOpName("Sort"));
-    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sort<T>(opBuilder.build());
   }
@@ -63,7 +63,7 @@ public final class Sort<T extends Tensor> extends RawOp implements Operand<T> {
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

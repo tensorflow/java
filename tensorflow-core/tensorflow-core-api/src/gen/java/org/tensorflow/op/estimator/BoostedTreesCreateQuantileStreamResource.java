@@ -64,9 +64,9 @@ public final class BoostedTreesCreateQuantileStreamResource extends RawOp {
   @Endpoint(describeByClass = true)
   public static BoostedTreesCreateQuantileStreamResource create(Scope scope, Operand<?> quantileStreamResourceHandle, Operand<TFloat32> epsilon, Operand<TInt64> numStreams, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCreateQuantileStreamResource", scope.makeOpName("BoostedTreesCreateQuantileStreamResource"));
-    opBuilder.addInput(quantileStreamResourceHandle.asOutput());
-    opBuilder.addInput(epsilon.asOutput());
-    opBuilder.addInput(numStreams.asOutput());
+    opBuilder.addInput(quantileStreamResourceHandle.asOutput(scope));
+    opBuilder.addInput(epsilon.asOutput(scope));
+    opBuilder.addInput(numStreams.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

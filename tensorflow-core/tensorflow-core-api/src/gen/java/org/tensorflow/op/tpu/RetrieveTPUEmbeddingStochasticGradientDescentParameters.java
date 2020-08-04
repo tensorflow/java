@@ -134,7 +134,7 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters exten
   }
   
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<TFloat32> asOutput(Scope scope) {
     return parameters;
   }
   

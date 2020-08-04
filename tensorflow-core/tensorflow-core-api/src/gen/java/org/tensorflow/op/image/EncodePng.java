@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -83,9 +82,9 @@ public final class EncodePng extends RawOp implements Operand<TString> {
    * @return a new instance of EncodePng
    */
   @Endpoint(describeByClass = true)
-  public static <T extends Tensor & TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
+  public static <T extends TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
-    opBuilder.addInput(image.asOutput());
+    opBuilder.addInput(image.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -112,7 +111,7 @@ public final class EncodePng extends RawOp implements Operand<TString> {
   }
   
   @Override
-  public Output<TString> asOutput() {
+  public Output<TString> asOutput(Scope scope) {
     return contents;
   }
   

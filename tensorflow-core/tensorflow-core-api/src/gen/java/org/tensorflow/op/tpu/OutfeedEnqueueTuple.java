@@ -42,7 +42,7 @@ public final class OutfeedEnqueueTuple extends RawOp {
   @Endpoint(describeByClass = true)
   public static OutfeedEnqueueTuple create(Scope scope, Iterable<Operand<?>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueueTuple", scope.makeOpName("OutfeedEnqueueTuple"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new OutfeedEnqueueTuple(opBuilder.build());
   }
