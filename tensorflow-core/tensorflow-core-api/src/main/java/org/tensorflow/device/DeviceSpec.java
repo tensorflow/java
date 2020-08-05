@@ -1,7 +1,5 @@
 package org.tensorflow.device;
 
-import com.google.common.base.Joiner;
-
 import javax.annotation.Nullable;
 import java.util.Objects;
 
@@ -84,17 +82,17 @@ public final class DeviceSpec {
 
   @Override
   public String toString() {
-    Joiner specJoiner = Joiner.on("").skipNulls();
     String deviceString = null;
     if (deviceType() != null) {
       String deviceSuffix = deviceIndex() == null ? "*" : deviceIndex().toString();
-      deviceString = Joiner.on(":").join(deviceType().toString().toUpperCase(), deviceSuffix);
+      deviceString = String.join(":", deviceType().toString().toUpperCase(), deviceSuffix);
     }
-    return specJoiner.join(
-        NullOrWithPrefix(job(), JOB_PREFIX),
-        NullOrWithPrefix(replica(), REPLICA_PREFIX),
-        NullOrWithPrefix(task(), TASK_PREFIX),
-        NullOrWithPrefix(deviceString, DEVICE_PREFIX));
+    return String.join(
+        "",
+        EmptyOrWithPrefix(job(), JOB_PREFIX),
+        EmptyOrWithPrefix(replica(), REPLICA_PREFIX),
+        EmptyOrWithPrefix(task(), TASK_PREFIX),
+        EmptyOrWithPrefix(deviceString, DEVICE_PREFIX));
   }
 
   private DeviceSpec(
@@ -114,14 +112,12 @@ public final class DeviceSpec {
     return new Builder();
   }
 
-  @Nullable
-  private static String NullOrWithPrefix(@Nullable String s, String prefix) {
-    return s == null ? null : prefix + s;
+  private static String EmptyOrWithPrefix(@Nullable String s, String prefix) {
+    return s == null ? "" : prefix + s;
   }
 
-  @Nullable
-  private static String NullOrWithPrefix(@Nullable Integer i, String prefix) {
-    return i == null ? null : prefix + i.toString();
+  private static String EmptyOrWithPrefix(@Nullable Integer i, String prefix) {
+    return i == null ? "" : prefix + i.toString();
   }
 
   /** A Builder class for building {@link DeviceSpec} class. */
