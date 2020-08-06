@@ -323,9 +323,9 @@ public final class Ops {
 
   public final ImageOps image;
 
-  public final DataOps data;
-
   public final ShapeOps shape;
+
+  public final DataOps data;
 
   public final IoOps io;
 
@@ -349,9 +349,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -360,8 +360,8 @@ public final class Ops {
     nn = new NnOps(scope);
     summary = new SummaryOps(scope);
     image = new ImageOps(scope);
-    data = new DataOps(scope);
     shape = new ShapeOps(scope);
+    data = new DataOps(scope);
     io = new IoOps(scope);
     dtypes = new DtypesOps(scope);
     xla = new XlaOps(scope);
@@ -373,8 +373,8 @@ public final class Ops {
     math = new MathOps(scope);
     audio = new AudioOps(scope);
     signal = new SignalOps(scope);
-    train = new TrainOps(scope);
     quantization = new QuantizationOps(scope);
+    train = new TrainOps(scope);
   }
 
   /**
