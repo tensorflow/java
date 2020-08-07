@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "LoadDataset"
+  endpoint {
+    name: "data.LoadDataset"
+  }
+}

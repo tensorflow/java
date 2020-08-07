@@ -1,6 +1,4 @@
 op {
   graph_op_name: "ShuffleAndRepeatDataset"
-  endpoint {
-    name: "data.ShuffleAndRepeatDataset"
-  }
+  visibility: SKIP
 }

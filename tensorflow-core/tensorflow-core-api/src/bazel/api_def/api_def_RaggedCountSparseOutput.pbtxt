@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RaggedCountSparseOutput"
+  endpoint {
+    name: "ragged.RaggedCountSparseOutput"
+  }
+}

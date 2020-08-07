@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BandedTriangularSolve"
+  endpoint {
+    name: "linalg.BandedTriangularSolve"
+  }
+}
