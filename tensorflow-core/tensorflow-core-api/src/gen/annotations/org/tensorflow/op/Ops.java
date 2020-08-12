@@ -68,10 +68,8 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
 import org.tensorflow.op.core.CountUpTo;
-import org.tensorflow.op.core.DataServiceDataset;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
-import org.tensorflow.op.core.DenseBincount;
 import org.tensorflow.op.core.DestroyResourceOp;
 import org.tensorflow.op.core.DestroyTemporaryVariable;
 import org.tensorflow.op.core.DynamicPartition;
@@ -145,7 +143,6 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
-import org.tensorflow.op.core.RaggedBincount;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.ReadVariableOp;
@@ -201,9 +198,6 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
-import org.tensorflow.op.core.SparseBincount;
-import org.tensorflow.op.core.SparseCrossHashed;
-import org.tensorflow.op.core.SparseCrossV2;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -252,6 +246,8 @@ import org.tensorflow.op.core.TensorListStack;
 import org.tensorflow.op.core.TensorScatterMax;
 import org.tensorflow.op.core.TensorScatterMin;
 import org.tensorflow.op.core.TensorScatterNdAdd;
+import org.tensorflow.op.core.TensorScatterNdMax;
+import org.tensorflow.op.core.TensorScatterNdMin;
 import org.tensorflow.op.core.TensorScatterNdSub;
 import org.tensorflow.op.core.TensorScatterNdUpdate;
 import org.tensorflow.op.core.TensorStridedSliceUpdate;
@@ -323,6 +319,8 @@ public final class Ops {
 
   public final ImageOps image;
 
+  public final RaggedOps ragged;
+
   public final DataOps data;
 
   public final ShapeOps shape;
@@ -349,9 +347,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -360,6 +358,7 @@ public final class Ops {
     nn = new NnOps(scope);
     summary = new SummaryOps(scope);
     image = new ImageOps(scope);
+    ragged = new RaggedOps(scope);
     data = new DataOps(scope);
     shape = new ShapeOps(scope);
     io = new IoOps(scope);
@@ -373,8 +372,8 @@ public final class Ops {
     math = new MathOps(scope);
     audio = new AudioOps(scope);
     signal = new SignalOps(scope);
-    train = new TrainOps(scope);
     quantization = new QuantizationOps(scope);
+    train = new TrainOps(scope);
   }
 
   /**
@@ -1921,28 +1920,6 @@ public final class Ops {
   }
 
   /**
-   *
-   * @param datasetId
-   * @param processingMode
-   * @param address
-   * @param protocol
-   * @param jobName
-   * @param maxOutstandingRequests
-   * @param iterationCounter
-   * @param outputTypes
-   * @param outputShapes
-   * @param options carries optional attributes values
-   * @return a new instance of DataServiceDataset
-   */
-  public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
-      Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
-      Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes,
-      DataServiceDataset.Options... options) {
-    return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
-  }
-
-  /**
    * Makes a copy of `x`.
    *
    * @param <T> data type for {@code y()} output
@@ -1961,31 +1938,6 @@ public final class Ops {
    */
   public DeleteSessionTensor deleteSessionTensor(Operand<TString> handle) {
     return DeleteSessionTensor.create(scope, handle);
-  }
-
-  /**
-   * Counts the number of occurrences of each value in an integer array.
-   *  <p>
-   *  Outputs a vector with length `size` and the same dtype as `weights`. If
-   *  `weights` are empty, then index `i` stores the number of times the value `i` is
-   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
-   *  the value in `weights` at each index where the corresponding value in `arr` is
-   *  `i`.
-   *  <p>
-   *  Values in `arr` outside of the range [0, size) are ignored.
-   *
-   * @param <U> data type for {@code output()} output
-   * @param input 1D or 2D int `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   *  shape as `arr`, or a length-0 `Tensor`, in which case it acts as all weights
-   *  equal to 1.
-   * @param options carries optional attributes values
-   * @return a new instance of DenseBincount
-   */
-  public <U extends TNumber, T extends TNumber> DenseBincount<U> denseBincount(Operand<T> input,
-      Operand<T> size, Operand<U> weights, DenseBincount.Options... options) {
-    return DenseBincount.create(scope, input, size, weights, options);
   }
 
   /**
@@ -3802,33 +3754,6 @@ public final class Ops {
   public <T extends TType, U extends TNumber> QuantizedReshape<T> quantizedReshape(
       Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
-  }
-
-  /**
-   * Counts the number of occurrences of each value in an integer array.
-   *  <p>
-   *  Outputs a vector with length `size` and the same dtype as `weights`. If
-   *  `weights` are empty, then index `i` stores the number of times the value `i` is
-   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
-   *  the value in `weights` at each index where the corresponding value in `arr` is
-   *  `i`.
-   *  <p>
-   *  Values in `arr` outside of the range [0, size) are ignored.
-   *
-   * @param <U> data type for {@code output()} output
-   * @param splits 1D int64 `Tensor`.
-   * @param values 2D int `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
-   *  equal to 1.
-   * @param options carries optional attributes values
-   * @return a new instance of RaggedBincount
-   */
-  public <U extends TNumber, T extends TNumber> RaggedBincount<U> raggedBincount(
-      Operand<TInt64> splits, Operand<T> values, Operand<T> size, Operand<U> weights,
-      RaggedBincount.Options... options) {
-    return RaggedBincount.create(scope, splits, values, size, weights, options);
   }
 
   /**
@@ -5779,143 +5704,6 @@ public final class Ops {
   }
 
   /**
-   * Counts the number of occurrences of each value in an integer array.
-   *  <p>
-   *  Outputs a vector with length `size` and the same dtype as `weights`. If
-   *  `weights` are empty, then index `i` stores the number of times the value `i` is
-   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
-   *  the value in `weights` at each index where the corresponding value in `arr` is
-   *  `i`.
-   *  <p>
-   *  Values in `arr` outside of the range [0, size) are ignored.
-   *
-   * @param <U> data type for {@code output()} output
-   * @param indices 2D int64 `Tensor`.
-   * @param values 1D int `Tensor`.
-   * @param denseShape 1D int64 `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
-   *  equal to 1.
-   * @param options carries optional attributes values
-   * @return a new instance of SparseBincount
-   */
-  public <U extends TNumber, T extends TNumber> SparseBincount<U> sparseBincount(
-      Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> size,
-      Operand<U> weights, SparseBincount.Options... options) {
-    return SparseBincount.create(scope, indices, values, denseShape, size, weights, options);
-  }
-
-  /**
-   * Generates sparse cross from a list of sparse and dense tensors.
-   *  <p>
-   *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
-   *  representing features of one feature column. It outputs a 2D `SparseTensor` with
-   *  the batchwise crosses of these features.
-   *  <p>
-   *  For example, if the inputs are
-   *  <p>
-   *      inputs[0]: SparseTensor with shape = [2, 2]
-   *      [0, 0]: "a"
-   *      [1, 0]: "b"
-   *      [1, 1]: "c"
-   *  <p>
-   *      inputs[1]: SparseTensor with shape = [2, 1]
-   *      [0, 0]: "d"
-   *      [1, 0]: "e"
-   *  <p>
-   *      inputs[2]: Tensor [["f"], ["g"]]
-   *  <p>
-   *  then the output will be
-   *  <p>
-   *      shape = [2, 2]
-   *      [0, 0]: "a_X_d_X_f"
-   *      [1, 0]: "b_X_e_X_g"
-   *      [1, 1]: "c_X_e_X_g"
-   *  <p>
-   *  if hashed_output=true then the output will be
-   *  <p>
-   *      shape = [2, 2]
-   *      [0, 0]: FingerprintCat64(
-   *                  Fingerprint64("f"), FingerprintCat64(
-   *                      Fingerprint64("d"), Fingerprint64("a")))
-   *      [1, 0]: FingerprintCat64(
-   *                  Fingerprint64("g"), FingerprintCat64(
-   *                      Fingerprint64("e"), Fingerprint64("b")))
-   *      [1, 1]: FingerprintCat64(
-   *                  Fingerprint64("g"), FingerprintCat64(
-   *                      Fingerprint64("e"), Fingerprint64("c")))
-   *
-   * @param indices 2-D.  Indices of each input `SparseTensor`.
-   * @param values 1-D.   values of each `SparseTensor`.
-   * @param shapes 1-D.   Shapes of each `SparseTensor`.
-   * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
-   * @param numBuckets It is used if hashed_output is true.
-   *  output = hashed_value%num_buckets if num_buckets > 0 else hashed_value.
-   * @param strongHash boolean, if true, siphash with salt will be used instead of farmhash.
-   * @param salt Specify the salt that will be used by the siphash function.
-   * @return a new instance of SparseCrossHashed
-   */
-  public SparseCrossHashed sparseCrossHashed(Iterable<Operand<TInt64>> indices,
-      Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes,
-      Iterable<Operand<?>> denseInputs, Operand<TInt64> numBuckets, Operand<TBool> strongHash,
-      Operand<TInt64> salt) {
-    return SparseCrossHashed.create(scope, indices, values, shapes, denseInputs, numBuckets, strongHash, salt);
-  }
-
-  /**
-   * Generates sparse cross from a list of sparse and dense tensors.
-   *  <p>
-   *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
-   *  representing features of one feature column. It outputs a 2D `SparseTensor` with
-   *  the batchwise crosses of these features.
-   *  <p>
-   *  For example, if the inputs are
-   *  <p>
-   *      inputs[0]: SparseTensor with shape = [2, 2]
-   *      [0, 0]: "a"
-   *      [1, 0]: "b"
-   *      [1, 1]: "c"
-   *  <p>
-   *      inputs[1]: SparseTensor with shape = [2, 1]
-   *      [0, 0]: "d"
-   *      [1, 0]: "e"
-   *  <p>
-   *      inputs[2]: Tensor [["f"], ["g"]]
-   *  <p>
-   *  then the output will be
-   *  <p>
-   *      shape = [2, 2]
-   *      [0, 0]: "a_X_d_X_f"
-   *      [1, 0]: "b_X_e_X_g"
-   *      [1, 1]: "c_X_e_X_g"
-   *  <p>
-   *  if hashed_output=true then the output will be
-   *  <p>
-   *      shape = [2, 2]
-   *      [0, 0]: FingerprintCat64(
-   *                  Fingerprint64("f"), FingerprintCat64(
-   *                      Fingerprint64("d"), Fingerprint64("a")))
-   *      [1, 0]: FingerprintCat64(
-   *                  Fingerprint64("g"), FingerprintCat64(
-   *                      Fingerprint64("e"), Fingerprint64("b")))
-   *      [1, 1]: FingerprintCat64(
-   *                  Fingerprint64("g"), FingerprintCat64(
-   *                      Fingerprint64("e"), Fingerprint64("c")))
-   *
-   * @param indices 2-D.  Indices of each input `SparseTensor`.
-   * @param values 1-D.   values of each `SparseTensor`.
-   * @param shapes 1-D.   Shapes of each `SparseTensor`.
-   * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
-   * @param sep string used when joining a list of string inputs, can be used as separator later.
-   * @return a new instance of SparseCrossV2
-   */
-  public SparseCrossV2 sparseCrossV2(Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values,
-      Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Operand<TString> sep) {
-    return SparseCrossV2.create(scope, indices, values, shapes, denseInputs, sep);
-  }
-
-  /**
    * Splits a tensor into `num_split` tensors along one dimension.
    *
    * @param <T> data type for {@code output()} output
@@ -6994,6 +6782,32 @@ public final class Ops {
   public <T extends TType, U extends TNumber> TensorScatterNdAdd<T> tensorScatterNdAdd(
       Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     return TensorScatterNdAdd.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdMax
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdMax<T> tensorScatterNdMax(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdMax.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdMin
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdMin<T> tensorScatterNdMin(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdMin.create(scope, tensor, indices, updates);
   }
 
   /**

@@ -1,6 +1,4 @@
 op {
   graph_op_name: "ExtractGlimpse"
-  endpoint {
-    name: "image.ExtractGlimpse"
-  }
+  visibility: SKIP
 }

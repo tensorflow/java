@@ -56,10 +56,13 @@ import org.tensorflow.types.TString;
  * @see {@link Ops}
  */
 public final class DataOps {
+  public final DataExperimentalOps experimental;
+
   private final Scope scope;
 
   DataOps(Scope scope) {
     this.scope = scope;
+    experimental = new DataExperimentalOps(scope);
   }
 
   /**

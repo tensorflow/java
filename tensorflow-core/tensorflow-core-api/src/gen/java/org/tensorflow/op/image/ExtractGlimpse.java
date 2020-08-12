@@ -58,7 +58,6 @@ import org.tensorflow.types.TInt32;
  * If the coordinates are not normalized they are interpreted as
  *   numbers of pixels.
  */
-@Operator(group = "image")
 public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
   
   /**
@@ -128,7 +127,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
    */
   @Endpoint(describeByClass = true)
   public static ExtractGlimpse create(Scope scope, Operand<TFloat32> input, Operand<TInt32> size, Operand<TFloat32> offsets, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpse", scope.makeOpName("ExtractGlimpse"));
+    OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpseV2", scope.makeOpName("ExtractGlimpse"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(offsets.asOutput());

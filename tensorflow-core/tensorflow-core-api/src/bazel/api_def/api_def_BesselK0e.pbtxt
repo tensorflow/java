@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BesselK0e"
+  endpoint {
+    name: "math.special.BesselK0e"
+  }
+}

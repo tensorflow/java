@@ -32,9 +32,6 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that shuffles and repeats elements from `input_dataset`
- * <p>
- * pseudorandomly.
  */
 public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TType> {
   
@@ -62,28 +59,25 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
    * 
    * @param scope current scope
    * @param inputDataset 
-   * @param bufferSize The number of output elements to buffer in an iterator over
-   * this dataset. Compare with the `min_after_dequeue` attr when creating a
-   * `RandomShuffleQueue`.
-   * @param seed A scalar seed for the random number generator. If either `seed` or
-   * `seed2` is set to be non-zero, the random number generator is seeded
-   * by the given seed.  Otherwise, a random seed is used.
-   * @param seed2 A second scalar seed to avoid seed collision.
-   * @param count A scalar representing the number of times the underlying dataset
-   * should be repeated. The default is `-1`, which results in infinite repetition.
+   * @param bufferSize 
+   * @param seed 
+   * @param seed2 
+   * @param count 
+   * @param seedGenerator 
    * @param outputTypes 
    * @param outputShapes 
    * @param options carries optional attributes values
    * @return a new instance of ShuffleAndRepeatDataset
    */
   @Endpoint(describeByClass = true)
-  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDataset", scope.makeOpName("ShuffleAndRepeatDataset"));
+  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDatasetV2", scope.makeOpName("ShuffleAndRepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder.addInput(count.asOutput());
+    opBuilder.addInput(seedGenerator.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

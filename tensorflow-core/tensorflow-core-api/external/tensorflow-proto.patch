@@ -122,3 +122,17 @@ diff -ruN a/tensorflow/core/util/memmapped_file_system.proto b/tensorflow/core/u
 
  // A message that describes one region of memmapped file.
  message MemmappedFileSystemDirectoryElement {
+diff --git a/tensorflow/core/profiler/profiler_options.proto b/tensorflow/core/profiler/profiler_options.proto
+index 8b4fc3de6f..9a34ea5aaf 100644
+--- a/tensorflow/core/profiler/profiler_options.proto
++++ b/tensorflow/core/profiler/profiler_options.proto
+@@ -1,6 +1,9 @@
+ syntax = "proto3";
+
+ package tensorflow;
++option java_outer_classname = "ProfilerOptionsProtos";
++option java_multiple_files = true;
++option java_package = "org.tensorflow.profiler";
+
+ message ProfileOptions {
+   // Some default value of option are not proto3 default value. Use this version
