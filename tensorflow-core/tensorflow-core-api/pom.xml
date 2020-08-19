@@ -39,12 +39,6 @@
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-generator</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional> <!-- for compilation only -->
-    </dependency>
-    <dependency>
-      <groupId>org.tensorflow</groupId>
       <artifactId>ndarray</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -144,6 +138,13 @@
               <annotationProcessors>
                 <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
               </annotationProcessors>
+              <annotationProcessorPaths>
+                <annotationProcessorPath>
+                  <groupId>org.tensorflow</groupId>
+                  <artifactId>tensorflow-core-generator</artifactId>
+                  <version>${project.version}</version>
+                </annotationProcessorPath>
+              </annotationProcessorPaths>
               <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
               <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
             </configuration>
