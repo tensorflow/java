@@ -72,6 +72,9 @@ public final class RequantizationRange extends RawOp {
     return outputMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RequantizationRange";
+  
   private Output<TFloat32> outputMin;
   private Output<TFloat32> outputMax;
   

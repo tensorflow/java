@@ -71,6 +71,9 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
     return examplesDebugOutputsSerialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesExampleDebugOutputs";
+  
   private Output<TString> examplesDebugOutputsSerialized;
   
   private BoostedTreesExampleDebugOutputs(Operation operation) {

@@ -128,6 +128,9 @@ public final class ApplyAdagrad<T extends TType> extends RawOp implements Operan
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyAdagrad";
+  
   private Output<T> out;
   
   private ApplyAdagrad(Operation operation) {

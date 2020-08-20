@@ -64,6 +64,9 @@ public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
     return (Output<TType>) sparseMatrix;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixZeros";
+  
   private Output<?> sparseMatrix;
   
   private SparseMatrixZeros(Operation operation) {

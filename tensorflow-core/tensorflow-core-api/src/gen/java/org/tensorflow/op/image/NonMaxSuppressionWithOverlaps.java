@@ -90,6 +90,9 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
     return selectedIndices;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NonMaxSuppressionWithOverlaps";
+  
   private Output<TInt32> selectedIndices;
   
   private NonMaxSuppressionWithOverlaps(Operation operation) {

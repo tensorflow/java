@@ -148,6 +148,9 @@ public final class SparseConditionalAccumulator extends RawOp implements Operand
     return handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseConditionalAccumulator";
+  
   private Output<TString> handle;
   
   private SparseConditionalAccumulator(Operation operation) {

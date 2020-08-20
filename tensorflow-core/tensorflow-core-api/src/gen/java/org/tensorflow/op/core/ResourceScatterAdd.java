@@ -72,6 +72,9 @@ public final class ResourceScatterAdd extends RawOp {
     return new ResourceScatterAdd(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceScatterAdd";
+  
   
   private ResourceScatterAdd(Operation operation) {
     super(operation);

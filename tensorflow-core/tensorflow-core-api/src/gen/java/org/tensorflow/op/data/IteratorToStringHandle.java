@@ -60,6 +60,9 @@ public final class IteratorToStringHandle extends RawOp implements Operand<TStri
     return stringHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorToStringHandle";
+  
   private Output<TString> stringHandle;
   
   private IteratorToStringHandle(Operation operation) {

@@ -165,6 +165,9 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Mfcc";
+  
   private Output<TFloat32> output;
   
   private Mfcc(Operation operation) {

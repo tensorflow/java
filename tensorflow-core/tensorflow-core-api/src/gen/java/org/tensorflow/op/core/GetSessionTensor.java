@@ -66,6 +66,9 @@ public final class GetSessionTensor<T extends TType> extends RawOp implements Op
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GetSessionTensor";
+  
   private Output<T> value;
   
   private GetSessionTensor(Operation operation) {

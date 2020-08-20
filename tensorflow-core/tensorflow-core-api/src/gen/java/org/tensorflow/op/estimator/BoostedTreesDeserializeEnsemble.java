@@ -53,6 +53,9 @@ public final class BoostedTreesDeserializeEnsemble extends RawOp {
     return new BoostedTreesDeserializeEnsemble(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesDeserializeEnsemble";
+  
   
   private BoostedTreesDeserializeEnsemble(Operation operation) {
     super(operation);

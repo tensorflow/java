@@ -72,6 +72,9 @@ public final class ResourceScatterMin extends RawOp {
     return new ResourceScatterMin(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceScatterMin";
+  
   
   private ResourceScatterMin(Operation operation) {
     super(operation);

@@ -49,6 +49,9 @@ public final class DeserializeIterator extends RawOp {
     return new DeserializeIterator(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeserializeIterator";
+  
   
   private DeserializeIterator(Operation operation) {
     super(operation);

@@ -80,6 +80,9 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
     return (Output<TType>) encodedRagged;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedTensorToVariant";
+  
   private Output<?> encodedRagged;
   
   private RaggedTensorToVariant(Operation operation) {

@@ -98,6 +98,9 @@ public final class ResourceSparseApplyProximalGradientDescent extends RawOp {
     return new Options().useLocking(useLocking);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceSparseApplyProximalGradientDescent";
+  
   
   private ResourceSparseApplyProximalGradientDescent(Operation operation) {
     super(operation);

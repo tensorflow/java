@@ -98,6 +98,9 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Cast";
+  
   private Output<U> y;
   
   private Cast(Operation operation) {

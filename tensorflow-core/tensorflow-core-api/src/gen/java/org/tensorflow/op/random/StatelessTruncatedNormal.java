@@ -88,6 +88,9 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends RawOp imp
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessTruncatedNormal";
+  
   private Output<V> output;
   
   private StatelessTruncatedNormal(Operation operation) {

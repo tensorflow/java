@@ -228,6 +228,9 @@ public final class Batch extends RawOp {
     return id;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Batch";
+  
   private List<Output<?>> batchedTensors;
   private Output<TInt64> batchIndex;
   private Output<TInt64> id;

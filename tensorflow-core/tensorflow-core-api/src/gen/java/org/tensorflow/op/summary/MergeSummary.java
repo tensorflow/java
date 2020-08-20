@@ -70,6 +70,9 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
     return summary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MergeSummary";
+  
   private Output<TString> summary;
   
   private MergeSummary(Operation operation) {

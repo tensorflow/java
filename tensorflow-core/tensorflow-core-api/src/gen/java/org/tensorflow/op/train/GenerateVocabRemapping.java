@@ -137,6 +137,9 @@ public final class GenerateVocabRemapping extends RawOp {
     return numPresent;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GenerateVocabRemapping";
+  
   private Output<TInt64> remapping;
   private Output<TInt32> numPresent;
   

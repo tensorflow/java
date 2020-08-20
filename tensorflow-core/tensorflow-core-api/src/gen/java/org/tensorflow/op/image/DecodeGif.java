@@ -70,6 +70,9 @@ public final class DecodeGif extends RawOp implements Operand<TUint8> {
     return image;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeGif";
+  
   private Output<TUint8> image;
   
   private DecodeGif(Operation operation) {

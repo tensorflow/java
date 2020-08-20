@@ -72,6 +72,9 @@ public final class DestroyTemporaryVariable<T extends TType> extends RawOp imple
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DestroyTemporaryVariable";
+  
   private Output<T> value;
   
   private DestroyTemporaryVariable(Operation operation) {

@@ -153,6 +153,9 @@ public final class RetrieveTPUEmbeddingMDLAdagradLightParameters extends RawOp {
     return benefits;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingMDLAdagradLightParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> accumulators;
   private Output<TFloat32> weights;

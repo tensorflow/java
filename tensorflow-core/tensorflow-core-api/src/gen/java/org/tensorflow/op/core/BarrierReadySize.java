@@ -62,6 +62,9 @@ public final class BarrierReadySize extends RawOp implements Operand<TInt32> {
     return size;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BarrierReadySize";
+  
   private Output<TInt32> size;
   
   private BarrierReadySize(Operation operation) {

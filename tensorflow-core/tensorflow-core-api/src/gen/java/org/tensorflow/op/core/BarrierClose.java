@@ -92,6 +92,9 @@ public final class BarrierClose extends RawOp {
     return new Options().cancelPendingEnqueues(cancelPendingEnqueues);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BarrierClose";
+  
   
   private BarrierClose(Operation operation) {
     super(operation);

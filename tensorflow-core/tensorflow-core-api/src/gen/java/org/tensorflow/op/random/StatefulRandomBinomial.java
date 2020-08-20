@@ -88,6 +88,9 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatefulRandomBinomial";
+  
   private Output<V> output;
   
   private StatefulRandomBinomial(Operation operation) {

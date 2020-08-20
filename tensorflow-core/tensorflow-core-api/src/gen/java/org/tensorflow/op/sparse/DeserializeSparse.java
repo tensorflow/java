@@ -115,6 +115,9 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
     return sparseShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeserializeSparse";
+  
   private Output<TInt64> sparseIndices;
   private Output<U> sparseValues;
   private Output<TInt64> sparseShape;

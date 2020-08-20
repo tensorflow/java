@@ -62,6 +62,9 @@ public final class SdcaFprint extends RawOp implements Operand<TInt64> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SdcaFprint";
+  
   private Output<TInt64> output;
   
   private SdcaFprint(Operation operation) {

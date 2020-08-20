@@ -57,6 +57,9 @@ public final class ReplicaId extends RawOp implements Operand<TInt32> {
     return id;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaReplicaId";
+  
   private Output<TInt32> id;
   
   private ReplicaId(Operation operation) {

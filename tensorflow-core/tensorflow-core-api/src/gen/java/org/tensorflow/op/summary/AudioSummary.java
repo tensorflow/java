@@ -114,6 +114,9 @@ public final class AudioSummary extends RawOp implements Operand<TString> {
     return summary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AudioSummaryV2";
+  
   private Output<TString> summary;
   
   private AudioSummary(Operation operation) {

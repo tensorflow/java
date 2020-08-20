@@ -86,6 +86,9 @@ public final class StopGradient<T extends TType> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StopGradient";
+  
   private Output<T> output;
   
   private StopGradient(Operation operation) {

@@ -95,6 +95,9 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
     return v;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchSelfAdjointEigV2";
+  
   private Output<T> e;
   private Output<T> v;
   

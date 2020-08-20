@@ -79,6 +79,9 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
     return (Iterator) output.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SplitV";
+  
   private List<Output<T>> output;
   
   @SuppressWarnings("unchecked")

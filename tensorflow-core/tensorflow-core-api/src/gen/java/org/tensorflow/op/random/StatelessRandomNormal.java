@@ -86,6 +86,9 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessRandomNormal";
+  
   private Output<V> output;
   
   private StatelessRandomNormal(Operation operation) {

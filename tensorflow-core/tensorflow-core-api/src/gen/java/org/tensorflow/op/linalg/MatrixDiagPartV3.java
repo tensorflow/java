@@ -215,6 +215,9 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
     return diagonal;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixDiagPartV3";
+  
   private Output<T> diagonal;
   
   private MatrixDiagPartV3(Operation operation) {

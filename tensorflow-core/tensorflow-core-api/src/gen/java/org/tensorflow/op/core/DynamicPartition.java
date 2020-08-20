@@ -104,6 +104,9 @@ public final class DynamicPartition<T extends TType> extends RawOp implements It
     return (Iterator) outputs.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DynamicPartition";
+  
   private List<Output<T>> outputs;
   
   @SuppressWarnings("unchecked")

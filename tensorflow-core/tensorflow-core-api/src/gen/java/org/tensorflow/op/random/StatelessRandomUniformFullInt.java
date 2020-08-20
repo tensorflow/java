@@ -71,6 +71,9 @@ public final class StatelessRandomUniformFullInt<V extends TNumber> extends RawO
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessRandomUniformFullInt";
+  
   private Output<V> output;
   
   private StatelessRandomUniformFullInt(Operation operation) {

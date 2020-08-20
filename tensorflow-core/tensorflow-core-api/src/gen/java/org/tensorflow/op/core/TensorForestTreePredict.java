@@ -63,6 +63,9 @@ public final class TensorForestTreePredict extends RawOp implements Operand<TFlo
     return logits;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreePredict";
+  
   private Output<TFloat32> logits;
   
   private TensorForestTreePredict(Operation operation) {

@@ -59,6 +59,9 @@ public final class MultiDeviceIteratorToStringHandle extends RawOp implements Op
     return stringHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MultiDeviceIteratorToStringHandle";
+  
   private Output<TString> stringHandle;
   
   private MultiDeviceIteratorToStringHandle(Operation operation) {

@@ -108,6 +108,9 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
     return tensor;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListStack";
+  
   private Output<T> tensor;
   
   private TensorListStack(Operation operation) {

@@ -174,6 +174,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) output.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeCSV";
+  
   private List<Output<?>> output;
   
   private DecodeCsv(Operation operation) {

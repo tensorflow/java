@@ -59,6 +59,9 @@ public final class TensorForestTreeSize extends RawOp implements Operand<TInt32>
     return treeSize;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreeSize";
+  
   private Output<TInt32> treeSize;
   
   private TensorForestTreeSize(Operation operation) {

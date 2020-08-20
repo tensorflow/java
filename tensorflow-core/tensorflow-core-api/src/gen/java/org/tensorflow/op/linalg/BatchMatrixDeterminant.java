@@ -59,6 +59,9 @@ public final class BatchMatrixDeterminant<T extends TType> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatrixDeterminant";
+  
   private Output<T> output;
   
   private BatchMatrixDeterminant(Operation operation) {

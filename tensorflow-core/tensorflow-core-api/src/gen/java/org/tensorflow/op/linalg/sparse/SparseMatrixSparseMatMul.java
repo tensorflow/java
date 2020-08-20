@@ -229,6 +229,9 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
     return (Output<TType>) c;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixSparseMatMul";
+  
   private Output<?> c;
   
   private SparseMatrixSparseMatMul(Operation operation) {

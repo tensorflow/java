@@ -64,6 +64,9 @@ public final class SoftplusGrad<T extends TNumber> extends RawOp implements Oper
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SoftplusGrad";
+  
   private Output<T> backprops;
   
   private SoftplusGrad(Operation operation) {

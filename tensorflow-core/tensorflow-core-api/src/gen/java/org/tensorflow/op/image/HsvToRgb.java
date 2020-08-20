@@ -69,6 +69,9 @@ public final class HsvToRgb<T extends TNumber> extends RawOp implements Operand<
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "HSVToRGB";
+  
   private Output<T> output;
   
   private HsvToRgb(Operation operation) {

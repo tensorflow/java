@@ -59,6 +59,9 @@ public final class ReaderNumWorkUnitsCompleted extends RawOp implements Operand<
     return unitsCompleted;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderNumWorkUnitsCompletedV2";
+  
   private Output<TInt64> unitsCompleted;
   
   private ReaderNumWorkUnitsCompleted(Operation operation) {

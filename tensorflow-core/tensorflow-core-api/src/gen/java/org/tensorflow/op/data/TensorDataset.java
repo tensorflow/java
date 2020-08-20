@@ -68,6 +68,9 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorDataset";
+  
   private Output<?> handle;
   
   private TensorDataset(Operation operation) {

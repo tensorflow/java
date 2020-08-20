@@ -110,6 +110,9 @@ public final class TensorForestTreeResourceHandleOp extends RawOp implements Ope
     return (Output<TType>) resource;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreeResourceHandleOp";
+  
   private Output<?> resource;
   
   private TensorForestTreeResourceHandleOp(Operation operation) {

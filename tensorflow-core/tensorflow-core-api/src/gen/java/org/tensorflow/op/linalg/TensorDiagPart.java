@@ -81,6 +81,9 @@ public final class TensorDiagPart<T extends TType> extends RawOp implements Oper
     return diagonal;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DiagPart";
+  
   private Output<T> diagonal;
   
   private TensorDiagPart(Operation operation) {

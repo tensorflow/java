@@ -127,6 +127,9 @@ public final class StringSplit extends RawOp {
     return shape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringSplitV2";
+  
   private Output<TInt64> indices;
   private Output<TString> values;
   private Output<TInt64> shape;

@@ -104,6 +104,9 @@ public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IRFFT3D";
+  
   private Output<U> output;
   
   private Irfft3d(Operation operation) {

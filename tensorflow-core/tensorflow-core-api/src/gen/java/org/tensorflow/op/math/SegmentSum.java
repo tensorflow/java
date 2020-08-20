@@ -90,6 +90,9 @@ public final class SegmentSum<T extends TType> extends RawOp implements Operand<
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SegmentSum";
+  
   private Output<T> output;
   
   private SegmentSum(Operation operation) {

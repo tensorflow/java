@@ -87,6 +87,9 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatefulStandardNormalV2";
+  
   private Output<U> output;
   
   private StatefulStandardNormal(Operation operation) {

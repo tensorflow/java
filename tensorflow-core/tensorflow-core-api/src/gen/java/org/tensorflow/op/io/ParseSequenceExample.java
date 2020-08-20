@@ -358,6 +358,9 @@ public final class ParseSequenceExample extends RawOp {
     return featureListRaggedInnerSplits;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ParseSequenceExampleV2";
+  
   private List<Output<TInt64>> contextSparseIndices;
   private List<Output<?>> contextSparseValues;
   private List<Output<TInt64>> contextSparseShapes;

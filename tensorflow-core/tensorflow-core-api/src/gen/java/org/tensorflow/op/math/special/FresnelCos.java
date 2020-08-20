@@ -59,6 +59,9 @@ public final class FresnelCos<T extends TNumber> extends RawOp implements Operan
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FresnelCos";
+  
   private Output<T> y;
   
   private FresnelCos(Operation operation) {

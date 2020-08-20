@@ -73,6 +73,9 @@ public final class TridiagonalMatMul<T extends TType> extends RawOp implements O
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TridiagonalMatMul";
+  
   private Output<T> output;
   
   private TridiagonalMatMul(Operation operation) {

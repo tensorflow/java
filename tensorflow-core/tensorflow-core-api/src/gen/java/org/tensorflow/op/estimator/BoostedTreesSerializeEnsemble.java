@@ -62,6 +62,9 @@ public final class BoostedTreesSerializeEnsemble extends RawOp {
     return treeEnsembleSerialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesSerializeEnsemble";
+  
   private Output<TInt64> stampToken;
   private Output<TString> treeEnsembleSerialized;
   

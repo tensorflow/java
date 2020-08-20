@@ -153,6 +153,9 @@ public final class RetrieveTPUEmbeddingCenteredRMSPropParameters extends RawOp {
     return mg;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingCenteredRMSPropParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> ms;
   private Output<TFloat32> mom;

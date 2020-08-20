@@ -207,6 +207,9 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Dequantize";
+  
   private Output<U> output;
   
   private Dequantize(Operation operation) {

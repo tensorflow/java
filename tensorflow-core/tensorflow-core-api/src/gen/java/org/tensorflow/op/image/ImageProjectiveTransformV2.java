@@ -113,6 +113,9 @@ public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp i
     return transformedImages;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ImageProjectiveTransformV2";
+  
   private Output<T> transformedImages;
   
   private ImageProjectiveTransformV2(Operation operation) {

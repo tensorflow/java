@@ -80,6 +80,9 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NcclAllReduce";
+  
   private Output<T> output;
   
   private NcclAllReduce(Operation operation) {

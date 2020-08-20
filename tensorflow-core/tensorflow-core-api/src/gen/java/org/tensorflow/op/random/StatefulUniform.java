@@ -87,6 +87,9 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatefulUniform";
+  
   private Output<U> output;
   
   private StatefulUniform(Operation operation) {

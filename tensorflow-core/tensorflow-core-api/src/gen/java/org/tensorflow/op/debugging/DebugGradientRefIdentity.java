@@ -64,6 +64,9 @@ public final class DebugGradientRefIdentity<T extends TType> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DebugGradientRefIdentity";
+  
   private Output<T> output;
   
   private DebugGradientRefIdentity(Operation operation) {

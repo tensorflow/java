@@ -146,6 +146,9 @@ public final class RetrieveTPUEmbeddingMomentumParametersGradAccumDebug extends 
     return gradientAccumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingMomentumParametersGradAccumDebug";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> momenta;
   private Output<TFloat32> gradientAccumulators;

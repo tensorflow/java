@@ -92,6 +92,9 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
     return patches;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExtractImagePatches";
+  
   private Output<T> patches;
   
   private ExtractImagePatches(Operation operation) {

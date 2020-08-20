@@ -93,6 +93,9 @@ public final class MergeV2Checkpoints extends RawOp {
     return new Options().deleteOldDirs(deleteOldDirs);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MergeV2Checkpoints";
+  
   
   private MergeV2Checkpoints(Operation operation) {
     super(operation);

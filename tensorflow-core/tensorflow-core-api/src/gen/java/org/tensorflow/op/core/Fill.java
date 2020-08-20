@@ -91,6 +91,9 @@ public final class Fill<U extends TType> extends RawOp implements Operand<U> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Fill";
+  
   private Output<U> output;
   
   private Fill(Operation operation) {

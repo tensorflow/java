@@ -73,6 +73,9 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
     return (Output<TType>) outputHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListScatterIntoExistingList";
+  
   private Output<?> outputHandle;
   
   private TensorListScatterIntoExistingList(Operation operation) {

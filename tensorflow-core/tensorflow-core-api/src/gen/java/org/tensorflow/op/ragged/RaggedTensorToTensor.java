@@ -133,6 +133,9 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
     return result;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedTensorToTensor";
+  
   private Output<U> result;
   
   private RaggedTensorToTensor(Operation operation) {

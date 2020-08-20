@@ -74,6 +74,9 @@ public final class FilterByLastComponentDataset extends RawOp implements Operand
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FilterByLastComponentDataset";
+  
   private Output<?> output;
   
   private FilterByLastComponentDataset(Operation operation) {

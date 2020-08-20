@@ -154,6 +154,9 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FakeQuantWithMinMaxArgsGradient";
+  
   private Output<TFloat32> backprops;
   
   private FakeQuantWithMinMaxArgsGradient(Operation operation) {

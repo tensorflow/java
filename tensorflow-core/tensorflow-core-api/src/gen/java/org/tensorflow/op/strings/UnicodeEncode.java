@@ -156,6 +156,9 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnicodeEncode";
+  
   private Output<TString> output;
   
   private UnicodeEncode(Operation operation) {

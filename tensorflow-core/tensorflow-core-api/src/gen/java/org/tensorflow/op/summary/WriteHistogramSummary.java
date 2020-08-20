@@ -54,6 +54,9 @@ public final class WriteHistogramSummary extends RawOp {
     return new WriteHistogramSummary(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "WriteHistogramSummary";
+  
   
   private WriteHistogramSummary(Operation operation) {
     super(operation);

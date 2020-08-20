@@ -127,6 +127,9 @@ public final class ScatterAdd<T extends TType> extends RawOp implements Operand<
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterAdd";
+  
   private Output<T> outputRef;
   
   private ScatterAdd(Operation operation) {

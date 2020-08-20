@@ -62,6 +62,9 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
     return recordsProduced;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderNumRecordsProducedV2";
+  
   private Output<TInt64> recordsProduced;
   
   private ReaderNumRecordsProduced(Operation operation) {

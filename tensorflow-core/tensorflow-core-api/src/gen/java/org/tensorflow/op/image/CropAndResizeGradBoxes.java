@@ -116,6 +116,9 @@ public final class CropAndResizeGradBoxes extends RawOp implements Operand<TFloa
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CropAndResizeGradBoxes";
+  
   private Output<TFloat32> output;
   
   private CropAndResizeGradBoxes(Operation operation) {

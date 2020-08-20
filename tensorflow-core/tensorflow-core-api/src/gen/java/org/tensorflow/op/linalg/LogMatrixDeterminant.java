@@ -75,6 +75,9 @@ public final class LogMatrixDeterminant<T extends TType> extends RawOp {
     return logAbsDeterminant;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LogMatrixDeterminant";
+  
   private Output<T> sign;
   private Output<T> logAbsDeterminant;
   

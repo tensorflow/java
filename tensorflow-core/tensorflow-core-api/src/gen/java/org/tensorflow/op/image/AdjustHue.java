@@ -73,6 +73,9 @@ public final class AdjustHue<T extends TNumber> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AdjustHue";
+  
   private Output<T> output;
   
   private AdjustHue(Operation operation) {

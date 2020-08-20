@@ -74,6 +74,9 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListSplit";
+  
   private Output<?> outputHandle;
   
   private TensorListSplit(Operation operation) {

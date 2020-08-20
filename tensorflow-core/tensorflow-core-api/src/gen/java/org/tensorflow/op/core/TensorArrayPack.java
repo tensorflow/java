@@ -101,6 +101,9 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayPack";
+  
   private Output<T> value;
   
   private TensorArrayPack(Operation operation) {

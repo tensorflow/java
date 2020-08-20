@@ -99,6 +99,9 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatrixSolveLs";
+  
   private Output<T> output;
   
   private BatchMatrixSolveLs(Operation operation) {

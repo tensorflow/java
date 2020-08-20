@@ -61,6 +61,9 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp
     return isInitialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IsBoostedTreesQuantileStreamResourceInitialized";
+  
   private Output<TBool> isInitialized;
   
   private IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {

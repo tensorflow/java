@@ -153,6 +153,9 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
     return validOutputs;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NonMaxSuppressionV5";
+  
   private Output<TInt32> selectedIndices;
   private Output<T> selectedScores;
   private Output<TInt32> validOutputs;

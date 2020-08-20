@@ -87,6 +87,9 @@ public final class QuantizedMul<V extends TType> extends RawOp {
     return maxZ;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedMul";
+  
   private Output<V> z;
   private Output<TFloat32> minZ;
   private Output<TFloat32> maxZ;

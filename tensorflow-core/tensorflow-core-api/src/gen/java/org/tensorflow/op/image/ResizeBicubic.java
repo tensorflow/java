@@ -124,6 +124,9 @@ public final class ResizeBicubic extends RawOp implements Operand<TFloat32> {
     return resizedImages;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeBicubic";
+  
   private Output<TFloat32> resizedImages;
   
   private ResizeBicubic(Operation operation) {

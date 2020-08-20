@@ -89,6 +89,9 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessMultinomial";
+  
   private Output<V> output;
   
   private StatelessMultinomial(Operation operation) {

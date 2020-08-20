@@ -104,6 +104,9 @@ public final class Placeholder<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Placeholder";
+  
   private Output<T> output;
   
   private Placeholder(Operation operation) {

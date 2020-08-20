@@ -163,6 +163,9 @@ public final class QuantizeAndDequantize<T extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizeAndDequantizeV3";
+  
   private Output<T> output;
   
   private QuantizeAndDequantize(Operation operation) {

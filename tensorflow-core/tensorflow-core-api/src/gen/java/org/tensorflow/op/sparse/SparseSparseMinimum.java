@@ -78,6 +78,9 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
     return outputValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSparseMinimum";
+  
   private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   

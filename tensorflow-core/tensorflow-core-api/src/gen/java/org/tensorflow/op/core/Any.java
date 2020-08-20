@@ -104,6 +104,9 @@ public final class Any extends RawOp implements Operand<TBool> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Any";
+  
   private Output<TBool> output;
   
   private Any(Operation operation) {

@@ -133,6 +133,9 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ParameterizedTruncatedNormal";
+  
   private Output<U> output;
   
   private ParameterizedTruncatedNormal(Operation operation) {

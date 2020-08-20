@@ -104,6 +104,9 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterNdNonAliasingAdd";
+  
   private Output<T> output;
   
   private ScatterNdNonAliasingAdd(Operation operation) {

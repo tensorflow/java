@@ -130,6 +130,9 @@ public final class RandomShuffle<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RandomShuffle";
+  
   private Output<T> output;
   
   private RandomShuffle(Operation operation) {

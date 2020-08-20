@@ -68,6 +68,9 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
     return elementShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListElementShape";
+  
   private Output<T> elementShape;
   
   private TensorListElementShape(Operation operation) {

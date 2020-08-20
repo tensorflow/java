@@ -146,6 +146,9 @@ public final class HashTable extends RawOp implements Operand<TType> {
     return (Output<TType>) tableHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "HashTableV2";
+  
   private Output<?> tableHandle;
   
   private HashTable(Operation operation) {

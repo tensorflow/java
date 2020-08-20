@@ -132,6 +132,9 @@ public final class InfeedEnqueue extends RawOp {
     return new Options().deviceOrdinal(deviceOrdinal);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InfeedEnqueue";
+  
   
   private InfeedEnqueue(Operation operation) {
     super(operation);

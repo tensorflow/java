@@ -91,6 +91,9 @@ public final class SegmentMean<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SegmentMean";
+  
   private Output<T> output;
   
   private SegmentMean(Operation operation) {

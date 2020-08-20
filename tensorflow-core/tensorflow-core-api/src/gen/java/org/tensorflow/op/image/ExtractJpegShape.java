@@ -83,6 +83,9 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
     return imageShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExtractJpegShape";
+  
   private Output<T> imageShape;
   
   private ExtractJpegShape(Operation operation) {

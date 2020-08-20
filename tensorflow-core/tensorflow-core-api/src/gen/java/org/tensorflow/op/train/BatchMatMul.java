@@ -141,6 +141,9 @@ public final class BatchMatMul<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatMulV2";
+  
   private Output<T> output;
   
   private BatchMatMul(Operation operation) {

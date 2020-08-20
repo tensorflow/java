@@ -69,6 +69,9 @@ public final class InplaceAdd<T extends TType> extends RawOp implements Operand<
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InplaceAdd";
+  
   private Output<T> y;
   
   private InplaceAdd(Operation operation) {

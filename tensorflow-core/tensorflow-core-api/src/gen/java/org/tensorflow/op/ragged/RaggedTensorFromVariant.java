@@ -110,6 +110,9 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
     return outputDenseValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedTensorFromVariant";
+  
   private List<Output<U>> outputNestedSplits;
   private Output<T> outputDenseValues;
   

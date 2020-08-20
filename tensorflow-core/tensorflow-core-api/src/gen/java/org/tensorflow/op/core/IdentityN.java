@@ -80,6 +80,9 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) output.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IdentityN";
+  
   private List<Output<?>> output;
   
   private IdentityN(Operation operation) {

@@ -104,6 +104,9 @@ public final class AssignAdd<T extends TType> extends RawOp implements Operand<T
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AssignAdd";
+  
   private Output<T> outputRef;
   
   private AssignAdd(Operation operation) {

@@ -60,6 +60,9 @@ public final class BatchCholesky<T extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchCholesky";
+  
   private Output<T> output;
   
   private BatchCholesky(Operation operation) {

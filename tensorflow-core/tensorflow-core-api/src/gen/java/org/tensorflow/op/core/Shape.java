@@ -87,6 +87,9 @@ public final class Shape<U extends TNumber> extends RawOp implements Operand<U> 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Shape";
+  
   private Output<U> output;
   
   private Shape(Operation operation) {

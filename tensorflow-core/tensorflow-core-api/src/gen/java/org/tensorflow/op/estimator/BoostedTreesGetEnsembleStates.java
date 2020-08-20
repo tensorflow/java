@@ -84,6 +84,9 @@ public final class BoostedTreesGetEnsembleStates extends RawOp {
     return lastLayerNodesRange;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesGetEnsembleStates";
+  
   private Output<TInt64> stampToken;
   private Output<TInt32> numTrees;
   private Output<TInt32> numFinalizedTrees;

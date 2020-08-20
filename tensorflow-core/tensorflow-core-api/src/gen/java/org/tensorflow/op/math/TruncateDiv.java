@@ -71,6 +71,9 @@ public final class TruncateDiv<T extends TType> extends RawOp implements Operand
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TruncateDiv";
+  
   private Output<T> z;
   
   private TruncateDiv(Operation operation) {

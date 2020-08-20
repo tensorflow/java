@@ -72,6 +72,9 @@ public final class BoostedTreesMakeQuantileSummaries extends RawOp implements It
     return (Iterator) summaries.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesMakeQuantileSummaries";
+  
   private List<Output<TFloat32>> summaries;
   
   @SuppressWarnings("unchecked")

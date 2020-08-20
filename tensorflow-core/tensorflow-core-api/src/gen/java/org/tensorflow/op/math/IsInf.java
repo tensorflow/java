@@ -72,6 +72,9 @@ public final class IsInf extends RawOp implements Operand<TBool> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IsInf";
+  
   private Output<TBool> y;
   
   private IsInf(Operation operation) {

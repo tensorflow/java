@@ -149,6 +149,9 @@ public final class ResourceConditionalAccumulator extends RawOp implements Opera
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceConditionalAccumulator";
+  
   private Output<?> handle;
   
   private ResourceConditionalAccumulator(Operation operation) {

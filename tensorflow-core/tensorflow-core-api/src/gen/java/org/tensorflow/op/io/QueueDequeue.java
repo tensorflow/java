@@ -116,6 +116,9 @@ public final class QueueDequeue extends RawOp implements Iterable<Operand<TType>
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QueueDequeueV2";
+  
   private List<Output<?>> components;
   
   private QueueDequeue(Operation operation) {

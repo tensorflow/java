@@ -66,6 +66,9 @@ public final class ShardedFilename extends RawOp implements Operand<TString> {
     return filename;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ShardedFilename";
+  
   private Output<TString> filename;
   
   private ShardedFilename(Operation operation) {

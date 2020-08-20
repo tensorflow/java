@@ -126,6 +126,9 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
     return dense;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseToDense";
+  
   private Output<U> dense;
   
   private SparseToDense(Operation operation) {

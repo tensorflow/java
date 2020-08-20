@@ -77,6 +77,9 @@ public final class RegexFullMatch extends RawOp implements Operand<TBool> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RegexFullMatch";
+  
   private Output<TBool> output;
   
   private RegexFullMatch(Operation operation) {

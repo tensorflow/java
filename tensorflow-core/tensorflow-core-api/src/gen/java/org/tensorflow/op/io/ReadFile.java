@@ -59,6 +59,9 @@ public final class ReadFile extends RawOp implements Operand<TString> {
     return contents;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReadFile";
+  
   private Output<TString> contents;
   
   private ReadFile(Operation operation) {

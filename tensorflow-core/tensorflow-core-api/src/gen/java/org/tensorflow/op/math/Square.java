@@ -63,6 +63,9 @@ public final class Square<T extends TType> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Square";
+  
   private Output<T> y;
   
   private Square(Operation operation) {

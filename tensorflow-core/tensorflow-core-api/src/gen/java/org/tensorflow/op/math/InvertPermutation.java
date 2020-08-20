@@ -79,6 +79,9 @@ public final class InvertPermutation<T extends TNumber> extends RawOp implements
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InvertPermutation";
+  
   private Output<T> y;
   
   private InvertPermutation(Operation operation) {

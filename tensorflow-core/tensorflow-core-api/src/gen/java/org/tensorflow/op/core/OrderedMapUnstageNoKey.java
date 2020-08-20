@@ -164,6 +164,9 @@ public final class OrderedMapUnstageNoKey extends RawOp {
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OrderedMapUnstageNoKey";
+  
   private Output<TInt64> key;
   private List<Output<?>> values;
   

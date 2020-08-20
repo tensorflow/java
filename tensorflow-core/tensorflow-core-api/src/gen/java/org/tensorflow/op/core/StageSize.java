@@ -156,6 +156,9 @@ public final class StageSize extends RawOp implements Operand<TInt32> {
     return size;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StageSize";
+  
   private Output<TInt32> size;
   
   private StageSize(Operation operation) {

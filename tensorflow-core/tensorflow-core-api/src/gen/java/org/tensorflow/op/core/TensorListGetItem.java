@@ -67,6 +67,9 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
     return item;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListGetItem";
+  
   private Output<T> item;
   
   private TensorListGetItem(Operation operation) {

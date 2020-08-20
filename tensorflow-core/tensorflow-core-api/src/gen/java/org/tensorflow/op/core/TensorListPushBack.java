@@ -68,6 +68,9 @@ public final class TensorListPushBack extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListPushBack";
+  
   private Output<?> outputHandle;
   
   private TensorListPushBack(Operation operation) {

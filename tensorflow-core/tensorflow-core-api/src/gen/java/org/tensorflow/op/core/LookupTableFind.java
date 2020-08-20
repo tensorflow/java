@@ -73,6 +73,9 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LookupTableFindV2";
+  
   private Output<U> values;
   
   private LookupTableFind(Operation operation) {

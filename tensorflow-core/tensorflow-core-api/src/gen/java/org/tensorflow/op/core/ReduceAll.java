@@ -104,6 +104,9 @@ public final class ReduceAll extends RawOp implements Operand<TBool> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "All";
+  
   private Output<TBool> output;
   
   private ReduceAll(Operation operation) {

@@ -44,6 +44,9 @@ public final class ShutdownDistributedTPU extends RawOp {
     return new ShutdownDistributedTPU(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ShutdownDistributedTPU";
+  
   
   private ShutdownDistributedTPU(Operation operation) {
     super(operation);

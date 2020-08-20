@@ -72,6 +72,9 @@ public final class Rint<T extends TNumber> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Rint";
+  
   private Output<T> y;
   
   private Rint(Operation operation) {

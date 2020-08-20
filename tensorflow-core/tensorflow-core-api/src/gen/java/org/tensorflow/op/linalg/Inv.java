@@ -112,6 +112,9 @@ public final class Inv<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixInverse";
+  
   private Output<T> output;
   
   private Inv(Operation operation) {

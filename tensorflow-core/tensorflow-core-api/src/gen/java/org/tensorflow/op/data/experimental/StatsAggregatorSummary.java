@@ -58,6 +58,9 @@ public final class StatsAggregatorSummary extends RawOp implements Operand<TStri
     return summary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalStatsAggregatorSummary";
+  
   private Output<TString> summary;
   
   private StatsAggregatorSummary(Operation operation) {

@@ -72,6 +72,9 @@ public final class IsFinite extends RawOp implements Operand<TBool> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IsFinite";
+  
   private Output<TBool> y;
   
   private IsFinite(Operation operation) {

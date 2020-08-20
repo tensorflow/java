@@ -74,6 +74,9 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
     return sum;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AccumulateNV2";
+  
   private Output<T> sum;
   
   private AccumulateN(Operation operation) {

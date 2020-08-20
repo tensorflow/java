@@ -82,6 +82,9 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorGetNextSync";
+  
   private List<Output<?>> components;
   
   private IteratorGetNextSync(Operation operation) {

@@ -95,6 +95,9 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessRandomBinomial";
+  
   private Output<W> output;
   
   private StatelessRandomBinomial(Operation operation) {

@@ -130,6 +130,9 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RandomGamma";
+  
   private Output<U> output;
   
   private RandomGamma(Operation operation) {

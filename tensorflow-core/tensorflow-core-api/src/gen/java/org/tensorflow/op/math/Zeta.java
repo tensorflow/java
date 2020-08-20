@@ -68,6 +68,9 @@ public final class Zeta<T extends TNumber> extends RawOp implements Operand<T> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Zeta";
+  
   private Output<T> z;
   
   private Zeta(Operation operation) {

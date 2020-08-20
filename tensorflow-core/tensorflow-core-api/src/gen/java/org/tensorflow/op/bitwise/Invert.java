@@ -103,6 +103,9 @@ public final class Invert<T extends TNumber> extends RawOp implements Operand<T>
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Invert";
+  
   private Output<T> y;
   
   private Invert(Operation operation) {

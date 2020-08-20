@@ -47,6 +47,9 @@ public final class ImportEvent extends RawOp {
     return new ImportEvent(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ImportEvent";
+  
   
   private ImportEvent(Operation operation) {
     super(operation);

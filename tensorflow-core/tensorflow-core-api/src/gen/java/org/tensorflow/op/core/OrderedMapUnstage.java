@@ -168,6 +168,9 @@ public final class OrderedMapUnstage extends RawOp implements Iterable<Operand<T
     return (Iterator) values.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OrderedMapUnstage";
+  
   private List<Output<?>> values;
   
   private OrderedMapUnstage(Operation operation) {

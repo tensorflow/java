@@ -84,6 +84,9 @@ public final class BroadcastTo<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BroadcastTo";
+  
   private Output<T> output;
   
   private BroadcastTo(Operation operation) {

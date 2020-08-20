@@ -115,6 +115,9 @@ public final class LmdbReader extends RawOp implements Operand<TString> {
     return readerHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LMDBReader";
+  
   private Output<TString> readerHandle;
   
   private LmdbReader(Operation operation) {

@@ -128,6 +128,9 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
     return idx;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UniqueV2";
+  
   private Output<T> y;
   private Output<V> idx;
   

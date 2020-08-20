@@ -123,6 +123,9 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
     return resizedImages;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeNearestNeighbor";
+  
   private Output<T> resizedImages;
   
   private ResizeNearestNeighbor(Operation operation) {

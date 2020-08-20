@@ -133,6 +133,9 @@ public final class CopyHost<T extends TType> extends RawOp implements Operand<T>
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CopyHost";
+  
   private Output<T> output;
   
   private CopyHost(Operation operation) {

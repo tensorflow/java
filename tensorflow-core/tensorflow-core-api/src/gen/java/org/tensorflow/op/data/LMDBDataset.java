@@ -87,6 +87,9 @@ public final class LMDBDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LMDBDataset";
+  
   private Output<?> handle;
   
   private LMDBDataset(Operation operation) {

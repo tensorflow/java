@@ -59,6 +59,9 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
     return numAccumulated;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceAccumulatorNumAccumulated";
+  
   private Output<TInt32> numAccumulated;
   
   private ResourceAccumulatorNumAccumulated(Operation operation) {

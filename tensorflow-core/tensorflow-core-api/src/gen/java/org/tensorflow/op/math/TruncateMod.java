@@ -70,6 +70,9 @@ public final class TruncateMod<T extends TNumber> extends RawOp implements Opera
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TruncateMod";
+  
   private Output<T> z;
   
   private TruncateMod(Operation operation) {

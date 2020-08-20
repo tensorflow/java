@@ -148,6 +148,9 @@ public final class Stage extends RawOp {
     return new Options().sharedName(sharedName);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Stage";
+  
   
   private Stage(Operation operation) {
     super(operation);

@@ -106,6 +106,9 @@ public final class PreventGradient<T extends TType> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PreventGradient";
+  
   private Output<T> output;
   
   private PreventGradient(Operation operation) {

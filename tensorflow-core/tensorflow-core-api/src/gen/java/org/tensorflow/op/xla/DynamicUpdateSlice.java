@@ -78,6 +78,9 @@ public final class DynamicUpdateSlice<T extends TType> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaDynamicUpdateSlice";
+  
   private Output<T> output;
   
   private DynamicUpdateSlice(Operation operation) {

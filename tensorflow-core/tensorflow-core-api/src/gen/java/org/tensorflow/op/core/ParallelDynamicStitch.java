@@ -119,6 +119,9 @@ public final class ParallelDynamicStitch<T extends TType> extends RawOp implemen
     return merged;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ParallelDynamicStitch";
+  
   private Output<T> merged;
   
   private ParallelDynamicStitch(Operation operation) {

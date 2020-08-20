@@ -63,6 +63,9 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
     return size;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArraySizeV3";
+  
   private Output<TInt32> size;
   
   private TensorArraySize(Operation operation) {

@@ -68,6 +68,9 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
     return (Iterator) bucketBoundaries.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceGetBucketBoundaries";
+  
   private List<Output<TFloat32>> bucketBoundaries;
   
   @SuppressWarnings("unchecked")

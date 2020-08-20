@@ -61,6 +61,9 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
     return (Output<TType>) optional;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OptionalFromValue";
+  
   private Output<?> optional;
   
   private OptionalFromValue(Operation operation) {

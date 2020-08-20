@@ -62,6 +62,9 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
     return length;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListLength";
+  
   private Output<TInt32> length;
   
   private TensorListLength(Operation operation) {

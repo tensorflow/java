@@ -80,6 +80,9 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
     return bValGrad;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseAddGrad";
+  
   private Output<T> aValGrad;
   private Output<T> bValGrad;
   

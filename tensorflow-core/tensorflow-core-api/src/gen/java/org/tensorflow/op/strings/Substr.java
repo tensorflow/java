@@ -184,6 +184,9 @@ public final class Substr extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Substr";
+  
   private Output<TString> output;
   
   private Substr(Operation operation) {

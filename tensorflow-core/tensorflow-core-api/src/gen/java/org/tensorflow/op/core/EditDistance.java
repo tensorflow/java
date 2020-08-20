@@ -151,6 +151,9 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EditDistance";
+  
   private Output<TFloat32> output;
   
   private EditDistance(Operation operation) {

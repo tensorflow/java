@@ -68,6 +68,9 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TextLineDataset";
+  
   private Output<?> handle;
   
   private TextLineDataset(Operation operation) {

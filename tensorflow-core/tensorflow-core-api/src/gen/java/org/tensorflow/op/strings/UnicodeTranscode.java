@@ -203,6 +203,9 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnicodeTranscode";
+  
   private Output<TString> output;
   
   private UnicodeTranscode(Operation operation) {

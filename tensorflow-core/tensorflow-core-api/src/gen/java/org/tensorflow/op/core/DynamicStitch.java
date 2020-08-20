@@ -120,6 +120,9 @@ public final class DynamicStitch<T extends TType> extends RawOp implements Opera
     return merged;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DynamicStitch";
+  
   private Output<T> merged;
   
   private DynamicStitch(Operation operation) {

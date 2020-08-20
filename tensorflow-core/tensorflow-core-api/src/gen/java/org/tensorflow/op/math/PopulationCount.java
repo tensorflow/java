@@ -68,6 +68,9 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PopulationCount";
+  
   private Output<TUint8> y;
   
   private PopulationCount(Operation operation) {

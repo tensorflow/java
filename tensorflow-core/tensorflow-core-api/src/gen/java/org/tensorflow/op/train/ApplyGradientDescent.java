@@ -102,6 +102,9 @@ public final class ApplyGradientDescent<T extends TType> extends RawOp implement
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyGradientDescent";
+  
   private Output<T> out;
   
   private ApplyGradientDescent(Operation operation) {

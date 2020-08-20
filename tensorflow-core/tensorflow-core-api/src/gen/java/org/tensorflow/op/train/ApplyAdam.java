@@ -142,6 +142,9 @@ public final class ApplyAdam<T extends TType> extends RawOp implements Operand<T
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyAdam";
+  
   private Output<T> out;
   
   private ApplyAdam(Operation operation) {

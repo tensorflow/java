@@ -63,6 +63,9 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RandomGammaGrad";
+  
   private Output<T> output;
   
   private RandomGammaGrad(Operation operation) {

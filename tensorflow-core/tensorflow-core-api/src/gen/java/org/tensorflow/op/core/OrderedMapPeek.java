@@ -169,6 +169,9 @@ public final class OrderedMapPeek extends RawOp implements Iterable<Operand<TTyp
     return (Iterator) values.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OrderedMapPeek";
+  
   private List<Output<?>> values;
   
   private OrderedMapPeek(Operation operation) {

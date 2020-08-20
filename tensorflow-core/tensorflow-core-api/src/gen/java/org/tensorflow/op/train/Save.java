@@ -60,6 +60,9 @@ public final class Save extends RawOp {
     return new Save(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SaveV2";
+  
   
   private Save(Operation operation) {
     super(operation);

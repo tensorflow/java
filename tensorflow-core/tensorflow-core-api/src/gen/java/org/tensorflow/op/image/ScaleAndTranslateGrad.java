@@ -119,6 +119,9 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScaleAndTranslateGrad";
+  
   private Output<T> output;
   
   private ScaleAndTranslateGrad(Operation operation) {

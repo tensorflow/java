@@ -61,6 +61,9 @@ public final class TPUOrdinalSelector extends RawOp implements Operand<TInt32> {
     return deviceOrdinals;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TPUOrdinalSelector";
+  
   private Output<TInt32> deviceOrdinals;
   
   private TPUOrdinalSelector(Operation operation) {

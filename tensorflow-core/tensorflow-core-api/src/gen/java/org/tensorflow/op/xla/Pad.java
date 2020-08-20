@@ -74,6 +74,9 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaPad";
+  
   private Output<T> output;
   
   private Pad(Operation operation) {

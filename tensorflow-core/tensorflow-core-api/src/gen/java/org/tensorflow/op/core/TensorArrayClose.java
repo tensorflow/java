@@ -49,6 +49,9 @@ public final class TensorArrayClose extends RawOp {
     return new TensorArrayClose(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayCloseV3";
+  
   
   private TensorArrayClose(Operation operation) {
     super(operation);

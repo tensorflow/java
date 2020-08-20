@@ -74,6 +74,9 @@ public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp 
     return denseShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CSRSparseMatrixToSparseTensor";
+  
   private Output<TInt64> indices;
   private Output<T> values;
   private Output<TInt64> denseShape;

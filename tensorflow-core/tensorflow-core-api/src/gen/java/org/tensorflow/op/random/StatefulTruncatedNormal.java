@@ -88,6 +88,9 @@ public final class StatefulTruncatedNormal<U extends TType> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatefulTruncatedNormal";
+  
   private Output<U> output;
   
   private StatefulTruncatedNormal(Operation operation) {

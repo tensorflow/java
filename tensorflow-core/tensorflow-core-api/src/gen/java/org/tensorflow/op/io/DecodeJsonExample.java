@@ -69,6 +69,9 @@ public final class DecodeJsonExample extends RawOp implements Operand<TString> {
     return binaryExamples;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeJSONExample";
+  
   private Output<TString> binaryExamples;
   
   private DecodeJsonExample(Operation operation) {

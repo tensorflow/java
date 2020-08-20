@@ -96,6 +96,9 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
     return (Output<TType>) serialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SerializeIterator";
+  
   private Output<?> serialized;
   
   private SerializeIterator(Operation operation) {

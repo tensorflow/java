@@ -73,6 +73,9 @@ public final class KeyValueSort<T extends TNumber, U extends TType> extends RawO
     return sortedValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaKeyValueSort";
+  
   private Output<T> sortedKeys;
   private Output<U> sortedValues;
   

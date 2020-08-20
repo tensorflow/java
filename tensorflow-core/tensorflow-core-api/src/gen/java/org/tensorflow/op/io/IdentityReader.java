@@ -119,6 +119,9 @@ public final class IdentityReader extends RawOp implements Operand<TType> {
     return (Output<TType>) readerHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IdentityReaderV2";
+  
   private Output<?> readerHandle;
   
   private IdentityReader(Operation operation) {

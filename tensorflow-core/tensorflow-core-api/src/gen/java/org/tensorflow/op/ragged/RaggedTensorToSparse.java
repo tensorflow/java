@@ -79,6 +79,9 @@ public final class RaggedTensorToSparse<U extends TType> extends RawOp {
     return sparseDenseShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedTensorToSparse";
+  
   private Output<TInt64> sparseIndices;
   private Output<U> sparseValues;
   private Output<TInt64> sparseDenseShape;

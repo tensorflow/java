@@ -84,6 +84,9 @@ public final class BitwiseOr<T extends TNumber> extends RawOp implements Operand
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BitwiseOr";
+  
   private Output<T> z;
   
   private BitwiseOr(Operation operation) {

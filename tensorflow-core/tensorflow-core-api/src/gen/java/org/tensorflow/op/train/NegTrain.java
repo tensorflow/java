@@ -65,6 +65,9 @@ public final class NegTrain extends RawOp {
     return new NegTrain(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NegTrain";
+  
   
   private NegTrain(Operation operation) {
     super(operation);

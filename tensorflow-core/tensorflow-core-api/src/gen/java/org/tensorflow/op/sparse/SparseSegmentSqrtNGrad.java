@@ -72,6 +72,9 @@ public final class SparseSegmentSqrtNGrad<T extends TNumber> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSqrtNGrad";
+  
   private Output<T> output;
   
   private SparseSegmentSqrtNGrad(Operation operation) {

@@ -193,6 +193,9 @@ public final class RecordInput extends RawOp implements Operand<TString> {
     return records;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RecordInput";
+  
   private Output<TString> records;
   
   private RecordInput(Operation operation) {

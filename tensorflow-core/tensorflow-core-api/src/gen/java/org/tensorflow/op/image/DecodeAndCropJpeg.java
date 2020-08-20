@@ -232,6 +232,9 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
     return image;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeAndCropJpeg";
+  
   private Output<TUint8> image;
   
   private DecodeAndCropJpeg(Operation operation) {

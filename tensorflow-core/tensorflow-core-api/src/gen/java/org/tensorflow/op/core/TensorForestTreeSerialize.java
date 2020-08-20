@@ -59,6 +59,9 @@ public final class TensorForestTreeSerialize extends RawOp implements Operand<TS
     return treeConfig;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreeSerialize";
+  
   private Output<TString> treeConfig;
   
   private TensorForestTreeSerialize(Operation operation) {

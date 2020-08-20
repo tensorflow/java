@@ -103,6 +103,9 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
     return (Iterator) outputs.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MlirPassthroughOp";
+  
   private List<Output<?>> outputs;
   
   private MlirPassthroughOp(Operation operation) {

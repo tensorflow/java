@@ -204,6 +204,9 @@ public final class TensorArray extends RawOp {
     return flow;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayV3";
+  
   private Output<?> handle;
   private Output<TFloat32> flow;
   

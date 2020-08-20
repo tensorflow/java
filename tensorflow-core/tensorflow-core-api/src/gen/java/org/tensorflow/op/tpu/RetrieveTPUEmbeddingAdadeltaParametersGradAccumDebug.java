@@ -153,6 +153,9 @@ public final class RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug extends 
     return gradientAccumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> accumulators;
   private Output<TFloat32> updates;

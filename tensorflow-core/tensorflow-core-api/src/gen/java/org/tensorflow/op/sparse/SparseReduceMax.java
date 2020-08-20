@@ -119,6 +119,9 @@ public final class SparseReduceMax<T extends TNumber> extends RawOp implements O
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseReduceMax";
+  
   private Output<T> output;
   
   private SparseReduceMax(Operation operation) {

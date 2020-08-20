@@ -123,6 +123,9 @@ public final class ResizeBicubicGrad<T extends TNumber> extends RawOp implements
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeBicubicGrad";
+  
   private Output<T> output;
   
   private ResizeBicubicGrad(Operation operation) {

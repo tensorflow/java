@@ -45,6 +45,9 @@ public final class ConfigureTPUEmbedding extends RawOp {
     return new ConfigureTPUEmbedding(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ConfigureTPUEmbedding";
+  
   
   private ConfigureTPUEmbedding(Operation operation) {
     super(operation);

@@ -66,6 +66,9 @@ public final class SquaredDifference<T extends TType> extends RawOp implements O
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SquaredDifference";
+  
   private Output<T> z;
   
   private SquaredDifference(Operation operation) {

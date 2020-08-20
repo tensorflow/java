@@ -110,6 +110,9 @@ public final class BoostedTreesQuantileStreamResourceHandleOp extends RawOp impl
     return (Output<TType>) resource;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceHandleOp";
+  
   private Output<?> resource;
   
   private BoostedTreesQuantileStreamResourceHandleOp(Operation operation) {

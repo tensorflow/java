@@ -170,6 +170,9 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
     return topology;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ConfigureDistributedTPU";
+  
   private Output<TString> topology;
   
   private ConfigureDistributedTPU(Operation operation) {

@@ -162,6 +162,9 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
     return outputMatrix;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LoadAndRemapMatrix";
+  
   private Output<TFloat32> outputMatrix;
   
   private LoadAndRemapMatrix(Operation operation) {

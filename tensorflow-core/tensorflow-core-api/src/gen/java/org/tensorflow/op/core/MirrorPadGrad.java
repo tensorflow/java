@@ -86,6 +86,9 @@ public final class MirrorPadGrad<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MirrorPadGrad";
+  
   private Output<T> output;
   
   private MirrorPadGrad(Operation operation) {

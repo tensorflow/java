@@ -48,6 +48,9 @@ public final class TensorForestCreateTreeVariable extends RawOp {
     return new TensorForestCreateTreeVariable(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestCreateTreeVariable";
+  
   
   private TensorForestCreateTreeVariable(Operation operation) {
     super(operation);

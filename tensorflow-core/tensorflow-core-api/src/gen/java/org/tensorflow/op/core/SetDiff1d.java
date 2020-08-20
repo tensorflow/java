@@ -105,6 +105,9 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
     return idx;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ListDiff";
+  
   private Output<T> out;
   private Output<U> idx;
   

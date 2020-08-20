@@ -116,6 +116,9 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyAdagradDA";
+  
   private Output<T> out;
   
   private SparseApplyAdagradDa(Operation operation) {

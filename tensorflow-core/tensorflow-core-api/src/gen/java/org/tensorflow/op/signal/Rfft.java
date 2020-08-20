@@ -86,6 +86,9 @@ public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RFFT";
+  
   private Output<U> output;
   
   private Rfft(Operation operation) {

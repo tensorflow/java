@@ -72,6 +72,9 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TPUEmbeddingActivations";
+  
   private Output<TFloat32> output;
   
   private TPUEmbeddingActivations(Operation operation) {

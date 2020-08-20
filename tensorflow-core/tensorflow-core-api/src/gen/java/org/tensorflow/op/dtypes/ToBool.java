@@ -72,6 +72,9 @@ public final class ToBool extends RawOp implements Operand<TBool> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ToBool";
+  
   private Output<TBool> output;
   
   private ToBool(Operation operation) {

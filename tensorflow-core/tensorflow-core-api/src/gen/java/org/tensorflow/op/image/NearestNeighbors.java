@@ -73,6 +73,9 @@ public final class NearestNeighbors extends RawOp {
     return nearestCenterDistances;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NearestNeighbors";
+  
   private Output<TInt64> nearestCenterIndices;
   private Output<TFloat32> nearestCenterDistances;
   

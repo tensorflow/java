@@ -120,6 +120,9 @@ public final class Where extends RawOp implements Operand<TInt64> {
     return index;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Where";
+  
   private Output<TInt64> index;
   
   private Where(Operation operation) {

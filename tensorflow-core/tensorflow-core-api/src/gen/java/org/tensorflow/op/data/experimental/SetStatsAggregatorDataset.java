@@ -80,6 +80,9 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalSetStatsAggregatorDataset";
+  
   private Output<?> handle;
   
   private SetStatsAggregatorDataset(Operation operation) {

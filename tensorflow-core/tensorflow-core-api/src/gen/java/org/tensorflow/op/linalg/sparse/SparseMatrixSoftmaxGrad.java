@@ -66,6 +66,9 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
     return (Output<TType>) gradient;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixSoftmaxGrad";
+  
   private Output<?> gradient;
   
   private SparseMatrixSoftmaxGrad(Operation operation) {

@@ -139,6 +139,9 @@ public final class UniqueWithCounts<T extends TType, V extends TNumber> extends 
     return count;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UniqueWithCountsV2";
+  
   private Output<T> y;
   private Output<V> idx;
   private Output<V> count;

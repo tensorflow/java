@@ -63,6 +63,9 @@ public final class Xlogy<T extends TType> extends RawOp implements Operand<T> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Xlogy";
+  
   private Output<T> z;
   
   private Xlogy(Operation operation) {

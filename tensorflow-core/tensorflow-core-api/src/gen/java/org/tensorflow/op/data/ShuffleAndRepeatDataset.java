@@ -90,6 +90,9 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ShuffleAndRepeatDataset";
+  
   private Output<?> handle;
   
   private ShuffleAndRepeatDataset(Operation operation) {

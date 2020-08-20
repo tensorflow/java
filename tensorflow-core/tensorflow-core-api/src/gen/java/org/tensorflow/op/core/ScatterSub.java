@@ -126,6 +126,9 @@ public final class ScatterSub<T extends TType> extends RawOp implements Operand<
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterSub";
+  
   private Output<T> outputRef;
   
   private ScatterSub(Operation operation) {

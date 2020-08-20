@@ -154,6 +154,9 @@ public final class LogUniformCandidateSampler extends RawOp {
     return sampledExpectedCount;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LogUniformCandidateSampler";
+  
   private Output<TInt64> sampledCandidates;
   private Output<TFloat32> trueExpectedCount;
   private Output<TFloat32> sampledExpectedCount;

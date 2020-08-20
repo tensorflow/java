@@ -137,6 +137,9 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixSparseCholesky";
+  
   private Output<?> output;
   
   private SparseMatrixSparseCholesky(Operation operation) {

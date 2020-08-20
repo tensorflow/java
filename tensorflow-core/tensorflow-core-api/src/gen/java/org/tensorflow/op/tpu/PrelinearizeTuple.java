@@ -112,6 +112,9 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PrelinearizeTuple";
+  
   private Output<?> output;
   
   private PrelinearizeTuple(Operation operation) {

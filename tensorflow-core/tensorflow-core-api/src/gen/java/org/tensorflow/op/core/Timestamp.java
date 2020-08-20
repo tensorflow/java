@@ -62,6 +62,9 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
     return ts;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Timestamp";
+  
   private Output<TFloat64> ts;
   
   private Timestamp(Operation operation) {

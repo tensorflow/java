@@ -43,6 +43,9 @@ public final class NoOp extends RawOp {
     return new NoOp(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NoOp";
+  
   
   private NoOp(Operation operation) {
     super(operation);

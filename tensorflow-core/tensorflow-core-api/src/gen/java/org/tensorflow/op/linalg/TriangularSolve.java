@@ -176,6 +176,9 @@ public final class TriangularSolve<T extends TType> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixTriangularSolve";
+  
   private Output<T> output;
   
   private TriangularSolve(Operation operation) {

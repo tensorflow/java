@@ -94,6 +94,9 @@ public final class BatchMatrixInverse<T extends TNumber> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatrixInverse";
+  
   private Output<T> output;
   
   private BatchMatrixInverse(Operation operation) {

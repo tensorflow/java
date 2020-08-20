@@ -52,6 +52,9 @@ public final class AssignSubVariableOp extends RawOp {
     return new AssignSubVariableOp(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AssignSubVariableOp";
+  
   
   private AssignSubVariableOp(Operation operation) {
     super(operation);

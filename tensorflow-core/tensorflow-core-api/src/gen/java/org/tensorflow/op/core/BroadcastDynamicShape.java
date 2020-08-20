@@ -67,6 +67,9 @@ public final class BroadcastDynamicShape<T extends TNumber> extends RawOp implem
     return r0;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BroadcastArgs";
+  
   private Output<T> r0;
   
   private BroadcastDynamicShape(Operation operation) {

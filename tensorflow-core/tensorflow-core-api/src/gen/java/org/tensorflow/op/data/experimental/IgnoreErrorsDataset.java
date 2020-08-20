@@ -74,6 +74,9 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalIgnoreErrorsDataset";
+  
   private Output<?> handle;
   
   private IgnoreErrorsDataset(Operation operation) {

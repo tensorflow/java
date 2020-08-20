@@ -116,6 +116,9 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
     return tensor;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RestoreSlice";
+  
   private Output<T> tensor;
   
   private RestoreSlice(Operation operation) {

@@ -69,6 +69,9 @@ public final class Cross<T extends TNumber> extends RawOp implements Operand<T> 
     return product;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Cross";
+  
   private Output<T> product;
   
   private Cross(Operation operation) {

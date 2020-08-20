@@ -121,6 +121,9 @@ public final class RefEnter<T extends TType> extends RawOp implements Operand<T>
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RefEnter";
+  
   private Output<T> output;
   
   private RefEnter(Operation operation) {

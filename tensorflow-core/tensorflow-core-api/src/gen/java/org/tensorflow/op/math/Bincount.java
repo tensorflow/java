@@ -79,6 +79,9 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
     return bins;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Bincount";
+  
   private Output<T> bins;
   
   private Bincount(Operation operation) {

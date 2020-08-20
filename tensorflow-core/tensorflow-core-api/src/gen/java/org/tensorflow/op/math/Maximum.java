@@ -67,6 +67,9 @@ public final class Maximum<T extends TNumber> extends RawOp implements Operand<T
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Maximum";
+  
   private Output<T> z;
   
   private Maximum(Operation operation) {

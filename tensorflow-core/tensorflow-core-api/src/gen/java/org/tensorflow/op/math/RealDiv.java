@@ -68,6 +68,9 @@ public final class RealDiv<T extends TType> extends RawOp implements Operand<T> 
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RealDiv";
+  
   private Output<T> z;
   
   private RealDiv(Operation operation) {

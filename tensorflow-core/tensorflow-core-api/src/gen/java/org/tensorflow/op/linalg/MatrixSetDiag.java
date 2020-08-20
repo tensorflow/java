@@ -219,6 +219,9 @@ public final class MatrixSetDiag<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixSetDiagV3";
+  
   private Output<T> output;
   
   private MatrixSetDiag(Operation operation) {

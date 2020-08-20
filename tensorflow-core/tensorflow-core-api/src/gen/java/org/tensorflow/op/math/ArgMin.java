@@ -98,6 +98,9 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ArgMin";
+  
   private Output<V> output;
   
   private ArgMin(Operation operation) {

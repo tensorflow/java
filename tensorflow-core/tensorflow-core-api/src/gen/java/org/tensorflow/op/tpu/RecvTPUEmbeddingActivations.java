@@ -74,6 +74,9 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
     return (Iterator) outputs.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RecvTPUEmbeddingActivations";
+  
   private List<Output<TFloat32>> outputs;
   
   @SuppressWarnings("unchecked")

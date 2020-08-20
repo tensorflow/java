@@ -136,6 +136,9 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
     return batchedGrad;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnbatchGrad";
+  
   private Output<T> batchedGrad;
   
   private UnbatchGrad(Operation operation) {

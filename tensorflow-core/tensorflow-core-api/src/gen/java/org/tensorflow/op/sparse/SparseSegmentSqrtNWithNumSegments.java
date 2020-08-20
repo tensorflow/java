@@ -80,6 +80,9 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSqrtNWithNumSegments";
+  
   private Output<T> output;
   
   private SparseSegmentSqrtNWithNumSegments(Operation operation) {

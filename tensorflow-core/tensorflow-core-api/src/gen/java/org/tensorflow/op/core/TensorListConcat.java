@@ -84,6 +84,9 @@ public final class TensorListConcat<U extends TType> extends RawOp {
     return lengths;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListConcatV2";
+  
   private Output<U> tensor;
   private Output<TInt64> lengths;
   

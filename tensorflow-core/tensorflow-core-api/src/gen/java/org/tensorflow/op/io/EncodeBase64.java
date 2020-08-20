@@ -101,6 +101,9 @@ public final class EncodeBase64 extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EncodeBase64";
+  
   private Output<TString> output;
   
   private EncodeBase64(Operation operation) {

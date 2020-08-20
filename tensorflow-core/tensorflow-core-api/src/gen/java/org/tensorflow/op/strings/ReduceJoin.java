@@ -143,6 +143,9 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReduceJoin";
+  
   private Output<TString> output;
   
   private ReduceJoin(Operation operation) {

@@ -74,6 +74,9 @@ public final class NcclBroadcast<T extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NcclBroadcast";
+  
   private Output<T> output;
   
   private NcclBroadcast(Operation operation) {

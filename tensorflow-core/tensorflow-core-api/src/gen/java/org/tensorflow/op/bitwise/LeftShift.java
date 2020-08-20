@@ -95,6 +95,9 @@ public final class LeftShift<T extends TNumber> extends RawOp implements Operand
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LeftShift";
+  
   private Output<T> z;
   
   private LeftShift(Operation operation) {

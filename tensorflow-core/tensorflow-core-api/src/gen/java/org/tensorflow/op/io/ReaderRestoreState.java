@@ -53,6 +53,9 @@ public final class ReaderRestoreState extends RawOp {
     return new ReaderRestoreState(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderRestoreStateV2";
+  
   
   private ReaderRestoreState(Operation operation) {
     super(operation);

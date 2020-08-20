@@ -51,6 +51,9 @@ public final class BoostedTreesQuantileStreamResourceDeserialize extends RawOp {
     return new BoostedTreesQuantileStreamResourceDeserialize(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceDeserialize";
+  
   
   private BoostedTreesQuantileStreamResourceDeserialize(Operation operation) {
     super(operation);

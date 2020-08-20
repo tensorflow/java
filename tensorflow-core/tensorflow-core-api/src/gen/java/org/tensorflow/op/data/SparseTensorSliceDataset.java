@@ -64,6 +64,9 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseTensorSliceDataset";
+  
   private Output<?> handle;
   
   private SparseTensorSliceDataset(Operation operation) {

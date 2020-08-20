@@ -87,6 +87,9 @@ public final class ResourceApplyGradientDescent extends RawOp {
     return new Options().useLocking(useLocking);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceApplyGradientDescent";
+  
   
   private ResourceApplyGradientDescent(Operation operation) {
     super(operation);

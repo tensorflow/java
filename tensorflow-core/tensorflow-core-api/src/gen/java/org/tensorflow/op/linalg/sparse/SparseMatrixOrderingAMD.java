@@ -107,6 +107,9 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixOrderingAMD";
+  
   private Output<TInt32> output;
   
   private SparseMatrixOrderingAMD(Operation operation) {

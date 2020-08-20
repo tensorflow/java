@@ -73,6 +73,9 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
     return statsSummary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesAggregateStats";
+  
   private Output<TFloat32> statsSummary;
   
   private BoostedTreesAggregateStats(Operation operation) {

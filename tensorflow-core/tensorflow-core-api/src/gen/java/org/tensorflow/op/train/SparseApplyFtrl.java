@@ -128,6 +128,9 @@ public final class SparseApplyFtrl<T extends TType> extends RawOp implements Ope
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyFtrlV2";
+  
   private Output<T> out;
   
   private SparseApplyFtrl(Operation operation) {

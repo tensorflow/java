@@ -176,6 +176,9 @@ public final class Skipgram extends RawOp {
     return labels;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Skipgram";
+  
   private Output<TString> vocabWord;
   private Output<TInt32> vocabFreq;
   private Output<TInt64> wordsPerEpoch;

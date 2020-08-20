@@ -82,6 +82,9 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
     return v;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaSelfAdjointEig";
+  
   private Output<T> w;
   private Output<T> v;
   

@@ -70,6 +70,9 @@ public final class Atan2<T extends TNumber> extends RawOp implements Operand<T> 
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Atan2";
+  
   private Output<T> z;
   
   private Atan2(Operation operation) {

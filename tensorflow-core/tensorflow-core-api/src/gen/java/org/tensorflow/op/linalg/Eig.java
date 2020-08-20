@@ -115,6 +115,9 @@ public final class Eig<U extends TType> extends RawOp {
     return v;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Eig";
+  
   private Output<U> e;
   private Output<U> v;
   

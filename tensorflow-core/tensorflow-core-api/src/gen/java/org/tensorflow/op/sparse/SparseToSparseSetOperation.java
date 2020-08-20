@@ -152,6 +152,9 @@ public final class SparseToSparseSetOperation<T extends TType> extends RawOp {
     return resultShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseToSparseSetOperation";
+  
   private Output<TInt64> resultIndices;
   private Output<T> resultValues;
   private Output<TInt64> resultShape;

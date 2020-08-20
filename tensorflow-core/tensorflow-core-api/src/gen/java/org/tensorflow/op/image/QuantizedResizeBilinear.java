@@ -136,6 +136,9 @@ public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
     return outMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedResizeBilinear";
+  
   private Output<T> resizedImages;
   private Output<TFloat32> outMin;
   private Output<TFloat32> outMax;

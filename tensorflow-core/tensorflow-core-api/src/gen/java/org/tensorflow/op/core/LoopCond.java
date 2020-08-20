@@ -63,6 +63,9 @@ public final class LoopCond extends RawOp implements Operand<TBool> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LoopCond";
+  
   private Output<TBool> output;
   
   private LoopCond(Operation operation) {

@@ -73,6 +73,9 @@ public final class BroadcastHelper<T extends TType> extends RawOp {
     return rhsOutput;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaBroadcastHelper";
+  
   private Output<T> lhsOutput;
   private Output<T> rhsOutput;
   

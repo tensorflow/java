@@ -109,6 +109,9 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
     return outputDenseValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedGather";
+  
   private List<Output<T>> outputNestedSplits;
   private Output<U> outputDenseValues;
   

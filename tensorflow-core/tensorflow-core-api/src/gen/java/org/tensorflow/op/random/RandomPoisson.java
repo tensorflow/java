@@ -156,6 +156,9 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RandomPoissonV2";
+  
   private Output<V> output;
   
   private RandomPoisson(Operation operation) {

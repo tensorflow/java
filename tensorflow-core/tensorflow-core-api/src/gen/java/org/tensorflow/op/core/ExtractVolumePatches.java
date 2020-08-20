@@ -90,6 +90,9 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
     return patches;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExtractVolumePatches";
+  
   private Output<T> patches;
   
   private ExtractVolumePatches(Operation operation) {

@@ -68,6 +68,9 @@ public final class GuaranteeConst<T extends TType> extends RawOp implements Oper
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GuaranteeConst";
+  
   private Output<T> output;
   
   private GuaranteeConst(Operation operation) {

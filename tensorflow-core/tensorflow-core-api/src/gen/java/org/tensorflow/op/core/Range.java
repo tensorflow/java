@@ -79,6 +79,9 @@ public final class Range<T extends TNumber> extends RawOp implements Operand<T> 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Range";
+  
   private Output<T> output;
   
   private Range(Operation operation) {

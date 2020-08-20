@@ -59,6 +59,9 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
     return hasValue;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OptionalHasValue";
+  
   private Output<TBool> hasValue;
   
   private OptionalHasValue(Operation operation) {

@@ -65,6 +65,9 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
     return summary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorSummaryV2";
+  
   private Output<TString> summary;
   
   private TensorSummary(Operation operation) {

@@ -147,6 +147,9 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
     return bytes;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EncodeProto";
+  
   private Output<TString> bytes;
   
   private EncodeProto(Operation operation) {

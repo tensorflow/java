@@ -104,6 +104,9 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeCompressed";
+  
   private Output<TString> output;
   
   private DecodeCompressed(Operation operation) {

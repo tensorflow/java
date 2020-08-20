@@ -78,6 +78,9 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatefulUniformInt";
+  
   private Output<U> output;
   
   private StatefulUniformInt(Operation operation) {

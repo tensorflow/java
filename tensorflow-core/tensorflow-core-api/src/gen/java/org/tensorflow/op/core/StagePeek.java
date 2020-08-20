@@ -166,6 +166,9 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) values.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StagePeek";
+  
   private List<Output<?>> values;
   
   private StagePeek(Operation operation) {

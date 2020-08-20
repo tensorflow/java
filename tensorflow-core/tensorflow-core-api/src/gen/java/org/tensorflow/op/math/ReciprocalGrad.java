@@ -65,6 +65,9 @@ public final class ReciprocalGrad<T extends TType> extends RawOp implements Oper
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReciprocalGrad";
+  
   private Output<T> z;
   
   private ReciprocalGrad(Operation operation) {
