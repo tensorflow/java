@@ -103,14 +103,11 @@ import org.tensorflow.types.family.TType;
 public final class NnOps {
   public final NnRawOps raw;
 
-  public final NnInternalOps internal;
-
   private final Scope scope;
 
   NnOps(Scope scope) {
     this.scope = scope;
     raw = new NnRawOps(scope);
-    internal = new NnInternalOps(scope);
   }
 
   /**
