@@ -56,10 +56,10 @@ public class EagerTestSession extends TestSession {
     return tf;
   }
 
-    /**
-     * Get the TensorFlow EagerSession instance
-     * @return the TensorFlow EagerSession instance
-     */
+  /**
+   * Get the TensorFlow EagerSession instance
+   * @return the TensorFlow EagerSession instance
+   */
   public EagerSession getSession() {
     return session;
   }
