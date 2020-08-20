@@ -99,15 +99,15 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
    */
   public AdaGrad(Ops tf, String name, float learningRate, float initialAccumulatorValue) {
     super(assertGraph(tf), name, learningRate, initialAccumulatorValue);
-    assert initialAccumulatorValue >= 0.0F
-        : "initial_accumulator_value must be non-negative: " + initialAccumulatorValue;
+    if(initialAccumulatorValue < 0.0F)
+        throw new IllegalArgumentException( "initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
     initConfig(learningRate, initialAccumulatorValue);
   }
 
   /**
    * Create an AdaGrad Optimizer from a config object
    *
-   * @param graph the tensorflow graph
+   * @param tf the TensorFlow Ops
    * @param config a config object to initialize, , the config object has keys for "name",
    *     "learning_rate" and "accumulator". If a key is missing the default value is used.
    */
@@ -118,7 +118,7 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
   /**
    * Create an AdaGrad Optimizer from a config object
    *
-   * @param graph the tensorflow graph
+   * @param tf the TensorFlow Ops
    * @param config a config object to initialize, the config object has keys for "name",
    *     "learning_rate" and "accumulator". If a key is missing the default value is used.
    */
@@ -137,8 +137,8 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
   /**
    * Initialize the configuration
    *
-   * @param learningRate
-   * @param initialAccumulatorValue
+   * @param learningRate the learning rate
+   * @param initialAccumulatorValue the initial Accumulator value
    */
   private void initConfig(float learningRate, float initialAccumulatorValue) {
     this.learningRate = learningRate;

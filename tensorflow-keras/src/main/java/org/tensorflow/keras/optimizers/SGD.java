@@ -16,7 +16,6 @@ package org.tensorflow.keras.optimizers;
 
 import java.util.HashMap;
 import java.util.Map;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
 import org.tensorflow.op.Ops;
 
@@ -103,7 +102,8 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
    */
   public SGD(Ops tf, float learningRate, float momentum, boolean useNesterov) {
     super(assertGraph(tf), learningRate, momentum, useNesterov);
-    assert momentum >= 0.0F && momentum <= 1.0F : "\"momentum\" must be between [0, 1].";
+    if(momentum < 0 || momentum > 1)
+      throw new IllegalArgumentException("\"momentum\" must be between [0, 1].");
     initConfig(learningRate, momentum, useNesterov);
   }
 
@@ -119,7 +119,8 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
    */
   public SGD(Ops tf, String name, float learningRate, float momentum, boolean useNesterov) {
     super(assertGraph(tf), name, learningRate, momentum, useNesterov);
-    assert momentum >= 0.0F && momentum <= 1.0F : "\"momentum\" must be between [0, 1].";
+    if(momentum < 0 || momentum > 1)
+      throw new IllegalArgumentException("\"momentum\" must be between [0, 1].");
     initConfig(learningRate, momentum, useNesterov);
   }
 

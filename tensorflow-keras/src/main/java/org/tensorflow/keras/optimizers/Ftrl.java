@@ -31,7 +31,7 @@ import org.tensorflow.op.train.ApplyFtrl;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-/** Ftrl Optimizer that implements the FTRL algorithm. */
+/** Ftrl (Follow the Regularized Leader) Optimizer that implements the FTRL algorithm. */
 public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     implements OptimizerInterface {
 
@@ -140,11 +140,15 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
    *
    * @param tf the TensorFlow Ops
    * @param learningRate the learning rate
-   * @param learningRatePower
-   * @param initialAccumulatorValue
-   * @param l1Strength
-   * @param l2Strength
-   * @param l2ShrinkageRegularizationStrength
+   * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
+   *     a fixed learning rate.
+   * @param initialAccumulatorValue The starting value for accumulators. Only zero or positive
+   *     values are allowed.
+   * @param l1Strength the L1 Regularization strength, must be greater than or equal to zero.
+   * @param l2Strength the L2 Regularization strength, must be greater than or equal to zero.
+   * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
+   *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
+   *     than or equal to zero.
    */
   public Ftrl(
       Ops tf,
@@ -170,13 +174,17 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
    * Create a Ftrl Optimizer
    *
    * @param tf the TensorFlow Ops
-   * @param name the Optmizer name
+   * @param name the name of this Ftrl Optimizer
    * @param learningRate the learning rate
-   * @param learningRatePower
-   * @param initialAccumulatorValue
-   * @param l1Strength
-   * @param l2Strength
-   * @param l2ShrinkageRegularizationStrength
+   * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
+   *     a fixed learning rate.
+   * @param initialAccumulatorValue The starting value for accumulators. Only zero or positive
+   *     values are allowed.
+   * @param l1Strength the L1 Regularization strength, must be greater than or equal to zero.
+   * @param l2Strength the L2 Regularization strength, must be greater than or equal to zero.
+   * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
+   *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
+   *     than or equal to zero.
    */
   public Ftrl(
       Ops tf,
@@ -198,8 +206,6 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     validateParams();
     initConfig();
   }
-
-
 
   /**
    * Create a Ftrl Optmizer
@@ -325,7 +331,7 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
         accumSlot, // accum
         linearSlot, // linear
         gradient, // gradient
-            tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), // lr
+        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), // lr
         tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.dataType()), // l1
         tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.dataType()), // l2
         tf.dtypes.cast(

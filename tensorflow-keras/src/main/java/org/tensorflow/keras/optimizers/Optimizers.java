@@ -41,15 +41,15 @@ public class Optimizers {
   static Map<String, Function<Ops, Optimizer>> map =
       new HashMap<String, Function<Ops, Optimizer>>() {
         {
-          put("adadelta", tf -> new AdaDelta(tf));
-          put("adagrad", tf -> new AdaGrad(tf));
-          put("adagrad-da", tf -> new AdaGradDA(tf));
-          put("adam", tf -> new Adam(tf));
-          put("adamax", tf -> new Adamax(tf));
-          put("ftrl", tf -> new Ftrl(tf));
-          put("nadam", tf -> new Nadam(tf));
-          put("rmsprop", tf -> new RMSProp(tf));
-          put("sgd", tf -> new SGD(tf));
+          put("adadelta", AdaDelta::new);
+          put("adagrad", AdaGrad::new);
+          put("adagrad-da", AdaGradDA::new);
+          put("adam", Adam::new);
+          put("adamax", Adamax::new);
+          put("ftrl", Ftrl::new);
+          put("nadam", Nadam::new);
+          put("rmsprop", RMSProp::new);
+          put("sgd", SGD::new);
         }
       };
 
@@ -65,9 +65,9 @@ public class Optimizers {
   }
 
   /**
-   * Get an Initializer
+   * Get an Optimizer
    *
-   * @param si a lamda function
+   * @param func a lamda function that returns the Optimizer
    * @return the Intializer object
    */
   public static Optimizer get(Ops tf, Function<Ops, Optimizer> func) {
@@ -75,10 +75,11 @@ public class Optimizers {
   }
 
   /**
-   * Get an Initializer
+   * Get an Optimizer
    *
-   * @param optimizerFunction
-   * @param custom_functions a map of Initializer lambdas that will be queried if the Optimizer is
+   * @param optimizerFunction either a String that identifies the Optimizer, an Optimizer class, or
+   *     * an Optimizer object.
+   * @param custom_functions a map of Optimizer lambdas that will be queried if the Optimizer is
    *     not found in the standard keys
    * @return the Optimizer object
    */
@@ -95,10 +96,10 @@ public class Optimizers {
         }
         return function != null ? function.apply(tf) : null;
       } else if (optimizerFunction instanceof Class) {
-        Class c = (Class) optimizerFunction; // do this for Java 8 rather than Pattern Matching for
-        // instanceof
+        // do this for Java 8 rather than Pattern Matching for instanceof
+        Class<OptimizerInterface> c = (Class<OptimizerInterface>) optimizerFunction;
         try {
-          Constructor ctor = c.getConstructor(Ops.class);
+          Constructor<OptimizerInterface> ctor = c.getConstructor(Ops.class);
           return (Optimizer) ctor.newInstance(tf);
         } catch (NoSuchMethodException
             | InstantiationException

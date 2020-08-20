@@ -22,17 +22,19 @@ import org.tensorflow.op.Ops;
 public interface OptimizerInterface {
 
   /** The value for the name key in the Config object */
-  public static final String NAME_KEY = "name";
+  String NAME_KEY = "name";
 
   /**
    * Get a TensorFlow Graph from the Ops.
    *
    * @param tf the TensorFlow Ops
    * @return the graph
-   * @throws java.lang.AssertionError if the TensorFlow Ops does not represent Graph mode
+   * @throws java.lang.IllegalArgumentException if the TensorFlow Ops does not represent Graph mode
    */
-  public static Graph assertGraph(Ops tf) {
-    assert tf.scope().env().isGraph() : "Optimizers can only be used in Graph Mode";
+  static Graph assertGraph(Ops tf) {
+    if(!tf.scope().env().isGraph()) {
+      throw new IllegalArgumentException("Invalid environment, Optimizers can only be used in Graph Mode");
+    }
     return (Graph) tf.scope().env();
   }
 
@@ -41,19 +43,19 @@ public interface OptimizerInterface {
    *
    * @return the config object used to initialize the Optimizer
    */
-  public Map<String, Object> getConfig();
+  Map<String, Object> getConfig();
 
   /**
    * Return the current learning rate
    *
    * @return the current learning rate
    */
-  public float getLearningRate();
+  float getLearningRate();
 
   /**
    * Set the learning rate
    *
    * @param learningRate the learning rate;
    */
-  public void setLearningRate(float learningRate);
+  void setLearningRate(float learningRate);
 }

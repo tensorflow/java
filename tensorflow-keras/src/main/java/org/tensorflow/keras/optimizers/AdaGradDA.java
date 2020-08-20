@@ -85,10 +85,12 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
       float l1Strength,
       float l2Strength) {
     super(assertGraph(tf), learningRate, initialAccumulatorValue, l1Strength, l2Strength);
-    assert initialAccumulatorValue >= 0.0F
-        : "initial_accumulator_value must be non-negative: " + initialAccumulatorValue;
-    assert l1Strength >= 0.0F : "l1Strength must be non-negative: " + l1Strength;
-    assert l2Strength >= 0.0F : "l2Strength must be non-negative: " + l2Strength;
+    if( initialAccumulatorValue < 0.0F)
+        throw new IllegalArgumentException("initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
+    if(l1Strength < 0)
+      throw new IllegalArgumentException("l1Strength must be non-negative: " + l1Strength);
+    if(l2Strength < 0)
+      throw new IllegalArgumentException("l2Strength must be non-negative: " + l2Strength);
     initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
   }
 
@@ -110,10 +112,13 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
       float l1Strength,
       float l2Strength) {
     super(assertGraph(tf), name, learningRate, initialAccumulatorValue, l1Strength, l2Strength);
-    assert initialAccumulatorValue >= 0.0F
-        : "initial_accumulator_value must be non-negative: " + initialAccumulatorValue;
-    assert l1Strength >= 0.0F : "l1Strength must be non-negative: " + l1Strength;
-    assert l2Strength >= 0.0F : "l2Strength must be non-negative: " + l2Strength;
+    if( initialAccumulatorValue < 0.0F)
+      throw new IllegalArgumentException("initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
+    if(l1Strength < 0)
+      throw new IllegalArgumentException("l1Strength must be non-negative: " + l1Strength);
+    if(l2Strength < 0)
+      throw new IllegalArgumentException("l2Strength must be non-negative: " + l2Strength);
+    initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
     initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
   }
 
