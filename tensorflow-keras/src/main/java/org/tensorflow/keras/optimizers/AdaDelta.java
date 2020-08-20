@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.tensorflow.keras.backend.tf.ControlDependencies;
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -33,7 +32,6 @@ import org.tensorflow.op.Ops;
  * <p>Two accumulation steps are required: 1) the accumulation of gradients squared, 2) the
  * accumulation of updates squared.
  *
- * @param <U> The Type for the call operation
  */
 public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
     implements OptimizerInterface {
@@ -69,7 +67,7 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
    * @param name the name of the Optimizer, defaults to "Adadelta"
    */
   public AdaDelta(Ops tf, String name) {
-    this(tf, LEARNING_RATE_DEFAULT, RHO_DEFAULT, EPSILON_DEFAULT);
+    this(tf, name, LEARNING_RATE_DEFAULT, RHO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
@@ -90,7 +88,7 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
    * @param learningRate The learning rate
    */
   public AdaDelta(Ops tf, String name, float learningRate) {
-    this(tf, learningRate, RHO_DEFAULT, EPSILON_DEFAULT);
+    this(tf, name, learningRate, RHO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
@@ -129,15 +127,14 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
       case 1:
         return Optional.of(initializers.get(0));
       default:
-        return Optional.of(
-            ControlDependencies.addControlDependencies(tf, this.getOptimizerName(), initializers));
+        return Optional.of( tf.withSubScope(name).withControlDependencies(initializers).noOp());
     }
   }
 
   /**
    * Create an Adam Optimizer from a config object
    *
-   * @param graph the tensorflow graph
+   * @param tf the tensorflow Ops
    * @param config a config object to initialize, he config object has keys for "name",
    *     "learning_rate", "rho" and "epsilon". If a key is missing the default value is used.
    */
@@ -148,7 +145,8 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
   /**
    * Create an Adadelta optimizer
    *
-   * @param graph the tensorflow graph @@param config a config object to initialize, the config
+   * @param tf the tensorflow Ops
+   * @param config a config object to initialize, the config
    *     object has keys for "name", "learning_rate", "rho" and "epsilon". If a key is missing the
    *     default value is used.
    */
