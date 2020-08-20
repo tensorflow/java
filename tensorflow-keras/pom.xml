@@ -27,22 +27,17 @@
     </parent>
     <artifactId>tensorflow-keras</artifactId>
     <packaging>jar</packaging>
-
     <name>TensorFlow Keras Library</name>
+    <description>Java implementation of the TensorFlow Keras API</description>
+
     <properties>
         <javacpp.platform.extension></javacpp.platform.extension>
     </properties>
-    <description>Java implementation of the TensorFlow Keras API</description>
 
     <dependencies>
         <dependency>
             <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow-core-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow-core-generator</artifactId>
+            <artifactId>tensorflow-core-platform</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -50,18 +45,6 @@
             <artifactId>tensorflow-framework</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>ndarray</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>3.11.4</version>
-        </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -72,12 +55,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.8</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow-core-platform</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
