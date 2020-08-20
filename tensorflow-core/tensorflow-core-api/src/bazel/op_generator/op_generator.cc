@@ -509,6 +509,13 @@ void GenerateOp(const OpSpec& op, const EndpointSpec& endpoint,
     RenderInterfaceImpl(op, mode, &writer);
   }
   writer.EndLine();
+
+  Variable nameVariable = Variable::Create("OP_NAME", Type::Class("String")); 
+  Javadoc name_javadoc = Javadoc::Create("The name of this op, as known by TensorFlow core engine");
+  string quoted_string = "\"" + op.graph_op_name() + "\"";
+  writer.WriteFieldWithInitializer(nameVariable, PUBLIC|STATIC|FINAL, &name_javadoc, quoted_string );
+  writer.EndLine();
+
   for (const ArgumentSpec& output : op.outputs()) {
     writer.WriteField(output.var(), PRIVATE);
   }

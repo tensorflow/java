@@ -238,6 +238,22 @@ SourceWriter& SourceWriter::WriteField(const Variable& field, int modifiers,
   return *this;
 }
 
+SourceWriter& SourceWriter::WriteFieldWithInitializer(const Variable& field,
+	int modifiers, const Javadoc* javadoc, const string& initializer) {
+  // If present, write field javadoc only as one brief line
+  if (javadoc != nullptr && !javadoc->brief().empty()) {
+    Append("/** ").Append(javadoc->brief()).Append(" */").EndLine();
+  }
+  WriteModifiers(modifiers);
+  if (!initializer.empty())
+    AppendType(field.type()).Append(" ").Append(field.name()).
+                            Append(" = ").Append(initializer).Append(";");
+  else
+    AppendType(field.type()).Append(" ").Append(field.name()).Append(";");
+  EndLine();
+  return *this;
+}
+
 SourceWriter& SourceWriter::WriteModifiers(int modifiers) {
   if (modifiers & PUBLIC) {
     Append("public ");
