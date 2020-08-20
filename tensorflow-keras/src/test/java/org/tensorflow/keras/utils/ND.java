@@ -126,7 +126,8 @@ public class ND {
    * @return the resulting array from the add operation
    */
   public static FloatNdArray add(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -175,7 +176,8 @@ public class ND {
    * @return the resulting array from the subtraction operation
    */
   public static FloatNdArray sub(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -230,9 +232,9 @@ public class ND {
    * @return the resulting array from the muliply operation
    */
   public static FloatNdArray mul(FloatNdArray a, FloatNdArray b) {
-    assert a.shape().equals(b.shape())
-        : String.format(
-            "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape());
+    if(!a.shape().equals(b.shape()))
+        throw new IllegalArgumentException(String.format(
+            "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
     boolean sameSize = a.shape().size() == b.shape().size();
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -287,7 +289,8 @@ public class ND {
    * @return the resulting array from the Divide operation
    */
   public static FloatNdArray div(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -306,7 +309,8 @@ public class ND {
    * @return the resulting array from the Divide operation
    */
   public static FloatNdArray div(FloatNdArray a, float scalar) {
-    assert (scalar != 0);
+    if(scalar == 0)
+      throw new IllegalArgumentException("Cannot divide by zero");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -344,7 +348,8 @@ public class ND {
    * @return the array result of the power operation
    */
   public static FloatNdArray pow(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -363,7 +368,6 @@ public class ND {
    * @return the array result of the power operation
    */
   public static FloatNdArray pow(FloatNdArray a, float scalar) {
-    assert (scalar != 0);
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -382,7 +386,6 @@ public class ND {
    * @return the array result of the power operation
    */
   public static FloatNdArray pow(float scalar, FloatNdArray a) {
-    assert (scalar != 0);
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -444,7 +447,8 @@ public class ND {
    * @throws java.lang.AssertionError if the two arrays are not the same size.
    */
   public static FloatNdArray max(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -495,7 +499,8 @@ public class ND {
    * @throws java.lang.AssertionError if the two arrays are not the same size.
    */
   public static FloatNdArray min(FloatNdArray a, FloatNdArray b) {
-    assert (a.shape().size() == b.shape().size());
+    if(a.shape().size() != b.shape().size())
+      throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
