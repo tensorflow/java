@@ -182,6 +182,31 @@ public interface StructuredValueOrBuilder extends
 
   /**
    * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  boolean hasBoundedTensorSpecValue();
+  /**
+   * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  org.tensorflow.proto.framework.BoundedTensorSpecProto getBoundedTensorSpecValue();
+  /**
+   * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder getBoundedTensorSpecValueOrBuilder();
+
+  /**
+   * <pre>
    * Represents a list of `Value`.
    * </pre>
    *

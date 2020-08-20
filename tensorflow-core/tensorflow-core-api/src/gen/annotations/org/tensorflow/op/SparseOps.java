@@ -29,9 +29,11 @@ import org.tensorflow.op.sparse.SparseAccumulatorApplyGradient;
 import org.tensorflow.op.sparse.SparseAccumulatorTakeGradient;
 import org.tensorflow.op.sparse.SparseAdd;
 import org.tensorflow.op.sparse.SparseAddGrad;
+import org.tensorflow.op.sparse.SparseBincount;
 import org.tensorflow.op.sparse.SparseConcat;
 import org.tensorflow.op.sparse.SparseConditionalAccumulator;
 import org.tensorflow.op.sparse.SparseCross;
+import org.tensorflow.op.sparse.SparseCrossHashed;
 import org.tensorflow.op.sparse.SparseDenseCwiseAdd;
 import org.tensorflow.op.sparse.SparseDenseCwiseDiv;
 import org.tensorflow.op.sparse.SparseDenseCwiseMul;
@@ -63,6 +65,7 @@ import org.tensorflow.op.sparse.SparseTensorDenseMatMul;
 import org.tensorflow.op.sparse.SparseToDense;
 import org.tensorflow.op.sparse.SparseToSparseSetOperation;
 import org.tensorflow.op.sparse.TakeManySparseFromTensorsMap;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -373,6 +376,34 @@ public final class SparseOps {
   }
 
   /**
+   * Counts the number of occurrences of each value in an integer array.
+   *  <p>
+   *  Outputs a vector with length `size` and the same dtype as `weights`. If
+   *  `weights` are empty, then index `i` stores the number of times the value `i` is
+   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
+   *  the value in `weights` at each index where the corresponding value in `arr` is
+   *  `i`.
+   *  <p>
+   *  Values in `arr` outside of the range [0, size) are ignored.
+   *
+   * @param <U> data type for {@code output()} output
+   * @param indices 2D int64 `Tensor`.
+   * @param values 1D int `Tensor`.
+   * @param denseShape 1D int64 `Tensor`.
+   * @param size non-negative int scalar `Tensor`.
+   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
+   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
+   *  equal to 1.
+   * @param options carries optional attributes values
+   * @return a new instance of SparseBincount
+   */
+  public <U extends TNumber, T extends TNumber> SparseBincount<U> sparseBincount(
+      Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> size,
+      Operand<U> weights, SparseBincount.Options... options) {
+    return SparseBincount.create(scope, indices, values, denseShape, size, weights, options);
+  }
+
+  /**
    * Concatenates a list of `SparseTensor` along the specified dimension.
    *  <p>
    *  Concatenation is with respect to the dense versions of these sparse tensors.
@@ -490,26 +521,73 @@ public final class SparseOps {
    *                  Fingerprint64("g"), FingerprintCat64(
    *                      Fingerprint64("e"), Fingerprint64("c")))
    *
-   * @param <T> data type for {@code outputValues()} output
    * @param indices 2-D.  Indices of each input `SparseTensor`.
    * @param values 1-D.   values of each `SparseTensor`.
    * @param shapes 1-D.   Shapes of each `SparseTensor`.
    * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
-   * @param hashedOutput If true, returns the hash of the cross instead of the string.
-   *  This will allow us avoiding string manipulations.
-   * @param numBuckets It is used if hashed_output is true.
-   *  output = hashed_value%num_buckets if num_buckets > 0 else hashed_value.
-   * @param hashKey Specify the hash_key that will be used by the `FingerprintCat64`
-   *  function to combine the crosses fingerprints.
-   * @param outType
-   * @param internalType
+   * @param sep string used when joining a list of string inputs, can be used as separator later.
    * @return a new instance of SparseCross
    */
-  public <T extends TType, U extends TType> SparseCross<T> sparseCross(
-      Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values,
-      Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Boolean hashedOutput,
-      Long numBuckets, Long hashKey, DataType<T> outType, DataType<U> internalType) {
-    return SparseCross.create(scope, indices, values, shapes, denseInputs, hashedOutput, numBuckets, hashKey, outType, internalType);
+  public SparseCross sparseCross(Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values,
+      Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Operand<TString> sep) {
+    return SparseCross.create(scope, indices, values, shapes, denseInputs, sep);
+  }
+
+  /**
+   * Generates sparse cross from a list of sparse and dense tensors.
+   *  <p>
+   *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
+   *  representing features of one feature column. It outputs a 2D `SparseTensor` with
+   *  the batchwise crosses of these features.
+   *  <p>
+   *  For example, if the inputs are
+   *  <p>
+   *      inputs[0]: SparseTensor with shape = [2, 2]
+   *      [0, 0]: "a"
+   *      [1, 0]: "b"
+   *      [1, 1]: "c"
+   *  <p>
+   *      inputs[1]: SparseTensor with shape = [2, 1]
+   *      [0, 0]: "d"
+   *      [1, 0]: "e"
+   *  <p>
+   *      inputs[2]: Tensor [["f"], ["g"]]
+   *  <p>
+   *  then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: "a_X_d_X_f"
+   *      [1, 0]: "b_X_e_X_g"
+   *      [1, 1]: "c_X_e_X_g"
+   *  <p>
+   *  if hashed_output=true then the output will be
+   *  <p>
+   *      shape = [2, 2]
+   *      [0, 0]: FingerprintCat64(
+   *                  Fingerprint64("f"), FingerprintCat64(
+   *                      Fingerprint64("d"), Fingerprint64("a")))
+   *      [1, 0]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("b")))
+   *      [1, 1]: FingerprintCat64(
+   *                  Fingerprint64("g"), FingerprintCat64(
+   *                      Fingerprint64("e"), Fingerprint64("c")))
+   *
+   * @param indices 2-D.  Indices of each input `SparseTensor`.
+   * @param values 1-D.   values of each `SparseTensor`.
+   * @param shapes 1-D.   Shapes of each `SparseTensor`.
+   * @param denseInputs 2-D.    Columns represented by dense `Tensor`.
+   * @param numBuckets It is used if hashed_output is true.
+   *  output = hashed_value%num_buckets if num_buckets > 0 else hashed_value.
+   * @param strongHash boolean, if true, siphash with salt will be used instead of farmhash.
+   * @param salt Specify the salt that will be used by the siphash function.
+   * @return a new instance of SparseCrossHashed
+   */
+  public SparseCrossHashed sparseCrossHashed(Iterable<Operand<TInt64>> indices,
+      Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes,
+      Iterable<Operand<?>> denseInputs, Operand<TInt64> numBuckets, Operand<TBool> strongHash,
+      Operand<TInt64> salt) {
+    return SparseCrossHashed.create(scope, indices, values, shapes, denseInputs, numBuckets, strongHash, salt);
   }
 
   /**
@@ -870,8 +948,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentMean
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMean<T> sparseSegmentMean(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMean<T> sparseSegmentMean(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentMean.create(scope, data, indices, segmentIds);
   }
 
@@ -888,8 +966,8 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentMean op.
    * @return a new instance of SparseSegmentMeanGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
-      Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(
+      Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentMeanGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
@@ -897,7 +975,7 @@ public final class SparseOps {
    * Computes the mean along sparse segments of a tensor.
    *  <p>
    *  Like `SparseSegmentMean`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
@@ -910,8 +988,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentMeanWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 
@@ -928,8 +1006,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSqrtN
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentSqrtN.create(scope, data, indices, segmentIds);
   }
 
@@ -946,8 +1024,8 @@ public final class SparseOps {
    * @param outputDim0 dimension 0 of "data" passed to SparseSegmentSqrtN op.
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
-      Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(
+      Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
@@ -957,7 +1035,7 @@ public final class SparseOps {
    *  N is the size of the segment being reduced.
    *  <p>
    *  Like `SparseSegmentSqrtN`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
@@ -970,8 +1048,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentSqrtNWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 
@@ -1013,8 +1091,8 @@ public final class SparseOps {
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @return a new instance of SparseSegmentSum
    */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSum<T> sparseSegmentSum(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSum<T> sparseSegmentSum(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     return SparseSegmentSum.create(scope, data, indices, segmentIds);
   }
 
@@ -1022,7 +1100,7 @@ public final class SparseOps {
    * Computes the sum along sparse segments of a tensor.
    *  <p>
    *  Like `SparseSegmentSum`, but allows missing ids in `segment_ids`. If an id is
-   *  misisng, the `output` tensor at that position will be zeroed.
+   *  missing, the `output` tensor at that position will be zeroed.
    *  <p>
    *  Read
    *  [the section on segmentation](https://tensorflow.org/api_docs/python/tf/sparse#Segmentation)
@@ -1055,8 +1133,8 @@ public final class SparseOps {
    * @param numSegments Should equal the number of distinct segment IDs.
    * @return a new instance of SparseSegmentSumWithNumSegments
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
-      Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
+      Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     return SparseSegmentSumWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
   }
 

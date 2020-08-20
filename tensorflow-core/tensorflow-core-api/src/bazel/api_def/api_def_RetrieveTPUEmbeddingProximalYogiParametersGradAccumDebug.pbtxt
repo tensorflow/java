@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug"
+  endpoint {
+    name: "tpu.RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug"
+  }
+}

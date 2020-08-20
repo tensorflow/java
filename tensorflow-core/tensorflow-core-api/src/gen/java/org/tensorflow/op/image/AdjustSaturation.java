@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * Adjust the saturation of one or more images.
  * <p>
  * `images` is a tensor of at least 3 dimensions.  The last dimension is
- * interpretted as channels, and must be three.
+ * interpreted as channels, and must be three.
  * <p>
  * The input image is considered in the RGB colorspace. Conceptually, the RGB
  * colors are first mapped into HSV. A scale is then applied all the saturation

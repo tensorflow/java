@@ -36,21 +36,45 @@ import org.tensorflow.types.family.TType;
 public final class ShuffleDataset extends RawOp implements Operand<TType> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.data.ShuffleDataset}
+   */
+  public static class Options {
+    
+    /**
+     * @param reshuffleEachIteration 
+     */
+    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+      this.reshuffleEachIteration = reshuffleEachIteration;
+      return this;
+    }
+    
+    private Boolean reshuffleEachIteration;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new ShuffleDataset operation.
    * 
    * @param scope current scope
    * @param inputDataset 
    * @param bufferSize 
+   * @param seed 
+   * @param seed2 
    * @param seedGenerator 
    * @param outputTypes 
    * @param outputShapes 
+   * @param options carries optional attributes values
    * @return a new instance of ShuffleDataset
    */
   @Endpoint(describeByClass = true)
-  public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV2", scope.makeOpName("ShuffleDataset"));
+  public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<?> seedGenerator, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV3", scope.makeOpName("ShuffleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
+    opBuilder.addInput(seed.asOutput());
+    opBuilder.addInput(seed2.asOutput());
     opBuilder.addInput(seedGenerator.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
@@ -63,7 +87,21 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.reshuffleEachIteration != null) {
+          opBuilder.setAttr("reshuffle_each_iteration", opts.reshuffleEachIteration);
+        }
+      }
+    }
     return new ShuffleDataset(opBuilder.build());
+  }
+  
+  /**
+   * @param reshuffleEachIteration 
+   */
+  public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+    return new Options().reshuffleEachIteration(reshuffleEachIteration);
   }
   
   /**

@@ -101,7 +101,6 @@ import org.tensorflow.op.core.InplaceAdd;
 import org.tensorflow.op.core.InplaceSub;
 import org.tensorflow.op.core.InplaceUpdate;
 import org.tensorflow.op.core.IsVariableInitialized;
-import org.tensorflow.op.core.LinSpace;
 import org.tensorflow.op.core.LookupTableExport;
 import org.tensorflow.op.core.LookupTableFind;
 import org.tensorflow.op.core.LookupTableImport;
@@ -167,6 +166,8 @@ import org.tensorflow.op.core.ResourceScatterMax;
 import org.tensorflow.op.core.ResourceScatterMin;
 import org.tensorflow.op.core.ResourceScatterMul;
 import org.tensorflow.op.core.ResourceScatterNdAdd;
+import org.tensorflow.op.core.ResourceScatterNdMax;
+import org.tensorflow.op.core.ResourceScatterNdMin;
 import org.tensorflow.op.core.ResourceScatterNdSub;
 import org.tensorflow.op.core.ResourceScatterNdUpdate;
 import org.tensorflow.op.core.ResourceScatterSub;
@@ -242,7 +243,11 @@ import org.tensorflow.op.core.TensorListScatterIntoExistingList;
 import org.tensorflow.op.core.TensorListSetItem;
 import org.tensorflow.op.core.TensorListSplit;
 import org.tensorflow.op.core.TensorListStack;
+import org.tensorflow.op.core.TensorScatterMax;
+import org.tensorflow.op.core.TensorScatterMin;
 import org.tensorflow.op.core.TensorScatterNdAdd;
+import org.tensorflow.op.core.TensorScatterNdMax;
+import org.tensorflow.op.core.TensorScatterNdMin;
 import org.tensorflow.op.core.TensorScatterNdSub;
 import org.tensorflow.op.core.TensorScatterNdUpdate;
 import org.tensorflow.op.core.TensorStridedSliceUpdate;
@@ -261,6 +266,8 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
+import org.tensorflow.op.core.XlaSpmdFullToShardShape;
+import org.tensorflow.op.core.XlaSpmdShardToFullShape;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -312,6 +319,8 @@ public final class Ops {
 
   public final ImageOps image;
 
+  public final RaggedOps ragged;
+
   public final DataOps data;
 
   public final ShapeOps shape;
@@ -349,6 +358,7 @@ public final class Ops {
     nn = new NnOps(scope);
     summary = new SummaryOps(scope);
     image = new ImageOps(scope);
+    ragged = new RaggedOps(scope);
     data = new DataOps(scope);
     shape = new ShapeOps(scope);
     io = new IoOps(scope);
@@ -1019,6 +1029,15 @@ public final class Ops {
    *  <p>
    *  In the above example, the input Tensor with the shape of `[1, 3]`
    *  is broadcasted to output Tensor with shape of `[3, 3]`.
+   *  <p>
+   *  When doing broadcasted operations such as multiplying a tensor
+   *  by a scalar, broadcasting (usually) confers some time or space
+   *  benefit, as the broadcasted tensor is never materialized.
+   *  <p>
+   *  However, `broadcast_to` does not carry with it any such benefits.
+   *  The newly-created tensor takes the full memory of the broadcasted
+   *  shape. (In a graph context, `broadcast_to` might be fused to
+   *  subsequent operation and then be optimized away, however.)
    *
    * @param <T> data type for {@code output()} output
    * @param input A Tensor to broadcast.
@@ -2304,8 +2323,8 @@ public final class Ops {
    * Gather slices from `params` axis `axis` according to `indices`.
    *  <p>
    *  `indices` must be an integer tensor of any dimension (usually 0-D or 1-D).
-   *  Produces an output tensor with shape `params.shape[:axis] + indices.shape +
-   *  params.shape[axis + 1:]` where:
+   *  Produces an output tensor with shape `params.shape[:axis] +
+   *  indices.shape[batch_dims:] + params.shape[axis + 1:]` where:
    *  <pre>{@code
    *      # Scalar indices (output is rank(params) - 1).
    *      output[a_0, ..., a_n, b_0, ..., b_n] =
@@ -2816,9 +2835,12 @@ public final class Ops {
   }
 
   /**
-   *     Updates specified rows with values in `v`.
+   * Updates specified rows 'i' with values 'v'.
    *  <p>
-   *      Computes `x[i, :] = v; return x`.
+   *  Computes `x[i, :] = v; return x`.
+   *  <p>
+   *  Originally this function is mutative however for compilation we make this
+   *  operation create / operate on a copy of `x`.
    *
    * @param <T> data type for {@code y()} output
    * @param x A tensor of type `T`.
@@ -2841,29 +2863,6 @@ public final class Ops {
    */
   public <T extends TType> IsVariableInitialized isVariableInitialized(Operand<T> ref) {
     return IsVariableInitialized.create(scope, ref);
-  }
-
-  /**
-   * Generates values in an interval.
-   *  <p>
-   *  A sequence of `num` evenly-spaced values are generated beginning at `start`.
-   *  If `num > 1`, the values in the sequence increase by `stop - start / num - 1`,
-   *  so that the last one is exactly `stop`.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
-   *  tf.linspace(10.0, 12.0, 3, name="linspace") => [ 10.0  11.0  12.0]
-   *  }</pre>
-   *
-   * @param <T> data type for {@code output()} output
-   * @param start 0-D tensor. First entry in the range.
-   * @param stop 0-D tensor. Last entry in the range.
-   * @param num 0-D tensor. Number of values to generate.
-   * @return a new instance of LinSpace
-   */
-  public <T extends TNumber, U extends TNumber> LinSpace<T> linSpace(Operand<T> start,
-      Operand<T> stop, Operand<U> num) {
-    return LinSpace.create(scope, start, stop, num);
   }
 
   /**
@@ -3183,7 +3182,7 @@ public final class Ops {
    *  '''
    *
    * @tf.function def foo(x, y):
-   *    return = mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
+   *    return mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
    *
    *  graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
    *  }</pre>
@@ -4342,6 +4341,38 @@ public final class Ops {
       Operand<?> ref, Operand<T> indices, Operand<U> updates,
       ResourceScatterNdAdd.Options... options) {
     return ResourceScatterNdAdd.create(scope, ref, indices, updates, options);
+  }
+
+  /**
+   *
+   * @param ref A resource handle. Must be from a VarHandleOp.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of
+   *  values whose element wise max is taken with ref
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceScatterNdMax
+   */
+  public <T extends TNumber, U extends TType> ResourceScatterNdMax resourceScatterNdMax(
+      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+      ResourceScatterNdMax.Options... options) {
+    return ResourceScatterNdMax.create(scope, ref, indices, updates, options);
+  }
+
+  /**
+   *
+   * @param ref A resource handle. Must be from a VarHandleOp.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of
+   *  values whose element wise min is taken with ref.
+   * @param options carries optional attributes values
+   * @return a new instance of ResourceScatterNdMin
+   */
+  public <T extends TNumber, U extends TType> ResourceScatterNdMin resourceScatterNdMin(
+      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+      ResourceScatterNdMin.Options... options) {
+    return ResourceScatterNdMin.create(scope, ref, indices, updates, options);
   }
 
   /**
@@ -5903,11 +5934,11 @@ public final class Ops {
    *  begin = [1, 2, x, x, 0, x] # x denotes don't care (usually 0)
    *  end = [2, 4, x, x, -3, x]
    *  strides = [1, 1, x, x, -1, 1]
-   *  begin_mask = 1<<4 | 1 << 5 = 48
+   *  begin_mask = 1<<4 | 1<<5 = 48
    *  end_mask = 1<<5 = 32
    *  ellipsis_mask = 1<<3 = 8
-   *  new_axis_mask = 1<<2 4
-   *  shrink_axis_mask = 1<<0
+   *  new_axis_mask = 1<<2 = 4
+   *  shrink_axis_mask = 1<<0 = 1
    *  }</pre>
    *  In this case if `foo.shape` is (5, 5, 5, 5, 5, 5) the final shape of
    *  the slice becomes (2, 1, 5, 5, 2, 5).
@@ -6654,6 +6685,32 @@ public final class Ops {
   }
 
   /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterMax
+   */
+  public <T extends TType, U extends TNumber> TensorScatterMax<T> tensorScatterMax(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterMax.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterMin
+   */
+  public <T extends TType, U extends TNumber> TensorScatterMin<T> tensorScatterMin(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterMin.create(scope, tensor, indices, updates);
+  }
+
+  /**
    * Adds sparse `updates` to an existing tensor according to `indices`.
    *  <p>
    *  This operation creates a new tensor by adding sparse `updates` to the passed
@@ -6663,16 +6720,17 @@ public final class Ops {
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>
    *  `indices` is an integer tensor containing indices into a new tensor of shape
-   *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
+   *  `tensor.shape`.  The last dimension of `indices` can be at most the rank of
+   *  `tensor.shape`:
    *  <p>
-   *      indices.shape[-1] <= shape.rank
+   *      indices.shape[-1] <= tensor.shape.rank
    *  <p>
    *  The last dimension of `indices` corresponds to indices into elements
-   *  (if `indices.shape[-1] = shape.rank`) or slices
-   *  (if `indices.shape[-1] < shape.rank`) along dimension `indices.shape[-1]` of
-   *  `shape`.  `updates` is a tensor with shape
+   *  (if `indices.shape[-1] = tensor.shape.rank`) or slices
+   *  (if `indices.shape[-1] < tensor.shape.rank`) along dimension
+   *  `indices.shape[-1]` of `tensor.shape`.  `updates` is a tensor with shape
    *  <p>
-   *      indices.shape[:-1] + shape[indices.shape[-1]:]
+   *      indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
    *  <p>
    *  The simplest form of tensor_scatter_add is to add individual elements to a
    *  tensor by index. For example, say we want to add 4 elements in a rank-1
@@ -6724,6 +6782,32 @@ public final class Ops {
   public <T extends TType, U extends TNumber> TensorScatterNdAdd<T> tensorScatterNdAdd(
       Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     return TensorScatterNdAdd.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdMax
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdMax<T> tensorScatterNdMax(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdMax.create(scope, tensor, indices, updates);
+  }
+
+  /**
+   *
+   * @param <T> data type for {@code output()} output
+   * @param tensor Tensor to update.
+   * @param indices Index tensor.
+   * @param updates Updates to scatter into output.
+   * @return a new instance of TensorScatterNdMin
+   */
+  public <T extends TType, U extends TNumber> TensorScatterNdMin<T> tensorScatterNdMin(
+      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+    return TensorScatterNdMin.create(scope, tensor, indices, updates);
   }
 
   /**
@@ -7560,6 +7644,42 @@ public final class Ops {
    */
   public <T extends TType> Where where(Operand<T> condition) {
     return Where.create(scope, condition);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from automatic partitioning to
+   *  <p>
+   *  manual partitioning. It annotates the input (full-shape, to be automatically
+   *  partitioned) with the same sharding used by manual partitioning, and outputs a
+   *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
+   *  shape is not evenly partitionable, the padding region will be masked with 0s.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param manualSharding
+   * @return a new instance of XlaSpmdFullToShardShape
+   */
+  public <T extends TType> XlaSpmdFullToShardShape<T> xlaSpmdFullToShardShape(Operand<T> input,
+      String manualSharding) {
+    return XlaSpmdFullToShardShape.create(scope, input, manualSharding);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from manual partitioning to
+   *  <p>
+   *  automatic partitioning. It converts the shard-shaped, manually partitioned input
+   *  into full-shaped tensor to be partitioned automatically with the same sharding
+   *  used by manual partitioning.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param manualSharding
+   * @param fullShape
+   * @return a new instance of XlaSpmdShardToFullShape
+   */
+  public <T extends TType> XlaSpmdShardToFullShape<T> xlaSpmdShardToFullShape(Operand<T> input,
+      String manualSharding, Shape fullShape) {
+    return XlaSpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
   }
 
   /**

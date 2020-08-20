@@ -25,7 +25,6 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -35,7 +34,7 @@ import org.tensorflow.types.family.TType;
  * N is the size of the segment being reduced.
  * <p>
  * Like `SparseSegmentSqrtN`, but allows missing ids in `segment_ids`. If an id is
- * misisng, the `output` tensor at that position will be zeroed.
+ * missing, the `output` tensor at that position will be zeroed.
  * <p>
  * Read
  * [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
@@ -57,7 +56,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());

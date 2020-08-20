@@ -35,8 +35,6 @@ import org.tensorflow.op.math.Asinh;
 import org.tensorflow.op.math.Atan;
 import org.tensorflow.op.math.Atan2;
 import org.tensorflow.op.math.Atanh;
-import org.tensorflow.op.math.BesselI0e;
-import org.tensorflow.op.math.BesselI1e;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
@@ -47,6 +45,7 @@ import org.tensorflow.op.math.Cos;
 import org.tensorflow.op.math.Cosh;
 import org.tensorflow.op.math.Cumprod;
 import org.tensorflow.op.math.Cumsum;
+import org.tensorflow.op.math.DenseBincount;
 import org.tensorflow.op.math.Digamma;
 import org.tensorflow.op.math.Div;
 import org.tensorflow.op.math.DivNoNan;
@@ -530,38 +529,6 @@ public final class MathOps {
   }
 
   /**
-   * Computes the Bessel i0e function of `x` element-wise.
-   *  <p>
-   *  Exponentially scaled modified Bessel function of order 0 defined as
-   *  `bessel_i0e(x) = exp(-abs(x)) bessel_i0(x)`.
-   *  <p>
-   *  This function is faster and numerically stabler than `bessel_i0(x)`.
-   *
-   * @param <T> data type for {@code y()} output
-   * @param x
-   * @return a new instance of BesselI0e
-   */
-  public <T extends TNumber> BesselI0e<T> besselI0e(Operand<T> x) {
-    return BesselI0e.create(scope, x);
-  }
-
-  /**
-   * Computes the Bessel i1e function of `x` element-wise.
-   *  <p>
-   *  Exponentially scaled modified Bessel function of order 0 defined as
-   *  `bessel_i1e(x) = exp(-abs(x)) bessel_i1(x)`.
-   *  <p>
-   *  This function is faster and numerically stabler than `bessel_i1(x)`.
-   *
-   * @param <T> data type for {@code y()} output
-   * @param x
-   * @return a new instance of BesselI1e
-   */
-  public <T extends TNumber> BesselI1e<T> besselI1e(Operand<T> x) {
-    return BesselI1e.create(scope, x);
-  }
-
-  /**
    * Compute the regularized incomplete beta integral \\(I_x(a, b)\\).
    *  <p>
    *  The regularized incomplete beta integral is defined as:
@@ -829,6 +796,31 @@ public final class MathOps {
   public <T extends TType, U extends TNumber> Cumsum<T> cumsum(Operand<T> x, Operand<U> axis,
       Cumsum.Options... options) {
     return Cumsum.create(scope, x, axis, options);
+  }
+
+  /**
+   * Counts the number of occurrences of each value in an integer array.
+   *  <p>
+   *  Outputs a vector with length `size` and the same dtype as `weights`. If
+   *  `weights` are empty, then index `i` stores the number of times the value `i` is
+   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
+   *  the value in `weights` at each index where the corresponding value in `arr` is
+   *  `i`.
+   *  <p>
+   *  Values in `arr` outside of the range [0, size) are ignored.
+   *
+   * @param <U> data type for {@code output()} output
+   * @param input 1D or 2D int `Tensor`.
+   * @param size non-negative int scalar `Tensor`.
+   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
+   *  shape as `arr`, or a length-0 `Tensor`, in which case it acts as all weights
+   *  equal to 1.
+   * @param options carries optional attributes values
+   * @return a new instance of DenseBincount
+   */
+  public <U extends TNumber, T extends TNumber> DenseBincount<U> denseBincount(Operand<T> input,
+      Operand<T> size, Operand<U> weights, DenseBincount.Options... options) {
+    return DenseBincount.create(scope, input, size, weights, options);
   }
 
   /**

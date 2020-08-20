@@ -36,19 +36,18 @@ public final class ResourceHandle {
       "\n/tensorflow/core/framework/resource_han" +
       "dle.proto\022\ntensorflow\032,tensorflow/core/f" +
       "ramework/tensor_shape.proto\032%tensorflow/" +
-      "core/framework/types.proto\"\270\002\n\023ResourceH" +
+      "core/framework/types.proto\"\245\002\n\023ResourceH" +
       "andleProto\022\016\n\006device\030\001 \001(\t\022\021\n\tcontainer\030" +
       "\002 \001(\t\022\014\n\004name\030\003 \001(\t\022\021\n\thash_code\030\004 \001(\004\022\027" +
       "\n\017maybe_type_name\030\005 \001(\t\022H\n\021dtypes_and_sh" +
       "apes\030\006 \003(\0132-.tensorflow.ResourceHandlePr" +
-      "oto.DtypeAndShape\022\027\n\017allowed_devices\030\007 \003" +
-      "(\t\032a\n\rDtypeAndShape\022#\n\005dtype\030\001 \001(\0162\024.ten" +
-      "sorflow.DataType\022+\n\005shape\030\002 \001(\0132\034.tensor" +
-      "flow.TensorShapeProtoB\215\001\n\036org.tensorflow" +
-      ".proto.frameworkB\016ResourceHandleP\001ZVgith" +
-      "ub.com/tensorflow/tensorflow/tensorflow/" +
-      "go/core/framework/resource_handle_go_pro" +
-      "to\370\001\001b\006proto3"
+      "oto.DtypeAndShape\032a\n\rDtypeAndShape\022#\n\005dt" +
+      "ype\030\001 \001(\0162\024.tensorflow.DataType\022+\n\005shape" +
+      "\030\002 \001(\0132\034.tensorflow.TensorShapeProtoJ\004\010\007" +
+      "\020\010B\215\001\n\036org.tensorflow.proto.frameworkB\016R" +
+      "esourceHandleP\001ZVgithub.com/tensorflow/t" +
+      "ensorflow/tensorflow/go/core/framework/r" +
+      "esource_handle_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -61,7 +60,7 @@ public final class ResourceHandle {
     internal_static_tensorflow_ResourceHandleProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_ResourceHandleProto_descriptor,
-        new java.lang.String[] { "Device", "Container", "Name", "HashCode", "MaybeTypeName", "DtypesAndShapes", "AllowedDevices", });
+        new java.lang.String[] { "Device", "Container", "Name", "HashCode", "MaybeTypeName", "DtypesAndShapes", });
     internal_static_tensorflow_ResourceHandleProto_DtypeAndShape_descriptor =
       internal_static_tensorflow_ResourceHandleProto_descriptor.getNestedTypes().get(0);
     internal_static_tensorflow_ResourceHandleProto_DtypeAndShape_fieldAccessorTable = new

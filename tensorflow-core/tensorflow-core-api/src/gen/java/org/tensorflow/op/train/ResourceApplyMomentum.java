@@ -27,9 +27,9 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Update '*var' according to the momentum scheme. Set use_nesterov = True if you
+ * Update '*var' according to the momentum scheme.
  * <p>
- * want to use Nesterov momentum.
+ * Set use_nesterov = True if you want to use Nesterov momentum.
  * <p>
  * accum = accum * momentum + grad
  * var -= lr * accum

@@ -30,7 +30,7 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Computes gradients of max pooling function.
+ * Computes gradients of 3D max pooling function.
  * 
  * @param <U> data type for {@code output()} output
  */

@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -56,8 +57,18 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
       return this;
     }
     
+    /**
+     * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
+     * output ResourceHandle represents a per-replica/partitioned resource variable.
+     */
+    public Options allowedDevices(List<String> allowedDevices) {
+      this.allowedDevices = allowedDevices;
+      return this;
+    }
+    
     private String container;
     private String sharedName;
+    private List<String> allowedDevices;
     
     private Options() {
     }
@@ -87,6 +98,13 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
         if (opts.sharedName != null) {
           opBuilder.setAttr("shared_name", opts.sharedName);
         }
+        if (opts.allowedDevices != null) {
+          String[] allowedDevicesArray = new String[opts.allowedDevices.size()];
+          for (int i = 0; i < allowedDevicesArray.length; ++i) {
+            allowedDevicesArray[i] = opts.allowedDevices.get(i);
+          }
+          opBuilder.setAttr("allowed_devices", allowedDevicesArray);
+        }
       }
     }
     return new VarHandleOp(opBuilder.build());
@@ -104,6 +122,14 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
+  }
+  
+  /**
+   * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
+   * output ResourceHandle represents a per-replica/partitioned resource variable.
+   */
+  public static Options allowedDevices(List<String> allowedDevices) {
+    return new Options().allowedDevices(allowedDevices);
   }
   
   /**

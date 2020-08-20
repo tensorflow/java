@@ -106,6 +106,15 @@ public interface SnapshotMetadataRecordOrBuilder extends
   int getDtypeValue(int index);
 
   /**
+   * <pre>
+   * The number of elements in the snapshot.
+   * </pre>
+   *
+   * <code>int64 num_elements = 6;</code>
+   */
+  long getNumElements();
+
+  /**
    * <code>bool finalized = 1000;</code>
    */
   boolean getFinalized();

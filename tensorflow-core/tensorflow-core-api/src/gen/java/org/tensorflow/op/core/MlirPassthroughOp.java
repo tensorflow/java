@@ -59,7 +59,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @tf.function
  * def foo(x, y):
- *   return = mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
+ *   return mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
  * 
  * graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
  * }</pre>

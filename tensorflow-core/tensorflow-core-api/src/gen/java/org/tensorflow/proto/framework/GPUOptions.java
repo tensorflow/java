@@ -568,6 +568,52 @@ private static final long serialVersionUID = 0L;
        * <code>repeated float memory_limit_mb = 1;</code>
        */
       float getMemoryLimitMb(int index);
+
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      java.util.List<java.lang.Integer> getPriorityList();
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      int getPriorityCount();
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      int getPriority(int index);
     }
     /**
      * <pre>
@@ -588,6 +634,7 @@ private static final long serialVersionUID = 0L;
       }
       private VirtualDevices() {
         memoryLimitMb_ = emptyFloatList();
+        priority_ = emptyIntList();
       }
 
       @java.lang.Override
@@ -642,6 +689,27 @@ private static final long serialVersionUID = 0L;
                 input.popLimit(limit);
                 break;
               }
+              case 16: {
+                if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                  priority_ = newIntList();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                priority_.addInt(input.readInt32());
+                break;
+              }
+              case 18: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                  priority_ = newIntList();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  priority_.addInt(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
               default: {
                 if (!parseUnknownField(
                     input, unknownFields, extensionRegistry, tag)) {
@@ -659,6 +727,9 @@ private static final long serialVersionUID = 0L;
         } finally {
           if (((mutable_bitField0_ & 0x00000001) != 0)) {
             memoryLimitMb_.makeImmutable(); // C
+          }
+          if (((mutable_bitField0_ & 0x00000002) != 0)) {
+            priority_.makeImmutable(); // C
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -730,6 +801,62 @@ private static final long serialVersionUID = 0L;
       }
       private int memoryLimitMbMemoizedSerializedSize = -1;
 
+      public static final int PRIORITY_FIELD_NUMBER = 2;
+      private com.google.protobuf.Internal.IntList priority_;
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getPriorityList() {
+        return priority_;
+      }
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      public int getPriorityCount() {
+        return priority_.size();
+      }
+      /**
+       * <pre>
+       * Priority values to use with the virtual devices. Use the cuda function
+       * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+       * priority.
+       * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+       * least priority and -1 for greatest priority.
+       * If this field is not specified, then the virtual devices will be
+       * created with the default. If this field has values set, then the size
+       * of this must match with the above memory_limit_mb.
+       * </pre>
+       *
+       * <code>repeated int32 priority = 2;</code>
+       */
+      public int getPriority(int index) {
+        return priority_.getInt(index);
+      }
+      private int priorityMemoizedSerializedSize = -1;
+
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -752,6 +879,13 @@ private static final long serialVersionUID = 0L;
         for (int i = 0; i < memoryLimitMb_.size(); i++) {
           output.writeFloatNoTag(memoryLimitMb_.getFloat(i));
         }
+        if (getPriorityList().size() > 0) {
+          output.writeUInt32NoTag(18);
+          output.writeUInt32NoTag(priorityMemoizedSerializedSize);
+        }
+        for (int i = 0; i < priority_.size(); i++) {
+          output.writeInt32NoTag(priority_.getInt(i));
+        }
         unknownFields.writeTo(output);
       }
 
@@ -772,6 +906,20 @@ private static final long serialVersionUID = 0L;
           }
           memoryLimitMbMemoizedSerializedSize = dataSize;
         }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < priority_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(priority_.getInt(i));
+          }
+          size += dataSize;
+          if (!getPriorityList().isEmpty()) {
+            size += 1;
+            size += com.google.protobuf.CodedOutputStream
+                .computeInt32SizeNoTag(dataSize);
+          }
+          priorityMemoizedSerializedSize = dataSize;
+        }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
         return size;
@@ -789,6 +937,8 @@ private static final long serialVersionUID = 0L;
 
         if (!getMemoryLimitMbList()
             .equals(other.getMemoryLimitMbList())) return false;
+        if (!getPriorityList()
+            .equals(other.getPriorityList())) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
         return true;
       }
@@ -803,6 +953,10 @@ private static final long serialVersionUID = 0L;
         if (getMemoryLimitMbCount() > 0) {
           hash = (37 * hash) + MEMORY_LIMIT_MB_FIELD_NUMBER;
           hash = (53 * hash) + getMemoryLimitMbList().hashCode();
+        }
+        if (getPriorityCount() > 0) {
+          hash = (37 * hash) + PRIORITY_FIELD_NUMBER;
+          hash = (53 * hash) + getPriorityList().hashCode();
         }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
@@ -944,6 +1098,8 @@ private static final long serialVersionUID = 0L;
           super.clear();
           memoryLimitMb_ = emptyFloatList();
           bitField0_ = (bitField0_ & ~0x00000001);
+          priority_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
 
@@ -976,6 +1132,11 @@ private static final long serialVersionUID = 0L;
             bitField0_ = (bitField0_ & ~0x00000001);
           }
           result.memoryLimitMb_ = memoryLimitMb_;
+          if (((bitField0_ & 0x00000002) != 0)) {
+            priority_.makeImmutable();
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.priority_ = priority_;
           onBuilt();
           return result;
         }
@@ -1031,6 +1192,16 @@ private static final long serialVersionUID = 0L;
             } else {
               ensureMemoryLimitMbIsMutable();
               memoryLimitMb_.addAll(other.memoryLimitMb_);
+            }
+            onChanged();
+          }
+          if (!other.priority_.isEmpty()) {
+            if (priority_.isEmpty()) {
+              priority_ = other.priority_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensurePriorityIsMutable();
+              priority_.addAll(other.priority_);
             }
             onChanged();
           }
@@ -1197,6 +1368,150 @@ private static final long serialVersionUID = 0L;
         public Builder clearMemoryLimitMb() {
           memoryLimitMb_ = emptyFloatList();
           bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+
+        private com.google.protobuf.Internal.IntList priority_ = emptyIntList();
+        private void ensurePriorityIsMutable() {
+          if (!((bitField0_ & 0x00000002) != 0)) {
+            priority_ = mutableCopy(priority_);
+            bitField0_ |= 0x00000002;
+           }
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getPriorityList() {
+          return ((bitField0_ & 0x00000002) != 0) ?
+                   java.util.Collections.unmodifiableList(priority_) : priority_;
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public int getPriorityCount() {
+          return priority_.size();
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public int getPriority(int index) {
+          return priority_.getInt(index);
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public Builder setPriority(
+            int index, int value) {
+          ensurePriorityIsMutable();
+          priority_.setInt(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public Builder addPriority(int value) {
+          ensurePriorityIsMutable();
+          priority_.addInt(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public Builder addAllPriority(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensurePriorityIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, priority_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Priority values to use with the virtual devices. Use the cuda function
+         * cudaDeviceGetStreamPriorityRange to query for valid range of values for
+         * priority.
+         * On a P4000 GPU with cuda 10.1, the priority range reported was 0 for
+         * least priority and -1 for greatest priority.
+         * If this field is not specified, then the virtual devices will be
+         * created with the default. If this field has values set, then the size
+         * of this must match with the above memory_limit_mb.
+         * </pre>
+         *
+         * <code>repeated int32 priority = 2;</code>
+         */
+        public Builder clearPriority() {
+          priority_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
           return this;
         }

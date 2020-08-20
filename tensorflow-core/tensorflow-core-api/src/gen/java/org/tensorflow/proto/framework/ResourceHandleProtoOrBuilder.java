@@ -134,43 +134,4 @@ public interface ResourceHandleProtoOrBuilder extends
    */
   org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder getDtypesAndShapesOrBuilder(
       int index);
-
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  java.util.List<java.lang.String>
-      getAllowedDevicesList();
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  int getAllowedDevicesCount();
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  java.lang.String getAllowedDevices(int index);
-  /**
-   * <pre>
-   * A set of devices containing the resource. If empty, the resource only
-   * exists on `device`.
-   * </pre>
-   *
-   * <code>repeated string allowed_devices = 7;</code>
-   */
-  com.google.protobuf.ByteString
-      getAllowedDevicesBytes(int index);
 }

@@ -154,6 +154,20 @@ private static final long serialVersionUID = 0L;
             kindCase_ = 34;
             break;
           }
+          case 282: {
+            org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder subBuilder = null;
+            if (kindCase_ == 35) {
+              subBuilder = ((org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_).toBuilder();
+            }
+            kind_ =
+                input.readMessage(org.tensorflow.proto.framework.BoundedTensorSpecProto.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_);
+              kind_ = subBuilder.buildPartial();
+            }
+            kindCase_ = 35;
+            break;
+          }
           case 410: {
             org.tensorflow.proto.framework.ListValue.Builder subBuilder = null;
             if (kindCase_ == 51) {
@@ -255,6 +269,7 @@ private static final long serialVersionUID = 0L;
     TENSOR_DTYPE_VALUE(32),
     TENSOR_SPEC_VALUE(33),
     TYPE_SPEC_VALUE(34),
+    BOUNDED_TENSOR_SPEC_VALUE(35),
     LIST_VALUE(51),
     TUPLE_VALUE(52),
     DICT_VALUE(53),
@@ -283,6 +298,7 @@ private static final long serialVersionUID = 0L;
         case 32: return TENSOR_DTYPE_VALUE;
         case 33: return TENSOR_SPEC_VALUE;
         case 34: return TYPE_SPEC_VALUE;
+        case 35: return BOUNDED_TENSOR_SPEC_VALUE;
         case 51: return LIST_VALUE;
         case 52: return TUPLE_VALUE;
         case 53: return DICT_VALUE;
@@ -592,6 +608,44 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.framework.TypeSpecProto.getDefaultInstance();
   }
 
+  public static final int BOUNDED_TENSOR_SPEC_VALUE_FIELD_NUMBER = 35;
+  /**
+   * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  public boolean hasBoundedTensorSpecValue() {
+    return kindCase_ == 35;
+  }
+  /**
+   * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  public org.tensorflow.proto.framework.BoundedTensorSpecProto getBoundedTensorSpecValue() {
+    if (kindCase_ == 35) {
+       return (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_;
+    }
+    return org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+  }
+  /**
+   * <pre>
+   * Represents a value for tf.BoundedTensorSpec.
+   * </pre>
+   *
+   * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+   */
+  public org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder getBoundedTensorSpecValueOrBuilder() {
+    if (kindCase_ == 35) {
+       return (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_;
+    }
+    return org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+  }
+
   public static final int LIST_VALUE_FIELD_NUMBER = 51;
   /**
    * <pre>
@@ -788,6 +842,9 @@ private static final long serialVersionUID = 0L;
     if (kindCase_ == 34) {
       output.writeMessage(34, (org.tensorflow.proto.framework.TypeSpecProto) kind_);
     }
+    if (kindCase_ == 35) {
+      output.writeMessage(35, (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_);
+    }
     if (kindCase_ == 51) {
       output.writeMessage(51, (org.tensorflow.proto.framework.ListValue) kind_);
     }
@@ -846,6 +903,10 @@ private static final long serialVersionUID = 0L;
     if (kindCase_ == 34) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(34, (org.tensorflow.proto.framework.TypeSpecProto) kind_);
+    }
+    if (kindCase_ == 35) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(35, (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_);
     }
     if (kindCase_ == 51) {
       size += com.google.protobuf.CodedOutputStream
@@ -917,6 +978,10 @@ private static final long serialVersionUID = 0L;
         if (!getTypeSpecValue()
             .equals(other.getTypeSpecValue())) return false;
         break;
+      case 35:
+        if (!getBoundedTensorSpecValue()
+            .equals(other.getBoundedTensorSpecValue())) return false;
+        break;
       case 51:
         if (!getListValue()
             .equals(other.getListValue())) return false;
@@ -986,6 +1051,10 @@ private static final long serialVersionUID = 0L;
       case 34:
         hash = (37 * hash) + TYPE_SPEC_VALUE_FIELD_NUMBER;
         hash = (53 * hash) + getTypeSpecValue().hashCode();
+        break;
+      case 35:
+        hash = (37 * hash) + BOUNDED_TENSOR_SPEC_VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getBoundedTensorSpecValue().hashCode();
         break;
       case 51:
         hash = (37 * hash) + LIST_VALUE_FIELD_NUMBER;
@@ -1233,6 +1302,13 @@ private static final long serialVersionUID = 0L;
           result.kind_ = typeSpecValueBuilder_.build();
         }
       }
+      if (kindCase_ == 35) {
+        if (boundedTensorSpecValueBuilder_ == null) {
+          result.kind_ = kind_;
+        } else {
+          result.kind_ = boundedTensorSpecValueBuilder_.build();
+        }
+      }
       if (kindCase_ == 51) {
         if (listValueBuilder_ == null) {
           result.kind_ = kind_;
@@ -1347,6 +1423,10 @@ private static final long serialVersionUID = 0L;
         }
         case TYPE_SPEC_VALUE: {
           mergeTypeSpecValue(other.getTypeSpecValue());
+          break;
+        }
+        case BOUNDED_TENSOR_SPEC_VALUE: {
+          mergeBoundedTensorSpecValue(other.getBoundedTensorSpecValue());
           break;
         }
         case LIST_VALUE: {
@@ -2427,6 +2507,178 @@ private static final long serialVersionUID = 0L;
       kindCase_ = 34;
       onChanged();;
       return typeSpecValueBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.BoundedTensorSpecProto, org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder, org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder> boundedTensorSpecValueBuilder_;
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public boolean hasBoundedTensorSpecValue() {
+      return kindCase_ == 35;
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public org.tensorflow.proto.framework.BoundedTensorSpecProto getBoundedTensorSpecValue() {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        if (kindCase_ == 35) {
+          return (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_;
+        }
+        return org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+      } else {
+        if (kindCase_ == 35) {
+          return boundedTensorSpecValueBuilder_.getMessage();
+        }
+        return org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public Builder setBoundedTensorSpecValue(org.tensorflow.proto.framework.BoundedTensorSpecProto value) {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        kind_ = value;
+        onChanged();
+      } else {
+        boundedTensorSpecValueBuilder_.setMessage(value);
+      }
+      kindCase_ = 35;
+      return this;
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public Builder setBoundedTensorSpecValue(
+        org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder builderForValue) {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        kind_ = builderForValue.build();
+        onChanged();
+      } else {
+        boundedTensorSpecValueBuilder_.setMessage(builderForValue.build());
+      }
+      kindCase_ = 35;
+      return this;
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public Builder mergeBoundedTensorSpecValue(org.tensorflow.proto.framework.BoundedTensorSpecProto value) {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        if (kindCase_ == 35 &&
+            kind_ != org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance()) {
+          kind_ = org.tensorflow.proto.framework.BoundedTensorSpecProto.newBuilder((org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          kind_ = value;
+        }
+        onChanged();
+      } else {
+        if (kindCase_ == 35) {
+          boundedTensorSpecValueBuilder_.mergeFrom(value);
+        }
+        boundedTensorSpecValueBuilder_.setMessage(value);
+      }
+      kindCase_ = 35;
+      return this;
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public Builder clearBoundedTensorSpecValue() {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        if (kindCase_ == 35) {
+          kindCase_ = 0;
+          kind_ = null;
+          onChanged();
+        }
+      } else {
+        if (kindCase_ == 35) {
+          kindCase_ = 0;
+          kind_ = null;
+        }
+        boundedTensorSpecValueBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder getBoundedTensorSpecValueBuilder() {
+      return getBoundedTensorSpecValueFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    public org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder getBoundedTensorSpecValueOrBuilder() {
+      if ((kindCase_ == 35) && (boundedTensorSpecValueBuilder_ != null)) {
+        return boundedTensorSpecValueBuilder_.getMessageOrBuilder();
+      } else {
+        if (kindCase_ == 35) {
+          return (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_;
+        }
+        return org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+      }
+    }
+    /**
+     * <pre>
+     * Represents a value for tf.BoundedTensorSpec.
+     * </pre>
+     *
+     * <code>.tensorflow.BoundedTensorSpecProto bounded_tensor_spec_value = 35;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.BoundedTensorSpecProto, org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder, org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder> 
+        getBoundedTensorSpecValueFieldBuilder() {
+      if (boundedTensorSpecValueBuilder_ == null) {
+        if (!(kindCase_ == 35)) {
+          kind_ = org.tensorflow.proto.framework.BoundedTensorSpecProto.getDefaultInstance();
+        }
+        boundedTensorSpecValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.framework.BoundedTensorSpecProto, org.tensorflow.proto.framework.BoundedTensorSpecProto.Builder, org.tensorflow.proto.framework.BoundedTensorSpecProtoOrBuilder>(
+                (org.tensorflow.proto.framework.BoundedTensorSpecProto) kind_,
+                getParentForChildren(),
+                isClean());
+        kind_ = null;
+      }
+      kindCase_ = 35;
+      onChanged();;
+      return boundedTensorSpecValueBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

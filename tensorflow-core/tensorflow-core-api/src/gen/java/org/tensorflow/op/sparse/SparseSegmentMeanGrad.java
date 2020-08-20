@@ -51,7 +51,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
    * @return a new instance of SparseSegmentMeanGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanGrad", scope.makeOpName("SparseSegmentMeanGrad"));
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());

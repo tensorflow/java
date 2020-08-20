@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * dimension of `a` (after being transposed if `transpose_a` is non-zero) must
  * match the outer dimension of `b` (after being transposed if `transposed_b` is
  * non-zero). Then do broadcast add operation with bias values on the matrix
- * mulplication result. The bias size must match inner dimension of `b`.
+ * multiplication result. The bias size must match inner dimension of `b`.
  * 
  * @param <W> data type for {@code out()} output
  */

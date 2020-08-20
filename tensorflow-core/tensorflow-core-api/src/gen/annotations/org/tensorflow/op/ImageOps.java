@@ -36,7 +36,6 @@ import org.tensorflow.op.image.DrawBoundingBoxes;
 import org.tensorflow.op.image.EncodeJpeg;
 import org.tensorflow.op.image.EncodeJpegVariableQuality;
 import org.tensorflow.op.image.EncodePng;
-import org.tensorflow.op.image.ExtractGlimpse;
 import org.tensorflow.op.image.ExtractImagePatches;
 import org.tensorflow.op.image.ExtractJpegShape;
 import org.tensorflow.op.image.HsvToRgb;
@@ -98,7 +97,7 @@ public final class ImageOps {
    * Adjust the hue of one or more images.
    *  <p>
    *  `images` is a tensor of at least 3 dimensions.  The last dimension is
-   *  interpretted as channels, and must be three.
+   *  interpreted as channels, and must be three.
    *  <p>
    *  The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A delta is then applied all the hue values,
@@ -117,7 +116,7 @@ public final class ImageOps {
    * Adjust the saturation of one or more images.
    *  <p>
    *  `images` is a tensor of at least 3 dimensions.  The last dimension is
-   *  interpretted as channels, and must be three.
+   *  interpreted as channels, and must be three.
    *  <p>
    *  The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A scale is then applied all the saturation
@@ -347,7 +346,7 @@ public final class ImageOps {
    *      convert $src.gif -coalesce $dst.gif
    *  <p>
    *  This op also supports decoding JPEGs and PNGs, though it is cleaner to use
-   *  `tf.image.decode_image`.
+   *  `tf.io.decode_image`.
    *
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
@@ -382,7 +381,7 @@ public final class ImageOps {
    *  downscaling the image later.
    *  <p>
    *  This op also supports decoding PNGs and non-animated GIFs since the interface is
-   *  the same, though it is cleaner to use `tf.image.decode_image`.
+   *  the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param contents 0-D.  The JPEG-encoded image.
    * @param options carries optional attributes values
@@ -417,7 +416,7 @@ public final class ImageOps {
    *  of color channels.
    *  <p>
    *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.image.decode_image`.
+   *  is the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param <T> data type for {@code image()} output
    * @param contents 0-D.  The PNG-encoded image.
@@ -453,7 +452,7 @@ public final class ImageOps {
    *  of color channels.
    *  <p>
    *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.image.decode_image`.
+   *  is the same, though it is cleaner to use `tf.io.decode_image`.
    *
    * @param <T> data type for {@code image()} output
    * @param contents 0-D.  The PNG-encoded image.
@@ -574,50 +573,6 @@ public final class ImageOps {
    */
   public <T extends TNumber> EncodePng encodePng(Operand<T> image, EncodePng.Options... options) {
     return EncodePng.create(scope, image, options);
-  }
-
-  /**
-   * Extracts a glimpse from the input tensor.
-   *  <p>
-   *  Returns a set of windows called glimpses extracted at location
-   *  `offsets` from the input tensor. If the windows only partially
-   *  overlaps the inputs, the non overlapping areas will be filled with
-   *  random noise.
-   *  <p>
-   *  The result is a 4-D tensor of shape `[batch_size, glimpse_height,
-   *  glimpse_width, channels]`. The channels and batch dimensions are the
-   *  same as that of the input tensor. The height and width of the output
-   *  windows are specified in the `size` parameter.
-   *  <p>
-   *  The argument `normalized` and `centered` controls how the windows are built:
-   *  <ul>
-   *  <li>
-   *  If the coordinates are normalized but not centered, 0.0 and 1.0
-   *    correspond to the minimum and maximum of each height and width
-   *    dimension.
-   *  </li>
-   *  <li>
-   *  If the coordinates are both normalized and centered, they range from
-   *    -1.0 to 1.0. The coordinates (-1.0, -1.0) correspond to the upper
-   *    left corner, the lower right corner is located at (1.0, 1.0) and the
-   *    center is at (0, 0).
-   *  </li>
-   *  <li>
-   *  If the coordinates are not normalized they are interpreted as
-   *    numbers of pixels.
-   *
-   * @param input A 4-D float tensor of shape `[batch_size, height, width, channels]`.
-   * @param size A 1-D tensor of 2 elements containing the size of the glimpses
-   *  to extract.  The glimpse height must be specified first, following
-   *  by the glimpse width.
-   * @param offsets A 2-D integer tensor of shape `[batch_size, 2]` containing
-   *  the y, x locations of the center of each window.
-   * @param options carries optional attributes values
-   * @return a new instance of ExtractGlimpse
-   */
-  public ExtractGlimpse extractGlimpse(Operand<TFloat32> input, Operand<TInt32> size,
-      Operand<TFloat32> offsets, ExtractGlimpse.Options... options) {
-    return ExtractGlimpse.create(scope, input, size, offsets, options);
   }
 
   /**

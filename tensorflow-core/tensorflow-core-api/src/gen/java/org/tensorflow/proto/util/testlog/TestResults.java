@@ -232,6 +232,10 @@ private static final long serialVersionUID = 0L;
      * <code>EDGE_BENCHMARK = 4;</code>
      */
     EDGE_BENCHMARK(4),
+    /**
+     * <code>IOS_BENCHMARK = 5;</code>
+     */
+    IOS_BENCHMARK(5),
     UNRECOGNIZED(-1),
     ;
 
@@ -259,6 +263,10 @@ private static final long serialVersionUID = 0L;
      * <code>EDGE_BENCHMARK = 4;</code>
      */
     public static final int EDGE_BENCHMARK_VALUE = 4;
+    /**
+     * <code>IOS_BENCHMARK = 5;</code>
+     */
+    public static final int IOS_BENCHMARK_VALUE = 5;
 
 
     public final int getNumber() {
@@ -284,6 +292,7 @@ private static final long serialVersionUID = 0L;
         case 2: return PYTHON_BENCHMARK;
         case 3: return ANDROID_BENCHMARK;
         case 4: return EDGE_BENCHMARK;
+        case 5: return IOS_BENCHMARK;
         default: return null;
       }
     }

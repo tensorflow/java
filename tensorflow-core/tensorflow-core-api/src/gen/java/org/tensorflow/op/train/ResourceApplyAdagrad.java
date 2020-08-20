@@ -30,7 +30,7 @@ import org.tensorflow.types.family.TType;
  * Update '*var' according to the adagrad scheme.
  * <p>
  * accum += grad * grad
- * var -= lr * grad * (1 / sqrt(accum))
+ * var -= lr * grad * (1 / (sqrt(accum) + epsilon))
  */
 public final class ResourceApplyAdagrad extends RawOp {
   

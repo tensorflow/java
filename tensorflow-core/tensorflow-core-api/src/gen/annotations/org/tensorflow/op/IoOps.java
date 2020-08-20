@@ -419,7 +419,7 @@ public final class IoOps {
    * @param featureListDenseKeys The keys expected in the SequenceExamples' feature_lists associated
    *  with lists of dense values.
    * @param featureListRaggedKeys The keys expected in the FeatureLists associated with ragged values.
-   * @param featureListDenseMissingAssumedEmpty A vector corresponding 1:1 with featue_list_dense_keys, indicating which
+   * @param featureListDenseMissingAssumedEmpty A vector corresponding 1:1 with feature_list_dense_keys, indicating which
    *  features may be missing from the SequenceExamples.  If the associated
    *  FeatureList is missing, it is treated as empty.
    * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).

@@ -93,11 +93,29 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
       return this;
     }
     
+    /**
+     * @param circularBufferSize 
+     */
+    public Options circularBufferSize(Long circularBufferSize) {
+      this.circularBufferSize = circularBufferSize;
+      return this;
+    }
+    
+    /**
+     * @param tfdbgRunId 
+     */
+    public Options tfdbgRunId(String tfdbgRunId) {
+      this.tfdbgRunId = tfdbgRunId;
+      return this;
+    }
+    
     private String tfdbgContextId;
     private String opName;
     private Long outputSlot;
     private Long tensorDebugMode;
     private List<String> debugUrls;
+    private Long circularBufferSize;
+    private String tfdbgRunId;
     
     private Options() {
     }
@@ -136,6 +154,12 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
             debugUrlsArray[i] = opts.debugUrls.get(i);
           }
           opBuilder.setAttr("debug_urls", debugUrlsArray);
+        }
+        if (opts.circularBufferSize != null) {
+          opBuilder.setAttr("circular_buffer_size", opts.circularBufferSize);
+        }
+        if (opts.tfdbgRunId != null) {
+          opBuilder.setAttr("tfdbg_run_id", opts.tfdbgRunId);
         }
       }
     }
@@ -178,6 +202,20 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
    */
   public static Options debugUrls(List<String> debugUrls) {
     return new Options().debugUrls(debugUrls);
+  }
+  
+  /**
+   * @param circularBufferSize 
+   */
+  public static Options circularBufferSize(Long circularBufferSize) {
+    return new Options().circularBufferSize(circularBufferSize);
+  }
+  
+  /**
+   * @param tfdbgRunId 
+   */
+  public static Options tfdbgRunId(String tfdbgRunId) {
+    return new Options().tfdbgRunId(tfdbgRunId);
   }
   
   /**

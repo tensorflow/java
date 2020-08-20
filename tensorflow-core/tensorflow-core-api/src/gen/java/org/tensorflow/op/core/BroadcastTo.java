@@ -49,6 +49,15 @@ import org.tensorflow.types.family.TType;
  * <p>
  * In the above example, the input Tensor with the shape of `[1, 3]`
  * is broadcasted to output Tensor with shape of `[3, 3]`.
+ * <p>
+ * When doing broadcasted operations such as multiplying a tensor
+ * by a scalar, broadcasting (usually) confers some time or space
+ * benefit, as the broadcasted tensor is never materialized.
+ * <p>
+ * However, `broadcast_to` does not carry with it any such benefits.
+ * The newly-created tensor takes the full memory of the broadcasted
+ * shape. (In a graph context, `broadcast_to` might be fused to
+ * subsequent operation and then be optimized away, however.)
  * 
  * @param <T> data type for {@code output()} output
  */

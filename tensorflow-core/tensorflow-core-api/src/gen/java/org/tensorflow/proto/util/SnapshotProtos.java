@@ -49,18 +49,18 @@ public final class SnapshotProtos {
       "sor.proto\032,tensorflow/core/framework/ten" +
       "sor_shape.proto\032%tensorflow/core/framewo" +
       "rk/types.proto\"9\n\016SnapshotRecord\022\'\n\006tens" +
-      "or\030\001 \003(\0132\027.tensorflow.TensorProto\"\242\001\n\026Sn" +
+      "or\030\001 \003(\0132\027.tensorflow.TensorProto\"\270\001\n\026Sn" +
       "apshotMetadataRecord\022\022\n\ngraph_hash\030\001 \001(\t" +
       "\022\016\n\006run_id\030\002 \001(\t\022\032\n\022creation_timestamp\030\003" +
       " \001(\003\022\017\n\007version\030\004 \001(\003\022#\n\005dtype\030\005 \003(\0162\024.t" +
-      "ensorflow.DataType\022\022\n\tfinalized\030\350\007 \001(\010\"_" +
-      "\n\016TensorMetadata\0222\n\014tensor_shape\030\002 \001(\0132\034" +
-      ".tensorflow.TensorShapeProto\022\031\n\021tensor_s" +
-      "ize_bytes\030\003 \001(\003\"_\n\026SnapshotTensorMetadat" +
-      "a\022E\n\017tensor_metadata\030\001 \003(\0132,.tensorflow." +
-      "data.experimental.TensorMetadataB-\n\031org." +
-      "tensorflow.proto.utilB\016SnapshotProtosP\001b" +
-      "\006proto3"
+      "ensorflow.DataType\022\024\n\014num_elements\030\006 \001(\003" +
+      "\022\022\n\tfinalized\030\350\007 \001(\010\"_\n\016TensorMetadata\0222" +
+      "\n\014tensor_shape\030\002 \001(\0132\034.tensorflow.Tensor" +
+      "ShapeProto\022\031\n\021tensor_size_bytes\030\003 \001(\003\"_\n" +
+      "\026SnapshotTensorMetadata\022E\n\017tensor_metada" +
+      "ta\030\001 \003(\0132,.tensorflow.data.experimental." +
+      "TensorMetadataB-\n\031org.tensorflow.proto.u" +
+      "tilB\016SnapshotProtosP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -80,7 +80,7 @@ public final class SnapshotProtos {
     internal_static_tensorflow_data_experimental_SnapshotMetadataRecord_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_SnapshotMetadataRecord_descriptor,
-        new java.lang.String[] { "GraphHash", "RunId", "CreationTimestamp", "Version", "Dtype", "Finalized", });
+        new java.lang.String[] { "GraphHash", "RunId", "CreationTimestamp", "Version", "Dtype", "NumElements", "Finalized", });
     internal_static_tensorflow_data_experimental_TensorMetadata_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_tensorflow_data_experimental_TensorMetadata_fieldAccessorTable = new
