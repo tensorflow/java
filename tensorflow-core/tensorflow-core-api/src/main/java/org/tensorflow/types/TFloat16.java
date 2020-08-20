@@ -35,19 +35,23 @@ import org.tensorflow.types.family.TNumber;
 /**
  * IEEE-754 half-precision 16-bit float tensor type.
  *
- * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with potentially
- * a precision loss) is required for each 32 bits value written or read on a tensor of this type from
- * the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor, performances will be
- * improved by working with {@link TFloat32} or {@link TFloat64} data types whenever possible.
+ * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with
+ * potentially a precision loss) is required for each 32 bits value written or read on a tensor of
+ * this type from the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor,
+ * performances will be improved by working with {@link TFloat32} or {@link TFloat64} data types
+ * whenever possible.
  *
- * <p>Also, {@code TFloat16} tensors normally perform better if they are located in GPU memory since most
- * CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link TBfloat16}
- * tensor type might be a better option.
+ * <p>Also, {@code TFloat16} tensors normally perform better if they are located in GPU memory since
+ * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
+ * TBfloat16} tensor type might be a better option.
  */
 public interface TFloat16 extends FloatNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "FLOAT16";
+
   /** Type metadata */
-  DataType<TFloat16> DTYPE = DataType.create("FLOAT16", 19, 2, TFloat16Impl::mapTensor);
+  DataType<TFloat16> DTYPE = DataType.create(NAME, 19, 2, TFloat16Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -118,17 +122,15 @@ public interface TFloat16 extends FloatNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TFloat16}
- */
+/** Hidden implementation of a {@code TFloat16} */
 class TFloat16Impl extends FloatDenseNdArray implements TFloat16 {
 
   static TFloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TFloat16Impl(DataLayouts.FLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
+    return new TFloat16Impl(
+        DataLayouts.FLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
   }
 
   private TFloat16Impl(FloatDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 }
-

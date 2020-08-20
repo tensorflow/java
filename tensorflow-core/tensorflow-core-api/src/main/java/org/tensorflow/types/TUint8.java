@@ -31,13 +31,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * 8-bit unsigned integer tensor type.
- */
+/** 8-bit unsigned integer tensor type. */
 public interface TUint8 extends ByteNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "UINT8";
+
   /** Type metadata */
-  DataType<TUint8> DTYPE = DataType.create("UINT8", 4, 1, TUint8Impl::mapTensor);
+  DataType<TUint8> DTYPE = DataType.create(NAME, 4, 1, TUint8Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single byte value.
@@ -108,9 +109,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TUint8}
- */
+/** Hidden implementation of a {@code TUint8} */
 class TUint8Impl extends ByteDenseNdArray implements TUint8 {
 
   static TUint8 mapTensor(TF_Tensor nativeTensor, Shape shape) {

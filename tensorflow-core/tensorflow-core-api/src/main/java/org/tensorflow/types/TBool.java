@@ -36,14 +36,15 @@ import org.tensorflow.types.family.TType;
  * Boolean tensor type.
  *
  * <p>If direct memory mapping is not available in the JVM, tensors of this type might require an
- * explicit mapping between Java boolean values and byte buffers using the
- * {@link DataLayouts#BOOL BOOL} layout, which may impact I/O
- * performances.
+ * explicit mapping between Java boolean values and byte buffers using the {@link DataLayouts#BOOL
+ * BOOL} layout, which may impact I/O performances.
  */
 public interface TBool extends BooleanNdArray, TType {
+  /** readable-name for the data type */
+  static final String NAME = "BOOL";
 
   /** Type metadata */
-  DataType<TBool> DTYPE = DataType.create("BOOL", 10, 1, TBoolImpl::mapTensor);
+  DataType<TBool> DTYPE = DataType.create(NAME, 10, 1, TBoolImpl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single boolean value.
@@ -114,9 +115,7 @@ public interface TBool extends BooleanNdArray, TType {
   }
 }
 
-/**
- * Hidden implementation of a {@code TBool}
- */
+/** Hidden implementation of a {@code TBool} */
 class TBoolImpl extends BooleanDenseNdArray implements TBool {
 
   static TBool mapTensor(TF_Tensor nativeTensor, Shape shape) {

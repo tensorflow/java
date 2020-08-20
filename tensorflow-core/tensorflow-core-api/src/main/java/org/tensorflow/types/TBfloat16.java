@@ -36,21 +36,24 @@ import org.tensorflow.types.family.TNumber;
  * Brain 16-bit float tensor type.
  *
  * <p>This type differs from {@link TFloat16} as it truncates the mantissa of a 32-bit float and
- * preserve all exponent bits for faster conversion, while the latter shrink the exponent and have
- * a longer mantissa for more precision.
+ * preserve all exponent bits for faster conversion, while the latter shrink the exponent and have a
+ * longer mantissa for more precision.
  *
- * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with potentially
- * a precision loss) is required for each 32 bits value written or read on a tensor of this type from
- * the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor, performances will be
- * improved by working with {@link TFloat32} or {@link TFloat64} data types whenever possible.
+ * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with
+ * potentially a precision loss) is required for each 32 bits value written or read on a tensor of
+ * this type from the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor,
+ * performances will be improved by working with {@link TFloat32} or {@link TFloat64} data types
+ * whenever possible.
  *
- * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster computation
- * compared to {@link TFloat16} when GPUs are not used.
+ * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster
+ * computation compared to {@link TFloat16} when GPUs are not used.
  */
 public interface TBfloat16 extends FloatNdArray, TNumber {
+  /** readable-name for the data type */
+  static final String NAME = "BFLOAT16";
 
   /** Type metadata */
-  DataType<TBfloat16> DTYPE = DataType.create("BFLOAT16", 14, 2, TBfloat16Impl::mapTensor);
+  DataType<TBfloat16> DTYPE = DataType.create(NAME, 14, 2, TBfloat16Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -121,17 +124,15 @@ public interface TBfloat16 extends FloatNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TBfloat16}
- */
+/** Hidden implementation of a {@code TBfloat16} */
 class TBfloat16Impl extends FloatDenseNdArray implements TBfloat16 {
 
   static TBfloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TBfloat16Impl(DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
+    return new TBfloat16Impl(
+        DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
   }
 
   private TBfloat16Impl(FloatDataBuffer buffer, Shape shape) {
     super(buffer, shape);
   }
 }
-

@@ -40,15 +40,16 @@ import org.tensorflow.types.family.TType;
  * <p>This type can be used to store any arbitrary byte sequence of variable length.
  *
  * <p>Since the size of a tensor is fixed, creating a tensor of this type requires to provide all of
- * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then
- * the data in the tensor is initialized once and cannot be modified afterwards.
+ * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
+ * data in the tensor is initialized once and cannot be modified afterwards.
  */
 public interface TString extends NdArray<String>, TType {
 
-  /**
-   * Type metadata
-   */
-  DataType<TString> DTYPE = DataType.create("STRING", 7, -1, TStringImpl::mapTensor);
+  /** readable-name for the data type */
+  static final String NAME = "STRING";
+
+  /** Type metadata */
+  DataType<TString> DTYPE = DataType.create(NAME, 7, -1, TStringImpl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a string scalar.
@@ -96,8 +97,8 @@ public interface TString extends NdArray<String>, TType {
    * <p>The tensor will have the same shape as the source array and its data will be copied. The
    * strings are encoded into bytes using the charset passed in parameter.
    *
-   * <p>If charset is different than default UTF-8, then it must also be provided explicitly
-   * when reading data from the tensor, using {@link #using(Charset)}:</p>
+   * <p>If charset is different than default UTF-8, then it must also be provided explicitly when
+   * reading data from the tensor, using {@link #using(Charset)}:
    *
    * <pre>{@code
    * // Given `originalStrings` an initialized vector of strings
@@ -135,8 +136,8 @@ public interface TString extends NdArray<String>, TType {
    * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
    * strings are encoded into bytes using the charset passed in parameter.
    *
-   * <p>If charset is different than default UTF-8, then it must also be provided explicitly
-   * when reading data from the tensor, using {@link #using(Charset)}:</p>
+   * <p>If charset is different than default UTF-8, then it must also be provided explicitly when
+   * reading data from the tensor, using {@link #using(Charset)}:
    *
    * <pre>{@code
    * // Given `originalStrings` an initialized buffer of strings
@@ -161,8 +162,8 @@ public interface TString extends NdArray<String>, TType {
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
-   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by
-   * invoking {@link #asBytes()} on the returned data:</p>
+   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by invoking
+   * {@link #asBytes()} on the returned data:
    *
    * <pre>{@code
    * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
@@ -180,8 +181,8 @@ public interface TString extends NdArray<String>, TType {
    *
    * <p>The data will be copied from the provided buffer to the tensor after it has been allocated.
    *
-   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by
-   * invoking {@link #asBytes()} on the returned data:</p>
+   * <p>If data must be read as raw bytes as well, the user must specify it explicitly by invoking
+   * {@link #asBytes()} on the returned data:
    *
    * <pre>{@code
    * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
@@ -212,15 +213,11 @@ public interface TString extends NdArray<String>, TType {
    */
   TString using(Charset charset);
 
-  /**
-   * @return the tensor data as a n-dimensional array of raw byte sequences.
-   */
+  /** @return the tensor data as a n-dimensional array of raw byte sequences. */
   NdArray<byte[]> asBytes();
 }
 
-/**
- * Hidden implementation of a {@code TString}
- */
+/** Hidden implementation of a {@code TString} */
 class TStringImpl extends DenseNdArray<String> implements TString {
 
   @Override
@@ -235,9 +232,11 @@ class TStringImpl extends DenseNdArray<String> implements TString {
 
   static <T> Tensor<TString> createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
     long size = StringTensorBuffer.computeSize(src, getBytes);
-    return Tensor.of(TString.DTYPE, src.shape(), size, data ->
-        ((TStringImpl)data).tensorBuffer.init(src, getBytes)
-    );
+    return Tensor.of(
+        TString.DTYPE,
+        src.shape(),
+        size,
+        data -> ((TStringImpl) data).tensorBuffer.init(src, getBytes));
   }
 
   static TString mapTensor(TF_Tensor nativeTensor, Shape shape) {
@@ -245,13 +244,14 @@ class TStringImpl extends DenseNdArray<String> implements TString {
     return new TStringImpl(buffer, UTF_8_LAYOUT, shape);
   }
 
-  private static DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT = DataLayouts.ofStrings(StandardCharsets.UTF_8);
+  private static DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT =
+      DataLayouts.ofStrings(StandardCharsets.UTF_8);
 
   private final StringTensorBuffer tensorBuffer;
 
-  private TStringImpl(StringTensorBuffer buffer, DataLayout<DataBuffer<byte[]>, String> layout, Shape shape) {
+  private TStringImpl(
+      StringTensorBuffer buffer, DataLayout<DataBuffer<byte[]>, String> layout, Shape shape) {
     super(layout.applyTo(buffer), shape);
     tensorBuffer = buffer;
   }
 }
-

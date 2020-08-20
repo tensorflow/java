@@ -31,13 +31,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * IEEE-754 double-precision 64-bit float tensor type.
- */
+/** IEEE-754 double-precision 64-bit float tensor type. */
 public interface TFloat64 extends DoubleNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "DOUBLE";
+
   /** Type metadata */
-  DataType<TFloat64> DTYPE = DataType.create("DOUBLE", 2, 8, TFloat64Impl::mapTensor);
+  DataType<TFloat64> DTYPE = DataType.create(NAME, 2, 8, TFloat64Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single double value.
@@ -108,9 +109,7 @@ public interface TFloat64 extends DoubleNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TFloat64}
- */
+/** Hidden implementation of a {@code TFloat64} */
 class TFloat64Impl extends DoubleDenseNdArray implements TFloat64 {
 
   static TFloat64 mapTensor(TF_Tensor nativeTensor, Shape shape) {
