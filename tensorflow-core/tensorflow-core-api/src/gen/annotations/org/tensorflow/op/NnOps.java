@@ -20,6 +20,7 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
+import org.tensorflow.op.core.NN;
 import org.tensorflow.op.nn.AvgPool;
 import org.tensorflow.op.nn.AvgPool3d;
 import org.tensorflow.op.nn.AvgPool3dGrad;
@@ -84,11 +85,9 @@ import org.tensorflow.op.nn.Relu;
 import org.tensorflow.op.nn.Relu6;
 import org.tensorflow.op.nn.Selu;
 import org.tensorflow.op.nn.Softmax;
-import org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.nn.Softsign;
 import org.tensorflow.op.nn.SpaceToBatch;
 import org.tensorflow.op.nn.SpaceToDepth;
-import org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.nn.TopK;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -102,10 +101,16 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class NnOps {
+  public final NnRawOps raw;
+
+  public final NnInternalOps internal;
+
   private final Scope scope;
 
   NnOps(Scope scope) {
     this.scope = scope;
+    raw = new NnRawOps(scope);
+    internal = new NnInternalOps(scope);
   }
 
   /**
@@ -1754,6 +1759,52 @@ public final class NnOps {
   }
 
   /**
+   * Computes sigmoid cross entropy given `logits`.
+   *
+   *  <p>Measures the probability error in discrete classification tasks in which each class is
+   *  independent and not mutually exclusive. For instance, one could perform multilabel
+   *  classification where a picture can contain both an elephant and a dog at the same time.
+   *
+   *  <p>For brevity, let `x = logits`, `z = labels`. The logistic loss is
+   *
+   *  <pre>
+   *      z * -log(sigmoid(x)) + (1 - z) * -log(1 - sigmoid(x))
+   *      = z * -log(1 / (1 + exp(-x))) + (1 - z) * -log(exp(-x) / (1 + exp(-x)))
+   *      = z * log(1 + exp(-x)) + (1 - z) * (-log(exp(-x)) + log(1 + exp(-x)))
+   *      = z * log(1 + exp(-x)) + (1 - z) * (x + log(1 + exp(-x))
+   *      = (1 - z) * x + log(1 + exp(-x))
+   *      = x - x * z + log(1 + exp(-x))
+   *  </pre>
+   *
+   *  <p>For x < 0, to avoid overflow in exp(-x), we reformulate the above
+   *
+   *  <pre>
+   *       x - x * z + log(1 + exp(-x))
+   *       = log(exp(x)) - x * z + log(1 + exp(-x))
+   *       = - x * z + log(1 + exp(x))
+   *  </pre>
+   *
+   *  <p>Hence, to ensure stability and avoid overflow, the implementation uses this equivalent
+   *  formulation
+   *
+   *  <pre>
+   *      max(x, 0) - x * z + log(1 + exp(-abs(x)))
+   *  </pre>
+   *
+   *  <p>`logits` and `labels` must have the same type and shape.
+   *
+   * @param scope The TensorFlow scope
+   * @param labels the labels
+   * @param logits the logits of type float32 or float64
+   * @param <T> the type of labels and logits
+   * @return the component-wise logistic losses.
+   */
+  public <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(Operand<T> labels,
+      Operand<T> logits) {
+    return NN.sigmoidCrossEntropyWithLogits(scope, labels, logits);
+  }
+
+  /**
    * Computes softmax activations.
    *  <p>
    *  For each batch `i` and class `j` we have
@@ -1769,20 +1820,48 @@ public final class NnOps {
   }
 
   /**
-   * Computes softmax cross entropy cost and gradients to backpropagate.
-   *  <p>
-   *  Inputs are the logits, not probabilities.
+   * Computes softmax cross entropy between `logits` and `labels`.
    *
-   * @param <T> data type for {@code loss()} output
-   * @param features batch_size x num_classes matrix
-   * @param labels batch_size x num_classes matrix
-   *  The caller must ensure that each batch of labels represents a valid
-   *  probability distribution.
-   * @return a new instance of SoftmaxCrossEntropyWithLogits
+   *  <p>Measures the probability error in discrete classification tasks in which the classes are
+   *  mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
+   *  labeled with one and only one label: an image can be a dog or a truck, but not both.
+   *
+   *  <p>**NOTE:** While the classes are mutually exclusive, their probabilities need not be. All
+   *  that is required is that each row of `labels` is a valid probability distribution. If they are
+   *  not, the computation of the gradient will be incorrect.
+   *
+   *  <p>If using exclusive `labels` (wherein one and only one class is true at a time), see
+   *  `sparse_softmax_cross_entropy_with_logits`.
+   *
+   *  <p>Usage:
+   *
+   *  <pre>
+   *    >>> logits = [[4.0, 2.0, 1.0], [0.0, 5.0, 1.0]]
+   *    >>> labels = [[1.0, 0.0, 0.0], [0.0, 0.8, 0.2]]
+   *    >>> tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+   *    <tf.Tensor: shape=(2,), dtype=float32,
+   *    numpy=array([0.16984604, 0.82474494], dtype=float32)>
+   *  </pre>
+   *
+   *  <p>Backpropagation will happen into both `logits` and `labels`. To disallow backpropagation
+   *  into `labels`, pass label tensors through `tf.stop_gradient` before feeding it to this
+   *  function.
+   *
+   * @param scope current scope
+   * @param labels Each vector along the class dimension should hold a valid probability
+   *      distribution e.g. for the case in which labels are of shape `[batch_size, num_classes]`,
+   *      each row of `labels[i]` must be a valid probability distribution.
+   * @param logits Per-label activations, typically a linear output. These activation energies are
+   *      interpreted as unnormalized log probabilities.
+   * @param axis The class dimension. -1 is the last dimension.
+   * @param <U> the data type of the logits
+   * @param <T> the number type of the operands
+   * @return the softmax cross entropy loss. Its type is the same as `logits` and its shape is the
+   *      same as `labels` except that it does not have the last dimension of `labels`.
    */
-  public <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> softmaxCrossEntropyWithLogits(
-      Operand<T> features, Operand<T> labels) {
-    return SoftmaxCrossEntropyWithLogits.create(scope, features, labels);
+  public <U extends TType, T extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
+      Operand<T> labels, Operand<U> logits, int axis) {
+    return NN.softmaxCrossEntropyWithLogits(scope, labels, logits, axis);
   }
 
   /**
@@ -1974,24 +2053,22 @@ public final class NnOps {
   }
 
   /**
-   * Computes softmax cross entropy cost and gradients to backpropagate.
-   *  <p>
-   *  Unlike `SoftmaxCrossEntropyWithLogits`, this operation does not accept
-   *  a matrix of label probabilities, but rather a single label per row
-   *  of features.  This label is considered to have probability 1.0 for the
-   *  given row.
-   *  <p>
-   *  Inputs are the logits, not probabilities.
+   * Computes sparse softmax cross entropy between `logits` and `labels`.
    *
-   * @param <T> data type for {@code loss()} output
-   * @param features batch_size x num_classes matrix
-   * @param labels batch_size vector with values in [0, num_classes).
-   *  This is the label for the given minibatch entry.
-   * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
+   * @param scope current scope
+   * @param labels `Tensor` of shape `[d_0, d_1, ..., d_{r-1}]` (where `r` is rank of `labels` and
+   *      result) and dtype `int32` or `int64`. Each entry in `labels` must be an index in `[0,
+   *      num_classes)`. Other values will raise an exception when this op is run on CPU, and return
+   *      `NaN` for corresponding loss and gradient rows on GPU.
+   * @param logits Per-label activations (typically a linear output) of shape `[d_0, d_1, ...,
+   *      d_{r-1}, num_classes]` and dtype `float16`, `float32`, or `float64`. These activation
+   *      energies are interpreted as unnormalized log probabilities.
+   * @return A `Tensor` of the same shape as `labels` and of the same type as `logits` with the
+   *      softmax cross entropy loss.
    */
-  public <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
-      Operand<T> features, Operand<U> labels) {
-    return SparseSoftmaxCrossEntropyWithLogits.create(scope, features, labels);
+  public <T extends TNumber, U extends TNumber> Operand sparseSoftmaxCrossEntropyWithLogits(
+      Operand<T> labels, Operand<U> logits) {
+    return NN.sparseSoftmaxCrossEntropyWithLogits(scope, labels, logits);
   }
 
   /**
