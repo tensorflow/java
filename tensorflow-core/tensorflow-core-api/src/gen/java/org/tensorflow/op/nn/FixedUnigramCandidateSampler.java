@@ -312,6 +312,9 @@ public final class FixedUnigramCandidateSampler extends RawOp {
     return sampledExpectedCount;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FixedUnigramCandidateSampler";
+  
   private Output<TInt64> sampledCandidates;
   private Output<TFloat32> trueExpectedCount;
   private Output<TFloat32> sampledExpectedCount;

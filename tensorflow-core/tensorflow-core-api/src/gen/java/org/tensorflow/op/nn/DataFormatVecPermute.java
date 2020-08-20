@@ -118,6 +118,9 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DataFormatVecPermute";
+  
   private Output<T> y;
   
   private DataFormatVecPermute(Operation operation) {

@@ -160,6 +160,9 @@ public final class DepthwiseConv2dNativeBackpropInput<T extends TNumber> extends
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DepthwiseConv2dNativeBackpropInput";
+  
   private Output<T> output;
   
   private DepthwiseConv2dNativeBackpropInput(Operation operation) {

@@ -204,6 +204,9 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Conv2DBackpropInput";
+  
   private Output<T> output;
   
   private Conv2dBackpropInput(Operation operation) {

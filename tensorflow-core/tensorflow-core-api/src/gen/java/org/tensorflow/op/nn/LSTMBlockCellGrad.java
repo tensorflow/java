@@ -119,6 +119,9 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
     return wcoGrad;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LSTMBlockCellGrad";
+  
   private Output<T> csPrevGrad;
   private Output<T> dicfo;
   private Output<T> wciGrad;

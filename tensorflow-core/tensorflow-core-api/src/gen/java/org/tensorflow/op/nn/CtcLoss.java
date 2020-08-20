@@ -161,6 +161,9 @@ public final class CtcLoss<T extends TNumber> extends RawOp {
     return gradient;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CTCLoss";
+  
   private Output<T> loss;
   private Output<T> gradient;
   

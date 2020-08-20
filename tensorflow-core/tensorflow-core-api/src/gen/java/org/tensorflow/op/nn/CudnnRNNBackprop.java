@@ -314,6 +314,9 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     return paramsBackprop;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CudnnRNNBackpropV3";
+  
   private Output<T> inputBackprop;
   private Output<T> inputHBackprop;
   private Output<T> inputCBackprop;

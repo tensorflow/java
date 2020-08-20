@@ -128,6 +128,9 @@ public final class FractionalAvgPoolGrad<T extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FractionalAvgPoolGrad";
+  
   private Output<T> output;
   
   private FractionalAvgPoolGrad(Operation operation) {

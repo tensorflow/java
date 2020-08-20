@@ -67,6 +67,9 @@ public final class L2Loss<T extends TNumber> extends RawOp implements Operand<T>
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "L2Loss";
+  
   private Output<T> output;
   
   private L2Loss(Operation operation) {

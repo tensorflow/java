@@ -251,6 +251,9 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends RawOp im
     return params;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CudnnRNNCanonicalToParamsV2";
+  
   private Output<T> params;
   
   private CudnnRNNCanonicalToParams(Operation operation) {

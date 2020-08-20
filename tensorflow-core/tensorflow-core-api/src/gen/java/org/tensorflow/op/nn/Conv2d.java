@@ -222,6 +222,9 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Conv2D";
+  
   private Output<T> output;
   
   private Conv2d(Operation operation) {

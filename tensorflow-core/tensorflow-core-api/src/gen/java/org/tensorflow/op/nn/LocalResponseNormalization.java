@@ -165,6 +165,9 @@ public final class LocalResponseNormalization<T extends TNumber> extends RawOp i
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LRN";
+  
   private Output<T> output;
   
   private LocalResponseNormalization(Operation operation) {

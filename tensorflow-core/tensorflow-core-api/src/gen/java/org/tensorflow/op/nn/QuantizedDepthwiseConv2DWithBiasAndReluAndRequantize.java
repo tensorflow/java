@@ -160,6 +160,9 @@ public final class QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W extend
     return maxOutput;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize";
+  
   private Output<W> output;
   private Output<TFloat32> minOutput;
   private Output<TFloat32> maxOutput;

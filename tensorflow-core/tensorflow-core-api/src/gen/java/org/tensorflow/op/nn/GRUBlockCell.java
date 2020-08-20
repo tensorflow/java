@@ -129,6 +129,9 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
     return h;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GRUBlockCell";
+  
   private Output<T> r;
   private Output<T> u;
   private Output<T> c;

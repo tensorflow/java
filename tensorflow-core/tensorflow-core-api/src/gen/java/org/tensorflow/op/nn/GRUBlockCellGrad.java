@@ -173,6 +173,9 @@ public final class GRUBlockCellGrad<T extends TNumber> extends RawOp {
     return dRBarUBar;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GRUBlockCellGrad";
+  
   private Output<T> dX;
   private Output<T> dHPrev;
   private Output<T> dCBar;

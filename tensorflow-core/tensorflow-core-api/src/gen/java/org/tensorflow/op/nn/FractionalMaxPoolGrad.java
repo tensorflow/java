@@ -124,6 +124,9 @@ public final class FractionalMaxPoolGrad<T extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FractionalMaxPoolGrad";
+  
   private Output<T> output;
   
   private FractionalMaxPoolGrad(Operation operation) {

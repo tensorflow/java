@@ -242,6 +242,9 @@ public final class CudnnRnnParamsSize<U extends TNumber> extends RawOp implement
     return paramsSize;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CudnnRNNParamsSize";
+  
   private Output<U> paramsSize;
   
   private CudnnRnnParamsSize(Operation operation) {

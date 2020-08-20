@@ -67,6 +67,9 @@ public final class Softmax<T extends TNumber> extends RawOp implements Operand<T
     return softmax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Softmax";
+  
   private Output<T> softmax;
   
   private Softmax(Operation operation) {

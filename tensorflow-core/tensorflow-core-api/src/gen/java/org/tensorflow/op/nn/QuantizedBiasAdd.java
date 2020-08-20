@@ -86,6 +86,9 @@ public final class QuantizedBiasAdd<V extends TType> extends RawOp {
     return maxOut;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedBiasAdd";
+  
   private Output<V> output;
   private Output<TFloat32> minOut;
   private Output<TFloat32> maxOut;

@@ -116,6 +116,9 @@ public final class TopK<T extends TNumber> extends RawOp {
     return indices;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TopKV2";
+  
   private Output<T> values;
   private Output<TInt32> indices;
   

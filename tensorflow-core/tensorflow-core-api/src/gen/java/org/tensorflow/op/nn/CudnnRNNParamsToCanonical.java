@@ -255,6 +255,9 @@ public final class CudnnRNNParamsToCanonical<T extends TNumber> extends RawOp {
     return biases;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CudnnRNNParamsToCanonicalV2";
+  
   private List<Output<T>> weights;
   private List<Output<T>> biases;
   

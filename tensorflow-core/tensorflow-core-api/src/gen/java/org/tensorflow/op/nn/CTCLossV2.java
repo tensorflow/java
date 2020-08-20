@@ -158,6 +158,9 @@ public final class CTCLossV2 extends RawOp {
     return gradient;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CTCLossV2";
+  
   private Output<TFloat32> loss;
   private Output<TFloat32> gradient;
   

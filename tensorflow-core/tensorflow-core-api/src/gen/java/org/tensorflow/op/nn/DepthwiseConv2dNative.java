@@ -164,6 +164,9 @@ public final class DepthwiseConv2dNative<T extends TNumber> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DepthwiseConv2dNative";
+  
   private Output<T> output;
   
   private DepthwiseConv2dNative(Operation operation) {

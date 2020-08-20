@@ -64,6 +64,9 @@ public final class SoftsignGrad<T extends TNumber> extends RawOp implements Oper
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SoftsignGrad";
+  
   private Output<T> backprops;
   
   private SoftsignGrad(Operation operation) {

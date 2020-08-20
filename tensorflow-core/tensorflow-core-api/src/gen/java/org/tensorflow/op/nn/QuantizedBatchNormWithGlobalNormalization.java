@@ -115,6 +115,9 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
     return resultMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedBatchNormWithGlobalNormalization";
+  
   private Output<U> result;
   private Output<TFloat32> resultMin;
   private Output<TFloat32> resultMax;

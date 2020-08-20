@@ -62,6 +62,9 @@ public final class Relu6<T extends TNumber> extends RawOp implements Operand<T> 
     return activations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Relu6";
+  
   private Output<T> activations;
   
   private Relu6(Operation operation) {

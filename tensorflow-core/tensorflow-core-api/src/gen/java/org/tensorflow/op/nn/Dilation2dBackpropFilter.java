@@ -84,6 +84,9 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
     return filterBackprop;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Dilation2DBackpropFilter";
+  
   private Output<T> filterBackprop;
   
   private Dilation2dBackpropFilter(Operation operation) {

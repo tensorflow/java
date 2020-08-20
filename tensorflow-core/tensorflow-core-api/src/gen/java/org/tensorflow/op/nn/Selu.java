@@ -70,6 +70,9 @@ public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
     return activations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Selu";
+  
   private Output<T> activations;
   
   private Selu(Operation operation) {

@@ -205,6 +205,9 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Conv2DBackpropFilter";
+  
   private Output<T> output;
   
   private Conv2dBackpropFilter(Operation operation) {

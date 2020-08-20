@@ -93,6 +93,9 @@ public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FusedPadConv2D";
+  
   private Output<T> output;
   
   private FusedPadConv2d(Operation operation) {

@@ -65,6 +65,9 @@ public final class InvGrad<T extends TType> extends RawOp implements Operand<T> 
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InvGrad";
+  
   private Output<T> z;
   
   private InvGrad(Operation operation) {

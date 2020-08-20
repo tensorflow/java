@@ -95,6 +95,9 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
     return activations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LeakyRelu";
+  
   private Output<T> activations;
   
   private LeakyRelu(Operation operation) {

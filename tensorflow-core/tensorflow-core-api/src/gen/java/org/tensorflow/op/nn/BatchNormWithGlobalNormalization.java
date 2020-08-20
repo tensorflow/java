@@ -83,6 +83,9 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
     return result;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchNormWithGlobalNormalization";
+  
   private Output<T> result;
   
   private BatchNormWithGlobalNormalization(Operation operation) {

@@ -67,6 +67,9 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
     return logsoftmax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LogSoftmax";
+  
   private Output<T> logsoftmax;
   
   private LogSoftmax(Operation operation) {

@@ -161,6 +161,9 @@ public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends TTyp
     return maxOutput;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedConv2DWithBiasSumAndReluAndRequantize";
+  
   private Output<X> output;
   private Output<TFloat32> minOutput;
   private Output<TFloat32> maxOutput;
