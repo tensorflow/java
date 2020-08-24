@@ -19,6 +19,7 @@ package org.tensorflow;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;
@@ -68,6 +69,7 @@ final class DataTypes {
 
   // TODO (karllessard): Right now this method is private but we might want to expose it
   //      to allow user to register custom data types?
+  @Nullable
   private static void register(DataType<?> dataType) {
     DATA_TYPE_REGISTRY.put(dataType.nativeCode(), dataType);
     DATA_TYPE_REGISTRY.put(dataType.nativeCode() + 100, dataType);

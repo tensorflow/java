@@ -36,6 +36,8 @@ import org.tensorflow.proto.framework.RunOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.types.TString;
 
 import static org.tensorflow.Graph.resolveOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
@@ -444,6 +446,14 @@ public final class Session implements AutoCloseable {
     runner().addTarget(op.op()).run();
   }
 
+  public void save(String prefix) {
+    SaverDef saverDef = graph.saverDef();
+    runner()
+        .addTarget(saverDef.getSaveTensorName())
+        .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
+        .run();
+  }
+
   /**
    * Output tensors and metadata obtained when executing a session.
    *
@@ -461,6 +471,10 @@ public final class Session implements AutoCloseable {
      * protocol buffer</a>.
      */
     public RunMetadata metadata;
+  }
+
+  Graph graph() {
+    return graph;
   }
 
   private final Graph graph;
