@@ -20,12 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jdk.nashorn.internal.codegen.FunctionSignature;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -107,8 +107,8 @@ public class SavedModelBundleTest {
         s.run(init);
 
         FunctionGraph function = FunctionGraph.builder()
-            .addInput("input", x)
-            .addOutput("reducedSum", z)
+            .input("input", x)
+            .output("reducedSum", z)
             .build(s);
 
         // Call the graph and remember the result of computation for later
@@ -119,8 +119,8 @@ public class SavedModelBundleTest {
         // Export the model
         SavedModelBundle.exporter(testFolder.toString())
             .withTags("test")
-            .withFunction(function)
-            .export(s);
+            .function(function)
+            .export();
       }
     }
     assertTrue(Files.exists(testFolder.resolve(Paths.get("variables", "variables.index"))));
@@ -133,11 +133,11 @@ public class SavedModelBundleTest {
       assertNotNull(savedModel.metaGraphDef());
       assertNotNull(savedModel.metaGraphDef().getSaverDef());
       assertEquals(1, savedModel.metaGraphDef().getSignatureDefCount());
-      assertEquals(SavedModelBundle.DEFAULT_SIGNATURE_NAME,
+      assertEquals(FunctionGraph.DEFAULT_NAME,
           savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
 
       SignatureDef signature = savedModel.metaGraphDef().getSignatureDefMap()
-          .get(SavedModelBundle.DEFAULT_SIGNATURE_NAME);
+          .get(FunctionGraph.DEFAULT_NAME);
       assertNotNull(signature);
       assertEquals(1, signature.getInputsCount());
       assertEquals(1, signature.getOutputsCount());
@@ -153,13 +153,12 @@ public class SavedModelBundleTest {
       assertNotNull(outputInfo);
       assertEquals(0, outputInfo.getTensorShape().getDimCount());
 
-      FunctionGraph function = savedModel.function();
+      FunctionGraph function = savedModel.function(FunctionGraph.DEFAULT_NAME);
       assertNotNull(function);
       assertEquals(1, function.inputNames().size());
       assertEquals("input", function.inputNames().iterator().next());
       assertEquals(1, function.outputNames().size());
       assertEquals("reducedSum", function.outputNames().iterator().next());
-      assertEquals(FunctionGraph.DEFAULT_METHOD_NAME, function.methodName());
 
       // Call the saved model function and make sure it returns the same result as before
       try (Tensor<TFloat32> xTensor = TFloat32.tensorOf(xValue);

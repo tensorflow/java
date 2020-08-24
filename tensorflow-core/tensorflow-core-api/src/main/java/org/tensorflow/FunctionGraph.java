@@ -20,9 +20,6 @@ import java.util.ListIterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
@@ -31,39 +28,98 @@ import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.framework.TensorShapeProto.Dim;
 
 /**
- * Invoke <a href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a>
+ * A graph that can be invoked as a single function, with an input and output signature.
+ *
+ * <p>Note that the lifetime of a function is coupled with the lifetime of its graph or session, i.e.
+ * the function will failed to be invoked after the graph or session is released, which ever comes
+ * first. e.g.
+ *
+ * <pre>{@code
+ * FunctionGraph function;
+ * try (Graph g = new Graph()) {
+ *   Ops tf = Ops.create(g);
+ *   Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE);
+ *   Add<TFloat32> y = tf.math.add(x, tf.constant(2.0f));
+ *   try (Session s = new Session(s)) {
+ *     function = FunctionGraph.builder("myFunction").input("x", x).output("y", y).build(s);
+ *     try (Tensor<TFloat32> xValue = TFloat32.scalarOf(10.0f);
+ *          Tensor<TFloat32> yValue = function.call(xValue).expect(TFloat32.DTYPE)) {
+ *       assertEquals(12.0f, yValue.data().getFloat());
+ *     }
+ *   }
+ * }
+ * try (Tensor<TFloat32> xValue = TFloat32.scalarOf(10.0f)) {
+ *   function.call(xValue); // fails, graph has been closed
+ * }
+ * }</pre>
+ *
+ * <p>A function can also invoke a
+ * <a href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a>
  * defined in a {@link SavedModelBundle}.
  *
  * <pre>{@code
  * FunctionGraph myFunction = savedModelBundle.function("myFunctionSignatureName");
- * Map<String, Tensor<?>> outputTensorMap = myFunction.call(session, inputTensorMap);
+ * Map<String, Tensor<?>> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
- *
  */
-public class FunctionGraph implements AutoCloseable {
+public class FunctionGraph {
 
-  public static class SignatureBuilder {
+  /** The default signature name, when not provided */
+  public static final String DEFAULT_NAME = "serving_default";
 
-    public SignatureBuilder addInput(String inputName, Operand<?> input) {
+  /**
+   * Builds a new function signature.
+   */
+  public static class Builder {
+
+    /**
+     * Register a tensor as an input of the function.
+     *
+     * @param inputName user-friendly name for this input tensor
+     * @param input input tensor
+     * @return this builder
+     */
+    public Builder input(String inputName, Operand<?> input) {
       signatureBuilder.putInputs(inputName, toTensorInfo(input.asOutput()));
       return this;
     }
 
-    public SignatureBuilder addOutput(String outputName, Operand<?> output) {
+    /**
+     * Register a tensor as an output of the function.
+     *
+     * @param inputName user-friendly name for this input tensor
+     * @param input input tensor
+     * @return this builder
+     */
+    public Builder output(String outputName, Operand<?> output) {
       signatureBuilder.putOutputs(outputName, toTensorInfo(output.asOutput()));
       return this;
     }
 
-    public SignatureBuilder methodName(String methodName) {
+    /**
+     * Provide extensible name information enabling third-party users to mark a signature as
+     * supporting a particular method
+     *
+     * @param methodName method name
+     * @return this builder
+     */
+    public Builder methodName(String methodName) {
       signatureBuilder.setMethodName(methodName);
       return this;
     }
 
-    private SignatureDef build() {
-      return signatureBuilder.build();
+    /**
+     * Creates a function from a graph session.
+     *
+     * <p>The provided session will be used for running or saving this function.
+     *
+     * @param signature signature of the function
+     * @param session a graph session
+     * @return a function
+     */
+    public FunctionGraph build(Session session) {
+      return new FunctionGraph(name, signatureBuilder.build(), session);
     }
-
-    private final SignatureDef.Builder signatureBuilder = SignatureDef.newBuilder();
 
     private static TensorInfo toTensorInfo(Output<?> operand) {
       Shape shape = operand.shape();
@@ -77,38 +133,59 @@ public class FunctionGraph implements AutoCloseable {
           .setName(operand.op().name() + ":" + operand.index())
           .build();
     }
-  }
 
-  public static FunctionGraph create(BiConsumer<Map<String, SignatureDef>, Graph> function) {
-    Graph graph = new Graph();
-    Map<String, SignatureDef> signatures = new HashMap<>();
-    function.accept(signatures, graph);
-    return new FunctionGraph(signatures, graph);
-  }
+    private final String name;
+    private final SignatureDef.Builder signatureBuilder = SignatureDef.newBuilder();
 
-  public static FunctionGraph create(SignatureDef signature, Graph graph) {
-    return new FunctionGraph(signature, graph);
+    private Builder(String name) {
+      this.name = name;
+    }
   }
 
   /**
-   * Returns the method name of this function
+   * Returns a new builder for creating a function
+   *
+   * <p>"serving_default" will be used as the default function signature name.
+   */
+  public static Builder builder() {
+    return new Builder(DEFAULT_NAME);
+  }
+
+  /**
+   * Returns a new builder for creating a function.
+   *
+   * @param name function signature name
+   */
+  public static Builder builder(String name) {
+    return new Builder(name);
+  }
+
+  /**
+   * Return the name of this function
+   */
+  public String name() {
+    return name;
+  }
+
+  /**
+   * Returns the method name of this function (e.g. as exposed by a server)
    */
   public String methodName() {
-    return signature.getMethodName();
+    return signatureDef.getMethodName();
   }
 
   /**
    * Returns the names of the inputs of this function.
    */
   public Set<String> inputNames() {
-    return signature.getInputsMap().keySet();
+    return signatureDef.getInputsMap().keySet();
   }
 
   /**
    * Returns the names of the outputs of this function.
    */
   public Set<String> outputNames() {
-    return signature.getOutputsMap().keySet();
+    return signatureDef.getOutputsMap().keySet();
   }
 
   /**
@@ -124,7 +201,7 @@ public class FunctionGraph implements AutoCloseable {
 
     final Session.Runner runner = session.runner();
 
-    signature.getInputsMap().forEach((argName, t) -> {
+    signatureDef.getInputsMap().forEach((argName, t) -> {
       Tensor<?> tensor = arguments.get(argName);
       if (tensor == null) {
         throw new IllegalArgumentException(String.format("Missing argument [%s]", argName));
@@ -132,7 +209,7 @@ public class FunctionGraph implements AutoCloseable {
       runner.feed(t.getName(), tensor);
     });
 
-    Map<String, TensorInfo> outputToNode = signature.getOutputsMap();
+    Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
     outputToNode.values().forEach(t -> runner.fetch(t.getName()));
 
     List<Tensor<?>> resultTensors = runner.run();
@@ -166,48 +243,36 @@ public class FunctionGraph implements AutoCloseable {
    *                                  in the function
    */
   public Tensor<?> call(Tensor<?> tensor) throws IllegalArgumentException {
-    if (signature.getInputsCount() != 1) {
+    if (signatureDef.getInputsCount() != 1) {
       throw new IllegalArgumentException(
-        String.format("Function [%s] requires multiple inputs", signature.getMethodName()));
+        String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
     }
-    String inputNodeName = signature.getInputsMap().values().iterator().next().getName();
+    String inputNodeName = signatureDef.getInputsMap().values().iterator().next().getName();
 
-    if (signature.getOutputsCount() != 1) {
+    if (signatureDef.getOutputsCount() != 1) {
       throw new IllegalArgumentException(
-        String.format("Function [%s] has multiple outputs", signature.getMethodName()));
+        String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
     }
-    String outputNodeName = signature.getOutputsMap().values().iterator().next().getName();
+    String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
 
     return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
   }
 
-  /**
-   * Returns the signature of this function
-   */
-  public SignatureDef signature() {
-    return signature;
+  Session session() {
+    return session;
   }
 
-  @Override
-  public void close() {
-    session.close();
-    graph.close();
+  SignatureDef signatureDef() {
+    return signatureDef;
   }
 
-  FunctionGraph(SignatureDef signature, Graph graph) {
-    this.graph = graph;
-    this.session = new Session(graph);
-    this.signature = signature;
-  }
-
-  FunctionGraph(Session session, SignatureDef signature) {
-    this.graph = session.graph();
-    this.session = session;
-    this.signature = signature;
-  }
-
-  private final Map<String, SignatureDef> signatures;
-  private final Graph graph;
+  private final String name;
   private final Session session;
-  private final SignatureDef signature;
+  private final SignatureDef signatureDef;
+
+  FunctionGraph(String name, SignatureDef signatureDef, Session session) {
+    this.name = name;
+    this.session = session;
+    this.signatureDef = signatureDef;
+  }
 }

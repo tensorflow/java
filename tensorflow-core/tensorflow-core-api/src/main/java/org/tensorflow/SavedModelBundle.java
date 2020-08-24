@@ -27,10 +27,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -40,17 +40,13 @@ import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
+import org.tensorflow.proto.framework.MetaGraphDefOrBuilder;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
 import org.tensorflow.proto.framework.SignatureDef;
-import org.tensorflow.proto.framework.TensorInfo;
-import org.tensorflow.proto.framework.TensorShapeProto;
-import org.tensorflow.proto.framework.TensorShapeProto.Dim;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
@@ -63,7 +59,7 @@ import org.tensorflow.proto.framework.TensorShapeProto.Dim;
  */
 public class SavedModelBundle implements AutoCloseable {
 
-  public static final String DEFAULT_SIGNATURE_NAME = "serving_default";
+  public static final String DEFAULT_TAG = "serve";
 
   /** Options for loading a SavedModel. */
   public static final class Loader {
@@ -120,35 +116,71 @@ public class SavedModelBundle implements AutoCloseable {
   /** Options for exporting a SavedModel. */
   public static final class Exporter {
 
+    /**
+     * Sets the set of tags that identify the specific graph in the saved model to save.
+     *
+     * <p/>Note that only one graph per model can be saved right now using this API.
+     *
+     * @param tags the tags identifying the specific MetaGraphDef to save.
+     * @return this object
+     */
     public Exporter withTags(String... tags) {
       this.tags.addAll(Arrays.asList(tags));
       return this;
     }
 
-    public Exporter withFunction(FunctionGraph functionGraph) {
-    }
-
-    public Exporter withSignature(SignatureDef signatureDef) {
-      return withSignature(DEFAULT_SIGNATURE_NAME, signatureDef);
-    }
-
-    public Exporter withSignature(String signatureName, SignatureDef signature) {
-      metaGraphDefBuilder.putSignatureDef(signatureName, signature);
+    /**
+     * Save a function with this model.
+     *
+     * <p/>The function carries a signature (i.e. a list of user-friendly input and outputs names to
+     * a graph) and a valid session to a graph to be saved in the model.
+     *
+     * <p/><i>Note:Eventually, TensorFlow for Java will support the export of functions objects like the
+     * Python API does. But right now, only session-centric models are supported (i.e. models that
+     * has a single main graph and one or more signatures), like TensorFlow 1.x and estimators do.
+     *
+     * <p/>Still, the actual Java API is "function-ready", meaning that the signatures exposed by the
+     * main graph are provided as `FunctionGraph` objects. Only functions based on the same graph
+     * can then be saved within a single model, or an exception will be thrown.</i>
+     *
+     * @param function a function carrying a signature and a valid session to graph to be saved
+     * @return this object
+     * @throws IllegalArgumentException if a function with the same name has already been added to the model
+     */
+    public Exporter function(FunctionGraph function) {
+      if (functions.containsKey(function.name())) {
+        throw new IllegalArgumentException("Function \"" + function.name() + "\" was already added to the model");
+      }
+      functions.put(function.name(), function);
+      if (session == null) {
+        session = function.session();
+      } else if (session != function.session()) {
+        throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
+      }
+      metaGraphDefBuilder.putSignatureDef(function.name(), function.signatureDef());
       return this;
     }
 
-    public void export(Session session) throws IOException {
-      Graph graph = session.graph();
+    /**
+     * Save the model into the export directory.
+     *
+     * @throws IOException if saved model or variable state can be written on disk
+     */
+    public void export() throws IOException {
+      if (functions.isEmpty() || session == null) {
+        throw new IllegalStateException("Model should contain at least one valid function");
+      }
       if (tags.isEmpty()) {
-        tags.add("serve");
+        tags.add(DEFAULT_TAG);
       }
       // It is imperative to retrieve the graphDef after the saverDef, as the former might add
       // new ops to the graph.
-      MetaGraphDef metaGraphDef = metaGraphDefBuilder
+      Graph graph = session.graph();
+      MetaGraphDef.Builder metaGraphDef = metaGraphDefBuilder
           .setSaverDef(graph.saverDef())
           .setGraphDef(graph.toGraphDef())
-          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(tags))
-          .build();
+          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(tags));
+      functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signatureDef()));
 
       // Make sure saved model directories exist
       Path variableDir = Paths.get(exportDir, "variables");
@@ -170,8 +202,10 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private final String exportDir;
-    private final MetaGraphDef.Builder metaGraphDefBuilder = MetaGraphDef.newBuilder();
     private final List<String> tags = new ArrayList<>();
+    private final MetaGraphDef.Builder metaGraphDefBuilder = MetaGraphDef.newBuilder();
+    private final Map<String, FunctionGraph> functions = new HashMap<>();
+    private Session session;
   }
 
   /**
@@ -205,6 +239,14 @@ public class SavedModelBundle implements AutoCloseable {
     return new Loader(exportDir);
   }
 
+  /**
+   * Export a saved model.
+   *
+   * <p/>Returns a <code>Exporter</code> object for setting configuration options before actually
+   * saving the model.
+   *
+   * @param exportDir the directory path containing a saved model.
+   */
   public static Exporter exporter(String exportDir) {
     return new Exporter(exportDir);
   }
@@ -246,24 +288,41 @@ public class SavedModelBundle implements AutoCloseable {
    *                                  saved model.
    */
   public FunctionGraph function(String functionSignatureName) {
-    SignatureDef signature = metaGraphDef.getSignatureDefMap().get(functionSignatureName);
-    if (signature == null) {
+    FunctionGraph function = functions.get(functionSignatureName);
+    if (function == null) {
       throw new IllegalArgumentException(
           String.format("Function with signature [%s] not found", functionSignatureName));
     }
-    return new FunctionGraph(session, signature);
+    return function;
   }
 
   /**
-   * Return the {@link FunctionGraph} corresponding to the default function signature of this model.
+   * Invokes the default function directly from this model.
    *
-   * @param functionSignatureName name of the {@code SignatureDef} in the saved model.
-   * @return TfFunction object that can be used to make calls to the tf.function
-   * @throws IllegalArgumentException if no function with the default signature name can be found in
-   *                                  this saved model.
+   * <p/>The default function selection is done based on the first of the following conditions that
+   * is true:
+   * <ul>
+   *   <li>The function is the only signature available attached to the main graph of this saved model</li>
+   *   <li>The function is mapped to the default signature name, which is "serving_default"</li>
+   * </ul>
+   *
+   * <p>Caller is responsible for closing all returned Tensors.
+   *
+   * @param arguments list of input tensors, mapped by their signature name
+   * @return list of output tensors, mapped by the signature name
+   * @throws IllegalArgumentException if no function can be selected by default
    */
-  public FunctionGraph function() {
-    return function(DEFAULT_SIGNATURE_NAME);
+  public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments) {
+    FunctionGraph function = null;
+    if (functions.size() == 1) {
+      function = functions.values().iterator().next();
+    } else {
+      function = functions.get(FunctionGraph.DEFAULT_NAME);
+    }
+    if (function == null) {
+      throw new IllegalArgumentException("Cannot elect a default function for this model");
+    }
+    return function.call(arguments);
   }
 
   /**
@@ -272,13 +331,18 @@ public class SavedModelBundle implements AutoCloseable {
    */
   @Override
   public void close() {
-    functions.forEach((s, f) -> f.close());
+    session.close();
+    graph.close();
   }
 
+  private final Graph graph;
+  private final Session session;
   private final MetaGraphDef metaGraphDef;
   private final Map<String, FunctionGraph> functions;
 
-  private SavedModelBundle(MetaGraphDef metaGraphDef, Map<String, FunctionGraph> functions) {
+  private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, FunctionGraph> functions) {
+    this.graph = graph;
+    this.session = session;
     this.metaGraphDef = metaGraphDef;
     this.functions = functions;
   }
@@ -295,16 +359,12 @@ public class SavedModelBundle implements AutoCloseable {
     final Graph graph = new Graph(graphHandle, metaGraphDef.getSaverDef());
     final Session session = new Session(graph, sessionHandle);
 
-    // For each signature, we will create a separate function. To support cases where multiple
-    // signatures are attached to the same graph, each function instance will retain a reference
-    // to the underlying resource, so that they are freed only when the last function is released.
+    // For each signature definition, create a distinct function based on the main graph/session
     final Map<String, FunctionGraph> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
     metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
-      graphHandle.retainReference();
-      sessionHandle.retainReference();
-      functions.put(signatureName, new FunctionGraph(session, signatureDef));
+      functions.put(signatureName, new FunctionGraph(signatureName, signatureDef, session));
     });
-    return new SavedModelBundle(metaGraphDef, functions);
+    return new SavedModelBundle(graph, session, metaGraphDef, functions);
   }
 
   private static SavedModelBundle load(
