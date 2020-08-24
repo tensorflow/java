@@ -24,7 +24,7 @@ fi
 
 if [[ "${EXTENSION:-}" == *gpu* ]]; then
     export BUILD_FLAGS="$BUILD_FLAGS --config=cuda"
-    export TF_CUDA_COMPUTE_CAPABILITIES=3.5,sm_52,sm_60,sm_61,7.0,7.5
+    export TF_CUDA_COMPUTE_CAPABILITIES=sm_35,sm_37,sm_52,sm_60,sm_61,7.0
     if [[ -z ${TF_CUDA_PATHS:-} ]] && [[ -d ${CUDA_PATH:-} ]]; then
         # Work around some issue with Bazel preventing it from detecting CUDA on Windows
         export TF_CUDA_PATHS="$CUDA_PATH"
