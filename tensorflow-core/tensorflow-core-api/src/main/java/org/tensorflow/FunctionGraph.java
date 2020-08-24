@@ -19,39 +19,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
+import java.util.function.Function;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.math.Sign;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
-import org.tensorflow.proto.framework.TensorShapeProto;
-import org.tensorflow.proto.framework.TensorShapeProto.Dim;
 
 /**
  * A graph that can be invoked as a single function, with an input and output signature.
- *
- * <p>Note that the lifetime of a function is coupled with the lifetime of its graph or session, i.e.
- * the function will failed to be invoked after the graph or session is released, which ever comes
- * first. e.g.
- *
- * <pre>{@code
- * FunctionGraph function;
- * try (Graph g = new Graph()) {
- *   Ops tf = Ops.create(g);
- *   Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE);
- *   Add<TFloat32> y = tf.math.add(x, tf.constant(2.0f));
- *   try (Session s = new Session(s)) {
- *     function = FunctionGraph.builder("myFunction").input("x", x).output("y", y).build(s);
- *     try (Tensor<TFloat32> xValue = TFloat32.scalarOf(10.0f);
- *          Tensor<TFloat32> yValue = function.call(xValue).expect(TFloat32.DTYPE)) {
- *       assertEquals(12.0f, yValue.data().getFloat());
- *     }
- *   }
- * }
- * try (Tensor<TFloat32> xValue = TFloat32.scalarOf(10.0f)) {
- *   function.call(xValue); // fails, graph has been closed
- * }
- * }</pre>
  *
  * <p>A function can also invoke a
  * <a href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a>
@@ -62,130 +37,120 @@ import org.tensorflow.proto.framework.TensorShapeProto.Dim;
  * Map<String, Tensor<?>> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
  */
-public class FunctionGraph {
-
-  /** The default signature name, when not provided */
-  public static final String DEFAULT_NAME = "serving_default";
+public class FunctionGraph implements AutoCloseable {
 
   /**
-   * Builds a new function signature.
-   */
-  public static class Builder {
-
-    /**
-     * Register a tensor as an input of the function.
-     *
-     * @param inputName user-friendly name for this input tensor
-     * @param input input tensor
-     * @return this builder
-     */
-    public Builder input(String inputName, Operand<?> input) {
-      signatureBuilder.putInputs(inputName, toTensorInfo(input.asOutput()));
-      return this;
-    }
-
-    /**
-     * Register a tensor as an output of the function.
-     *
-     * @param inputName user-friendly name for this input tensor
-     * @param input input tensor
-     * @return this builder
-     */
-    public Builder output(String outputName, Operand<?> output) {
-      signatureBuilder.putOutputs(outputName, toTensorInfo(output.asOutput()));
-      return this;
-    }
-
-    /**
-     * Provide extensible name information enabling third-party users to mark a signature as
-     * supporting a particular method
-     *
-     * @param methodName method name
-     * @return this builder
-     */
-    public Builder methodName(String methodName) {
-      signatureBuilder.setMethodName(methodName);
-      return this;
-    }
-
-    /**
-     * Creates a function from a graph session.
-     *
-     * <p>The provided session will be used for running or saving this function.
-     *
-     * @param signature signature of the function
-     * @param session a graph session
-     * @return a function
-     */
-    public FunctionGraph build(Session session) {
-      return new FunctionGraph(name, signatureBuilder.build(), session);
-    }
-
-    private static TensorInfo toTensorInfo(Output<?> operand) {
-      Shape shape = operand.shape();
-      TensorShapeProto.Builder tensorShapeBuilder = TensorShapeProto.newBuilder();
-      for (int i = 0; i < shape.numDimensions(); ++i) {
-        tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.size(i)));
-      }
-      return TensorInfo.newBuilder()
-          .setDtype(DataType.forNumber(operand.dataType().nativeCode()))
-          .setTensorShape(tensorShapeBuilder)
-          .setName(operand.op().name() + ":" + operand.index())
-          .build();
-    }
-
-    private final String name;
-    private final SignatureDef.Builder signatureBuilder = SignatureDef.newBuilder();
-
-    private Builder(String name) {
-      this.name = name;
-    }
-  }
-
-  /**
-   * Returns a new builder for creating a function
+   * Creates a function by building a new graph.
    *
-   * <p>"serving_default" will be used as the default function signature name.
-   */
-  public static Builder builder() {
-    return new Builder(DEFAULT_NAME);
-  }
-
-  /**
-   * Returns a new builder for creating a function.
+   * <p/>The {@code functionBuilder} must initialize the function graph from the provided
+   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors
+   * and fetch the output tensors on execution.
    *
-   * @param name function signature name
+   * <p/>The function will be the owner of the new graph and its resulting session. Therefore,
+   * the function must be enclosed properly with a try-with-resources block to guarantee that
+   * all native resources will be freed once the function is discarded. For example:
+   *
+   * <pre>{@code
+   * public class MyModel {
+   *
+   *   public static Signature addTwo(Ops tf) {
+   *     Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *     Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
+   *     return Signature.builder("addTwo").input("x", input).output("y", output).build();
+   *   }
+   *
+   *   public static void main(String args[]) {
+   *     try (FunctionGraph function = FunctionGraph.create(MyModel::addTwo);
+   *         Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
+   *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *     }
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param functionBuilder function builder
+   * @return the new function
    */
-  public static Builder builder(String name) {
-    return new Builder(name);
+  public static FunctionGraph create(Function<Ops, Signature> functionBuilder) {
+    Graph graph = new Graph();
+    try {
+      Ops tf = Ops.create(graph);
+      Signature signature = functionBuilder.apply(tf);
+      return new FunctionGraph(signature, graph, new Session(graph), Ownership.GRAPH);
+    } catch (Exception e) {
+      graph.close();
+      throw e;
+    }
   }
 
   /**
-   * Return the name of this function
+   * Create a function from a signature and an existing graph.
+   *
+   * <p/>The function will keep the ownership of the session used to run the graph but not
+   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope
+   * of the function. For example:
+   *
+   * <pre>{@code
+   * try (Graph g = new Graph()) {
+   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *   Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
+   *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
+   *
+   *   try (FunctionGraph f = FunctionGraph.create(signature, g);
+   *       Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
+   *     assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *   }
+   *   // Graph g is still valid at this point
+   * }
+   * }</pre>
+   *
+   * @param signature signature of the function to create
+   * @param graph a valid and initialized graph
+   * @return a new function
    */
-  public String name() {
-    return name;
+  public static FunctionGraph create(Signature signature, Graph graph) {
+    return new FunctionGraph(signature, graph, new Session(graph), Ownership.SESSION);
   }
 
   /**
-   * Returns the method name of this function (e.g. as exposed by a server)
+   * Create a function from a signature and a valid graph session.
+   *
+   * <p/>The function will not own the session nor its graph, meaning that their lifetime
+   * can extend beyond the scope of the function. Therefore the function does not need to be
+   * closed after its usage. For example:
+   *
+   * <pre>{@code
+   * try (Graph g = new Graph()) {
+   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *   Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
+   *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
+   *
+   *   try (Session s = new Session(g)) {
+   *     // Auto-closing the function just as an example but this is not required since it has
+   *     // no effect
+   *     try (FunctionGraph f = FunctionGraph.create(signature, s);
+   *         Tensor<TFloat32> t = TFloat32.scalarOf(2.0f)) {
+   *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *     }
+   *     // Session s is still valid at this point
+   *   }
+   *   // Graph g is still valid at this point
+   * }
+   * }</pre>
+   *
+   * @param signature signature of the function to create
+   * @param graph a valid session to an initialized graph
+   * @return a new function
    */
-  public String methodName() {
-    return signatureDef.getMethodName();
+  public static FunctionGraph create(Signature signature, Session session) {
+    return new FunctionGraph(signature, session.graph(), session, Ownership.NONE);
   }
 
   /**
-   * Returns the names of the inputs of this function.
+   * Returns the signature of this function
    */
-  public Set<String> inputNames() {
-    return signatureDef.getInputsMap().keySet();
-  }
-
-  /**
-   * Returns the names of the outputs of this function.
-   */
-  public Set<String> outputNames() {
-    return signatureDef.getOutputsMap().keySet();
+  public Signature signature() {
+    return signature;
   }
 
   /**
@@ -199,6 +164,7 @@ public class FunctionGraph {
   public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments)
       throws IllegalArgumentException {
 
+    final SignatureDef signatureDef = signature.asSignatureDef();
     final Session.Runner runner = session.runner();
 
     signatureDef.getInputsMap().forEach((argName, t) -> {
@@ -243,6 +209,8 @@ public class FunctionGraph {
    *                                  in the function
    */
   public Tensor<?> call(Tensor<?> tensor) throws IllegalArgumentException {
+    final SignatureDef signatureDef = signature.asSignatureDef();
+
     if (signatureDef.getInputsCount() != 1) {
       throw new IllegalArgumentException(
         String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
@@ -258,21 +226,49 @@ public class FunctionGraph {
     return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
   }
 
-  Session session() {
+  /**
+   * Returns the session used to execute the graph when calling this function
+   *
+   * <p>In general, a user does not need to handle directly the session of a function and rely
+   * on {@link #call(Map)} to execute the graph instead. But in some cases, direct access to
+   * the session might be necessary, as it allows more running options.
+   *
+   * @return the function session
+   */
+  public Session session() {
     return session;
   }
 
-  SignatureDef signatureDef() {
-    return signatureDef;
+  /**
+   * Returns the graph of this function
+   */
+  public Graph graph() {
+    return graph;
   }
 
-  private final String name;
-  private final Session session;
-  private final SignatureDef signatureDef;
+  @Override
+  public void close() {
+    if (ownership != Ownership.NONE) {
+      session.close();
+      if (ownership == Ownership.GRAPH) {
+        graph.close();
+      }
+    }
+  }
 
-  FunctionGraph(String name, SignatureDef signatureDef, Session session) {
-    this.name = name;
+  private enum Ownership {
+    GRAPH, SESSION, NONE;
+  }
+
+  private final Graph graph;
+  private final Session session;
+  private final Signature signature;
+  private final Ownership ownership;
+
+  FunctionGraph(Signature signature, Graph graph, Session session, Ownership ownership) {
+    this.graph = graph;
     this.session = session;
-    this.signatureDef = signatureDef;
+    this.signature = signature;
+    this.ownership = ownership;
   }
 }

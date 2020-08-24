@@ -36,6 +36,7 @@ import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.math.Sign;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SignatureDef;
@@ -102,24 +103,20 @@ public class SavedModelBundleTest {
           .variable(tf.random.randomUniform(tf.constant(xyShape), TFloat32.DTYPE));
       ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
       Init init = tf.init();
+      Signature signature = Signature.builder().input("input", x).output("reducedSum", z).build();
 
-      try (Session s = new Session(g)) {
-        s.run(init);
-
-        FunctionGraph function = FunctionGraph.builder()
-            .input("input", x)
-            .output("reducedSum", z)
-            .build(s);
+      try (FunctionGraph f = FunctionGraph.create(signature, g)) {
+        f.session().run(init);
 
         // Call the graph and remember the result of computation for later
         try (Tensor<TFloat32> xTensor = TFloat32.tensorOf(xValue);
-             Tensor<TFloat32> zTensor = function.call(xTensor).expect(TFloat32.DTYPE)) {
+             Tensor<TFloat32> zTensor = f.call(xTensor).expect(TFloat32.DTYPE)) {
           reducedSum = zTensor.data().getFloat();
         }
         // Export the model
         SavedModelBundle.exporter(testFolder.toString())
             .withTags("test")
-            .function(function)
+            .function(f)
             .export();
       }
     }
@@ -133,32 +130,33 @@ public class SavedModelBundleTest {
       assertNotNull(savedModel.metaGraphDef());
       assertNotNull(savedModel.metaGraphDef().getSaverDef());
       assertEquals(1, savedModel.metaGraphDef().getSignatureDefCount());
-      assertEquals(FunctionGraph.DEFAULT_NAME,
+      assertEquals(Signature.DEFAULT_NAME,
           savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
 
-      SignatureDef signature = savedModel.metaGraphDef().getSignatureDefMap()
-          .get(FunctionGraph.DEFAULT_NAME);
-      assertNotNull(signature);
-      assertEquals(1, signature.getInputsCount());
-      assertEquals(1, signature.getOutputsCount());
+      FunctionGraph function = savedModel.function(Signature.DEFAULT_NAME);
+      assertNotNull(function);
 
-      TensorInfo inputInfo = signature.getInputsMap().get("input");
+      Signature signature = function.signature();
+      assertNotNull(signature);
+      assertEquals(1, signature.inputNames().size());
+      assertEquals("input", signature.inputNames().iterator().next());
+      assertEquals(1, signature.outputNames().size());
+      assertEquals("reducedSum", signature.outputNames().iterator().next());
+
+      SignatureDef signatureDef = signature.asSignatureDef();
+      assertEquals(1, signatureDef.getInputsCount());
+      assertEquals(1, signatureDef.getOutputsCount());
+
+      TensorInfo inputInfo = signatureDef.getInputsMap().get("input");
       assertNotNull(inputInfo);
       assertEquals(xyShape.numDimensions(), inputInfo.getTensorShape().getDimCount());
       for (int i = 0; i < xyShape.numDimensions(); ++i) {
         assertEquals(xyShape.size(i), inputInfo.getTensorShape().getDim(i).getSize());
       }
 
-      TensorInfo outputInfo = signature.getOutputsMap().get("reducedSum");
+      TensorInfo outputInfo = signatureDef.getOutputsMap().get("reducedSum");
       assertNotNull(outputInfo);
       assertEquals(0, outputInfo.getTensorShape().getDimCount());
-
-      FunctionGraph function = savedModel.function(FunctionGraph.DEFAULT_NAME);
-      assertNotNull(function);
-      assertEquals(1, function.inputNames().size());
-      assertEquals("input", function.inputNames().iterator().next());
-      assertEquals(1, function.outputNames().size());
-      assertEquals("reducedSum", function.outputNames().iterator().next());
 
       // Call the saved model function and make sure it returns the same result as before
       try (Tensor<TFloat32> xTensor = TFloat32.tensorOf(xValue);

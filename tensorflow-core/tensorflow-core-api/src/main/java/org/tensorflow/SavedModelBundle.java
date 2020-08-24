@@ -148,16 +148,17 @@ public class SavedModelBundle implements AutoCloseable {
      * @throws IllegalArgumentException if a function with the same name has already been added to the model
      */
     public Exporter function(FunctionGraph function) {
-      if (functions.containsKey(function.name())) {
-        throw new IllegalArgumentException("Function \"" + function.name() + "\" was already added to the model");
+      Signature signature = function.signature();
+      if (functions.containsKey(signature.name())) {
+        throw new IllegalArgumentException("Function \"" + signature.name() + "\" was already added to the model");
       }
-      functions.put(function.name(), function);
+      functions.put(signature.name(), function);
       if (session == null) {
         session = function.session();
       } else if (session != function.session()) {
         throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
       }
-      metaGraphDefBuilder.putSignatureDef(function.name(), function.signatureDef());
+      metaGraphDefBuilder.putSignatureDef(signature.name(), signature.asSignatureDef());
       return this;
     }
 
@@ -180,7 +181,7 @@ public class SavedModelBundle implements AutoCloseable {
           .setSaverDef(graph.saverDef())
           .setGraphDef(graph.toGraphDef())
           .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(tags));
-      functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signatureDef()));
+      functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
       // Make sure saved model directories exist
       Path variableDir = Paths.get(exportDir, "variables");
@@ -317,7 +318,7 @@ public class SavedModelBundle implements AutoCloseable {
     if (functions.size() == 1) {
       function = functions.values().iterator().next();
     } else {
-      function = functions.get(FunctionGraph.DEFAULT_NAME);
+      function = functions.get(Signature.DEFAULT_NAME);
     }
     if (function == null) {
       throw new IllegalArgumentException("Cannot elect a default function for this model");
@@ -359,10 +360,14 @@ public class SavedModelBundle implements AutoCloseable {
     final Graph graph = new Graph(graphHandle, metaGraphDef.getSaverDef());
     final Session session = new Session(graph, sessionHandle);
 
-    // For each signature definition, create a distinct function based on the main graph/session
+    // Create a separate function for each signature of the main graph.
+    // Note that the saved model will remain the owner of the graph and the session, meaning
+    // that the functions do not need to be closed by the user and if it does, it should have
+    // no effect.
     final Map<String, FunctionGraph> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
     metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
-      functions.put(signatureName, new FunctionGraph(signatureName, signatureDef, session));
+      Signature signature = new Signature(signatureName, signatureDef);
+      functions.put(signatureName, FunctionGraph.create(signature, session));
     });
     return new SavedModelBundle(graph, session, metaGraphDef, functions);
   }
