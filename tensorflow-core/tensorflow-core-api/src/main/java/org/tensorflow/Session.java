@@ -446,6 +446,16 @@ public final class Session implements AutoCloseable {
     runner().addTarget(op.op()).run();
   }
 
+  /**
+   * Saves the actual state of the variables of this session's graph.
+   *
+   * <p/>{@code prefix} is a path where the files containing the variables state will be saved,
+   * followed by a prefix for naming these files. For example, if {@code prefix} is set to
+   * <i>mymodel/myvariables/variables</i>, then the generated files will be located under
+   * <i>mymodel/myvariables</i> and named <i>variables.data-*-of-*</i>
+   *
+   * @param prefix
+   */
   public void save(String prefix) {
     SaverDef saverDef = graph.saverDef();
     runner()

@@ -15,13 +15,13 @@
  */
 package org.tensorflow;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.math.Sign;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 
@@ -33,11 +33,11 @@ import org.tensorflow.proto.framework.TensorInfo;
  * defined in a {@link SavedModelBundle}.
  *
  * <pre>{@code
- * FunctionGraph myFunction = savedModelBundle.function("myFunctionSignatureName");
+ * ConcreteFunction myFunction = savedModelBundle.function("myFunctionSignatureName");
  * Map<String, Tensor<?>> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
  */
-public class FunctionGraph implements AutoCloseable {
+public class ConcreteFunction implements AutoCloseable {
 
   /**
    * Creates a function by building a new graph.
@@ -60,7 +60,7 @@ public class FunctionGraph implements AutoCloseable {
    *   }
    *
    *   public static void main(String args[]) {
-   *     try (FunctionGraph function = FunctionGraph.create(MyModel::addTwo);
+   *     try (ConcreteFunction function = ConcreteFunction.create(MyModel::addTwo);
    *         Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
    *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
    *     }
@@ -71,12 +71,12 @@ public class FunctionGraph implements AutoCloseable {
    * @param functionBuilder function builder
    * @return the new function
    */
-  public static FunctionGraph create(Function<Ops, Signature> functionBuilder) {
+  public static ConcreteFunction create(Function<Ops, Signature> functionBuilder) {
     Graph graph = new Graph();
     try {
       Ops tf = Ops.create(graph);
       Signature signature = functionBuilder.apply(tf);
-      return new FunctionGraph(signature, graph, new Session(graph), Ownership.GRAPH);
+      return new ConcreteFunction(signature, graph, new Session(graph), Ownership.GRAPH_AND_SESSION);
     } catch (Exception e) {
       graph.close();
       throw e;
@@ -96,7 +96,7 @@ public class FunctionGraph implements AutoCloseable {
    *   Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
    *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
    *
-   *   try (FunctionGraph f = FunctionGraph.create(signature, g);
+   *   try (ConcreteFunction f = ConcreteFunction.create(signature, g);
    *       Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
    *     assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
    *   }
@@ -108,8 +108,8 @@ public class FunctionGraph implements AutoCloseable {
    * @param graph a valid and initialized graph
    * @return a new function
    */
-  public static FunctionGraph create(Signature signature, Graph graph) {
-    return new FunctionGraph(signature, graph, new Session(graph), Ownership.SESSION);
+  public static ConcreteFunction create(Signature signature, Graph graph) {
+    return new ConcreteFunction(signature, graph, new Session(graph), Ownership.SESSION_ONLY);
   }
 
   /**
@@ -128,7 +128,7 @@ public class FunctionGraph implements AutoCloseable {
    *   try (Session s = new Session(g)) {
    *     // Auto-closing the function just as an example but this is not required since it has
    *     // no effect
-   *     try (FunctionGraph f = FunctionGraph.create(signature, s);
+   *     try (ConcreteFunction f = ConcreteFunction.create(signature, s);
    *         Tensor<TFloat32> t = TFloat32.scalarOf(2.0f)) {
    *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
    *     }
@@ -142,8 +142,8 @@ public class FunctionGraph implements AutoCloseable {
    * @param graph a valid session to an initialized graph
    * @return a new function
    */
-  public static FunctionGraph create(Signature signature, Session session) {
-    return new FunctionGraph(signature, session.graph(), session, Ownership.NONE);
+  public static ConcreteFunction create(Signature signature, Session session) {
+    return new ConcreteFunction(signature, session.graph(), session, Ownership.NONE);
   }
 
   /**
@@ -227,6 +227,18 @@ public class FunctionGraph implements AutoCloseable {
   }
 
   /**
+   * Export this function as a saved model.
+   *
+   * <p>This method is convenient shortcut equivalent to
+   * {@code SavedModel.exporter(exportDir).withFunction(this).export()}
+   */
+  public void save(String exportDir) throws IOException {
+    SavedModelBundle.exporter(exportDir)
+        .withFunction(this)
+        .export();
+  }
+
+  /**
    * Returns the session used to execute the graph when calling this function
    *
    * <p>In general, a user does not need to handle directly the session of a function and rely
@@ -250,14 +262,14 @@ public class FunctionGraph implements AutoCloseable {
   public void close() {
     if (ownership != Ownership.NONE) {
       session.close();
-      if (ownership == Ownership.GRAPH) {
+      if (ownership == Ownership.GRAPH_AND_SESSION) {
         graph.close();
       }
     }
   }
 
   private enum Ownership {
-    GRAPH, SESSION, NONE;
+    GRAPH_AND_SESSION, SESSION_ONLY, NONE;
   }
 
   private final Graph graph;
@@ -265,7 +277,7 @@ public class FunctionGraph implements AutoCloseable {
   private final Signature signature;
   private final Ownership ownership;
 
-  FunctionGraph(Signature signature, Graph graph, Session session, Ownership ownership) {
+  ConcreteFunction(Signature signature, Graph graph, Session session, Ownership ownership) {
     this.graph = graph;
     this.session = session;
     this.signature = signature;

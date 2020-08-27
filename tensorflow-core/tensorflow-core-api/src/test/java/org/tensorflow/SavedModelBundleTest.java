@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import jdk.nashorn.internal.codegen.FunctionSignature;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -36,7 +35,6 @@ import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.op.math.Sign;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SignatureDef;
@@ -105,7 +103,7 @@ public class SavedModelBundleTest {
       Init init = tf.init();
       Signature signature = Signature.builder().input("input", x).output("reducedSum", z).build();
 
-      try (FunctionGraph f = FunctionGraph.create(signature, g)) {
+      try (ConcreteFunction f = ConcreteFunction.create(signature, g)) {
         f.session().run(init);
 
         // Call the graph and remember the result of computation for later
@@ -116,7 +114,7 @@ public class SavedModelBundleTest {
         // Export the model
         SavedModelBundle.exporter(testFolder.toString())
             .withTags("test")
-            .function(f)
+            .withFunction(f)
             .export();
       }
     }
@@ -133,7 +131,7 @@ public class SavedModelBundleTest {
       assertEquals(Signature.DEFAULT_NAME,
           savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
 
-      FunctionGraph function = savedModel.function(Signature.DEFAULT_NAME);
+      ConcreteFunction function = savedModel.function(Signature.DEFAULT_NAME);
       assertNotNull(function);
 
       Signature signature = function.signature();

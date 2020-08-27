@@ -15,10 +15,6 @@
  */
 package org.tensorflow;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
@@ -28,7 +24,7 @@ import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.framework.TensorShapeProto.Dim;
 
 /**
- * Describe the inputs and outputs of an executable entity, such as a {@link FunctionGraph}, among
+ * Describe the inputs and outputs of an executable entity, such as a {@link ConcreteFunction}, among
  * other useful metadata.
  */
 public class Signature  {

@@ -301,17 +301,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return addGradients(null, new Output<?>[] {y}, x, null);
   }
 
-  public SaverDef saverDef() {
-    if (saverDef == null) {
-      synchronized (this) {
-        if (saverDef == null) {
-          saverDef = addVariableSaver(this);
-        }
-      }
-    }
-    return saverDef;
-  }
-
   /**
    * Used to instantiate an abstract class which overrides the buildSubgraph method to build a
    * conditional or body subgraph for a while loop. After Java 8, this can alternatively be used to
@@ -425,6 +414,23 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       return outputs;
     }
+  }
+
+  /**
+   * Return the {@link SaverDef} instance used to save the state of all variables present in
+   * this graph.
+   *
+   * <p/>On the first call of this method, all nodes necessary to save and restore the state of the
+   * variables are added to the graph. Consequently, any variables that are added to the graph after
+   * this call could not be saved nor restored using this {@link SaverDef}.
+   *
+   * @return a {@link SaverDef} instance
+   */
+  synchronized SaverDef saverDef() {
+    if (saverDef == null) {
+      saverDef = addVariableSaver(this);
+    }
+    return saverDef;
   }
 
   private final Object nativeHandleLock = new Object();
