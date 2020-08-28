@@ -93,10 +93,14 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Sets the set of tags that identify the specific graph in the saved model to load.
      *
+     * <p>Has no effect if {@code tags} is null or empty
+     *
      * @param tags the tags identifying the specific MetaGraphDef to load.
      */
     public Loader withTags(String... tags) {
-      this.tags = tags;
+      if (tags != null && tags.length > 0) {
+        this.tags = tags;
+      }
       return this;
     }
 
@@ -105,7 +109,7 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private String exportDir = null;
-    private String[] tags = null;
+    private String[] tags = {DEFAULT_TAG};
     private ConfigProto configProto = null;
     private RunOptions runOptions = null;
   }

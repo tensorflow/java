@@ -38,6 +38,19 @@ public class Signature  {
   public static class Builder {
 
     /**
+     * Sets the name of this signature.
+     *
+     * <p/>When not set explicitly, the default value is {@link #DEFAULT_NAME}.
+     *
+     * @param name signature name
+     * @return this builder
+     */
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    /**
      * Register a tensor as an input of the function.
      *
      * @param inputName user-friendly name for this input tensor
@@ -93,30 +106,15 @@ public class Signature  {
           .build();
     }
 
-    private final String name;
+    private String name = DEFAULT_NAME;
     private final SignatureDef.Builder signatureBuilder = SignatureDef.newBuilder();
-
-    private Builder(String name) {
-      this.name = name;
-    }
   }
 
   /**
    * Returns a new builder for creating a signature
-   *
-   * <p>"serving_default" will be used as the default signature name.
    */
   public static Builder builder() {
-    return new Builder(DEFAULT_NAME);
-  }
-
-  /**
-   * Returns a new builder for creating a signature.
-   *
-   * @param name signature name
-   */
-  public static Builder builder(String name) {
-    return new Builder(name);
+    return new Builder();
   }
 
   /**
