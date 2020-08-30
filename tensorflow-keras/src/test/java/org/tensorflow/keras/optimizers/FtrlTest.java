@@ -14,24 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.Ftrl.INITIAL_ACCUM_VALUE_KEY;
-import static org.tensorflow.keras.optimizers.Ftrl.L1STRENGTH_KEY;
-import static org.tensorflow.keras.optimizers.Ftrl.L2STRENGTH_KEY;
-import static org.tensorflow.keras.optimizers.Ftrl.L2_SHRINKAGE_REGULARIZATION_STRENGTH_KEY;
-import static org.tensorflow.keras.optimizers.Ftrl.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.Ftrl.LEARNING_RATE_POWER_KEY;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -41,8 +25,18 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 
-/** Test cases for Ftrl Optimizer */
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.keras.optimizers.Ftrl.*;
+import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
+
+/** Test the Ftrl Optimizer */
 public class FtrlTest {
+
   private TestSession.Mode tf_mode = TestSession.Mode.GRAPH;
   int index;
 
@@ -147,7 +141,7 @@ public class FtrlTest {
       session.evaluate(var1_init, var1);
 
       for (int i = 0; i < numSteps; i++) {
-        session.run(ftrl_update);
+        session.run(ftrl_update, instance.getFeedDict());
       }
 
       float[] expectedVar0 = {-0.22578995F, -0.44345796F};
@@ -214,7 +208,7 @@ public class FtrlTest {
       session.evaluate(var1_init, var1);
 
       for (int i = 0; i < numSteps; i++) {
-        session.run(ftrl_update);
+        session.run(ftrl_update, instance.getFeedDict());
       }
 
       float[] expectedVar0 = {-7.66718769F, -10.91273689F};
@@ -282,7 +276,7 @@ public class FtrlTest {
       session.evaluate(var1_init, var1);
 
       for (int i = 0; i < numSteps; i++) {
-        session.run(ftrl_update);
+        session.run(ftrl_update, instance.getFeedDict());
       }
 
       float[] expectedVar0 = {-0.24059935F, -0.46829352F};
@@ -290,6 +284,74 @@ public class FtrlTest {
 
       float[] expectedVar1 = {-0.02406147F, -0.04830509F};
       session.evaluate(expectedVar1, var1);
+    }
+  }
+
+  @Test
+  public void testChangingLearningRate() {
+    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+      Ops tf = session.getTF();
+      int numSteps = 10;
+      float learningRate = 3.0F;
+      float[] var0_init = {1.0F, 2.0F};
+      float[] var1_init = {4.0F, 3.0F};
+      float[] grads0_init = {0.1F, 0.2F};
+      float[] grads1_init = {0.01F, 0.02F};
+      Shape shape0 = Shape.of(var0_init.length);
+      Shape shape1 = Shape.of(var1_init.length);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+
+      Constant<TFloat32> grads0 = tf.constant(grads0_init);
+      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+
+      Ftrl instance =
+          new Ftrl(
+              tf,
+              learningRate,
+              Ftrl.LEARNING_RATE_POWER_DEFAULT, // learningRatePower
+              0.1F, // initial_accumulator_value
+              0.001F, // l1_regularization_strength
+              2.0F, // l2_regularization_strength
+              Ftrl
+                  .L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT // l2_shrinkage_regularization_strength
+              );
+
+      /* build the GradsAnvVars */
+      List gradsAndVars = new ArrayList<>();
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+      Op ftrl_update = instance.applyGradients(gradsAndVars, "FtrlTest");
+
+      /* initialize the local variables */
+      session.run(var0Initializer);
+      session.run(var1Initializer);
+
+      /** initialize the accumulators */
+      session.run(tf.init());
+      float expected[][][] = {
+        {{-0.022833f, -0.038881f}, {-0.002141f, -0.004474f}},
+        {{-0.037825f, -0.067760f}, {-0.003717f, -0.007587f}},
+        {{-0.019528f, -0.034022f}, {-0.001979f, -0.004008f}},
+        {{-0.003895f, -0.007653f}, {-0.000355f, -0.000720f}},
+        {{-0.000596f, -0.001364f}, {-0.000046f, -0.000094f}},
+        {{-0.000084f, -0.000221f}, {-0.000006f, -0.000012f}},
+        {{-0.000011f, -0.000034f}, {-0.000001f, -0.000001f}},
+        {{-0.000002f, -0.000005f}, {-0.000000f, -0.000000f}},
+        {{-0.000000f, -0.000001f}, {-0.000000f, -0.000000f}},
+        {{-0.000000f, -0.000000f}, {-0.000000f, -0.000000f}}
+      };
+      for (int i = 0; i < numSteps; i++) {
+        session.run(ftrl_update, instance.getFeedDict());
+        session.evaluate(expected[i][0], var0);
+        session.evaluate(expected[i][1], var1);
+        learningRate *= 0.1f;
+        instance.setLearningRate(learningRate);
+      }
     }
   }
 
@@ -339,7 +401,7 @@ public class FtrlTest {
       session.evaluate(var1_init, var1);
 
       for (int i = 0; i < numSteps; i++) {
-        session.run(ftrl_update);
+        session.run(ftrl_update, instance.getFeedDict());
       }
 
       float[] expectedVar0 = {-2.60260963F, -4.29698515F};

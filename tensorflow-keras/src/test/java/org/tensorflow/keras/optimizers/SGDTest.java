@@ -14,24 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.tensorflow.framework.optimizers.Momentum.MOMENTUM;
+import org.junit.jupiter.api.*;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
-import static org.tensorflow.keras.optimizers.SGD.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.SGD.MOMENTUM_DEFAULT;
-import static org.tensorflow.keras.optimizers.SGD.MOMENTUM_KEY;
-import static org.tensorflow.keras.optimizers.SGD.NESTEROV_DEFAULT;
-import static org.tensorflow.keras.optimizers.SGD.NESTEROV_KEY;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -40,6 +24,16 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.Momentum.MOMENTUM;
+import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
+import static org.tensorflow.keras.optimizers.SGD.*;
 
 /** Test cases for SGD Optimizer */
 public class SGDTest {
@@ -134,7 +128,7 @@ public class SGDTest {
       session.evaluate(var0_init, var0);
       session.evaluate(var1_init, var1);
 
-      session.run(update); // 1 step
+      session.run(update, instance.getFeedDict()); // 1 step
 
       float[] expectedVar0 = {1.0F - 3.0F * 0.1F, 2.0F - 3.0F * 0.1F};
       float[] expectedVar1 = {3.0F - 3.0F * 0.01F, 4.0F - 3.0F * 0.01F};
@@ -194,7 +188,7 @@ public class SGDTest {
       session.evaluate(var0_init, var0);
       session.evaluate(var1_init, var1);
 
-      session.run(update); // 1 step
+      session.run(update, instance.getFeedDict()); // 1 step
 
       float[] expectedMomentum0 = {0.1F, 0.1F};
       float[] expectedMomentum1 = {0.01F, 0.01F};
@@ -206,7 +200,7 @@ public class SGDTest {
       session.evaluate(expectedVar0, var0);
       session.evaluate(expectedVar1, var1);
 
-      session.run(update); // step 2
+      session.run(update, instance.getFeedDict()); // step 2
 
       float[] expectedMomentum0_2 = {(0.9f * 0.1f + 0.1f), (0.9f * 0.1f + 0.1f)};
       float[] expectedMomentum1_2 = {(0.9f * 0.01f + 0.01f), (0.9f * 0.01f + 0.01f)};

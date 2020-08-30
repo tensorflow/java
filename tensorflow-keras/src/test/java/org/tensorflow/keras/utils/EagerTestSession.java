@@ -14,37 +14,30 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.utils;
 
-import java.io.PrintWriter;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Predicate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import org.tensorflow.DataType;
-import org.tensorflow.EagerSession;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.Session;
+import org.tensorflow.*;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
+import org.tensorflow.types.*;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
-/** Eaager Mode Test Session */
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/** @author Jim Clarke */
 public class EagerTestSession extends TestSession {
 
   private final EagerSession session;
   private final Ops tf;
 
-  /** Create an Eager mode test session. */
+  /** Create a EagerTestSession */
   public EagerTestSession() {
     this.session = EagerSession.create();
     this.tf = Ops.create(session).withName("test");
@@ -57,8 +50,9 @@ public class EagerTestSession extends TestSession {
   }
 
   /**
-   * Get the TensorFlow EagerSession instance
-   * @return the TensorFlow EagerSession instance
+   * Returns the EagerSession for this Test session
+   *
+   * @return the EagerSession for this Test session
    */
   public EagerSession getSession() {
     return session;
@@ -90,7 +84,22 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> void evaluate(double expected, Operand<T> input) {
+  public void run(Op op) {
+    /* Empty */
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void run(Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    /* Empty */
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U extends TNumber> void evaluate(
+      double expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     DataType dtype = input.asOutput().dataType();
     if (dtype == TFloat32.DTYPE) {
       Operand<TFloat32> o = (Operand<TFloat32>) input;
@@ -169,7 +178,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> void evaluate(Number[] expected, Output<T> input) {
+  public <U extends TNumber> void evaluate(
+      Number[] expected,
+      Output<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     int size = input.shape().size() == 0 ? 1 : (int) input.shape().size();
     assertEquals(
         expected.length,
@@ -254,7 +266,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> void evaluate(FloatNdArray expected, Output<T> input) {
+  public <U extends TNumber> void evaluate(
+      FloatNdArray expected,
+      Output<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     DataType dtype = input.dataType();
     if (dtype == TFloat32.DTYPE) {
       Output<TFloat32> o = (Output<TFloat32>) input;
@@ -334,7 +349,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> void evaluate(Output<T> input, Predicate<Number> predicate) {
+  public <U extends TNumber> void evaluate(
+      Output<U> input,
+      Predicate<Number> predicate,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     AtomicInteger index = new AtomicInteger();
     DataType dtype = input.asOutput().dataType();
     boolean isScalar = input.shape().equals(Shape.scalar());
@@ -457,7 +475,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public void evaluate(String[] expected, Output<TString> input) {
+  public void evaluate(
+      String[] expected,
+      Output<TString> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     int size = input.shape().size() == 0 ? 1 : (int) input.shape().size();
     assertEquals(
         expected.length,
@@ -485,7 +506,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public void evaluate(Boolean[] expected, Output<TBool> input) {
+  public void evaluate(
+      Boolean[] expected,
+      Output<TBool> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     int size = input.shape().size() == 0 ? 1 : (int) input.shape().size();
     assertEquals(
         expected.length,
@@ -513,10 +537,13 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> void evaluate(Output<T> expected, Output<T> input) {
+  public <T extends TType> void evaluate(
+      Output<T> expected,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     assert input.shape().equals(expected.shape())
         : String.format(
-            "expected shape (%s) != to input shape (%ds)",
+            "expected shape (%s) != to input shape (%s)",
             expected.shape().toString(), input.shape().toString());
     DataType dtype = input.asOutput().dataType();
     boolean isScalar = input.shape().equals(Shape.scalar());
@@ -683,7 +710,10 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> void print(PrintWriter writer, Output<T> input) {
+  public <T extends TType> void print(
+      PrintWriter writer,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     DataType dtype = input.asOutput().dataType();
     if (dtype == TFloat32.DTYPE) {
       Output<TFloat32> o = (Output<TFloat32>) input;

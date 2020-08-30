@@ -22,9 +22,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.function.Supplier;
 
 /**
  * Functions to get an Optimizer based on String name, an Optimizer class, or lambda function.
@@ -79,8 +79,8 @@ public class Optimizers {
    *
    * @param optimizerFunction either a String that identifies the Optimizer, an Optimizer class, or
    *     * an Optimizer object.
-   * @param custom_functions a map of Optimizer lambdas that will be queried if the Optimizer is
-   *     not found in the standard keys
+   * @param custom_functions a map of Optimizer lambdas that will be queried if the Optimizer is not
+   *     found in the standard keys
    * @return the Optimizer object
    */
   public static Optimizer get(

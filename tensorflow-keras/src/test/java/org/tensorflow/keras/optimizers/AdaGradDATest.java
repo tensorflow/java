@@ -14,20 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.AdaGradDA.INITIAL_ACCUM_KEY;
-import static org.tensorflow.keras.optimizers.AdaGradDA.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -36,6 +24,16 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.keras.optimizers.AdaGradDA.INITIAL_ACCUM_KEY;
+import static org.tensorflow.keras.optimizers.AdaGradDA.LEARNING_RATE_KEY;
+import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 
 /** Test cases for AdaGradDA Optimizer */
 public class AdaGradDATest {
@@ -116,7 +114,7 @@ public class AdaGradDATest {
 
       session.evaluate(var0_init, var0);
       session.evaluate(var1_init, var1);
-      session.run(ada_update);
+      session.run(ada_update, instance.getFeedDict());
       float[] expected0 = {-0.904534F, -1.603567F};
       session.evaluate(expected0, var0);
       float[] expected1 = {-0.094821f, -0.189358f};

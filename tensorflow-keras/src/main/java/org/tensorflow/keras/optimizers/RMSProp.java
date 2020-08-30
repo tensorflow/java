@@ -14,11 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
+import org.tensorflow.op.Ops;
+
 import java.util.HashMap;
 import java.util.Map;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
+
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
-import org.tensorflow.op.Ops;
 
 /** RMSProp Optimizer that implements the RMSProp algorithm. */
 public class RMSProp extends org.tensorflow.framework.optimizers.RMSProp
@@ -37,7 +38,6 @@ public class RMSProp extends org.tensorflow.framework.optimizers.RMSProp
   public static final boolean CENTERED_DEFAULT = false;
 
   private Map<String, Object> config = new HashMap<>();
-  private float learningRate;
 
   /**
    * Create an RMSProp Optimizer with the following defaults, name="RMSProp", learning_rate=0.001,
@@ -172,7 +172,6 @@ public class RMSProp extends org.tensorflow.framework.optimizers.RMSProp
    */
   private void initConfig(
       float learningRate, float decay, float momentum, float epsilon, boolean centered) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(DECAY_KEY, decay);
@@ -185,17 +184,5 @@ public class RMSProp extends org.tensorflow.framework.optimizers.RMSProp
   @Override
   public Map<String, Object> getConfig() {
     return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 }

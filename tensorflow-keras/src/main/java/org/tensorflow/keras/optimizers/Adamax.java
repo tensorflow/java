@@ -14,29 +14,28 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdaMax;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
+import java.util.*;
+
+import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+
 /** Adamax Optimizer that implements the Adamax algorithm. */
 public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
-    implements OptimizerInterface {
+    implements OptimizerInterface, AutoCloseable {
 
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
@@ -51,15 +50,17 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
   public static final float BETA_ONE_DEFAULT = 0.9F;
   public static final float BETA_TWO_DEFAULT = 0.999F;
 
-  private Scope scope;
-  private Map<String, Object> config = new HashMap<>();
+  private final Map<String, Object> config = new HashMap<>();
 
   private float learningRate;
+  private Tensor<TFloat32> learningRateTensor;
+  private final Placeholder<TFloat32> learningRatePlaceholder;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
+
   private final float betaOne;
   private final float betaTwo;
   private final float epsilon;
 
-  private Constant<TFloat32> learningRateConst;
   private Constant<TFloat32> epsilonConst;
   private Constant<TFloat32> betaOneConst;
   private Constant<TFloat32> betaTwoConst;
@@ -117,10 +118,14 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
   public Adamax(Ops tf, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(assertGraph(tf));
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
-    this.scope = tf.scope();
     initConfig(learningRate, betaOne, betaTwo, epsilon);
   }
 
@@ -138,10 +143,14 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
       Ops tf, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(assertGraph(tf), name);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
-    this.scope = tf.scope();
 
     initConfig(learningRate, betaOne, betaTwo, epsilon);
   }
@@ -191,8 +200,31 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
 
   /** {@inheritDoc} */
   @Override
-  public void setLearningRate(float learningRate) {
+  public final void setLearningRate(float learningRate) {
     this.learningRate = learningRate;
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+    }
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+  }
+
+  /**
+   * Get the Feed Dictionary for the run methods to set the Placeholder values(s)
+   *
+   * @return the current Feed Dictionary for the run methods
+   */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
+    return this.feedDict;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void close() throws Exception {
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+      this.learningRateTensor = null;
+    }
   }
 
   /** {@inheritDoc} */
@@ -200,7 +232,6 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
   protected Optional<Op> prepare(String scopeName) {
     betaOneConst = tf.constant(betaOne);
     betaTwoConst = tf.constant(betaTwo);
-    learningRateConst = tf.constant(learningRate);
     epsilonConst = tf.constant(epsilon);
 
     return Optional.empty();
@@ -238,16 +269,16 @@ public class Adamax extends org.tensorflow.framework.optimizers.Optimizer
     Variable<T> firstMomentSlot = getSlot(variable, FIRST_MOMENT).get();
     Variable<T> secondMomentSlot = getSlot(variable, SECOND_MOMENT).get();
     return ApplyAdaMax.create(
-        scope,
-        (Operand) variable,
-        (Operand) firstMomentSlot,
-        (Operand) secondMomentSlot,
-        (Operand) tf.dtypes.cast(betaOnePower, gradient.dataType()),
-        (Operand) tf.dtypes.cast(learningRateConst, gradient.dataType()),
-        (Operand) tf.dtypes.cast(betaOneConst, gradient.dataType()),
-        (Operand) tf.dtypes.cast(betaTwoConst, gradient.dataType()),
-        (Operand) tf.dtypes.cast(epsilonConst, gradient.dataType()),
-        (Operand) gradient);
+        tf.scope(),
+        (Operand<T>) variable,
+        (Operand<T>) firstMomentSlot,
+        (Operand<T>) secondMomentSlot,
+        (Operand<T>) tf.dtypes.cast(betaOnePower, gradient.dataType()),
+        (Operand<T>) tf.dtypes.cast(this.learningRatePlaceholder, gradient.dataType()),
+        (Operand<T>) tf.dtypes.cast(betaOneConst, gradient.dataType()),
+        (Operand<T>) tf.dtypes.cast(betaTwoConst, gradient.dataType()),
+        (Operand<T>) tf.dtypes.cast(epsilonConst, gradient.dataType()),
+        (Operand<T>) gradient);
   }
 
   /** {@inheritDoc} */

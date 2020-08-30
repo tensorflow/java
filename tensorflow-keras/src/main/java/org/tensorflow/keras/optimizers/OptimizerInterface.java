@@ -14,9 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.Map;
 import org.tensorflow.Graph;
 import org.tensorflow.op.Ops;
+
+import java.util.Map;
 
 /** The main Interface for Keras Optimizers */
 public interface OptimizerInterface {
@@ -32,8 +33,9 @@ public interface OptimizerInterface {
    * @throws java.lang.IllegalArgumentException if the TensorFlow Ops does not represent Graph mode
    */
   static Graph assertGraph(Ops tf) {
-    if(!tf.scope().env().isGraph()) {
-      throw new IllegalArgumentException("Invalid environment, Optimizers can only be used in Graph Mode");
+    if (!tf.scope().env().isGraph()) {
+      throw new IllegalArgumentException(
+          "Invalid environment, Optimizers can only be used in Graph Mode");
     }
     return (Graph) tf.scope().env();
   }
@@ -44,18 +46,4 @@ public interface OptimizerInterface {
    * @return the config object used to initialize the Optimizer
    */
   Map<String, Object> getConfig();
-
-  /**
-   * Return the current learning rate
-   *
-   * @return the current learning rate
-   */
-  float getLearningRate();
-
-  /**
-   * Set the learning rate
-   *
-   * @param learningRate the learning rate;
-   */
-  void setLearningRate(float learningRate);
 }

@@ -14,11 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
+import org.tensorflow.op.Ops;
+
 import java.util.HashMap;
 import java.util.Map;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
+
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
-import org.tensorflow.op.Ops;
 
 /** Adam Optimizer that implements the Adam algorithm. */
 public class Adam extends org.tensorflow.framework.optimizers.Adam implements OptimizerInterface {
@@ -33,8 +34,7 @@ public class Adam extends org.tensorflow.framework.optimizers.Adam implements Op
   public static final float BETA_ONE_DEFAULT = 0.9F;
   public static final float BETA_TWO_DEFAULT = 0.999F;
 
-  private float learningRate;
-  private Map<String, Object> config = new HashMap<>();
+  private final Map<String, Object> config = new HashMap<>();
 
   /**
    * Create an Adam Optimizer
@@ -154,7 +154,6 @@ public class Adam extends org.tensorflow.framework.optimizers.Adam implements Op
    *     1 of the paper. Defaults to 1e-7.
    */
   protected void initConfig(float learningRate, float betaOne, float betaTwo, float epsilon) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(EPSILON_KEY, epsilon);
@@ -166,17 +165,5 @@ public class Adam extends org.tensorflow.framework.optimizers.Adam implements Op
   @Override
   public Map<String, Object> getConfig() {
     return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 }

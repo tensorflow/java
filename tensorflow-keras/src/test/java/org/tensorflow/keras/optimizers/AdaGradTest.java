@@ -14,21 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.tensorflow.framework.optimizers.AdaGrad.ACCUMULATOR;
+import org.junit.jupiter.api.*;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.AdaGrad.INITIAL_ACCUM_KEY;
-import static org.tensorflow.keras.optimizers.AdaGrad.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import org.tensorflow.keras.utils.ND;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -40,6 +27,17 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.AdaGrad.ACCUMULATOR;
+import static org.tensorflow.keras.optimizers.AdaGrad.INITIAL_ACCUM_KEY;
+import static org.tensorflow.keras.optimizers.AdaGrad.LEARNING_RATE_KEY;
+import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 
 /** Test cases for AdaGrad Optimizer */
 public class AdaGradTest {
@@ -138,7 +136,7 @@ public class AdaGradTest {
       session.evaluate(var1_init, var1);
 
       for (int step = 0; step < numSteps; step++) {
-        session.run(ada_update);
+        session.run(ada_update, instance.getFeedDict());
 
         accum0_np = caclulateAccum(accum0_np, grads0_np);
         var0_np = calculate(var0_np, accum0_np, grads0_np, learningRate);

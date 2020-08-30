@@ -14,10 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
+import org.tensorflow.op.Ops;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
-import org.tensorflow.op.Ops;
 
 /** Stochastic Gradient Descent and momentum optimizer. */
 public class SGD extends org.tensorflow.framework.optimizers.Momentum
@@ -32,7 +34,6 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
   public static final boolean NESTEROV_DEFAULT = false;
 
   private Map<String, Object> config = new HashMap<>();
-  private float learningRate;
 
   /**
    * Create a Stochastic Gradient Descent optimizer using defaults: name="SGD", learning_rate=0.01,
@@ -102,7 +103,7 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
    */
   public SGD(Ops tf, float learningRate, float momentum, boolean useNesterov) {
     super(assertGraph(tf), learningRate, momentum, useNesterov);
-    if(momentum < 0 || momentum > 1)
+    if (momentum < 0 || momentum > 1)
       throw new IllegalArgumentException("\"momentum\" must be between [0, 1].");
     initConfig(learningRate, momentum, useNesterov);
   }
@@ -119,7 +120,7 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
    */
   public SGD(Ops tf, String name, float learningRate, float momentum, boolean useNesterov) {
     super(assertGraph(tf), name, learningRate, momentum, useNesterov);
-    if(momentum < 0 || momentum > 1)
+    if (momentum < 0 || momentum > 1)
       throw new IllegalArgumentException("\"momentum\" must be between [0, 1].");
     initConfig(learningRate, momentum, useNesterov);
   }
@@ -166,7 +167,6 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
    * @param useNesterov Whether to apply Nesterov momentum. Defaults to `false`.
    */
   private void initConfig(float learningRate, float momentum, boolean useNesterov) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(MOMENTUM_KEY, momentum);
@@ -177,18 +177,6 @@ public class SGD extends org.tensorflow.framework.optimizers.Momentum
   @Override
   public Map<String, Object> getConfig() {
     return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 
   // overide the momentum name to return "SGD"

@@ -17,7 +17,13 @@ package org.tensorflow.keras.optimizers;
 import java.util.HashMap;
 import java.util.Map;
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+
+import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Placeholder;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * AdaGrad Optimizer that implements the AdaGrad algorithm. Adagrad is an optimizer with
@@ -34,7 +40,6 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
   public static final float INITIAL_ACCUM__DEFAULT = 0.1f;
 
   private Map<String, Object> config = new HashMap<>();
-  private float learningRate;
 
   /**
    * Create an AdaGrad Optimizer with name="Adagrad", learningRate=0.001F, and initial
@@ -99,8 +104,9 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
    */
   public AdaGrad(Ops tf, String name, float learningRate, float initialAccumulatorValue) {
     super(assertGraph(tf), name, learningRate, initialAccumulatorValue);
-    if(initialAccumulatorValue < 0.0F)
-        throw new IllegalArgumentException( "initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
+    if (initialAccumulatorValue < 0.0F)
+      throw new IllegalArgumentException(
+          "initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
     initConfig(learningRate, initialAccumulatorValue);
   }
 
@@ -141,7 +147,6 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
    * @param initialAccumulatorValue the initial Accumulator value
    */
   private void initConfig(float learningRate, float initialAccumulatorValue) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(INITIAL_ACCUM_KEY, initialAccumulatorValue);
@@ -151,17 +156,5 @@ public class AdaGrad extends org.tensorflow.framework.optimizers.AdaGrad
   @Override
   public Map<String, Object> getConfig() {
     return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 }

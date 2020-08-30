@@ -14,29 +14,25 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.tensorflow.DataType;
-import org.tensorflow.Graph;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+import org.tensorflow.*;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
+import java.util.*;
+
+import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+
 /** Nadam Optimizer that implements the NAdam algorithm. */
 public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
-    implements OptimizerInterface {
+    implements OptimizerInterface, AutoCloseable {
 
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
@@ -55,6 +51,9 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
   private final Map<String, Object> config = new HashMap<>();
 
   private float learningRate;
+  private Tensor<TFloat32> learningRateTensor;
+  private final Placeholder<TFloat32> learningRatePlaceholder;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
   private final float betaOne;
   private final float betaTwo;
   private final float epsilon;
@@ -63,7 +62,6 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
 
   private long iterations = 0;
 
-  private Constant<TFloat32> learningRateConst;
   private Constant<TFloat32> betaOneConst;
   private Constant<TFloat32> betaTwoConst;
   private Constant<TInt64> localStepConst;
@@ -140,6 +138,11 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
   public Nadam(Ops tf, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(assertGraph(tf));
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -160,6 +163,11 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
       Ops tf, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(assertGraph(tf), name);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -200,8 +208,31 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
 
   /** {@inheritDoc} */
   @Override
-  public void setLearningRate(float learningRate) {
+  public final void setLearningRate(float learningRate) {
     this.learningRate = learningRate;
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+    }
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+  }
+
+  /**
+   * Get the Feed Dictionary for the run methods to set the Placeholder values(s)
+   *
+   * @return the current Feed Dictionary for the run methods
+   */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
+    return this.feedDict;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void close() throws Exception {
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+      this.learningRateTensor = null;
+    }
   }
 
   /** {@inheritDoc} */
@@ -248,7 +279,6 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
     Constant<TFloat32> one = tf.constant(1.0F);
     Constant<TFloat32> point5 = tf.constant(0.5F);
 
-    learningRateConst = tf.constant(learningRate);
     betaOneConst = tf.constant(betaOne);
     betaTwoConst = tf.constant(betaTwo);
     localStepConst = tf.constant(this.iterations + 1);
@@ -350,7 +380,7 @@ public class Nadam extends org.tensorflow.framework.optimizers.Optimizer
         tf.math.sub(
             variable,
             tf.math.div(
-                tf.math.mul(tf.dtypes.cast(learningRateConst, dType), m_t_bar),
+                tf.math.mul(tf.dtypes.cast(this.learningRatePlaceholder, dType), m_t_bar),
                 tf.math.add(tf.math.sqrt(v_t_prime), tf.dtypes.cast(epsilonConst, dType))));
     // assign(var, var_t, use_locking=self._use_locking)
     return tf.assign(variable, var_t, Assign.useLocking(true));

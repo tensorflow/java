@@ -14,16 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.utils;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.function.Predicate;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.tensorflow.EagerSession;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.Session;
+import org.tensorflow.*;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -32,569 +23,1065 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
-/** Base class for Test Session */
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/** @author Jim Clarke */
 public abstract class TestSession implements AutoCloseable {
 
   protected float epsilon = 1e-5F;
   protected boolean debug;
 
-  /** The Test Session mode, either Eager or Graph */
+  /** Enumerate between Eager and Graph Mode */
   public enum Mode {
     EAGER,
     GRAPH;
   }
 
-  /**
-   * Create an Eager Test Session
-   *
-   * @return the Eager Test Session
-   */
   public static TestSession createEagerSession() {
     return new EagerTestSession();
   }
 
-  /**
-   * Create a Graph Test Session
-   *
-   * @return the Graph Test Session
-   */
   public static TestSession createGraphSession() {
     return new GraphTestSession();
   }
 
-  /**
-   * Create a Test Session
-   *
-   * @param mode
-   * @return
-   */
   public static TestSession createTestSession(Mode mode) {
     return mode == Mode.EAGER ? createEagerSession() : createGraphSession();
   }
 
-  /** Initialize the Test Session, default implementation is do nothing. */
   public void initialize() {
     // empty
   }
 
   /**
-   * Run the Operation
+   * Perform session.run()
    *
-   * @param op the Operation to run
+   * <p>If in eager mode, this does nothing.
+   *
+   * @param op The Operation to run
    */
-  public void run(Op op) {
-    // empty
-  }
+  public abstract void run(Op op);
 
   /**
-   * Evaluate the input against the expected value
+   * Perform session.run()
+   *
+   * <p>If in eager mode, this does nothing.
+   *
+   * @param op The Operation to run
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public abstract void run(Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(Number expected, Operand<T> input) {
-    evaluate(new Number[] {expected}, input);
+  public <U extends TNumber> void evaluate(Number expected, Operand<U> input) {
+    evaluate(new Number[] {expected}, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(Number expected, Op input) {
-    evaluate(new Number[] {expected}, input);
+  public <U extends TNumber> void evaluate(
+      Number expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new Number[] {expected}, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected values
-   *
-   * @param expected the expected values
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
-   */
-  public <T extends TNumber> void evaluate(Number[] expected, Op input) {
-    Output output = input.op().output(0);
-    evaluate(expected, output);
-  }
-
-  /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
    */
-  public <T extends TNumber> void evaluate(Number[] expected, Operand<T> input) {
+  public void evaluate(Number expected, Op input) {
+    evaluate(new Number[] {expected}, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the feedDict entries
+   */
+  public <T extends TType> void evaluate(
+      Number expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new Number[] {expected}, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type for the input
+   */
+  public <U extends TNumber> void evaluate(Number[] expected, Op input) {
+    Output<U> output = input.op().output(0);
+    evaluate(expected, output, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type for the input
+   */
+  public <U extends TNumber> void evaluate(
+      Number[] expected,
+      Op input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    Output<U> output = input.op().output(0);
+    evaluate(expected, output, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(Number[] expected, Operand<U> input) {
+    Output<U> output = input.asOutput();
+    evaluate(expected, output, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      Number[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Output output = input.asOutput();
-    evaluate(expected, output);
+    evaluate(expected, output, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(byte expected, Operand<T> input) {
-    evaluate((double) expected, input);
+  public <U extends TNumber> void evaluate(byte expected, Operand<U> input) {
+    evaluate((double) expected, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(int expected, Operand<T> input) {
-    evaluate((double) expected, input);
+  public <U extends TNumber> void evaluate(
+      byte expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate((double) expected, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(long expected, Operand<T> input) {
-    evaluate((double) expected, input);
+  public <U extends TNumber> void evaluate(int expected, Operand<U> input) {
+    evaluate((double) expected, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(float expected, Operand<T> input) {
-    evaluate((double) expected, input);
+  public <U extends TNumber> void evaluate(
+      int expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate((double) expected, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public abstract <T extends TNumber> void evaluate(double expected, Operand<T> input);
+  public <U extends TNumber> void evaluate(long expected, Operand<U> input) {
+    evaluate((double) expected, input, null);
+  }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(byte[] expected, Operand<T> input) {
+  public <U extends TNumber> void evaluate(
+      long expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate((double) expected, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(float expected, Operand<U> input) {
+    evaluate((double) expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      float expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate((double) expected, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(double expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public abstract <U extends TNumber> void evaluate(
+      double expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(byte[] expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      byte[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Byte[] iArray = new Byte[expected.length];
-    for (int i = 0; i < expected.length; i++) iArray[i] = expected[i];
-    evaluate(iArray, input);
+    for (int i = 0; i < expected.length; i++) {
+      iArray[i] = expected[i];
+    }
+    evaluate(iArray, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(int[] expected, Operand<T> input) {
+  public <U extends TNumber> void evaluate(int[] expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      int[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Integer[] iArray = new Integer[expected.length];
-    for (int i = 0; i < expected.length; i++) iArray[i] = expected[i];
-    evaluate(iArray, input);
+    for (int i = 0; i < expected.length; i++) {
+      iArray[i] = expected[i];
+    }
+    evaluate(iArray, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(long[] expected, Operand<T> input) {
+  public <U extends TNumber> void evaluate(long[] expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      long[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Long[] iArray = new Long[expected.length];
-    for (int i = 0; i < expected.length; i++) iArray[i] = expected[i];
-    evaluate(iArray, input);
+    for (int i = 0; i < expected.length; i++) {
+      iArray[i] = expected[i];
+    }
+    evaluate(iArray, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected values
+   * Evaluate the expected results versus the actual results
    *
-   * @param expected the expected values
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(float[] expected, Operand<T> input) {
+  public <U extends TNumber> void evaluate(float[] expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      float[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Float[] iArray = new Float[expected.length];
-    for (int i = 0; i < expected.length; i++) iArray[i] = expected[i];
-    evaluate(iArray, input);
+    for (int i = 0; i < expected.length; i++) {
+      iArray[i] = expected[i];
+    }
+    evaluate(iArray, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TNumber> void evaluate(double[] expected, Operand<T> input) {
+  public <U extends TNumber> void evaluate(double[] expected, Operand<U> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(
+      double[] expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     Double[] iArray = new Double[expected.length];
-    for (int i = 0; i < expected.length; i++) iArray[i] = expected[i];
-    evaluate(iArray, input);
+    for (int i = 0; i < expected.length; i++) {
+      iArray[i] = expected[i];
+    }
+    evaluate(iArray, input, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public abstract <T extends TNumber> void evaluate(Number[] expected, Output<T> input);
+  public <U extends TNumber> void evaluate(Number[] expected, Output<U> input) {
+    evaluate(expected, input, null);
+  }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public abstract <U extends TNumber> void evaluate(
+      Number[] expected,
+      Output<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(String expected, Operand<TString> input) {
-    evaluate(new String[] {expected}, input);
+    evaluate(expected, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      String expected,
+      Operand<TString> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new String[] {expected}, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(String expected, Op input) {
-    evaluate(new String[] {expected}, input);
+    evaluate(new String[] {expected}, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      String expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new String[] {expected}, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(String[] expected, Op input) {
-    Output output = input.op().output(0);
-    evaluate(expected, output);
+    evaluate(expected, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      String[] expected,
+      Op input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    Output output = input.op().output(0);
+    evaluate(expected, output, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(String[] expected, Operand<TString> input) {
     Output output = input.asOutput();
-    evaluate(expected, output);
+    evaluate(expected, output, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
    */
-  public abstract void evaluate(String[] expected, Output<TString> input);
+  public abstract void evaluate(
+      String[] expected,
+      Output<TString> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
    */
   public void evaluate(Boolean expected, Operand<TBool> input) {
-    evaluate(new Boolean[] {expected}, input);
+    evaluate(new Boolean[] {expected}, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      Boolean expected,
+      Operand<TBool> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new Boolean[] {expected}, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(Boolean expected, Op input) {
-    evaluate(new Boolean[] {expected}, input);
+    evaluate(new Boolean[] {expected}, input, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      Boolean expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(new Boolean[] {expected}, input, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(Boolean[] expected, Op input) {
     Output output = input.op().output(0);
-    evaluate(expected, output);
+    evaluate(expected, output, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void evaluate(
+      Boolean[] expected,
+      Op input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    Output output = input.op().output(0);
+    evaluate(expected, output, feedDict);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    */
   public void evaluate(Boolean[] expected, Operand<TBool> input) {
     Output output = input.asOutput();
-    evaluate(expected, output);
+    evaluate(expected, output, null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
    */
-  public abstract void evaluate(Boolean[] expected, Output<TBool> input);
-
-  public <T extends TType> void evaluate(Operand<T> expected, Op input) {
-    Output output = input.op().output(0);
-    evaluate(expected, output);
+  public void evaluate(
+      Boolean[] expected,
+      Operand<TBool> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    Output output = input.asOutput();
+    evaluate(expected, output, feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
+   * @param input the actual value
+   */
+  public void evaluate(Boolean[] expected, Output<TBool> input) {
+    evaluate(expected, input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public abstract void evaluate(
+      Boolean[] expected,
+      Output<TBool> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   */
+  public <T extends TType> void evaluate(Operand<T> expected, Output<T> input) {
+    evaluate(expected.asOutput(), input, null);
+  }
+
+  /**
+   * Evaluate the expected results versus the actual results
+   *
+   * @param expected the expected value
+   * @param input the actual value
+   * @param <T> the data type for the feedDict entries
    */
   public <T extends TType> void evaluate(Operand<T> expected, Operand<T> input) {
-    evaluate(expected.asOutput(), input.asOutput());
+    evaluate(expected.asOutput(), input.asOutput(), null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the feedDict entries
    */
-  public abstract <T extends TType> void evaluate(Output<T> expected, Output<T> input);
+  public abstract <T extends TType> void evaluate(
+      Output<T> expected,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public <T extends TType> void evaluate(FloatNdArray expected, Operand<T> input) {
-    evaluate(expected, input.asOutput());
+  public <U extends TNumber> void evaluate(FloatNdArray expected, Operand<U> input) {
+    evaluate(expected, input.asOutput(), null);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public abstract <T extends TType> void evaluate(FloatNdArray expected, Output<T> input);
-
-  public <T extends TType> void evaluate(Operand<T> input, Predicate<Number> predicate) {
-    evaluate(input.asOutput(), predicate);
+  public <U extends TNumber> void evaluate(
+      FloatNdArray expected,
+      Operand<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    evaluate(expected, input.asOutput(), feedDict);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param <U> the data type of the input
    */
-  public abstract <T extends TType> void evaluate(Output<T> input, Predicate<Number> predicate);
+  public <U extends TNumber> void evaluate(FloatNdArray expected, Output<U> input) {
+    evaluate(expected, input, null);
+  }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluate the expected results versus the actual results
    *
    * @param expected the expected value
-   * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
    */
-  public <T extends TType> void evaluate(FloatNdArray input, Predicate<Number> predicate) {
+  public abstract <U extends TNumber> void evaluate(
+      FloatNdArray expected,
+      Output<U> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the actual results using a predicate
+   *
+   * @param input the actual value
+   * @param predicate a predicate that accepts a Number as an argument, if the result of the
+   *     predicate is false, then the test will fail
+   * @param <U> the data type of the input
+   */
+  public <U extends TNumber> void evaluate(Operand<U> input, Predicate<Number> predicate) {
+    evaluate(input.asOutput(), predicate, null);
+  }
+
+  /**
+   * Evaluate the actual results using a predicate
+   *
+   * @param input the actual value
+   * @param predicate a predicate that accepts a Number as an argument, if the result of the
+   *     predicate is false, then the test will fail
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <U> the data type of the input
+   */
+  public abstract <U extends TNumber> void evaluate(
+      Output<U> input,
+      Predicate<Number> predicate,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Evaluate the actual results using a predicate
+   *
+   * @param input the actual value
+   * @param predicate a predicate that accepts a Number as an argument, if the result of the
+   *     predicate is false, then the test will fail
+   */
+  public void evaluate(FloatNdArray input, Predicate<Number> predicate) {
     input.scalars().forEach(f -> assertTrue(predicate.test(f.getFloat())));
   }
 
   /**
-   * Print the input
+   * Print the results to output stream
    *
    * @param out the output stream
-   * @param input the operand to print
-   * @param <T> the data type of the input
+   * @param input the actual value
+   * @param <T> the data type for the input
    */
   public <T extends TType> void print(OutputStream out, Operand<T> input) {
-    print(new PrintWriter(new OutputStreamWriter(out)), input.asOutput());
+    print(out, input, null);
   }
 
   /**
-   * Print the input
+   * Print the results to output stream
    *
    * @param out the output stream
-   * @param input the op to print
-   * @param <T> the data type of the input
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the feedDict entries
    */
-  public <T extends TType> void print(OutputStream out, Op input) {
-    print(new PrintWriter(new OutputStreamWriter(out)), input.op().output(0));
+  public <T extends TType> void print(
+      OutputStream out,
+      Operand<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(out)), input.asOutput(), feedDict);
   }
 
   /**
-   * Print the input
+   * Print the results to output stream
    *
    * @param out the output stream
-   * @param input the op to print
-   * @param <T> the data type of the input
+   * @param input the actual value
+   */
+  public void print(OutputStream out, Op input) {
+    print(out, input, null);
+  }
+
+  /**
+   * Print the results to output stream
+   *
+   * @param out the output stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void print(
+      OutputStream out, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(out)), input.op().output(0), feedDict);
+  }
+
+  /**
+   * Print the results to output stream
+   *
+   * @param out the output stream
+   * @param input the actual value
+   * @param <T> the data type for the input
    */
   public <T extends TType> void print(OutputStream out, Output<T> input) {
-    print(new PrintWriter(new OutputStreamWriter(out)), input);
+    print(out, input, null);
   }
 
   /**
-   * Print the input
+   * Print the results to output stream
    *
-   * @param witer the output writer
-   * @param input the operand to print
-   * @param <T> the data type of the input
+   * @param out the output stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the input
+   */
+  public <T extends TType> void print(
+      OutputStream out,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(out)), input, feedDict);
+  }
+
+  /**
+   * Print the results to the character stream
+   *
+   * @param writer the character stream
+   * @param input the actual value
+   * @param <T> the data type for the input
    */
   public <T extends TType> void print(Writer writer, Operand<T> input) {
-    print(new PrintWriter(writer), input.asOutput());
+    print(writer, input, null);
   }
 
   /**
-   * Print the input
+   * Print the results to the character stream
    *
-   * @param witer the output writer
-   * @param input the op to print
-   * @param <T> the data type of the input
+   * @param writer the character stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the input
    */
-  public <T extends TType> void print(Writer writer, Op input) {
-    print(new PrintWriter(writer), input.op().output(0));
+  public <T extends TType> void print(
+      Writer writer,
+      Operand<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(writer), input.asOutput(), feedDict);
   }
 
   /**
-   * Print the input
+   * Print the results to the character stream
    *
-   * @param witer the output writer
-   * @param input the op to print
-   * @param <T> the data type of the input
+   * @param writer the character stream
+   * @param input the actual value
+   */
+  public void print(Writer writer, Op input) {
+    print(writer, input, null);
+  }
+
+  /**
+   * Print the results to the character stream
+   *
+   * @param writer the character stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void print(
+      Writer writer, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(writer), input.op().output(0), feedDict);
+  }
+
+  /**
+   * Print the results to the character stream
+   *
+   * @param writer the character stream
+   * @param input the actual value
+   * @param <T> the data type for the input
    */
   public <T extends TType> void print(Writer writer, Output<T> input) {
-    print(new PrintWriter(writer), input);
+    print(writer, input, null);
   }
 
   /**
-   * Print the input
+   * Print the results to the character stream
    *
-   * @param witer the output writer
-   * @param input the op to print
+   * @param writer the character stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the input
    */
-  public abstract <T extends TType> void print(PrintWriter writer, Output<T> input);
+  public <T extends TType> void print(
+      Writer writer,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(writer), input, feedDict);
+  }
 
   /**
-   * Get the TensorFlow Ops
+   * Print the results to the character stream
    *
-   * @return the TensorFlow Ops
+   * @param writer the character stream
+   * @param input the actual value
+   * @param <T> the data type for the input
+   */
+  public <T extends TType> void print(PrintWriter writer, Output<T> input) {
+    print(writer, input, null);
+  }
+
+  /**
+   * Print the results to the character stream
+   *
+   * @param writer the character stream
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the input
+   */
+  public abstract <T extends TType> void print(
+      PrintWriter writer,
+      Output<T> input,
+      Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict);
+
+  /**
+   * Get the TensorFlow Ops for this test session
+   *
+   * @return the TensorFlow Ops for this test session
    */
   public abstract Ops getTF();
 
   /**
-   * Determine if this Test Session represents an Eager Session
+   * Determine whether this session is in Eager mode
    *
-   * @return true, if this Test Session represents an Eager Session
+   * @return true if the this session is in Eager mode
    */
   public abstract boolean isEager();
 
   /**
-   * Determine if this Test Session represents a Graph Session
+   * Determine whether this session is in Graph mode
    *
-   * @return true, if this Test Session represents a Graph Session
+   * @return true if the this session is in Graph mode
    */
   public boolean isGraph() {
     return !isEager();
   }
 
   /**
-   * Get the epsilon value for evaluating float values
+   * Get the current EPSILON value for floating point number comparison.
    *
-   * @return the epsilon value for evaluating float values
+   * @return the current EPSILON value for floating point number comparison.
    */
   public float getEpsilon() {
     return this.epsilon;
   }
 
   /**
-   * Set the epsilon value for evaluating float values
+   * Set the current EPSILON value for floating point number comparison.
    *
-   * @param epsilon the epsilon value for evaluating float values
+   * @param epsilon the new EPSILON value for floating point number comparison.
    */
   public void setEpsilon(float epsilon) {
     this.epsilon = epsilon;
   }
 
   /**
-   * Get the TensorFlow session object associated with this Test Session
+   * Get the TensorFlow Session object
    *
-   * @return a TensorFlow session if this is a Graph session, otherwise null
+   * @return the TensorFlow Session object, returns null if this is not a Graph Test Session
    */
   public abstract Session getGraphSession();
 
   /**
-   * Get the TensorFlow eager session object associated with this Test Session
+   * Get the TensorFlow EagerSession object
    *
-   * @return a TensorFlow session if this is an eager session, otherwise null
+   * @return the TensorFlow Session object, returns null if this is not a Graph Test Session
    */
   public abstract EagerSession getEagerSession();
 
@@ -602,15 +1089,21 @@ public abstract class TestSession implements AutoCloseable {
   @Override
   public abstract void close();
 
-  /** @return the debug setting */
+  /**
+   * Get the debug setting
+   *
+   * @return the debug setting
+   */
   public boolean isDebug() {
     return debug;
   }
 
   /**
-   * Set the debug flag
+   * Sets the debug setting.
    *
-   * @param debug the setting for debugging
+   * <p>If true, then evaluate methods will also print the Tensor values to System.out.
+   *
+   * @param debug the debug to set
    */
   public void setDebug(boolean debug) {
     this.debug = debug;

@@ -31,7 +31,6 @@ import org.tensorflow.op.Ops;
  *
  * <p>Two accumulation steps are required: 1) the accumulation of gradients squared, 2) the
  * accumulation of updates squared.
- *
  */
 public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
     implements OptimizerInterface {
@@ -45,10 +44,8 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
   public static final float EPSILON_DEFAULT = 1e-7F;
 
   private Map<String, Object> config = new HashMap<>();
-  private float learningRate;
 
   private List<Op> initializers = new ArrayList<>();
-
 
   /**
    * Create an Adadelta optimizer with default name="Adadelta", learning_rate=0.001F, rho=0.95F, and
@@ -127,7 +124,7 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
       case 1:
         return Optional.of(initializers.get(0));
       default:
-        return Optional.of( tf.withSubScope(name).withControlDependencies(initializers).noOp());
+        return Optional.of(tf.withSubScope(name).withControlDependencies(initializers).noOp());
     }
   }
 
@@ -146,9 +143,8 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
    * Create an Adadelta optimizer
    *
    * @param tf the tensorflow Ops
-   * @param config a config object to initialize, the config
-   *     object has keys for "name", "learning_rate", "rho" and "epsilon". If a key is missing the
-   *     default value is used.
+   * @param config a config object to initialize, the config object has keys for "name",
+   *     "learning_rate", "rho" and "epsilon". If a key is missing the default value is used.
    */
   public static AdaDelta create(Ops tf, Map<String, Object> config) {
     String name = (String) config.get(NAME_KEY);
@@ -171,7 +167,6 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
    * @param epsilon A constant epsilon used to better conditioning the grad update.
    */
   private void initConfig(float learningRate, float rho, float epsilon) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(RHO_RATE_KEY, rho);
@@ -183,18 +178,4 @@ public class AdaDelta extends org.tensorflow.framework.optimizers.AdaDelta
   public Map<String, Object> getConfig() {
     return config;
   }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
-  }
-
-
 }

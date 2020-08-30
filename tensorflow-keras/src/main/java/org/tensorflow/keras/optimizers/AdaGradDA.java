@@ -14,10 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
+import org.tensorflow.op.Ops;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
-import org.tensorflow.op.Ops;
 
 /** Optimizer that implements the Adagrad Dual-Averaging algorithm. */
 public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
@@ -33,8 +35,7 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
   public static final float L1STRENGTH_DEFAULT = 0.0F;
   public static final float L2STRENGTH_DEFAULT = 0.0F;
 
-  private Map<String, Object> config = new HashMap<>();
-  private float learningRate;
+  private final Map<String, Object> config = new HashMap<>();
 
   /**
    * Create an AdagradDA Optimizer with default values name="adagrad-da". learning_rate=.001,
@@ -85,11 +86,12 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
       float l1Strength,
       float l2Strength) {
     super(assertGraph(tf), learningRate, initialAccumulatorValue, l1Strength, l2Strength);
-    if( initialAccumulatorValue < 0.0F)
-        throw new IllegalArgumentException("initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
-    if(l1Strength < 0)
+    if (initialAccumulatorValue < 0.0F)
+      throw new IllegalArgumentException(
+          "initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
+    if (l1Strength < 0)
       throw new IllegalArgumentException("l1Strength must be non-negative: " + l1Strength);
-    if(l2Strength < 0)
+    if (l2Strength < 0)
       throw new IllegalArgumentException("l2Strength must be non-negative: " + l2Strength);
     initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
   }
@@ -112,11 +114,12 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
       float l1Strength,
       float l2Strength) {
     super(assertGraph(tf), name, learningRate, initialAccumulatorValue, l1Strength, l2Strength);
-    if( initialAccumulatorValue < 0.0F)
-      throw new IllegalArgumentException("initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
-    if(l1Strength < 0)
+    if (initialAccumulatorValue < 0.0F)
+      throw new IllegalArgumentException(
+          "initial_accumulator_value must be non-negative: " + initialAccumulatorValue);
+    if (l1Strength < 0)
       throw new IllegalArgumentException("l1Strength must be non-negative: " + l1Strength);
-    if(l2Strength < 0)
+    if (l2Strength < 0)
       throw new IllegalArgumentException("l2Strength must be non-negative: " + l2Strength);
     initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
     initConfig(learningRate, initialAccumulatorValue, l1Strength, l2Strength);
@@ -168,7 +171,6 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
    */
   private void initConfig(
       float learningRate, float initialAccumulatorValue, float l1Strength, float l2Strength) {
-    this.learningRate = learningRate;
     config.put(NAME_KEY, this.getOptimizerName());
     config.put(LEARNING_RATE_KEY, learningRate);
     config.put(INITIAL_ACCUM_KEY, initialAccumulatorValue);
@@ -180,17 +182,5 @@ public class AdaGradDA extends org.tensorflow.framework.optimizers.AdaGradDA
   @Override
   public Map<String, Object> getConfig() {
     return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 }

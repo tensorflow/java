@@ -14,26 +14,28 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.Session;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyFtrl;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
+
 /** Ftrl (Follow the Regularized Leader) Optimizer that implements the FTRL algorithm. */
 public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
-    implements OptimizerInterface {
+    implements OptimizerInterface, AutoCloseable {
 
   public static final String LEARNING_RATE_KEY = "learning_rate";
   public static final String LEARNING_RATE_POWER_KEY = "learning_rate_power";
@@ -55,15 +57,18 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
 
   private final String name;
   private float learningRate;
+  private Tensor<TFloat32> learningRateTensor;
+  private final Placeholder<TFloat32> learningRatePlaceholder;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
   private final float learningRatePower;
   private final float initialAccumulatorValue;
   private final float l1RegularizationStrength;
   private final float l2RegularizationStrength;
   private final float l2ShrinkageRegularizationStrength;
 
-  private Map<String, Object> config = new HashMap<>();
+  private final Map<String, Object> config = new HashMap<>();
 
-  private boolean useLocking = true;
+  private final boolean useLocking = true;
 
   /**
    * Create a Ftrl Optimizer
@@ -161,6 +166,11 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     super(assertGraph(tf));
     this.name = getOptimizerName();
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.learningRatePower = learningRatePower;
     this.initialAccumulatorValue = initialAccumulatorValue;
     this.l1RegularizationStrength = l1Strength;
@@ -198,6 +208,11 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     super(assertGraph(tf), name);
     this.name = name;
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+        tf.withSubScope(LEARNING_RATE)
+            .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.learningRatePower = learningRatePower;
     this.initialAccumulatorValue = initialAccumulatorValue;
     this.l1RegularizationStrength = l1Strength;
@@ -331,7 +346,7 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
         accumSlot, // accum
         linearSlot, // linear
         gradient, // gradient
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), // lr
+        tf.dtypes.cast(this.learningRatePlaceholder, gradient.dataType()), // lr
         tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.dataType()), // l1
         tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.dataType()), // l2
         tf.dtypes.cast(
@@ -360,7 +375,26 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
 
   /** {@inheritDoc} */
   @Override
-  public void setLearningRate(float learningRate) {
+  public final void setLearningRate(float learningRate) {
     this.learningRate = learningRate;
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+    }
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+  }
+
+  /** {@inheritDoc} */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
+    return this.feedDict;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void close() throws Exception {
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+      this.learningRateTensor = null;
+    }
   }
 }

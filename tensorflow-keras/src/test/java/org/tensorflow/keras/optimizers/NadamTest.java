@@ -14,29 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.Adamax.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.Nadam.BETA_ONE_DEFAULT;
-import static org.tensorflow.keras.optimizers.Nadam.BETA_ONE_KEY;
-import static org.tensorflow.keras.optimizers.Nadam.BETA_TWO_DEFAULT;
-import static org.tensorflow.keras.optimizers.Nadam.BETA_TWO_KEY;
-import static org.tensorflow.keras.optimizers.Nadam.EPSILON_DEFAULT;
-import static org.tensorflow.keras.optimizers.Nadam.EPSILON_KEY;
-import static org.tensorflow.keras.optimizers.Nadam.FIRST_MOMENT;
-import static org.tensorflow.keras.optimizers.Nadam.LEARNING_RATE_DEFAULT;
-import static org.tensorflow.keras.optimizers.Nadam.SECOND_MOMENT;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import org.tensorflow.keras.utils.ND;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -48,6 +28,16 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.keras.optimizers.Adamax.LEARNING_RATE_KEY;
+import static org.tensorflow.keras.optimizers.Nadam.*;
+import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 
 /** Test cases for Nadam Optimizer */
 public class NadamTest {
@@ -199,7 +189,7 @@ public class NadamTest {
 
       for (int step = 0; step < numSteps; step++) {
 
-        session.run(update);
+        session.run(update, instance.getFeedDict());
 
         float mut =
             Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
