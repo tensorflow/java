@@ -15,12 +15,19 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -33,7 +40,10 @@ public class AdaDelta extends Optimizer {
   public static final String ACCUMULATOR = "accum";
   public static final String ACCUMULATOR_UPDATE = "accum_update";
 
-  private final float learningRate;
+  private float learningRate;
+  private Tensor<TFloat32> learningRateTensor;
+  private final Placeholder<TFloat32> learningRatePlaceholder;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
 
   private final float rho;
 
@@ -46,6 +56,10 @@ public class AdaDelta extends Optimizer {
   public AdaDelta(Graph graph, float learningRate, float rho, float epsilon) {
     super(graph);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.rho = rho;
     this.epsilon = epsilon;
   }
@@ -57,6 +71,10 @@ public class AdaDelta extends Optimizer {
   public AdaDelta(Graph graph, String name, float learningRate, float rho, float epsilon) {
     super(graph, name);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.rho = rho;
     this.epsilon = epsilon;
   }
@@ -82,7 +100,7 @@ public class AdaDelta extends Optimizer {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> accumUpdateSlot = getSlot(variable, ACCUMULATOR_UPDATE).get();
     return tf.train.applyAdadelta(variable, accumSlot, accumUpdateSlot,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
+        tf.dtypes.cast(learningRatePlaceholder, gradient.dataType()),
         tf.dtypes.cast(tf.constant(rho), gradient.dataType()),
         tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
         gradient);
@@ -100,5 +118,37 @@ public class AdaDelta extends Optimizer {
   @Override
   public String getOptimizerName() {
     return "Adadelta";
+  }
+
+
+  /** {@inheritDoc} */
+  @Override
+  public float getLearningRate() {
+    return this.learningRate;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void setLearningRate(float learningRate) {
+    this.learningRate = learningRate;
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+    }
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+  }
+
+  /** {@inheritDoc} */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
+    return this.feedDict;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void close() throws Exception {
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+      this.learningRateTensor = null;
+    }
   }
 }

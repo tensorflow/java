@@ -21,10 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.tensorflow.Graph;
-import org.tensorflow.Operand;
-import org.tensorflow.Operation;
-import org.tensorflow.Output;
+
+import org.tensorflow.*;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
@@ -36,8 +34,8 @@ import org.tensorflow.types.family.TType;
 /**
  * Base class for gradient optimizers.
  */
-public abstract class Optimizer {
-
+public abstract class Optimizer implements  AutoCloseable {
+  public static final String LEARNING_RATE = "learning_rate";
   public static final String VARIABLE_V2 = "VariableV2";
   /**
    * Global state variables
@@ -247,7 +245,26 @@ public abstract class Optimizer {
   public abstract String getOptimizerName();
 
   /**
-   * Optional attributes for {@link org.tensorflow.training.optimizers.Optimizer}
+   * Set the learning rate
+   * @param learningRate the learning rate
+   */
+  public abstract void setLearningRate(float learningRate);
+
+  /**
+   * Get the learning rate
+   * @return the learning rate
+   */
+  public abstract float getLearningRate();
+
+  /**
+   * Get the Feed Dictionary for the run methods to set the Placeholder values(s)
+   *
+   * @return the current Feed Dictionary for the run methods
+   */
+  public abstract Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict();
+
+  /**
+   * Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer}
    */
   public static class Options {
 

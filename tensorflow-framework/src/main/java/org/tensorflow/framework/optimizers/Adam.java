@@ -15,17 +15,21 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TFloat32;
@@ -42,7 +46,10 @@ public class Adam extends Optimizer {
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
 
-  private final float learningRate;
+  private float learningRate;
+  private Tensor<TFloat32> learningRateTensor;
+  private final Placeholder<TFloat32> learningRatePlaceholder;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
 
   private final float betaOne;
 
@@ -50,7 +57,6 @@ public class Adam extends Optimizer {
 
   private final float epsilon;
 
-  private Constant<TFloat32> learningRateConst;
   private Constant<TFloat32> epsilonConst;
   private Constant<TFloat32> betaOneConst;
   private Constant<TFloat32> betaTwoConst;
@@ -64,6 +70,10 @@ public class Adam extends Optimizer {
   public Adam(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(graph);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -76,6 +86,10 @@ public class Adam extends Optimizer {
   public Adam(Graph graph, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(graph, name);
     this.learningRate = learningRate;
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.learningRatePlaceholder =
+            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -121,7 +135,6 @@ public class Adam extends Optimizer {
   protected Optional<Op> prepare(String scopeName) {
     betaOneConst = tf.constant(betaOne);
     betaTwoConst = tf.constant(betaTwo);
-    learningRateConst = tf.constant(learningRate);
     epsilonConst = tf.constant(epsilon);
     return Optional.empty();
   }
@@ -142,7 +155,7 @@ public class Adam extends Optimizer {
     return tf.train.applyAdam(variable, firstMomentSlot, secondMomentSlot,
         tf.dtypes.cast(betaOnePower, gradient.dataType()),
         tf.dtypes.cast(betaTwoPower, gradient.dataType()),
-        tf.dtypes.cast(learningRateConst, gradient.dataType()),
+        tf.dtypes.cast(learningRatePlaceholder, gradient.dataType()),
         tf.dtypes.cast(betaOneConst, gradient.dataType()),
         tf.dtypes.cast(betaTwoConst, gradient.dataType()),
         tf.dtypes.cast(epsilonConst, gradient.dataType()),
@@ -178,5 +191,36 @@ public class Adam extends Optimizer {
   @Override
   public String getOptimizerName() {
     return "Adam";
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public float getLearningRate() {
+    return this.learningRate;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void setLearningRate(float learningRate) {
+    this.learningRate = learningRate;
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+    }
+    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+  }
+
+  /** {@inheritDoc} */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
+    return this.feedDict;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void close() throws Exception {
+    if (this.learningRateTensor != null) {
+      this.learningRateTensor.close();
+      this.learningRateTensor = null;
+    }
   }
 }
