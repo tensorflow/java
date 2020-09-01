@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** @author Jim Clarke */
+/** Abstract class for Test Sessions */
 public abstract class TestSession implements AutoCloseable {
 
   protected float epsilon = 1e-5F;
@@ -849,6 +849,72 @@ public abstract class TestSession implements AutoCloseable {
    */
   public void evaluate(FloatNdArray input, Predicate<Number> predicate) {
     input.scalars().forEach(f -> assertTrue(predicate.test(f.getFloat())));
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   * @param <T> the data type for the input
+   */
+  public <T extends TType> void print(Operand<T> input) {
+    print(System.out, input, null);
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the feedDict entries
+   */
+  public <T extends TType> void print(
+      Operand<T> input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input.asOutput(), feedDict);
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   */
+  public void print(Op input) {
+    print(System.out, input, null);
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   */
+  public void print(Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input.op().output(0), feedDict);
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   * @param <T> the data type for the input
+   */
+  public <T extends TType> void print(Output<T> input) {
+    print(System.out, input, null);
+  }
+
+  /**
+   * Print the results to the "standard" output stream.
+   *
+   * @param input the actual value
+   * @param feedDict The dictionary of values to pass to the feed() operation of the runner,
+   *     required for placeholders.
+   * @param <T> the data type for the input
+   */
+  public <T extends TType> void print(
+      Output<T> input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input, feedDict);
   }
 
   /**

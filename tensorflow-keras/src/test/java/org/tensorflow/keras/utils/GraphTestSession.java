@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** @author Jim Clarke */
+/** A Graph Mode Test Session */
 public class GraphTestSession extends TestSession {
 
   private final Graph graph;

@@ -31,7 +31,7 @@ import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** @author Jim Clarke */
+/** An Eager Mode Test Session */
 public class EagerTestSession extends TestSession {
 
   private final EagerSession session;
