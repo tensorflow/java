@@ -121,4 +121,71 @@ public class AdaGradDATest {
       session.evaluate(expected1, var1);
     }
   }
+
+  @Test
+  public void testWithLearningRateDecay() {
+    float[] var0_init = {0.0F, 0.0F};
+    float[] var1_init = {0.0F, 0.0F};
+    float[] grads0_init = {0.1F, 0.2F};
+    float[] grads1_init = {0.01F, 0.02F};
+    float epsilon = 1e-8F;
+    float epsilon1 = 1e-5F;
+    int numSteps = 4;
+    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+      Ops tf = session.getTF();
+
+      Shape shape0 = Shape.of(var0_init.length);
+      Shape shape1 = Shape.of(var1_init.length);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+
+      Constant<TFloat32> grads0 = tf.constant(grads0_init);
+      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+
+      /* initialize the local variables */
+      /* initialize the local variables */
+      session.run(var0Initializer);
+      session.run(var1Initializer);
+
+      float learningRate = 3.0F;
+
+      AdaGrad instance = new AdaGrad(tf, learningRate);
+
+      /* build the GradsAnvVars */
+      List gradsAndVars = new ArrayList<>();
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+      Op update = instance.applyGradients(gradsAndVars, "AdGradDATest");
+
+      /** initialize the accumulators */
+      session.run(tf.init());
+
+      session.evaluate(var0_init, var0);
+      session.evaluate(var1_init, var1);
+      float[][] expected0 = {
+        {-0.904534F, -1.603567F},
+        {-1.683957F, -2.8763597F},
+        {-2.3579178F, -3.9125152F},
+        {-2.942418F, -4.770327F}
+      };
+      float[][] expected1 = {
+        {-0.094821F, -0.189358F},
+        {-0.18011717F, -0.35944232F},
+        {-0.2568455F, -0.51221514F},
+        {-0.3258666F, -0.6494397F}
+      };
+      for (int i = 0; i < numSteps; i++) {
+        session.run(update, instance.getFeedDict());
+        System.out.println("step: " + i);
+        session.evaluate(expected0[i], var0);
+        session.evaluate(expected1[i], var1);
+        learningRate *= 0.9;
+        instance.setLearningRate(learningRate);
+      }
+    }
+  }
 }

@@ -40,6 +40,7 @@ import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 
 /** Test cases for Adamax Optimizer */
 public class AdamaxTest {
+
   private TestSession.Mode tf_mode = TestSession.Mode.GRAPH;
 
   private static final int VAR = 0;
@@ -197,16 +198,135 @@ public class AdamaxTest {
         v1 = resultNP[V];
 
         // evaluate  var0 and var1
-
         session.evaluate(var0_np, var0);
         session.evaluate(var1_np, var1);
       }
     }
   }
 
+  @Test
+  public void testWithLearningRateDecay() {
+
+    float epsilon = 1e-6f;
+    float epsilon1 = 1e-3F;
+    int numSteps = 3;
+
+    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+      Ops tf = session.getTF();
+      float[] zeros = {0.0F, 0.0F};
+      FloatNdArray m0 = NdArrays.vectorOf(zeros);
+      FloatNdArray v0 = NdArrays.vectorOf(zeros);
+      FloatNdArray m1 = NdArrays.vectorOf(zeros);
+      FloatNdArray v1 = NdArrays.vectorOf(zeros);
+      float[] var0_init = {1.0F, 2.0F};
+      float[] var1_init = {3.0F, 4.0F};
+      float[] grads0_init = {0.1F, 0.1F};
+      float[] grads1_init = {0.01F, 0.01F};
+      FloatNdArray var0_np = NdArrays.vectorOf(var0_init);
+      FloatNdArray var1_np = NdArrays.vectorOf(var1_init);
+      FloatNdArray grads0_np = NdArrays.vectorOf(grads0_init);
+      FloatNdArray grads1_np = NdArrays.vectorOf(grads1_init);
+      Shape shape0 = Shape.of(var0_init.length);
+      Shape shape1 = Shape.of(var1_init.length);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+
+      Constant<TFloat32> grads0 = tf.constant(grads0_init);
+      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+
+      /* initialize the local variables */
+      session.run(var0Initializer);
+      session.run(var1Initializer);
+      float learningRate = 0.001F;
+
+      Adamax instance = new Adamax(tf, learningRate);
+      /* build the GradsAnvVars */
+      List gradsAndVars = new ArrayList<>();
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+      gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+      Op update = instance.applyGradients(gradsAndVars, "AdamTest");
+
+      /* Create and validae the shapes of the slota */
+      Variable<TFloat32>[] firstMomentSlots = new Variable[2];
+      Variable<TFloat32>[] secondMomentSlots = new Variable[2];
+
+      firstMomentSlots[0] = instance.getSlot(var0.asOutput(), FIRST_MOMENT).get();
+      assertEquals(firstMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+
+      secondMomentSlots[0] = instance.getSlot(var0.asOutput(), SECOND_MOMENT).get();
+      assertEquals(secondMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+
+      firstMomentSlots[1] = instance.getSlot(var1.asOutput(), FIRST_MOMENT).get();
+      assertEquals(firstMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+
+      secondMomentSlots[1] = instance.getSlot(var1.asOutput(), SECOND_MOMENT).get();
+      assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+
+      /** initialize the accumulators */
+      session.run(tf.init());
+
+      /* initialize the local variables */
+      session.run(var0Initializer);
+      session.run(var1Initializer);
+      session.setEpsilon(epsilon1);
+      for (int step = 0; step < numSteps; step++) {
+        // Test powers
+        final float beta1_power = (float) Math.pow(BETA_ONE_DEFAULT, step + 1);
+
+        try (Tensor<TFloat32> result =
+            session
+                .getGraphSession()
+                .runner()
+                .fetch("beta1_power")
+                .run()
+                .get(0)
+                .expect(TFloat32.DTYPE)) {
+          result
+              .data()
+              .scalars()
+              .forEach(
+                  f -> {
+                    assertEquals(beta1_power, f.getFloat(), epsilon1);
+                  });
+        }
+        session.run(update, instance.getFeedDict());
+
+        FloatNdArray[] resultNP = calculate(var0_np, grads0_np, step, m0, v0, learningRate);
+        var0_np = resultNP[VAR];
+        m0 = resultNP[M];
+        v0 = resultNP[V];
+
+        resultNP = calculate(var1_np, grads1_np, step, m1, v1, learningRate);
+        var1_np = resultNP[VAR];
+        m1 = resultNP[M];
+        v1 = resultNP[V];
+
+        // evaluate  var0 and var1
+        session.evaluate(var0_np, var0);
+        session.evaluate(var1_np, var1);
+
+        learningRate *= 0.9F;
+        instance.setLearningRate(learningRate);
+      }
+    }
+  }
+
   private FloatNdArray[] calculate(
       FloatNdArray var_np, FloatNdArray grads_np, int step, FloatNdArray m, FloatNdArray v) {
-    float alpha = 0.001F;
+    return calculate(var_np, grads_np, step, m, v, 0.001F);
+  }
+
+  private FloatNdArray[] calculate(
+      FloatNdArray var_np,
+      FloatNdArray grads_np,
+      int step,
+      FloatNdArray m,
+      FloatNdArray v,
+      float alpha) {
     float beta1 = BETA_ONE_DEFAULT;
     float beta2 = BETA_TWO_DEFAULT;
     float espilon = 1e-8F;

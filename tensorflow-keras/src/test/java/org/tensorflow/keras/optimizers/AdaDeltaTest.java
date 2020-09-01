@@ -202,4 +202,99 @@ public class AdaDeltaTest {
       }
     }
   }
+
+  @Test
+  public void testWithLearningRateDecay() {
+    int numSteps = 4; // # number of ADADELTA steps to perform
+    float[] grads = {0.2F, 0.1F, 0.01F};
+
+    for (float grad : grads) {
+      try (TestSession session = TestSession.createTestSession(tf_mode)) {
+        Ops tf = session.getTF();
+        float lr = 1.0F;
+        float[] var0_init = {1.0F, 2.0F};
+        float[] var1_init = {3.0F, 4.0F};
+        float[] fgrads = {grad, grad};
+        Shape shape = Shape.of(var0_init.length);
+        Variable<TFloat32> var0 = tf.withName("var0").variable(shape, TFloat32.DTYPE);
+        Variable<TFloat32> var1 = tf.withName("var1").variable(shape, TFloat32.DTYPE);
+
+        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
+        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+
+        Constant<TFloat32> cgrads = tf.constant(fgrads);
+
+        float accum = 0.0F;
+        float accum_update = 0.0F;
+        float rho = 0.95F;
+        float epsilon = 1e-8F;
+        float epsilon1 = 1e-5F;
+
+        /* build the GradsAnvVars */
+        List gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new GradAndVar<>(cgrads.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new GradAndVar<>(cgrads.asOutput(), var1.asOutput()));
+
+        /* get the Optimizer */
+        AdaDelta instance = new AdaDelta(tf, lr, rho, epsilon);
+
+        Op adadelta_update = instance.applyGradients(gradsAndVars, "AdaDeltaTest");
+
+        /* Create and validae the shapes of the slota */
+        Variable<TFloat32>[] slots = new Variable[2];
+        Variable<TFloat32>[] slotUpdates = new Variable[2];
+
+        slots[0] = instance.getSlot(var0.asOutput(), ACCUMULATOR).get();
+        assertEquals(slots[0].asOutput().shape(), var0.asOutput().shape());
+
+        slotUpdates[0] = instance.getSlot(var0.asOutput(), ACCUMULATOR_UPDATE).get();
+        assertEquals(slotUpdates[0].asOutput().shape(), var0.asOutput().shape());
+
+        slots[1] = instance.getSlot(var1.asOutput(), ACCUMULATOR).get();
+        assertEquals(slots[1].asOutput().shape(), var1.asOutput().shape());
+
+        slotUpdates[1] = instance.getSlot(var1.asOutput(), ACCUMULATOR_UPDATE).get();
+        assertEquals(slotUpdates[1].asOutput().shape(), var1.asOutput().shape());
+
+        /* initialize the local variables */
+        session.run(var0Initializer);
+        session.run(var1Initializer);
+
+        /** initialize the accumulators */
+        session.run(tf.init());
+
+        /** make sure the variables were initialized properly */
+        session.evaluate(var0_init, var0);
+        session.evaluate(var1_init, var1);
+
+        float[] updates = new float[numSteps];
+        float totUpdate = 0;
+        for (int step = 0; step < numSteps; step++) {
+          session.run(adadelta_update, instance.getFeedDict());
+          accum = accum * rho + (float) Math.pow(grad, 2) * (1.0F - rho);
+          updates[step] =
+              ((float) Math.sqrt(accum_update + epsilon)
+                  * (float) (1 / Math.sqrt(accum + epsilon))
+                  * grad);
+          accum_update = (accum_update * rho + ((float) Math.pow(updates[step], 2) * (1.0F - rho)));
+          totUpdate += updates[step] * lr;
+
+          for (int i = 0; i < 2; i++) {
+            session.evaluate(accum, slots[i]);
+            session.evaluate(accum_update, slotUpdates[i]);
+          }
+
+          Float[] var0_initUpdate = {var0_init[0] - totUpdate, var0_init[1] - totUpdate};
+          Float[] var1_initUpdate = {var1_init[0] - totUpdate, var1_init[1] - totUpdate};
+
+          session.evaluate(var0_initUpdate, var0);
+          session.evaluate(var1_initUpdate, var1);
+
+          // Adjust learning rate
+          lr *= 0.9F;
+          instance.setLearningRate(lr);
+        }
+      }
+    }
+  }
 }

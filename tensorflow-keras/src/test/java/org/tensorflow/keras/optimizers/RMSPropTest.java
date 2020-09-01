@@ -41,6 +41,7 @@ import static org.tensorflow.keras.optimizers.RMSProp.*;
 
 /** Test cases for RMSProp Optimizer */
 public class RMSPropTest {
+
   private TestSession.Mode tf_mode = TestSession.Mode.GRAPH;
 
   final int VAR_T = 0;
@@ -219,6 +220,141 @@ public class RMSPropTest {
 
           session.evaluate(var0_np, var0);
           session.evaluate(var1_np, var1);
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testWithLearningRateDecay() {
+    int numSteps = 3;
+
+    for (int run = 0; run < _test_param_values.length; run++) {
+      try (TestSession session = TestSession.createTestSession(tf_mode)) {
+        Ops tf = session.getTF();
+        session.setEpsilon(1e-2f);
+        float[] var0_init = {1.0F, 2.0F};
+        float[] var1_init = {3.0F, 4.0F};
+        float[] grads0_init = {0.1F, 0.2F};
+        float[] grads1_init = {0.01F, 0.2F};
+        final float epsilon1 = 1e-2F;
+
+        FloatNdArray var0_np = NdArrays.vectorOf(var0_init);
+        FloatNdArray var1_np = NdArrays.vectorOf(var1_init);
+        FloatNdArray grads0_np = NdArrays.vectorOf(grads0_init);
+        FloatNdArray grads1_np = NdArrays.vectorOf(grads1_init);
+
+        Shape shape0 = Shape.of(var0_init.length);
+        Shape shape1 = Shape.of(var1_init.length);
+        Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+        Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
+        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+
+        Constant<TFloat32> grads0 = tf.constant(grads0_init);
+        Constant<TFloat32> grads1 = tf.constant(grads1_init);
+
+        // learning_rate, rho (decay), momentum, epsilon, centered
+        float learningRate = (float) (float) _test_param_values[run][0];
+        float decay = (float) _test_param_values[run][1];
+        float momentum = (float) _test_param_values[run][2];
+        float epsilon = (float) _test_param_values[run][3];
+        boolean centered = (boolean) _test_param_values[run][4];
+
+        RMSProp instance = new RMSProp(tf, learningRate, decay, momentum, epsilon, centered);
+
+        /* build the GradsAnvVars */
+        List gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+        Op update = instance.applyGradients(gradsAndVars, "RMSPropTest");
+
+        /* initialize the local variables */
+        session.run(var0Initializer);
+        session.run(var1Initializer);
+
+        /** initialize the accumulators */
+        session.run(tf.init());
+
+        /** make sure the variables were initialized properly */
+        session.evaluate(var0_init, var0);
+        session.evaluate(var1_init, var1);
+
+        Variable<TFloat32> mg0 = centered ? instance.getSlot(var0.asOutput(), MG).get() : null;
+        Variable<TFloat32> mg1 = centered ? instance.getSlot(var1.asOutput(), MG).get() : null;
+        Variable<TFloat32> mom0 =
+            momentum > 0.F ? instance.getSlot(var0.asOutput(), MOMENTUM).get() : null;
+        Variable<TFloat32> mom1 =
+            momentum > 0.F ? instance.getSlot(var1.asOutput(), MOMENTUM).get() : null;
+        Variable<TFloat32> rms0 = instance.getSlot(var0.asOutput(), RMS).get();
+        Variable<TFloat32> rms1 = instance.getSlot(var1.asOutput(), RMS).get();
+
+        float[] zeros = {0.0F, 0.0F};
+        float[] ones = {1.0F, 1.0F}; // temp to match RMSProp
+        FloatNdArray mg0_np = NdArrays.vectorOf(zeros);
+        FloatNdArray mg1_np = NdArrays.vectorOf(zeros);
+        FloatNdArray rms0_np = NdArrays.vectorOf(ones);
+        FloatNdArray rms1_np = NdArrays.vectorOf(ones);
+        FloatNdArray mom0_np = NdArrays.vectorOf(zeros);
+        FloatNdArray mom1_np = NdArrays.vectorOf(zeros);
+
+        for (int i = 0; i < numSteps; i++) {
+          session.run(update, instance.getFeedDict());
+          FloatNdArray[] result0 =
+              calc(
+                  var0_np,
+                  grads0_np,
+                  mg0_np,
+                  rms0_np,
+                  mom0_np,
+                  learningRate,
+                  decay,
+                  momentum,
+                  epsilon,
+                  centered);
+          var0_np = result0[VAR_T];
+          mg0_np = result0[MG_T];
+          rms0_np = result0[RMS_T];
+          mom0_np = result0[MOM_T];
+
+          FloatNdArray[] result1 =
+              calc(
+                  var1_np,
+                  grads1_np,
+                  mg1_np,
+                  rms1_np,
+                  mom1_np,
+                  learningRate,
+                  decay,
+                  momentum,
+                  epsilon,
+                  centered);
+
+          var1_np = result1[VAR_T];
+          mg1_np = result1[MG_T];
+          rms1_np = result1[RMS_T];
+          mom1_np = result1[MOM_T];
+
+          if (centered) {
+            session.evaluate(mg0_np, mg0);
+            session.evaluate(mg0_np, mg0);
+          }
+          if (momentum > 0.F) {
+            session.evaluate(mom0_np, mom0);
+            session.evaluate(mom1_np, mom1);
+          }
+
+          /*     TODO the values returned from rms slot, do not match what I see in the python test */
+          session.evaluate(rms0_np, rms0);
+          session.evaluate(rms1_np, rms1);
+
+          session.evaluate(var0_np, var0);
+          session.evaluate(var1_np, var1);
+
+          learningRate *= 0.9F;
+          instance.setLearningRate(learningRate);
         }
       }
     }
