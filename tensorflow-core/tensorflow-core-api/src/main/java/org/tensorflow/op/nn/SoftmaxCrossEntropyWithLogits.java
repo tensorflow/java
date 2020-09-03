@@ -79,7 +79,7 @@ public class SoftmaxCrossEntropyWithLogits {
       axis += logits.asOutput().shape().numDimensions();
     }
 
-    Operand<? extends TNumber> preciseLogits =
+    Operand preciseLogits =
         (Operand<? extends TNumber>)
             logits; // cannot use generics cause logits of bool gets cast to TFloat32
 
@@ -90,7 +90,7 @@ public class SoftmaxCrossEntropyWithLogits {
       preciseLogits = Cast.create(scope, logits, TFloat32.DTYPE);
     }
     /* cannot use generics on DataType because preciseLogits may have been cast. */
-    DataType<? extends TType> dtype = preciseLogits.asOutput().dataType();
+    DataType dtype = preciseLogits.asOutput().dataType();
     Operand castLabels = Cast.create(scope, labels, dtype);
     Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, preciseLogits), TInt64.DTYPE);
     Shape shape = logits.asOutput().shape();
