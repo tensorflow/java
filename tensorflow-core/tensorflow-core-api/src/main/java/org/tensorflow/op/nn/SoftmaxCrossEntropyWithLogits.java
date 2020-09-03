@@ -113,9 +113,9 @@ public class SoftmaxCrossEntropyWithLogits {
     Operand<TInt64> outputShape =
         Slice.create(
             scope,
-            Constant.vectorOf(scope, inputShape.asArray()),
-            Constant.vectorOf(scope, new long[] {0}),
-            Constant.vectorOf(scope, new long[] {inputShape.numDimensions() - 1}));
+            Constant.tensorOf(scope, inputShape),
+            Constant.arrayOf(scope, 0L),
+            Constant.arrayOf(scope, inputShape.numDimensions() - 1L));
     cost = Reshape.create(scope, cost, outputShape);
     if (scope.env().isGraph() && !shape.hasUnknownDimension()) {
       long[] array = shape.asArray();
@@ -129,8 +129,7 @@ public class SoftmaxCrossEntropyWithLogits {
       for (int i = axis + 1; i < shape.numDimensions(); i++) {
         newArray[i - 1] = shape.size(i);
       }
-      Shape newShape = Shape.of(newArray);
-      cost = Reshape.create(scope, cost, Constant.vectorOf(scope, newShape.asArray()));
+      cost = Reshape.create(scope, cost, Constant.vectorOf(scope, newArray));
     }
 
     if (convertToFloat32) {
@@ -150,7 +149,7 @@ public class SoftmaxCrossEntropyWithLogits {
   private static <T extends TNumber> Operand<T> flattenOuterDims(Scope scope, Operand<T> logits) {
     Operand<TInt64> one = Constant.scalarOf(scope, 1L);
 
-    org.tensorflow.ndarray.Shape shape = logits.asOutput().shape();
+    Shape shape = logits.asOutput().shape();
     int ndims = shape.numDimensions();
     if (!shape.hasUnknownDimension()) {
       long product = 1L;
@@ -164,8 +163,7 @@ public class SoftmaxCrossEntropyWithLogits {
         product *= d;
       }
       if (productValid) {
-        return Reshape.create(
-            scope, logits, Constant.vectorOf(scope, new long[] {product, shape.size(-1)}));
+        return Reshape.create(scope, logits, Constant.arrayOf(scope, product, shape.size(-1)));
       }
     }
 

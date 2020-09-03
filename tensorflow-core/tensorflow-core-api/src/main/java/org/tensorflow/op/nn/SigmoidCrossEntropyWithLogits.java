@@ -1,6 +1,7 @@
 package org.tensorflow.op.nn;
 
 import org.tensorflow.Operand;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -62,7 +63,7 @@ public class SigmoidCrossEntropyWithLogits {
   @Endpoint(name = "sigmoidCrossEntropyWithLogits")
   public static <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<T> logits) {
-    if (!labels.asOutput().shape().equals(logits.asOutput().shape())) {
+    if (!isCompatible(labels.asOutput().shape(), logits.asOutput().shape())) {
       throw new IllegalArgumentException(
           String.format(
               "logits and labels must have the same shape (%s vs %s)",
@@ -74,11 +75,34 @@ public class SigmoidCrossEntropyWithLogits {
         Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().dataType());
     Operand<TBool> cond = GreaterEqual.create(scope, logits, zeros);
 
-    Operand<T> relu_logits = Select.create(scope, cond, logits, zeros);
-    Operand<T> neg_abs_logits = Select.create(scope, cond, Neg.create(scope, logits), logits);
+    Operand<T> reluLogits = Select.create(scope, cond, logits, zeros);
+    Operand<T> negAbsLogits = Select.create(scope, cond, Neg.create(scope, logits), logits);
     return Add.create(
         scope,
-        Sub.create(scope, relu_logits, Mul.create(scope, logits, labels)),
-        Log1p.create(scope, Exp.create(scope, neg_abs_logits)));
+        Sub.create(scope, reluLogits, Mul.create(scope, logits, labels)),
+        Log1p.create(scope, Exp.create(scope, negAbsLogits)));
+  }
+  /**
+   * Determine if 2 shapes are compatible
+   *
+   * <p>2 shapes are compatible if they have the same number of dimensions, and if the corresponding
+   * dimensions are equal, or at least one of the corresponding dimensions is unknown.
+   *
+   * @param shape the first shape
+   * @param other the second shape
+   * @return true, if the shapes are compatible.
+   */
+  private static boolean isCompatible(Shape shape, Shape other) {
+    if (shape.numDimensions() != other.numDimensions()) return false;
+    for (int i = 0; i < shape.numDimensions(); i++) {
+      long aShapeDim = shape.size(i);
+      long bShapeDim = other.size(i);
+      if (aShapeDim == bShapeDim
+          || (aShapeDim == Shape.UNKNOWN_SIZE || bShapeDim == Shape.UNKNOWN_SIZE)) {
+        continue;
+      }
+      return false;
+    }
+    return true;
   }
 }

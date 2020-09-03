@@ -65,6 +65,8 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    *     probabilities.
    * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type as
    *     <code>logits</code> with the softmax cross entropy loss.
+   * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
+   *     of the labels is not equal to the rank of the logits minus one.
    */
   @Endpoint(name = "sparseSoftmaxCrossEntropyWithLogits")
   public static <T extends TNumber, U extends TNumber> Operand sparseSoftmaxCrossEntropyWithLogits(
@@ -140,12 +142,10 @@ public class SparseSoftmaxCrossEntropyWithLogits {
                           + "dimension "))));
     }
 
-    // Reshape logits to 2 dim, labels to 1 dim.
-    long numClassses = logitsShape.size(logitsShape.numDimensions() - 1);
+    // Reshape logits to 2 dims, labels to 1 dim.
+    long numClassses = logitsShape.size(-1);
 
-    preciseLogits =
-        Reshape.create(
-            scope, preciseLogits, Constant.vectorOf(scope, new long[] {-1, numClassses}));
+    preciseLogits = Reshape.create(scope, preciseLogits, Constant.arrayOf(scope, -1L, numClassses));
     labels = Reshape.create(scope, labels, Constant.scalarOf(scope, -1));
     scope.withControlDependencies(shapeChecks);
     org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits smax =
