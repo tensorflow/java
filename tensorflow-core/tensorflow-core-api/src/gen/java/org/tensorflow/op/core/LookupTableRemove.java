@@ -54,7 +54,6 @@ public final class LookupTableRemove extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LookupTableRemoveV2";
   
-  
   private LookupTableRemove(Operation operation) {
     super(operation);
   }

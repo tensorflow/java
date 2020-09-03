@@ -107,7 +107,6 @@ public final class ResourceApplyAdaMax extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceApplyAdaMax";
   
-  
   private ResourceApplyAdaMax(Operation operation) {
     super(operation);
   }

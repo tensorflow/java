@@ -54,7 +54,6 @@ public final class BoostedTreesCreateEnsemble extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BoostedTreesCreateEnsemble";
   
-  
   private BoostedTreesCreateEnsemble(Operation operation) {
     super(operation);
   }

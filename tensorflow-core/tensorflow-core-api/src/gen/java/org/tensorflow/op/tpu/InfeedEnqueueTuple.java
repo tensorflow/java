@@ -124,7 +124,6 @@ public final class InfeedEnqueueTuple extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "InfeedEnqueueTuple";
   
-  
   private InfeedEnqueueTuple(Operation operation) {
     super(operation);
   }

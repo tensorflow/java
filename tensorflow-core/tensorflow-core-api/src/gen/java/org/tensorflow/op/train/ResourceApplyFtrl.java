@@ -120,18 +120,16 @@ public final class ResourceApplyFtrl extends RawOp {
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyFtrlV2";
-
+  
   /**
    * @param multiplyLinearByLr 
    */
   public static Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
     return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
-
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceApplyFtrlV2";
   
   private ResourceApplyFtrl(Operation operation) {
     super(operation);

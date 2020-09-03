@@ -75,7 +75,6 @@ public final class ResourceScatterDiv extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceScatterDiv";
   
-  
   private ResourceScatterDiv(Operation operation) {
     super(operation);
   }

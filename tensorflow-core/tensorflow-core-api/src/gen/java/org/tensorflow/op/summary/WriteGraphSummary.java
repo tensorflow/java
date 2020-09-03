@@ -53,7 +53,6 @@ public final class WriteGraphSummary extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "WriteGraphSummary";
   
-  
   private WriteGraphSummary(Operation operation) {
     super(operation);
   }

@@ -118,7 +118,6 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BoostedTreesUpdateEnsembleV2";
   
-  
   private BoostedTreesUpdateEnsembleV2(Operation operation) {
     super(operation);
   }

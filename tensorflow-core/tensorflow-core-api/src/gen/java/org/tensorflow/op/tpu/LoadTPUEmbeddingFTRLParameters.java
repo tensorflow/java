@@ -135,7 +135,6 @@ public final class LoadTPUEmbeddingFTRLParameters extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingFTRLParameters";
   
-  
   private LoadTPUEmbeddingFTRLParameters(Operation operation) {
     super(operation);
   }

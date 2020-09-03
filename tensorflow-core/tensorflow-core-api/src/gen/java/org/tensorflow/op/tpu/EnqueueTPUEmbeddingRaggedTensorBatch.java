@@ -177,6 +177,8 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
     return new Options().maxSequenceLengths(maxSequenceLengths);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EnqueueTPUEmbeddingRaggedTensorBatch";
   
   private EnqueueTPUEmbeddingRaggedTensorBatch(Operation operation) {
     super(operation);

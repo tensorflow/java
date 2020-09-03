@@ -135,7 +135,6 @@ public final class LoadTPUEmbeddingRMSPropParameters extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingRMSPropParameters";
   
-  
   private LoadTPUEmbeddingRMSPropParameters(Operation operation) {
     super(operation);
   }

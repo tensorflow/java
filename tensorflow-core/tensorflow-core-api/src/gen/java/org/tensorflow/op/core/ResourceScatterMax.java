@@ -75,7 +75,6 @@ public final class ResourceScatterMax extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceScatterMax";
   
-  
   private ResourceScatterMax(Operation operation) {
     super(operation);
   }

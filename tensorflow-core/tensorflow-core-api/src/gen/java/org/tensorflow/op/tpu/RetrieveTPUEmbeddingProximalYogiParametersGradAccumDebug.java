@@ -143,6 +143,9 @@ public final class RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug exte
     return gradientAccumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> v;
   private Output<TFloat32> m;

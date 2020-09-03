@@ -50,7 +50,6 @@ public final class OutfeedEnqueueTuple extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "OutfeedEnqueueTuple";
   
-  
   private OutfeedEnqueueTuple(Operation operation) {
     super(operation);
   }

@@ -94,6 +94,9 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     return outputRowSplits;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedCross";
+  
   private Output<T> outputValues;
   private Output<U> outputRowSplits;
   

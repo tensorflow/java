@@ -199,7 +199,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
   }
   
   /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ExtractGlimpse";
+  public static final String OP_NAME = "ExtractGlimpseV2";
   
   private Output<TFloat32> glimpse;
   

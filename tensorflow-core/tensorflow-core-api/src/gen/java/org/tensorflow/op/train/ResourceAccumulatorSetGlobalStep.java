@@ -54,7 +54,6 @@ public final class ResourceAccumulatorSetGlobalStep extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceAccumulatorSetGlobalStep";
   
-  
   private ResourceAccumulatorSetGlobalStep(Operation operation) {
     super(operation);
   }

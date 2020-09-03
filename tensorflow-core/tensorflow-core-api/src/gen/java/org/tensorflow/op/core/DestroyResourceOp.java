@@ -88,7 +88,6 @@ public final class DestroyResourceOp extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DestroyResourceOp";
   
-  
   private DestroyResourceOp(Operation operation) {
     super(operation);
   }

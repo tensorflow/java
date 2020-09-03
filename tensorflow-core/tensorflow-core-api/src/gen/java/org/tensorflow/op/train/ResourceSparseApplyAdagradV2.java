@@ -121,7 +121,6 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceSparseApplyAdagradV2";
   
-  
   private ResourceSparseApplyAdagradV2(Operation operation) {
     super(operation);
   }

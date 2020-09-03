@@ -63,7 +63,6 @@ public final class BarrierInsertMany extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BarrierInsertMany";
   
-  
   private BarrierInsertMany(Operation operation) {
     super(operation);
   }

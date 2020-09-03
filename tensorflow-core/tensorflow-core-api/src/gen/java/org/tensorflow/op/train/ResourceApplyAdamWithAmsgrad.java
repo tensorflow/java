@@ -114,7 +114,6 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceApplyAdamWithAmsgrad";
   
-  
   private ResourceApplyAdamWithAmsgrad(Operation operation) {
     super(operation);
   }

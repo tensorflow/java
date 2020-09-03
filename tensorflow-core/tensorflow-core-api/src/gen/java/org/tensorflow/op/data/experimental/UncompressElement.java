@@ -76,6 +76,9 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UncompressElement";
+  
   private List<Output<?>> components;
   
   private UncompressElement(Operation operation) {
