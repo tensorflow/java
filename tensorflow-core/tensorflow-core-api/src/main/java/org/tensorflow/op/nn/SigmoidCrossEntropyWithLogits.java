@@ -68,6 +68,7 @@ public class SigmoidCrossEntropyWithLogits {
               "logits and labels must have the same shape (%s vs %s)",
               labels.asOutput().shape().toString(), logits.asOutput().shape()));
     }
+    scope = scope.withSubScope("SigmoidCrossEntropyWithLogits");
 
     Operand<T> zeros =
         Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().dataType());

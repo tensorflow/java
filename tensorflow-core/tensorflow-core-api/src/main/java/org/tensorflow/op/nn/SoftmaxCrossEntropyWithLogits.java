@@ -73,6 +73,7 @@ public class SoftmaxCrossEntropyWithLogits {
   @Endpoint(name = "softmaxCrossEntropyWithLogits")
   public static <U extends TType, T extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<U> logits, int axis) {
+    scope = scope.withSubScope("SoftmaxCrossEntropyWithLogits");
     axis = axis % logits.asOutput().shape().numDimensions();
     if (axis < 0) {
       axis += logits.asOutput().shape().numDimensions();
