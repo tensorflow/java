@@ -17,22 +17,23 @@
 
 package org.tensorflow.types;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.function.Function;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.StringTensorBuffer;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.function.Function;
 
 /**
  * String type.
