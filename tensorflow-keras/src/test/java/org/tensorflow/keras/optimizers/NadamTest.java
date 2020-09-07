@@ -28,6 +28,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,6 @@ public class NadamTest {
     FloatNdArray grads0Np = NdArrays.vectorOf(grads0Init);
     FloatNdArray grads1Np = NdArrays.vectorOf(grads1Init);
 
-    float epsilon = 1e-6f;
     float epsilon1 = 1e-3F;
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -114,7 +114,7 @@ public class NadamTest {
 
       Nadam instance = new Nadam(tf);
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -140,7 +140,7 @@ public class NadamTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.setEpsilon(epsilon1);
@@ -156,13 +156,7 @@ public class NadamTest {
               .run()
               .get(0)
               .expect(TFloat32.DTYPE)) {
-        result
-            .data()
-            .scalars()
-            .forEach(
-                f -> {
-                  assertEquals(1F, f.getFloat(), epsilon1);
-                });
+        result.data().scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
 
@@ -182,13 +176,7 @@ public class NadamTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f -> {
-                    assertEquals(momentum, f.getFloat(), epsilon1);
-                  });
+          result.data().scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);
         FloatNdArray[] resultsNP = nadamUpdateNdArray(var0Np, grads0Np, step, m0, v0, mcache);

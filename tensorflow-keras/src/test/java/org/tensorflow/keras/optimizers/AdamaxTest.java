@@ -28,6 +28,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,6 @@ public class AdamaxTest {
     FloatNdArray grads0Np = NdArrays.vectorOf(grads0Init);
     FloatNdArray grads1Np = NdArrays.vectorOf(grads1Init);
 
-    float epsilon = 1e-6f;
     float epsilon1 = 1e-3F;
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -113,7 +113,7 @@ public class AdamaxTest {
 
       Adamax instance = new Adamax(tf);
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -135,7 +135,7 @@ public class AdamaxTest {
       secondMomentSlots[1] = instance.getSlot(var1.asOutput(), SECOND_MOMENT).get();
       assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       /* initialize the local variables */
@@ -154,13 +154,7 @@ public class AdamaxTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f -> {
-                    assertEquals(beta1Power, f.getFloat(), epsilon1);
-                  });
+          result.data().scalars().forEach(f -> assertEquals(beta1Power, f.getFloat(), epsilon1));
         }
         session.run(update);
 
@@ -185,18 +179,16 @@ public class AdamaxTest {
   private FloatNdArray[] calculate(
       FloatNdArray varNp, FloatNdArray gradsNp, int step, FloatNdArray m, FloatNdArray v) {
     float alpha = 0.001F;
-    float beta1 = BETA_ONE_DEFAULT;
-    float beta2 = BETA_TWO_DEFAULT;
     float espilon = 1e-8F;
 
-    float oneMinusBeta1 = 1.F - beta1;
-    float oneMinusBeta1Pow = 1.F - (float) Math.pow(beta1, step + 1);
+    float oneMinusBeta1 = 1.F - BETA_ONE_DEFAULT;
+    float oneMinusBeta1Pow = 1.F - (float) Math.pow(BETA_ONE_DEFAULT, step + 1);
     float alpha1 = alpha / oneMinusBeta1Pow;
 
     // beta1 * m + (1 - beta1) * gT;
-    m = ND.add(ND.mul(beta1, m), ND.mul(oneMinusBeta1, gradsNp));
-    // np.maximum(beta2 * v, np.abs(gT))
-    v = ND.max(ND.mul(beta2, v), ND.abs(gradsNp));
+    m = ND.add(ND.mul(BETA_ONE_DEFAULT, m), ND.mul(oneMinusBeta1, gradsNp));
+    // np.maximum(BETA_TWO_DEFAULT * v, np.abs(gT))
+    v = ND.max(ND.mul(BETA_TWO_DEFAULT, v), ND.abs(gradsNp));
     // paramT = param - (alpha / (1 - beta1**(t + 1))) * (mT / (vT + epsilon))
     varNp = ND.sub(varNp, ND.mul(alpha1, ND.div(m, ND.add(v, espilon))));
 

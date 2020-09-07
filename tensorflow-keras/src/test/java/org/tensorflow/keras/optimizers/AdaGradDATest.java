@@ -24,6 +24,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,6 @@ import java.util.List;
 public class AdaGradDATest {
 
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-
-  int index;
 
   public AdaGradDATest() {}
 
@@ -55,8 +54,6 @@ public class AdaGradDATest {
     float[] var1Init = {0.0F, 0.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
 
@@ -81,13 +78,13 @@ public class AdaGradDATest {
       AdaGrad instance = new AdaGrad(tf, learningRate);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
       Op adaUpdate = instance.applyGradients(gradsAndVars, "AdGradDATest");
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.evaluate(var0Init, var0);

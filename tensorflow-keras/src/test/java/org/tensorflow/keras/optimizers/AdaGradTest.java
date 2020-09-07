@@ -27,6 +27,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +60,6 @@ public class AdaGradTest {
     float[] var1Init = {3.0F, 4.0F};
     float[] grads0Init = {0.1F, 0.1F};
     float[] grads1Init = {0.01F, 0.01F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
     float[] accum0 = {0.1f, 0.1f};
     float[] accum1 = {0.1f, 0.1f};
 
@@ -90,7 +89,7 @@ public class AdaGradTest {
       AdaGrad instance = new AdaGrad(tf, learningRate);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -107,10 +106,10 @@ public class AdaGradTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
+      /* make sure the variables were initialized properly */
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 
@@ -131,8 +130,7 @@ public class AdaGradTest {
   private FloatNdArray caclulateAccum(FloatNdArray accum, FloatNdArray grads) {
     // accum + gT * gT
     FloatNdArray squareG = ND.square(grads);
-    FloatNdArray result = ND.add(accum, squareG);
-    return result;
+    return ND.add(accum, squareG);
   }
 
   private FloatNdArray calculate(
@@ -141,7 +139,6 @@ public class AdaGradTest {
     FloatNdArray divisor = ND.add(ND.sqrt(accum), 1e-07f);
     FloatNdArray dividend = ND.mul(learningRate, grads);
     FloatNdArray quotient = ND.div(dividend, divisor);
-    FloatNdArray result = ND.sub(param, quotient);
-    return result;
+    return ND.sub(param, quotient);
   }
 }

@@ -28,6 +28,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,6 @@ import static org.tensorflow.framework.optimizers.Adam.SECOND_MOMENT;
 /** Test cases for Adam Optimizer */
 public class AdamTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-
-  int index;
 
   public AdamTest() {}
 
@@ -58,10 +57,6 @@ public class AdamTest {
 
   @Test
   public void testBasic() {
-    float m0 = 0.0F;
-    float v0 = 0.0F;
-    float m1 = 0.0F;
-    float v1 = 0.0F;
     float[] var0Init = {1.0F, 2.0F};
     float[] var1Init = {3.0F, 4.0F};
     float[] grads0Init = {0.1F, 0.1F};
@@ -96,10 +91,9 @@ public class AdamTest {
       float learningRate = 0.001F;
       float beta1 = 0.9F;
       float beta2 = 0.999F;
-      float epsilon = 1e-8F;
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -107,7 +101,7 @@ public class AdamTest {
 
       Op update = instance.applyGradients(gradsAndVars, "AdamTest");
 
-      /* Create and validae the shapes of the slota */
+      /* Create and validate the shapes of the slots */
       Variable<TFloat32>[] firstMomentSlots = new Variable[2];
       Variable<TFloat32>[] secondMomentSlots = new Variable[2];
 
@@ -149,13 +143,7 @@ public class AdamTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f -> {
-                    assertEquals(powers[0], f.getFloat(), epsilon1);
-                  });
+          result.data().scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
         }
         try (Tensor<TFloat32> result =
             session
@@ -165,13 +153,7 @@ public class AdamTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f -> {
-                    assertEquals(powers[1], f.getFloat(), epsilon1);
-                  });
+          result.data().scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
         }
         session.run(update);
 
@@ -213,8 +195,7 @@ public class AdamTest {
     FloatNdArray mul1 = ND.mul(v, beta);
     FloatNdArray squareG = ND.square(gT);
     FloatNdArray mul2 = ND.mul((1 - beta), squareG);
-    FloatNdArray add = ND.add(mul1, mul2);
-    return add;
+    return ND.add(mul1, mul2);
   }
 
   private FloatNdArray calculateParam(
@@ -224,7 +205,6 @@ public class AdamTest {
     FloatNdArray divisor = ND.add(sqrt, epsilon);
     FloatNdArray dividend = ND.mul(lrT, m);
     FloatNdArray quotient = ND.div(dividend, divisor);
-    FloatNdArray result = ND.sub(param, quotient);
-    return result;
+    return ND.sub(param, quotient);
   }
 }

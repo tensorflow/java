@@ -27,6 +27,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class RMSPropTest {
   final int RMS_T = 2;
   final int MOM_T = 3;
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-  int index;
+
   Object[][] TestParamValues = {
     // learningRate, rho (decay), momentum, epsilon, centered
     {0.05F, 0.9F, 0.0F, 1e-3F, true},
@@ -69,7 +70,7 @@ public class RMSPropTest {
 
     int numSteps = 3;
 
-    for (int run = 0; run < TestParamValues.length; run++) {
+    for (Object[] testParamValue : TestParamValues) {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         session.setEpsilon(1e-2f);
@@ -77,7 +78,6 @@ public class RMSPropTest {
         float[] var1Init = {3.0F, 4.0F};
         float[] grads0Init = {0.1F, 0.2F};
         float[] grads1Init = {0.01F, 0.2F};
-        final float epsilon1 = 1e-2F;
 
         FloatNdArray var0Np = NdArrays.vectorOf(var0Init);
         FloatNdArray var1Np = NdArrays.vectorOf(var1Init);
@@ -96,18 +96,18 @@ public class RMSPropTest {
         Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
         // learningRate, rho (decay), momentum, epsilon, centered
-        float learningRate = (float) (float) TestParamValues[run][0];
-        float decay = (float) TestParamValues[run][1];
-        float momentum = (float) TestParamValues[run][2];
-        float epsilon = (float) TestParamValues[run][3];
-        boolean centered = (boolean) TestParamValues[run][4];
+        float learningRate = (float) (float) testParamValue[0];
+        float decay = (float) testParamValue[1];
+        float momentum = (float) testParamValue[2];
+        float epsilon = (float) testParamValue[3];
+        boolean centered = (boolean) testParamValue[4];
 
         RMSProp instance = new RMSProp(tf, learningRate, decay, momentum, epsilon, centered);
 
         /* build the GradsAnvVars */
-        List gradsAndVars = new ArrayList<>();
-        gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
-        gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+        List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
         Op update = instance.applyGradients(gradsAndVars, "RMSPropTest");
 
@@ -115,10 +115,10 @@ public class RMSPropTest {
         session.run(var0Initializer);
         session.run(var1Initializer);
 
-        /** initialize the accumulators */
+        /* initialize the accumulators */
         session.run(tf.init());
 
-        /** make sure the variables were initialized properly */
+        /* make sure the variables were initialized properly */
         session.evaluate(var0Init, var0);
         session.evaluate(var1Init, var1);
 
@@ -179,12 +179,11 @@ public class RMSPropTest {
 
           if (centered) {
             session.evaluate(mg0Np, mg0);
-            session.evaluate(mg0Np, mg0);
+            session.evaluate(mg1Np, mg1);
           }
-          if (momentum > 0.F) {
-            session.evaluate(mom0Np, mom0);
-            session.evaluate(mom1Np, mom1);
-          }
+
+          if (mom0 != null) session.evaluate(mom0Np, mom0);
+          if (mom1 != null) session.evaluate(mom1Np, mom1);
 
           /*     TODO the values returned from rms slot, do not match what I see in the python test */
           session.evaluate(rms0Np, rms0);
@@ -240,8 +239,7 @@ public class RMSPropTest {
     FloatNdArray squareG = ND.square(gradNp);
     float oneRHO = 1.0F - decay;
     FloatNdArray decayG2 = ND.mul(oneRHO, squareG);
-    FloatNdArray result = ND.add(rmsRho, decayG2);
-    return result;
+    return ND.add(rmsRho, decayG2);
   }
 
   private FloatNdArray calcMG(FloatNdArray mgNp, FloatNdArray gradNp, float decay) {
@@ -249,8 +247,7 @@ public class RMSPropTest {
     FloatNdArray mgRho = ND.mul(mgNp, decay);
     float oneRHO = 1.0F - decay;
     FloatNdArray decayG = ND.mul(oneRHO, gradNp);
-    FloatNdArray result = ND.add(mgRho, decayG);
-    return result;
+    return ND.add(mgRho, decayG);
   }
 
   private FloatNdArray calcMom(
@@ -265,8 +262,7 @@ public class RMSPropTest {
     FloatNdArray dividend = ND.mul(lr, gradNp);
     FloatNdArray divisor = ND.sqrt(ND.add(denomT, epsilon));
     FloatNdArray quotient = ND.div(dividend, divisor);
-    FloatNdArray result = ND.add(moMo, quotient);
-    return result;
+    return ND.add(moMo, quotient);
   }
 
   private FloatNdArray calcVar(
@@ -275,7 +271,6 @@ public class RMSPropTest {
     FloatNdArray dividend = ND.mul(lr, gradNp);
     FloatNdArray divisor = ND.add(ND.sqrt(denomT), epsilon);
     FloatNdArray quotient = ND.div(dividend, divisor);
-    FloatNdArray result = ND.sub(varNp, quotient);
-    return result;
+    return ND.sub(varNp, quotient);
   }
 }

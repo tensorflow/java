@@ -24,6 +24,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +71,6 @@ public class SGDTest {
     float[] grads1Init = {0.01F, 0.01F};
     float learningRate = 3.0F;
 
-    float epsilon = 1e-6F;
-    float epsilon1 = 1e-2F;
-
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
 
@@ -88,7 +86,7 @@ public class SGDTest {
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -99,10 +97,10 @@ public class SGDTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
+      /* make sure the variables were initialized properly */
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 
@@ -125,9 +123,6 @@ public class SGDTest {
     float learningRate = 2.0F;
     float momentum = 0.9F;
 
-    float epsilon = 1e-6F;
-    float epsilon1 = 1e-2F;
-
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
 
@@ -143,7 +138,7 @@ public class SGDTest {
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -159,10 +154,10 @@ public class SGDTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
+      /* make sure the variables were initialized properly */
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 

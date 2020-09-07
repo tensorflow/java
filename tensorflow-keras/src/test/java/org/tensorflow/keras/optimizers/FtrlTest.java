@@ -24,6 +24,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Test cases for Ftrl Optimizer */
 public class FtrlTest {
-  private TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-  int index;
+  private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
   public FtrlTest() {}
 
@@ -67,8 +67,6 @@ public class FtrlTest {
     float[] var1Init = {4.0F, 3.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
 
     int numSteps = 10;
 
@@ -100,7 +98,7 @@ public class FtrlTest {
               );
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -110,7 +108,7 @@ public class FtrlTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.evaluate(var0Init, var0);
@@ -133,8 +131,6 @@ public class FtrlTest {
     float[] var1Init = {4.0F, 3.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
 
     int numSteps = 10;
 
@@ -166,7 +162,7 @@ public class FtrlTest {
               );
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -176,7 +172,7 @@ public class FtrlTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.evaluate(var0Init, var0);
@@ -200,8 +196,6 @@ public class FtrlTest {
     float[] var1Init = {4.0F, 3.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
 
     int numSteps = 10;
 
@@ -233,7 +227,7 @@ public class FtrlTest {
               );
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
@@ -243,7 +237,7 @@ public class FtrlTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.evaluate(var0Init, var0);
@@ -267,8 +261,6 @@ public class FtrlTest {
     float[] var1Init = {0.0F, 0.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
-    float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
 
     int numSteps = 3;
 
@@ -291,7 +283,7 @@ public class FtrlTest {
       Ftrl instance = new Ftrl(tf, learningRate);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
       Op ftrlUpdate = instance.applyGradients(gradsAndVars, "FtrlTest");
@@ -300,7 +292,7 @@ public class FtrlTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
       session.evaluate(var0Init, var0);
