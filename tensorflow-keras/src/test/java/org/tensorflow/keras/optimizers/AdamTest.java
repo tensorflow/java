@@ -14,29 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.keras.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.tensorflow.Tensor;
-import static org.tensorflow.framework.optimizers.Adam.FIRST_MOMENT;
-import static org.tensorflow.framework.optimizers.Adam.SECOND_MOMENT;
 import org.tensorflow.framework.optimizers.Optimizer;
-import static org.tensorflow.keras.optimizers.Adam.BETA_ONE_DEFAULT;
-import static org.tensorflow.keras.optimizers.Adam.BETA_ONE_KEY;
-import static org.tensorflow.keras.optimizers.Adam.BETA_TWO_DEFAULT;
-import static org.tensorflow.keras.optimizers.Adam.BETA_TWO_KEY;
-import static org.tensorflow.keras.optimizers.Adam.EPSILON_DEFAULT;
-import static org.tensorflow.keras.optimizers.Adam.EPSILON_KEY;
-import static org.tensorflow.keras.optimizers.Adam.LEARNING_RATE_DEFAULT;
-import static org.tensorflow.keras.optimizers.Adam.LEARNING_RATE_KEY;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
 import org.tensorflow.keras.utils.ND;
 import org.tensorflow.keras.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -49,9 +29,16 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.Adam.FIRST_MOMENT;
+import static org.tensorflow.framework.optimizers.Adam.SECOND_MOMENT;
+
 /** Test cases for Adam Optimizer */
 public class AdamTest {
-  private TestSession.Mode tf_mode = TestSession.Mode.GRAPH;
+  private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
   int index;
 
@@ -69,55 +56,38 @@ public class AdamTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of create method, of class Adam. */
-  @Test
-  public void testCreate() {
-    try (TestSession testSession = TestSession.createTestSession(tf_mode)) {
-      Ops tf = testSession.getTF();
-      Map<String, Object> config = new HashMap<>();
-      config.put(NAME_KEY, "AdaDelta");
-      config.put(LEARNING_RATE_KEY, LEARNING_RATE_DEFAULT);
-      config.put(BETA_ONE_KEY, BETA_ONE_DEFAULT);
-      config.put(BETA_TWO_KEY, BETA_TWO_DEFAULT);
-      config.put(EPSILON_KEY, EPSILON_DEFAULT);
-      AdaDelta expResult = new AdaDelta(tf);
-      AdaDelta result = AdaDelta.create(tf, config);
-      assertEquals(expResult.getConfig(), result.getConfig());
-    }
-  }
-
   @Test
   public void testBasic() {
     float m0 = 0.0F;
     float v0 = 0.0F;
     float m1 = 0.0F;
     float v1 = 0.0F;
-    float[] var0_init = {1.0F, 2.0F};
-    float[] var1_init = {3.0F, 4.0F};
-    float[] grads0_init = {0.1F, 0.1F};
-    float[] grads1_init = {0.01F, 0.01F};
-    FloatNdArray var0_np = NdArrays.vectorOf(var0_init);
-    FloatNdArray var1_np = NdArrays.vectorOf(var1_init);
-    FloatNdArray grads0_np = NdArrays.vectorOf(grads0_init);
-    FloatNdArray grads1_np = NdArrays.vectorOf(grads1_init);
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {3.0F, 4.0F};
+    float[] grads0Init = {0.1F, 0.1F};
+    float[] grads1Init = {0.01F, 0.01F};
+    FloatNdArray var0Np = NdArrays.vectorOf(var0Init);
+    FloatNdArray var1Np = NdArrays.vectorOf(var1Init);
+    FloatNdArray grads0Np = NdArrays.vectorOf(grads0Init);
+    FloatNdArray grads1Np = NdArrays.vectorOf(grads1Init);
 
     float epsilon1 = 1e-3F;
 
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
 
       session.setEpsilon(epsilon1);
 
-      Shape shape0 = Shape.of(var0_init.length);
-      Shape shape1 = Shape.of(var1_init.length);
+      Shape shape0 = Shape.of(var0Init.length);
+      Shape shape1 = Shape.of(var1Init.length);
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
 
-      Constant<TFloat32> grads0 = tf.constant(grads0_init);
-      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+      Constant<TFloat32> grads0 = tf.constant(grads0Init);
+      Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* initialize the local variables */
       session.run(var0Initializer);
@@ -153,16 +123,16 @@ public class AdamTest {
       secondMomentSlots[1] = instance.getSlot(var1.asOutput(), SECOND_MOMENT).get();
       assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      session.evaluate(var0_init, var0);
-      session.evaluate(var1_init, var1);
+      session.evaluate(var0Init, var0);
+      session.evaluate(var1Init, var1);
 
-      FloatNdArray m0_np = NdArrays.ofFloats(shape1);
-      FloatNdArray v0_np = NdArrays.ofFloats(shape1);
-      FloatNdArray m1_np = NdArrays.ofFloats(shape1);
-      FloatNdArray v1_np = NdArrays.ofFloats(shape1);
+      FloatNdArray m0Np = NdArrays.ofFloats(shape0);
+      FloatNdArray v0Np = NdArrays.ofFloats(shape0);
+      FloatNdArray m1Np = NdArrays.ofFloats(shape1);
+      FloatNdArray v1Np = NdArrays.ofFloats(shape1);
 
       for (int step = 0; step < 3; step++) {
 
@@ -175,7 +145,7 @@ public class AdamTest {
             session
                 .getGraphSession()
                 .runner()
-                .fetch("beta1_power")
+                .fetch("beta1Power")
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
@@ -191,7 +161,7 @@ public class AdamTest {
             session
                 .getGraphSession()
                 .runner()
-                .fetch("beta2_power")
+                .fetch("beta2Power")
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
@@ -205,57 +175,54 @@ public class AdamTest {
         }
         session.run(update);
 
-        float lr_t =
+        float lrT =
             learningRate
                 * (float) Math.sqrt(1 - (float) Math.pow(beta2, (step + 1)))
                 / (1 - (float) Math.pow(beta1, (step + 1)));
 
-        m0_np = calculateM(m0_np, grads0_np, beta1);
-        v0_np = calculateV(v0_np, grads0_np, beta2);
-        var0_np = calculateParam(var0_np, lr_t, m0_np, v0_np, 1e-7F);
+        m0Np = calculateM(m0Np, grads0Np, beta1);
+        v0Np = calculateV(v0Np, grads0Np, beta2);
+        var0Np = calculateParam(var0Np, lrT, m0Np, v0Np, 1e-7F);
 
-        m1_np = calculateM(m1_np, grads1_np, beta1);
-        v1_np = calculateV(v1_np, grads1_np, beta2);
-        var1_np = calculateParam(var1_np, lr_t, m1_np, v1_np, 1e-7F);
+        m1Np = calculateM(m1Np, grads1Np, beta1);
+        v1Np = calculateV(v1Np, grads1Np, beta2);
+        var1Np = calculateParam(var1Np, lrT, m1Np, v1Np, 1e-7F);
 
         // evaluate var 0 and var1
-        session.evaluate(var0_np, var0);
-        session.evaluate(var1_np, var1);
+        session.evaluate(var0Np, var0);
+        session.evaluate(var1Np, var1);
 
         // first moment
-        session.evaluate(m0_np, firstMomentSlots[0]);
-        session.evaluate(m1_np, firstMomentSlots[1]);
+        session.evaluate(m0Np, firstMomentSlots[0]);
+        session.evaluate(m1Np, firstMomentSlots[1]);
 
         // second moment
-        session.evaluate(v0_np, secondMomentSlots[0]);
-        session.evaluate(v1_np, secondMomentSlots[1]);
+        session.evaluate(v0Np, secondMomentSlots[0]);
+        session.evaluate(v1Np, secondMomentSlots[1]);
       }
     }
   }
 
-  private FloatNdArray calculateM(FloatNdArray m, FloatNdArray g_t, float beta) {
-    // m_t = beta1 * m + (1 - beta1) * g_t
-    return ND.add(ND.mul(m, beta), ND.mul(g_t, (1 - beta)));
+  private FloatNdArray calculateM(FloatNdArray m, FloatNdArray gT, float beta) {
+    // mT = beta1 * m + (1 - beta1) * gT
+    return ND.add(ND.mul(m, beta), ND.mul(gT, (1 - beta)));
   }
 
-  private FloatNdArray calculateV(FloatNdArray v, FloatNdArray g_t, float beta) {
-    // beta2 * v + (1 - beta2) * g_t * g_t
+  private FloatNdArray calculateV(FloatNdArray v, FloatNdArray gT, float beta) {
+    // beta2 * v + (1 - beta2) * gT * gT
     FloatNdArray mul1 = ND.mul(v, beta);
-    FloatNdArray squareG = ND.square(g_t);
+    FloatNdArray squareG = ND.square(gT);
     FloatNdArray mul2 = ND.mul((1 - beta), squareG);
     FloatNdArray add = ND.add(mul1, mul2);
     return add;
-
-    // return ND.add(ND.mul(v, beta),
-    //     ND.mul((1-beta), ND.square(g_t)));
   }
 
   private FloatNdArray calculateParam(
-      FloatNdArray param, float lr_t, FloatNdArray m, FloatNdArray v, float epsilon) {
-    //  param - lr_t * m_t / (np.sqrt(v_t) + epsilon)
+      FloatNdArray param, float lrT, FloatNdArray m, FloatNdArray v, float epsilon) {
+    //  param - lrT * mT / (np.sqrt(vT) + epsilon)
     FloatNdArray sqrt = ND.sqrt(v);
     FloatNdArray divisor = ND.add(sqrt, epsilon);
-    FloatNdArray dividend = ND.mul(lr_t, m);
+    FloatNdArray dividend = ND.mul(lrT, m);
     FloatNdArray quotient = ND.div(dividend, divisor);
     FloatNdArray result = ND.sub(param, quotient);
     return result;
