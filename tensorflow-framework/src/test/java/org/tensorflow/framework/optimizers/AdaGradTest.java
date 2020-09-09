@@ -71,8 +71,11 @@ public class AdaGradTest {
     FloatNdArray accum1Np = NdArrays.vectorOf(accum1);
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
       Graph graph = session.getGraph();
+
+      float learningRate = 3.0F;
+      AdaGrad instance = new AdaGrad(graph, learningRate, 0.1f);
+      Ops tf = instance.getTF();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -85,9 +88,7 @@ public class AdaGradTest {
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
-      float learningRate = 3.0F;
 
-      AdaGrad instance = new AdaGrad(graph, learningRate);
 
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
@@ -116,15 +117,11 @@ public class AdaGradTest {
 
       for (int step = 0; step < numSteps; step++) {
         session.run(adaUpdate);
-
-        accum0Np = caclulateAccum(accum0Np, grads0Np);
-        var0Np = calculate(var0Np, accum0Np, grads0Np, learningRate);
-        session.evaluate(var0Np, var0);
-
-        accum1Np = caclulateAccum(accum1Np, grads1Np);
-        var1Np = calculate(var1Np, accum1Np, grads1Np, learningRate);
-        session.evaluate(var1Np, var1);
       }
+      float[] expected0 = {-1.6026098728179932f, -0.6026098728179932f};
+      session.evaluate(expected0, var0);
+      float[] expected1 = {2.715679168701172f, 3.715679168701172f};
+      session.evaluate(expected1, var1);
     }
   }
 

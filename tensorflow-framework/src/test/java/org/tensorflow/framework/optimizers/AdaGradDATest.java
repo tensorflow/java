@@ -55,8 +55,12 @@ public class AdaGradDATest {
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
       Graph graph = session.getGraph();
+
+      float learningRate = 3.0F;
+
+      AdaGradDA instance = new AdaGradDA(graph, learningRate);
+      Ops tf = instance.getTF();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -70,13 +74,10 @@ public class AdaGradDATest {
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* initialize the local variables */
-      /* initialize the local variables */
+
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      float learningRate = 3.0F;
-
-      AdaGrad instance = new AdaGrad(graph, learningRate);
 
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();

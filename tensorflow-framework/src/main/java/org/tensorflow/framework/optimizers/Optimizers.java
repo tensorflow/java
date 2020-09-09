@@ -15,7 +15,7 @@ public enum Optimizers {
   NADAM(Nadam::new),
   RMSPROP(RMSProp::new),
   MOMENTUM(Momentum::new),
-  GRADIENT_DESCENT(Momentum::new);
+  GRADIENT_DESCENT(GradientDescent::new);
 
   private final Function<Graph, Optimizer> creator;
 

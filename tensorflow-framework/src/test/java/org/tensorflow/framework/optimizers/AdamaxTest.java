@@ -94,8 +94,10 @@ public class AdamaxTest {
     float epsilon1 = 1e-3F;
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
       Graph graph = session.getGraph();
+
+      Adamax instance = new Adamax(graph);
+      Ops tf = instance.getTF();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -112,7 +114,7 @@ public class AdamaxTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      Adamax instance = new Adamax(graph);
+
       /* build the GradsAnvVars */
       List<GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new GradAndVar<>(grads0.asOutput(), var0.asOutput()));
@@ -151,7 +153,7 @@ public class AdamaxTest {
             session
                 .getGraphSession()
                 .runner()
-                .fetch("beta1Power")
+                .fetch("beta1_power")
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {

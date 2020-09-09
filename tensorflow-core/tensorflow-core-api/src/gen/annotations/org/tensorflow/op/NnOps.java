@@ -1863,14 +1863,13 @@ public final class NnOps {
    * @param logits Per-label activations, typically a linear output. These activation energies are
    *      interpreted as unnormalized log probabilities.
    * @param axis The class dimension. -1 is the last dimension.
-   * @param <U> the data type of the <code>logits</code>
    * @param <T> the number type of the operands
    * @return the softmax cross entropy loss. Its type is the same as <code>logits</code> and its
    *      shape is the same as <code>labels</code> except that it does not have the last dimension of
    *      <code>labels</code>.
    */
-  public <U extends TType, T extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
-      Operand<T> labels, Operand<U> logits, int axis) {
+  public <T extends TNumber, U extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
+      Operand<U> labels, Operand<T> logits, int axis) {
     return SoftmaxCrossEntropyWithLogits.softmaxCrossEntropyWithLogits(scope, labels, logits, axis);
   }
 

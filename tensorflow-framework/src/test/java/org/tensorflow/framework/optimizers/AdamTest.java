@@ -69,10 +69,15 @@ public class AdamTest {
     float epsilon1 = 1e-3F;
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
+      float learningRate = 0.001F;
+      float beta1 = 0.9F;
+      float beta2 = 0.999F;
       Graph graph = session.getGraph();
+
       session.setEpsilon(epsilon1);
 
+      Adam instance = new Adam(graph, learningRate);
+      Ops tf = instance.getTF();
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
@@ -88,16 +93,14 @@ public class AdamTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      float learningRate = 0.001F;
-      float beta1 = 0.9F;
-      float beta2 = 0.999F;
+
 
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      Adam instance = new Adam(graph, learningRate);
+
 
       Op update = instance.applyGradients(gradsAndVars, "AdamTest");
 
@@ -139,7 +142,7 @@ public class AdamTest {
             session
                 .getGraphSession()
                 .runner()
-                .fetch("beta1Power")
+                .fetch("beta1_power")
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
@@ -149,7 +152,7 @@ public class AdamTest {
             session
                 .getGraphSession()
                 .runner()
-                .fetch("beta2Power")
+                .fetch("beta2_power")
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {

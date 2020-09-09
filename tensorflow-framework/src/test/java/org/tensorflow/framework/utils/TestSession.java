@@ -40,11 +40,11 @@ public abstract class TestSession implements AutoCloseable {
   /** The Test Session mode, either Eager or Graph */
   public enum Mode {
     EAGER,
-    GRAPH;
+    GRAPH
   }
 
   /**
-   * Create an Eager Test Session
+   * Creates an Eager Test Session
    *
    * @return the Eager Test Session
    */
@@ -53,7 +53,7 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Create a Graph Test Session
+   * Creates a Graph Test Session
    *
    * @return the Graph Test Session
    */
@@ -62,22 +62,22 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Create a Test Session
+   * Creates a Test Session
    *
-   * @param mode
-   * @return
+   * @param mode the type of Session, either eager or graph
+   * @return returns the test session
    */
   public static TestSession createTestSession(Mode mode) {
     return mode == Mode.EAGER ? createEagerSession() : createGraphSession();
   }
 
-  /** Initialize the Test Session, default implementation is do nothing. */
+  /** Initializes the Test Session, default implementation is do nothing. */
   public void initialize() {
     // empty
   }
 
   /**
-   * Run the Operation
+   * Runs the Operation
    *
    * @param op the Operation to run
    */
@@ -86,7 +86,7 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Get the Graph
+   * Gets the Graph
    *
    * @return the graph if in Graph Mode, otherwise null.
    */
@@ -95,120 +95,118 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(Number expected, Operand<T> input) {
     evaluate(new Number[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
-  public <T extends TNumber> void evaluate(Number expected, Op input) {
+  public void evaluate(Number expected, Op input) {
     evaluate(new Number[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected values
+   * Evaluates the input against the expected values
    *
    * @param expected the expected values
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
-  public <T extends TNumber> void evaluate(Number[] expected, Op input) {
-    Output output = input.op().output(0);
+  public void evaluate(Number[] expected, Op input) {
+    Output<? extends TNumber> output = input.op().output(0);
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(Number[] expected, Operand<T> input) {
-    Output output = input.asOutput();
+    Output<T> output = input.asOutput();
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(byte expected, Operand<T> input) {
     evaluate((double) expected, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(int expected, Operand<T> input) {
     evaluate((double) expected, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(long expected, Operand<T> input) {
     evaluate((double) expected, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(float expected, Operand<T> input) {
     evaluate((double) expected, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract <T extends TNumber> void evaluate(double expected, Operand<T> input);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(byte[] expected, Operand<T> input) {
     Byte[] iArray = new Byte[expected.length];
@@ -217,12 +215,12 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(int[] expected, Operand<T> input) {
     Integer[] iArray = new Integer[expected.length];
@@ -231,12 +229,12 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(long[] expected, Operand<T> input) {
     Long[] iArray = new Long[expected.length];
@@ -245,12 +243,12 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected values
+   * Evaluates the input against the expected values
    *
    * @param expected the expected values
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(float[] expected, Operand<T> input) {
     Float[] iArray = new Float[expected.length];
@@ -259,12 +257,12 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TNumber> void evaluate(double[] expected, Operand<T> input) {
     Double[] iArray = new Double[expected.length];
@@ -273,207 +271,212 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract <T extends TNumber> void evaluate(Number[] expected, Output<T> input);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(String expected, Operand<TString> input) {
     evaluate(new String[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(String expected, Op input) {
     evaluate(new String[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(String[] expected, Op input) {
-    Output output = input.op().output(0);
+    Output<TString> output = input.op().output(0);
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(String[] expected, Operand<TString> input) {
-    Output output = input.asOutput();
+    Output<TString> output = input.asOutput();
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract void evaluate(String[] expected, Output<TString> input);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(Boolean expected, Operand<TBool> input) {
     evaluate(new Boolean[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(Boolean expected, Op input) {
     evaluate(new Boolean[] {expected}, input);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(Boolean[] expected, Op input) {
-    Output output = input.op().output(0);
+    Output<TBool> output = input.op().output(0);
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public void evaluate(Boolean[] expected, Operand<TBool> input) {
-    Output output = input.asOutput();
+    Output<TBool> output = input.asOutput();
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract void evaluate(Boolean[] expected, Output<TBool> input);
 
+  /**
+   * Evaluates the input against the expected value
+   *
+   * @param expected the expected value
+   * @param input the operand to evaluate
+   * @param <T> the data type of the expected Operand
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
+   */
   public <T extends TType> void evaluate(Operand<T> expected, Op input) {
-    Output output = input.op().output(0);
+    Output<T> output = input.op().output(0);
     evaluate(expected, output);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TType> void evaluate(Operand<T> expected, Operand<T> input) {
     evaluate(expected.asOutput(), input.asOutput());
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract <T extends TType> void evaluate(Output<T> expected, Output<T> input);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public <T extends TType> void evaluate(FloatNdArray expected, Operand<T> input) {
     evaluate(expected, input.asOutput());
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
    * @param expected the expected value
    * @param input the operand to evaluate
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract <T extends TType> void evaluate(FloatNdArray expected, Output<T> input);
 
+  /**
+   * Evaluates the input against the expected value
+   *
+   * @param input the operand to evaluate
+   * @param predicate the Predicate
+   * @param <T> the data type of the input
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
+   */
   public <T extends TType> void evaluate(Operand<T> input, Predicate<Number> predicate) {
     evaluate(input.asOutput(), predicate);
   }
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
-   * @param expected the expected value
    * @param input the operand to evaluate
+   * @param predicate The Predicate that evaluates the each value from input
    * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
   public abstract <T extends TType> void evaluate(Output<T> input, Predicate<Number> predicate);
 
   /**
-   * Evaluate the input against the expected value
+   * Evaluates the input against the expected value
    *
-   * @param expected the expected value
    * @param input the operand to evaluate
-   * @param <T> the data type of the input
-   * @throws org.opentest4j.AssertionFailedError
+   * @param predicate The Predicate that evaluates the each value from input
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
    */
-  public <T extends TType> void evaluate(FloatNdArray input, Predicate<Number> predicate) {
+  public void evaluate(FloatNdArray input, Predicate<Number> predicate) {
     input.scalars().forEach(f -> assertTrue(predicate.test(f.getFloat())));
   }
 
@@ -493,9 +496,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param out the output stream
    * @param input the op to print
-   * @param <T> the data type of the input
    */
-  public <T extends TType> void print(OutputStream out, Op input) {
+  public void print(OutputStream out, Op input) {
     print(new PrintWriter(new OutputStreamWriter(out)), input.op().output(0));
   }
 
@@ -513,7 +515,7 @@ public abstract class TestSession implements AutoCloseable {
   /**
    * Print the input
    *
-   * @param witer the output writer
+   * @param writer the output writer
    * @param input the operand to print
    * @param <T> the data type of the input
    */
@@ -524,18 +526,17 @@ public abstract class TestSession implements AutoCloseable {
   /**
    * Print the input
    *
-   * @param witer the output writer
+   * @param writer the output writer
    * @param input the op to print
-   * @param <T> the data type of the input
    */
-  public <T extends TType> void print(Writer writer, Op input) {
+  public void print(Writer writer, Op input) {
     print(new PrintWriter(writer), input.op().output(0));
   }
 
   /**
    * Print the input
    *
-   * @param witer the output writer
+   * @param writer the output writer
    * @param input the op to print
    * @param <T> the data type of the input
    */
@@ -546,7 +547,7 @@ public abstract class TestSession implements AutoCloseable {
   /**
    * Print the input
    *
-   * @param witer the output writer
+   * @param writer the output writer
    * @param input the op to print
    */
   public abstract <T extends TType> void print(PrintWriter writer, Output<T> input);

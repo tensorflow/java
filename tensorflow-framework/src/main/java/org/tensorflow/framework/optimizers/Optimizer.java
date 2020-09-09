@@ -72,6 +72,14 @@ public abstract class Optimizer {
   }
 
   /**
+   * Gets the Optimizer's Ops instance
+   * @return the Optimizer's Ops instance
+   */
+  public final Ops getTF() {
+    return tf;
+  }
+
+  /**
    * Creates a name by combining a variable name and a slot name
    *
    * @param variable the variable
