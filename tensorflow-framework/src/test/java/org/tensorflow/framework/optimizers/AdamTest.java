@@ -105,7 +105,9 @@ public class AdamTest {
       Op update = instance.applyGradients(gradsAndVars, "AdamTest");
 
       /* Create and validate the shapes of the slots */
+      @SuppressWarnings("unchecked")
       Variable<TFloat32>[] firstMomentSlots = new Variable[2];
+      @SuppressWarnings("unchecked")
       Variable<TFloat32>[] secondMomentSlots = new Variable[2];
 
       firstMomentSlots[0] = instance.getSlot(var0.asOutput(), FIRST_MOMENT).get();
