@@ -64,52 +64,55 @@ public class SoftmaxCrossEntropyWithLogits {
    * @param logits Per-label activations, typically a linear output. These activation energies are
    *     interpreted as unnormalized log probabilities.
    * @param axis The class dimension. -1 is the last dimension.
-   * @param <U> the data type of the <code>logits</code>
    * @param <T> the number type of the operands
    * @return the softmax cross entropy loss. Its type is the same as <code>logits</code> and its
    *     shape is the same as <code>labels</code> except that it does not have the last dimension of
    *     <code>labels</code>.
    */
   @Endpoint(name = "softmaxCrossEntropyWithLogits")
-  public static <U extends TType, T extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
-      Scope scope, Operand<T> labels, Operand<U> logits, int axis) {
+  public static <T extends TNumber, U extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
+      Scope scope, Operand<U> labels, Operand<T> logits, int axis) {
     scope = scope.withSubScope("SoftmaxCrossEntropyWithLogits");
     axis = axis % logits.asOutput().shape().numDimensions();
     if (axis < 0) {
       axis += logits.asOutput().shape().numDimensions();
     }
 
-    Operand preciseLogits =
-        (Operand<? extends TNumber>)
-            logits; // cannot use generics cause logits of bool gets cast to TFloat32
 
     boolean convertToFloat32 =
         logits.asOutput().dataType() == TFloat16.DTYPE
             || logits.asOutput().dataType() == TBfloat16.DTYPE;
     if (convertToFloat32) {
-      preciseLogits = Cast.create(scope, logits, TFloat32.DTYPE);
+      Operand<TFloat32> result =  softmaxCrossEntropyWithLogits(scope,
+              Cast.create(scope, labels, TFloat32.DTYPE),
+              Cast.create(scope, logits, TFloat32.DTYPE),
+              axis);
+      return Cast.create(scope, result, logits.asOutput().dataType());
+    } else if(!logits.asOutput().dataType().equals(labels.asOutput().dataType())) {
+      return softmaxCrossEntropyWithLogits(scope,
+              Cast.create(scope, labels, logits.asOutput().dataType()),
+              logits,
+              axis);
     }
-    /* cannot use generics on DataType because preciseLogits may have been cast. */
-    DataType dtype = preciseLogits.asOutput().dataType();
-    Operand castLabels = Cast.create(scope, labels, dtype);
-    Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, preciseLogits), TInt64.DTYPE);
+
+    Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, logits), TInt64.DTYPE);
     Shape shape = logits.asOutput().shape();
 
     // Move the dim to the end if dim is not the last dimension.
-    if (axis != -1 && axis != preciseLogits.asOutput().shape().numDimensions() - 1) {
-      preciseLogits = moveDimToEnd(scope, preciseLogits, axis, inputRank);
-      castLabels = moveDimToEnd(scope, castLabels, axis, inputRank);
+    if (axis != -1 && axis != logits.asOutput().shape().numDimensions() - 1) {
+      logits = moveDimToEnd(scope, logits, axis, inputRank);
+      labels = moveDimToEnd(scope, labels, axis, inputRank);
     }
 
-    Shape inputShape = preciseLogits.asOutput().shape();
-    preciseLogits = flattenOuterDims(scope, preciseLogits);
-    castLabels = flattenOuterDims(scope, castLabels);
+    Shape inputShape = logits.asOutput().shape();
+    logits = flattenOuterDims(scope, logits);
+    labels = flattenOuterDims(scope, labels);
 
-    org.tensorflow.op.nn.raw.SoftmaxCrossEntropyWithLogits smax =
+    org.tensorflow.op.nn.raw.SoftmaxCrossEntropyWithLogits<T> smax =
         org.tensorflow.op.nn.raw.SoftmaxCrossEntropyWithLogits.create(
-            scope, preciseLogits, castLabels);
+            scope, logits, (Operand<T>)labels);
     /* cannot use generic on cost, because cost may be recast later. */
-    Operand cost = smax.loss();
+    Operand<T> cost = smax.loss();
     Operand<TInt64> outputShape =
         Slice.create(
             scope,
@@ -132,9 +135,6 @@ public class SoftmaxCrossEntropyWithLogits {
       cost = Reshape.create(scope, cost, Constant.vectorOf(scope, newArray));
     }
 
-    if (convertToFloat32) {
-      cost = Cast.create(scope, cost, logits.asOutput().dataType());
-    }
     return cost;
   }
 
@@ -195,7 +195,7 @@ public class SoftmaxCrossEntropyWithLogits {
    * @param <U> the data type of the rank
    * @return the reshaped input
    */
-  private static <T extends TType, U extends TNumber> Operand<T> moveDimToEnd(
+  private static <T extends TNumber, U extends TNumber> Operand<T> moveDimToEnd(
       Scope scope, Operand<T> input, int dimIndex, Operand<U> rank) {
     DataType<? extends TNumber> rankDType = rank.asOutput().dataType();
     Operand one = Cast.create(scope, Constant.scalarOf(scope, 1), rankDType);
