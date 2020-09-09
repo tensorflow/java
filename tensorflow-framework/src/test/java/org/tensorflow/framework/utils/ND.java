@@ -12,18 +12,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.utils;
+package org.tensorflow.framework.utils;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
 // TODO used in the Callbacks, this should be a part of NDArray?
+
 /** NDArray math Utilities */
 public class ND {
 
@@ -126,7 +128,7 @@ public class ND {
    * @return the resulting array from the add operation
    */
   public static FloatNdArray add(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -176,7 +178,7 @@ public class ND {
    * @return the resulting array from the subtraction operation
    */
   public static FloatNdArray sub(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -232,9 +234,10 @@ public class ND {
    * @return the resulting array from the muliply operation
    */
   public static FloatNdArray mul(FloatNdArray a, FloatNdArray b) {
-    if(!a.shape().equals(b.shape()))
-        throw new IllegalArgumentException(String.format(
-            "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
+    if (!a.shape().equals(b.shape()))
+      throw new IllegalArgumentException(
+          String.format(
+              "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
     boolean sameSize = a.shape().size() == b.shape().size();
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -289,7 +292,7 @@ public class ND {
    * @return the resulting array from the Divide operation
    */
   public static FloatNdArray div(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -309,8 +312,7 @@ public class ND {
    * @return the resulting array from the Divide operation
    */
   public static FloatNdArray div(FloatNdArray a, float scalar) {
-    if(scalar == 0)
-      throw new IllegalArgumentException("Cannot divide by zero");
+    if (scalar == 0) throw new IllegalArgumentException("Cannot divide by zero");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
@@ -348,7 +350,7 @@ public class ND {
    * @return the array result of the power operation
    */
   public static FloatNdArray pow(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -444,10 +446,10 @@ public class ND {
    * @param a the first array
    * @param a the second array
    * @return the resulting array with the maximum values between each element of the arrays.
-   * @throws java.lang.AssertionError if the two arrays are not the same size.
+   * @throws AssertionError if the two arrays are not the same size.
    */
   public static FloatNdArray max(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();
@@ -496,10 +498,10 @@ public class ND {
    * @param a the first array
    * @param a the second array
    * @return the resulting array with the minimum values between each element of the arrays.
-   * @throws java.lang.AssertionError if the two arrays are not the same size.
+   * @throws AssertionError if the two arrays are not the same size.
    */
   public static FloatNdArray min(FloatNdArray a, FloatNdArray b) {
-    if(a.shape().size() != b.shape().size())
+    if (a.shape().size() != b.shape().size())
       throw new IllegalArgumentException("a and b muse have the same number of dimensions");
     FloatNdArray result = NdArrays.ofFloats(a.shape());
     int nDims = a.shape().numDimensions();

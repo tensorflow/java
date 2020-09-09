@@ -12,11 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
+import org.tensorflow.Graph;
 import org.tensorflow.framework.optimizers.Optimizer.GradAndVar;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -55,10 +56,10 @@ public class AdaDeltaTest {
   @Test
   public void testConstructAdadeltaWithLR() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      AdaDelta opt = new AdaDelta(tf, 1.0F, 0.9F, 1.F);
-      AdaDelta opt2 = new AdaDelta(tf, 0.1F, 0.9F, 1.F);
-      AdaDelta opt3 = new AdaDelta(tf, 0.1F, 0.9F, 1e-8F);
+      Graph graph = session.getGraph();
+      AdaDelta opt = new AdaDelta(graph, 1.0F, 0.9F, 1.F);
+      AdaDelta opt2 = new AdaDelta(graph, 0.1F, 0.9F, 1.F);
+      AdaDelta opt3 = new AdaDelta(graph, 0.1F, 0.9F, 1e-8F);
       String format = "AdaDelta{learningRate=%s, rho=%s, epsilon=%s}";
       String optExpected = String.format(format, 1.0F, 0.9F, 1.F);
       String opt2Expected = String.format(format, 0.1F, 0.9F, 1.F);
@@ -75,28 +76,6 @@ public class AdaDeltaTest {
   }
 
   @Test
-  public void testConstructOptions() {
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      AdaDelta.Options options =
-          AdaDelta.Options.builder()
-              .name("myAdaDelta")
-              .learningRate(1.0F)
-              .rho(0.9F)
-              .epsilon(1.F)
-              .build();
-      AdaDelta opt = new AdaDelta(tf, options);
-
-      String format = "AdaDelta{learningRate=%s, rho=%s, epsilon=%s}";
-      String optExpected = String.format(format, 1.0F, 0.9F, 1.F);
-
-      String optString = opt.toString();
-
-      assertEquals(optExpected, optString);
-    }
-  }
-
-  @Test
   public void testBasic() {
     int numUpdates = 4; // # number of ADADELTA steps to perform
     float[] grads = {0.2F, 0.1F, 0.01F};
@@ -105,6 +84,7 @@ public class AdaDeltaTest {
       for (float lr : lrs) {
         try (TestSession session = TestSession.createTestSession(tfMode)) {
           Ops tf = session.getTF();
+          Graph graph = session.getGraph();
           float[] var0Init = {1.0F, 2.0F};
           float[] var1Init = {3.0F, 4.0F};
           float[] fgrads = {grad, grad};
@@ -128,7 +108,7 @@ public class AdaDeltaTest {
           gradsAndVars.add(new GradAndVar<>(cgrads.asOutput(), var1.asOutput()));
 
           /* get the Optimizer */
-          AdaDelta adaDelta = new AdaDelta(tf, lr, rho, epsilon);
+          AdaDelta adaDelta = new AdaDelta(graph, lr, rho, epsilon);
 
           /*apply gradients */
           Op adadeltaUpdate = adaDelta.applyGradients(gradsAndVars, "AdaDeltaTest");

@@ -12,18 +12,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.utils;
+package org.tensorflow.framework.utils;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.function.Predicate;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.tensorflow.EagerSession;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.Session;
+import org.tensorflow.*;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -31,6 +22,14 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Base class for Test Session */
 public abstract class TestSession implements AutoCloseable {
@@ -84,6 +83,15 @@ public abstract class TestSession implements AutoCloseable {
    */
   public void run(Op op) {
     // empty
+  }
+
+  /**
+   * Get the Graph
+   *
+   * @return the graph if in Graph Mode, otherwise null.
+   */
+  public Graph getGraph() {
+    return null;
   }
 
   /**

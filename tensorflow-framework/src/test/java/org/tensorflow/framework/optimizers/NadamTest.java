@@ -12,13 +12,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
+import org.tensorflow.Graph;
 import org.tensorflow.Tensor;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.ND;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.framework.utils.ND;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.keras.optimizers.Nadam.FIRST_MOMENT;
-import static org.tensorflow.keras.optimizers.Nadam.SECOND_MOMENT;
 
 /** Test cases for Nadam Optimizer */
 public class NadamTest {
@@ -65,8 +63,8 @@ public class NadamTest {
   @Test
   public void testGetOptimizerName() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Nadam instance = new Nadam(tf);
+      Graph graph = session.getGraph();
+      Nadam instance = new Nadam(graph);
       String expResult = "Nadam";
       String result = instance.getOptimizerName();
       assertEquals(expResult, result);
@@ -100,6 +98,7 @@ public class NadamTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -112,7 +111,7 @@ public class NadamTest {
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
-      Nadam instance = new Nadam(tf);
+      Nadam instance = new Nadam(graph);
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
@@ -124,16 +123,16 @@ public class NadamTest {
       Variable<TFloat32>[] firstMomentSlots = new Variable[2];
       Variable<TFloat32>[] secondMomentSlots = new Variable[2];
 
-      firstMomentSlots[0] = instance.getSlot(var0.asOutput(), FIRST_MOMENT).get();
+      firstMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.FIRST_MOMENT).get();
       assertEquals(firstMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
 
-      secondMomentSlots[0] = instance.getSlot(var0.asOutput(), SECOND_MOMENT).get();
+      secondMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.SECOND_MOMENT).get();
       assertEquals(secondMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
 
-      firstMomentSlots[1] = instance.getSlot(var1.asOutput(), FIRST_MOMENT).get();
+      firstMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.FIRST_MOMENT).get();
       assertEquals(firstMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
 
-      secondMomentSlots[1] = instance.getSlot(var1.asOutput(), SECOND_MOMENT).get();
+      secondMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.SECOND_MOMENT).get();
       assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
 
       /* initialize the local variables */

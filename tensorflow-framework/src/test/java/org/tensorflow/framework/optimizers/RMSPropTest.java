@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.ND;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.Graph;
+import org.tensorflow.framework.utils.ND;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -73,6 +73,7 @@ public class RMSPropTest {
     for (Object[] testParamValue : TestParamValues) {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
+        Graph graph = session.getGraph();
         session.setEpsilon(1e-2f);
         float[] var0Init = {1.0F, 2.0F};
         float[] var1Init = {3.0F, 4.0F};
@@ -102,10 +103,10 @@ public class RMSPropTest {
         float epsilon = (float) testParamValue[3];
         boolean centered = (boolean) testParamValue[4];
 
-        RMSProp instance = new RMSProp(tf, learningRate, decay, momentum, epsilon, centered);
+        RMSProp instance = new RMSProp(graph, learningRate, decay, momentum, epsilon, centered);
 
         /* build the GradsAnvVars */
-        List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
+        List<GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
         gradsAndVars.add(new GradAndVar<>(grads0.asOutput(), var0.asOutput()));
         gradsAndVars.add(new GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 

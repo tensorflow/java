@@ -12,13 +12,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
+import org.tensorflow.Graph;
 import org.tensorflow.Tensor;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.ND;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.framework.utils.ND;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -70,7 +70,7 @@ public class AdamTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-
+      Graph graph = session.getGraph();
       session.setEpsilon(epsilon1);
 
       Shape shape0 = Shape.of(var0Init.length);
@@ -97,7 +97,7 @@ public class AdamTest {
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      Adam instance = new Adam(tf, learningRate);
+      Adam instance = new Adam(graph, learningRate);
 
       Op update = instance.applyGradients(gradsAndVars, "AdamTest");
 

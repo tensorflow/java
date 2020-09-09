@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.ND;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.Graph;
+import org.tensorflow.framework.utils.ND;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -72,6 +72,7 @@ public class AdaGradTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -86,7 +87,7 @@ public class AdaGradTest {
 
       float learningRate = 3.0F;
 
-      AdaGrad instance = new AdaGrad(tf, learningRate);
+      AdaGrad instance = new AdaGrad(graph, learningRate);
 
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();

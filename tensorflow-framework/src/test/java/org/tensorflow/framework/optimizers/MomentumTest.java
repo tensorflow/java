@@ -12,11 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.Graph;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -33,11 +33,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.tensorflow.framework.optimizers.Momentum.MOMENTUM;
 
 /** Test cases for SGD Optimizer */
-public class SGDTest {
+public class MomentumTest {
 
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
-  public SGDTest() {}
+  public MomentumTest() {}
 
   @BeforeAll
   public static void setUpClass() {}
@@ -55,9 +55,9 @@ public class SGDTest {
   @Test
   public void testGetOptimizerName() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      SGD instance = new SGD(tf);
-      String expResult = "SGD";
+      Graph graph = session.getGraph();
+      Momentum instance = new Momentum(graph);
+      String expResult = "Momentum";
       String result = instance.getOptimizerName();
       assertEquals(expResult, result);
     }
@@ -73,6 +73,7 @@ public class SGDTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -90,7 +91,7 @@ public class SGDTest {
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      SGD instance = new SGD(tf, learningRate);
+      Momentum instance = new Momentum(graph, learningRate);
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
       /* initialize the local variables */
@@ -125,6 +126,7 @@ public class SGDTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -142,7 +144,7 @@ public class SGDTest {
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      SGD instance = new SGD(tf, learningRate, momentum);
+      Momentum instance = new Momentum(graph, learningRate, momentum);
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
       Variable<TFloat32> momentumSlot0 = instance.getSlot(var0.asOutput(), MOMENTUM).get();

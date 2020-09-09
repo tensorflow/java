@@ -12,11 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.Graph;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -53,8 +53,8 @@ public class FtrlTest {
   @Test
   public void testGetOptimizerName() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Ftrl instance = new Ftrl(tf);
+      Graph graph = session.getGraph();
+      Ftrl instance = new Ftrl(graph);
       String expResult = "Ftrl";
       String result = instance.getOptimizerName();
       assertEquals(expResult, result);
@@ -72,6 +72,7 @@ public class FtrlTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -88,7 +89,7 @@ public class FtrlTest {
 
       Ftrl instance =
           new Ftrl(
-              tf,
+              graph,
               learningRate,
               -0.5F, // learningRatePower
               0.1F, // initialAccumulatorValue
@@ -136,6 +137,7 @@ public class FtrlTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -152,7 +154,7 @@ public class FtrlTest {
 
       Ftrl instance =
           new Ftrl(
-              tf,
+              graph,
               learningRate,
               Ftrl.LEARNING_RATE_POWER_DEFAULT, // learningRatePower
               0.1F, // initialAccumulatorValue
@@ -201,6 +203,7 @@ public class FtrlTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -217,7 +220,7 @@ public class FtrlTest {
 
       Ftrl instance =
           new Ftrl(
-              tf,
+              graph,
               learningRate,
               Ftrl.LEARNING_RATE_POWER_DEFAULT, // learningRatePower
               0.1F, // initialAccumulatorValue
@@ -266,6 +269,7 @@ public class FtrlTest {
 
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
@@ -280,7 +284,7 @@ public class FtrlTest {
 
       float learningRate = 3.0F;
 
-      Ftrl instance = new Ftrl(tf, learningRate);
+      Ftrl instance = new Ftrl(graph, learningRate);
 
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();

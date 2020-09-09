@@ -12,31 +12,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.utils;
+package org.tensorflow.framework.utils;
+
+import org.tensorflow.*;
+import org.tensorflow.ndarray.FloatNdArray;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Ops;
+import org.tensorflow.types.*;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import org.tensorflow.DataType;
-import org.tensorflow.EagerSession;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.Session;
-import org.tensorflow.ndarray.FloatNdArray;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Eaager Mode Test Session */
 public class EagerTestSession extends TestSession {
@@ -58,6 +49,7 @@ public class EagerTestSession extends TestSession {
 
   /**
    * Get the TensorFlow EagerSession instance
+   *
    * @return the TensorFlow EagerSession instance
    */
   public EagerSession getSession() {
