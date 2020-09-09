@@ -34,7 +34,7 @@ The following describes the layout of the repository and its different artifacts
   * Intended audience: expert neural network developers who prefer to make explicit, detailed decisions 
     about their models and training algorithms
     
-* `tensorflow-keras`
+* `tensorflow-keras` (early WIP; only defined in `dev` profile)
   * Partially covers the framework API to allow simpler definition of models and training algorithms
   * Intended to be familiar if you know the Python Keras API, but prioritizes clean, idiomatic Java 
     over fidelity to Python
