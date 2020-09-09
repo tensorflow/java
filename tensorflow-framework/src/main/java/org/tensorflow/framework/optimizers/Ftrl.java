@@ -1,59 +1,35 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+package org.tensorflow.framework.optimizers;
 
-Licensed under the Apache License, Version 2.0 (the );
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an  BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-=======================================================================*/
-package org.tensorflow.keras.optimizers;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.Session;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.assertGraph;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
-import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyFtrl;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-/** Ftrl (Follow the Regularized Leader) Optimizer that implements the FTRL algorithm. */
-public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
-    implements OptimizerInterface {
+import java.util.List;
 
-  public static final String LEARNING_RATE_KEY = "learning_rate";
-  public static final String LEARNING_RATE_POWER_KEY = "learning_rate_power";
-  public static final String INITIAL_ACCUM_VALUE_KEY = "initial_accumulator_value";
-  public static final String L1STRENGTH_KEY = "l1_regularization_strength";
-  public static final String L2STRENGTH_KEY = "l2_regularization_strength";
-  public static final String L2_SHRINKAGE_REGULARIZATION_STRENGTH_KEY =
-      "l2_shrinkage_regularization_strength";
-
-  public static final float LEARNING_RATE_DEFAULT = 0.001F;
-  public static final float LEARNING_RATE_POWER_DEFAULT = -0.5F;
-  public static final float INITIAL_ACCUM_VALUE_DEFAULT = 0.1F;
-  public static final float L1STRENGTH_DEFAULT = 0.0F;
-  public static final float L2STRENGTH_DEFAULT = 0.0F;
-  public static final float L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT = 0.0F;
+/**
+ * Optimizer that implements the FTRL algorithm.
+ *
+ * @see <a href="https://www.eecs.tufts.edu/~dsculley/papers/ad-click-prediction.pdf">McMahan, et
+ *     al., 2013, Algorithm 1</a>
+ *     <p>This version has support for both online L2 (the L2 penalty given in the paper above) and
+ *     shrinkage-type L2 (which is the addition of an L2 penalty to the loss function).
+ */
+public class Ftrl extends Optimizer {
 
   public static final String ACCUMULATOR = "gradient_accumulator";
   public static final String LINEAR_ACCUMULATOR = "linear_accumulator";
 
-  private final String name;
+  public static final float LEARNING_RATE_DEFAULT = 0.001f;
+  public static final float LEARNING_RATE_POWER_DEFAULT = -0.5f;
+  public static final float INITIAL_ACCUMULATOR_VALUE_DEFAULT = 0.1f;
+  public static final float L1STRENGTH_DEFAULT = 0.0f;
+  public static final float L2STRENGTH_DEFAULT = 0.0f;
+  public static final float L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT = 0.0f;
+
   private float learningRate;
   private final float learningRatePower;
   private final float initialAccumulatorValue;
@@ -61,84 +37,80 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
   private final float l2RegularizationStrength;
   private final float l2ShrinkageRegularizationStrength;
 
-  private Map<String, Object> config = new HashMap<>();
-
-  private boolean useLocking = true;
-
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
+   * @param graph the TensorFlow Graph
    */
-  public Ftrl(Ops tf) {
+  public Ftrl(Graph graph) {
     this(
-        tf,
+        graph,
         LEARNING_RATE_DEFAULT,
         LEARNING_RATE_POWER_DEFAULT,
-        INITIAL_ACCUM_VALUE_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
         L1STRENGTH_DEFAULT,
         L2STRENGTH_DEFAULT,
         L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
   }
 
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
-   * @param name the Optmizer name
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer
    */
-  public Ftrl(Ops tf, String name) {
+  public Ftrl(Graph graph, String name) {
     this(
-        tf,
+        graph,
         name,
         LEARNING_RATE_DEFAULT,
         LEARNING_RATE_POWER_DEFAULT,
-        INITIAL_ACCUM_VALUE_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
         L1STRENGTH_DEFAULT,
         L2STRENGTH_DEFAULT,
         L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
   }
 
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
+   * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
    */
-  public Ftrl(Ops tf, float learningRate) {
+  public Ftrl(Graph graph, float learningRate) {
     this(
-        tf,
+        graph,
         learningRate,
         LEARNING_RATE_POWER_DEFAULT,
-        INITIAL_ACCUM_VALUE_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
         L1STRENGTH_DEFAULT,
         L2STRENGTH_DEFAULT,
         L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
   }
 
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
-   * @param name the Optmizer name
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer
    * @param learningRate the learning rate
    */
-  public Ftrl(Ops tf, String name, float learningRate) {
+  public Ftrl(Graph graph, String name, float learningRate) {
     this(
-        tf,
+        graph,
         name,
         learningRate,
         LEARNING_RATE_POWER_DEFAULT,
-        INITIAL_ACCUM_VALUE_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
         L1STRENGTH_DEFAULT,
         L2STRENGTH_DEFAULT,
         L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
   }
 
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
+   * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
    * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
    *     a fixed learning rate.
@@ -149,17 +121,19 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
    * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
    *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
    *     than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if the initialAccumulatorValue,
+   *     l1RegularizationStrength, l2RegularizationStrength, or l2ShrinkageRegularizationStrength
+   *     are less than 0.0, or learningRatePower is greater than 0.0.
    */
   public Ftrl(
-      Ops tf,
+      Graph graph,
       float learningRate,
       float learningRatePower,
       float initialAccumulatorValue,
       float l1Strength,
       float l2Strength,
       float l2ShrinkageRegularizationStrength) {
-    super(assertGraph(tf));
-    this.name = getOptimizerName();
+    super(graph);
     this.learningRate = learningRate;
     this.learningRatePower = learningRatePower;
     this.initialAccumulatorValue = initialAccumulatorValue;
@@ -167,14 +141,13 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     this.l2RegularizationStrength = l2Strength;
     this.l2ShrinkageRegularizationStrength = l2ShrinkageRegularizationStrength;
     validateParams();
-    initConfig();
   }
 
   /**
-   * Create a Ftrl Optimizer
+   * Creates a Ftrl Optimizer
    *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this Ftrl Optimizer
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer
    * @param learningRate the learning rate
    * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
    *     a fixed learning rate.
@@ -185,9 +158,12 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
    * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
    *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
    *     than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if the initialAccumulatorValue,
+   *     l1RegularizationStrength, l2RegularizationStrength, or l2ShrinkageRegularizationStrength
+   *     are less than 0.0, or learningRatePower is greater than 0.0.
    */
   public Ftrl(
-      Ops tf,
+      Graph graph,
       String name,
       float learningRate,
       float learningRatePower,
@@ -195,8 +171,7 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
       float l1Strength,
       float l2Strength,
       float l2ShrinkageRegularizationStrength) {
-    super(assertGraph(tf), name);
-    this.name = name;
+    super(graph, name);
     this.learningRate = learningRate;
     this.learningRatePower = learningRatePower;
     this.initialAccumulatorValue = initialAccumulatorValue;
@@ -204,67 +179,9 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
     this.l2RegularizationStrength = l2Strength;
     this.l2ShrinkageRegularizationStrength = l2ShrinkageRegularizationStrength;
     validateParams();
-    initConfig();
   }
 
-  /**
-   * Create a Ftrl Optmizer
-   *
-   * @param tf the TensorFlow Ops
-   * @param config a config object to initialize
-   * @return a new Frtl Optimizer
-   */
-  public static Ftrl create(Ops tf, Map<String, Object> config) {
-    String name = (String) config.get(NAME_KEY);
-    float learningRate = (float) config.getOrDefault(LEARNING_RATE_KEY, LEARNING_RATE_DEFAULT);
-    float learningRatePower =
-        (float) config.getOrDefault(LEARNING_RATE_POWER_KEY, LEARNING_RATE_POWER_DEFAULT);
-    float initialAccumulatorValue =
-        (float) config.getOrDefault(INITIAL_ACCUM_VALUE_KEY, INITIAL_ACCUM_VALUE_DEFAULT);
-    float l1RegularizationStrength =
-        (float) config.getOrDefault(L1STRENGTH_KEY, L1STRENGTH_DEFAULT);
-    float l2RegularizationStrength =
-        (float) config.getOrDefault(L2STRENGTH_KEY, L2STRENGTH_DEFAULT);
-    float l2ShrinkageRegularizationStrength =
-        (float)
-            config.getOrDefault(
-                L2_SHRINKAGE_REGULARIZATION_STRENGTH_KEY,
-                L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
-
-    if (name == null) {
-      return new Ftrl(
-          tf,
-          learningRate,
-          learningRatePower,
-          initialAccumulatorValue,
-          l1RegularizationStrength,
-          l2RegularizationStrength,
-          l2ShrinkageRegularizationStrength);
-    } else {
-      return new Ftrl(
-          tf,
-          name,
-          learningRate,
-          learningRatePower,
-          initialAccumulatorValue,
-          l1RegularizationStrength,
-          l2RegularizationStrength,
-          l2ShrinkageRegularizationStrength);
-    }
-  }
-
-  /** Initialize the Config object from the current settings */
-  protected void initConfig() {
-    config.put(NAME_KEY, this.name);
-    config.put(LEARNING_RATE_KEY, learningRate);
-    config.put(LEARNING_RATE_POWER_KEY, learningRatePower);
-    config.put(INITIAL_ACCUM_VALUE_KEY, initialAccumulatorValue);
-    config.put(L1STRENGTH_KEY, l1RegularizationStrength);
-    config.put(L2STRENGTH_KEY, l2RegularizationStrength);
-    config.put(L2_SHRINKAGE_REGULARIZATION_STRENGTH_KEY, l2ShrinkageRegularizationStrength);
-  }
-
-  /** Validate all the settings of the Frtl Optmizer */
+  /** Validates all the settings of the Frtl Optmizer */
   private void validateParams() {
     if (this.initialAccumulatorValue < 0.0F) {
       throw new IllegalArgumentException(
@@ -306,7 +223,7 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
   }
 
   /**
-   * Create a slot variables for the accumulators
+   * Creates a slot variables for the accumulators
    *
    * @param v the variable
    * @param <T> the data type of the variable
@@ -325,7 +242,7 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> linearSlot = getSlot(variable, LINEAR_ACCUMULATOR).get();
-    ApplyFtrl.Options options = ApplyFtrl.useLocking(useLocking);
+    ApplyFtrl.Options options = ApplyFtrl.useLocking(true);
     return this.tf.train.applyFtrl(
         variable,
         accumSlot, // accum
@@ -344,23 +261,5 @@ public class Ftrl extends org.tensorflow.framework.optimizers.Optimizer
   @Override
   public String getOptimizerName() {
     return "Ftrl";
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Map<String, Object> getConfig() {
-    return config;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
   }
 }
