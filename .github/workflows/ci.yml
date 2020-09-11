@@ -22,7 +22,7 @@ jobs:
   linux-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: ubuntu-latest
-    container: nvidia/cuda:10.1-cudnn7-devel-centos7
+    container: nvidia/cuda:10.2-cudnn7-devel-centos7
     strategy:
       matrix:
         ext: ["", -mkl, -gpu, -mkl-gpu]
