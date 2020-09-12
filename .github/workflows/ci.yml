@@ -22,7 +22,7 @@ jobs:
   linux-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: ubuntu-latest
-    container: nvidia/cuda:10.1-cudnn7-devel-centos7
+    container: centos:7
     strategy:
       matrix:
         ext: ["", -mkl, -gpu, -mkl-gpu]
@@ -39,6 +39,17 @@ jobs:
           echo Downloading Bazel
           curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
+          echo Installing CUDA
+          curl -L https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda-repo-rhel7-10-1-local-10.1.243-418.87.00-1.0-1.x86_64.rpm -o $HOME/cuda.rpm
+          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.5/cudnn-10.1-linux-x64-v7.6.5.32.tgz -o $HOME/cudnn.tgz
+          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.4/nccl_2.4.8-1+cuda10.1_x86_64.txz -o $HOME/nccl.txz
+          rpm -i $HOME/cuda.rpm
+          cd /var/cuda-repo-10-1-local-10.1.243-418.87.00/; rpm -i --nodeps cuda*.rpm libc*.rpm
+          ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
+          ln -sf /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/libnvidia-ml.so
+          tar hxvf $HOME/cudnn.tgz -C /usr/local/
+          tar hxvf $HOME/nccl.txz --strip-components=1 -C /usr/local/cuda/
+          mv /usr/local/cuda/lib/* /usr/local/cuda/lib64/
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -110,7 +121,7 @@ jobs:
           curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
           echo Installing CUDA
           curl.exe -L http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_windows.exe -o cuda.exe
-          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.4/cudnn-10.1-windows7-x64-v7.6.4.38.zip -o cudnn.zip
+          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.5/cudnn-10.1-windows7-x64-v7.6.5.32.zip -o cudnn.zip
           cuda.exe -s
           mkdir cuda
           unzip.exe cudnn.zip
