@@ -84,7 +84,6 @@ public final class InfeedEnqueuePrelinearizedBuffer extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "InfeedEnqueuePrelinearizedBuffer";
   
-  
   private InfeedEnqueuePrelinearizedBuffer(Operation operation) {
     super(operation);
   }

@@ -90,7 +90,6 @@ public final class ResourceApplyGradientDescent extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceApplyGradientDescent";
   
-  
   private ResourceApplyGradientDescent(Operation operation) {
     super(operation);
   }

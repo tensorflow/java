@@ -15,79 +15,152 @@
  */
 package org.tensorflow.framework.optimizers;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
+
+import java.util.List;
 
 /**
  * Optimizer that implements the RMSProp algorithm.
- * <p>
- * See the <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">lecture
- * notes</a> that is inexplicably the canonical reference.
+ *
+ * <p>The gist of RMSprop is to: <nl>
+ * <li>Maintain a moving (discounted) average of the square of gradients
+ * <li>Divide the gradient by the root of this average </nl>
+ *
+ *     <p>
+ *
+ *     <p>This implementation of RMSprop uses plain momentum, not Nesterov momentum.
+ *
+ *     <p>
+ *
+ *     <p>The centered version additionally maintains a moving average of the gradients, and uses
+ *     that average to estimate the variance.
+ *
+ *     <p>
+ *
+ * @see <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">Hinton G,
+ *     et al. 2012, lecture notes</a> that is inexplicably the canonical reference.
  */
 public class RMSProp extends Optimizer {
 
+  public static final float LEARNING_RATE_DEFAULT = 0.001f;
+  public static final float DECAY_DEFAULT = 0.9f;
+  public static final float MOMENTUM_DEFAULT = 0.0f;
+  public static final float EPSILON_DEFAULT = 1e-10f;
+  public static final boolean CENTERED_DEFAULT = false;
   public static final String RMS = "rms";
   public static final String MG = "mg"; // mean gradient?
   public static final String MOMENTUM = "momentum";
 
-  private float learningRate;
-  private Tensor<TFloat32> learningRateTensor;
-  private final Placeholder<TFloat32> learningRatePlaceholder;
-  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
   private final float decay;
   private final float momentum;
   private final float epsilon;
   private final boolean centered;
 
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   */
+  public RMSProp(Graph graph) {
+    this(
+        graph,
+        LEARNING_RATE_DEFAULT,
+        DECAY_DEFAULT,
+        MOMENTUM_DEFAULT,
+        EPSILON_DEFAULT,
+        CENTERED_DEFAULT);
+  }
+
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRate the learning rate
+   */
   public RMSProp(Graph graph, float learningRate) {
-    this(graph, learningRate, 0.9f, 0.0f, 1e-10f, false);
+    this(graph, learningRate, DECAY_DEFAULT, MOMENTUM_DEFAULT, EPSILON_DEFAULT, CENTERED_DEFAULT);
   }
 
-  public RMSProp(Graph graph, float learningRate, float decay, float momentum, float epsilon,
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRate the learning rate
+   * @param decay Discounting factor for the history/coming gradient. Defaults to 0.9.
+   * @param momentum the acceleration factor, default is 0.
+   * @param epsilon A small constant for numerical stability
+   * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
+   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
+   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     and memory. Defaults to <code>false</code>.
+   */
+  public RMSProp(
+      Graph graph,
+      float learningRate,
+      float decay,
+      float momentum,
+      float epsilon,
       boolean centered) {
-    super(graph);
-    this.learningRate = learningRate;
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.learningRatePlaceholder =
-            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
-
+    super(graph, learningRate);
     this.decay = decay;
     this.momentum = momentum;
     this.epsilon = epsilon;
     this.centered = centered;
   }
 
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer. Defaults to "RMSProp".
+   * @param learningRate the learning rate
+   */
   public RMSProp(Graph graph, String name, float learningRate) {
-    this(graph, name, learningRate, 0.9f, 0.0f, 1e-10f, false);
+    this(
+        graph,
+        name,
+        learningRate,
+        DECAY_DEFAULT,
+        MOMENTUM_DEFAULT,
+        EPSILON_DEFAULT,
+        CENTERED_DEFAULT);
   }
 
-  public RMSProp(Graph graph, String name, float learningRate, float decay, float momentum, float epsilon,
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer. Defaults to "RMSProp".
+   * @param learningRate the learning rate
+   * @param decay Discounting factor for the history/coming gradient. Defaults to 0.9.
+   * @param momentum The acceleration factor, default is 0.
+   * @param epsilon A small constant for numerical stability
+   * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
+   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
+   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     and memory. Defaults to <code>false</code>.
+   */
+  public RMSProp(
+      Graph graph,
+      String name,
+      float learningRate,
+      float decay,
+      float momentum,
+      float epsilon,
       boolean centered) {
-    super(graph, name);
-    this.learningRate = learningRate;
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.learningRatePlaceholder =
-            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+    super(graph, name, learningRate);
     this.decay = decay;
     this.momentum = momentum;
     this.epsilon = epsilon;
     this.centered = centered;
   }
 
+  /** {@inheritDoc} */
   @Override
   protected void createSlots(List<Output<? extends TType>> variables) {
     for (Output<? extends TType> v : variables) {
@@ -95,85 +168,75 @@ public class RMSProp extends Optimizer {
     }
   }
 
+  /**
+   * Creates the RMSProp Slots for Root Mean Squared (RMS), MOMENTUM, and Mean Gradient (MG)
+   *
+   * @param v the variable to install in the slot
+   * @param <T> the datatype of the variable.
+   */
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.dataType()));
+    Operand<T> rmsInitializer =
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.dataType()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
-    Operand<T> momentumInitializer = tf
-        .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+    Operand<T> momentumInitializer =
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer = tf
-          .fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+      Operand<T> mgInitializer =
+          tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> rmsSlot = getSlot(variable, RMS).get();
     Variable<T> momentumSlot = getSlot(variable, MOMENTUM).get();
     if (centered) {
       Variable<T> mgSlot = getSlot(variable, MG).get();
-      return tf.train.applyCenteredRmsProp(variable, mgSlot, rmsSlot, momentumSlot,
-          tf.dtypes.cast(learningRatePlaceholder, gradient.dataType()),
+      return tf.train.applyCenteredRmsProp(
+          variable,
+          mgSlot,
+          rmsSlot,
+          momentumSlot,
+          tf.dtypes.cast(getLearningRateOperand(), gradient.dataType()),
           tf.dtypes.cast(tf.constant(decay), gradient.dataType()),
           tf.dtypes.cast(tf.constant(momentum), gradient.dataType()),
           tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
           gradient);
     }
-    return tf.train.applyRmsProp(variable, rmsSlot, momentumSlot,
-        tf.dtypes.cast(learningRatePlaceholder, gradient.dataType()),
+    return tf.train.applyRmsProp(
+        variable,
+        rmsSlot,
+        momentumSlot,
+        tf.dtypes.cast(getLearningRateOperand(), gradient.dataType()),
         tf.dtypes.cast(tf.constant(decay), gradient.dataType()),
         tf.dtypes.cast(tf.constant(momentum), gradient.dataType()),
         tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
         gradient);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
-    return "RMSProp{" +
-        "learningRate=" + learningRate +
-        ", decay=" + decay +
-        ", momentum=" + momentum +
-        ", epsilon=" + epsilon +
-        ", centered=" + centered +
-        '}';
+    return "RMSProp{"
+        + "learningRate="
+        + learningRate
+        + ", decay="
+        + decay
+        + ", momentum="
+        + momentum
+        + ", epsilon="
+        + epsilon
+        + ", centered="
+        + centered
+        + '}';
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
     return "RMSProp";
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public final void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
-    if (this.learningRateTensor != null) {
-      this.learningRateTensor.close();
-    }
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
-  }
-
-  /** {@inheritDoc} */
-  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
-    return this.feedDict;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void close() throws Exception {
-    if (this.learningRateTensor != null) {
-      this.learningRateTensor.close();
-      this.learningRateTensor = null;
-    }
   }
 }

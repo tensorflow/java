@@ -46,6 +46,8 @@ public final class InitializeTableFromDataset extends RawOp {
     return new InitializeTableFromDataset(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InitializeTableFromDataset";
   
   private InitializeTableFromDataset(Operation operation) {
     super(operation);

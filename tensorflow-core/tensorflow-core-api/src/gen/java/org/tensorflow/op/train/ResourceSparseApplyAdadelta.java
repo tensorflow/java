@@ -101,7 +101,6 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceSparseApplyAdadelta";
   
-  
   private ResourceSparseApplyAdadelta(Operation operation) {
     super(operation);
   }

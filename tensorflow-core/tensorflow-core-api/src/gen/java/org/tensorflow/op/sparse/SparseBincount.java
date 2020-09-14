@@ -117,6 +117,9 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseBincount";
+  
   private Output<U> output;
   
   private SparseBincount(Operation operation) {

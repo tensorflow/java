@@ -137,7 +137,6 @@ public final class LoadTPUEmbeddingAdadeltaParametersGradAccumDebug extends RawO
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingAdadeltaParametersGradAccumDebug";
   
-  
   private LoadTPUEmbeddingAdadeltaParametersGradAccumDebug(Operation operation) {
     super(operation);
   }

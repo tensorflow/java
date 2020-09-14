@@ -125,7 +125,6 @@ public final class ResourceScatterNdSub extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceScatterNdSub";
   
-  
   private ResourceScatterNdSub(Operation operation) {
     super(operation);
   }

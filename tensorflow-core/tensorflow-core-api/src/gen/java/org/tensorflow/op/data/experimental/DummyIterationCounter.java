@@ -56,6 +56,9 @@ public final class DummyIterationCounter extends RawOp implements Operand<TType>
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DummyIterationCounter";
+  
   private Output<?> handle;
   
   private DummyIterationCounter(Operation operation) {

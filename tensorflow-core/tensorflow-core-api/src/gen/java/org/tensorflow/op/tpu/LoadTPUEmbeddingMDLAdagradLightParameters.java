@@ -137,7 +137,6 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingMDLAdagradLightParameters";
   
-  
   private LoadTPUEmbeddingMDLAdagradLightParameters(Operation operation) {
     super(operation);
   }

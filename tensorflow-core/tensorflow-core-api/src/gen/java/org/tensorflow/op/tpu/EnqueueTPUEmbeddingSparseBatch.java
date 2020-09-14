@@ -146,7 +146,6 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "EnqueueTPUEmbeddingSparseBatch";
   
-  
   private EnqueueTPUEmbeddingSparseBatch(Operation operation) {
     super(operation);
   }

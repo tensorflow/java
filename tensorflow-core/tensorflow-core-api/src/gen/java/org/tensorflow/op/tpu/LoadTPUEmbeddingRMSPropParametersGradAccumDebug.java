@@ -137,7 +137,6 @@ public final class LoadTPUEmbeddingRMSPropParametersGradAccumDebug extends RawOp
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingRMSPropParametersGradAccumDebug";
   
-  
   private LoadTPUEmbeddingRMSPropParametersGradAccumDebug(Operation operation) {
     super(operation);
   }

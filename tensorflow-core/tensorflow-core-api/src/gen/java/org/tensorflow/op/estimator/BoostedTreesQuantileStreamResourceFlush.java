@@ -97,7 +97,6 @@ public final class BoostedTreesQuantileStreamResourceFlush extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BoostedTreesQuantileStreamResourceFlush";
   
-  
   private BoostedTreesQuantileStreamResourceFlush(Operation operation) {
     super(operation);
   }

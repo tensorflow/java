@@ -104,7 +104,6 @@ public final class ResourceApplyPowerSign extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceApplyPowerSign";
   
-  
   private ResourceApplyPowerSign(Operation operation) {
     super(operation);
   }

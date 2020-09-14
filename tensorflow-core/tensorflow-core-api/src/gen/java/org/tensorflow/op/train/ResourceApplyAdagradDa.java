@@ -101,7 +101,6 @@ public final class ResourceApplyAdagradDa extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceApplyAdagradDA";
   
-  
   private ResourceApplyAdagradDa(Operation operation) {
     super(operation);
   }

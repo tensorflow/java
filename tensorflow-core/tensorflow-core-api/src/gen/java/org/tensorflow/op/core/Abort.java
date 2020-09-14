@@ -104,7 +104,6 @@ public final class Abort extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Abort";
   
-  
   private Abort(Operation operation) {
     super(operation);
   }

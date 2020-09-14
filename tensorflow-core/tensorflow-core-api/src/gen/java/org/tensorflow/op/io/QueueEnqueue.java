@@ -96,7 +96,6 @@ public final class QueueEnqueue extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "QueueEnqueueV2";
   
-  
   private QueueEnqueue(Operation operation) {
     super(operation);
   }

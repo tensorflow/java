@@ -140,6 +140,9 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
     return outputDenseShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedCountSparseOutput";
+  
   private Output<TInt64> outputIndices;
   private Output<U> outputValues;
   private Output<TInt64> outputDenseShape;

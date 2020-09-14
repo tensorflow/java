@@ -117,7 +117,7 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
   }
   
   /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShuffleDatasetV2";
+  public static final String OP_NAME = "ShuffleDatasetV3";
   
   private Output<?> handle;
   

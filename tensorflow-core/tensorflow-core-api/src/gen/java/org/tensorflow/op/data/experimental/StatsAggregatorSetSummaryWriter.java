@@ -50,7 +50,6 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "StatsAggregatorSetSummaryWriter";
   
-  
   private StatsAggregatorSetSummaryWriter(Operation operation) {
     super(operation);
   }

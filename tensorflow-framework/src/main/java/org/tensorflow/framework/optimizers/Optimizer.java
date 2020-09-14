@@ -15,50 +15,47 @@
  */
 package org.tensorflow.framework.optimizers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.tensorflow.*;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.NoOp;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-/**
- * Base class for gradient optimizers.
- */
-public abstract class Optimizer implements  AutoCloseable {
+import java.util.*;
+import java.util.stream.Collectors;
+
+/** Base class for gradient optimizers. */
+public abstract class Optimizer implements AutoCloseable {
   public static final String LEARNING_RATE = "learning_rate";
   public static final String VARIABLE_V2 = "VariableV2";
-  /**
-   * Global state variables
-   */
-  //TODO make this be used.
+  public static final float LEARNING_RATE_DEFAULT = 0.001f;
+
+  /** Global state variables */
+  // TODO make this be used.
   protected final List<Variable<?>> globals;
-  /**
-   * The Graph this optimizer is operating on.
-   */
+  /** The Graph this optimizer is operating on. */
   protected final Graph graph;
-  /**
-   * The ops builder for the graph.
-   */
+  /** The ops builder for the graph. */
   protected final Ops tf;
-  /**
-   * Top level map key is the variable name, lower level map key is the slot name.
-   */
+  /** Top level map key is the variable name, lower level map key is the slot name. */
   private final Map<String, Map<String, Variable<?>>> slots;
+
+  protected float learningRate;
+  protected Placeholder<TFloat32> learningRatePlaceholder = null;
+  private Tensor<TFloat32> learningRateTensor;
+  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap = null;
 
   /**
    * Builds an optimizer for the supplied graph.
-   * <p>
-   * Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
+   *
+   * <p>Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
+   *
    * @param graph The graph to optimize.
    */
   protected Optimizer(Graph graph) {
@@ -66,10 +63,28 @@ public abstract class Optimizer implements  AutoCloseable {
     this.tf = Ops.create(graph).withName(getOptimizerName());
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
+    setLearningRate(LEARNING_RATE_DEFAULT);
   }
 
   /**
    * Builds an optimizer for the supplied graph.
+   *
+   * <p>Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
+   *
+   * @param graph The graph to optimize.
+   * @param learningRate the learning rate.
+   */
+  protected Optimizer(Graph graph, float learningRate) {
+    this.graph = graph;
+    this.tf = Ops.create(graph).withName(getOptimizerName());
+    this.slots = new HashMap<>();
+    this.globals = new ArrayList<>();
+    setLearningRate(learningRate);
+  }
+
+  /**
+   * Builds an optimizer for the supplied graph.
+   *
    * @param graph The graph to optimize.
    * @param name The base name for the operations.
    */
@@ -78,6 +93,22 @@ public abstract class Optimizer implements  AutoCloseable {
     this.tf = Ops.create(graph).withName(name);
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
+    setLearningRate(LEARNING_RATE_DEFAULT);
+  }
+
+  /**
+   * Builds an optimizer for the supplied graph.
+   *
+   * @param graph The graph to optimize.
+   * @param name The base name for the operations.
+   * @param learningRate the learning rate.
+   */
+  protected Optimizer(Graph graph, String name, float learningRate) {
+    this.graph = graph;
+    this.tf = Ops.create(graph).withName(name);
+    this.slots = new HashMap<>();
+    this.globals = new ArrayList<>();
+    setLearningRate(learningRate);
   }
 
   public static String createName(Output<? extends TType> variable, String slotName) {
@@ -96,11 +127,14 @@ public abstract class Optimizer implements  AutoCloseable {
 
   public <T extends TType> List<GradAndVar<?>> computeGradients(Operand<?> loss) {
     List<Operation> variables = new ArrayList<>();
-    graph.operations().forEachRemaining((Operation op) -> {
-      if (op.type().equals(VARIABLE_V2)) {
-        variables.add(op);
-      }
-    });
+    graph
+        .operations()
+        .forEachRemaining(
+            (Operation op) -> {
+              if (op.type().equals(VARIABLE_V2)) {
+                variables.add(op);
+              }
+            });
 
     Output<?>[] variableOutputArray = new Output[variables.size()];
     for (int i = 0; i < variables.size(); i++) {
@@ -123,8 +157,8 @@ public abstract class Optimizer implements  AutoCloseable {
   }
 
   public Op applyGradients(List<GradAndVar<? extends TType>> gradsAndVars, String name) {
-    List<Output<? extends TType>> variables = gradsAndVars.stream().map(GradAndVar::getVariable)
-        .collect(Collectors.toList());
+    List<Output<? extends TType>> variables =
+        gradsAndVars.stream().map(GradAndVar::getVariable).collect(Collectors.toList());
 
     createSlots(variables);
 
@@ -142,7 +176,7 @@ public abstract class Optimizer implements  AutoCloseable {
   /**
    * Gets the slot associated with the specified variable and slot name.
    *
-   * @param var      The variable to lookup.
+   * @param var The variable to lookup.
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
@@ -153,7 +187,7 @@ public abstract class Optimizer implements  AutoCloseable {
   /**
    * Gets the slot associated with the specified variable and slot name.
    *
-   * @param varName  The variable to lookup.
+   * @param varName The variable to lookup.
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
@@ -163,7 +197,7 @@ public abstract class Optimizer implements  AutoCloseable {
       Variable<? extends TType> slot = variables.get(varName);
       if (slot != null) {
         @SuppressWarnings("unchecked") // This method should only be called when the type is known.
-            Optional<Variable<T>> opt = Optional.of((Variable<T>) slot);
+        Optional<Variable<T>> opt = Optional.of((Variable<T>) slot);
         return opt;
       }
       return Optional.empty();
@@ -175,20 +209,20 @@ public abstract class Optimizer implements  AutoCloseable {
    * Creates a slot in the graph for the specified variable with the specified name. Adds the slot's
    * initializer to the graph's initializers, and the slot to the Optimizer's slot map.
    *
-   * @param variable    The variable to create the slot for.
-   * @param slotName    The name of the slot.
+   * @param variable The variable to create the slot for.
+   * @param slotName The name of the slot.
    * @param initializer The initializer for the slot.
-   * @param <T>         The type of the variable.
+   * @param <T> The type of the variable.
    */
-  protected <T extends TType> void createSlot(Output<T> variable, String slotName,
-      Operand<T> initializer) {
-    Variable<T> slot = tf.withName(createName(variable, slotName))
-        .variable(variable.shape(), variable.dataType());
+  protected <T extends TType> void createSlot(
+      Output<T> variable, String slotName, Operand<T> initializer) {
+    Variable<T> slot =
+        tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.dataType());
     Assign<T> slotInit = tf.assign(slot, initializer);
     graph.addInitializer(slotInit);
     String varName = variable.op().name();
-    Map<String, Variable<? extends TType>> variables = slots
-        .computeIfAbsent(slotName, (k) -> new HashMap<>());
+    Map<String, Variable<? extends TType>> variables =
+        slots.computeIfAbsent(slotName, (k) -> new HashMap<>());
     variables.put(varName, slot);
   }
 
@@ -206,8 +240,7 @@ public abstract class Optimizer implements  AutoCloseable {
    *
    * @param variables The variables to create slots for.
    */
-  protected void createSlots(List<Output<? extends TType>> variables) {
-  }
+  protected void createSlots(List<Output<? extends TType>> variables) {}
 
   private <T extends TType> Op applyDense(GradAndVar<T> gradVarPair) {
     return applyDense(gradVarPair.getGradient(), gradVarPair.getVariable());
@@ -218,7 +251,7 @@ public abstract class Optimizer implements  AutoCloseable {
    *
    * @param gradient The gradient to use.
    * @param variable The variable to update.
-   * @param <T>      The type of the variable.
+   * @param <T> The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
   protected abstract <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable);
@@ -227,7 +260,7 @@ public abstract class Optimizer implements  AutoCloseable {
    * Gathers up the update operations into a single op that can be used as a run target.
    *
    * @param updateOperations The update operations.
-   * @param name             The name of the run target.
+   * @param name The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
   protected Op finish(List<Op> updateOperations, String name) {
@@ -238,44 +271,78 @@ public abstract class Optimizer implements  AutoCloseable {
   }
 
   /**
-   * Name of the optimizer.
+   * Gets the Name of the optimizer.
    *
    * @return The optimizer name.
    */
   public abstract String getOptimizerName();
 
   /**
-   * Set the learning rate
+   * Sets the learning rate
+   *
    * @param learningRate the learning rate
    */
-  public abstract void setLearningRate(float learningRate);
+  public final void setLearningRate(float learningRate) {
+    if (this.learningRatePlaceholder == null) {
+      this.learningRatePlaceholder =
+          tf.withSubScope(LEARNING_RATE)
+              .placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    }
+
+    if (this.learningRate != learningRate) {
+      if (this.learningRateTensor != null) this.learningRateTensor.close();
+      this.learningRate = learningRate;
+      this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
+      this.feedMap = Collections.singletonMap(this.learningRatePlaceholder, learningRateTensor);
+    }
+  }
 
   /**
-   * Get the learning rate
+   * Gets the learning rate
+   *
    * @return the learning rate
    */
-  public abstract float getLearningRate();
+  public float getLearningRate() {
+    return this.learningRate;
+  }
 
   /**
-   * Get the Feed Dictionary for the run methods to set the Placeholder values(s)
+   * Gets the learning rate Operand, used by subclasses in their graph operations
    *
-   * @return the current Feed Dictionary for the run methods
+   * @return the learning rate Operand
    */
-  public abstract Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict();
+  protected Operand<TFloat32> getLearningRateOperand() {
+    return this.learningRatePlaceholder;
+  }
 
   /**
-   * Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer}
+   * Gets the Feed Map for the run methods to set the Placeholder value(s). Each entry in the Feed
+   * Map contains a PlaceHolder and a Tensor with the value
+   *
+   * @return the current Feed Map for the run methods, this may be null if an LearningRate as an
+   *     Operand has been set.
    */
+  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedMap() {
+    return this.feedMap;
+  }
+
+  public void close() {
+    // close the learningRate Tensor if it exists.
+    if (this.feedMap != null) {
+      this.feedMap.get(this.learningRatePlaceholder).close();
+    }
+  }
+
+  /** Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer} */
   public static class Options {
 
     protected String sharedName;
 
-    private Options() {
-    }
+    private Options() {}
 
     /**
      * @param sharedName If non-empty, this variable is named in the given bucket with this
-     *                   shared_name. Otherwise, the node name is used instead.
+     *     shared_name. Otherwise, the node name is used instead.
      */
     public Optimizer.Options sharedName(String sharedName) {
       this.sharedName = sharedName;

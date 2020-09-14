@@ -135,7 +135,6 @@ public final class LoadTPUEmbeddingMomentumParametersGradAccumDebug extends RawO
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingMomentumParametersGradAccumDebug";
   
-  
   private LoadTPUEmbeddingMomentumParametersGradAccumDebug(Operation operation) {
     super(operation);
   }

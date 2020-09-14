@@ -135,7 +135,6 @@ public final class LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug exten
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug";
   
-  
   private LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug(Operation operation) {
     super(operation);
   }

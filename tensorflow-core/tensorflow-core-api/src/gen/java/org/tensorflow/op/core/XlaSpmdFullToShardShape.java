@@ -68,6 +68,9 @@ public final class XlaSpmdFullToShardShape<T extends TType> extends RawOp implem
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaSpmdFullToShardShape";
+  
   private Output<T> output;
   
   private XlaSpmdFullToShardShape(Operation operation) {

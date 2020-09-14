@@ -97,7 +97,6 @@ public final class Send extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Send";
   
-  
   private Send(Operation operation) {
     super(operation);
   }

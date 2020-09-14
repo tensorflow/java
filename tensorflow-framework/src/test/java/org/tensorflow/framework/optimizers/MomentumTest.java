@@ -12,11 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.optimizers;
+package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.framework.optimizers.Optimizer;
-import org.tensorflow.keras.utils.TestSession;
+import org.tensorflow.Graph;
+import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -24,25 +24,20 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.tensorflow.framework.optimizers.Momentum.MOMENTUM;
-import static org.tensorflow.keras.optimizers.OptimizerInterface.NAME_KEY;
-import static org.tensorflow.keras.optimizers.SGD.*;
 
 /** Test cases for SGD Optimizer */
-public class SGDTest {
+public class MomentumTest {
 
-  private TestSession.Mode tf_mode = TestSession.Mode.GRAPH;
+  private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
-  int index;
-
-  public SGDTest() {}
+  public MomentumTest() {}
 
   @BeforeAll
   public static void setUpClass() {}
@@ -56,29 +51,13 @@ public class SGDTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of create method, of class SGD. */
-  @Test
-  public void testCreate() {
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
-      Ops tf = session.getTF();
-      Map<String, Object> config = new HashMap<>();
-      config.put(NAME_KEY, "Ftrl");
-      config.put(LEARNING_RATE_KEY, 2.0F);
-      config.put(MOMENTUM_KEY, MOMENTUM_DEFAULT);
-      config.put(NESTEROV_KEY, NESTEROV_DEFAULT);
-      SGD expResult = new SGD(tf, 2.0F);
-      SGD result = SGD.create(tf, config);
-      assertEquals(expResult.getConfig(), result.getConfig());
-    }
-  }
-
   /** Test of getOptimizerName method, of class SGD. */
   @Test
   public void testGetOptimizerName() {
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
-      Ops tf = session.getTF();
-      SGD instance = new SGD(tf);
-      String expResult = "SGD";
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Graph graph = session.getGraph();
+      Momentum instance = new Momentum(graph);
+      String expResult = "Momentum";
       String result = instance.getOptimizerName();
       assertEquals(expResult, result);
     }
@@ -86,49 +65,47 @@ public class SGDTest {
 
   @Test
   public void testBasic() {
-    float[] var0_init = {1.0F, 2.0F};
-    float[] var1_init = {3.0F, 4.0F};
-    float[] grads0_init = {0.1F, 0.1F};
-    float[] grads1_init = {0.01F, 0.01F};
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {3.0F, 4.0F};
+    float[] grads0Init = {0.1F, 0.1F};
+    float[] grads1Init = {0.01F, 0.01F};
     float learningRate = 3.0F;
 
-    float epsilon = 1e-6F;
-    float epsilon1 = 1e-2F;
-
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
+      Graph graph = session.getGraph();
 
-      Shape shape0 = Shape.of(var0_init.length);
-      Shape shape1 = Shape.of(var1_init.length);
+      Shape shape0 = Shape.of(var0Init.length);
+      Shape shape1 = Shape.of(var1Init.length);
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
 
-      Constant<TFloat32> grads0 = tf.constant(grads0_init);
-      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+      Constant<TFloat32> grads0 = tf.constant(grads0Init);
+      Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      SGD instance = new SGD(tf, learningRate);
+      Momentum instance = new Momentum(graph, learningRate);
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
       /* initialize the local variables */
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
-      session.evaluate(var0_init, var0);
-      session.evaluate(var1_init, var1);
+      /* make sure the variables were initialized properly */
+      session.evaluate(var0Init, var0);
+      session.evaluate(var1Init, var1);
 
-      session.run(update, instance.getFeedDict()); // 1 step
+      session.run(update, instance.getFeedMap()); // 1 step
 
       float[] expectedVar0 = {1.0F - 3.0F * 0.1F, 2.0F - 3.0F * 0.1F};
       float[] expectedVar1 = {3.0F - 3.0F * 0.01F, 4.0F - 3.0F * 0.01F};
@@ -139,37 +116,34 @@ public class SGDTest {
 
   @Test
   public void testMomentum() {
-    float[] var0_init = {1.0F, 2.0F};
-    float[] var1_init = {3.0F, 4.0F};
-    float[] grads0_init = {0.1F, 0.1F};
-    float[] grads1_init = {0.01F, 0.01F};
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {3.0F, 4.0F};
+    float[] grads0Init = {0.1F, 0.1F};
+    float[] grads1Init = {0.01F, 0.01F};
 
     float learningRate = 2.0F;
     float momentum = 0.9F;
 
-    float epsilon = 1e-6F;
-    float epsilon1 = 1e-2F;
-
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+    try (TestSession session = TestSession.createTestSession(tfMode);
+        Momentum instance = new Momentum(session.getGraph(), learningRate, momentum)) {
       Ops tf = session.getTF();
 
-      Shape shape0 = Shape.of(var0_init.length);
-      Shape shape1 = Shape.of(var1_init.length);
+      Shape shape0 = Shape.of(var0Init.length);
+      Shape shape1 = Shape.of(var1Init.length);
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
 
-      Constant<TFloat32> grads0 = tf.constant(grads0_init);
-      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+      Constant<TFloat32> grads0 = tf.constant(grads0Init);
+      Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      SGD instance = new SGD(tf, learningRate, momentum);
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
       Variable<TFloat32> momentumSlot0 = instance.getSlot(var0.asOutput(), MOMENTUM).get();
@@ -181,14 +155,14 @@ public class SGDTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      /* initialize the accumulators */
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
-      session.evaluate(var0_init, var0);
-      session.evaluate(var1_init, var1);
+      /* make sure the variables were initialized properly */
+      session.evaluate(var0Init, var0);
+      session.evaluate(var1Init, var1);
 
-      session.run(update, instance.getFeedDict()); // 1 step
+      session.run(update, instance.getFeedMap()); // 1 step
 
       float[] expectedMomentum0 = {0.1F, 0.1F};
       float[] expectedMomentum1 = {0.01F, 0.01F};
@@ -200,57 +174,55 @@ public class SGDTest {
       session.evaluate(expectedVar0, var0);
       session.evaluate(expectedVar1, var1);
 
-      session.run(update, instance.getFeedDict()); // step 2
+      session.run(update, instance.getFeedMap()); // step 2
 
-      float[] expectedMomentum0_2 = {(0.9f * 0.1f + 0.1f), (0.9f * 0.1f + 0.1f)};
-      float[] expectedMomentum1_2 = {(0.9f * 0.01f + 0.01f), (0.9f * 0.01f + 0.01f)};
-      session.evaluate(expectedMomentum0_2, momentumSlot0);
-      session.evaluate(expectedMomentum1_2, momentumSlot1);
+      float[] expectedMomentum02 = {(0.9f * 0.1f + 0.1f), (0.9f * 0.1f + 0.1f)};
+      float[] expectedMomentum12 = {(0.9f * 0.01f + 0.01f), (0.9f * 0.01f + 0.01f)};
+      session.evaluate(expectedMomentum02, momentumSlot0);
+      session.evaluate(expectedMomentum12, momentumSlot1);
 
-      float[] expectedVar0_2 = {
+      float[] expectedVar02 = {
         1.0F - (0.1F * 2.0F) - ((0.9F * 0.1F + 0.1F) * 2.0F),
         2.0F - (0.1F * 2.0F) - ((0.9F * 0.1F + 0.1F) * 2.0F)
       };
-      float[] expectedVar1_2 = {
+      float[] expectedVar12 = {
         2.98F - ((0.9F * 0.01F + 0.01F) * 2.0F), 3.98F - ((0.9F * 0.01F + 0.01F) * 2.0F)
       };
-      session.evaluate(expectedVar0_2, var0);
-      session.evaluate(expectedVar1_2, var1);
+      session.evaluate(expectedVar02, var0);
+      session.evaluate(expectedVar12, var1);
     }
   }
 
   @Test
   public void testWithLearningRateDecay() {
     int numSteps = 2;
-    float[] var0_init = {1.0F, 2.0F};
-    float[] var1_init = {3.0F, 4.0F};
-    float[] grads0_init = {0.1F, 0.1F};
-    float[] grads1_init = {0.01F, 0.01F};
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {3.0F, 4.0F};
+    float[] grads0Init = {0.1F, 0.1F};
+    float[] grads1Init = {0.01F, 0.01F};
 
     float learningRate = 3.0F;
 
-    float epsilon = 1e-6F;
-    float epsilon1 = 1e-2F;
-    try (TestSession session = TestSession.createTestSession(tf_mode)) {
+    try (TestSession session = TestSession.createTestSession(tfMode);
+        Momentum instance = new Momentum(session.getGraph(), learningRate)) {
       Ops tf = session.getTF();
-      Shape shape0 = Shape.of(var0_init.length);
-      Shape shape1 = Shape.of(var1_init.length);
+      Shape shape0 = Shape.of(var0Init.length);
+      Shape shape1 = Shape.of(var1Init.length);
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0_init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1_init));
+      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
 
-      Constant<TFloat32> grads0 = tf.constant(grads0_init);
-      Constant<TFloat32> grads1 = tf.constant(grads1_init);
+      Constant<TFloat32> grads0 = tf.constant(grads0Init);
+      Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
       /* build the GradsAnvVars */
-      List gradsAndVars = new ArrayList<>();
+      List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
 
-      SGD instance = new SGD(tf, learningRate);
-      Op update = instance.applyGradients(gradsAndVars, "SGDTest");
+      Op update = instance.applyGradients(gradsAndVars, "MomentumTest");
 
       Variable<TFloat32> momentumSlot0 = instance.getSlot(var0.asOutput(), MOMENTUM).get();
       assertEquals(momentumSlot0.asOutput().shape(), var0.asOutput().shape());
@@ -261,12 +233,12 @@ public class SGDTest {
       session.run(var0Initializer);
       session.run(var1Initializer);
 
-      /** initialize the accumulators */
+      // initialize the accumulators
       session.run(tf.init());
 
-      /** make sure the variables were initialized properly */
-      session.evaluate(var0_init, var0);
-      session.evaluate(var1_init, var1);
+      // make sure the variables were initialized properly
+      session.evaluate(var0Init, var0);
+      session.evaluate(var1Init, var1);
 
       float[][] expectedVar0 = {
         {0.7F, 1.7F},
@@ -283,7 +255,9 @@ public class SGDTest {
         {2.966667F, 3.966667F}
       };
       for (int step = 0; step < numSteps; step++) {
-        session.run(update, instance.getFeedDict());
+        assertEquals(learningRate, instance.getLearningRate(), 1e-6);
+        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.run(update, instance.getFeedMap());
         session.evaluate(expectedVar0[step], var0);
         session.evaluate(expectedVar1[step], var1);
         learningRate *= 0.1;

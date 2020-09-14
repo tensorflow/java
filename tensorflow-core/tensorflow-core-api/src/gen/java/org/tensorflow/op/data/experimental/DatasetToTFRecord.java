@@ -54,7 +54,6 @@ public final class DatasetToTFRecord extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ExperimentalDatasetToTFRecord";
   
-  
   private DatasetToTFRecord(Operation operation) {
     super(operation);
   }

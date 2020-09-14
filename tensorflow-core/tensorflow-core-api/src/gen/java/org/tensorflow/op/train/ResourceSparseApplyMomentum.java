@@ -129,7 +129,6 @@ public final class ResourceSparseApplyMomentum extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceSparseApplyMomentum";
   
-  
   private ResourceSparseApplyMomentum(Operation operation) {
     super(operation);
   }

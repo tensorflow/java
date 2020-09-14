@@ -145,7 +145,6 @@ public final class StageClear extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "StageClear";
   
-  
   private StageClear(Operation operation) {
     super(operation);
   }

@@ -17,20 +17,21 @@
 
 package org.tensorflow.types;
 
-import java.util.function.Consumer;
 import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
+import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.family.TType;
+
+import java.util.function.Consumer;
 
 /**
  * Boolean tensor type.

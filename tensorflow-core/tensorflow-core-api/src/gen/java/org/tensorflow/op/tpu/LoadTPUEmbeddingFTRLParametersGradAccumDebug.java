@@ -137,7 +137,6 @@ public final class LoadTPUEmbeddingFTRLParametersGradAccumDebug extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LoadTPUEmbeddingFTRLParametersGradAccumDebug";
   
-  
   private LoadTPUEmbeddingFTRLParametersGradAccumDebug(Operation operation) {
     super(operation);
   }

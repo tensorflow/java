@@ -56,7 +56,6 @@ public final class CreateSummaryDbWriter extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CreateSummaryDbWriter";
   
-  
   private CreateSummaryDbWriter(Operation operation) {
     super(operation);
   }

@@ -130,6 +130,8 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumD
     return new Options().config(config);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug";
   
   private LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug(Operation operation) {
     super(operation);

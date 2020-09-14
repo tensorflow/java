@@ -57,7 +57,6 @@ public final class ConsumeMutexLock extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ConsumeMutexLock";
   
-  
   private ConsumeMutexLock(Operation operation) {
     super(operation);
   }

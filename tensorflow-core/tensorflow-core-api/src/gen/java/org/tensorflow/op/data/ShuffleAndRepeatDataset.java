@@ -119,7 +119,7 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
   }
   
   /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShuffleAndRepeatDataset";
+  public static final String OP_NAME = "ShuffleAndRepeatDatasetV2";
   
   private Output<?> handle;
   

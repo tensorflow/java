@@ -105,7 +105,6 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceSparseApplyProximalAdagrad";
   
-  
   private ResourceSparseApplyProximalAdagrad(Operation operation) {
     super(operation);
   }

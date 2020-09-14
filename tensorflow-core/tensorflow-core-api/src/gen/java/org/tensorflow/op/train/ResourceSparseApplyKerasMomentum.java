@@ -129,7 +129,6 @@ public final class ResourceSparseApplyKerasMomentum extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceSparseApplyKerasMomentum";
   
-  
   private ResourceSparseApplyKerasMomentum(Operation operation) {
     super(operation);
   }

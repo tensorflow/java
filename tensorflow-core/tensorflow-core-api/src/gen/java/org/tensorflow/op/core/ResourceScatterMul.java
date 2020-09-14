@@ -75,7 +75,6 @@ public final class ResourceScatterMul extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ResourceScatterMul";
   
-  
   private ResourceScatterMul(Operation operation) {
     super(operation);
   }

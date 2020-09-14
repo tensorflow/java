@@ -55,7 +55,6 @@ public final class AssignVariableOp extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "AssignVariableOp";
   
-  
   private AssignVariableOp(Operation operation) {
     super(operation);
   }

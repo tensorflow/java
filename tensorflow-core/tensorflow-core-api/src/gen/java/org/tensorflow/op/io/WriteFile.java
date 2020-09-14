@@ -54,7 +54,6 @@ public final class WriteFile extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "WriteFile";
   
-  
   private WriteFile(Operation operation) {
     super(operation);
   }

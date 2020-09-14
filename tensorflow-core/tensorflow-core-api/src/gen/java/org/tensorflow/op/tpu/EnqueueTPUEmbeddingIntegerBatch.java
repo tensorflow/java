@@ -93,7 +93,6 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "EnqueueTPUEmbeddingIntegerBatch";
   
-  
   private EnqueueTPUEmbeddingIntegerBatch(Operation operation) {
     super(operation);
   }
