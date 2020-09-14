@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.keras.utils;
+package org.tensorflow.framework.utils;
 
 import org.tensorflow.*;
 import org.tensorflow.Session.Runner;
@@ -52,22 +52,10 @@ public class GraphTestSession extends TestSession {
     return tf;
   }
 
-  /**
-   * Get the Graph instance for this test Session
-   *
-   * @return
-   */
+  /** {@inheritDoc} */
+  @Override
   public Graph getGraph() {
     return graph;
-  }
-
-  /**
-   * Get the Graph session instance for this test Session
-   *
-   * @return
-   */
-  public Session getSession() {
-    return session;
   }
 
   /** {@inheritDoc} */
@@ -98,23 +86,12 @@ public class GraphTestSession extends TestSession {
   /** {@inheritDoc} */
   @Override
   public void initialize() {
-    graph
-        .initializers()
-        .forEach(
-            initializer -> {
-              session.runner().addTarget(initializer).run();
-            });
+    session.run(tf.init());
   }
 
   /** {@inheritDoc} */
   @Override
-  public void run(Op op) {
-    session.run(op);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void run(Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+  public final void run(Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     createRunner(op, feedDict).run();
   }
 
@@ -122,26 +99,16 @@ public class GraphTestSession extends TestSession {
    * Create a runner for the Operation
    *
    * @param op the operation
-   * @return the runner
-   */
-  public Runner createRunner(Op op) {
-    return createRunner(op, null);
-  }
-
-  /**
-   * Create a runner for the Operation
-   *
-   * @param op the operation
-   * @param feedDict the dictionary of values to use for the runner's feed operations. Required when
+   * @param feedMap the dictionary of values to use for the runner's feed operations. Required when
    *     placeholders are used.
    * @return the runner
    */
-  public Runner createRunner(
-      Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
+  public final Runner createRunner(
+      Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
     Runner runner = session.runner();
     runner.addTarget(op.op());
-    if (feedDict != null && !feedDict.isEmpty()) {
-      feedDict.forEach((name, tensor) -> runner.feed(name, tensor));
+    if (feedMap != null) {
+      feedMap.forEach(runner::feed);
     }
     return runner;
   }
@@ -152,7 +119,7 @@ public class GraphTestSession extends TestSession {
       double expected,
       Operand<U> input,
       Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
-    DataType dtype = input.asOutput().dataType();
+    DataType<U> dtype = input.asOutput().dataType();
     if (dtype == TFloat32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
@@ -161,22 +128,13 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
         }
       }
       index.set(0);
       try (Tensor<TFloat32> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat32.DTYPE)) {
-        result
-            .data()
-            .scalars()
-            .forEach(
-                f -> {
-                  assertEquals((float) expected, f.getFloat(), epsilon);
-                });
+        result.data().scalars().forEach(f -> assertEquals((float) expected, f.getFloat(), epsilon));
       }
     } else if (dtype == TFloat64.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -186,22 +144,13 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
         }
       }
       index.set(0);
       try (Tensor<TFloat64> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat64.DTYPE)) {
-        result
-            .data()
-            .scalars()
-            .forEach(
-                f -> {
-                  assertEquals(expected, f.getDouble(), epsilon);
-                });
+        result.data().scalars().forEach(f -> assertEquals(expected, f.getDouble(), epsilon));
       }
     } else if (dtype == TInt32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -211,25 +160,15 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
         }
       }
       index.set(0);
       try (Tensor<TInt32> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt32.DTYPE)) {
-        result
-            .data()
-            .scalars()
-            .forEach(
-                f -> {
-                  assertEquals((int) expected, f.getInt());
-                });
+        result.data().scalars().forEach(f -> assertEquals((int) expected, f.getInt()));
       }
     } else if (dtype == TInt64.DTYPE) {
-      Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (Tensor<TInt64> result =
@@ -237,22 +176,13 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
         }
       }
       index.set(0);
       try (Tensor<TInt64> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt64.DTYPE)) {
-        result
-            .data()
-            .scalars()
-            .forEach(
-                f -> {
-                  assertEquals((long) expected, f.getLong());
-                });
+        result.data().scalars().forEach(f -> assertEquals((long) expected, f.getLong()));
       }
     } else {
       fail("Unexpected DataType: " + dtype);
@@ -273,7 +203,7 @@ public class GraphTestSession extends TestSession {
           () ->
               String.format("expected length (%d) != to input length (%d)", expected.length, size));
     }
-    DataType dtype = input.asOutput().dataType();
+    DataType<U> dtype = input.asOutput().dataType();
     if (dtype == TFloat32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
@@ -282,10 +212,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
         }
       }
       index.set(0);
@@ -295,10 +222,9 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals(
-                      expected[index.getAndIncrement()].floatValue(), f.getFloat(), epsilon);
-                });
+                f ->
+                    assertEquals(
+                        expected[index.getAndIncrement()].floatValue(), f.getFloat(), epsilon));
       }
     } else if (dtype == TFloat64.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -308,10 +234,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
         }
       }
       index.set(0);
@@ -321,10 +244,9 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals(
-                      expected[index.getAndIncrement()].doubleValue(), f.getDouble(), epsilon);
-                });
+                f ->
+                    assertEquals(
+                        expected[index.getAndIncrement()].doubleValue(), f.getDouble(), epsilon));
       }
     } else if (dtype == TInt32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -334,10 +256,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
         }
       }
       index.set(0);
@@ -346,13 +265,9 @@ public class GraphTestSession extends TestSession {
         result
             .data()
             .scalars()
-            .forEach(
-                f -> {
-                  assertEquals(expected[index.getAndIncrement()].intValue(), f.getInt());
-                });
+            .forEach(f -> assertEquals(expected[index.getAndIncrement()].intValue(), f.getInt()));
       }
     } else if (dtype == TInt64.DTYPE) {
-      Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (Tensor<TInt64> result =
@@ -360,10 +275,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
         }
       }
       index.set(0);
@@ -372,10 +284,7 @@ public class GraphTestSession extends TestSession {
         result
             .data()
             .scalars()
-            .forEach(
-                f -> {
-                  assertEquals(expected[index.getAndIncrement()].longValue(), f.getLong());
-                });
+            .forEach(f -> assertEquals(expected[index.getAndIncrement()].longValue(), f.getLong()));
       }
     } else {
       fail("Unexpected DataType: " + dtype);
@@ -388,7 +297,7 @@ public class GraphTestSession extends TestSession {
       FloatNdArray expected,
       Output<U> input,
       Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
-    DataType dtype = input.asOutput().dataType();
+    DataType<U> dtype = input.asOutput().dataType();
     if (dtype == TFloat32.DTYPE) {
       AtomicLong index = new AtomicLong();
       if (debug) {
@@ -397,10 +306,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
         }
       }
       index.set(0);
@@ -410,9 +316,9 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals(expected.getFloat(index.getAndIncrement()), f.getFloat(), epsilon);
-                });
+                f ->
+                    assertEquals(
+                        expected.getFloat(index.getAndIncrement()), f.getFloat(), epsilon));
       }
     } else if (dtype == TFloat64.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -422,10 +328,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble());
-                  });
+              .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
         }
       }
       index.set(0);
@@ -435,10 +338,9 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals(
-                      (double) expected.getFloat(index.getAndIncrement()), f.getDouble(), epsilon);
-                });
+                f ->
+                    assertEquals(
+                        expected.getFloat(index.getAndIncrement()), f.getDouble(), epsilon));
       }
     } else if (dtype == TInt32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
@@ -448,10 +350,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
         }
       }
       index.set(0);
@@ -461,12 +360,9 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals((int) expected.getFloat(index.getAndIncrement()), f.getInt());
-                });
+                f -> assertEquals((int) expected.getFloat(index.getAndIncrement()), f.getInt()));
       }
     } else if (dtype == TInt64.DTYPE) {
-      Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (Tensor<TInt64> result =
@@ -474,10 +370,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEach(
-                  f -> {
-                    System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong());
-                  });
+              .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
         }
       }
       index.set(0);
@@ -487,9 +380,7 @@ public class GraphTestSession extends TestSession {
             .data()
             .scalars()
             .forEach(
-                f -> {
-                  assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getLong());
-                });
+                f -> assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getLong()));
       }
     } else {
       fail("Unexpected DataType: " + dtype);
@@ -514,10 +405,7 @@ public class GraphTestSession extends TestSession {
         result
             .data()
             .scalars()
-            .forEach(
-                f -> {
-                  System.out.printf("%d). %s\n", index.getAndIncrement(), f.getObject());
-                });
+            .forEach(f -> System.out.printf("%d). %s\n", index.getAndIncrement(), f.getObject()));
       }
     }
     index.set(0);
@@ -526,10 +414,7 @@ public class GraphTestSession extends TestSession {
       result
           .data()
           .scalars()
-          .forEach(
-              f -> {
-                assertEquals(expected[index.getAndIncrement()], f.getObject());
-              });
+          .forEach(f -> assertEquals(expected[index.getAndIncrement()], f.getObject()));
     }
   }
 
@@ -551,10 +436,7 @@ public class GraphTestSession extends TestSession {
         result
             .data()
             .scalars()
-            .forEach(
-                f -> {
-                  System.out.printf("%d). %b\n", index.getAndIncrement(), f.getObject());
-                });
+            .forEach(f -> System.out.printf("%d). %b\n", index.getAndIncrement(), f.getObject()));
       }
     }
     index.set(0);
@@ -563,10 +445,7 @@ public class GraphTestSession extends TestSession {
       result
           .data()
           .scalars()
-          .forEach(
-              f -> {
-                assertEquals(expected[index.getAndIncrement()], f.getObject());
-              });
+          .forEach(f -> assertEquals(expected[index.getAndIncrement()], f.getObject()));
     }
   }
 
@@ -581,9 +460,10 @@ public class GraphTestSession extends TestSession {
             "expected shape (%s) != to input shape (%s)",
             expected.shape().toString(), input.shape().toString());
     AtomicInteger index = new AtomicInteger();
-    DataType dtype = input.asOutput().dataType();
+    DataType<T> dtype = input.asOutput().dataType();
     boolean isScalar = input.shape().equals(Shape.scalar());
     if (dtype == TFloat32.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TFloat32> finalExpected = (Output<TFloat32>) expected;
       if (debug) {
         try (Tensor<TFloat32> result =
@@ -598,13 +478,12 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %f <==> %f\n",
-                          index.getAndIncrement(),
-                          finalExpected.data().getFloat(idx),
-                          f.getFloat());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %f <==> %f\n",
+                            index.getAndIncrement(),
+                            finalExpected.data().getFloat(idx),
+                            f.getFloat()));
           }
         }
       }
@@ -620,12 +499,12 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getFloat(idx), f.getFloat(), epsilon);
-                  });
+                  (idx, f) ->
+                      assertEquals(expectedResult.data().getFloat(idx), f.getFloat(), epsilon));
         }
       }
     } else if (dtype == TFloat64.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TFloat64> finalExpected = (Output<TFloat64>) expected;
       if (debug) {
         try (Tensor<TFloat64> result =
@@ -640,13 +519,12 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %f <==> %f\n",
-                          index.getAndIncrement(),
-                          finalExpected.data().getDouble(idx),
-                          f.getDouble());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %f <==> %f\n",
+                            index.getAndIncrement(),
+                            finalExpected.data().getDouble(idx),
+                            f.getDouble()));
           }
         }
       }
@@ -662,12 +540,12 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getDouble(idx), f.getDouble(), epsilon);
-                  });
+                  (idx, f) ->
+                      assertEquals(expectedResult.data().getDouble(idx), f.getDouble(), epsilon));
         }
       }
     } else if (dtype == TInt32.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TInt32> finalExpected = (Output<TInt32>) expected;
       if (debug) {
         try (Tensor<TInt32> result =
@@ -682,11 +560,10 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %d <==> %d\n",
-                          index.getAndIncrement(), finalExpected.data().getInt(idx), f.getInt());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %d <==> %d\n",
+                            index.getAndIncrement(), finalExpected.data().getInt(idx), f.getInt()));
           }
         }
       }
@@ -702,12 +579,11 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getInt(idx), f.getInt(), epsilon);
-                  });
+                  (idx, f) -> assertEquals(expectedResult.data().getInt(idx), f.getInt(), epsilon));
         }
       }
     } else if (dtype == TInt64.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TInt64> finalExpected = (Output<TInt64>) expected;
       if (debug) {
         try (Tensor<TInt64> result =
@@ -722,11 +598,12 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %d <==> %d\n",
-                          index.getAndIncrement(), finalExpected.data().getLong(idx), f.getLong());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %d <==> %d\n",
+                            index.getAndIncrement(),
+                            finalExpected.data().getLong(idx),
+                            f.getLong()));
           }
         }
       }
@@ -742,12 +619,12 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getLong(idx), f.getLong(), epsilon);
-                  });
+                  (idx, f) ->
+                      assertEquals(expectedResult.data().getLong(idx), f.getLong(), epsilon));
         }
       }
     } else if (dtype == TBool.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TBool> finalExpected = (Output<TBool>) expected;
       if (debug) {
         try (Tensor<TBool> result =
@@ -762,13 +639,12 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %b <==> %b\n",
-                          index.getAndIncrement(),
-                          finalExpected.data().getBoolean(idx),
-                          f.getBoolean());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %b <==> %b\n",
+                            index.getAndIncrement(),
+                            finalExpected.data().getBoolean(idx),
+                            f.getBoolean()));
           }
         }
       }
@@ -784,12 +660,11 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getBoolean(idx), f.getBoolean());
-                  });
+                  (idx, f) -> assertEquals(expectedResult.data().getBoolean(idx), f.getBoolean()));
         }
       }
     } else if (dtype == TString.DTYPE) {
+      @SuppressWarnings("unchecked")
       final Output<TString> finalExpected = (Output<TString>) expected;
       if (debug) {
         try (Tensor<TString> result =
@@ -804,13 +679,12 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %s <==> %s\n",
-                          index.getAndIncrement(),
-                          finalExpected.data().getObject(idx),
-                          f.getObject());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %s <==> %s\n",
+                            index.getAndIncrement(),
+                            finalExpected.data().getObject(idx),
+                            f.getObject()));
           }
         }
       }
@@ -826,9 +700,7 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    assertEquals(expectedResult.data().getObject(idx), f.getObject());
-                  });
+                  (idx, f) -> assertEquals(expectedResult.data().getObject(idx), f.getObject()));
         }
       }
     } else {
@@ -842,7 +714,7 @@ public class GraphTestSession extends TestSession {
       Predicate<Number> predicate,
       Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     AtomicInteger index = new AtomicInteger();
-    DataType dtype = input.asOutput().dataType();
+    DataType<U> dtype = input.asOutput().dataType();
     boolean isScalar = input.shape().equals(Shape.scalar());
     if (dtype == TFloat32.DTYPE) {
       if (debug) {
@@ -857,11 +729,10 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %b <==> %f\n",
-                          index.getAndIncrement(), predicate.test(f.getFloat()), f.getFloat());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %b <==> %f\n",
+                            index.getAndIncrement(), predicate.test(f.getFloat()), f.getFloat()));
           }
         }
       }
@@ -874,10 +745,7 @@ public class GraphTestSession extends TestSession {
           result
               .data()
               .scalars()
-              .forEachIndexed(
-                  (idx, f) -> {
-                    assertTrue(predicate.test(result.data().getFloat()));
-                  });
+              .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.data().getFloat())));
         }
       }
     } else if (dtype == TFloat64.DTYPE) {
@@ -893,29 +761,23 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %b <==> %f\n",
-                          index.getAndIncrement(), predicate.test(f.getDouble()), f.getDouble());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %b <==> %f\n",
+                            index.getAndIncrement(), predicate.test(f.getDouble()), f.getDouble()));
           }
         }
       }
       index.set(0);
       try (Tensor<TFloat64> result =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat64.DTYPE);
-          Tensor<TFloat64> expectedResult =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat64.DTYPE)) {
+          createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat64.DTYPE)) {
         if (isScalar) {
           assertTrue(predicate.test(result.data().getDouble()));
         } else {
           result
               .data()
               .scalars()
-              .forEachIndexed(
-                  (idx, f) -> {
-                    assertTrue(predicate.test(result.data().getDouble()));
-                  });
+              .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.data().getDouble())));
         }
       }
     } else if (dtype == TInt32.DTYPE) {
@@ -930,29 +792,23 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %b <==> %d\n",
-                          index.getAndIncrement(), predicate.test(f.getInt()), f.getInt());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %b <==> %d\n",
+                            index.getAndIncrement(), predicate.test(f.getInt()), f.getInt()));
           }
         }
       }
       index.set(0);
       try (Tensor<TInt32> result =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt32.DTYPE);
-          Tensor<TInt32> expectedResult =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt32.DTYPE)) {
+          createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt32.DTYPE)) {
         if (isScalar) {
           assertTrue(predicate.test(result.data().getInt()));
         } else {
           result
               .data()
               .scalars()
-              .forEachIndexed(
-                  (idx, f) -> {
-                    assertTrue(predicate.test(result.data().getInt()));
-                  });
+              .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.data().getInt())));
         }
       }
     } else if (dtype == TInt64.DTYPE) {
@@ -968,29 +824,23 @@ public class GraphTestSession extends TestSession {
                 .data()
                 .scalars()
                 .forEachIndexed(
-                    (idx, f) -> {
-                      System.out.printf(
-                          "%d). %b <==> %d\n",
-                          index.getAndIncrement(), predicate.test(f.getLong()), f.getLong());
-                    });
+                    (idx, f) ->
+                        System.out.printf(
+                            "%d). %b <==> %d\n",
+                            index.getAndIncrement(), predicate.test(f.getLong()), f.getLong()));
           }
         }
       }
       index.set(0);
       try (Tensor<TInt64> result =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt64.DTYPE);
-          Tensor<TInt64> expectedResult =
-              createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt64.DTYPE)) {
+          createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt64.DTYPE)) {
         if (isScalar) {
           assertTrue(predicate.test(result.data().getLong()));
         } else {
           result
               .data()
               .scalars()
-              .forEachIndexed(
-                  (idx, f) -> {
-                    assertTrue(predicate.test(result.data().getLong()));
-                  });
+              .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.data().getLong())));
         }
       }
     } else {
@@ -1006,7 +856,7 @@ public class GraphTestSession extends TestSession {
       Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict) {
     boolean isScalar = input.asOutput().shape().size() == 1;
 
-    DataType dtype = input.dataType();
+    DataType<T> dtype = input.dataType();
     if (dtype == TFloat32.DTYPE) {
       AtomicInteger index = new AtomicInteger();
       try (Tensor<TFloat32> result =
@@ -1018,9 +868,7 @@ public class GraphTestSession extends TestSession {
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %f\n", index.getAndIncrement(), f.getFloat());
-                  });
+                  (idx, f) -> writer.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
         }
       }
     } else if (dtype == TFloat64.DTYPE) {
@@ -1029,16 +877,15 @@ public class GraphTestSession extends TestSession {
       try (Tensor<TFloat64> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TFloat64.DTYPE)) {
         if (isScalar) {
-          writer.printf(
-              "%d). %f\n", index.getAndIncrement(), ((Output<TFloat64>) input).data().getDouble());
+          @SuppressWarnings("unchecked")
+          Output<TFloat64> o = (Output<TFloat64>) input;
+          writer.printf("%d). %f\n", index.getAndIncrement(), o.data().getDouble());
         } else {
           result
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %f\n", index.getAndIncrement(), f.getDouble());
-                  });
+                  (idx, f) -> writer.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
         }
       }
     } else if (dtype == TInt32.DTYPE) {
@@ -1047,16 +894,15 @@ public class GraphTestSession extends TestSession {
       try (Tensor<TInt32> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt32.DTYPE)) {
         if (isScalar) {
-          writer.printf(
-              "%d). %f\n", index.getAndIncrement(), ((Output<TInt32>) input).data().getInt());
+          @SuppressWarnings("unchecked")
+          Output<TInt32> o = (Output<TInt32>) input;
+          writer.printf("%d). %d\n", index.getAndIncrement(), o.data().getInt());
         } else {
           result
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %d\n", index.getAndIncrement(), f.getInt());
-                  });
+                  (idx, f) -> writer.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
         }
       }
     } else if (dtype == TInt64.DTYPE) {
@@ -1065,16 +911,15 @@ public class GraphTestSession extends TestSession {
       try (Tensor<TInt64> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TInt64.DTYPE)) {
         if (isScalar) {
-          writer.printf(
-              "%d). %f\n", index.getAndIncrement(), ((Output<TInt64>) input).data().getLong());
+          @SuppressWarnings("unchecked")
+          Output<TInt64> o = (Output<TInt64>) input;
+          writer.printf("%d). %d\n", index.getAndIncrement(), o.data().getLong());
         } else {
           result
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %d\n", index.getAndIncrement(), f.getLong());
-                  });
+                  (idx, f) -> writer.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
         }
       }
     } else if (dtype == TBool.DTYPE) {
@@ -1083,16 +928,15 @@ public class GraphTestSession extends TestSession {
       try (Tensor<TBool> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TBool.DTYPE)) {
         if (isScalar) {
-          writer.printf(
-              "%d). %b\n", index.getAndIncrement(), ((Output<TBool>) input).data().getBoolean());
+          @SuppressWarnings("unchecked")
+          Output<TBool> o = (Output<TBool>) input;
+          writer.printf("%d). %b\n", index.getAndIncrement(), o.data().getBoolean());
         } else {
           result
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %b\n", index.getAndIncrement(), f.getBoolean());
-                  });
+                  (idx, f) -> writer.printf("%d). %b\n", index.getAndIncrement(), f.getBoolean()));
         }
       }
     } else if (dtype == TString.DTYPE) {
@@ -1101,16 +945,15 @@ public class GraphTestSession extends TestSession {
       try (Tensor<TString> result =
           createRunner(input, feedDict).fetch(input).run().get(0).expect(TString.DTYPE)) {
         if (isScalar) {
-          writer.printf(
-              "%d). %s\n", index.getAndIncrement(), ((Output<TString>) input).data().getObject());
+          @SuppressWarnings("unchecked")
+          Output<TString> o = (Output<TString>) input;
+          writer.printf("%d). %s\n", index.getAndIncrement(), o.data().getObject());
         } else {
           result
               .data()
               .scalars()
               .forEachIndexed(
-                  (idx, f) -> {
-                    writer.printf("%d). %s\n", index.getAndIncrement(), f.getObject());
-                  });
+                  (idx, f) -> writer.printf("%d). %s\n", index.getAndIncrement(), f.getObject()));
         }
       }
     } else {

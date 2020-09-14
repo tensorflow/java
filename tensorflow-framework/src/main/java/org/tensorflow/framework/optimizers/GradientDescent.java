@@ -16,92 +16,64 @@
 package org.tensorflow.framework.optimizers;
 
 import org.tensorflow.Graph;
-import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.core.Placeholder;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-import java.util.Collections;
-import java.util.Map;
-
 /**
- * Basic SGD.
+ * Basic Stochastic gradient descent optimizer. GradientDescent updates the current weight using the
+ * current gradient ?L/?w multiplied by the learning rate.
  */
 public class GradientDescent extends Optimizer {
 
-  private float learningRate;
-  private Tensor<TFloat32> learningRateTensor;
-  private final Placeholder<TFloat32> learningRatePlaceholder;
-  private Map<Operand<? extends TType>, Tensor<? extends TType>> feedDict;
+  public static final float LEARNING_RATE_DEFAULT = 0.01f;
 
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   */
+  public GradientDescent(Graph graph) {
+    this(graph, LEARNING_RATE_DEFAULT);
+  }
+
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRate the learning rate, defaults to 0.01
+   */
   public GradientDescent(Graph graph, float learningRate) {
-    super(graph);
-    this.learningRate = learningRate;
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.learningRatePlaceholder =
-            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+    super(graph, learningRate);
   }
 
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer, default is "GradientDescent"
+   * @param learningRate the learning rate, defaults to 0.01
+   */
   public GradientDescent(Graph graph, String name, float learningRate) {
-    super(graph, name);
-    this.learningRate = learningRate;
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.learningRatePlaceholder =
-            tf.withSubScope(LEARNING_RATE).placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
+    super(graph, name, learningRate);
   }
 
+  /** {@inheritDoc} */
   @Override
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
-    return tf.train.applyGradientDescent(variable,
-        tf.dtypes.cast(learningRatePlaceholder, gradient.dataType()), gradient);
+    return tf.train.applyGradientDescent(
+        variable, tf.dtypes.cast(getLearningRateOperand(), gradient.dataType()), gradient);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
-    return "GradientDescent{" +
-        "learningRate=" + learningRate +
-        '}';
+    return "GradientDescent{" + "learningRate=" + learningRate + '}';
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
     return "GradientDescent";
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public float getLearningRate() {
-    return this.learningRate;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public final void setLearningRate(float learningRate) {
-    this.learningRate = learningRate;
-    if (this.learningRateTensor != null) {
-      this.learningRateTensor.close();
-    }
-    this.learningRateTensor = TFloat32.scalarOf(this.learningRate);
-    this.feedDict = Collections.singletonMap(this.learningRatePlaceholder, this.learningRateTensor);
-  }
-
-  /** {@inheritDoc} */
-  public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedDict() {
-    return this.feedDict;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void close() throws Exception {
-    if (this.learningRateTensor != null) {
-      this.learningRateTensor.close();
-      this.learningRateTensor = null;
-    }
   }
 }
