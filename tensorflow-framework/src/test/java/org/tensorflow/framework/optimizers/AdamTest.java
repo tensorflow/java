@@ -274,12 +274,7 @@ public class AdamTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f ->  assertEquals(powers[0], f.getFloat(), epsilon1)
-                  );
+          result.data().scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
         }
         try (Tensor<TFloat32> result =
             session
@@ -289,14 +284,11 @@ public class AdamTest {
                 .run()
                 .get(0)
                 .expect(TFloat32.DTYPE)) {
-          result
-              .data()
-              .scalars()
-              .forEach(
-                  f -> assertEquals(powers[1], f.getFloat(), epsilon1));
+          result.data().scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
         }
         assertEquals(learningRate, instance.getLearningRate(), 1e-6f);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
 
         float lr_t =

@@ -256,7 +256,8 @@ public class MomentumTest {
       };
       for (int step = 0; step < numSteps; step++) {
         assertEquals(learningRate, instance.getLearningRate(), 1e-6);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
         session.evaluate(expectedVar0[step], var0);
         session.evaluate(expectedVar1[step], var1);

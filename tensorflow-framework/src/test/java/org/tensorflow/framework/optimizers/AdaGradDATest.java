@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -28,6 +27,8 @@ import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Test cases for AdaGradDA Optimizer */
 public class AdaGradDATest {
@@ -140,14 +141,15 @@ public class AdaGradDATest {
       session.evaluate(var1Init, var1);
 
       float[][][] expected = {
-        {{ -2.121320f, -2.683281f},{ -0.298511f, -0.588348f}},
-        {{ -3.680166f, -4.483282f}, { -0.565851f, -1.107964f}},
-        {{ -4.895166f, -5.831203f}, { -0.805286f, -1.567190f}},
-        {{ -5.873222f, -6.892054f}, { -1.019739f, -1.973306f}}
+        {{-2.121320f, -2.683281f}, {-0.298511f, -0.588348f}},
+        {{-3.680166f, -4.483282f}, {-0.565851f, -1.107964f}},
+        {{-4.895166f, -5.831203f}, {-0.805286f, -1.567190f}},
+        {{-5.873222f, -6.892054f}, {-1.019739f, -1.973306f}}
       };
       for (int i = 0; i < numSteps; i++) {
         assertEquals(learningRate, instance.getLearningRate(), epsilon);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
         session.evaluate(expected[i][0], var0);
         session.evaluate(expected[i][1], var1);

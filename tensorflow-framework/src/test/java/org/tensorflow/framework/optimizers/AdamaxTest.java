@@ -269,7 +269,8 @@ public class AdamaxTest {
                   });
         }
         assertEquals(learningRate, instance.getLearningRate(), epsilon);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
 
         FloatNdArray[] resultNP = calculate(var0Np, grads0Np, step, m0, v0, learningRate);

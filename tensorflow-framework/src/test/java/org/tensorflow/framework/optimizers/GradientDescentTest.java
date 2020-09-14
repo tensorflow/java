@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.framework.optimizers.Momentum.MOMENTUM;
 
 /** Test cases for GradientDescent Optimizer */
 public class GradientDescentTest {
@@ -129,7 +128,6 @@ public class GradientDescentTest {
 
       Op update = instance.applyGradients(gradsAndVars, "GradientDescentTest");
 
-
       /* initialize the local variables */
       session.run(var0Initializer);
       session.run(var1Initializer);
@@ -157,7 +155,8 @@ public class GradientDescentTest {
       };
       for (int step = 0; step < numSteps; step++) {
         assertEquals(learningRate, instance.getLearningRate(), 1e-6f);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
         session.evaluate(expectedVar0[step], var0);
         session.evaluate(expectedVar1[step], var1);

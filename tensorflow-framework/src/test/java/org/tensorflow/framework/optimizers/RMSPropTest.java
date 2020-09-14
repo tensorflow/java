@@ -306,7 +306,8 @@ public class RMSPropTest {
 
         for (int i = 0; i < numSteps; i++) {
           assertEquals(learningRate, instance.getLearningRate(), epsilon);
-          session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+          session.evaluate(
+              learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
           session.run(update, instance.getFeedMap());
           FloatNdArray[] result0 =
               calc(

@@ -235,7 +235,8 @@ public class AdaDeltaTest {
         float totUpdate = 0;
         for (int step = 0; step < numSteps; step++) {
           assertEquals(learningRate, instance.getLearningRate(), epsilon);
-          session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+          session.evaluate(
+              learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
           session.run(adadeltaUpdate, instance.getFeedMap());
           accum = accum * rho + (float) Math.pow(grad, 2) * (1.0F - rho);
           updates[step] =

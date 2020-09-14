@@ -243,7 +243,6 @@ public class NadamTest {
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
 
-
       /* build the GradsAnvVars */
       List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
       gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
@@ -282,46 +281,40 @@ public class NadamTest {
       session.evaluate(var1Init, var1);
 
       try (Tensor<TFloat32> result =
-                   session
-                           .getGraphSession()
-                           .runner()
-                           .fetch("momentum")
-                           .run()
-                           .get(0)
-                           .expect(TFloat32.DTYPE)) {
-        result
-                .data()
-                .scalars()
-                .forEach(
-                        f -> assertEquals(1F, f.getFloat(), epsilon1));
+          session
+              .getGraphSession()
+              .runner()
+              .fetch("momentum")
+              .run()
+              .get(0)
+              .expect(TFloat32.DTYPE)) {
+        result.data().scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
 
       for (int step = 0; step < numSteps; step++) {
         assertEquals(learningRate, instance.getLearningRate(), 1e-6f);
-        session.evaluate(learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
+        session.evaluate(
+            learningRate, tf.identity(instance.getLearningRateOperand()), instance.getFeedMap());
         session.run(update, instance.getFeedMap());
 
         float mut =
-                Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
+            Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
         momentum = momentum * mut;
 
         try (Tensor<TFloat32> result =
-                     session
-                             .getGraphSession()
-                             .runner()
-                             .fetch("momentum")
-                             .run()
-                             .get(0)
-                             .expect(TFloat32.DTYPE)) {
-          result
-                  .data()
-                  .scalars()
-                  .forEach(
-                          f -> assertEquals(momentum, f.getFloat(), epsilon1));
+            session
+                .getGraphSession()
+                .runner()
+                .fetch("momentum")
+                .run()
+                .get(0)
+                .expect(TFloat32.DTYPE)) {
+          result.data().scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);
-        FloatNdArray[] resultsNP = nadamUpdateNdArray(var0Np, grads0Np, step, m0, v0, mcache, learningRate);
+        FloatNdArray[] resultsNP =
+            nadamUpdateNdArray(var0Np, grads0Np, step, m0, v0, mcache, learningRate);
         var0Np = resultsNP[VAR];
         m0 = resultsNP[M];
         v0 = resultsNP[V];
@@ -349,24 +342,24 @@ public class NadamTest {
     }
   }
 
-
   private FloatNdArray[] nadamUpdateNdArray(
-          FloatNdArray varNp,
-          FloatNdArray gradsNp,
-          int t,
-          FloatNdArray m,
-          FloatNdArray v,
-          FloatNdArray mCache) {
+      FloatNdArray varNp,
+      FloatNdArray gradsNp,
+      int t,
+      FloatNdArray m,
+      FloatNdArray v,
+      FloatNdArray mCache) {
     return nadamUpdateNdArray(varNp, gradsNp, t, m, v, mCache, 0.001F);
   }
+
   private FloatNdArray[] nadamUpdateNdArray(
-          FloatNdArray varNp,
-          FloatNdArray gradsNp,
-          int t,
-          FloatNdArray m,
-          FloatNdArray v,
-          FloatNdArray mCache,
-          float alpha) {
+      FloatNdArray varNp,
+      FloatNdArray gradsNp,
+      int t,
+      FloatNdArray m,
+      FloatNdArray v,
+      FloatNdArray mCache,
+      float alpha) {
 
     float beta1 = 0.9F;
     float beta2 = 0.999F;
@@ -382,7 +375,7 @@ public class NadamTest {
     FloatNdArray vPrimeT = ND.div(vT, 1.F - (float) Math.pow(beta2, t + 1));
     FloatNdArray mBarT = ND.add(ND.mul((1 - muT), gPrimeT), ND.mul(muT1, mPrimeT));
     FloatNdArray paramT =
-            ND.sub(varNp, ND.div(ND.mul(alpha, mBarT), ND.add(ND.sqrt(vPrimeT), epsilon)));
+        ND.sub(varNp, ND.div(ND.mul(alpha, mBarT), ND.add(ND.sqrt(vPrimeT), epsilon)));
 
     FloatNdArray[] results = new FloatNdArray[3];
     results[VAR] = paramT;
