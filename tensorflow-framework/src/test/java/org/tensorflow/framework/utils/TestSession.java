@@ -65,6 +65,7 @@ public abstract class TestSession implements AutoCloseable {
 
   /**
    * Returns the Graph if in Graph mode, or null if in EagerMode
+   *
    * @return the Graph if in Graph mode, or null if in EagerMode
    */
   public Graph getGraph() {
@@ -78,10 +79,9 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param op The Operation to run
    */
-  public  void run(Op op) {
-      run(op, null);
+  public void run(Op op) {
+    run(op, null);
   }
-
 
   /**
    * Perform session.run()
@@ -89,8 +89,8 @@ public abstract class TestSession implements AutoCloseable {
    * <p>If in eager mode, this does nothing.
    *
    * @param op The Operation to run
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public abstract void run(Op op, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap);
 
@@ -110,8 +110,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -136,8 +136,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       Number expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
@@ -161,14 +161,12 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type for the input
    */
   public <U extends TNumber> void evaluate(
-      Number[] expected,
-      Op input,
-      Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
+      Number[] expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
     Output<U> output = input.op().output(0);
     evaluate(expected, output, feedMap);
   }
@@ -190,8 +188,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -218,8 +216,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -245,8 +243,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -272,8 +270,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -299,8 +297,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -326,8 +324,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public abstract <U extends TNumber> void evaluate(
@@ -351,8 +349,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -382,8 +380,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -413,8 +411,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -444,8 +442,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -475,8 +473,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -506,8 +504,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public abstract <U extends TNumber> void evaluate(
@@ -530,8 +528,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       String expected,
@@ -555,8 +553,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       String expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
@@ -578,13 +576,11 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
-      String[] expected,
-      Op input,
-      Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
+      String[] expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
     Output<TString> output = input.op().output(0);
     evaluate(expected, output, feedMap);
   }
@@ -605,8 +601,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public abstract void evaluate(
       String[] expected,
@@ -628,8 +624,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       Boolean expected,
@@ -653,8 +649,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       Boolean expected, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
@@ -677,8 +673,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       Boolean[] expected,
@@ -704,8 +700,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void evaluate(
       Boolean[] expected,
@@ -730,8 +726,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public abstract void evaluate(
       Boolean[] expected,
@@ -765,8 +761,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the feedMap entries
    */
   public abstract <T extends TType> void evaluate(
@@ -790,8 +786,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public <U extends TNumber> void evaluate(
@@ -817,8 +813,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param expected the expected value
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public abstract <U extends TNumber> void evaluate(
@@ -844,8 +840,8 @@ public abstract class TestSession implements AutoCloseable {
    * @param input the actual value
    * @param predicate a predicate that accepts a Number as an argument, if the result of the
    *     predicate is false, then the test will fail
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <U> the data type of the input
    */
   public abstract <U extends TNumber> void evaluate(
@@ -878,8 +874,8 @@ public abstract class TestSession implements AutoCloseable {
    * Print the results to the "standard" output stream.
    *
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the feedMap entries
    */
   public <T extends TType> void print(
@@ -900,8 +896,8 @@ public abstract class TestSession implements AutoCloseable {
    * Print the results to the "standard" output stream.
    *
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void print(Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
     print(new PrintWriter(new OutputStreamWriter(System.out)), input.op().output(0), feedMap);
@@ -921,8 +917,8 @@ public abstract class TestSession implements AutoCloseable {
    * Print the results to the "standard" output stream.
    *
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the input
    */
   public <T extends TType> void print(
@@ -946,8 +942,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param out the output stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the feedMap entries
    */
   public <T extends TType> void print(
@@ -972,8 +968,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param out the output stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void print(
       OutputStream out, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
@@ -996,8 +992,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param out the output stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the input
    */
   public <T extends TType> void print(
@@ -1023,8 +1019,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param writer the character stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the input
    */
   public <T extends TType> void print(
@@ -1049,8 +1045,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param writer the character stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    */
   public void print(
       Writer writer, Op input, Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap) {
@@ -1073,8 +1069,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param writer the character stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the input
    */
   public <T extends TType> void print(
@@ -1100,8 +1096,8 @@ public abstract class TestSession implements AutoCloseable {
    *
    * @param writer the character stream
    * @param input the actual value
-   * @param feedMap The dictionary of values to pass to the feed() operation of the runner,
-   *     required for placeholders.
+   * @param feedMap The dictionary of values to pass to the feed() operation of the runner, required
+   *     for placeholders.
    * @param <T> the data type for the input
    */
   public abstract <T extends TType> void print(
