@@ -176,7 +176,6 @@ public class Ftrl extends Optimizer {
     this.l2RegularizationStrength = l2Strength;
     this.l2ShrinkageRegularizationStrength = l2ShrinkageRegularizationStrength;
     validateParams();
-
   }
 
   /** Validates all the settings of the Frtl Optmizer */
@@ -248,8 +247,7 @@ public class Ftrl extends Optimizer {
         tf.dtypes.cast(this.getLearningRateOperand(), gradient.dataType()),
         tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.dataType()),
         tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.dataType()),
-        tf.dtypes.cast(
-            tf.constant(l2ShrinkageRegularizationStrength), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(l2ShrinkageRegularizationStrength), gradient.dataType()),
         tf.dtypes.cast(tf.constant(learningRatePower), gradient.dataType()),
         ApplyFtrl.useLocking(true));
   }

@@ -139,10 +139,7 @@ public class AdaGrad extends Optimizer {
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return tf.train.applyAdagrad(
-        variable,
-        slot,
-        tf.dtypes.cast(getLearningRateOperand(), gradient.dataType()),
-        gradient);
+        variable, slot, tf.dtypes.cast(getLearningRateOperand(), gradient.dataType()), gradient);
   }
 
   /** {@inheritDoc} */

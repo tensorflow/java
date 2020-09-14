@@ -68,13 +68,9 @@ public class AdaDelta extends Optimizer {
   public static final float RHO_DEFAULT = 0.95f;
   public static final float EPSILON_DEFAULT = 1e-7f;
 
-
-
   private final float rho;
 
   private final float epsilon;
-
-
 
   public AdaDelta(Graph graph) {
     this(graph, LEARNING_RATE_DEFAULT, RHO_DEFAULT, EPSILON_DEFAULT);
