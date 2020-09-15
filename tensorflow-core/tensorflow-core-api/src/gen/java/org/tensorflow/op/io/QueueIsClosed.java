@@ -62,6 +62,9 @@ public final class QueueIsClosed extends RawOp implements Operand<TBool> {
     return isClosed;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QueueIsClosedV2";
+  
   private Output<TBool> isClosed;
   
   private QueueIsClosed(Operation operation) {

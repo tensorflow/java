@@ -117,6 +117,9 @@ public final class SparseCross extends RawOp {
     return outputShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseCrossV2";
+  
   private Output<TInt64> outputIndices;
   private Output<TString> outputValues;
   private Output<TInt64> outputShape;

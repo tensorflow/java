@@ -77,6 +77,9 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DatasetToSingleElement";
+  
   private List<Output<?>> components;
   
   private DatasetToSingleElement(Operation operation) {

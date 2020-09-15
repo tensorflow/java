@@ -109,6 +109,9 @@ public final class Equal extends RawOp implements Operand<TBool> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Equal";
+  
   private Output<TBool> z;
   
   private Equal(Operation operation) {

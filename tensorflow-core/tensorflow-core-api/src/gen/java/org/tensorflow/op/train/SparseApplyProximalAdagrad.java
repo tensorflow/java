@@ -117,6 +117,9 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyProximalAdagrad";
+  
   private Output<T> out;
   
   private SparseApplyProximalAdagrad(Operation operation) {

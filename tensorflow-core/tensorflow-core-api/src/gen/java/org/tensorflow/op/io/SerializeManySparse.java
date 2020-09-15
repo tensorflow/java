@@ -93,6 +93,9 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
     return serializedSparse;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SerializeManySparse";
+  
   private Output<U> serializedSparse;
   
   private SerializeManySparse(Operation operation) {

@@ -93,6 +93,9 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnsortedSegmentProd";
+  
   private Output<T> output;
   
   private UnsortedSegmentProd(Operation operation) {

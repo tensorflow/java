@@ -146,6 +146,9 @@ public final class RetrieveTPUEmbeddingAdadeltaParameters extends RawOp {
     return updates;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingAdadeltaParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> accumulators;
   private Output<TFloat32> updates;

@@ -132,6 +132,8 @@ public final class LoadTPUEmbeddingADAMParameters extends RawOp {
     return new Options().config(config);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LoadTPUEmbeddingADAMParameters";
   
   private LoadTPUEmbeddingADAMParameters(Operation operation) {
     super(operation);

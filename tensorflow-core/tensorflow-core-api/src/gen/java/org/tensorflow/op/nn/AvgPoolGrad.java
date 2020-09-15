@@ -123,6 +123,9 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AvgPoolGrad";
+  
   private Output<T> output;
   
   private AvgPoolGrad(Operation operation) {

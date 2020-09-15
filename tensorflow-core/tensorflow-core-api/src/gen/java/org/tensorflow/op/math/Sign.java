@@ -69,6 +69,9 @@ public final class Sign<T extends TType> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Sign";
+  
   private Output<T> y;
   
   private Sign(Operation operation) {

@@ -85,6 +85,9 @@ public final class SparseSoftmax<T extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSoftmax";
+  
   private Output<T> output;
   
   private SparseSoftmax(Operation operation) {

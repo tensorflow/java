@@ -212,6 +212,9 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
     return (Output<TType>) tableHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MutableDenseHashTableV2";
+  
   private Output<?> tableHandle;
   
   private MutableDenseHashTable(Operation operation) {

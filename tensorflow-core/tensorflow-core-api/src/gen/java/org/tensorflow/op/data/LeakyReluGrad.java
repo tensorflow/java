@@ -99,6 +99,9 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LeakyReluGrad";
+  
   private Output<T> backprops;
   
   private LeakyReluGrad(Operation operation) {

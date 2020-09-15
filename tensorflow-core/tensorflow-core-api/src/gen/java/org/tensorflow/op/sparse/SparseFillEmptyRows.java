@@ -125,6 +125,9 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
     return reverseIndexMap;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseFillEmptyRows";
+  
   private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   private Output<TBool> emptyRowIndicator;

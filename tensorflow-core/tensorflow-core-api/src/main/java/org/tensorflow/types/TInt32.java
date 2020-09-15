@@ -30,13 +30,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * 32-bit signed integer tensor type.
- */
+/** 32-bit signed integer tensor type. */
 public interface TInt32 extends IntNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "INT32";
+
   /** Type metadata */
-  DataType<TInt32> DTYPE = DataType.create("INT32", 3, 4, TInt32Impl::mapTensor);
+  DataType<TInt32> DTYPE = DataType.create(NAME, 3, 4, TInt32Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single int value.
@@ -107,9 +108,7 @@ public interface TInt32 extends IntNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TInt32}
- */
+/** Hidden implementation of a {@code TInt32} */
 class TInt32Impl extends IntDenseNdArray implements TInt32 {
 
   static TInt32 mapTensor(TF_Tensor nativeTensor, Shape shape) {

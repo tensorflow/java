@@ -76,6 +76,9 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListGather";
+  
   private Output<T> values;
   
   private TensorListGather(Operation operation) {

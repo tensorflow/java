@@ -54,6 +54,8 @@ public final class LookupTableInsert extends RawOp {
     return new LookupTableInsert(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LookupTableInsertV2";
   
   private LookupTableInsert(Operation operation) {
     super(operation);

@@ -124,6 +124,9 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
     return product;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatMul";
+  
   private Output<T> product;
   
   private MatMul(Operation operation) {

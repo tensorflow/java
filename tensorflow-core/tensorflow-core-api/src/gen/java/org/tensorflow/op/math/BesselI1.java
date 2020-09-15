@@ -59,6 +59,9 @@ public final class BesselI1<T extends TNumber> extends RawOp implements Operand<
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BesselI1";
+  
   private Output<T> y;
   
   private BesselI1(Operation operation) {

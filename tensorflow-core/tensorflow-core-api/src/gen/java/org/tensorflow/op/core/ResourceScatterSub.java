@@ -72,6 +72,8 @@ public final class ResourceScatterSub extends RawOp {
     return new ResourceScatterSub(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceScatterSub";
   
   private ResourceScatterSub(Operation operation) {
     super(operation);

@@ -313,6 +313,9 @@ public final class CudnnRNN<T extends TNumber> extends RawOp {
     return hostReserved;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CudnnRNNV3";
+  
   private Output<T> output;
   private Output<T> outputH;
   private Output<T> outputC;

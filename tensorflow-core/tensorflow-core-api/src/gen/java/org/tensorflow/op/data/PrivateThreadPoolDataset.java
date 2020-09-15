@@ -77,6 +77,9 @@ public final class PrivateThreadPoolDataset extends RawOp implements Operand<TTy
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PrivateThreadPoolDataset";
+  
   private Output<?> handle;
   
   private PrivateThreadPoolDataset(Operation operation) {

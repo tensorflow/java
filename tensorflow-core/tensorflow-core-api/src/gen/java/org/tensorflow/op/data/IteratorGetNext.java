@@ -77,6 +77,9 @@ public final class IteratorGetNext extends RawOp implements Iterable<Operand<TTy
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorGetNext";
+  
   private List<Output<?>> components;
   
   private IteratorGetNext(Operation operation) {

@@ -61,6 +61,9 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
     return serialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SerializeTensor";
+  
   private Output<TString> serialized;
   
   private SerializeTensor(Operation operation) {

@@ -76,6 +76,9 @@ public final class AdjustContrast<T extends TNumber> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AdjustContrastv2";
+  
   private Output<T> output;
   
   private AdjustContrast(Operation operation) {

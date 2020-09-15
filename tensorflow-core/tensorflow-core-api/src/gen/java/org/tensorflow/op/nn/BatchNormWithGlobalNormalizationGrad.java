@@ -106,6 +106,9 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
     return dg;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchNormWithGlobalNormalizationGrad";
+  
   private Output<T> dx;
   private Output<T> dm;
   private Output<T> dv;

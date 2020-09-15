@@ -64,6 +64,9 @@ public final class LogicalAnd extends RawOp implements Operand<TBool> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LogicalAnd";
+  
   private Output<TBool> z;
   
   private LogicalAnd(Operation operation) {

@@ -76,6 +76,9 @@ public final class AccumulatorTakeGradient<T extends TType> extends RawOp implem
     return average;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AccumulatorTakeGradient";
+  
   private Output<T> average;
   
   private AccumulatorTakeGradient(Operation operation) {

@@ -69,6 +69,9 @@ public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StaticRegexFullMatch";
+  
   private Output<TBool> output;
   
   private StaticRegexFullMatch(Operation operation) {

@@ -141,6 +141,9 @@ public final class SparseApplyMomentum<T extends TType> extends RawOp implements
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyMomentum";
+  
   private Output<T> out;
   
   private SparseApplyMomentum(Operation operation) {

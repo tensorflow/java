@@ -70,6 +70,9 @@ public final class Ifft<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IFFT";
+  
   private Output<T> output;
   
   private Ifft(Operation operation) {

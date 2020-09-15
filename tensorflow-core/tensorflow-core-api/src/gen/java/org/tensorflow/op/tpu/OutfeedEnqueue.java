@@ -46,6 +46,8 @@ public final class OutfeedEnqueue extends RawOp {
     return new OutfeedEnqueue(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OutfeedEnqueue";
   
   private OutfeedEnqueue(Operation operation) {
     super(operation);

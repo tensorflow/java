@@ -75,6 +75,9 @@ public final class ToHashBucketFast extends RawOp implements Operand<TInt64> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringToHashBucketFast";
+  
   private Output<TInt64> output;
   
   private ToHashBucketFast(Operation operation) {

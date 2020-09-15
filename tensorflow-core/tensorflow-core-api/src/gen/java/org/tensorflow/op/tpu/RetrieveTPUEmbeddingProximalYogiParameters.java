@@ -137,6 +137,9 @@ public final class RetrieveTPUEmbeddingProximalYogiParameters extends RawOp {
     return m;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingProximalYogiParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> v;
   private Output<TFloat32> m;

@@ -71,6 +71,9 @@ public final class Cosh<T extends TType> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Cosh";
+  
   private Output<T> y;
   
   private Cosh(Operation operation) {

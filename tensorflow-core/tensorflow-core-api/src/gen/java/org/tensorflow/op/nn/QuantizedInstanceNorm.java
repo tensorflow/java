@@ -190,6 +190,9 @@ public final class QuantizedInstanceNorm<T extends TType> extends RawOp {
     return yMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedInstanceNorm";
+  
   private Output<T> y;
   private Output<TFloat32> yMin;
   private Output<TFloat32> yMax;

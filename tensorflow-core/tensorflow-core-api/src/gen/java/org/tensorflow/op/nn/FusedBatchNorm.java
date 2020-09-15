@@ -205,6 +205,9 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     return reserveSpace3;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FusedBatchNormV3";
+  
   private Output<T> y;
   private Output<U> batchMean;
   private Output<U> batchVariance;

@@ -175,6 +175,8 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
     return new Options().maxSequenceLengths(maxSequenceLengths);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EnqueueTPUEmbeddingSparseTensorBatch";
   
   private EnqueueTPUEmbeddingSparseTensorBatch(Operation operation) {
     super(operation);

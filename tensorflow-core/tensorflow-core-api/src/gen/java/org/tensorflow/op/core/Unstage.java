@@ -162,6 +162,9 @@ public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) values.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Unstage";
+  
   private List<Output<?>> values;
   
   private Unstage(Operation operation) {

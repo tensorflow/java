@@ -123,6 +123,9 @@ public final class GenerateBoundingBoxProposals extends RawOp {
     return roiProbabilities;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GenerateBoundingBoxProposals";
+  
   private Output<TFloat32> rois;
   private Output<TFloat32> roiProbabilities;
   

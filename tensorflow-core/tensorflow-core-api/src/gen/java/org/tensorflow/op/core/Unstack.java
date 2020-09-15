@@ -117,6 +117,9 @@ public final class Unstack<T extends TType> extends RawOp implements Iterable<Op
     return (Iterator) output.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Unpack";
+  
   private List<Output<T>> output;
   
   @SuppressWarnings("unchecked")

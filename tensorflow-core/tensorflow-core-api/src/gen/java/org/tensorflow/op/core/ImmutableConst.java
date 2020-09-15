@@ -70,6 +70,9 @@ public final class ImmutableConst<T extends TType> extends RawOp implements Oper
     return tensor;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ImmutableConst";
+  
   private Output<T> tensor;
   
   private ImmutableConst(Operation operation) {

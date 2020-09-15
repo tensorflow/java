@@ -70,6 +70,9 @@ public final class SparseMatrixSoftmax extends RawOp implements Operand<TType> {
     return (Output<TType>) softmax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixSoftmax";
+  
   private Output<?> softmax;
   
   private SparseMatrixSoftmax(Operation operation) {

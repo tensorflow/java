@@ -64,6 +64,9 @@ public final class MatchingFiles extends RawOp implements Operand<TString> {
     return filenames;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatchingFiles";
+  
   private Output<TString> filenames;
   
   private MatchingFiles(Operation operation) {

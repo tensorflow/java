@@ -65,6 +65,9 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
     return (Output<TType>) sparseMatrix;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseTensorToCSRSparseMatrix";
+  
   private Output<?> sparseMatrix;
   
   private SparseTensorToCSRSparseMatrix(Operation operation) {

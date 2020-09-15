@@ -90,6 +90,9 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringToNumber";
+  
   private Output<T> output;
   
   private ToNumber(Operation operation) {

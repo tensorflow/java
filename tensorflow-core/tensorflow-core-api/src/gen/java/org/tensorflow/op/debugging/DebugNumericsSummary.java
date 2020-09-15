@@ -241,6 +241,9 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DebugNumericSummaryV2";
+  
   private Output<U> output;
   
   private DebugNumericsSummary(Operation operation) {

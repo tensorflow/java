@@ -57,6 +57,9 @@ public final class Fact extends RawOp implements Operand<TString> {
     return fact;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Fact";
+  
   private Output<TString> fact;
   
   private Fact(Operation operation) {

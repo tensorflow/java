@@ -64,6 +64,9 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListSetItem";
+  
   private Output<?> outputHandle;
   
   private TensorListSetItem(Operation operation) {

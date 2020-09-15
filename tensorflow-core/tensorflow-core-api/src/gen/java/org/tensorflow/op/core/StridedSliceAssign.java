@@ -187,6 +187,9 @@ public final class StridedSliceAssign<T extends TType> extends RawOp implements 
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StridedSliceAssign";
+  
   private Output<T> outputRef;
   
   private StridedSliceAssign(Operation operation) {

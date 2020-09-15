@@ -74,6 +74,9 @@ public final class SparseSliceGrad<T extends TType> extends RawOp implements Ope
     return valGrad;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSliceGrad";
+  
   private Output<T> valGrad;
   
   private SparseSliceGrad(Operation operation) {

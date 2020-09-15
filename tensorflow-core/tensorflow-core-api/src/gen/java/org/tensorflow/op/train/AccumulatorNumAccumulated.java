@@ -61,6 +61,9 @@ public final class AccumulatorNumAccumulated extends RawOp implements Operand<TI
     return numAccumulated;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AccumulatorNumAccumulated";
+  
   private Output<TInt32> numAccumulated;
   
   private AccumulatorNumAccumulated(Operation operation) {

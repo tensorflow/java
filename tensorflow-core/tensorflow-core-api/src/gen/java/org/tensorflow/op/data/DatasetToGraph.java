@@ -114,6 +114,9 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
     return graph;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DatasetToGraphV2";
+  
   private Output<TString> graph;
   
   private DatasetToGraph(Operation operation) {

@@ -142,6 +142,9 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterNdUpdate";
+  
   private Output<T> outputRef;
   
   private ScatterNdUpdate(Operation operation) {

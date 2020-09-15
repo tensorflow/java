@@ -62,6 +62,9 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
     return cardinality;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalDatasetCardinality";
+  
   private Output<TInt64> cardinality;
   
   private DatasetCardinality(Operation operation) {

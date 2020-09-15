@@ -132,6 +132,9 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
     return backpropWrtMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FakeQuantWithMinMaxVarsGradient";
+  
   private Output<TFloat32> backpropsWrtInput;
   private Output<TFloat32> backpropWrtMin;
   private Output<TFloat32> backpropWrtMax;

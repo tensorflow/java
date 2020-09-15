@@ -62,6 +62,9 @@ public final class Erfc<T extends TNumber> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Erfc";
+  
   private Output<T> y;
   
   private Erfc(Operation operation) {

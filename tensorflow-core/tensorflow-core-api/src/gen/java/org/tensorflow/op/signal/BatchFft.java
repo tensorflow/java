@@ -59,6 +59,9 @@ public final class BatchFft extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchFFT";
+  
   private Output<?> output;
   
   private BatchFft(Operation operation) {

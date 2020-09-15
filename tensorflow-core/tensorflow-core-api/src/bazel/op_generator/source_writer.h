@@ -153,6 +153,9 @@ class SourceWriter {
   SourceWriter& WriteField(const Variable& field, int modifiers,
                            const Javadoc* javadoc = nullptr);
 
+  SourceWriter& WriteFieldWithInitializer(const Variable& field,
+        int modifiers, const Javadoc* javadoc = nullptr, const string& initializer = nullptr);
+
  protected:
   virtual void DoAppend(const StringPiece& str) = 0;
 
@@ -161,7 +164,7 @@ class SourceWriter {
   class TypeVisitor {
    public:
     virtual ~TypeVisitor() = default;
-    void Visit(const Type& type);
+    void Visit(const Type& type);	
 
    protected:
     virtual void DoVisit(const Type& type) = 0;

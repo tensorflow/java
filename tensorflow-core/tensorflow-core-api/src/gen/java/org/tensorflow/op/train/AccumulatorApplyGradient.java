@@ -55,6 +55,8 @@ public final class AccumulatorApplyGradient extends RawOp {
     return new AccumulatorApplyGradient(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AccumulatorApplyGradient";
   
   private AccumulatorApplyGradient(Operation operation) {
     super(operation);

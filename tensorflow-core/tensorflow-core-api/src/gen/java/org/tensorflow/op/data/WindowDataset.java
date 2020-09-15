@@ -131,6 +131,9 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "WindowDataset";
+  
   private Output<?> handle;
   
   private WindowDataset(Operation operation) {

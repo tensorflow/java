@@ -192,6 +192,9 @@ public final class BlockLSTM<T extends TNumber> extends RawOp {
     return h;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BlockLSTMV2";
+  
   private Output<T> i;
   private Output<T> cs;
   private Output<T> f;

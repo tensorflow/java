@@ -101,6 +101,9 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StaticRegexReplace";
+  
   private Output<TString> output;
   
   private StaticRegexReplace(Operation operation) {

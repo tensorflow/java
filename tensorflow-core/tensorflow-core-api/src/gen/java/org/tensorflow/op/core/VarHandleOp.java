@@ -144,6 +144,9 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     return (Output<TType>) resource;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "VarHandleOp";
+  
   private Output<?> resource;
   
   private VarHandleOp(Operation operation) {

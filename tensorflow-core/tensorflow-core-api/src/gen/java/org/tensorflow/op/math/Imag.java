@@ -90,6 +90,9 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Imag";
+  
   private Output<U> output;
   
   private Imag(Operation operation) {

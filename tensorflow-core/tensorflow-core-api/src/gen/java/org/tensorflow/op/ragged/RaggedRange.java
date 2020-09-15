@@ -102,6 +102,9 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
     return rtDenseValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RaggedRange";
+  
   private Output<U> rtNestedSplits;
   private Output<T> rtDenseValues;
   

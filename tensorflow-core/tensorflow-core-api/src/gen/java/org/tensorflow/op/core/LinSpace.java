@@ -76,6 +76,9 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LinSpace";
+  
   private Output<T> output;
   
   private LinSpace(Operation operation) {

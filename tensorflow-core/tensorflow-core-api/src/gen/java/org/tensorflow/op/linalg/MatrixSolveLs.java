@@ -140,6 +140,9 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixSolveLs";
+  
   private Output<T> output;
   
   private MatrixSolveLs(Operation operation) {

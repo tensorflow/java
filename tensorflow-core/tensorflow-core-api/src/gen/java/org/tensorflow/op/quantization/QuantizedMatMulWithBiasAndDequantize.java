@@ -151,6 +151,9 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> exten
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedMatMulWithBiasAndDequantize";
+  
   private Output<W> out;
   
   private QuantizedMatMulWithBiasAndDequantize(Operation operation) {

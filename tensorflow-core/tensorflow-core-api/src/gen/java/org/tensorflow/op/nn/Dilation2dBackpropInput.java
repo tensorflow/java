@@ -84,6 +84,9 @@ public final class Dilation2dBackpropInput<T extends TNumber> extends RawOp impl
     return inBackprop;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Dilation2DBackpropInput";
+  
   private Output<T> inBackprop;
   
   private Dilation2dBackpropInput(Operation operation) {

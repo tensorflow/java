@@ -84,6 +84,9 @@ public final class BitwiseXor<T extends TNumber> extends RawOp implements Operan
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BitwiseXor";
+  
   private Output<T> z;
   
   private BitwiseXor(Operation operation) {

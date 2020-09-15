@@ -75,6 +75,9 @@ public final class Conj<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Conj";
+  
   private Output<T> output;
   
   private Conj(Operation operation) {

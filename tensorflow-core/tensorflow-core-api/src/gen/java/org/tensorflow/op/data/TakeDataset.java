@@ -80,6 +80,9 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TakeDataset";
+  
   private Output<?> handle;
   
   private TakeDataset(Operation operation) {

@@ -87,6 +87,9 @@ public final class BoostedTreesTrainingPredict extends RawOp {
     return nodeIds;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesTrainingPredict";
+  
   private Output<TFloat32> partialLogits;
   private Output<TInt32> treeIds;
   private Output<TInt32> nodeIds;

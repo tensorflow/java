@@ -74,6 +74,9 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
     return samples;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "KmeansPlusPlusInitialization";
+  
   private Output<TFloat32> samples;
   
   private KmeansPlusPlusInitialization(Operation operation) {

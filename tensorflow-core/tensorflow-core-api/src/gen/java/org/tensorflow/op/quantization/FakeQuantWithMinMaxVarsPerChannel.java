@@ -154,6 +154,9 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
     return outputs;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FakeQuantWithMinMaxVarsPerChannel";
+  
   private Output<TFloat32> outputs;
   
   private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {

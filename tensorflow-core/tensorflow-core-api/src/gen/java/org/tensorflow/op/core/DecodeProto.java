@@ -206,6 +206,9 @@ public final class DecodeProto extends RawOp {
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeProtoV2";
+  
   private Output<TInt32> sizes;
   private List<Output<?>> values;
   

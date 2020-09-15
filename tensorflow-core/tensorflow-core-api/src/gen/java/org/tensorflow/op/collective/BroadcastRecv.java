@@ -123,6 +123,9 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CollectiveBcastRecv";
+  
   private Output<T> output;
   
   private BroadcastRecv(Operation operation) {

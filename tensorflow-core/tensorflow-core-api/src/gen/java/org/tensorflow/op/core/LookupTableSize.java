@@ -60,6 +60,9 @@ public final class LookupTableSize extends RawOp implements Operand<TInt64> {
     return size;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LookupTableSizeV2";
+  
   private Output<TInt64> size;
   
   private LookupTableSize(Operation operation) {

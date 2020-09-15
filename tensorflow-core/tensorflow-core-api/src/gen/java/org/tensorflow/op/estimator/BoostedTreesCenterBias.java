@@ -68,6 +68,9 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
     return continueCentering;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesCenterBias";
+  
   private Output<TBool> continueCentering;
   
   private BoostedTreesCenterBias(Operation operation) {

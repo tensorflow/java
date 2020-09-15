@@ -83,6 +83,9 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MultiDeviceIteratorGetNextFromShard";
+  
   private List<Output<?>> components;
   
   private MultiDeviceIteratorGetNextFromShard(Operation operation) {

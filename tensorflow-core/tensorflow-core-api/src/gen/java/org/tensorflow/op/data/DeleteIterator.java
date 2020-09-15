@@ -48,6 +48,8 @@ public final class DeleteIterator extends RawOp {
     return new DeleteIterator(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeleteIterator";
   
   private DeleteIterator(Operation operation) {
     super(operation);

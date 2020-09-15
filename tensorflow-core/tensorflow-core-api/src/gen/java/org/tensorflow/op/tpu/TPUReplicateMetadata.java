@@ -249,6 +249,8 @@ public final class TPUReplicateMetadata extends RawOp {
     return new Options().allowSoftPlacement(allowSoftPlacement);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TPUReplicateMetadata";
   
   private TPUReplicateMetadata(Operation operation) {
     super(operation);

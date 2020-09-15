@@ -86,6 +86,9 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalCSVDataset";
+  
   private Output<?> handle;
   
   private CSVDataset(Operation operation) {

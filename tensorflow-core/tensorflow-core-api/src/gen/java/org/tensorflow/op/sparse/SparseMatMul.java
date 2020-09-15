@@ -164,6 +164,9 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
     return product;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatMul";
+  
   private Output<TFloat32> product;
   
   private SparseMatMul(Operation operation) {

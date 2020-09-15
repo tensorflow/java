@@ -99,6 +99,9 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NotEqual";
+  
   private Output<TBool> z;
   
   private NotEqual(Operation operation) {

@@ -154,6 +154,9 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CollectiveReduce";
+  
   private Output<T> output;
   
   private AllReduce(Operation operation) {

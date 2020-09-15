@@ -106,6 +106,9 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RegexReplace";
+  
   private Output<TString> output;
   
   private RegexReplace(Operation operation) {

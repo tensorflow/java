@@ -63,6 +63,9 @@ public final class Xdivy<T extends TType> extends RawOp implements Operand<T> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Xdivy";
+  
   private Output<T> z;
   
   private Xdivy(Operation operation) {

@@ -78,6 +78,9 @@ public final class GreaterEqual extends RawOp implements Operand<TBool> {
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "GreaterEqual";
+  
   private Output<TBool> z;
   
   private GreaterEqual(Operation operation) {

@@ -71,6 +71,9 @@ public final class BoostedTreesBucketize extends RawOp implements Iterable<Opera
     return (Iterator) buckets.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesBucketize";
+  
   private List<Output<TInt32>> buckets;
   
   @SuppressWarnings("unchecked")

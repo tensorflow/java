@@ -72,6 +72,9 @@ public final class NextAfter<T extends TNumber> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NextAfter";
+  
   private Output<T> output;
   
   private NextAfter(Operation operation) {

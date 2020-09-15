@@ -103,6 +103,9 @@ public final class LowerBound<U extends TNumber> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LowerBound";
+  
   private Output<U> output;
   
   private LowerBound(Operation operation) {

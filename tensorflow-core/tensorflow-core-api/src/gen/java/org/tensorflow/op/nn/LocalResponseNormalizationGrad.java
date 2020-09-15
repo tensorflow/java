@@ -157,6 +157,9 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LRNGrad";
+  
   private Output<T> output;
   
   private LocalResponseNormalizationGrad(Operation operation) {

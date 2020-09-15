@@ -45,6 +45,8 @@ public final class ControlTrigger extends RawOp {
     return new ControlTrigger(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ControlTrigger";
   
   private ControlTrigger(Operation operation) {
     super(operation);

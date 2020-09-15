@@ -81,6 +81,9 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
     return deleter;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AnonymousMultiDeviceIterator";
+  
   private Output<?> handle;
   private Output<?> deleter;
   

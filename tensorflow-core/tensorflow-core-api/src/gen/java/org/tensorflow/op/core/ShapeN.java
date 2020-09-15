@@ -85,6 +85,9 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
     return (Iterator) output.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ShapeN";
+  
   private List<Output<U>> output;
   
   @SuppressWarnings("unchecked")

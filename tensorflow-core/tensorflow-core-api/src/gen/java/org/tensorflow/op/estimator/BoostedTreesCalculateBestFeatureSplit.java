@@ -154,6 +154,9 @@ public final class BoostedTreesCalculateBestFeatureSplit extends RawOp {
     return splitWithDefaultDirections;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesCalculateBestFeatureSplit";
+  
   private Output<TInt32> nodeIds;
   private Output<TFloat32> gains;
   private Output<TInt32> featureDimensions;

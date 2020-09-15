@@ -72,6 +72,9 @@ public final class SwitchCond<T extends TType> extends RawOp {
     return outputTrue;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Switch";
+  
   private Output<T> outputFalse;
   private Output<T> outputTrue;
   

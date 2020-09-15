@@ -62,6 +62,9 @@ public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
     return response;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "WorkerHeartbeat";
+  
   private Output<TString> response;
   
   private WorkerHeartbeat(Operation operation) {

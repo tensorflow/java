@@ -72,6 +72,9 @@ public final class RefSwitch<T extends TType> extends RawOp {
     return outputTrue;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RefSwitch";
+  
   private Output<T> outputFalse;
   private Output<T> outputTrue;
   

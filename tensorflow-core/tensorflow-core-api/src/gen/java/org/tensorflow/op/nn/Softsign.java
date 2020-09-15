@@ -62,6 +62,9 @@ public final class Softsign<T extends TNumber> extends RawOp implements Operand<
     return activations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Softsign";
+  
   private Output<T> activations;
   
   private Softsign(Operation operation) {

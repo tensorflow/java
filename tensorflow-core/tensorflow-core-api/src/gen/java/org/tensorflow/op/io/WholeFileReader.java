@@ -119,6 +119,9 @@ public final class WholeFileReader extends RawOp implements Operand<TType> {
     return (Output<TType>) readerHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "WholeFileReaderV2";
+  
   private Output<?> readerHandle;
   
   private WholeFileReader(Operation operation) {

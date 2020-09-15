@@ -157,6 +157,9 @@ public final class QuantizedMatMulWithBiasAndRequantize<W extends TType> extends
     return maxOut;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedMatMulWithBiasAndRequantize";
+  
   private Output<W> out;
   private Output<TFloat32> minOut;
   private Output<TFloat32> maxOut;

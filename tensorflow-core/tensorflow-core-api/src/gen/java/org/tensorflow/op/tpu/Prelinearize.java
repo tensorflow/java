@@ -122,6 +122,9 @@ public final class Prelinearize extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Prelinearize";
+  
   private Output<?> output;
   
   private Prelinearize(Operation operation) {

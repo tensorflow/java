@@ -230,6 +230,9 @@ public final class FractionalAvgPool<T extends TNumber> extends RawOp {
     return colPoolingSequence;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FractionalAvgPool";
+  
   private Output<T> output;
   private Output<TInt64> rowPoolingSequence;
   private Output<TInt64> colPoolingSequence;

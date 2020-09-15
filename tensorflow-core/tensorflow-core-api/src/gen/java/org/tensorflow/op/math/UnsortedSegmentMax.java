@@ -100,6 +100,9 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnsortedSegmentMax";
+  
   private Output<T> output;
   
   private UnsortedSegmentMax(Operation operation) {

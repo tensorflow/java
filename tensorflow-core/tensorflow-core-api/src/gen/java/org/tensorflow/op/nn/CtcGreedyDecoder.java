@@ -131,6 +131,9 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
     return logProbability;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CTCGreedyDecoder";
+  
   private Output<TInt64> decodedIndices;
   private Output<TInt64> decodedValues;
   private Output<TInt64> decodedShape;

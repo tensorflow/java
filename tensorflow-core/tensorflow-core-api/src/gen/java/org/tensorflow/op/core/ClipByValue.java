@@ -73,6 +73,9 @@ public final class ClipByValue<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ClipByValue";
+  
   private Output<T> output;
   
   private ClipByValue(Operation operation) {

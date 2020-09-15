@@ -156,6 +156,9 @@ public final class OrderedMapIncompleteSize extends RawOp implements Operand<TIn
     return size;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OrderedMapIncompleteSize";
+  
   private Output<TInt32> size;
   
   private OrderedMapIncompleteSize(Operation operation) {

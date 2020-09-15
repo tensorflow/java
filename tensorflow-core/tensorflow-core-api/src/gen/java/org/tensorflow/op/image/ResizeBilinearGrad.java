@@ -123,6 +123,9 @@ public final class ResizeBilinearGrad<T extends TNumber> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeBilinearGrad";
+  
   private Output<T> output;
   
   private ResizeBilinearGrad(Operation operation) {

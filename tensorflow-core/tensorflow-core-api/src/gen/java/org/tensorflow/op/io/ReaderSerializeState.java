@@ -62,6 +62,9 @@ public final class ReaderSerializeState extends RawOp implements Operand<TString
     return state;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderSerializeStateV2";
+  
   private Output<TString> state;
   
   private ReaderSerializeState(Operation operation) {

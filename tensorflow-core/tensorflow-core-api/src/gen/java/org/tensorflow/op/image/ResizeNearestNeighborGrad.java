@@ -122,6 +122,9 @@ public final class ResizeNearestNeighborGrad<T extends TNumber> extends RawOp im
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeNearestNeighborGrad";
+  
   private Output<T> output;
   
   private ResizeNearestNeighborGrad(Operation operation) {

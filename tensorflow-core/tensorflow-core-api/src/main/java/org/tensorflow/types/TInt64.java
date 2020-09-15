@@ -31,13 +31,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.LongDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * 64-bit signed integer tensor type.
- */
+/** 64-bit signed integer tensor type. */
 public interface TInt64 extends LongNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "INT64";
+
   /** Type metadata */
-  DataType<TInt64> DTYPE = DataType.create("INT64", 9, 8, TInt64Impl::mapTensor);
+  DataType<TInt64> DTYPE = DataType.create(NAME, 9, 8, TInt64Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single long value.
@@ -108,9 +109,7 @@ public interface TInt64 extends LongNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TInt64}
- */
+/** Hidden implementation of a {@code TInt64} */
 class TInt64Impl extends LongDenseNdArray implements TInt64 {
 
   static TInt64 mapTensor(TF_Tensor nativeTensor, Shape shape) {

@@ -61,6 +61,9 @@ public final class ClusterOutput<T extends TType> extends RawOp implements Opera
     return outputs;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaClusterOutput";
+  
   private Output<T> outputs;
   
   private ClusterOutput(Operation operation) {

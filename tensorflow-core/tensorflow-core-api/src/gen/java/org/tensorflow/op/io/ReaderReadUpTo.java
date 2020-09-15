@@ -72,6 +72,9 @@ public final class ReaderReadUpTo extends RawOp {
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderReadUpToV2";
+  
   private Output<TString> keys;
   private Output<TString> values;
   

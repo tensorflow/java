@@ -100,6 +100,9 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixTranspose";
+  
   private Output<?> output;
   
   private SparseMatrixTranspose(Operation operation) {

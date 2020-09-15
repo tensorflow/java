@@ -61,6 +61,9 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<TTyp
     return (Output<TType>) outputHandles;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListPushBackBatch";
+  
   private Output<?> outputHandles;
   
   private TensorListPushBackBatch(Operation operation) {

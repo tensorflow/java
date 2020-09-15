@@ -21,35 +21,61 @@ import org.tensorflow.op.Op;
 import org.tensorflow.types.family.TType;
 
 /**
- * Basic SGD.
+ * Basic Stochastic gradient descent optimizer. GradientDescent updates the current weight using the
+ * current gradient ?L/?w multiplied by the learning rate.
  */
 public class GradientDescent extends Optimizer {
 
+  public static final float LEARNING_RATE_DEFAULT = 0.01f;
+
   private final float learningRate;
 
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   */
+  public GradientDescent(Graph graph) {
+    this(graph, LEARNING_RATE_DEFAULT);
+  }
+
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRate the learning rate, defaults to 0.01
+   */
   public GradientDescent(Graph graph, float learningRate) {
     super(graph);
     this.learningRate = learningRate;
   }
 
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer, default is "GradientDescent"
+   * @param learningRate the learning rate, defaults to 0.01
+   */
   public GradientDescent(Graph graph, String name, float learningRate) {
     super(graph, name);
     this.learningRate = learningRate;
   }
 
+  /** {@inheritDoc} */
   @Override
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
-    return tf.train.applyGradientDescent(variable,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), gradient);
+    return tf.train.applyGradientDescent(
+        variable, tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), gradient);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
-    return "GradientDescent{" +
-        "learningRate=" + learningRate +
-        '}';
+    return "GradientDescent{" + "learningRate=" + learningRate + '}';
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
     return "GradientDescent";

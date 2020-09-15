@@ -125,6 +125,9 @@ public final class ApplyRmsProp<T extends TType> extends RawOp implements Operan
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyRMSProp";
+  
   private Output<T> out;
   
   private ApplyRmsProp(Operation operation) {

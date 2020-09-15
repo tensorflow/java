@@ -119,6 +119,9 @@ public final class DataFormatDimMap<T extends TNumber> extends RawOp implements 
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DataFormatDimMap";
+  
   private Output<T> y;
   
   private DataFormatDimMap(Operation operation) {

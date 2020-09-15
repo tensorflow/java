@@ -79,6 +79,9 @@ public final class CSRSparseMatrixComponents<T extends TType> extends RawOp {
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CSRSparseMatrixComponents";
+  
   private Output<TInt32> rowPtrs;
   private Output<TInt32> colInds;
   private Output<T> values;

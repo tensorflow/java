@@ -59,6 +59,9 @@ public final class BatchMatrixDiag<T extends TType> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatrixDiag";
+  
   private Output<T> output;
   
   private BatchMatrixDiag(Operation operation) {

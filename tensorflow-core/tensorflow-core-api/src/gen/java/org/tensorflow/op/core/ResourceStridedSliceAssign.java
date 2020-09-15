@@ -173,6 +173,8 @@ public final class ResourceStridedSliceAssign extends RawOp {
     return new Options().shrinkAxisMask(shrinkAxisMask);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceStridedSliceAssign";
   
   private ResourceStridedSliceAssign(Operation operation) {
     super(operation);

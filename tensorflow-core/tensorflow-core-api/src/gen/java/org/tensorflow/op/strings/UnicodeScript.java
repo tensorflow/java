@@ -71,6 +71,9 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnicodeScript";
+  
   private Output<TInt32> output;
   
   private UnicodeScript(Operation operation) {

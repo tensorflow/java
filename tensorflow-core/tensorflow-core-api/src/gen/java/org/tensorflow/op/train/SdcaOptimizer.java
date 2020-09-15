@@ -163,6 +163,9 @@ public final class SdcaOptimizer extends RawOp {
     return outDeltaDenseWeights;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SdcaOptimizerV2";
+  
   private Output<TFloat32> outExampleStateData;
   private List<Output<TFloat32>> outDeltaSparseWeights;
   private List<Output<TFloat32>> outDeltaDenseWeights;

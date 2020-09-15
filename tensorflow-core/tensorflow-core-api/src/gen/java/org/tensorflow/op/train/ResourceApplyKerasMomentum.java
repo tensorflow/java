@@ -121,6 +121,8 @@ public final class ResourceApplyKerasMomentum extends RawOp {
     return new Options().useNesterov(useNesterov);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceApplyKerasMomentum";
   
   private ResourceApplyKerasMomentum(Operation operation) {
     super(operation);

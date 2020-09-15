@@ -130,6 +130,8 @@ public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
     return new Options().config(config);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LoadTPUEmbeddingAdagradParameters";
   
   private LoadTPUEmbeddingAdagradParameters(Operation operation) {
     super(operation);

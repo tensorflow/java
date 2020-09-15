@@ -62,6 +62,9 @@ public final class Softplus<T extends TNumber> extends RawOp implements Operand<
     return activations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Softplus";
+  
   private Output<T> activations;
   
   private Softplus(Operation operation) {

@@ -77,6 +77,9 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentMeanWithNumSegments";
+  
   private Output<T> output;
   
   private SparseSegmentMeanWithNumSegments(Operation operation) {

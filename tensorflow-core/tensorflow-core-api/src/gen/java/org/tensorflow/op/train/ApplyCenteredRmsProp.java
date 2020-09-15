@@ -135,6 +135,9 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyCenteredRMSProp";
+  
   private Output<T> out;
   
   private ApplyCenteredRmsProp(Operation operation) {

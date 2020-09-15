@@ -105,6 +105,9 @@ public final class BandPart<T extends TType> extends RawOp implements Operand<T>
     return band;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixBandPart";
+  
   private Output<T> band;
   
   private BandPart(Operation operation) {

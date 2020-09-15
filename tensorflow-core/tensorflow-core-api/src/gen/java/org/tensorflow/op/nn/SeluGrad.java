@@ -65,6 +65,9 @@ public final class SeluGrad<T extends TNumber> extends RawOp implements Operand<
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SeluGrad";
+  
   private Output<T> backprops;
   
   private SeluGrad(Operation operation) {

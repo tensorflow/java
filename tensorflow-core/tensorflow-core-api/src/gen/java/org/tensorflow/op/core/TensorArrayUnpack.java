@@ -64,6 +64,9 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
     return flowOut;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayUnpack";
+  
   private Output<TFloat32> flowOut;
   
   private TensorArrayUnpack(Operation operation) {

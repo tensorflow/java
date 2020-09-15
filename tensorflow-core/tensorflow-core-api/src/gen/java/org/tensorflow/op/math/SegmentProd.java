@@ -90,6 +90,9 @@ public final class SegmentProd<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SegmentProd";
+  
   private Output<T> output;
   
   private SegmentProd(Operation operation) {

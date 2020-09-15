@@ -86,6 +86,9 @@ public final class Svd<T extends TType> extends RawOp {
     return v;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaSvd";
+  
   private Output<T> s;
   private Output<T> u;
   private Output<T> v;

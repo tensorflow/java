@@ -85,6 +85,9 @@ public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CompareAndBitpack";
+  
   private Output<TUint8> output;
   
   private CompareAndBitpack(Operation operation) {

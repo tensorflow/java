@@ -90,6 +90,9 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SegmentMin";
+  
   private Output<T> output;
   
   private SegmentMin(Operation operation) {

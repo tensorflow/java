@@ -82,6 +82,9 @@ public final class InTopK extends RawOp implements Operand<TBool> {
     return precision;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InTopKV2";
+  
   private Output<TBool> precision;
   
   private InTopK(Operation operation) {

@@ -164,6 +164,9 @@ public final class MatrixDiag<T extends TType> extends RawOp implements Operand<
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MatrixDiagV2";
+  
   private Output<T> output;
   
   private MatrixDiag(Operation operation) {

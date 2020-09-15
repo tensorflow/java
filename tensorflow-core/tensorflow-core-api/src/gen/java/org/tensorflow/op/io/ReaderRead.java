@@ -68,6 +68,9 @@ public final class ReaderRead extends RawOp {
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderReadV2";
+  
   private Output<TString> key;
   private Output<TString> value;
   

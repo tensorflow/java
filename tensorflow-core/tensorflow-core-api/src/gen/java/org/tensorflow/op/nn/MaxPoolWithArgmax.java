@@ -147,6 +147,9 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
     return argmax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MaxPoolWithArgmax";
+  
   private Output<T> output;
   private Output<U> argmax;
   

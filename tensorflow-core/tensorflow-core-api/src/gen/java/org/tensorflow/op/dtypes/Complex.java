@@ -82,6 +82,9 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Complex";
+  
   private Output<U> out;
   
   private Complex(Operation operation) {

@@ -104,6 +104,9 @@ public final class SparseSplit<T extends TType> extends RawOp {
     return outputShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSplit";
+  
   private List<Output<TInt64>> outputIndices;
   private List<Output<T>> outputValues;
   private List<Output<TInt64>> outputShape;

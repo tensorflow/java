@@ -187,6 +187,9 @@ public final class TensorStridedSliceUpdate<T extends TType> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorStridedSliceUpdate";
+  
   private Output<T> output;
   
   private TensorStridedSliceUpdate(Operation operation) {

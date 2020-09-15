@@ -217,6 +217,9 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixMatMul";
+  
   private Output<T> output;
   
   private SparseMatrixMatMul(Operation operation) {

@@ -179,6 +179,9 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
     return sparseShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TakeManySparseFromTensorsMap";
+  
   private Output<TInt64> sparseIndices;
   private Output<T> sparseValues;
   private Output<TInt64> sparseShape;

@@ -76,6 +76,9 @@ public final class AssertCardinalityDataset extends RawOp implements Operand<TTy
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AssertCardinalityDataset";
+  
   private Output<?> handle;
   
   private AssertCardinalityDataset(Operation operation) {

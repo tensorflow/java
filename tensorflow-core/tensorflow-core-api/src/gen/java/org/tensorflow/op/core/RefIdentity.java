@@ -60,6 +60,9 @@ public final class RefIdentity<T extends TType> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RefIdentity";
+  
   private Output<T> output;
   
   private RefIdentity(Operation operation) {

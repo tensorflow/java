@@ -74,6 +74,9 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessRandomPoisson";
+  
   private Output<W> output;
   
   private StatelessRandomPoisson(Operation operation) {

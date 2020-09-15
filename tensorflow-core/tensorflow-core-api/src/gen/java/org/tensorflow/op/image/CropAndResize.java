@@ -156,6 +156,9 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
     return crops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CropAndResize";
+  
   private Output<TFloat32> crops;
   
   private CropAndResize(Operation operation) {

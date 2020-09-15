@@ -64,6 +64,9 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
     return incarnationId;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MultiDeviceIteratorInit";
+  
   private Output<TInt64> incarnationId;
   
   private MultiDeviceIteratorInit(Operation operation) {

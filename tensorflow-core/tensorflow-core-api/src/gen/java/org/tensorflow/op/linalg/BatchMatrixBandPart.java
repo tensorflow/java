@@ -64,6 +64,9 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
     return band;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchMatrixBandPart";
+  
   private Output<T> band;
   
   private BatchMatrixBandPart(Operation operation) {

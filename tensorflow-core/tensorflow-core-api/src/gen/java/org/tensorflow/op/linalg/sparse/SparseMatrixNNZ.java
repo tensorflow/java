@@ -59,6 +59,9 @@ public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
     return nnz;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixNNZ";
+  
   private Output<TInt32> nnz;
   
   private SparseMatrixNNZ(Operation operation) {

@@ -76,6 +76,8 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
     return new BoostedTreesUpdateEnsemble(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesUpdateEnsemble";
   
   private BoostedTreesUpdateEnsemble(Operation operation) {
     super(operation);

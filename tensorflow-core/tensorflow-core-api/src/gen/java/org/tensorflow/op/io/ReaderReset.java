@@ -46,6 +46,8 @@ public final class ReaderReset extends RawOp {
     return new ReaderReset(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReaderResetV2";
   
   private ReaderReset(Operation operation) {
     super(operation);

@@ -168,6 +168,9 @@ public final class MapPeek extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) values.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MapPeek";
+  
   private List<Output<?>> values;
   
   private MapPeek(Operation operation) {

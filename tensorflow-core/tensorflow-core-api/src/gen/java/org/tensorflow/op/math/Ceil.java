@@ -62,6 +62,9 @@ public final class Ceil<T extends TNumber> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Ceil";
+  
   private Output<T> y;
   
   private Ceil(Operation operation) {

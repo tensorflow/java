@@ -68,6 +68,9 @@ public final class BoostedTreesFlushQuantileSummaries extends RawOp implements I
     return (Iterator) summaries.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesFlushQuantileSummaries";
+  
   private List<Output<TFloat32>> summaries;
   
   @SuppressWarnings("unchecked")

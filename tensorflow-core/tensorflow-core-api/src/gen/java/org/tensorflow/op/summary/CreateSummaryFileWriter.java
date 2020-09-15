@@ -54,6 +54,8 @@ public final class CreateSummaryFileWriter extends RawOp {
     return new CreateSummaryFileWriter(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CreateSummaryFileWriter";
   
   private CreateSummaryFileWriter(Operation operation) {
     super(operation);

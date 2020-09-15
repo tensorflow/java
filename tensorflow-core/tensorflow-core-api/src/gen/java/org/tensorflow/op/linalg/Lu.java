@@ -111,6 +111,9 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
     return p;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Lu";
+  
   private Output<T> lu;
   private Output<U> p;
   

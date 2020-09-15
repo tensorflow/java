@@ -136,6 +136,9 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
     return logProbability;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CTCBeamSearchDecoder";
+  
   private List<Output<TInt64>> decodedIndices;
   private List<Output<TInt64>> decodedValues;
   private List<Output<TInt64>> decodedShape;

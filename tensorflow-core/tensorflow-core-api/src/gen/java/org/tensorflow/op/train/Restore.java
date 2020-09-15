@@ -93,6 +93,9 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) tensors.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RestoreV2";
+  
   private List<Output<?>> tensors;
   
   private Restore(Operation operation) {

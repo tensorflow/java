@@ -75,6 +75,9 @@ public final class IteratorGetNextAsOptional extends RawOp implements Operand<TT
     return (Output<TType>) optional;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorGetNextAsOptional";
+  
   private Output<?> optional;
   
   private IteratorGetNextAsOptional(Operation operation) {

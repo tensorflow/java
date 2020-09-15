@@ -193,6 +193,9 @@ public final class AsString extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AsString";
+  
   private Output<TString> output;
   
   private AsString(Operation operation) {

@@ -79,6 +79,9 @@ public final class QuantizedRelu<U extends TType> extends RawOp {
     return maxActivations;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedRelu";
+  
   private Output<U> activations;
   private Output<TFloat32> minActivations;
   private Output<TFloat32> maxActivations;

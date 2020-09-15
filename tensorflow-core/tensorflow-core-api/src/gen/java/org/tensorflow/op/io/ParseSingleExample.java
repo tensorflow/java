@@ -129,6 +129,9 @@ public final class ParseSingleExample extends RawOp {
     return denseValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ParseSingleExample";
+  
   private List<Output<TInt64>> sparseIndices;
   private List<Output<?>> sparseValues;
   private List<Output<TInt64>> sparseShapes;

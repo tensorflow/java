@@ -71,6 +71,9 @@ public final class Polygamma<T extends TNumber> extends RawOp implements Operand
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Polygamma";
+  
   private Output<T> z;
   
   private Polygamma(Operation operation) {

@@ -31,13 +31,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * IEEE-754 single-precision 32-bit float tensor type.
- */
+/** IEEE-754 single-precision 32-bit float tensor type. */
 public interface TFloat32 extends FloatNdArray, TNumber {
 
+  /** readable-name for the data type */
+  static final String NAME = "FLOAT";
+
   /** Type metadata */
-  DataType<TFloat32> DTYPE = DataType.create("FLOAT", 1, 4, TFloat32Impl::mapTensor);
+  DataType<TFloat32> DTYPE = DataType.create(NAME, 1, 4, TFloat32Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -108,9 +109,7 @@ public interface TFloat32 extends FloatNdArray, TNumber {
   }
 }
 
-/**
- * Hidden implementation of a {@code TFloat32}
- */
+/** Hidden implementation of a {@code TFloat32} */
 class TFloat32Impl extends FloatDenseNdArray implements TFloat32 {
 
   static TFloat32 mapTensor(TF_Tensor nativeTensor, Shape shape) {
@@ -121,4 +120,3 @@ class TFloat32Impl extends FloatDenseNdArray implements TFloat32 {
     super(buffer, shape);
   }
 }
-

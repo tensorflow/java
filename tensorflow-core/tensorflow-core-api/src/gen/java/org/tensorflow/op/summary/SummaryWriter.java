@@ -109,6 +109,9 @@ public final class SummaryWriter extends RawOp implements Operand<TType> {
     return (Output<TType>) writer;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SummaryWriter";
+  
   private Output<?> writer;
   
   private SummaryWriter(Operation operation) {

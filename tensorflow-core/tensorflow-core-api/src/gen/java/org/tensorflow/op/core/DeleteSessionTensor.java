@@ -47,6 +47,8 @@ public final class DeleteSessionTensor extends RawOp {
     return new DeleteSessionTensor(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeleteSessionTensor";
   
   private DeleteSessionTensor(Operation operation) {
     super(operation);

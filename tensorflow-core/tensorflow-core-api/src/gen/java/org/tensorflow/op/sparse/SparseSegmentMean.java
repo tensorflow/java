@@ -73,6 +73,9 @@ public final class SparseSegmentMean<T extends TNumber> extends RawOp implements
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentMean";
+  
   private Output<T> output;
   
   private SparseSegmentMean(Operation operation) {

@@ -153,6 +153,9 @@ public final class FakeQuantWithMinMaxVars extends RawOp implements Operand<TFlo
     return outputs;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FakeQuantWithMinMaxVars";
+  
   private Output<TFloat32> outputs;
   
   private FakeQuantWithMinMaxVars(Operation operation) {

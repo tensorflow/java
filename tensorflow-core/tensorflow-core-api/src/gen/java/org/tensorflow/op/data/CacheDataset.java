@@ -83,6 +83,9 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CacheDataset";
+  
   private Output<?> handle;
   
   private CacheDataset(Operation operation) {

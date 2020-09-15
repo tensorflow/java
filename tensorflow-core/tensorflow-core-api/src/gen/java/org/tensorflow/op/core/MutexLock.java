@@ -99,6 +99,9 @@ public final class MutexLock extends RawOp implements Operand<TType> {
     return (Output<TType>) mutexLock;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MutexLock";
+  
   private Output<?> mutexLock;
   
   private MutexLock(Operation operation) {

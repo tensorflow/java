@@ -124,6 +124,9 @@ public final class SparseReduceSumSparse<T extends TType> extends RawOp {
     return outputShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseReduceSumSparse";
+  
   private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   private Output<TInt64> outputShape;

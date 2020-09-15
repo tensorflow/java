@@ -69,6 +69,9 @@ public final class RequantizationRangePerChannel extends RawOp {
     return outputMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RequantizationRangePerChannel";
+  
   private Output<TFloat32> outputMin;
   private Output<TFloat32> outputMax;
   

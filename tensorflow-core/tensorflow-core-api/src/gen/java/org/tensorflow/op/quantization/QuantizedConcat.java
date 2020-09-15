@@ -84,6 +84,9 @@ public final class QuantizedConcat<T extends TType> extends RawOp {
     return outputMax;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedConcat";
+  
   private Output<T> output;
   private Output<TFloat32> outputMin;
   private Output<TFloat32> outputMax;

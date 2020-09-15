@@ -115,6 +115,9 @@ public final class Qr<T extends TType> extends RawOp {
     return r;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Qr";
+  
   private Output<T> q;
   private Output<T> r;
   

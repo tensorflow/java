@@ -128,6 +128,9 @@ public final class TruncatedNormal<U extends TNumber> extends RawOp implements O
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TruncatedNormal";
+  
   private Output<U> output;
   
   private TruncatedNormal(Operation operation) {

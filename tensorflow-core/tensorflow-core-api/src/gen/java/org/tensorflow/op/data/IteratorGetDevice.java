@@ -58,6 +58,9 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
     return device;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorGetDevice";
+  
   private Output<TString> device;
   
   private IteratorGetDevice(Operation operation) {

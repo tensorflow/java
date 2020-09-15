@@ -65,6 +65,9 @@ public final class ResourceGatherNd<U extends TType> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceGatherNd";
+  
   private Output<U> output;
   
   private ResourceGatherNd(Operation operation) {

@@ -72,6 +72,9 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessParameterizedTruncatedNormal";
+  
   private Output<V> output;
   
   private StatelessParameterizedTruncatedNormal(Operation operation) {

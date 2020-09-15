@@ -51,6 +51,8 @@ public final class DatasetToTfRecord extends RawOp {
     return new DatasetToTfRecord(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DatasetToTFRecord";
   
   private DatasetToTfRecord(Operation operation) {
     super(operation);

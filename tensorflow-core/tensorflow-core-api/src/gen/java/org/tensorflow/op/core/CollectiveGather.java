@@ -123,6 +123,9 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CollectiveGather";
+  
   private Output<T> output;
   
   private CollectiveGather(Operation operation) {

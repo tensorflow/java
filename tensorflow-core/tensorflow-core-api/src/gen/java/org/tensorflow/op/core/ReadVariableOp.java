@@ -71,6 +71,9 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReadVariableOp";
+  
   private Output<T> value;
   
   private ReadVariableOp(Operation operation) {

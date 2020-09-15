@@ -117,6 +117,9 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
     return ref;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TemporaryVariable";
+  
   private Output<T> ref;
   
   private TemporaryVariable(Operation operation) {

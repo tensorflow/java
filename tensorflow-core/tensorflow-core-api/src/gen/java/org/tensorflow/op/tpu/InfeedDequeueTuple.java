@@ -75,6 +75,9 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
     return (Iterator) outputs.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InfeedDequeueTuple";
+  
   private List<Output<?>> outputs;
   
   private InfeedDequeueTuple(Operation operation) {

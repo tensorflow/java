@@ -79,6 +79,9 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "NonDeterministicInts";
+  
   private Output<U> output;
   
   private NonDeterministicInts(Operation operation) {

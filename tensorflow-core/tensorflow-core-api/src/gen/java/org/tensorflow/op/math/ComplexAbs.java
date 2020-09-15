@@ -83,6 +83,9 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ComplexAbs";
+  
   private Output<U> y;
   
   private ComplexAbs(Operation operation) {

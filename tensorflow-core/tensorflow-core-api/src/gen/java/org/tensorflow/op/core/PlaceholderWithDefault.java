@@ -65,6 +65,9 @@ public final class PlaceholderWithDefault<T extends TType> extends RawOp impleme
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PlaceholderWithDefault";
+  
   private Output<T> output;
   
   private PlaceholderWithDefault(Operation operation) {

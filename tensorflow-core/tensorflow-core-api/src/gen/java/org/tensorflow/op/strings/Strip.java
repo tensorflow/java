@@ -65,6 +65,9 @@ public final class Strip extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringStrip";
+  
   private Output<TString> output;
   
   private Strip(Operation operation) {

@@ -113,6 +113,9 @@ public final class TensorArrayGather<T extends TType> extends RawOp implements O
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayGatherV3";
+  
   private Output<T> value;
   
   private TensorArrayGather(Operation operation) {

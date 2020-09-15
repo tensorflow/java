@@ -105,6 +105,9 @@ public final class OutfeedDequeue<T extends TType> extends RawOp implements Oper
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OutfeedDequeue";
+  
   private Output<T> output;
   
   private OutfeedDequeue(Operation operation) {

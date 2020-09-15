@@ -125,6 +125,9 @@ public final class AvgPool3dGrad<T extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AvgPool3DGrad";
+  
   private Output<T> output;
   
   private AvgPool3dGrad(Operation operation) {

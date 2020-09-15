@@ -136,6 +136,9 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
     return product;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseTensorDenseMatMul";
+  
   private Output<U> product;
   
   private SparseTensorDenseMatMul(Operation operation) {

@@ -146,6 +146,9 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
     return bGrad;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BlockLSTMGradV2";
+  
   private Output<T> xGrad;
   private Output<T> csPrevGrad;
   private Output<T> hPrevGrad;

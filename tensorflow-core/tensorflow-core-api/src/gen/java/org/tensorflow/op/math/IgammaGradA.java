@@ -63,6 +63,9 @@ public final class IgammaGradA<T extends TNumber> extends RawOp implements Opera
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IgammaGradA";
+  
   private Output<T> z;
   
   private IgammaGradA(Operation operation) {

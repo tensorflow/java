@@ -79,6 +79,9 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DirectedInterleaveDataset";
+  
   private Output<?> handle;
   
   private DirectedInterleaveDataset(Operation operation) {

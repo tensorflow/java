@@ -68,6 +68,9 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
     return contents;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "EncodeJpegVariableQuality";
+  
   private Output<TString> contents;
   
   private EncodeJpegVariableQuality(Operation operation) {

@@ -209,6 +209,9 @@ public final class TryRpc extends RawOp {
     return statusMessage;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TryRpc";
+  
   private Output<TString> response;
   private Output<TInt32> statusCode;
   private Output<TString> statusMessage;

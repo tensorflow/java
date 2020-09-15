@@ -99,6 +99,9 @@ public final class SparseSlice<T extends TType> extends RawOp {
     return outputShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSlice";
+  
   private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   private Output<TInt64> outputShape;

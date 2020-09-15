@@ -166,6 +166,9 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     return summary;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ImageSummary";
+  
   private Output<TString> summary;
   
   private ImageSummary(Operation operation) {

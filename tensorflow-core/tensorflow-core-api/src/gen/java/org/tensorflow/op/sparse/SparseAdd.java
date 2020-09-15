@@ -97,6 +97,9 @@ public final class SparseAdd<T extends TType> extends RawOp {
     return sumShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseAdd";
+  
   private Output<TInt64> sumIndices;
   private Output<T> sumValues;
   private Output<TInt64> sumShape;

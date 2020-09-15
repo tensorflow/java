@@ -98,6 +98,9 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
     return statsSummaryShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesSparseAggregateStats";
+  
   private Output<TInt32> statsSummaryIndices;
   private Output<TFloat32> statsSummaryValues;
   private Output<TInt32> statsSummaryShape;

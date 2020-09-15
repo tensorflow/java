@@ -53,6 +53,8 @@ public final class AccumulatorSetGlobalStep extends RawOp {
     return new AccumulatorSetGlobalStep(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AccumulatorSetGlobalStep";
   
   private AccumulatorSetGlobalStep(Operation operation) {
     super(operation);

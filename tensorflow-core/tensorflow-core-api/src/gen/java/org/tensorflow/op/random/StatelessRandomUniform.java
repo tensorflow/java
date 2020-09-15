@@ -87,6 +87,9 @@ public final class StatelessRandomUniform<V extends TNumber> extends RawOp imple
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StatelessRandomUniform";
+  
   private Output<V> output;
   
   private StatelessRandomUniform(Operation operation) {

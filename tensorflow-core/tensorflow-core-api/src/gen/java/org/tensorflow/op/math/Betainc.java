@@ -77,6 +77,9 @@ public final class Betainc<T extends TNumber> extends RawOp implements Operand<T
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Betainc";
+  
   private Output<T> z;
   
   private Betainc(Operation operation) {

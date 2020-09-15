@@ -130,6 +130,9 @@ public final class ScatterUpdate<T extends TType> extends RawOp implements Opera
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterUpdate";
+  
   private Output<T> outputRef;
   
   private ScatterUpdate(Operation operation) {

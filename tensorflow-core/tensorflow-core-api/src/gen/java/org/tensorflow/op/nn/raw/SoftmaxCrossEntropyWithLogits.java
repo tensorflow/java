@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.nn;
+package org.tensorflow.op.nn.raw;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code loss()} output
  */
-@Operator(group = "nn")
+@Operator(group = "nn.raw")
 public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawOp {
   
   /**
@@ -70,6 +70,9 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
   public Output<T> backprop() {
     return backprop;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SoftmaxCrossEntropyWithLogits";
   
   private Output<T> loss;
   private Output<T> backprop;

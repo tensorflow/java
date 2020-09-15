@@ -187,6 +187,9 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PaddingFIFOQueueV2";
+  
   private Output<?> handle;
   
   private PaddingFifoQueue(Operation operation) {

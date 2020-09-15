@@ -60,6 +60,9 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LogicalNot";
+  
   private Output<TBool> y;
   
   private LogicalNot(Operation operation) {

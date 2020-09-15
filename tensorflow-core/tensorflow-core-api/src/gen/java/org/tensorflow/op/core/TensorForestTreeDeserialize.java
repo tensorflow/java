@@ -48,6 +48,8 @@ public final class TensorForestTreeDeserialize extends RawOp {
     return new TensorForestTreeDeserialize(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreeDeserialize";
   
   private TensorForestTreeDeserialize(Operation operation) {
     super(operation);

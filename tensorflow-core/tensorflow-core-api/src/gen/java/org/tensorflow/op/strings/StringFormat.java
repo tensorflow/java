@@ -135,6 +135,9 @@ public final class StringFormat extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringFormat";
+  
   private Output<TString> output;
   
   private StringFormat(Operation operation) {

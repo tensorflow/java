@@ -104,6 +104,9 @@ public final class Join extends RawOp implements Operand<TString> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StringJoin";
+  
   private Output<TString> output;
   
   private Join(Operation operation) {

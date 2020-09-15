@@ -59,6 +59,9 @@ public final class BatchIfft3d extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BatchIFFT3D";
+  
   private Output<?> output;
   
   private BatchIfft3d(Operation operation) {

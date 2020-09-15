@@ -68,6 +68,9 @@ public final class ConjugateTranspose<T extends TType> extends RawOp implements 
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ConjugateTranspose";
+  
   private Output<T> y;
   
   private ConjugateTranspose(Operation operation) {

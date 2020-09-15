@@ -44,6 +44,8 @@ public final class CloseSummaryWriter extends RawOp {
     return new CloseSummaryWriter(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CloseSummaryWriter";
   
   private CloseSummaryWriter(Operation operation) {
     super(operation);

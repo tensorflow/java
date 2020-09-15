@@ -213,6 +213,9 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
     return charToByteStarts;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnicodeDecodeWithOffsets";
+  
   private Output<T> rowSplits;
   private Output<TInt32> charValues;
   private Output<TInt64> charToByteStarts;

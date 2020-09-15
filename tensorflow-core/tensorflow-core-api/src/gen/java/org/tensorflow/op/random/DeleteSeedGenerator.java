@@ -46,6 +46,8 @@ public final class DeleteSeedGenerator extends RawOp {
     return new DeleteSeedGenerator(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeleteSeedGenerator";
   
   private DeleteSeedGenerator(Operation operation) {
     super(operation);

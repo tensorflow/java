@@ -70,6 +70,9 @@ public final class FloorMod<T extends TNumber> extends RawOp implements Operand<
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FloorMod";
+  
   private Output<T> z;
   
   private FloorMod(Operation operation) {

@@ -124,6 +124,9 @@ public final class ResizeBilinear extends RawOp implements Operand<TFloat32> {
     return resizedImages;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResizeBilinear";
+  
   private Output<TFloat32> resizedImages;
   
   private ResizeBilinear(Operation operation) {

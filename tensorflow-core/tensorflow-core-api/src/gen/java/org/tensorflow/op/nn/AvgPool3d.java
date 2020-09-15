@@ -122,6 +122,9 @@ public final class AvgPool3d<T extends TNumber> extends RawOp implements Operand
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AvgPool3D";
+  
   private Output<T> output;
   
   private AvgPool3d(Operation operation) {

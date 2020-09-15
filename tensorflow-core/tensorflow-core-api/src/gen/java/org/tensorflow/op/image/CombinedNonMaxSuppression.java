@@ -178,6 +178,9 @@ public final class CombinedNonMaxSuppression extends RawOp {
     return validDetections;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CombinedNonMaxSuppression";
+  
   private Output<TFloat32> nmsedBoxes;
   private Output<TFloat32> nmsedScores;
   private Output<TFloat32> nmsedClasses;

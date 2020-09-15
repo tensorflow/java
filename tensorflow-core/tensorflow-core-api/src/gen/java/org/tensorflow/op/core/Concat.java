@@ -70,6 +70,9 @@ public final class Concat<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ConcatV2";
+  
   private Output<T> output;
   
   private Concat(Operation operation) {

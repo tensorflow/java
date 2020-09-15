@@ -106,6 +106,9 @@ public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeRaw";
+  
   private Output<T> output;
   
   private DecodeRaw(Operation operation) {

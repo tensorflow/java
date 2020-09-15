@@ -68,6 +68,9 @@ public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
     return flowOut;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayWriteV3";
+  
   private Output<TFloat32> flowOut;
   
   private TensorArrayWrite(Operation operation) {

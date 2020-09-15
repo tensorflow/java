@@ -77,6 +77,9 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<TT
     return (Iterator) components.iterator();
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OptionalGetValue";
+  
   private List<Output<?>> components;
   
   private OptionalGetValue(Operation operation) {

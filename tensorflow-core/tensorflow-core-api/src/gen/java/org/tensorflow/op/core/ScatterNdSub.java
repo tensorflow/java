@@ -140,6 +140,9 @@ public final class ScatterNdSub<T extends TType> extends RawOp implements Operan
     return outputRef;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ScatterNdSub";
+  
   private Output<T> outputRef;
   
   private ScatterNdSub(Operation operation) {

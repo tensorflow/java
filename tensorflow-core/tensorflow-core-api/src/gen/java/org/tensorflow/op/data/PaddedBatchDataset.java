@@ -118,6 +118,9 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "PaddedBatchDatasetV2";
+  
   private Output<?> handle;
   
   private PaddedBatchDataset(Operation operation) {

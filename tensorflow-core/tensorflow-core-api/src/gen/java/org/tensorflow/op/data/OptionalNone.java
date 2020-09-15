@@ -58,6 +58,9 @@ public final class OptionalNone extends RawOp implements Operand<TType> {
     return (Output<TType>) optional;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OptionalNone";
+  
   private Output<?> optional;
   
   private OptionalNone(Operation operation) {

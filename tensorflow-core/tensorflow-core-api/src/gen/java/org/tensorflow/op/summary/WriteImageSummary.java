@@ -91,6 +91,8 @@ public final class WriteImageSummary extends RawOp {
     return new Options().maxImages(maxImages);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "WriteImageSummary";
   
   private WriteImageSummary(Operation operation) {
     super(operation);

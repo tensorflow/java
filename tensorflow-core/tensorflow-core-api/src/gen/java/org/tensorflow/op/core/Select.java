@@ -64,6 +64,9 @@ public final class Select<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SelectV2";
+  
   private Output<T> output;
   
   private Select(Operation operation) {

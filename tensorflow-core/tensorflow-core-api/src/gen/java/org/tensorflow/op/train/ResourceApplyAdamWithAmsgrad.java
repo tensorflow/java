@@ -111,6 +111,8 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
     return new Options().useLocking(useLocking);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceApplyAdamWithAmsgrad";
   
   private ResourceApplyAdamWithAmsgrad(Operation operation) {
     super(operation);

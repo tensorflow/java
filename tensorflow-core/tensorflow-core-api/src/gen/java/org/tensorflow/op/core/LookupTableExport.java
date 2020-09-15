@@ -70,6 +70,9 @@ public final class LookupTableExport<T extends TType, U extends TType> extends R
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LookupTableExportV2";
+  
   private Output<T> keys;
   private Output<U> values;
   

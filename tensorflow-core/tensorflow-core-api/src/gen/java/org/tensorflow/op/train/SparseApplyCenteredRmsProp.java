@@ -136,6 +136,9 @@ public final class SparseApplyCenteredRmsProp<T extends TType> extends RawOp imp
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyCenteredRMSProp";
+  
   private Output<T> out;
   
   private SparseApplyCenteredRmsProp(Operation operation) {

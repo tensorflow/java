@@ -70,6 +70,9 @@ public final class Fft3d<T extends TType> extends RawOp implements Operand<T> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FFT3D";
+  
   private Output<T> output;
   
   private Fft3d(Operation operation) {

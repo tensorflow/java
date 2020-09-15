@@ -139,6 +139,9 @@ public final class ComputeAccidentalHits extends RawOp {
     return weights;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ComputeAccidentalHits";
+  
   private Output<TInt32> indices;
   private Output<TInt64> ids;
   private Output<TFloat32> weights;

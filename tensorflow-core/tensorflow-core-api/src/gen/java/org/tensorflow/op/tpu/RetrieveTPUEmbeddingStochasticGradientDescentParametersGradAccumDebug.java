@@ -139,6 +139,9 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAc
     return gradientAccumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> gradientAccumulators;
   

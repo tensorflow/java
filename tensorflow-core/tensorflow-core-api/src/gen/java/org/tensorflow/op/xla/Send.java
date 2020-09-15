@@ -52,6 +52,8 @@ public final class Send extends RawOp {
     return new Send(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaSend";
   
   private Send(Operation operation) {
     super(operation);

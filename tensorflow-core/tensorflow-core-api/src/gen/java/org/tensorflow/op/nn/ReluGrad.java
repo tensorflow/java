@@ -65,6 +65,9 @@ public final class ReluGrad<T extends TNumber> extends RawOp implements Operand<
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReluGrad";
+  
   private Output<T> backprops;
   
   private ReluGrad(Operation operation) {

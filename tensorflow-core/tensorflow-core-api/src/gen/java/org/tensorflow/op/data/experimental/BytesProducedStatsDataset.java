@@ -77,6 +77,9 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ExperimentalBytesProducedStatsDataset";
+  
   private Output<?> handle;
   
   private BytesProducedStatsDataset(Operation operation) {

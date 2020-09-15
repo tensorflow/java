@@ -139,6 +139,9 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
     return image;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodePng";
+  
   private Output<T> image;
   
   private DecodePng(Operation operation) {

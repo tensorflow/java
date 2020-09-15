@@ -73,6 +73,9 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaDequantize";
+  
   private Output<TBfloat16> output;
   
   private Dequantize(Operation operation) {

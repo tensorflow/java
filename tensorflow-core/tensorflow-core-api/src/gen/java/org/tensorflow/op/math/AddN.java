@@ -70,6 +70,9 @@ public final class AddN<T extends TType> extends RawOp implements Operand<T> {
     return sum;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AddN";
+  
   private Output<T> sum;
   
   private AddN(Operation operation) {

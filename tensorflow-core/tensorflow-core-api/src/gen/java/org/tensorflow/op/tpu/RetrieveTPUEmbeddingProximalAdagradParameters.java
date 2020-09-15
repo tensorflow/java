@@ -139,6 +139,9 @@ public final class RetrieveTPUEmbeddingProximalAdagradParameters extends RawOp {
     return accumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingProximalAdagradParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> accumulators;
   

@@ -68,6 +68,9 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
     return index;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "KMC2ChainInitialization";
+  
   private Output<TInt64> index;
   
   private KMC2ChainInitialization(Operation operation) {

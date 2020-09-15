@@ -113,6 +113,9 @@ public final class BandedTriangularSolve<T extends TType> extends RawOp implemen
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BandedTriangularSolve";
+  
   private Output<T> output;
   
   private BandedTriangularSolve(Operation operation) {

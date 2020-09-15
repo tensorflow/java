@@ -139,6 +139,9 @@ public final class RetrieveTPUEmbeddingMomentumParameters extends RawOp {
     return momenta;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingMomentumParameters";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> momenta;
   

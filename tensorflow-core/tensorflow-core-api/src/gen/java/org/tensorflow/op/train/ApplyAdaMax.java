@@ -119,6 +119,9 @@ public final class ApplyAdaMax<T extends TType> extends RawOp implements Operand
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyAdaMax";
+  
   private Output<T> out;
   
   private ApplyAdaMax(Operation operation) {

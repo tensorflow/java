@@ -70,6 +70,9 @@ public final class SparseTensorDenseAdd<U extends TType> extends RawOp implement
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseTensorDenseAdd";
+  
   private Output<U> output;
   
   private SparseTensorDenseAdd(Operation operation) {

@@ -131,6 +131,9 @@ public final class QuantizedDepthwiseConv2D<V extends TType> extends RawOp {
     return maxOutput;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "QuantizedDepthwiseConv2D";
+  
   private Output<V> output;
   private Output<TFloat32> minOutput;
   private Output<TFloat32> maxOutput;

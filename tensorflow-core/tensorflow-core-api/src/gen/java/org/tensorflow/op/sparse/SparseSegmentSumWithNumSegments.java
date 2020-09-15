@@ -98,6 +98,9 @@ public final class SparseSegmentSumWithNumSegments<T extends TNumber> extends Ra
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSumWithNumSegments";
+  
   private Output<T> output;
   
   private SparseSegmentSumWithNumSegments(Operation operation) {

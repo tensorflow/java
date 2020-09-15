@@ -128,6 +128,8 @@ public final class ResourceApplyFtrl extends RawOp {
     return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceApplyFtrlV2";
   
   private ResourceApplyFtrl(Operation operation) {
     super(operation);

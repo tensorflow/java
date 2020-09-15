@@ -62,6 +62,9 @@ public final class Erf<T extends TNumber> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Erf";
+  
   private Output<T> y;
   
   private Erf(Operation operation) {

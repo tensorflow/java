@@ -113,6 +113,9 @@ public final class SparseApplyProximalGradientDescent<T extends TType> extends R
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseApplyProximalGradientDescent";
+  
   private Output<T> out;
   
   private SparseApplyProximalGradientDescent(Operation operation) {

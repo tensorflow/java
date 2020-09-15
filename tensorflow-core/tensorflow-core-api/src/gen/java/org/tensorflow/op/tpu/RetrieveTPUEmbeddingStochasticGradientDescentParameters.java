@@ -138,6 +138,9 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters exten
     return parameters;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingStochasticGradientDescentParameters";
+  
   private Output<TFloat32> parameters;
   
   private RetrieveTPUEmbeddingStochasticGradientDescentParameters(Operation operation) {

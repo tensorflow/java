@@ -85,6 +85,8 @@ public final class BoostedTreesCreateQuantileStreamResource extends RawOp {
     return new Options().maxElements(maxElements);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesCreateQuantileStreamResource";
   
   private BoostedTreesCreateQuantileStreamResource(Operation operation) {
     super(operation);

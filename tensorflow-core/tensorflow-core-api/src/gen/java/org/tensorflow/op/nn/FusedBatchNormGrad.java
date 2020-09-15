@@ -187,6 +187,9 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     return reserveSpace5;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FusedBatchNormGradV3";
+  
   private Output<T> xBackprop;
   private Output<U> scaleBackprop;
   private Output<U> offsetBackprop;

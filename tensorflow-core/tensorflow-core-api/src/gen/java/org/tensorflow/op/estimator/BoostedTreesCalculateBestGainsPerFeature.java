@@ -107,6 +107,9 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
     return rightNodeContribsList;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BoostedTreesCalculateBestGainsPerFeature";
+  
   private List<Output<TInt32>> nodeIdsList;
   private List<Output<TFloat32>> gainsList;
   private List<Output<TInt32>> thresholdsList;

@@ -117,6 +117,9 @@ public final class MaxPoolGradGrad<T extends TNumber> extends RawOp implements O
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MaxPoolGradGradV2";
+  
   private Output<T> output;
   
   private MaxPoolGradGrad(Operation operation) {

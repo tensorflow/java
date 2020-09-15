@@ -116,6 +116,9 @@ public final class Mutex extends RawOp implements Operand<TType> {
     return (Output<TType>) resource;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MutexV2";
+  
   private Output<?> resource;
   
   private Mutex(Operation operation) {

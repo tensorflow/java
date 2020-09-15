@@ -60,6 +60,9 @@ public final class TPUCompilationResult extends RawOp implements Operand<TString
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TPUCompilationResult";
+  
   private Output<TString> output;
   
   private TPUCompilationResult(Operation operation) {

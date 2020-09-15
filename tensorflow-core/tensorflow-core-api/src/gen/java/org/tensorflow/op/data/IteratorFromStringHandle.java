@@ -106,6 +106,9 @@ public final class IteratorFromStringHandle extends RawOp implements Operand<TTy
     return (Output<TType>) resourceHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IteratorFromStringHandleV2";
+  
   private Output<?> resourceHandle;
   
   private IteratorFromStringHandle(Operation operation) {

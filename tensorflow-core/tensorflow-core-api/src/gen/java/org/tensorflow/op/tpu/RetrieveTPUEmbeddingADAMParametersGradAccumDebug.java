@@ -153,6 +153,9 @@ public final class RetrieveTPUEmbeddingADAMParametersGradAccumDebug extends RawO
     return gradientAccumulators;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RetrieveTPUEmbeddingADAMParametersGradAccumDebug";
+  
   private Output<TFloat32> parameters;
   private Output<TFloat32> momenta;
   private Output<TFloat32> velocities;

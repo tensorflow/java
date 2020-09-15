@@ -71,6 +71,9 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
     return value;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayReadV3";
+  
   private Output<T> value;
   
   private TensorArrayRead(Operation operation) {

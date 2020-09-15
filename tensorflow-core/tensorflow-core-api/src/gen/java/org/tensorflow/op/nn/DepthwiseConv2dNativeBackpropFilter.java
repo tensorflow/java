@@ -183,6 +183,9 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DepthwiseConv2dNativeBackpropFilter";
+  
   private Output<T> output;
   
   private DepthwiseConv2dNativeBackpropFilter(Operation operation) {

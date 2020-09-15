@@ -164,6 +164,9 @@ public final class MutableHashTableOfTensors extends RawOp implements Operand<TT
     return (Output<TType>) tableHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "MutableHashTableOfTensorsV2";
+  
   private Output<?> tableHandle;
   
   private MutableHashTableOfTensors(Operation operation) {

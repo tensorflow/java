@@ -59,6 +59,9 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
     return isInitialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IsBoostedTreesEnsembleInitialized";
+  
   private Output<TBool> isInitialized;
   
   private IsBoostedTreesEnsembleInitialized(Operation operation) {

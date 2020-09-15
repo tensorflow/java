@@ -50,6 +50,8 @@ public final class DeleteMultiDeviceIterator extends RawOp {
     return new DeleteMultiDeviceIterator(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DeleteMultiDeviceIterator";
   
   private DeleteMultiDeviceIterator(Operation operation) {
     super(operation);

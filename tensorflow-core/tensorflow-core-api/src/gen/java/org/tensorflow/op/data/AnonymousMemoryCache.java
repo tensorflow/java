@@ -54,6 +54,9 @@ public final class AnonymousMemoryCache extends RawOp {
     return deleter;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AnonymousMemoryCache";
+  
   private Output<?> handle;
   private Output<?> deleter;
   

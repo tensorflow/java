@@ -77,6 +77,9 @@ public final class Atan<T extends TType> extends RawOp implements Operand<T> {
     return y;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Atan";
+  
   private Output<T> y;
   
   private Atan(Operation operation) {

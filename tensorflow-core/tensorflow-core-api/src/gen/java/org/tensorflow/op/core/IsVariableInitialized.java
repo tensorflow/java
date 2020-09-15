@@ -62,6 +62,9 @@ public final class IsVariableInitialized extends RawOp implements Operand<TBool>
     return isInitialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "IsVariableInitialized";
+  
   private Output<TBool> isInitialized;
   
   private IsVariableInitialized(Operation operation) {

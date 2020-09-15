@@ -105,6 +105,9 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "HistogramFixedWidth";
+  
   private Output<U> out;
   
   private HistogramFixedWidth(Operation operation) {

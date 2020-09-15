@@ -75,6 +75,9 @@ public final class TensorListPopBack<T extends TType> extends RawOp {
     return tensor;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListPopBack";
+  
   private Output<?> outputHandle;
   private Output<T> tensor;
   

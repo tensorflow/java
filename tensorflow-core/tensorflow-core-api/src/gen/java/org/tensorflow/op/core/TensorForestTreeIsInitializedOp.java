@@ -59,6 +59,9 @@ public final class TensorForestTreeIsInitializedOp extends RawOp implements Oper
     return isInitialized;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorForestTreeIsInitializedOp";
+  
   private Output<TBool> isInitialized;
   
   private TensorForestTreeIsInitializedOp(Operation operation) {

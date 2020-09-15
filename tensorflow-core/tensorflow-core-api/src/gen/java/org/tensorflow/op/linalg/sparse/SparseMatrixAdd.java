@@ -69,6 +69,9 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
     return (Output<TType>) c;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseMatrixAdd";
+  
   private Output<?> c;
   
   private SparseMatrixAdd(Operation operation) {

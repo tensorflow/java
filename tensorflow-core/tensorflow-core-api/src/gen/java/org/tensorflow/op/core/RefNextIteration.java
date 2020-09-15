@@ -62,6 +62,9 @@ public final class RefNextIteration<T extends TType> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RefNextIteration";
+  
   private Output<T> output;
   
   private RefNextIteration(Operation operation) {

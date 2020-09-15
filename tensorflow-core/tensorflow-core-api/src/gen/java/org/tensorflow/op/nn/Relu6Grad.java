@@ -66,6 +66,9 @@ public final class Relu6Grad<T extends TNumber> extends RawOp implements Operand
     return backprops;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "Relu6Grad";
+  
   private Output<T> backprops;
   
   private Relu6Grad(Operation operation) {

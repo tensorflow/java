@@ -275,6 +275,9 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends RawOp {
     return bboxes;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SampleDistortedBoundingBoxV2";
+  
   private Output<T> begin;
   private Output<T> size;
   private Output<TFloat32> bboxes;

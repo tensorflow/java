@@ -125,6 +125,9 @@ public final class SparseReduceMaxSparse<T extends TNumber> extends RawOp {
     return outputShape;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseReduceMaxSparse";
+  
   private Output<TInt64> outputIndices;
   private Output<T> outputValues;
   private Output<TInt64> outputShape;

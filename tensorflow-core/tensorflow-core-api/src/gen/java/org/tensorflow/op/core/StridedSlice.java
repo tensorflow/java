@@ -304,6 +304,9 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "StridedSlice";
+  
   private Output<T> output;
   
   private StridedSlice(Operation operation) {

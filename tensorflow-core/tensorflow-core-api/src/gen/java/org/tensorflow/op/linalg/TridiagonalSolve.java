@@ -111,6 +111,9 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TridiagonalSolve";
+  
   private Output<T> output;
   
   private TridiagonalSolve(Operation operation) {

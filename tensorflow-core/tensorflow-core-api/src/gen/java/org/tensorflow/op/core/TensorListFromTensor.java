@@ -68,6 +68,9 @@ public final class TensorListFromTensor extends RawOp implements Operand<TType> 
     return (Output<TType>) outputHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorListFromTensor";
+  
   private Output<?> outputHandle;
   
   private TensorListFromTensor(Operation operation) {

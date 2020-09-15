@@ -116,6 +116,9 @@ public final class ApplyAddSign<T extends TType> extends RawOp implements Operan
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyAddSign";
+  
   private Output<T> out;
   
   private ApplyAddSign(Operation operation) {

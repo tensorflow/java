@@ -155,6 +155,9 @@ public final class ReverseSequence<T extends TType> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ReverseSequence";
+  
   private Output<T> output;
   
   private ReverseSequence(Operation operation) {

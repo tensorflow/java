@@ -98,6 +98,9 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSum";
+  
   private Output<T> output;
   
   private SparseSegmentSum(Operation operation) {

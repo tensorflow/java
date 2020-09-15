@@ -68,6 +68,9 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
     return product;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "XlaEinsum";
+  
   private Output<T> product;
   
   private Einsum(Operation operation) {

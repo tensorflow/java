@@ -199,6 +199,9 @@ public final class UnicodeDecode<T extends TNumber> extends RawOp {
     return charValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnicodeDecode";
+  
   private Output<T> rowSplits;
   private Output<TInt32> charValues;
   

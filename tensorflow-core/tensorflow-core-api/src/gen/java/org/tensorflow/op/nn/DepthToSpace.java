@@ -177,6 +177,9 @@ public final class DepthToSpace<T extends TType> extends RawOp implements Operan
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DepthToSpace";
+  
   private Output<T> output;
   
   private DepthToSpace(Operation operation) {

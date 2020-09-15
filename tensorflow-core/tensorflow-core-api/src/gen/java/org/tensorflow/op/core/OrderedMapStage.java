@@ -159,6 +159,8 @@ public final class OrderedMapStage extends RawOp {
     return new Options().sharedName(sharedName);
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "OrderedMapStage";
   
   private OrderedMapStage(Operation operation) {
     super(operation);

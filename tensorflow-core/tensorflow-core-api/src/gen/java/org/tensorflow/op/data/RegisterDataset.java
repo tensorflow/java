@@ -65,6 +65,9 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
     return datasetId;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RegisterDataset";
+  
   private Output<TInt64> datasetId;
   
   private RegisterDataset(Operation operation) {

@@ -96,6 +96,9 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "UnsortedSegmentSum";
+  
   private Output<T> output;
   
   private UnsortedSegmentSum(Operation operation) {

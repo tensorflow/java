@@ -112,6 +112,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DenseBincount";
+  
   private Output<U> output;
   
   private DenseBincount(Operation operation) {

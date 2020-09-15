@@ -102,6 +102,9 @@ public final class TensorArrayGrad extends RawOp {
     return flowOut;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TensorArrayGradV3";
+  
   private Output<?> gradHandle;
   private Output<TFloat32> flowOut;
   

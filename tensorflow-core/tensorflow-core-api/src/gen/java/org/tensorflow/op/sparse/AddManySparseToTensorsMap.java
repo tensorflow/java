@@ -145,6 +145,9 @@ public final class AddManySparseToTensorsMap extends RawOp implements Operand<TI
     return sparseHandles;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "AddManySparseToTensorsMap";
+  
   private Output<TInt64> sparseHandles;
   
   private AddManySparseToTensorsMap(Operation operation) {

@@ -198,6 +198,9 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
     return (Output<TType>) readerHandle;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "FixedLengthRecordReaderV2";
+  
   private Output<?> readerHandle;
   
   private FixedLengthRecordReader(Operation operation) {

@@ -132,6 +132,9 @@ public final class DecodeWav extends RawOp {
     return sampleRate;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "DecodeWav";
+  
   private Output<TFloat32> audio;
   private Output<TInt32> sampleRate;
   

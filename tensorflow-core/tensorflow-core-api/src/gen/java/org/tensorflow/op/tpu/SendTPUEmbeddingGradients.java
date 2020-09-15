@@ -61,6 +61,8 @@ public final class SendTPUEmbeddingGradients extends RawOp {
     return new SendTPUEmbeddingGradients(opBuilder.build());
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SendTPUEmbeddingGradients";
   
   private SendTPUEmbeddingGradients(Operation operation) {
     super(operation);

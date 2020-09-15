@@ -74,6 +74,9 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends RawO
     return average;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ResourceAccumulatorTakeGradient";
+  
   private Output<T> average;
   
   private ResourceAccumulatorTakeGradient(Operation operation) {

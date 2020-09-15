@@ -65,6 +65,9 @@ public final class InfeedDequeue<T extends TType> extends RawOp implements Opera
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "InfeedDequeue";
+  
   private Output<T> output;
   
   private InfeedDequeue(Operation operation) {

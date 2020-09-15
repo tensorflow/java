@@ -72,6 +72,9 @@ public final class CholeskyGrad<T extends TNumber> extends RawOp implements Oper
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "CholeskyGrad";
+  
   private Output<T> output;
   
   private CholeskyGrad(Operation operation) {

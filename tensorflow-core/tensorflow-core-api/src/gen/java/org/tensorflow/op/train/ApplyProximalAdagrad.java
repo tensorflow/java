@@ -112,6 +112,9 @@ public final class ApplyProximalAdagrad<T extends TType> extends RawOp implement
     return out;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ApplyProximalAdagrad";
+  
   private Output<T> out;
   
   private ApplyProximalAdagrad(Operation operation) {

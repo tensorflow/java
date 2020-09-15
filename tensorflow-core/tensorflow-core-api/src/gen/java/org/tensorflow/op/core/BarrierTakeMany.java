@@ -172,6 +172,9 @@ public final class BarrierTakeMany extends RawOp {
     return values;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BarrierTakeMany";
+  
   private Output<TInt64> indices;
   private Output<TString> keys;
   private List<Output<?>> values;

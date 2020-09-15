@@ -126,6 +126,9 @@ public final class RandomUniform<U extends TNumber> extends RawOp implements Ope
     return output;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RandomUniform";
+  
   private Output<U> output;
   
   private RandomUniform(Operation operation) {

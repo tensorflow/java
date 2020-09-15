@@ -71,6 +71,9 @@ public final class RefMerge<T extends TType> extends RawOp {
     return valueIndex;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "RefMerge";
+  
   private Output<T> output;
   private Output<TInt32> valueIndex;
   

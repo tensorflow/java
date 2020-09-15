@@ -65,6 +65,9 @@ public final class TanhGrad<T extends TType> extends RawOp implements Operand<T>
     return z;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "TanhGrad";
+  
   private Output<T> z;
   
   private TanhGrad(Operation operation) {

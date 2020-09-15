@@ -66,6 +66,9 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
     return r1;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BroadcastGradientArgs";
+  
   private Output<T> r0;
   private Output<T> r1;
   

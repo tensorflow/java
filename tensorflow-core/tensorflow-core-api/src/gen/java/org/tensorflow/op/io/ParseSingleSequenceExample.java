@@ -239,6 +239,9 @@ public final class ParseSingleSequenceExample extends RawOp {
     return featureListDenseValues;
   }
   
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ParseSingleSequenceExample";
+  
   private List<Output<TInt64>> contextSparseIndices;
   private List<Output<?>> contextSparseValues;
   private List<Output<TInt64>> contextSparseShapes;
