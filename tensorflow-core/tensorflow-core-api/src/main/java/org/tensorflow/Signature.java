@@ -45,8 +45,12 @@ public class Signature  {
      *
      * @param key signature key
      * @return this builder
+     * @throws IllegalArgumentException if the key is invalid
      */
     public Builder key(String key) {
+      if (key == null || key.isEmpty()) {
+        throw new IllegalArgumentException("Invalid key: " + key);
+      }
       this.key = key;
       return this;
     }
@@ -57,8 +61,12 @@ public class Signature  {
      * @param inputName user-friendly name for this input tensor
      * @param input input tensor
      * @return this builder
+     * @throws IllegalArgumentException if {@code inputName} is already mapped to another input
      */
     public Builder input(String inputName, Operand<?> input) {
+      if (signatureBuilder.containsInputs(inputName)) {
+        throw new IllegalArgumentException("\"" + inputName + "\" is already being mapped to another input");
+      }
       signatureBuilder.putInputs(inputName, toTensorInfo(input.asOutput()));
       return this;
     }
@@ -69,8 +77,12 @@ public class Signature  {
      * @param inputName user-friendly name for this input tensor
      * @param input input tensor
      * @return this builder
+     * @throws IllegalArgumentException if {@code outputName} is already mapped to another output
      */
     public Builder output(String outputName, Operand<?> output) {
+      if (signatureBuilder.containsOutputs(outputName)) {
+        throw new IllegalArgumentException("\"" + outputName + "\" is already being mapped to another output");
+      }
       signatureBuilder.putOutputs(outputName, toTensorInfo(output.asOutput()));
       return this;
     }
@@ -79,11 +91,11 @@ public class Signature  {
      * Provide extensible name information enabling third-party users to mark a signature as
      * supporting a particular method
      *
-     * @param methodName method name
+     * @param methodName method name or null for none (default)
      * @return this builder
      */
     public Builder methodName(String methodName) {
-      signatureBuilder.setMethodName(methodName);
+      signatureBuilder.setMethodName(methodName == null ? "" : methodName);
       return this;
     }
 
@@ -126,10 +138,10 @@ public class Signature  {
   }
 
   /**
-   * Returns the method name of this signature (e.g. as exposed by TF serving)
+   * Returns the method name of this signature (e.g. as exposed by TF serving) or null if none
    */
   public String methodName() {
-    return signatureDef.getMethodName();
+    return signatureDef.getMethodName().isEmpty() ? null : signatureDef.getMethodName();
   }
 
   /**

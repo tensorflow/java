@@ -454,7 +454,10 @@ public final class Session implements AutoCloseable {
    * <i>mymodel/myvariables/variables</i>, then the generated files will be located under
    * <i>mymodel/myvariables</i> and named <i>variables.data-*-of-*</i>
    *
-   * @param prefix
+   * <p/>Note that this method might alter the underlying graph if it is the first time that one
+   * of its session is saved, see {@link Graph#saverDef()} for more details.
+   *
+   * @param prefix prefix to the variable files to save
    */
   public void save(String prefix) {
     SaverDef saverDef = graph.saverDef();

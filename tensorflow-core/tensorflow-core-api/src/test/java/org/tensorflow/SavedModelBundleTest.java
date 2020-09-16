@@ -17,6 +17,7 @@ package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -256,6 +257,34 @@ public class SavedModelBundleTest {
         }
       }
     }
+  }
+
+  @Test
+  public void cannotExportOrImportInvalidTags() {
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.loader("/").withTags()
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.loader("/").withTags(new String[]{})
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.loader("/").withTags(new String[]{"tag", null})
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.loader("/").withTags(new String[]{"tag", ""})
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.exporter("/").withTags()
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.exporter("/").withTags(new String[]{})
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.exporter("/").withTags(new String[]{"tag", null})
+    );
+    assertThrows(IllegalArgumentException.class, () ->
+        SavedModelBundle.exporter("/").withTags(new String[]{"tag", ""})
+    );
   }
 
   @Test

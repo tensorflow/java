@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,6 +45,7 @@ import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
+import org.tensorflow.proto.util.SaverDef;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
@@ -73,6 +74,7 @@ public class SavedModelBundle implements AutoCloseable {
      * @param options A <a
      *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
      *     protocol buffer</a>.
+     * @return this object
      */
     public Loader withRunOptions(RunOptions options) {
       this.runOptions = options;
@@ -85,6 +87,7 @@ public class SavedModelBundle implements AutoCloseable {
      * @param configProto A <a
      *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto
      *     protocol buffer</a>.
+     * @return this object
      */
     public Loader withConfigProto(ConfigProto configProto) {
       this.configProto = configProto;
@@ -97,11 +100,12 @@ public class SavedModelBundle implements AutoCloseable {
      * <p>Has no effect if {@code tags} is null or empty
      *
      * @param tags the tags identifying the specific MetaGraphDef to load.
+     * @return this object
+     * @throws IllegalArgumentException if tags are invalid
      */
     public Loader withTags(String... tags) {
-      if (tags != null && tags.length > 0) {
-        this.tags = tags;
-      }
+      validateTags(tags);
+      this.tags = tags;
       return this;
     }
 
@@ -110,7 +114,7 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private String exportDir = null;
-    private String[] tags = {DEFAULT_TAG};
+    private String[] tags = { DEFAULT_TAG };
     private ConfigProto configProto = null;
     private RunOptions runOptions = null;
   }
@@ -125,9 +129,11 @@ public class SavedModelBundle implements AutoCloseable {
      *
      * @param tags the tags identifying the specific MetaGraphDef to save.
      * @return this object
+     * @throws IllegalArgumentException if tags are invalid
      */
     public Exporter withTags(String... tags) {
-      this.tags.addAll(Arrays.asList(tags));
+      validateTags(tags);
+      this.tags = tags;
       return this;
     }
 
@@ -148,6 +154,8 @@ public class SavedModelBundle implements AutoCloseable {
      * @param function a function carrying a signature and a valid session to the graph to be saved
      * @return this object
      * @throws IllegalArgumentException if a function with the same name has already been added to the model
+     * @throws UnsupportedOperationException if this function does not share the same session with the other
+     *                                       functions added to this model
      */
     public Exporter withFunction(ConcreteFunction function) {
       Signature signature = function.signature();
@@ -167,22 +175,22 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Save the model into the export directory.
      *
-     * @throws IOException if saved model or variable state can be written on disk
+     * @throws IOException if saved model or variable state cannot be written on disk
      */
     public void export() throws IOException {
       if (functions.isEmpty() || session == null) {
         throw new IllegalStateException("Model should contain at least one valid function");
       }
-      if (tags.isEmpty()) {
-        tags.add(DEFAULT_TAG);
-      }
+      Graph graph = session.graph();
+
       // It is imperative to retrieve the graphDef after the saverDef, as the former might add
       // new ops to the graph for saving and restoring the variables.
-      Graph graph = session.graph();
+      SaverDef saverDef = graph.saverDef();
+
       MetaGraphDef.Builder metaGraphDef = metaGraphDefBuilder
-          .setSaverDef(graph.saverDef())
+          .setSaverDef(saverDef)
           .setGraphDef(graph.toGraphDef())
-          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(tags));
+          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
       // Make sure saved model directories exist
@@ -205,9 +213,9 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private final String exportDir;
-    private final List<String> tags = new ArrayList<>();
+    private String[] tags = { DEFAULT_TAG };
     private final MetaGraphDef.Builder metaGraphDefBuilder = MetaGraphDef.newBuilder();
-    private final Map<String, ConcreteFunction> functions = new HashMap<>();
+    private final Map<String, ConcreteFunction> functions = new LinkedHashMap<>();
     private Session session;
   }
 
@@ -227,7 +235,11 @@ public class SavedModelBundle implements AutoCloseable {
    * @return a bundle containing the graph and associated session.
    */
   public static SavedModelBundle load(String exportDir, String... tags) {
-    return loader(exportDir).withTags(tags).load();
+    Loader loader = loader(exportDir);
+    if (tags != null && tags.length > 0) {
+      loader.withTags(tags);
+    }
+    return loader.load();
   }
 
   /**
@@ -414,6 +426,12 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     return bundle;
+  }
+
+  private static void validateTags(String[] tags) {
+    if (tags == null || tags.length == 0 || Arrays.stream(tags).anyMatch(t -> t == null || t.isEmpty())) {
+      throw new IllegalArgumentException("Invalid tags: " + Arrays.toString(tags));
+    }
   }
 
   static {

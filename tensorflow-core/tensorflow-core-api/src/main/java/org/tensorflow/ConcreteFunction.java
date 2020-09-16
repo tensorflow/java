@@ -231,11 +231,11 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <p>This method is convenient shortcut equivalent to
    * {@code SavedModel.exporter(exportDir).withFunction(this).export()}
+   *
+   * @throws IOException if saved model or variable state cannot be written on disk
    */
   public void save(String exportDir) throws IOException {
-    SavedModelBundle.exporter(exportDir)
-        .withFunction(this)
-        .export();
+    SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
   /**
