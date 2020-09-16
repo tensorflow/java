@@ -1,6 +1,9 @@
-Saved model created using Python @tf.function, tensorflow version 2.3.0.
-
-Python code used to create saved model below:
+# Saved model created using Python @tf.function, tensorflow version 2.3.0.
+#
+# Python code used to create saved model below
+#
+# WARNING: This script is just attached to the test code base for reference and is not used nor
+# executed by this project to generate the saved model, which has been added manually.
 
 import tensorflow as tf
 
