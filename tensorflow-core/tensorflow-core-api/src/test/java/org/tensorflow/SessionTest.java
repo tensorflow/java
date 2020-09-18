@@ -20,8 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
@@ -31,6 +36,7 @@ import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.Session}. */
@@ -203,6 +209,24 @@ public class SessionTest {
         }
       }
     }
+  }
+
+  @Test
+  public void save() throws IOException  {
+    Path testFolder = Files.createTempDirectory("tf-session-save-test");
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
+      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
+      Init init = tf.init();
+
+      try (Session s = new Session(g)) {
+        s.run(init);
+        s.save(testFolder.resolve("checkpoint").toString());
+      }
+    }
+    assertTrue(Files.exists(testFolder.resolve("checkpoint.index")));
+    assertTrue(Files.exists(testFolder.resolve("checkpoint.data-00000-of-00001")));
   }
 
   private static RunOptions fullTraceRunOptions() {

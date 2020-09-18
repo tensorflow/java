@@ -24,6 +24,7 @@ fi
 
 if [[ "${EXTENSION:-}" == *gpu* ]]; then
     export BUILD_FLAGS="$BUILD_FLAGS --config=cuda"
+    export TF_CUDA_COMPUTE_CAPABILITIES="3.5,7.0"
     if [[ -z ${TF_CUDA_PATHS:-} ]] && [[ -d ${CUDA_PATH:-} ]]; then
         # Work around some issue with Bazel preventing it from detecting CUDA on Windows
         export TF_CUDA_PATHS="$CUDA_PATH"
@@ -35,9 +36,9 @@ BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON
 # Always allow distinct host configuration since we rely on the host JVM for a few things (this was disabled by default on windows)
 BUILD_FLAGS="$BUILD_FLAGS --distinct_host_configuration=true"
 
-# Build C API of TensorFlow itself including a target to generate ops for Java
+# Build C/C++ API of TensorFlow itself including a target to generate ops for Java
 bazel build $BUILD_FLAGS \
-    @org_tensorflow//tensorflow:tensorflow \
+    @org_tensorflow//tensorflow:tensorflow_cc \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
     :java_op_generator \
@@ -49,23 +50,23 @@ export BAZEL_BIN=$(pwd -P)/bazel-bin
 export TENSORFLOW_BIN=$BAZEL_BIN/external/org_tensorflow/tensorflow
 
 # Normalize some paths with symbolic links
-TENSORFLOW_SO=($TENSORFLOW_BIN/libtensorflow.so.?.?.?)
+TENSORFLOW_SO=($TENSORFLOW_BIN/libtensorflow_cc.so.?.?.?)
 if [[ -f $TENSORFLOW_SO ]]; then
     export TENSORFLOW_LIB=$TENSORFLOW_SO
-    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so
-    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow.so.2
+    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow_cc.so
+    ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow_cc.so.2
 fi
-TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow.?.?.?.dylib)
+TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow_cc.?.?.?.dylib)
 if [[ -f $TENSORFLOW_DYLIB ]]; then
     export TENSORFLOW_LIB=$TENSORFLOW_DYLIB
-    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.dylib
-    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow.2.dylib
+    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow_cc.dylib
+    ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow_cc.2.dylib
 fi
-TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow.dll.if.lib $TENSORFLOW_BIN/libtensorflow.dll.ifso)
+TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow_cc.dll.if.lib $TENSORFLOW_BIN/libtensorflow_cc.dll.ifso)
 for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
     if [[ -f $TENSORFLOW_DLL ]]; then
-        export TENSORFLOW_LIB=$TENSORFLOW_BIN/tensorflow.dll
-        ln -sf $(basename $TENSORFLOW_DLL) $TENSORFLOW_BIN/tensorflow.lib
+        export TENSORFLOW_LIB=$TENSORFLOW_BIN/tensorflow_cc.dll
+        ln -sf $(basename $TENSORFLOW_DLL) $TENSORFLOW_BIN/tensorflow_cc.lib
     fi
 done
 echo "Listing $TENSORFLOW_BIN:" && ls -l $TENSORFLOW_BIN
