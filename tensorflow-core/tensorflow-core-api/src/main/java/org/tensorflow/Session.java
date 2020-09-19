@@ -36,6 +36,8 @@ import org.tensorflow.proto.framework.RunOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.types.TString;
 
 import static org.tensorflow.Graph.resolveOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
@@ -445,6 +447,27 @@ public final class Session implements AutoCloseable {
   }
 
   /**
+   * Saves the actual state of the variables of this session's graph.
+   *
+   * <p/>{@code prefix} is a path where the files containing the variables state will be saved,
+   * followed by a prefix for naming these files. For example, if {@code prefix} is set to
+   * <i>mymodel/myvariables/variables</i>, then the generated files will be located under
+   * <i>mymodel/myvariables</i> and named <i>variables.data-*-of-*</i>
+   *
+   * <p/>Note that this method might alter the underlying graph if it is the first time that one
+   * of its session is saved, see {@link Graph#saverDef()} for more details.
+   *
+   * @param prefix prefix to the variable files to save
+   */
+  public void save(String prefix) {
+    SaverDef saverDef = graph.saverDef();
+    runner()
+        .addTarget(saverDef.getSaveTensorName())
+        .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
+        .run();
+  }
+
+  /**
    * Output tensors and metadata obtained when executing a session.
    *
    * <p>See {@link Runner#runAndFetchMetadata()}
@@ -461,6 +484,10 @@ public final class Session implements AutoCloseable {
      * protocol buffer</a>.
      */
     public RunMetadata metadata;
+  }
+
+  Graph graph() {
+    return graph;
   }
 
   private final Graph graph;
