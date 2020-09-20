@@ -20,6 +20,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class ShapeUtils {
    * Converts a shape operand to a Shape object
    *
    * @param dims the Operand containing the shape values
-   * @return
+   * @return a new Shape based on an Operand that contains dimensions
    */
   public static <T extends TNumber> Shape toShape(Scope scope, Operand<T> dims) {
     long[] longDims = getLongArray(scope, dims);
@@ -71,14 +72,23 @@ public class ShapeUtils {
     List<Long> result = new ArrayList<>();
 
     if (scope.env().isEager()) {
-      if (dType.equals(TInt32.DTYPE))
-        ((Operand<TInt32>) dims)
-            .asOutput()
-            .data()
-            .scalars()
-            .forEach(s -> result.add((long) s.getInt()));
-      else
-        ((Operand<TInt64>) dims).asOutput().data().scalars().forEach(s -> result.add(s.getLong()));
+      if (dType.equals(TInt32.DTYPE)) {
+        @SuppressWarnings("unchecked")
+        Operand<TInt32> idims = (Operand<TInt32>) dims;
+
+        idims.asOutput().data().scalars().forEach(s -> result.add((long) s.getInt()));
+      } else if (dType.equals(TInt64.DTYPE)) {
+        @SuppressWarnings("unchecked")
+        Operand<TInt64> ldims = (Operand<TInt64>) dims;
+        ldims.asOutput().data().scalars().forEach(s -> result.add(s.getLong()));
+      } else if (dType.equals(TUint8.DTYPE)) {
+      @SuppressWarnings("unchecked")
+      Operand<TUint8> udims = (Operand<TUint8>) dims;
+        udims.asOutput().data().scalars().forEach(s -> result.add(s.getObject().longValue()));
+    }else { // shouldn't happen
+      throw new IllegalArgumentException("the data type must be an integer type");
+    }
+
     } else {
       try (Session session = new Session((Graph) scope.env())) {
         if (dType.equals(TInt32.DTYPE)) {
@@ -86,11 +96,18 @@ public class ShapeUtils {
               session.runner().fetch(dims).run().get(0).expect(TInt32.DTYPE)) {
             tensorResult.data().scalars().forEach(s -> result.add((long) s.getInt()));
           }
-        } else {
+        } else if (dType.equals(TInt64.DTYPE)){
           try (Tensor<TInt64> tensorResult =
               session.runner().fetch(dims).run().get(0).expect(TInt64.DTYPE)) {
             tensorResult.data().scalars().forEach(s -> result.add(s.getLong()));
           }
+        }else if (dType.equals(TUint8.DTYPE)){
+          try (Tensor<TUint8> tensorResult =
+                       session.runner().fetch(dims).run().get(0).expect(TUint8.DTYPE)) {
+            tensorResult.data().scalars().forEach(s -> result.add(s.getObject().longValue()));
+          }
+      }else { // shouldn't happen
+          throw new IllegalArgumentException("the data type must be an integer type");
         }
       }
     }
@@ -103,8 +120,8 @@ public class ShapeUtils {
    * @param tensor the tensor
    * @return the Shape of the tensor's data;
    */
-  public static Shape getShape(Tensor tensor) {
-    NdArray data = (NdArray) tensor.data();
+  public static <T extends TNumber> Shape getShape(Tensor<T> tensor) {
+    NdArray<?> data = (NdArray<?>) tensor.data();
     return data.shape();
   }
 
@@ -144,7 +161,7 @@ public class ShapeUtils {
    * @return true, if the two shapes are compatible.
    */
   public static boolean isCompatibleWith(Shape a, Shape b) {
-    if (!isUnknownShape(a) && !isUnknownShape(b)) {
+    if (isUnknownShape(a) && isUnknownShape(b)) {
       if (a.numDimensions() != b.numDimensions()) {
         return false;
       }
@@ -164,36 +181,38 @@ public class ShapeUtils {
    * @return true if the shape is an unknown shape
    */
   public static boolean isUnknownShape(Shape a) {
-    return a.asArray() == null;
+    return a.equals(Shape.unknown());
   }
 
   /**
-   * Reshapes the shape by eliminating trailing Dimensions.
+   * Reduces the shape by eliminating trailing Dimensions.
+   * <p>The last dimension, specified by axis, will be a product of all remaining dimensions</p>
    *
    * @param shape the shape to squeeze
    * @param axis the axis to squeeze
    * @return the new shape
    */
-  public static Shape squeeze(Shape shape, int axis) {
+  public static Shape reduce(Shape shape, int axis) {
     axis %= shape.numDimensions();
     if (axis < 0) {
       axis = shape.numDimensions() + axis;
     }
     long[] array = shape.asArray();
+    if(array == null)
+      return Shape.unknown();
     long[] newArray = new long[axis];
-    for (int i = 0; i < axis - 1; i++) {
-      newArray[i] = array[i];
-    }
-    long sum = array[axis - 1];
+    System.arraycopy(array, 0, newArray, 0, axis - 1);
+    long prod = array[axis - 1];
     for (int i = axis; i < array.length; i++) {
-      sum *= array[i];
+      if(array[i] != Shape.UNKNOWN_SIZE)
+        prod *= array[i];
     }
-    newArray[axis - 1] = sum;
+    newArray[axis - 1] = prod;
     return Shape.of(newArray);
   }
 
   /**
-   * Test to see if 2 shape dimensions are compatible.
+   * Test to see if two shape dimensions are compatible.
    *
    * <p>The dimensions are compatible if either dimension is <code>Shape.UNKNOWN_SIZE</code> or both
    * dimensions are equal
