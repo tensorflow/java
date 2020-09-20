@@ -27,9 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Various methods for dealing with Shapes and Operands
- *
- * @author Jim Clarke
+ * Various methods for processing with Shapes and Operands
  */
 public class ShapeUtils {
 
