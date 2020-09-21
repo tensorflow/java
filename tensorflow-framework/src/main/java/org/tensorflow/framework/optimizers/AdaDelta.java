@@ -95,9 +95,7 @@ public class AdaDelta extends Optimizer {
    * @param epsilon A constant epsilon used to better conditioning the grad update
    */
   public AdaDelta(Graph graph, float learningRate, float rho, float epsilon) {
-    super(graph, learningRate);
-    this.rho = rho;
-    this.epsilon = epsilon;
+    this(graph, null, learningRate, rho, epsilon);
   }
 
   /**

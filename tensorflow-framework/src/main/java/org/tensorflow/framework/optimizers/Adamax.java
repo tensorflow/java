@@ -92,10 +92,7 @@ public class Adamax extends Optimizer {
    * @param epsilon A small constant for numerical stability.
    */
   public Adamax(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
-    super(graph, learningRate);
-    this.betaOne = betaOne;
-    this.betaTwo = betaTwo;
-    this.epsilon = epsilon;
+    this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
 
   /**

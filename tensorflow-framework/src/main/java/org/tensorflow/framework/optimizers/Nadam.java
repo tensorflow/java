@@ -94,10 +94,7 @@ public class Nadam extends Optimizer {
    * @param epsilon A small constant for numerical stability. Default is 1e-8.
    */
   public Nadam(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
-    super(graph, learningRate);
-    this.betaOne = betaOne;
-    this.betaTwo = betaTwo;
-    this.epsilon = epsilon;
+    this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
 
   /**

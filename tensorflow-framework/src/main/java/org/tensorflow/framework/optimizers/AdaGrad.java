@@ -74,14 +74,7 @@ public class AdaGrad extends Optimizer {
    * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is negative
    */
   public AdaGrad(Graph graph, float learningRate, float initialAccumulatorValue) {
-    super(graph, learningRate);
-    if (initialAccumulatorValue < 0F) {
-      throw new IllegalArgumentException(
-          String.format(
-              "initialAccumulatorValue must be non-negative: %f", initialAccumulatorValue));
-    }
-    this.learningRate = learningRate;
-    this.initialAccumulatorValue = initialAccumulatorValue;
+    this(graph, null, learningRate, initialAccumulatorValue);
   }
 
   /**

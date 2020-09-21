@@ -132,13 +132,15 @@ public class Ftrl extends Optimizer {
       float l1Strength,
       float l2Strength,
       float l2ShrinkageRegularizationStrength) {
-    super(graph, learningRate);
-    this.learningRatePower = learningRatePower;
-    this.initialAccumulatorValue = initialAccumulatorValue;
-    this.l1RegularizationStrength = l1Strength;
-    this.l2RegularizationStrength = l2Strength;
-    this.l2ShrinkageRegularizationStrength = l2ShrinkageRegularizationStrength;
-    validateParams();
+    this(
+        graph,
+        null,
+        learningRate,
+        learningRatePower,
+        initialAccumulatorValue,
+        l1Strength,
+        l2Strength,
+        l2ShrinkageRegularizationStrength);
   }
 
   /**

@@ -99,10 +99,7 @@ public class Adam extends Optimizer {
    *     1 of the paper. Defaults to 1e-8.
    */
   public Adam(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
-    super(graph, learningRate);
-    this.betaOne = betaOne;
-    this.betaTwo = betaTwo;
-    this.epsilon = epsilon;
+    this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
 
   /**

@@ -100,23 +100,7 @@ public class AdaGradDA extends Optimizer {
       float initialAccumulatorValue,
       float l1Strength,
       float l2Strength) {
-    super(graph, learningRate);
-    if (initialAccumulatorValue <= 0F) {
-      throw new IllegalArgumentException(
-          String.format(
-              "initialAccumulatorValue must be greater than zero: %f", initialAccumulatorValue));
-    }
-    if (l1Strength < 0F) {
-      throw new IllegalArgumentException(
-          String.format("l1Strength must not be negative: %f", l1Strength));
-    }
-    if (l2Strength < 0F) {
-      throw new IllegalArgumentException(
-          String.format("l2Strength must not be negative: %f", l2Strength));
-    }
-    this.initialAccumulatorValue = initialAccumulatorValue;
-    this.l1Strength = l1Strength;
-    this.l2Strength = l2Strength;
+    this(graph, null, learningRate, initialAccumulatorValue, l1Strength, l2Strength);
   }
 
   /**

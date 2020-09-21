@@ -44,7 +44,7 @@ public class GradientDescent extends Optimizer {
    * @param learningRate the learning rate, defaults to 0.01
    */
   public GradientDescent(Graph graph, float learningRate) {
-    super(graph, learningRate);
+    super(graph, null, learningRate);
   }
 
   /**

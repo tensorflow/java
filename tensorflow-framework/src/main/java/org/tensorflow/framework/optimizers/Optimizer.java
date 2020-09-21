@@ -54,58 +54,13 @@ public abstract class Optimizer implements AutoCloseable {
   /**
    * Builds an optimizer for the supplied graph.
    *
-   * <p>Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
-   *
-   * @param graph The graph to optimize.
-   */
-  protected Optimizer(Graph graph) {
-    this.graph = graph;
-    this.tf = Ops.create(graph).withName(getOptimizerName());
-    this.slots = new HashMap<>();
-    this.globals = new ArrayList<>();
-    setLearningRate(LEARNING_RATE_DEFAULT);
-  }
-
-  /**
-   * Builds an optimizer for the supplied graph.
-   *
-   * <p>Uses the name from {@link Optimizer#getOptimizerName()} to name the operations.
-   *
-   * @param graph The graph to optimize.
-   * @param learningRate the learning rate.
-   */
-  protected Optimizer(Graph graph, float learningRate) {
-    this.graph = graph;
-    this.tf = Ops.create(graph).withName(getOptimizerName());
-    this.slots = new HashMap<>();
-    this.globals = new ArrayList<>();
-    setLearningRate(learningRate);
-  }
-
-  /**
-   * Builds an optimizer for the supplied graph.
-   *
-   * @param graph The graph to optimize.
-   * @param name The base name for the operations.
-   */
-  protected Optimizer(Graph graph, String name) {
-    this.graph = graph;
-    this.tf = Ops.create(graph).withName(name);
-    this.slots = new HashMap<>();
-    this.globals = new ArrayList<>();
-    setLearningRate(LEARNING_RATE_DEFAULT);
-  }
-
-  /**
-   * Builds an optimizer for the supplied graph.
-   *
    * @param graph The graph to optimize.
    * @param name The base name for the operations.
    * @param learningRate the learning rate.
    */
   protected Optimizer(Graph graph, String name, float learningRate) {
     this.graph = graph;
-    this.tf = Ops.create(graph).withName(name);
+    this.tf = Ops.create(graph).withName(name == null ? getOptimizerName() : name);
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
     setLearningRate(learningRate);
@@ -367,7 +322,7 @@ public abstract class Optimizer implements AutoCloseable {
     return feedMap;
   }
 
-  /** {@inheritDoc}  */
+  /** {@inheritDoc} */
   public void close() {
     // close the learningRate Tensor if it exists.
     if (learningRateTensor != null) {

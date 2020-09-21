@@ -106,11 +106,7 @@ public class RMSProp extends Optimizer {
       float momentum,
       float epsilon,
       boolean centered) {
-    super(graph, learningRate);
-    this.decay = decay;
-    this.momentum = momentum;
-    this.epsilon = epsilon;
-    this.centered = centered;
+    this(graph, null, learningRate, decay, momentum, epsilon, centered);
   }
 
   /**

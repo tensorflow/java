@@ -84,9 +84,7 @@ public class Momentum extends Optimizer {
    * @param useNesterov Whether to apply Nesterov momentum. Defaults to false.
    */
   public Momentum(Graph graph, float learningRate, float momentum, boolean useNesterov) {
-    super(graph, learningRate);
-    this.momentum = momentum;
-    this.useNesterov = useNesterov;
+    this(graph, null, learningRate, momentum, useNesterov);
   }
 
   /**
