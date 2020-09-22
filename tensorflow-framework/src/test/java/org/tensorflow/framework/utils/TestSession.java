@@ -470,6 +470,24 @@ public abstract class TestSession implements AutoCloseable {
   public abstract <T extends TType> void evaluate(Output<T> input, Predicate<Number> predicate);
 
   /**
+   * Evaluates the input against the expected string value
+   *
+   * @param input the operand to evaluate
+   * @param predicate The Predicate that evaluates the each value from input
+   */
+  public void evaluateString(Operand<TString> input, Predicate<String> predicate) {
+    evaluateString(input.asOutput(), predicate);
+  }
+
+  /**
+   * Evaluates the input against the expected string value
+   *
+   * @param input the operand to evaluate
+   * @param predicate The Predicate that evaluates the each value from input
+   */
+  public abstract  void evaluateString(Output<TString> input, Predicate<String> predicate);
+
+  /**
    * Evaluates the input against the expected value
    *
    * @param input the operand to evaluate
