@@ -24,21 +24,23 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates tensors with a uniform distribution.
+ *
  * <p>Examples:
  *
  * <pre>
- *      RandomUniform&lt;TFloat32, TFloat32&gt; initializer =
- *              new org.tensorflow.framework.initializers.RandomUniform&lt;&gt;(tf);
- *      Operand&lt;TFloat32&gt; values =
+ *     long seed = 1001l;
+ *     RandomUniform&lt;TFloat32, TFloat32&gt; initializer =
+ *              new org.tensorflow.framework.initializers.RandomUniform&lt;&gt;(tf, seed);
+ *     Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
  *
  * @param <T> The TType for the call operation
  * @param <U> The TNumber for the call operation
- * */
+ */
 public class RandomUniform<T extends TType, U extends TNumber> extends BaseInitializer<T> {
 
-  public static final double MINVAL_DEFAULT = 0.05;
+  public static final double MINVAL_DEFAULT = -0.05;
   public static final double MAXVAL_DEFAULT = 0.05;
 
   private final Double minval;
@@ -49,29 +51,23 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
    * Creates a RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomUniform(Ops tf) {
-    this(tf, MINVAL_DEFAULT, MAXVAL_DEFAULT, null);
+  public RandomUniform(Ops tf, Long seed) {
+    this(tf, MINVAL_DEFAULT, MAXVAL_DEFAULT, seed);
   }
 
   /**
    * Creates a RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
-   * @param minval Lower bound of the range of random values to generate (inclusive).
-   * @param maxval Upper bound of the range of random values to generate (exclusive).
-   */
-  public RandomUniform(Ops tf, double minval, double maxval) {
-    this(tf, minval, maxval, null);
-  }
-
-  /**
-   * Creates a RandomUniform initializer
-   *
-   * @param tf the TensorFlow Ops
-   * @param minval Lower bound of the range of random values to generate (inclusive).
-   * @param maxval Upper bound of the range of random values to generate (exclusive).
-   * @param seed Used to create random seeds.
+   * @param minval Lower bound of the range of random values to generate (inclusive). Default is
+   *     -0.05.
+   * @param maxval Upper bound of the range of random values to generate (exclusive). Default is
+   *     0.05.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
   public RandomUniform(Ops tf, double minval, double maxval, Long seed) {
     super(tf);

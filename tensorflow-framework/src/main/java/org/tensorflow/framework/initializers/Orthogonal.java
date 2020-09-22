@@ -27,17 +27,17 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates an orthogonal matrix.
- * <p>
- *     If the shape of the tensor to initialize is two-dimensional, it is initialized with an orthogonal matrix obtained from the QR
- *     decomposition of a matrix of random numbers drawn from a normal distribution. If the matrix has fewer rows than
- *     columns then the output will have orthogonal rows. Otherwise, the output will have orthogonal columns.
- * </p>
- * <p>
- *    If the shape of the tensor to initialize is more than two-dimensional,
- *    a matrix of shape <code>(shape.size(0) * ... * shape.size(n - 2), shape.size(n - 1))</code> is initialized,
- *    where <code>n</code> is the length of the shape vector. The matrix is subsequently reshaped
- *    to give a tensor of the desired shape.
- * </p>
+ *
+ * <p>If the shape of the tensor to initialize is two-dimensional, it is initialized with an
+ * orthogonal matrix obtained from the QR decomposition of a matrix of random numbers drawn from a
+ * normal distribution. If the matrix has fewer rows than columns then the output will have
+ * orthogonal rows. Otherwise, the output will have orthogonal columns.
+ *
+ * <p>If the shape of the tensor to initialize is more than two-dimensional, a matrix of shape
+ * <code>(shape.size(0) * ... * shape.size(n - 2), shape.size(n - 1))</code> is initialized, where
+ * <code>n</code> is the length of the shape vector. The matrix is subsequently reshaped to give a
+ * tensor of the desired shape.
+ *
  * <p>Examples:
  *
  * <pre>
@@ -61,26 +61,8 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
    * Creates an Orthogonal Initializer
    *
    * @param tf the TensorFlow Ops
-   */
-  public Orthogonal(Ops tf) {
-    this(tf, GAIN_DEFAULT, null);
-  }
-
-  /**
-   * Creates an Orthogonal Initializer
-   *
-   * @param tf the TensorFlow Ops
-   * @param gain the gain to be applied to the Matrix
-   */
-  public Orthogonal(Ops tf, double gain) {
-    this(tf, gain, null);
-  }
-
-  /**
-   * Creates an Orthogonal Initializer
-   *
-   * @param tf the TensorFlow Ops
-   * @param seed the seed for random number generation
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
   public Orthogonal(Ops tf, Long seed) {
     this(tf, GAIN_DEFAULT, seed);
@@ -90,8 +72,9 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
    * Creates an Orthogonal Initializer
    *
    * @param tf the TensorFlow Ops
-   * @param gain the gain to be applied to the Matrix
-   * @param seed the seed for random number generation
+   * @param gain the gain to be applied to the Matrix. Default is 1.0.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
   public Orthogonal(Ops tf, double gain, Long seed) {
     super(tf);

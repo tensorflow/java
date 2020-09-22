@@ -27,11 +27,13 @@ import org.tensorflow.types.family.TType;
  * <p>Examples:
  *
  * <pre>
- *      RandomNormal&lt;TFloat32, TFloat32&gt; initializer =
- *              new org.tensorflow.framework.initializers.RandomNormal&lt;&gt;(tf);
- *      Operand&lt;TFloat32&gt; values =
+ *     long seed = 1001l;
+ *     RandomNormal&lt;TFloat32, TFloat32&gt; initializer =
+ *              new org.tensorflow.framework.initializers.RandomNormal&lt;&gt;(tf, seed);
+ *     Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
+ *
  * @param <T> The TType for the call operation
  * @param <U> The TNumber for the call operation
  */
@@ -47,39 +49,33 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
    * creates the RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf) {
-    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, null);
+  public RandomNormal(Ops tf, Long seed) {
+    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, seed);
   }
 
   /**
    * creates the RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate.
+   * @param mean Mean of the random values to generate. Default is 0.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, double mean) {
-    this(tf, mean, STDDEV_DEFAULT, null);
+  public RandomNormal(Ops tf, double mean, Long seed) {
+    this(tf, mean, STDDEV_DEFAULT, seed);
   }
 
   /**
    * creates the RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate.
-   * @param stddev Standard deviation of the random values to generate.
-   */
-  public RandomNormal(Ops tf, double mean, double stddev) {
-    this(tf, mean, stddev, null);
-  }
-
-  /**
-   * creates the RandomUniform initializer
-   *
-   * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate.
-   * @param stddev Standard deviation of the random values to generate.
-   * @param seed Used to create random seeds.
+   * @param mean Mean of the random values to generate. Default is 0.
+   * @param stddev Standard deviation of the random values to generate. Default is 1.0.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
   public RandomNormal(Ops tf, double mean, double stddev, Long seed) {
     super(tf);

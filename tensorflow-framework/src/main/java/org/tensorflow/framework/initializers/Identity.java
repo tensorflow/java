@@ -64,7 +64,7 @@ public class Identity<T extends TType> extends BaseInitializer<T> {
   @Override
   public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
     if (!dtype.isFloating()) {
-      throw new IllegalArgumentException("DataType must be numeric or boolean: " + dtype.name());
+      throw new IllegalArgumentException("DataType must be a float type: " + dtype.name());
     }
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {

@@ -36,19 +36,42 @@ import org.tensorflow.types.family.TType;
  */
 public class Constant<T extends TType> extends BaseInitializer<T> {
 
-  private final Number numberValue;
-  private final Boolean booleanValue;
+  private final double doubleValue;
+  private final long longValue;
+  private final boolean booleanValue;
+  private final ValueType valueType;
+
+  private enum ValueType {
+    LONG, DOUBLE, BOOLEAN
+  }
+
 
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
    * @param tf the TensorFlow Ops
-   * @param value a number value
+   * @param value a double value
    */
-  public Constant(Ops tf, Number value) {
+  public Constant(Ops tf, long value) {
     super(tf);
-    this.numberValue = value;
-    this.booleanValue = null;
+    longValue = value;
+    doubleValue = 0;
+    booleanValue = false;
+    valueType = ValueType.LONG;
+  }
+
+  /**
+   * Creates an Initializer that generates tensors with a constant value.
+   *
+   * @param tf the TensorFlow Ops
+   * @param value a double value
+   */
+  public Constant(Ops tf, double value) {
+    super(tf);
+    doubleValue = value;
+    longValue = 0;
+    booleanValue = false;
+    valueType = ValueType.DOUBLE;
   }
 
   /**
@@ -57,10 +80,12 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
    * @param tf the TensorFlow Ops
    * @param value a boolean value
    */
-  public Constant(Ops tf, Boolean value) {
+  public Constant(Ops tf, boolean value) {
     super(tf);
-    this.numberValue = null;
-    this.booleanValue = value;
+    booleanValue = value;
+    doubleValue = 0;
+    longValue = 0;
+    valueType = ValueType.BOOLEAN;
   }
 
   /** {@inheritDoc} */
@@ -69,13 +94,14 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
     if (!(dtype.isNumeric() || dtype.isBoolean())) {
       throw new IllegalArgumentException("DataType must be numeric or boolean: " + dtype.name());
     }
-    if (this.numberValue != null) {
-      return tf.fill(dims, tf.dtypes.cast(tf.constant(numberValue.doubleValue()), dtype));
-    } else if (this.booleanValue != null) {
-      return tf.fill(dims, tf.dtypes.cast(tf.constant(this.booleanValue), dtype));
-    } else { // should not happen, but throw here just in case
-      throw new IllegalArgumentException(
-          "Value must be either be a Number or Boolean, none supplied.");
+    switch(valueType) {
+      case LONG:
+        return tf.fill(dims, tf.dtypes.cast(tf.constant(longValue), dtype));
+      case DOUBLE:
+        return tf.fill(dims, tf.dtypes.cast(tf.constant(doubleValue), dtype));
+      default:
+        return tf.fill(dims, tf.dtypes.cast(tf.constant(booleanValue), dtype));
     }
+
   }
 }

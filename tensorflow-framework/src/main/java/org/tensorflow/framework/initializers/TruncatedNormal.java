@@ -27,9 +27,10 @@ import org.tensorflow.types.family.TType;
  * <p>Examples:
  *
  * <pre>
- *      TruncatedNormal&lt;TFloat32, TFloat32&gt; initializer =
- *              new org.tensorflow.framework.initializers.TruncatedNormal&lt;&gt;(tf);
- *      Operand&lt;TFloat32&gt; values =
+ *     long seed = 1001l;
+ *     TruncatedNormal&lt;TFloat32, TFloat32&gt; initializer =
+ *              new org.tensorflow.framework.initializers.TruncatedNormal&lt;&gt;(tf, seed);
+ *     Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
  *
@@ -49,29 +50,21 @@ public class TruncatedNormal<T extends TType, U extends TNumber> extends BaseIni
    * Creates a TruncatedNormal Initializer
    *
    * @param tf the TensorFlow Ops
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
-  public TruncatedNormal(Ops tf) {
-    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, null);
+  public TruncatedNormal(Ops tf, Long seed) {
+    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, seed);
   }
 
   /**
    * Creates a TruncatedNormal Initializer
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate.
-   * @param stddev Standard deviation of the random values to generate.
-   */
-  public TruncatedNormal(Ops tf, double mean, double stddev) {
-    this(tf, mean, stddev, null);
-  }
-
-  /**
-   * Creates a TruncatedNormal Initializer
-   *
-   * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate.
-   * @param stddev Standard deviation of the random values to generate.
-   * @param seed Used to create random seeds
+   * @param mean Mean of the random values to generate. Default is 0.
+   * @param stddev Standard deviation of the random values to generate. Default is 0.05.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and dtype.
    */
   public TruncatedNormal(Ops tf, double mean, double stddev, Long seed) {
     super(tf);
