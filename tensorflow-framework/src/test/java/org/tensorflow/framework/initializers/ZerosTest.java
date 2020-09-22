@@ -21,11 +21,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /** Test the Zeros initializer */
 public class ZerosTest {
 
@@ -126,8 +121,7 @@ public class ZerosTest {
 
         Zeros<TString> instance = new Zeros<>(tf);
         Operand<TString> operand = instance.call(tf.constant(shape), TString.DTYPE);
-        session.evaluateString(operand, s->  s.isEmpty());
-
+        session.evaluateString(operand, String::isEmpty);
       }
   }
 
