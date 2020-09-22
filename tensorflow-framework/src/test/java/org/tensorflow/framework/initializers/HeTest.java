@@ -100,4 +100,43 @@ public class HeTest {
         session.evaluate(expected, operand);
       }
   }
+
+  @Test
+  public void testCallNormalReproducible() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        He<TFloat64, TFloat64> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
+
+  @Test
+  public void testCallUniformReproducible() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        He<TFloat64, TFloat64> instance = new He<>(tf, Distribution.UNIFORM, SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
+
+  @Test
+  public void testCallUNTRUNCATED_NORMALReproducible() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        He<TFloat64, TFloat64> instance = new He<>(tf, Distribution.UNTRUNCATED_NORMAL, SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
 }

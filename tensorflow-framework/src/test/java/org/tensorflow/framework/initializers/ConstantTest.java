@@ -150,4 +150,18 @@ public class ConstantTest {
         session.evaluate(expected, operand);
       }
   }
+
+  @Test
+  public void testReproducible() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+
+        Constant<TFloat64> instance = new Constant<>(tf, 11.);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
 }

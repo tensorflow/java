@@ -156,4 +156,76 @@ public class VarianceScalingTest {
         session.evaluate(expected, operand);
       }
   }
+
+  @Test
+  public void testReproducible1() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+
+        VarianceScaling<TFloat64, TFloat64> instance =
+            new VarianceScaling<>(
+                tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.UNIFORM, SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
+
+  @Test
+  public void testReproducible2() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+
+        VarianceScaling<TFloat64, TFloat64> instance =
+            new VarianceScaling<>(
+                tf,
+                1.0,
+                VarianceScaling.Mode.FAN_IN,
+                VarianceScaling.Distribution.UNTRUNCATED_NORMAL,
+                SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
+
+  @Test
+  public void testReproducible3() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+
+        VarianceScaling<TFloat64, TFloat64> instance =
+            new VarianceScaling<>(
+                tf,
+                1.0,
+                VarianceScaling.Mode.FAN_OUT,
+                VarianceScaling.Distribution.TRUNCATED_NORMAL,
+                SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
+
+  @Test
+  public void testReproducible4() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+
+        VarianceScaling<TFloat64, TFloat64> instance =
+            new VarianceScaling<>(
+                tf, 1.0, VarianceScaling.Mode.FAN_AVG, VarianceScaling.Distribution.UNIFORM, SEED);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(operand1, operand2);
+      }
+  }
 }
