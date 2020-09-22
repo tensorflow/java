@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /** Test the Orthogonal initializer */
 public class OrthogonalTest {
 
-  private final TestSession.Mode tfMode = TestSession.Mode.EAGER;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   private static final long SEED = 1000L;
   private static final double GAIN_VALUE = 1.0;
@@ -51,17 +51,18 @@ public class OrthogonalTest {
   /** Test of call method, of class Orthogonal. */
   @Test
   public void testCall_Int() {
-    assertThrows(
-        java.lang.IllegalArgumentException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Ops tf = session.getTF();
-            Shape shape = Shape.of(10, 10);
-            Orthogonal<TInt32, TInt32> instance = new Orthogonal(tf, GAIN_VALUE, SEED);
-            Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
-            fail("Should jave thrown IllegalArgumentException on Integer type");
-          }
-        });
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(10, 10);
+              Orthogonal<TInt32, TInt32> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+              instance.call(tf.constant(shape), TInt32.DTYPE);
+              fail("Should have thrown IllegalArgumentException on Integer type");
+            }
+          });
   }
 
   /** Test of call method, of class Orthogonal. */
@@ -169,13 +170,14 @@ public class OrthogonalTest {
       -0.00656797f,
       -0.12504758f
     };
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(10, 10);
-      Orthogonal<TFloat32, TFloat32> instance = new Orthogonal(tf, GAIN_VALUE, SEED);
-      Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(10, 10);
+        Orthogonal<TFloat32, TFloat32> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Orthogonal. */
@@ -283,12 +285,13 @@ public class OrthogonalTest {
       0.028705024822326536,
       -0.27774030642345227
     };
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(10, 10);
-      Orthogonal<TFloat64, TFloat64> instance = new Orthogonal(tf, GAIN_VALUE, SEED);
-      Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(10, 10);
+        Orthogonal<TFloat64, TFloat64> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 }

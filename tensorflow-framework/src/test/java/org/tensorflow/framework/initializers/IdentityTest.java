@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.junit.jupiter.api.*;
-import org.tensorflow.EagerSession;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /** Test the Identity initializer */
 public class IdentityTest {
 
-  private final TestSession.Mode tfMode = TestSession.Mode.EAGER;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public IdentityTest() {}
 
@@ -49,17 +48,18 @@ public class IdentityTest {
   /** Test of call method, of class Orthogonal. */
   @Test
   public void testCall_Int() {
-    assertThrows(
-        java.lang.IllegalArgumentException.class,
-        () -> {
-          try (EagerSession session = EagerSession.create()) {
-            Ops tf = Ops.create(session);
-            Shape shape = Shape.of(10, 10);
-            Identity<TInt32> instance = new Identity<>(tf, 2.);
-            instance.call(tf.constant(shape), TInt32.DTYPE);
-            fail("Should have thrown IllegalArgumentException on Integer type");
-          }
-        });
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(10, 10);
+              Identity<TInt32> instance = new Identity<>(tf, 2.);
+              instance.call(tf.constant(shape), TInt32.DTYPE);
+              fail("Should have thrown IllegalArgumentException on Integer type");
+            }
+          });
   }
 
   /** Test of call method, of class Constant. */
@@ -77,18 +77,20 @@ public class IdentityTest {
       0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f,
       0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f
     };
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(10, 10);
-      Identity<TFloat32> instance = new Identity<>(tf, 2.);
-      Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(10, 10);
+        Identity<TFloat32> instance = new Identity<>(tf, 2.);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
   @Test
   public void testCallDouble() {
+
     double[] expected = {
       2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
       0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -101,12 +103,13 @@ public class IdentityTest {
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0,
       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0
     };
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(10, 10);
-      Identity<TFloat64> instance = new Identity<>(tf, 2.);
-      Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(10, 10);
+        Identity<TFloat64> instance = new Identity<>(tf, 2.);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 }

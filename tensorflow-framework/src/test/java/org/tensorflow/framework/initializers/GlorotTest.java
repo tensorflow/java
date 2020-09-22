@@ -16,23 +16,20 @@ package org.tensorflow.framework.initializers;
 
 import org.junit.jupiter.api.*;
 import org.tensorflow.Operand;
+import org.tensorflow.framework.initializers.VarianceScaling.Distribution;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
 
-/** Test the RandomUniform initializer */
-public class RandomUniformTest {
-
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
+/** Test cases for Glorot initializer */
+public class GlorotTest {
 
   private static final long SEED = 1000L;
-  private static final double MIN_VALUE = 0.0;
-  private static final double MAX_VALUE = 10.0;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
-  public RandomUniformTest() {}
+  public GlorotTest() {}
 
   @BeforeAll
   public static void setUpClass() {}
@@ -46,47 +43,61 @@ public class RandomUniformTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of call method, of class RandomUniform. */
+  /** Test of call method, of class Glorot. */
   @Test
-  public void testCall_Int() {
-    int[] expected = {6, 1, 4, 1};
+  public void testCallNormal_Float() {
+    float[] expected = {-0.52388954F, -0.29329166F, -0.07872587F, -0.31851602F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomUniform<TInt32, TFloat64> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
-        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
-        session.evaluate(expected, operand);
-      }
-  }
+        Glorot<TFloat32, TFloat32> instance = new Glorot<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
 
-  /** Test of call method, of class RandomUniform. */
-  @Test
-  public void testCall_Float() {
-    float[] expected = {7.5660157f, 6.6877327f, 9.200811f, 5.385646F};
-    for (TestSession.Mode tfMode : tfModes)
-      try (TestSession session = TestSession.createTestSession(tfMode)) {
-        Ops tf = session.getTF();
-        Shape shape = Shape.of(2, 2);
-        RandomUniform<TFloat32, TFloat32> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
         session.evaluate(expected, operand);
       }
   }
 
   @Test
-  public void testCall_Double() {
+  public void testCallNormal_Double() {
     double[] expected = {
-      0.5281258126492294, 3.6064922351122752, 0.5479556897864346, 5.126554100456142
+      1.4971264721246893, -1.2488522307109322, -0.5409677352523339, 0.4871390504288623
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomUniform<TFloat64, TFloat64> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
+
+        Glorot<TFloat64, TFloat64> instance = new Glorot<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
+  }
+
+  /** Test of call method, of class Glorot. */
+  @Test
+  public void testCallUniform_Float() {
+    float[] expected = {0.9266439F, 0.8190767F, 1.1268647F, 0.6596042F};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Glorot<TFloat32, TFloat32> instance = new Glorot<>(tf, Distribution.UNIFORM, SEED);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
+  }
+
+  @Test
+  public void testCallUniform_Double() {
+    double[] expected = {
+      0.06468193804916589, 0.44170328686673477, 0.06711059208157763, 0.6278720842445181
+    };
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Glorot<TFloat64, TFloat64> instance = new Glorot<>(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
         session.evaluate(expected, operand);
       }

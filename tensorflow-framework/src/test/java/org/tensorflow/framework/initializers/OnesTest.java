@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /** Test the Ones initializer */
 public class OnesTest {
 
-  private final TestSession.Mode tfMode = TestSession.Mode.EAGER;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public OnesTest() {}
 
@@ -46,96 +46,103 @@ public class OnesTest {
   /** Test of call method, of class Ones. */
   @Test
   public void testCallUInt() {
-    Byte[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changet to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Ones<TUint8> instance = new Ones<>(tf);
-      Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    Byte[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changed to zero
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Ones<TUint8> instance = new Ones<>(tf);
+        Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Ones. */
   @Test
   public void testCallInt() {
-    int[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changet to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Ones<TInt32> instance = new Ones<>(tf);
-      Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    int[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changed to zero
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Ones<TInt32> instance = new Ones<>(tf);
+        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Ones. */
   @Test
   public void testCallLong() {
-    long[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changet to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Ones<TInt64> instance = new Ones<>(tf);
-      Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    long[] expected = {1, 1, 1, 1}; // init to ones to make sure they all changed to zero
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Ones<TInt64> instance = new Ones<>(tf);
+        Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Ones. */
   @Test
   public void testCallFloat() {
     float[] expected = {1.f, 1.f, 1.f, 1.f};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Ones<TFloat32> instance = new Ones<>(tf);
-      Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Ones<TFloat32> instance = new Ones<>(tf);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Ones. */
   @Test
   public void testCallDouble() {
     double[] expected = {1., 1., 1., 1.};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
 
-      Ones<TFloat64> instance = new Ones<>(tf);
-      Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        Ones<TFloat64> instance = new Ones<>(tf);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Ones. */
   @Test
   public void testCallString() {
-    assertThrows(
-        java.lang.IllegalArgumentException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Ops tf = session.getTF();
-            Shape shape = Shape.of(2, 2);
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(2, 2);
 
-            Ones<TString> instance = new Ones<>(tf);
-            Operand<TString> operand = instance.call(tf.constant(shape), TString.DTYPE);
-            fail("IllegalArgumentException should have been thrown for TString");
-          }
-        });
+              Ones<TString> instance = new Ones<>(tf);
+              instance.call(tf.constant(shape), TString.DTYPE);
+              fail("IllegalArgumentException should have been thrown for TString");
+            }
+          });
   }
 
   @Test
   public void testCallBool() {
     Boolean[] expected = {true, true, true, true};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
 
-      Ones<TBool> instance = new Ones<>(tf);
-      Operand<TBool> operand = instance.call(tf.constant(shape), TBool.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        Ones<TBool> instance = new Ones<>(tf);
+        Operand<TBool> operand = instance.call(tf.constant(shape), TBool.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 }

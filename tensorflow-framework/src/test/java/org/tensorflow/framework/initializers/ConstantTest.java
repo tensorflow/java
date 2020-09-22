@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /** Test the Constant initializer */
 public class ConstantTest {
 
-  private final TestSession.Mode tfMode = TestSession.Mode.EAGER;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public ConstantTest() {}
 
@@ -47,13 +47,14 @@ public class ConstantTest {
   @Test
   public void testCallUInt() {
     Byte[] expected = {0xf, 0xf, 0xf, 0xf}; // init to constant to make sure they all change to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Constant<TUint8> instance = new Constant<>(tf, 0xf);
-      Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Constant<TUint8> instance = new Constant<>(tf, 0xf);
+        Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
@@ -62,13 +63,14 @@ public class ConstantTest {
     Integer[] expected = {
       0xf, 0xf, 0xf, 0xf
     }; // init to constant to make sure they all change to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Constant<TInt32> instance = new Constant<>(tf, 0xf);
-      Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Constant<TInt32> instance = new Constant<>(tf, 0xf);
+        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
@@ -77,70 +79,75 @@ public class ConstantTest {
     long[] expected = {
       0xffL, 0xffL, 0xffL, 0xffL
     }; // init to constant to make sure they all change to zero
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Constant<TInt64> instance = new Constant<>(tf, 0xffL);
-      Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Constant<TInt64> instance = new Constant<>(tf, 0xffL);
+        Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
   @Test
   public void testCallFloat() {
     float[] expected = {12.f, 12.f, 12.f, 12.f};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Constant<TFloat32> instance = new Constant<>(tf, 12.F);
-      Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Constant<TFloat32> instance = new Constant<>(tf, 12.F);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
   @Test
   public void testCallDouble() {
     double[] expected = {11., 11., 11., 11.};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
 
-      Constant<TFloat64> instance = new Constant<>(tf, 11.);
-      Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        Constant<TFloat64> instance = new Constant<>(tf, 11.);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Constant. */
   @Test
   public void testCallString() {
-    assertThrows(
-        java.lang.IllegalArgumentException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Ops tf = session.getTF();
-            Shape shape = Shape.of(2, 2);
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(2, 2);
 
-            Constant<TString> instance = new Constant<>(tf, 22);
-            instance.call(tf.constant(shape), TString.DTYPE);
-            fail("IllegalArgumentException  should have been thrown for TString");
-          }
-        });
+              Constant<TString> instance = new Constant<>(tf, 22);
+              instance.call(tf.constant(shape), TString.DTYPE);
+              fail("IllegalArgumentException  should have been thrown for TString");
+            }
+          });
   }
 
   /** Test of call method, of class Constant. */
   @Test
   public void testCallBool() {
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(2, 2);
-      Boolean[] expected = {true, true, true, true};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        Boolean[] expected = {true, true, true, true};
 
-      Constant<TBool> instance = new Constant<>(tf, true);
-      Operand<TBool> operand = instance.call(tf.constant(shape), TBool.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        Constant<TBool> instance = new Constant<>(tf, true);
+        Operand<TBool> operand = instance.call(tf.constant(shape), TBool.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 }

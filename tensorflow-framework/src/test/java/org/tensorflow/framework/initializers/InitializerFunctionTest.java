@@ -24,7 +24,7 @@ import org.tensorflow.types.*;
 /** Test the InitializerFunction initializer */
 public class InitializerFunctionTest {
 
-  private final TestSession.Mode tfMode = TestSession.Mode.EAGER;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public InitializerFunctionTest() {}
 
@@ -44,79 +44,84 @@ public class InitializerFunctionTest {
   @Test
   public void testLambdaCallFloat() {
     float[] expected = {12345.0f};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(1);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(1);
 
-      // Test float
-      Initializer<TFloat32> func =
-          (dims, dtype) -> tf.dtypes.cast(tf.constant(new float[] {12345.0f}), dtype);
-      Operand<TFloat32> operand = func.call(tf.constant(shape), TFloat32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        // Test float
+        Initializer<TFloat32> func =
+            (dims, dtype) -> tf.dtypes.cast(tf.constant(new float[] {12345.0f}), dtype);
+        Operand<TFloat32> operand = func.call(tf.constant(shape), TFloat32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Initializer using Lambda. */
   @Test
   public void testLambdaCallUInt8() {
     byte[] expected = {0x15};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(1);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(1);
 
-      // Test float
-      Initializer<TUint8> func =
-          (dims, dtype) -> tf.dtypes.cast(tf.constant(new byte[] {0x15}), dtype);
-      Operand<TUint8> operand = func.call(tf.constant(shape), TUint8.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        // Test float
+        Initializer<TUint8> func =
+            (dims, dtype) -> tf.dtypes.cast(tf.constant(new byte[] {0x15}), dtype);
+        Operand<TUint8> operand = func.call(tf.constant(shape), TUint8.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Initializer using Lambda. */
   @Test
   public void testLambdaCallInt() {
     int[] expected = {12345};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(1);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(1);
 
-      // Test float
-      Initializer<TInt32> func =
-          (dims, dtype) -> tf.dtypes.cast(tf.constant(new int[] {12345}), dtype);
-      Operand<TInt32> operand = func.call(tf.constant(shape), TInt32.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        // Test float
+        Initializer<TInt32> func =
+            (dims, dtype) -> tf.dtypes.cast(tf.constant(new int[] {12345}), dtype);
+        Operand<TInt32> operand = func.call(tf.constant(shape), TInt32.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Initializer using Lambda. */
   @Test
   public void testLambdaCallLong() {
     long[] expected = {12345L};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(1);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(1);
 
-      // Test float
-      Initializer<TInt64> func =
-          (dims, dtype) -> tf.dtypes.cast(tf.constant(new long[] {12345L}), dtype);
-      Operand<TInt64> operand = func.call(tf.constant(shape), TInt64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        // Test float
+        Initializer<TInt64> func =
+            (dims, dtype) -> tf.dtypes.cast(tf.constant(new long[] {12345L}), dtype);
+        Operand<TInt64> operand = func.call(tf.constant(shape), TInt64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 
   /** Test of call method, of class Initializer using Lambda. */
   @Test
   public void testLambdaCallDouble() {
     double[] expected = {Math.PI};
-    try (TestSession session = TestSession.createTestSession(tfMode)) {
-      Ops tf = session.getTF();
-      Shape shape = Shape.of(1);
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(1);
 
-      // Test float
-      Initializer<TFloat64> func =
-          (dims, dtype) -> tf.dtypes.cast(tf.constant(new double[] {Math.PI}), dtype);
-      Operand<TFloat64> operand = func.call(tf.constant(shape), TFloat64.DTYPE);
-      session.evaluate(expected, operand);
-    }
+        // Test float
+        Initializer<TFloat64> func =
+            (dims, dtype) -> tf.dtypes.cast(tf.constant(new double[] {Math.PI}), dtype);
+        Operand<TFloat64> operand = func.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
   }
 }

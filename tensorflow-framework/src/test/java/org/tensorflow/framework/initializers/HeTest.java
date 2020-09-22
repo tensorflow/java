@@ -16,23 +16,22 @@ package org.tensorflow.framework.initializers;
 
 import org.junit.jupiter.api.*;
 import org.tensorflow.Operand;
+import org.tensorflow.framework.initializers.VarianceScaling.Distribution;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
 
-/** Test the RandomUniform initializer */
-public class RandomUniformTest {
-
+/** Test the He initializer */
+public class HeTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   private static final long SEED = 1000L;
-  private static final double MIN_VALUE = 0.0;
-  private static final double MAX_VALUE = 10.0;
 
-  public RandomUniformTest() {}
+  int counter;
+
+  public HeTest() {}
 
   @BeforeAll
   public static void setUpClass() {}
@@ -46,31 +45,44 @@ public class RandomUniformTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of call method, of class RandomUniform. */
+  /** Test of call method, of class He. */
   @Test
-  public void testCall_Int() {
-    int[] expected = {6, 1, 4, 1};
+  public void testCallNormal_Float() {
+    float[] expected = {-0.7408917F, -0.41477704F, -0.11133519F, -0.45044965F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomUniform<TInt32, TFloat64> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
-        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
+        He<TFloat32, TFloat32> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
         session.evaluate(expected, operand);
       }
   }
 
-  /** Test of call method, of class RandomUniform. */
   @Test
-  public void testCall_Float() {
-    float[] expected = {7.5660157f, 6.6877327f, 9.200811f, 5.385646F};
+  public void testCallNormal_Double() {
+    double[] expected = {
+      2.117256561466521, -1.7661437620712939, -0.7650439080001085, 0.6889186518780481
+    };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomUniform<TFloat32, TFloat32> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
+        He<TFloat64, TFloat64> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        session.evaluate(expected, operand);
+      }
+  }
+
+  /** Test of call method, of class He. */
+  @Test
+  public void testCall_Float() {
+    float[] expected = {1.3104724f, 1.1583493f, 1.5936272f, 0.93282115f};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        He<TFloat32, TFloat32> instance = new He<>(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
         session.evaluate(expected, operand);
       }
@@ -79,14 +91,13 @@ public class RandomUniformTest {
   @Test
   public void testCall_Double() {
     double[] expected = {
-      0.5281258126492294, 3.6064922351122752, 0.5479556897864346, 5.126554100456142
+      .09147407402970674, 0.6246627788317102, 0.09490870950065552, 0.8879452169740599
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomUniform<TFloat64, TFloat64> instance =
-            new RandomUniform<>(tf, MIN_VALUE, MAX_VALUE, SEED);
+        He<TFloat64, TFloat64> instance = new He<>(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
         session.evaluate(expected, operand);
       }
