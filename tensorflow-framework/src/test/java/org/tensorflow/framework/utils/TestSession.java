@@ -37,12 +37,6 @@ public abstract class TestSession implements AutoCloseable {
   protected float epsilon = 1e-5F;
   protected boolean debug;
 
-  /** The Test Session mode, either Eager or Graph */
-  public enum Mode {
-    EAGER,
-    GRAPH
-  }
-
   /**
    * Creates an Eager Test Session
    *
@@ -485,7 +479,7 @@ public abstract class TestSession implements AutoCloseable {
    * @param input the operand to evaluate
    * @param predicate The Predicate that evaluates the each value from input
    */
-  public abstract  void evaluateString(Output<TString> input, Predicate<String> predicate);
+  public abstract void evaluateString(Output<TString> input, Predicate<String> predicate);
 
   /**
    * Evaluates the input against the expected value
@@ -641,5 +635,11 @@ public abstract class TestSession implements AutoCloseable {
    */
   public void setDebug(boolean debug) {
     this.debug = debug;
+  }
+
+  /** The Test Session mode, either Eager or Graph */
+  public enum Mode {
+    EAGER,
+    GRAPH
   }
 }

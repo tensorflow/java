@@ -772,38 +772,38 @@ public class GraphTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public  void evaluateString(Output<TString> input, Predicate<String> predicate) {
+  public void evaluateString(Output<TString> input, Predicate<String> predicate) {
     boolean isScalar = input.shape().equals(Shape.scalar());
     AtomicInteger index = new AtomicInteger();
     if (debug) {
       try (Tensor<TString> result =
-                   this.getGraphSession().runner().fetch(input).run().get(0).expect(TString.DTYPE)) {
+          this.getGraphSession().runner().fetch(input).run().get(0).expect(TString.DTYPE)) {
         if (isScalar) {
           System.out.printf(
-                  "0). %b <==> %s\n",
-                  predicate.test(result.data().getObject()), result.data().getObject());
+              "0). %b <==> %s\n",
+              predicate.test(result.data().getObject()), result.data().getObject());
         } else {
           result
-                  .data()
-                  .scalars()
-                  .forEachIndexed(
-                          (idx, f) ->
-                                  System.out.printf(
-                                          "%d). %b <==> %s\n",
-                                          index.getAndIncrement(), predicate.test(f.getObject()), f.getObject()));
+              .data()
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) ->
+                      System.out.printf(
+                          "%d). %b <==> %s\n",
+                          index.getAndIncrement(), predicate.test(f.getObject()), f.getObject()));
         }
       }
     }
     index.set(0);
     try (Tensor<TString> result =
-                 this.getGraphSession().runner().fetch(input).run().get(0).expect(TString.DTYPE)) {
+        this.getGraphSession().runner().fetch(input).run().get(0).expect(TString.DTYPE)) {
       if (isScalar) {
         assertTrue(predicate.test(result.data().getObject()));
       } else {
         result
-                .data()
-                .scalars()
-                .forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
+            .data()
+            .scalars()
+            .forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
       }
     }
   }

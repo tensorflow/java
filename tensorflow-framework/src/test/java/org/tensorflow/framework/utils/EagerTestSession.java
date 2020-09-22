@@ -290,30 +290,29 @@ public class EagerTestSession extends TestSession {
 
   /** {@inheritDoc} */
   @Override
-  public  void evaluateString(Output<TString> input, Predicate<String> predicate) {
+  public void evaluateString(Output<TString> input, Predicate<String> predicate) {
     AtomicInteger index = new AtomicInteger();
     boolean isScalar = input.shape().equals(Shape.scalar());
-    if(debug) {
+    if (debug) {
       if (isScalar) {
         System.out.printf(
-                "0). %b <==> %s\n", predicate.test(input.data().getObject()), input.data().getObject());
+            "0). %b <==> %s\n", predicate.test(input.data().getObject()), input.data().getObject());
       } else {
-        input.data()
-                .scalars()
-                .forEachIndexed(
-                        (idx, s) ->
-                                System.out.printf(
-                                        "%d). %b <==> %s\n",
-                                        index.getAndIncrement(), predicate.test(s.getObject()), s.getObject()));
+        input
+            .data()
+            .scalars()
+            .forEachIndexed(
+                (idx, s) ->
+                    System.out.printf(
+                        "%d). %b <==> %s\n",
+                        index.getAndIncrement(), predicate.test(s.getObject()), s.getObject()));
       }
     }
     index.set(0);
     if (isScalar) {
       assertTrue(predicate.test(input.data().getObject()));
     } else {
-      input.data()
-              .scalars()
-              .forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
+      input.data().scalars().forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
     }
   }
 
