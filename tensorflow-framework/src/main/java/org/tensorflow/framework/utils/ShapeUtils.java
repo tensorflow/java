@@ -27,9 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Various methods for processing with Shapes and Operands
- */
+/** Various methods for processing with Shapes and Operands */
 public class ShapeUtils {
 
   /**
@@ -82,12 +80,12 @@ public class ShapeUtils {
         Operand<TInt64> ldims = (Operand<TInt64>) dims;
         ldims.asOutput().data().scalars().forEach(s -> result.add(s.getLong()));
       } else if (dType.equals(TUint8.DTYPE)) {
-      @SuppressWarnings("unchecked")
-      Operand<TUint8> udims = (Operand<TUint8>) dims;
+        @SuppressWarnings("unchecked")
+        Operand<TUint8> udims = (Operand<TUint8>) dims;
         udims.asOutput().data().scalars().forEach(s -> result.add(s.getObject().longValue()));
-    }else { // shouldn't happen
-      throw new IllegalArgumentException("the data type must be an integer type");
-    }
+      } else { // shouldn't happen
+        throw new IllegalArgumentException("the data type must be an integer type");
+      }
 
     } else {
       try (Session session = new Session((Graph) scope.env())) {
@@ -96,17 +94,17 @@ public class ShapeUtils {
               session.runner().fetch(dims).run().get(0).expect(TInt32.DTYPE)) {
             tensorResult.data().scalars().forEach(s -> result.add((long) s.getInt()));
           }
-        } else if (dType.equals(TInt64.DTYPE)){
+        } else if (dType.equals(TInt64.DTYPE)) {
           try (Tensor<TInt64> tensorResult =
               session.runner().fetch(dims).run().get(0).expect(TInt64.DTYPE)) {
             tensorResult.data().scalars().forEach(s -> result.add(s.getLong()));
           }
-        }else if (dType.equals(TUint8.DTYPE)){
+        } else if (dType.equals(TUint8.DTYPE)) {
           try (Tensor<TUint8> tensorResult =
-                       session.runner().fetch(dims).run().get(0).expect(TUint8.DTYPE)) {
+              session.runner().fetch(dims).run().get(0).expect(TUint8.DTYPE)) {
             tensorResult.data().scalars().forEach(s -> result.add(s.getObject().longValue()));
           }
-      }else { // shouldn't happen
+        } else { // shouldn't happen
           throw new IllegalArgumentException("the data type must be an integer type");
         }
       }
@@ -156,6 +154,14 @@ public class ShapeUtils {
    * Shape.unknown()</code> is compatible with <code>Shape(4, 4)</code>, but <code>Shape(32, 784)
    * </code> is not compatible with <code>Shape(4, 4)</code>.
    *
+   * <p>Compatibility is not the same as broadcasting. Compatible shapes must have the same number
+   * of dimensions and for each dimension pair, one dimension has to equal the other dimensions or
+   * at least one of the dimensions in the pair has to be UNKNOWN_SIZE.
+   *
+   * <p>Broadcasting allows different dimensions, but paired dimensions have to either be equal, or
+   * one dimension must be 1. If one shape has less dimensions than another shape, the smaller shape
+   * is "stretched" with dimensions of 1. See {@link org.tensorflow.op.Ops#broadcastTo}.
+   *
    * @param a The first shape
    * @param b The second shape
    * @return true, if the two shapes are compatible.
@@ -175,7 +181,7 @@ public class ShapeUtils {
   }
 
   /**
-   * Determines if a shape is an unknown shape as provided in <cade>Shape.unknown()</code>.
+   * Determines if a shape is an unknown shape as provided in <code>Shape.unknown()</code>.
    *
    * @param a the shape to test.
    * @return true if the shape is an unknown shape
@@ -186,7 +192,8 @@ public class ShapeUtils {
 
   /**
    * Reduces the shape by eliminating trailing Dimensions.
-   * <p>The last dimension, specified by axis, will be a product of all remaining dimensions</p>
+   *
+   * <p>The last dimension, specified by axis, will be a product of all remaining dimensions
    *
    * @param shape the shape to squeeze
    * @param axis the axis to squeeze
@@ -198,14 +205,12 @@ public class ShapeUtils {
       axis = shape.numDimensions() + axis;
     }
     long[] array = shape.asArray();
-    if(array == null)
-      return Shape.unknown();
+    if (array == null) return Shape.unknown();
     long[] newArray = new long[axis];
     System.arraycopy(array, 0, newArray, 0, axis - 1);
     long prod = array[axis - 1];
     for (int i = axis; i < array.length; i++) {
-      if(array[i] != Shape.UNKNOWN_SIZE)
-        prod *= array[i];
+      if (array[i] != Shape.UNKNOWN_SIZE) prod *= array[i];
     }
     newArray[axis - 1] = prod;
     return Shape.of(newArray);
