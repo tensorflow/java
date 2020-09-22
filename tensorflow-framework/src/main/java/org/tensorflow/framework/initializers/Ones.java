@@ -47,6 +47,7 @@ public class Ones<T extends TType> extends BaseInitializer<T> {
    *      Operand&lt;TFloat32&gt; values =
    *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
    * </pre>
+   *
    * @param tf the TensorFlow Ops
    */
   public Ones(Ops tf) {

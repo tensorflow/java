@@ -81,6 +81,4 @@ public class Glorot<T extends TType, U extends TNumber> extends VarianceScaling<
   public Glorot(Ops tf, Distribution distribution, Long seed) {
     super(tf, SCALE, Mode.FAN_AVG, distribution, seed);
   }
-
-
 }

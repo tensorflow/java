@@ -31,6 +31,7 @@ import org.tensorflow.types.family.TType;
  *      Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
+ *
  * @param <T> The TType for the call operation
  */
 public class Zeros<T extends TType> extends BaseInitializer<T> {

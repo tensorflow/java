@@ -41,11 +41,6 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
   private final boolean booleanValue;
   private final ValueType valueType;
 
-  private enum ValueType {
-    LONG, DOUBLE, BOOLEAN
-  }
-
-
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
@@ -94,7 +89,7 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
     if (!(dtype.isNumeric() || dtype.isBoolean())) {
       throw new IllegalArgumentException("DataType must be numeric or boolean: " + dtype.name());
     }
-    switch(valueType) {
+    switch (valueType) {
       case LONG:
         return tf.fill(dims, tf.dtypes.cast(tf.constant(longValue), dtype));
       case DOUBLE:
@@ -102,6 +97,11 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
       default:
         return tf.fill(dims, tf.dtypes.cast(tf.constant(booleanValue), dtype));
     }
+  }
 
+  private enum ValueType {
+    LONG,
+    DOUBLE,
+    BOOLEAN
   }
 }

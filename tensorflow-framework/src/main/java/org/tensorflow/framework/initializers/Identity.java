@@ -24,14 +24,18 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates the identity matrix.
- * <p>Only usable for generating 2D matrices.</p>
- <p>Examples:
+ *
+ * <p>Only usable for generating 2D matrices.
+ *
+ * <p>Examples:
+ *
  * <pre>
  *     Identity&lt;TFloat32&gt; initializer =
  *             new org.tensorflow.framework.initializers.Identity&lt;&gt;(tf);
  *     Operand&lt;TFloat32&gt; values =
  *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
+ *
  * @param <T> The TType for the call operation
  */
 public class Identity<T extends TType> extends BaseInitializer<T> {

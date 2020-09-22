@@ -77,6 +77,4 @@ public class He<T extends TType, U extends TNumber> extends VarianceScaling<T, U
   public He(Ops tf, Distribution distribution, Long seed) {
     super(tf, SCALE, Mode.FAN_IN, distribution, seed);
   }
-
-
 }

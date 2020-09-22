@@ -33,7 +33,9 @@ import org.tensorflow.types.family.TType;
  * the number of input units in the weight tensor)
  *
  * <p>Examples:
+ *
  * <p>LeCun Normal:
+ *
  * <pre>
  *      long seed = 1001l;
  *      LeCunNormal&lt;TFloat32, TFloat32&gt; initializer =
@@ -42,7 +44,9 @@ import org.tensorflow.types.family.TType;
  *      Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
+ *
  * <p>LeCun Uniform:
+ *
  * <pre>
  *      long seed = 1001l;
  *      LeCunNormal&lt;TFloat32, TFloat32&gt; initializer =
@@ -63,8 +67,6 @@ import org.tensorflow.types.family.TType;
  */
 public class LeCun<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
 
-
-
   /**
    * Creates a LeCunNormal Initializer
    *
@@ -74,8 +76,6 @@ public class LeCun<T extends TType, U extends TNumber> extends VarianceScaling<T
    *     will always produce the same random tensor for a given shape and dtype.
    */
   public LeCun(Ops tf, Distribution distribution, Long seed) {
-    super(tf, 1.0, Mode.FAN_IN,distribution, seed);
+    super(tf, 1.0, Mode.FAN_IN, distribution, seed);
   }
-
-
 }

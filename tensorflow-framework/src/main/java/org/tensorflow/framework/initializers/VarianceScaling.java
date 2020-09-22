@@ -188,14 +188,14 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
   }
 
   /** The mode to use for calculating the fan values. */
-  public static enum Mode {
+  public enum Mode {
     FAN_IN,
     FAN_OUT,
     FAN_AVG
   }
 
   /** The random distribution to use when initializing the values. */
-  public static enum Distribution {
+  public enum Distribution {
     TRUNCATED_NORMAL,
     UNTRUNCATED_NORMAL,
     UNIFORM
