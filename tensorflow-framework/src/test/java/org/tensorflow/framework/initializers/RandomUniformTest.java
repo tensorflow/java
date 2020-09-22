@@ -26,11 +26,10 @@ import org.tensorflow.types.TInt32;
 /** Test the RandomUniform initializer */
 public class RandomUniformTest {
 
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
   private static final long SEED = 1000L;
   private static final double MIN_VALUE = 0.0;
   private static final double MAX_VALUE = 10.0;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public RandomUniformTest() {}
 

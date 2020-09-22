@@ -25,10 +25,8 @@ import org.tensorflow.types.TFloat64;
 
 /** Test the He initializer */
 public class HeTest {
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
   private static final long SEED = 1000L;
-
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
   int counter;
 
   public HeTest() {}

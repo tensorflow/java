@@ -25,11 +25,10 @@ import org.tensorflow.types.TFloat64;
 /** Test the TruncatedNormal initializer */
 public class TruncatedNormalTest {
 
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
   private static final long SEED = 1000L;
   private static final double MEAN_VALUE = 0.0;
   private static final double STDDEV_VALUE = 3.0;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public TruncatedNormalTest() {}
 

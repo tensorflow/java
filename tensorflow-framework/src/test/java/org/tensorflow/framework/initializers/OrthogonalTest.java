@@ -29,10 +29,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 /** Test the Orthogonal initializer */
 public class OrthogonalTest {
 
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
   private static final long SEED = 1000L;
   private static final double GAIN_VALUE = 1.0;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public OrthogonalTest() {}
 

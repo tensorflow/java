@@ -25,9 +25,8 @@ import org.tensorflow.types.TFloat64;
 /** Test the VarianceScaling initializer */
 public class VarianceScalingTest {
 
-  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
   private static final long SEED = 1000L;
+  private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public VarianceScalingTest() {}
 
