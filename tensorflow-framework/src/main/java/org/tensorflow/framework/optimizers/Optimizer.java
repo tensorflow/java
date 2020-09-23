@@ -276,7 +276,7 @@ public abstract class Optimizer implements AutoCloseable {
   /**
    * Sets the learning rate
    *
-   * @param newLearningRate the new earning rate
+   * @param newLearningRate the new learning rate
    */
   public final void setLearningRate(float newLearningRate) {
     if (learningRatePlaceholder == null) {
@@ -315,7 +315,7 @@ public abstract class Optimizer implements AutoCloseable {
    * Gets the Feed Map for the run methods to set the Placeholder value(s). Each entry in the Feed
    * Map contains a PlaceHolder and a Tensor with the value
    *
-   * @return the current Feed Map for the run methods, this may be null if an LearningRate as an
+   * @return the current Feed Map for the run methods, this may be null if the LearningRate is an
    *     Operand has been set.
    */
   public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedMap() {
@@ -329,6 +329,7 @@ public abstract class Optimizer implements AutoCloseable {
       learningRateTensor.close();
       learningRateTensor = null;
     }
+    if (feedMap != null) feedMap = null;
   }
 
   /** Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer} */
