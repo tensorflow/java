@@ -5,8 +5,8 @@ package org.tensorflow.ndarray.buffer;
  *
  * <p>Data buffer windows have a fixed size and can {@link DataBufferWindow#slide(long) "slide"}
  * along a buffer to provide different views of the data without allocating a new buffer instance,
- * like {@link #offset(long)} does. This improves overall performance when this operation is
- * repeated frequently. For example:
+ * like {@link DataBuffer#offset(long)} does. This improves overall performance when this operation
+ * is repeated frequently. For example:
  *
  * <pre>{@code
  * IntDataBuffer bufferA = DataBuffers.ofInts(1024);
@@ -20,7 +20,7 @@ package org.tensorflow.ndarray.buffer;
  *         return i;
  *     }
  * }
- * }</pre>>
+ * }</pre>
  *
  * <p>{@code DataBufferWindow} instances are stateful and not thread-safe.
  *

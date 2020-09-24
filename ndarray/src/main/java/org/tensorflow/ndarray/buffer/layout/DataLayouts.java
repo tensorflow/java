@@ -50,7 +50,7 @@ public final class DataLayouts {
    * <p>Therefore, this is a lost of precision in the fraction part compared to the IEEE-754
    * half-precision floating point specification (see {@link #FLOAT16} but it has a larger range of
    * possible values in the whole part as it preserves the 8-bit exponent and uses the same bias,
-   * (i.e. an absolute range above 0 of approximately [10<sup>-40</sup>, 3.39 × 10<sup>38</sup>]
+   * (i.e. an absolute range above 0 of approximately [10<sup>-40</sup>, 3.39 &#xD7; 10<sup>38</sup>]
    *
    * <p>Some CPUs support the bfloat16 format natively for better performances.
    */
@@ -64,7 +64,8 @@ public final class DataLayouts {
    *
    * <p>There is a potential loss of precision when converting a single float (32-bit) to a half
    * float (16-bit). Absolute range of values above 0 for a half float is approximately
-   * [5.96 × 10<sup>-8</sup>, 6.55 × 10<sup>4</sup>] and their decimal part is rounded up to a 10 bits mantissa.
+   * [5.96 &#xD7; 10<sup>-8</sup>, 6.55 &#xD7; 10<sup>4</sup>] and their decimal part is rounded up
+   * to a 10 bits mantissa.
    *
    * <p>In general, half float computation perform better on GPUs since, in general, CPUs do not
    * support this format natively.</p>
