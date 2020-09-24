@@ -42,11 +42,11 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Creates a function by building a new graph.
    *
-   * <p/>The {@code functionBuilder} must initialize the function graph from the provided
+   * <p>The {@code functionBuilder} must initialize the function graph from the provided
    * {@link Ops} instance and return a valid signature that will be used to feed the input tensors
    * and fetch the output tensors on execution.
    *
-   * <p/>The function will be the owner of the new graph and its resulting session. Therefore,
+   * <p>The function will be the owner of the new graph and its resulting session. Therefore,
    * the function must be enclosed properly with a try-with-resources block to guarantee that
    * all native resources will be freed once the function is discarded. For example:
    *
@@ -86,7 +86,7 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Create a function from a signature and an existing graph.
    *
-   * <p/>The function will keep the ownership of the session used to run the graph but not
+   * <p>The function will keep the ownership of the session used to run the graph but not
    * the graph itself, meaning that the lifetime of the latter can extend beyond the scope
    * of the function. For example:
    *
@@ -115,7 +115,7 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Create a function from a signature and a valid graph session.
    *
-   * <p/>The function will not own the session nor its graph, meaning that their lifetime
+   * <p>The function will not own the session nor its graph, meaning that their lifetime
    * can extend beyond the scope of the function. Therefore the function does not need to be
    * closed after its usage. For example:
    *
@@ -139,7 +139,7 @@ public class ConcreteFunction implements AutoCloseable {
    * }</pre>
    *
    * @param signature signature of the function to create
-   * @param graph a valid session to an initialized graph
+   * @param session a valid session to an initialized graph
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Session session) {
@@ -158,8 +158,10 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <p>Caller is responsible for closing all Tensors.
    *
-   * @param tensor input tensor
-   * @return output tensor
+   * @param arguments list of tensors to pass in input to the function,
+   *                  mapped by their signature name
+   * @return output tensors resulting from the execution of the function,
+   *         mapped by their signature name
    */
   public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments)
       throws IllegalArgumentException {
@@ -232,6 +234,7 @@ public class ConcreteFunction implements AutoCloseable {
    * <p>This method is convenient shortcut equivalent to
    * {@code SavedModel.exporter(exportDir).withFunction(this).export()}
    *
+   * @param exportDir directory where to export the saved model
    * @throws IOException if saved model or variable state cannot be written on disk
    */
   public void save(String exportDir) throws IOException {

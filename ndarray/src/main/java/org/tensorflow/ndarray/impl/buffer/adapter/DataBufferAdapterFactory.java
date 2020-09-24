@@ -48,6 +48,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> ByteDataBuffer create(S buffer, ByteDataLayout<S> layout) {
@@ -59,6 +60,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> BooleanDataBuffer create(S buffer, BooleanDataLayout<S> layout) {
@@ -70,6 +72,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> DoubleDataBuffer create(S buffer, DoubleDataLayout<S> layout) {
@@ -81,6 +84,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> FloatDataBuffer create(S buffer, FloatDataLayout<S> layout) {
@@ -92,6 +96,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> IntDataBuffer create(S buffer, IntDataLayout<S> layout) {
@@ -103,6 +108,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> LongDataBuffer create(S buffer, LongDataLayout<S> layout) {
@@ -114,6 +120,7 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>> ShortDataBuffer create(S buffer, ShortDataLayout<S> layout) {
@@ -125,6 +132,8 @@ public class DataBufferAdapterFactory {
    *
    * @param buffer the delegate buffer
    * @param layout layout to apply
+   * @param <S> the type of the buffer
+   * @param <T> the type of data returned by the layout
    * @return buffer adapter
    */
   public static <S extends DataBuffer<?>, T> DataBuffer<T> create(S buffer, DataLayout<S, T> layout) {

@@ -60,6 +60,7 @@ public interface FloatNdArray extends NdArray<Float> {
    *  scalar.setFloat(10.0f);  // succeeds
    * }</pre>
    *
+   * @param value value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension

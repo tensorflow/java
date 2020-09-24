@@ -60,6 +60,7 @@ public interface BooleanNdArray extends NdArray<Boolean> {
    *  scalar.setBoolean(true);  // succeeds
    * }</pre>
    *
+   * @param value the value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension

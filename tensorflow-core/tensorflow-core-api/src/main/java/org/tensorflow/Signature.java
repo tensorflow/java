@@ -41,7 +41,7 @@ public class Signature  {
     /**
      * Sets the unique key of this signature.
      *
-     * <p/>When not set explicitly, the default value is {@link #DEFAULT_KEY}.
+     * <p>When not set explicitly, the default value is {@link #DEFAULT_KEY}.
      *
      * @param key signature key
      * @return this builder
@@ -74,8 +74,8 @@ public class Signature  {
     /**
      * Register a tensor as an output of the function.
      *
-     * @param inputName user-friendly name for this input tensor
-     * @param input input tensor
+     * @param outputName user-friendly name for this output tensor
+     * @param output output tensor
      * @return this builder
      * @throws IllegalArgumentException if {@code outputName} is already mapped to another output
      */

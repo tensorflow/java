@@ -154,7 +154,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
   }
 
   /**
-   * Returns a list of `Operand<?>` representing the components of the next dataset element.
+   * Returns a list of {@code Operand<?>} representing the components of the next dataset element.
    *
    * <p>In graph mode, call this method once, and use its result as input to another computation.
    * Then in the training loop, on successive calls to session.run(), successive dataset elements
@@ -163,7 +163,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * <p>In eager mode, each time this method is called, the next dataset element will be returned.
    * (This is done automatically by iterating through `Dataset` as a Java `Iterable`).
    *
-   * @return A `List<Operand<?>>` representing dataset element components.
+   * @return A {@code List<Operand<?>>} representing dataset element components.
    */
   public List<Operand<?>> getNext() {
     List<Operand<?>> components = new ArrayList<>();

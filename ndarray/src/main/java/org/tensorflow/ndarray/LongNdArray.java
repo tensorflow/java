@@ -60,6 +60,7 @@ public interface LongNdArray extends NdArray<Long> {
    *  scalar.setLong(10L);  // succeeds
    * }</pre>
    *
+   * @param value value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension

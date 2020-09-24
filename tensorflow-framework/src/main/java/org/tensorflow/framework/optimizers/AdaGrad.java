@@ -33,10 +33,8 @@ import java.util.List;
  *
  * <p>
  *
- * @see <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">Duchi, J, et al., 2011,
- *     Adaptive Subgradient Methods for Online Learning and Stochastic Optimization</a>
- * @see <a href="https://ppasupat.github.io/a9online/uploads/proximal_notes.pdf">Duchi, J, et al.,
- *     2013, Proximal and First-Order Methods for Convex Optimization, Introduction Section 1</a>.
+ * @see <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">Duchi, J, et al., 2011, Adaptive Subgradient Methods for Online Learning and Stochastic Optimization</a>
+ * @see <a href="https://ppasupat.github.io/a9online/uploads/proximal_notes.pdf">Duchi, J, et al., 2013, Proximal and First-Order Methods for Convex Optimization, Introduction Section 1</a>.
  */
 public class AdaGrad extends Optimizer {
 

@@ -433,6 +433,7 @@ public final class NdArrays {
    * Creates scalar (rank 0) initialized with the given value.
    *
    * @param value scalar value
+   * @param <T> the data type
    * @return new scalar
    */
   @SuppressWarnings("unchecked")
@@ -450,6 +451,7 @@ public final class NdArrays {
    * passed in parameter.
    *
    * @param values vector values
+   * @param <T> the data type
    * @return new vector
    * @throws IllegalArgumentException if values is null
    */
@@ -468,6 +470,7 @@ public final class NdArrays {
    *
    * @param clazz class of the data to be stored in this array
    * @param shape shape of the array
+   * @param <T> the data type
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null or has unknown dimensions
    */
@@ -480,6 +483,7 @@ public final class NdArrays {
    *
    * @param shape shape of the array
    * @param buffer buffer to wrap
+   * @param <T> the data type
    * @return new N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
