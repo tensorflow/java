@@ -180,6 +180,7 @@ public abstract class Optimizer {
    *
    * @param var The variable to lookup.
    * @param slotName The slot name.
+   * @param <T> a tensor type
    * @return The slot or {@link Optional#empty}.
    */
   public <T extends TType> Optional<Variable<T>> getSlot(Output<T> var, String slotName) {
@@ -232,6 +233,7 @@ public abstract class Optimizer {
    * Returns a No-op prepare.
    *
    * @param scopeName The scope name to use for any variable creations.
+   * @return a No-op to prepare this optimizer, or empty if none.
    */
   protected Optional<Op> prepare(String scopeName) {
     return Optional.empty();

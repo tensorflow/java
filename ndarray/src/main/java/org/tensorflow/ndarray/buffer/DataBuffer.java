@@ -224,7 +224,6 @@ public interface DataBuffer<T> {
    * <p>
    * This call is equivalent to {@link #slice(long, long) slice(0, size)}
    *
-   * @param index index of the first value of the new buffer created
    * @param size size of this new buffer
    * @return the new buffer
    * @throws IllegalArgumentException if index and/or size values do not pass validation checks
@@ -241,6 +240,7 @@ public interface DataBuffer<T> {
    * buffer's content will be visible in the new buffer and vice versa. The new buffer will be
    * read-only if, and only if, this buffer is read-only.
    *
+   * @param index index of the first value of the new buffer created
    * @param size size of this new buffer, must not be greater than {@code size()}
    * @return the new buffer
    * @throws IllegalArgumentException if size value do not pass validation checks

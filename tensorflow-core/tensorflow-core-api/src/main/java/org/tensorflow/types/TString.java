@@ -189,6 +189,7 @@ public interface TString extends NdArray<String>, TType {
    * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
    * }</pre>
    *
+   * @param shape shape of the tensor to create
    * @param data the source array giving the shape and data to the new tensor
    * @return the new tensor
    */

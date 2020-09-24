@@ -26,9 +26,7 @@ import org.tensorflow.ndarray.buffer.DataBufferWindow;
  * <p>An {@code NdArraySequence} is used to traverse an {@code NdArray} in a given dimension
  * and visit each of its elements.  For example, given a {@code n x m} matrix on the {@code [x, y]} axes,
  * elements are iterated in the following order:
- * <pre>
- * x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
- * </pre>
+ * <p>x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
  *
  * @param <T> data type of the array being iterated
  */

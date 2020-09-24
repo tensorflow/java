@@ -50,6 +50,7 @@ public final class DataType<T extends TType> {
    * @param name readable-name for this type
    * @param value must match the corresponding TF_* value in the TensorFlow C API.
    * @param byteSize size of an element of this type, in bytes, -1 if unknown
+   * @param <T> a tensor type
    * @param tensorMapper method for mapping tensor memory to elements of this type
    */
   public static <T extends TType> DataType<T> create(

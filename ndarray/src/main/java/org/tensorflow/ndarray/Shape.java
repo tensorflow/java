@@ -73,6 +73,10 @@ public final class Shape {
    * // A scalar. For readability, you should prefer calling Shape.scalar()
    * Shape scalar = Shape.of()
    * }</pre>
+   *
+   * @param dimensionSizes number of elements in each dimension of this shape, if any, or
+   *                       {@link Shape#UNKNOWN_SIZE} if unknown.
+   * @return a new shape
    */
   public static Shape of(long... dimensionSizes) {
     if (dimensionSizes == null || dimensionSizes.length == 0) {
@@ -88,7 +92,7 @@ public final class Shape {
    * {@link Shape#UNKNOWN_SIZE} is returned.
    *
    * @return The total number of elements a Tensor with this shape would have if it can be
-   * calculated, else {@link Shape#UNKNOWN_SIZE}.
+   *         calculated, else {@link Shape#UNKNOWN_SIZE}.
    */
   public long size() {
     if (size == null) {
@@ -104,7 +108,7 @@ public final class Shape {
    * an unknown size, {@link Shape#UNKNOWN_SIZE} is returned.
    *
    * @param i the index of the dimension to get the size for. If this Shape has a known number of
-   *          dimensions, it must be < {@link Shape#numDimensions()}. The index may be negative,
+   *          dimensions, it must be &lt; {@link Shape#numDimensions()}. The index may be negative,
    *          in which case the position is counted from the end of the shape. E.g.:
    *          {@code size(-1)} returns the size of the last dimension, {@code size(-2)} the size of
    *          the second to last dimension etc.
@@ -182,7 +186,7 @@ public final class Shape {
   /**
    * Equals implementation for Shapes. Two Shapes are considered equal iff:
    *
-   * <p><ul>
+   * <ul>
    * <li>the number of dimensions is defined and equal for both
    * <li>the size of each dimension is defined and equal for both
    * </ul>
@@ -232,7 +236,7 @@ public final class Shape {
    * Returns an n-dimensional Shape with the dimensions matching the first n dimensions
    * of this shape
    *
-   * @param n the number of leading dimensions to get, must be <= than {@link Shape#numDimensions()}
+   * @param n the number of leading dimensions to get, must be &lt;= than {@link Shape#numDimensions()}
    * @return an n-dimensional Shape with the first n dimensions matching the first n dimensions
    * of this Shape
    */
@@ -256,7 +260,7 @@ public final class Shape {
    * Returns an n-dimensional Shape with the dimensions matching the last n dimensions
    * of this Shape.
    *
-   * @param n the number of trailing dimensions to get, must be <= than
+   * @param n the number of trailing dimensions to get, must be &lt;= than
    *          {@link Shape#numDimensions()}
    * @return an n-dimensional shape with the dimensions matching the last n dimensions of this
    *         Shape, never null
@@ -323,7 +327,7 @@ public final class Shape {
   /**
    * Returns a new Shape, with another Shapes' dimensions appended.
    * For both this Shape and the other Shape, {@link Shape#isUnknown()} must return false.
-   * E.g. @code Shape.of(3,4).append(Shape.of(1,2)) => Shape.of(3,4,1,2) }
+   * e.g. {@code Shape.of(3,4).append(Shape.of(1,2)) => Shape.of(3,4,1,2) }
    *
    * @param other another Shape, must not be {@code null}, must not be unknown
    * @return A new Shape consisting of this Shapes's dimensions followed by the given Shape's

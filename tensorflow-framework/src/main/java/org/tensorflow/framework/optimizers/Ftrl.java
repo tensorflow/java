@@ -14,9 +14,9 @@ import java.util.List;
  * Optimizer that implements the FTRL algorithm.
  *
  * @see <a href="https://www.eecs.tufts.edu/~dsculley/papers/ad-click-prediction.pdf">McMahan, et
- *     al., 2013, Algorithm 1</a>
- *     <p>This version has support for both online L2 (the L2 penalty given in the paper above) and
- *     shrinkage-type L2 (which is the addition of an L2 penalty to the loss function).
+ *    al., 2013, Algorithm 1</a>
+ *    <p>This version has support for both online L2 (the L2 penalty given in the paper above) and
+ *    shrinkage-type L2 (which is the addition of an L2 penalty to the loss function).
  */
 public class Ftrl extends Optimizer {
 

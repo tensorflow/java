@@ -192,6 +192,8 @@ public final class Tensor<T extends TType> implements AutoCloseable {
    * value of type {@code Tensor<?>}.
    *
    * @param dt any supported tensor data type
+   * @param <U> a tensor type
+   * @return a tensor of the requested data type
    * @throws IllegalArgumentException if the actual data type of this object does not match the type
    *     {@code U}.
    */
