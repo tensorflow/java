@@ -17,6 +17,10 @@
   <properties>
     <!-- Match version used by TensorFlow, in tensorflow/workspace.bzl -->
     <protobuf.version>3.8.0</protobuf.version>
+    <native.build.skip>false</native.build.skip>
+    <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
+    <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
+    <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
   </properties>
 
   <dependencies>
@@ -73,10 +77,12 @@
   <profiles>
     <!--
     Dev Profile
-      This profile skips the native libraries build and other resource-consuming tasks for local
-      development. Note that any changes to the code that may impact low-level bindings with
-      the TensorFlow runtime library will require a complete build, in which case this profile
-      cannot be used.
+      This profile skips the tedious native build for local development, fetching the artifacts as a
+      dependency from the Maven repositories instead. If no native artifact matching the current
+      version have been deployed previously, building with this profile active will fail.
+
+      Note that any changes to the code that may impact low-level bindings with the TensorFlow
+      runtime library will require a complete build, in which case this profile cannot be used.
     -->
     <profile>
       <id>dev</id>
@@ -89,11 +95,98 @@
         </dependency>
       </dependencies>
       <properties>
-        <javacpp.build.skip>true</javacpp.build.skip>
-        <javacpp.parser.skip>true</javacpp.parser.skip>
-        <javacpp.compiler.skip>true</javacpp.compiler.skip>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <native.build.skip>true</native.build.skip>
       </properties>
+    </profile>
+    <!--
+    Release Profile
+      In release mode, all native artifacts, for all platforms, have been first downloaded from
+      external storage (previoulsy uploaded by the build servers) and placed under the target
+      directory, so we don't need to build them again. Plus, we want to generate the Javadoc.
+    -->
+    <profile>
+      <id>release</id>
+      <properties>
+        <native.build.skip>true</native.build.skip>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <!--
+              Attach native artifacts for release
+                Only operation systems and platform extension officially supported are deployed
+                during the release. Other experimental configurations, if any, are excluded from
+                this process.
+              -->
+              <execution>
+                <id>attach-artifacts</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>attach-artifact</goal>
+                </goals>
+                <configuration>
+                  <artifacts>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64.jar</file>
+                      <type>jar</type>
+                      <classifier>linux-x86_64</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-macosx-x86_64.jar</file>
+                      <type>jar</type>
+                      <classifier>macosx-x86_64</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64.jar</file>
+                      <type>jar</type>
+                      <classifier>windows-x86_64</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-mkl.jar</file>
+                      <type>jar</type>
+                      <classifier>linux-x86_64-mkl</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-macosx-x86_64-mkl.jar</file>
+                      <type>jar</type>
+                      <classifier>macosx-x86_64-mkl</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-mkl.jar</file>
+                      <type>jar</type>
+                      <classifier>windows-x86_64-mkl</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-mkl-gpu.jar</file>
+                      <type>jar</type>
+                      <classifier>linux-x86_64-mkl-gpu</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-mkl-gpu.jar</file>
+                      <type>jar</type>
+                      <classifier>windows-x86_64-mkl-gpu</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-gpu.jar</file>
+                      <type>jar</type>
+                      <classifier>linux-x86_64-gpu</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-gpu.jar</file>
+                      <type>jar</type>
+                      <classifier>windows-x86_64-gpu</classifier>
+                    </artifact>
+                  </artifacts>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
@@ -347,21 +440,27 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
+        <executions>
+          <execution>
+            <!--
+            Run the tests after packaging the artifacts
+              This is required as most of our unit tests are in fact integration tests that should
+              be executed in a TensorFlow runtime environment.
+            -->
+            <id>default-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <!--
-          Ensure the discovery of the native libraries by JUnit
-            While only adding elements to the classpath is enough for running tests in Maven,
-            we need to explicitly add them to the Java library path to run them from some IDEs
-          -->
-          <argLine>
-            -Djava.library.path=${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}
-          </argLine>
-          <additionalClasspathElements>${project.build.directory}/native/</additionalClasspathElements>
+          <additionalClasspathElements>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElements>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -377,7 +476,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -388,7 +487,6 @@
               <failOnError>false</failOnError>
               <minmemory>256m</minmemory>
               <maxmemory>2048m</maxmemory>
-              <quiet>true</quiet>
               <links>
                 <link>http://bytedeco.org/javacpp/apidocs</link>
               </links>
