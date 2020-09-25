@@ -124,6 +124,69 @@ public class FtrlTest {
   }
 
   @Test
+  public void testFtrlWithL1L2L2ShrinkageWithLROperand() {
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {4.0F, 3.0F};
+    float[] grads0Init = {0.1F, 0.2F};
+    float[] grads1Init = {0.01F, 0.02F};
+    float learningRate = 1.0F;
+
+    int numSteps = 10;
+
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      try (Ftrl instance =
+          new Ftrl(
+              session.getGraph(),
+              tf.math.mul(tf.constant(learningRate), tf.constant(3f)),
+              -0.5F, // learningRatePower
+              0.1F, // initialAccumulatorValue
+              0.001F, // l1RegularizationStrength
+              2.0F, // l2RegularizationStrength
+              0.1F // l2ShrinkageRegularizationStrength
+              )) {
+
+        Shape shape0 = Shape.of(var0Init.length);
+        Shape shape1 = Shape.of(var1Init.length);
+        Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+        Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+
+        Constant<TFloat32> grads0 = tf.constant(grads0Init);
+        Constant<TFloat32> grads1 = tf.constant(grads1Init);
+
+        /* build the GradsAnvVars */
+        List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+        Op ftrlUpdate = instance.applyGradients(gradsAndVars, "FtrlTest");
+
+        /* initialize the local variables */
+        session.run(var0Initializer);
+        session.run(var1Initializer);
+
+        /* initialize the accumulators */
+        session.run(tf.init());
+
+        session.evaluate(var0Init, var0);
+        session.evaluate(var1Init, var1);
+
+        for (int i = 0; i < numSteps; i++) {
+          session.run(ftrlUpdate, instance.getFeedMap());
+        }
+
+        float[] expectedVar0 = {-0.22578995F, -0.44345796F};
+        session.evaluate(expectedVar0, var0);
+        float[] expectedVar1 = {-0.14378493F, -0.13229476F};
+        session.evaluate(expectedVar1, var1);
+      }
+    }
+  }
+
+  @Test
   public void testFtrlWithL1() {
     float[] var0Init = {1.0F, 2.0F};
     float[] var1Init = {4.0F, 3.0F};

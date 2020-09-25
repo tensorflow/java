@@ -65,8 +65,8 @@ public class AdamTest {
     FloatNdArray grads0Np = NdArrays.vectorOf(grads0Init);
     FloatNdArray grads1Np = NdArrays.vectorOf(grads1Init);
 
-    float epsilon1 = 1e-3F;
-    float learningRate = 0.001F;
+    float epsilon1 = 1e-3f;
+    float learningRate = 0.001f;
 
     try (TestSession session = TestSession.createTestSession(tfMode);
         Adam instance = new Adam(session.getGraph(), learningRate)) {
@@ -181,6 +181,140 @@ public class AdamTest {
         // second moment
         session.evaluate(v0Np, secondMomentSlots[0]);
         session.evaluate(v1Np, secondMomentSlots[1]);
+      }
+    }
+  }
+
+  @Test
+  public void testBasicWithLROperand() {
+    float[] var0Init = {1.0F, 2.0F};
+    float[] var1Init = {3.0F, 4.0F};
+    float[] grads0Init = {0.1F, 0.1F};
+    float[] grads1Init = {0.01F, 0.01F};
+    FloatNdArray var0Np = NdArrays.vectorOf(var0Init);
+    FloatNdArray var1Np = NdArrays.vectorOf(var1Init);
+    FloatNdArray grads0Np = NdArrays.vectorOf(grads0Init);
+    FloatNdArray grads1Np = NdArrays.vectorOf(grads1Init);
+
+    float epsilon1 = 1e-3f;
+    float learningRate = 0.001f;
+
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      try (Adam instance =
+          new Adam(
+              session.getGraph(), tf.constant(learningRate))) {
+
+        float beta1 = 0.9F;
+        float beta2 = 0.999F;
+
+        session.setEpsilon(epsilon1);
+
+        Shape shape0 = Shape.of(var0Init.length);
+        Shape shape1 = Shape.of(var1Init.length);
+        Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+        Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+
+        Constant<TFloat32> grads0 = tf.constant(grads0Init);
+        Constant<TFloat32> grads1 = tf.constant(grads1Init);
+
+        /* initialize the local variables */
+        session.run(var0Initializer);
+        session.run(var1Initializer);
+
+        /* build the GradsAnvVars */
+        List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+        Op update = instance.applyGradients(gradsAndVars, "AdamTest");
+
+        /* Create and validate the shapes of the slots */
+        @SuppressWarnings("unchecked")
+        Variable<TFloat32>[] firstMomentSlots = new Variable[2];
+        @SuppressWarnings("unchecked")
+        Variable<TFloat32>[] secondMomentSlots = new Variable[2];
+
+        firstMomentSlots[0] = instance.getSlot(var0.asOutput(), FIRST_MOMENT).get();
+        assertEquals(firstMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+
+        secondMomentSlots[0] = instance.getSlot(var0.asOutput(), SECOND_MOMENT).get();
+        assertEquals(secondMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+
+        firstMomentSlots[1] = instance.getSlot(var1.asOutput(), FIRST_MOMENT).get();
+        assertEquals(firstMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+
+        secondMomentSlots[1] = instance.getSlot(var1.asOutput(), SECOND_MOMENT).get();
+        assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+
+        /* initialize the accumulators */
+        session.run(tf.init(), instance.getFeedMap());
+
+        session.evaluate(var0Init, var0);
+        session.evaluate(var1Init, var1);
+
+        FloatNdArray m0Np = NdArrays.ofFloats(shape0);
+        FloatNdArray v0Np = NdArrays.ofFloats(shape0);
+        FloatNdArray m1Np = NdArrays.ofFloats(shape1);
+        FloatNdArray v1Np = NdArrays.ofFloats(shape1);
+
+        for (int step = 0; step < 3; step++) {
+
+          // Test powers
+          final float[] powers = {
+            (float) Math.pow(beta1, step + 1), (float) Math.pow(beta2, step + 1)
+          };
+
+          try (Tensor<TFloat32> result =
+              session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("beta1_power")
+                  .run()
+                  .get(0)
+                  .expect(TFloat32.DTYPE)) {
+            result.data().scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
+          }
+          try (Tensor<TFloat32> result =
+              session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("beta2_power")
+                  .run()
+                  .get(0)
+                  .expect(TFloat32.DTYPE)) {
+            result.data().scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
+          }
+          session.run(update, instance.getFeedMap());
+
+          float lrT =
+              learningRate
+                  * (float) Math.sqrt(1 - (float) Math.pow(beta2, (step + 1)))
+                  / (1 - (float) Math.pow(beta1, (step + 1)));
+
+          m0Np = calculateM(m0Np, grads0Np, beta1);
+          v0Np = calculateV(v0Np, grads0Np, beta2);
+          var0Np = calculateParam(var0Np, lrT, m0Np, v0Np, 1e-7F);
+
+          m1Np = calculateM(m1Np, grads1Np, beta1);
+          v1Np = calculateV(v1Np, grads1Np, beta2);
+          var1Np = calculateParam(var1Np, lrT, m1Np, v1Np, 1e-7F);
+
+          // evaluate var 0 and var1
+          session.evaluate(var0Np, var0);
+          session.evaluate(var1Np, var1);
+
+          // first moment
+          session.evaluate(m0Np, firstMomentSlots[0]);
+          session.evaluate(m1Np, firstMomentSlots[1]);
+
+          // second moment
+          session.evaluate(v0Np, secondMomentSlots[0]);
+          session.evaluate(v1Np, secondMomentSlots[1]);
+        }
       }
     }
   }

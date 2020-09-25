@@ -98,13 +98,62 @@ public class AdaGradDATest {
   }
 
   @Test
+  public void testBasicWithLROperand() {
+    float[] var0Init = {0.0F, 0.0F};
+    float[] var1Init = {0.0F, 0.0F};
+    float[] grads0Init = {0.1F, 0.2F};
+    float[] grads1Init = {0.01F, 0.02F};
+    float learningRate = 1.5F;
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      try (AdaGradDA instance =
+          new AdaGradDA(
+              session.getGraph(), tf.math.mul(tf.constant(learningRate), tf.constant(2.f)))) {
+
+        Shape shape0 = Shape.of(var0Init.length);
+        Shape shape1 = Shape.of(var1Init.length);
+        Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
+        Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+
+        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
+        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+
+        Constant<TFloat32> grads0 = tf.constant(grads0Init);
+        Constant<TFloat32> grads1 = tf.constant(grads1Init);
+
+        /* initialize the local variables */
+
+        session.run(var0Initializer);
+        session.run(var1Initializer);
+
+        /* build the GradsAnvVars */
+        List<Optimizer.GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads0.asOutput(), var0.asOutput()));
+        gradsAndVars.add(new Optimizer.GradAndVar<>(grads1.asOutput(), var1.asOutput()));
+
+        Op adaUpdate = instance.applyGradients(gradsAndVars, "AdGradDATest");
+
+        /* initialize the accumulators */
+        session.run(tf.init());
+
+        session.evaluate(var0Init, var0);
+        session.evaluate(var1Init, var1);
+        session.run(adaUpdate, instance.getFeedMap());
+        float[] expected0 = {-0.904534F, -1.603567F};
+        session.evaluate(expected0, var0);
+        float[] expected1 = {-0.094821f, -0.189358f};
+        session.evaluate(expected1, var1);
+      }
+    }
+  }
+
+  @Test
   public void testWithLearningRateDecay() {
     float[] var0Init = {0.0F, 0.0F};
     float[] var1Init = {0.0F, 0.0F};
     float[] grads0Init = {0.1F, 0.2F};
     float[] grads1Init = {0.01F, 0.02F};
     float epsilon = 1e-8F;
-    float epsilon1 = 1e-5F;
     int numSteps = 4;
     float learningRate = 3.0F;
     try (TestSession session = TestSession.createTestSession(tfMode);
