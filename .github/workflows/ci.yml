@@ -3,10 +3,14 @@ on:
   push:
     branches:
       - master
+      - r[0-9].*
   pull_request:
     branches:
       - master
     types: [opened, reopened, synchronize, labeled, unlabeled]
+env:
+  IS_RELEASE: ${{ github.event_name == 'push' && github.ref != 'refs/heads/master' }}
+  IS_SNAPSHOT: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 jobs:
   quick-build:
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -31,7 +35,7 @@ jobs:
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch python36-devel python36-numpy python36-pip python36-six
+          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch python36-devel python36-numpy python36-pip python36-six awscli
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
@@ -63,11 +67,14 @@ jobs:
           echo "Fixing HOME to /root (was '$HOME')"
           export HOME=/root
           mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          $IS_SNAPSHOT && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           echo Executing Maven $MAVEN_PHASE
           mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
+      - name: Stage native artifacts
+        if: env.IS_RELEASE
+        run: AWS_ACCESS_KEY_ID=${{ secrets.CI_STORAGE_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.CI_STORAGE_ACCESS_KEY }} aws s3 cp tensorflow-core/tensorflow-core-api/target/tensorflow-core-api-*-linux-x86_64${{ matrix.ext }}.jar s3://tensorflow-java/staging/
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: macos-latest
@@ -91,12 +98,15 @@ jobs:
           mvn -version
           bazel version
           mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          $IS_SNAPSHOT && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           df -h
           echo Executing Maven $MAVEN_PHASE
           mvn clean $MAVEN_PHASE -Possrh -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }}
           df -h
+      - name: Stage native artifacts
+        if: env.IS_RELEASE
+        run: AWS_ACCESS_KEY_ID=${{ secrets.CI_STORAGE_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.CI_STORAGE_ACCESS_KEY }} aws s3 cp tensorflow-core/tensorflow-core-api/target/tensorflow-core-api-*-linux-x86_64${{ matrix.ext }}.jar s3://tensorflow-java/staging/
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: windows-latest
@@ -148,7 +158,7 @@ jobs:
           call mvn -version
           bazel version
           mkdir %USERPROFILE%\.m2
-          if "${{ github.event_name }}"=="push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
+          if ${{ env.IS_SNAPSHOT }} (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           df -h
           wmic pagefile list /format:list
@@ -157,8 +167,15 @@ jobs:
           if ERRORLEVEL 1 exit /b
           df -h
           wmic pagefile list /format:list
-  redeploy:
-    if: github.event_name == 'push'
+      - name: Stage native artifacts
+        if: env.IS_RELEASE
+        shell: cmd
+        run: |
+          set "AWS_ACCESS_KEY_ID=${{ secrets.CI_STORAGE_ID }}"
+          set "AWS_SECRET_ACCESS_KEY=${{ secrets.CI_STORAGE_ACCESS_KEY }}"
+          aws s3 cp --region ca-central-1 "tensorflow-core\tensorflow-core-api\target\tensorflow-core-api-*-windows-x86_64${{ matrix.ext }}.jar" s3://tensorflow-java/staging/
+  redeploy-snapshots:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
     runs-on: ubuntu-latest
     steps:

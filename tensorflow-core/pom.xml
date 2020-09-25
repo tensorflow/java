@@ -64,17 +64,20 @@
   </properties>
 
   <profiles>
+    <!-- Build other officially supported platforms on a release -->
+    <profile>
+      <id>release</id>
+      <modules>
+        <module>tensorflow-core-platform-mkl</module>
+        <module>tensorflow-core-platform-mkl-gpu</module>
+        <module>tensorflow-core-platform-gpu</module>
+      </modules>
+    </profile>
     <!-- Redeploys in one shot the snapshot artifacts of tensorflow-core-api
          given to maven-deploy-plugin to get consistent timestamps among them -->
     <profile>
       <id>redeploy</id>
       <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>javadoc</classifier>
-        </dependency>
         <dependency>
           <groupId>org.tensorflow</groupId>
           <artifactId>tensorflow-core-api</artifactId>
