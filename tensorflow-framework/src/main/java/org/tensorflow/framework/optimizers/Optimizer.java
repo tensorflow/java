@@ -50,6 +50,7 @@ public abstract class Optimizer implements AutoCloseable {
   protected Placeholder<TFloat32> learningRatePlaceholder = null;
   private Tensor<TFloat32> learningRateTensor;
   private Map<Operand<? extends TType>, Tensor<? extends TType>> feedMap = null;
+  private Operand<TFloat32> learningRateOperand;
 
   /**
    * Builds an optimizer for the supplied graph.
@@ -64,6 +65,21 @@ public abstract class Optimizer implements AutoCloseable {
     this.slots = new HashMap<>();
     this.globals = new ArrayList<>();
     setLearningRate(learningRate);
+  }
+
+  /**
+   * Builds an optimizer for the supplied graph.
+   *
+   * @param graph The graph to optimize.
+   * @param name The base name for the operations.
+   * @param learningRateOperand the learning rate.
+   */
+  protected Optimizer(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this.graph = graph;
+    this.tf = Ops.create(graph).withName(name == null ? getOptimizerName() : name);
+    this.slots = new HashMap<>();
+    this.globals = new ArrayList<>();
+    setLearningRateOperand(learningRateOperand);
   }
 
   /**
@@ -294,6 +310,17 @@ public abstract class Optimizer implements AutoCloseable {
   }
 
   /**
+   * Sets the learning rate Operand. The learning rate operand is an operand that is used to
+   * calculate the learning rate.
+   *
+   * @param newLearningRateOperand the new learning rate operand.
+   */
+  public final void setLearningRateOperand(Operand<TFloat32> newLearningRateOperand) {
+    close(); // Cleanup the placeholder and tensor if they exist.
+    learningRateOperand = newLearningRateOperand;
+  }
+
+  /**
    * Gets the learning rate
    *
    * @return the learning rate
@@ -303,20 +330,23 @@ public abstract class Optimizer implements AutoCloseable {
   }
 
   /**
-   * Gets the learning rate Operand, used by subclasses in their graph operations
+   * Gets the learning rate Operand, used by subclasses in their graph operations. If a float
+   * learning rate has been set using {@link #setLearningRate}, then this will be the learning rate
+   * Placeholder, otherwise the learning rate operand is returned as passed to {@link
+   * #setLearningRateOperand}.
    *
    * @return the learning rate Operand
    */
   protected Operand<TFloat32> getLearningRateOperand() {
-    return learningRatePlaceholder;
+    return learningRatePlaceholder == null ? learningRateOperand : learningRatePlaceholder;
   }
 
   /**
    * Gets the Feed Map for the run methods to set the Placeholder value(s). Each entry in the Feed
-   * Map contains a PlaceHolder and a Tensor with the value
+   * Map contains a PlaceHolder and a Tensor with the value.
    *
-   * @return the current Feed Map for the run methods, this may be null if the LearningRate is an
-   *     Operand has been set.
+   * @return the current Feed Map for the run methods, this will be null if the LearningRateOperand
+   *     has been set.
    */
   public Map<Operand<? extends TType>, Tensor<? extends TType>> getFeedMap() {
     return feedMap;

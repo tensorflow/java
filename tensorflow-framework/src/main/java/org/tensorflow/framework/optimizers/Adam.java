@@ -48,6 +48,8 @@ import java.util.Optional;
 @Operator
 public class Adam extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Adam";
+
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
 
@@ -69,7 +71,9 @@ public class Adam extends Optimizer {
   private Variable<TFloat32> betaTwoPower;
 
   /**
-   * Creates an Adam optimizer
+   * Creates an Adam optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #BETA_ONE_DEFAULT} for the betaOne value,
+   * {@link #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    */
@@ -78,7 +82,9 @@ public class Adam extends Optimizer {
   }
 
   /**
-   * Creates an Adam optimizer
+   * Creates an Adam optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and
+   * {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    * @param learningRate the learning rate
@@ -86,27 +92,61 @@ public class Adam extends Optimizer {
   public Adam(Graph graph, float learningRate) {
     this(graph, learningRate, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
   }
+  /**
+   * Creates an Adam optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and
+   * {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Adam(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
 
   /**
-   * Creates an Adam optimizer
+   * Creates an Adam optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow graph
    * @param learningRate the learning rate
-   * @param betaOne The exponential decay rate for the 1st moment estimates. Defaults to 0.9.
-   * @param betaTwo The exponential decay rate for the 2nd moment estimates. Defaults to 0.999.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the 2nd moment estimates.
    * @param epsilon A small constant for numerical stability. This epsilon is "epsilon hat" in the
    *     Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm
-   *     1 of the paper. Defaults to 1e-8.
+   *     1 of the paper..
    */
   public Adam(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
     this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
 
   /**
-   * Creates an Adam optimizer
+   * Creates an Adam optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow graph
-   * @param name the Optimizer name, defaults to "Adam"
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the 2nd moment estimates.
+   * @param epsilon A small constant for numerical stability. This epsilon is "epsilon hat" in the
+   *     Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm
+   *     1 of the paper.
+   */
+  public Adam(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    this(graph, null, learningRateOperand, betaOne, betaTwo, epsilon);
+  }
+
+  /**
+   * Creates an Adam optimizer using {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link
+   * #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name the Optimizer name.
    * @param learningRate the learning rate
    */
   public Adam(Graph graph, String name, float learningRate) {
@@ -114,20 +154,59 @@ public class Adam extends Optimizer {
   }
 
   /**
+   * Creates an Adam optimizer using {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link
+   * #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name the Optimizer name.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Adam(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(graph, name, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
    * Creates an Adam optimizer
    *
    * @param graph the TensorFlow graph
-   * @param name the Optimizer name, defaults to "Adam"
+   * @param name the Optimizer name.
    * @param learningRate the learning rate
-   * @param betaOne The exponential decay rate for the 1st moment estimates. Defaults to 0.9.
-   * @param betaTwo The exponential decay rate for the 2nd moment estimates. Defaults to 0.999.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the 2nd moment estimates.
    * @param epsilon A small constant for numerical stability. This epsilon is "epsilon hat" in the
    *     Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm
-   *     1 of the paper. Defaults to 1e-8.
+   *     1 of the paper.
    */
   public Adam(
       Graph graph, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(graph, name, learningRate);
+    this.betaOne = betaOne;
+    this.betaTwo = betaTwo;
+    this.epsilon = epsilon;
+  }
+
+  /**
+   * Creates an Adam optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the Optimizer name.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the 2nd moment estimates.
+   * @param epsilon A small constant for numerical stability. This epsilon is "epsilon hat" in the
+   *     Kingma and Ba paper (in the formula just before Section 2.1), not the epsilon in Algorithm
+   *     1 of the paper.
+   */
+  public Adam(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    super(graph, name, learningRateOperand);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -265,6 +344,6 @@ public class Adam extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Adam";
+    return DEFAULT_NAME;
   }
 }

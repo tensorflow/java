@@ -25,6 +25,7 @@ import java.util.Optional;
  */
 public class Adamax extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Adamax";
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
 
@@ -43,7 +44,10 @@ public class Adamax extends Optimizer {
   private Variable<TFloat32> betaOnePower;
 
   /**
-   * Creates an Optimizer that implements the Adamax algorithm.
+   * Creates an Optimizer that implements the Adamax algorithm, using {@link #DEFAULT_NAME} for the
+   * Optimizer name, {@link #LEARNING_RATE_DEFAULT} for the learning rate, {@link #BETA_ONE_DEFAULT}
+   * for the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and {@link
+   * #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    */
@@ -52,17 +56,21 @@ public class Adamax extends Optimizer {
   }
 
   /**
-   * Creates an Optimizer that implements the Adamax algorithm.
+   * Creates an Optimizer that implements the Adamax algorithm, {@link #LEARNING_RATE_DEFAULT} for
+   * the learning rate, {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT}
+   * for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
-   * @param name name for the operations Created when applying gradients. Defaults to "Adamax".
+   * @param name name for the operations Created when applying gradients.
    */
   public Adamax(Graph graph, String name) {
     this(graph, name, LEARNING_RATE_DEFAULT, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
-   * Creates an Optimizer that implements the Adamax algorithm.
+   * Creates an Optimizer that implements the Adamax algorithm, using {@link #DEFAULT_NAME} for the
+   * Optimizer name, {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for
+   * the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    * @param learningRate The learning rate.
@@ -72,18 +80,48 @@ public class Adamax extends Optimizer {
   }
 
   /**
-   * Creates an Optimizer that implements the Adamax algorithm.
+   * Creates an Optimizer that implements the Adamax algorithm, using {@link #DEFAULT_NAME} for the
+   * Optimizer name, {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for
+   * the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
-   * @param name name for the operations Created when applying gradients. Defaults to "Adamax".
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Adamax(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
+   * Creates an Optimizer that implements the Adamax algorithm, using {@link #BETA_ONE_DEFAULT} for
+   * the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and {@link
+   * #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name name for the operations Created when applying gradients.
    * @param learningRate The learning rate.
    */
   public Adamax(Graph graph, String name, float learningRate) {
     this(graph, name, learningRate, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
   }
+  /**
+   * Creates an Optimizer that implements the Adamax algorithm, using {@link #BETA_ONE_DEFAULT} for
+   * the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and {@link
+   * #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name name for the operations Created when applying gradients.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Adamax(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(graph, name, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
 
   /**
-   * Creates an Optimizer that implements the Adamax algorithm.
+   * Creates an Optimizer that implements the Adamax algorithm, {@link #LEARNING_RATE_DEFAULT} for
+   * the learning rate, {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT}
+   * for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    * @param learningRate The learning rate.
@@ -94,12 +132,32 @@ public class Adamax extends Optimizer {
   public Adamax(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
     this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
+  /**
+   * Creates an Optimizer that implements the Adamax algorithm, {@link #LEARNING_RATE_DEFAULT} for
+   * the learning rate, {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT}
+   * for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
+   */
+  public Adamax(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    this(graph, null, learningRateOperand, betaOne, betaTwo, epsilon);
+  }
 
   /**
    * Creates an Optimizer that implements the Adamax algorithm.
    *
    * @param graph the TensorFlow graph
-   * @param name name for the operations Created when applying gradients. Defaults to "Adamax".
+   * @param name name for the operations Created when applying gradients.
    * @param learningRate The learning rate.
    * @param betaOne The exponential decay rate for the 1st moment estimates.
    * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
@@ -108,6 +166,30 @@ public class Adamax extends Optimizer {
   public Adamax(
       Graph graph, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(graph, name, learningRate);
+    this.betaOne = betaOne;
+    this.betaTwo = betaTwo;
+    this.epsilon = epsilon;
+  }
+
+  /**
+   * Creates an Optimizer that implements the Adamax algorithm.
+   *
+   * @param graph the TensorFlow graph
+   * @param name name for the operations Created when applying gradients.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
+   */
+  public Adamax(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    super(graph, name, learningRateOperand);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -177,6 +259,6 @@ public class Adamax extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Adamax";
+    return DEFAULT_NAME;
   }
 }

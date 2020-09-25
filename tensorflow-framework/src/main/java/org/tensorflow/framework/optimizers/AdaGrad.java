@@ -20,6 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -40,6 +41,8 @@ import java.util.List;
  */
 public class AdaGrad extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Adagrad";
+
   public static final String ACCUMULATOR = "accumulator";
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
   public static final float INITIAL_ACCUMULATOR_DEFAULT = 0.01f;
@@ -47,7 +50,9 @@ public class AdaGrad extends Optimizer {
   private final float initialAccumulatorValue;
 
   /**
-   * Creates an AdaGrad Optimizer
+   * Creates an AdaGrad Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, and {@link * #INITIAL_ACCUMULATOR_DEFAULT} for
+   * the initialAccumulatorValue.
    *
    * @param graph the TensorFlow Graph
    */
@@ -56,7 +61,8 @@ public class AdaGrad extends Optimizer {
   }
 
   /**
-   * Creates an AdaGrad Optimizer
+   * Creates an AdaGrad Optimizer using using {@link #DEFAULT_NAME} for the Optimizer name, {@link *
+   * #INITIAL_ACCUMULATOR_DEFAULT} for the initialAccumulatorValue.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -66,7 +72,19 @@ public class AdaGrad extends Optimizer {
   }
 
   /**
-   * Creates an AdaGrad Optimizer
+   * Creates an AdaGrad Optimizer using using {@link #DEFAULT_NAME} for the Optimizer name, {@link *
+   * #INITIAL_ACCUMULATOR_DEFAULT} for the initialAccumulatorValue.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaGrad(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, INITIAL_ACCUMULATOR_DEFAULT);
+  }
+
+  /**
+   * Creates an AdaGrad Optimizer using {@link #DEFAULT_NAME} for the Optimizer name,
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -78,27 +96,79 @@ public class AdaGrad extends Optimizer {
   }
 
   /**
-   * Creates an AdaGrad Optimizer
+   * Creates an AdaGrad Optimizer using {@link #DEFAULT_NAME} for the Optimizer name,
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'Adagrad')
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param initialAccumulatorValue Starting value for the accumulators, must be non-negative.
+   * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is negative
+   */
+  public AdaGrad(
+      Graph graph, Operand<TFloat32> learningRateOperand, float initialAccumulatorValue) {
+    this(graph, null, learningRateOperand, initialAccumulatorValue);
+  }
+
+  /**
+   * Creates an AdaGrad Optimizer using {@link #INITIAL_ACCUMULATOR_DEFAULT} for the
+   * initialAccumulatorValue.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer .
    * @param learningRate the learning rate
    */
   public AdaGrad(Graph graph, String name, float learningRate) {
-    this(graph, name, learningRate, 0.01f);
+    this(graph, name, learningRate, INITIAL_ACCUMULATOR_DEFAULT);
+  }
+
+  /**
+   * Creates an AdaGrad Optimizer using {@link #INITIAL_ACCUMULATOR_DEFAULT} for the
+   * initialAccumulatorValue.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaGrad(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(graph, name, learningRateOperand, INITIAL_ACCUMULATOR_DEFAULT);
   }
 
   /**
    * Creates an AdaGrad Optimizer
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'Adagrad')
+   * @param name the name for this Optimizer
    * @param learningRate the learning rate
    * @param initialAccumulatorValue Starting value for the accumulators, must be non-negative.
    * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is negative
    */
   public AdaGrad(Graph graph, String name, float learningRate, float initialAccumulatorValue) {
     super(graph, name, learningRate);
+    if (initialAccumulatorValue < 0F) {
+      throw new IllegalArgumentException(
+          String.format(
+              "initialAccumulatorValue must be non-negative: %f", initialAccumulatorValue));
+    }
+    this.initialAccumulatorValue = initialAccumulatorValue;
+  }
+
+  /**
+   * Creates an AdaGrad Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param initialAccumulatorValue Starting value for the accumulators, must be non-negative.
+   * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is negative
+   */
+  public AdaGrad(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float initialAccumulatorValue) {
+    super(graph, name, learningRateOperand);
     if (initialAccumulatorValue < 0F) {
       throw new IllegalArgumentException(
           String.format(
@@ -149,6 +219,6 @@ public class AdaGrad extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Adagrad";
+    return DEFAULT_NAME;
   }
 }

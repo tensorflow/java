@@ -20,6 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -62,6 +63,7 @@ import java.util.List;
  */
 public class AdaDelta extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Adadelta";
   public static final String ACCUMULATOR = "accum";
   public static final String ACCUMULATOR_UPDATE = "accum_update";
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
@@ -72,12 +74,20 @@ public class AdaDelta extends Optimizer {
 
   private final float epsilon;
 
+  /**
+   * Creates an AdaDelta Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learningRate, {@link #RHO_DEFAULT} for the rho, and {@link
+   * #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph.
+   */
   public AdaDelta(Graph graph) {
     this(graph, LEARNING_RATE_DEFAULT, RHO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
-   * Creates an AdaDelta Optimizer
+   * Creates an AdaDelta Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #RHO_DEFAULT} for the rho, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -87,7 +97,19 @@ public class AdaDelta extends Optimizer {
   }
 
   /**
-   * Creates an AdaDelta Optimizer
+   * Creates an AdaDelta Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #RHO_DEFAULT} for the rho, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaDelta(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, RHO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
+   * Creates an AdaDelta Optimizer {@link #DEFAULT_NAME} for the Optimizer name
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -102,24 +124,68 @@ public class AdaDelta extends Optimizer {
    * Creates an AdaDelta Optimizer
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'Adadelta')
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param rho The decay factor
+   * @param epsilon A constant epsilon used to better conditioning the grad update
+   */
+  public AdaDelta(Graph graph, Operand<TFloat32> learningRateOperand, float rho, float epsilon) {
+    this(graph, null, learningRateOperand, rho, epsilon);
+  }
+
+  /**
+   * Creates an AdaDelta Optimizer using {@link #RHO_DEFAULT} for the rho, and {@link *
+   * #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
    * @param learningRate the learning rate
    */
   public AdaDelta(Graph graph, String name, float learningRate) {
-    this(graph, name, learningRate, 0.95f, 1e-8f);
+    this(graph, name, learningRate, RHO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
+   * Creates an AdaDelta Optimizer using {@link #RHO_DEFAULT} for the rho, and {@link *
+   * #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaDelta(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(graph, name, learningRateOperand, RHO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
    * Creates an AdaDelta Optimizer
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'Adadelta')
+   * @param name the name for this Optimizer.
    * @param learningRate the learning rate
    * @param rho The decay factor
    * @param epsilon A constant epsilon used to better conditioning the grad update
    */
   public AdaDelta(Graph graph, String name, float learningRate, float rho, float epsilon) {
     super(graph, name, learningRate);
+    this.rho = rho;
+    this.epsilon = epsilon;
+  }
+
+  /**
+   * Creates an AdaDelta Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param rho The decay factor
+   * @param epsilon A constant epsilon used to better conditioning the grad update
+   */
+  public AdaDelta(
+      Graph graph, String name, Operand<TFloat32> learningRateOperand, float rho, float epsilon) {
+    super(graph, name, learningRateOperand);
     this.rho = rho;
     this.epsilon = epsilon;
   }
@@ -178,6 +244,6 @@ public class AdaDelta extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Adadelta";
+    return DEFAULT_NAME;
   }
 }

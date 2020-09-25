@@ -21,6 +21,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyMomentum;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.List;
  */
 public class Momentum extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Momentum";
   public static final float LEARNING_RATE_DEFAULT = 0.01F;
   public static final float MOMENTUM_DEFAULT = 0.0F;
   public static final boolean NESTEROV_DEFAULT = false;
@@ -44,7 +46,9 @@ public class Momentum extends Optimizer {
   private final boolean useNesterov;
 
   /**
-   * Creates a Momentum Optimizer
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #MOMENTUM_DEFAULT} for the momentum, and
+   * {@link #NESTEROV_DEFAULT} for the Nesterov flag.
    *
    * @param graph the TensorFlow graph
    */
@@ -53,7 +57,8 @@ public class Momentum extends Optimizer {
   }
 
   /**
-   * Creates a Momentum Optimizer
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #MOMENTUM_DEFAULT} for the momentum, and {@link #NESTEROV_DEFAULT} for the Nesterov flag.
    *
    * @param graph the TensorFlow graph
    * @param learningRate the learning rate
@@ -63,28 +68,74 @@ public class Momentum extends Optimizer {
   }
 
   /**
-   * Creates a Momentum Optimizer
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #MOMENTUM_DEFAULT} for the momentum, and {@link #NESTEROV_DEFAULT} for the Nesterov flag.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Momentum(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, MOMENTUM_DEFAULT, NESTEROV_DEFAULT);
+  }
+
+  /**
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name and {@link
+   * #NESTEROV_DEFAULT} for the Nesterov flag.
    *
    * @param graph the TensorFlow graph
    * @param learningRate the learning rate
    * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
-   *     dampens oscillations, Must be greater than or equal to zero. Default is 0.
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
    */
   public Momentum(Graph graph, float learningRate, float momentum) {
     this(graph, learningRate, momentum, NESTEROV_DEFAULT);
   }
 
   /**
-   * Creates a Momentum Optimizer
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name and {@link
+   * #NESTEROV_DEFAULT} for the Nesterov flag.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
+   */
+  public Momentum(Graph graph, Operand<TFloat32> learningRateOperand, float momentum) {
+    this(graph, learningRateOperand, momentum, NESTEROV_DEFAULT);
+  }
+
+  /**
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow graph
    * @param learningRate the learning rate
    * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
-   *     dampens oscillations, Must be greater than or equal to zero. Default is 0.
-   * @param useNesterov Whether to apply Nesterov momentum. Defaults to false.
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @param useNesterov Whether to apply Nesterov momentum.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
    */
   public Momentum(Graph graph, float learningRate, float momentum, boolean useNesterov) {
     this(graph, null, learningRate, momentum, useNesterov);
+  }
+
+  /**
+   * Creates a Momentum Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @param useNesterov Whether to apply Nesterov momentum.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
+   */
+  public Momentum(
+      Graph graph, Operand<TFloat32> learningRateOperand, float momentum, boolean useNesterov) {
+    this(graph, null, learningRateOperand, momentum, useNesterov);
   }
 
   /**
@@ -94,12 +145,40 @@ public class Momentum extends Optimizer {
    * @param name the name for this Optimizer
    * @param learningRate the learning rate
    * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
-   *     dampens oscillations, Must be greater than or equal to zero. Default is 0.
-   * @param useNesterov Whether to apply Nesterov momentum. Defaults to false.
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @param useNesterov Whether to apply Nesterov momentum.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
    */
   public Momentum(
       Graph graph, String name, float learningRate, float momentum, boolean useNesterov) {
     super(graph, name, learningRate);
+    if (momentum < 0)
+      throw new IllegalArgumentException("momentum must be greater than or equal to zero.");
+    this.momentum = momentum;
+    this.useNesterov = useNesterov;
+  }
+
+  /**
+   * Creates a Momentum Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param momentum hyperparameter that accelerates gradient descent in the relevant direction and
+   *     dampens oscillations, Must be greater than or equal to zero.
+   * @param useNesterov Whether to apply Nesterov momentum.
+   * @throws java.lang.IllegalArgumentException if momentum is less than zero.
+   */
+  public Momentum(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float momentum,
+      boolean useNesterov) {
+    super(graph, name, learningRateOperand);
+    if (momentum < 0)
+      throw new IllegalArgumentException("momentum must be greater than or equal to zero.");
     this.momentum = momentum;
     this.useNesterov = useNesterov;
   }
@@ -152,6 +231,6 @@ public class Momentum extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Momentum";
+    return DEFAULT_NAME;
   }
 }

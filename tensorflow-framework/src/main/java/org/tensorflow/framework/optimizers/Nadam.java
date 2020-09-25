@@ -25,6 +25,7 @@ import java.util.Optional;
  */
 public class Nadam extends Optimizer {
 
+  public static final String DEFAULT_NAME = "Nadam";
   private static final float DECAY_BASE = 0.96f;
   private static final float DECAY = 0.004f;
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
@@ -65,7 +66,9 @@ public class Nadam extends Optimizer {
   private Operand<TFloat32> vTPrimeDenominator;
 
   /**
-   * Creates a Nadam Optimizer
+   * Creates a Nadam Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #BETA_ONE_DEFAULT} for the betaOne value,
+   * {@link #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
    */
@@ -74,54 +77,124 @@ public class Nadam extends Optimizer {
   }
 
   /**
-   * Creates a Nadam Optimizer
+   * Creates a Nadam Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and
+   * {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
-   * @param learningRate the learning rate, defaults to 0.001
+   * @param learningRate the learning rate.
    */
   public Nadam(Graph graph, float learningRate) {
     this(graph, learningRate, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
-   * Creates a Nadam Optimizer
+   * Creates a Nadam Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #BETA_ONE_DEFAULT} for the betaOne value, {@link #BETA_TWO_DEFAULT} for the betaTwo value, and
+   * {@link #EPSILON_DEFAULT} for the epsilon.
    *
    * @param graph the TensorFlow graph
-   * @param learningRate the learning rate, defaults to 0.001
-   * @param betaOne The exponential decay rate for the 1st moment estimates. Default is 0.9.
-   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm. Default
-   *     is 0.999.
-   * @param epsilon A small constant for numerical stability. Default is 1e-8.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Nadam(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(graph, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
+   * Creates a Nadam Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRate the learning rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
    */
   public Nadam(Graph graph, float learningRate, float betaOne, float betaTwo, float epsilon) {
     this(graph, null, learningRate, betaOne, betaTwo, epsilon);
   }
 
   /**
-   * Creates a Nadam Optimizer
+   * Creates a Nadam Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow graph
-   * @param name the name for this Optimizer, defaults to "Nadam"
-   * @param learningRate the learning rate, defaults to 0.001
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
+   */
+  public Nadam(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    this(graph, null, learningRateOperand, betaOne, betaTwo, epsilon);
+  }
+
+  /**
+   * Creates a Nadam Optimizer using {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link
+   * #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer.
+   * @param learningRate the learning rate.
    */
   public Nadam(Graph graph, String name, float learningRate) {
     this(graph, name, learningRate, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
   }
 
   /**
+   * Creates a Nadam Optimizer using {@link #BETA_ONE_DEFAULT} for the betaOne value, {@link
+   * #BETA_TWO_DEFAULT} for the betaTwo value, and {@link #EPSILON_DEFAULT} for the epsilon.
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Nadam(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(graph, name, learningRateOperand, BETA_ONE_DEFAULT, BETA_TWO_DEFAULT, EPSILON_DEFAULT);
+  }
+
+  /**
    * Creates a Nadam Optimizer
    *
    * @param graph the TensorFlow graph
-   * @param name the name for this Optimizer, defaults to "Nadam"
-   * @param learningRate the learning rate, defaults to 0.001
-   * @param betaOne The exponential decay rate for the 1st moment estimates. Default is 0.9.
-   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm. Default
-   *     is 0.999.
-   * @param epsilon A small constant for numerical stability. Default is 1e-8.
+   * @param name the name for this Optimizer.
+   * @param learningRate the learning rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
    */
   public Nadam(
       Graph graph, String name, float learningRate, float betaOne, float betaTwo, float epsilon) {
     super(graph, name, learningRate);
+    this.betaOne = betaOne;
+    this.betaTwo = betaTwo;
+    this.epsilon = epsilon;
+  }
+
+  /**
+   * Creates a Nadam Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param betaOne The exponential decay rate for the 1st moment estimates.
+   * @param betaTwo The exponential decay rate for the exponentially weighted infinity norm.
+   * @param epsilon A small constant for numerical stability.
+   */
+  public Nadam(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float betaOne,
+      float betaTwo,
+      float epsilon) {
+    super(graph, name, learningRateOperand);
     this.betaOne = betaOne;
     this.betaTwo = betaTwo;
     this.epsilon = epsilon;
@@ -287,6 +360,6 @@ public class Nadam extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Nadam";
+    return DEFAULT_NAME;
   }
 }

@@ -22,6 +22,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -46,6 +47,7 @@ import java.util.Optional;
  */
 public class AdaGradDA extends Optimizer {
 
+  public static final String DEFAULT_NAME = "adagrad-da";
   public static final String ACCUMULATOR = "gradient_accumulator";
   public static final String SQUARED_ACCUMULATOR = "gradient_squared_accumulator";
   public static final float LEARNING_RATE_DEFAULT = 0.001F;
@@ -59,7 +61,10 @@ public class AdaGradDA extends Optimizer {
   private Variable<TInt64> globalStep;
 
   /**
-   * Creates an AdaGradDA Optimizer
+   * Creates an AdaGradDA Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #INITIAL_ACCUMULATOR_DEFAULT} for the
+   * initialAccumulatorValue, {@link #L1_STRENGTH_DEFAULT} for the l1Strength, and {@link
+   * #L2_STRENGTH_DEFAULT} for the l2Strength.
    *
    * @param graph the TensorFlow Graph
    */
@@ -73,7 +78,9 @@ public class AdaGradDA extends Optimizer {
   }
 
   /**
-   * Creates an AdaGradDA Optimizer
+   * Creates an AdaGradDA Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #INITIAL_ACCUMULATOR_DEFAULT} for the initialAccumulatorValue, {@link #L1_STRENGTH_DEFAULT} for
+   * the l1Strength, and {@link #L2_STRENGTH_DEFAULT} for the l2Strength.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -84,7 +91,25 @@ public class AdaGradDA extends Optimizer {
   }
 
   /**
-   * Creates an AdaGradDA Optimizer
+   * Creates an AdaGradDA Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #INITIAL_ACCUMULATOR_DEFAULT} for the initialAccumulatorValue, {@link #L1_STRENGTH_DEFAULT} for
+   * the l1Strength, and {@link #L2_STRENGTH_DEFAULT} for the l2Strength.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaGradDA(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        learningRateOperand,
+        INITIAL_ACCUMULATOR_DEFAULT,
+        L1_STRENGTH_DEFAULT,
+        L2_STRENGTH_DEFAULT);
+  }
+
+  /**
+   * Creates an AdaGradDA Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -104,10 +129,33 @@ public class AdaGradDA extends Optimizer {
   }
 
   /**
-   * Creates an AdaGradDA Optimizer
+   * Creates an AdaGradDA Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'adagrad-da')
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param initialAccumulatorValue Starting value for the accumulators, must be greater than zero.
+   * @param l1Strength l1 regularization strength, must be greater than or equal to zero.
+   * @param l2Strength l2 regularization strength, must be greater than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is not greater than zero,
+   *     or l1Strength or l2Strength is less than zero
+   */
+  public AdaGradDA(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float initialAccumulatorValue,
+      float l1Strength,
+      float l2Strength) {
+    this(graph, null, learningRateOperand, initialAccumulatorValue, l1Strength, l2Strength);
+  }
+
+  /**
+   * Creates an AdaGradDA Optimizer using {@link #INITIAL_ACCUMULATOR_DEFAULT} for the
+   * initialAccumulatorValue, {@link #L1_STRENGTH_DEFAULT} for the l1Strength, and {@link
+   * #L2_STRENGTH_DEFAULT} for the l2Strength.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
    * @param learningRate the learning rate
    */
   public AdaGradDA(Graph graph, String name, float learningRate) {
@@ -121,10 +169,30 @@ public class AdaGradDA extends Optimizer {
   }
 
   /**
+   * Creates an AdaGradDA Optimizer using {@link #INITIAL_ACCUMULATOR_DEFAULT} for the
+   * initialAccumulatorValue, {@link #L1_STRENGTH_DEFAULT} for the l1Strength, and {@link
+   * #L2_STRENGTH_DEFAULT} for the l2Strength.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public AdaGradDA(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        name,
+        learningRateOperand,
+        INITIAL_ACCUMULATOR_DEFAULT,
+        L1_STRENGTH_DEFAULT,
+        L2_STRENGTH_DEFAULT);
+  }
+
+  /**
    * Creates an AdaGradDA Optimizer
    *
    * @param graph the TensorFlow Graph
-   * @param name the name for this Optimizer (defaults to 'adagrad-da')
+   * @param name the name for this Optimizer.
    * @param learningRate the learning rate
    * @param initialAccumulatorValue Starting value for the accumulators, must be positive
    * @param l1Strength l1 regularization strength, must be greater than or equal to zero.
@@ -140,6 +208,45 @@ public class AdaGradDA extends Optimizer {
       float l1Strength,
       float l2Strength) {
     super(graph, name, learningRate);
+    if (initialAccumulatorValue <= 0F) {
+      throw new IllegalArgumentException(
+          String.format(
+              "initialAccumulatorValue must be greater than zero: %f", initialAccumulatorValue));
+    }
+    if (l1Strength < 0F) {
+      throw new IllegalArgumentException(
+          String.format("l1Strength must not be negative: %f", l1Strength));
+    }
+    if (l2Strength < 0F) {
+      throw new IllegalArgumentException(
+          String.format("l2Strength must not be negative: %f", l2Strength));
+    }
+    this.initialAccumulatorValue = initialAccumulatorValue;
+    this.l1Strength = l1Strength;
+    this.l2Strength = l2Strength;
+  }
+
+  /**
+   * Creates an AdaGradDA Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param initialAccumulatorValue Starting value for the accumulators, must be positive
+   * @param l1Strength l1 regularization strength, must be greater than or equal to zero.
+   * @param l2Strength l2 regularization strength, must be greater than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if initialAccumulatorValue is not greater than zero,
+   *     or * l1Strength or l2Strength is less than zero
+   */
+  public AdaGradDA(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float initialAccumulatorValue,
+      float l1Strength,
+      float l2Strength) {
+    super(graph, name, learningRateOperand);
     if (initialAccumulatorValue <= 0F) {
       throw new IllegalArgumentException(
           String.format(
@@ -240,6 +347,6 @@ public class AdaGradDA extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "adagrad-da";
+    return DEFAULT_NAME;
   }
 }

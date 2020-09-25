@@ -6,6 +6,7 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyFtrl;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
  *     shrinkage-type L2 (which is the addition of an L2 penalty to the loss function).
  */
 public class Ftrl extends Optimizer {
+
+  public static final String DEFAULT_NAME = "Ftrl";
 
   public static final String ACCUMULATOR = "gradient_accumulator";
   public static final String LINEAR_ACCUMULATOR = "linear_accumulator";
@@ -37,7 +40,12 @@ public class Ftrl extends Optimizer {
   private final float l2ShrinkageRegularizationStrength;
 
   /**
-   * Creates a Ftrl Optimizer
+   * Creates an Ftrl Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #LEARNING_RATE_POWER_DEFAULT} for the
+   * learningRatePower. {@link #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue,
+   * {@link #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength
+   * and {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
    *
    * @param graph the TensorFlow Graph
    */
@@ -53,7 +61,12 @@ public class Ftrl extends Optimizer {
   }
 
   /**
-   * Creates a Ftrl Optimizer
+   * Creates an Ftrl Optimizer using {@link #LEARNING_RATE_DEFAULT} for the learning rate, {@link
+   * #LEARNING_RATE_POWER_DEFAULT} for the learningRatePower. {@link
+   * #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue, {@link
+   * #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength and
+   * {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
    *
    * @param graph the TensorFlow Graph
    * @param name the name of this Optimizer
@@ -71,7 +84,12 @@ public class Ftrl extends Optimizer {
   }
 
   /**
-   * Creates a Ftrl Optimizer
+   * Creates an Ftrl Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_POWER_DEFAULT} for the learningRatePower. {@link
+   * #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue, {@link
+   * #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength and
+   * {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -88,7 +106,34 @@ public class Ftrl extends Optimizer {
   }
 
   /**
-   * Creates a Ftrl Optimizer
+   * Creates an Ftrl Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_POWER_DEFAULT} for the learningRatePower. {@link
+   * #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue, {@link
+   * #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength and
+   * {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Ftrl(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        learningRateOperand,
+        LEARNING_RATE_POWER_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
+        L1STRENGTH_DEFAULT,
+        L2STRENGTH_DEFAULT,
+        L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
+  }
+
+  /**
+   * Creates an Ftrl Optimizer using {@link #LEARNING_RATE_POWER_DEFAULT} for the learningRatePower.
+   * {@link #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue, {@link
+   * #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength and
+   * {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
    *
    * @param graph the TensorFlow Graph
    * @param name the name of this Optimizer
@@ -107,7 +152,31 @@ public class Ftrl extends Optimizer {
   }
 
   /**
-   * Creates a Ftrl Optimizer
+   * Creates an Ftrl Optimizer using {@link #LEARNING_RATE_POWER_DEFAULT} for the learningRatePower.
+   * {@link #INITIAL_ACCUMULATOR_VALUE_DEFAULT} for the initialAccumulatorValue, {@link
+   * #L1STRENGTH_DEFAULT} for the l1Strength, {@link #L2STRENGTH_DEFAULT} for the l2Strength and
+   * {@link #L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT} for the
+   * l2ShrinkageRegularizationStrength.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public Ftrl(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        name,
+        learningRateOperand,
+        LEARNING_RATE_POWER_DEFAULT,
+        INITIAL_ACCUMULATOR_VALUE_DEFAULT,
+        L1STRENGTH_DEFAULT,
+        L2STRENGTH_DEFAULT,
+        L2_SHRINKAGE_REGULARIZATION_STRENGTH_DEFAULT);
+  }
+
+  /**
+   * Creates an Ftrl Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -136,6 +205,44 @@ public class Ftrl extends Optimizer {
         graph,
         null,
         learningRate,
+        learningRatePower,
+        initialAccumulatorValue,
+        l1Strength,
+        l2Strength,
+        l2ShrinkageRegularizationStrength);
+  }
+
+  /**
+   * Creates an Ftrl Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
+   *     a fixed learning rate.
+   * @param initialAccumulatorValue The starting value for accumulators. Only zero or positive
+   *     values are allowed.
+   * @param l1Strength the L1 Regularization strength, must be greater than or equal to zero.
+   * @param l2Strength the L2 Regularization strength, must be greater than or equal to zero.
+   * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
+   *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
+   *     than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if the initialAccumulatorValue,
+   *     l1RegularizationStrength, l2RegularizationStrength, or l2ShrinkageRegularizationStrength
+   *     are less than 0.0, or learningRatePower is greater than 0.0.
+   */
+  public Ftrl(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float learningRatePower,
+      float initialAccumulatorValue,
+      float l1Strength,
+      float l2Strength,
+      float l2ShrinkageRegularizationStrength) {
+    this(
+        graph,
+        null,
+        learningRateOperand,
         learningRatePower,
         initialAccumulatorValue,
         l1Strength,
@@ -180,7 +287,45 @@ public class Ftrl extends Optimizer {
     validateParams();
   }
 
-  /** Validates all the settings of the Frtl Optmizer */
+  /**
+   * Creates a Ftrl Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param learningRatePower Controls how the learning rate decreases during training. Use zero for
+   *     a fixed learning rate.
+   * @param initialAccumulatorValue The starting value for accumulators. Only zero or positive
+   *     values are allowed.
+   * @param l1Strength the L1 Regularization strength, must be greater than or equal to zero.
+   * @param l2Strength the L2 Regularization strength, must be greater than or equal to zero.
+   * @param l2ShrinkageRegularizationStrength This differs from L2 above in that the L2 above is a
+   *     stabilization penalty, whereas this L2 shrinkage is a magnitude penalty. must be greater
+   *     than or equal to zero.
+   * @throws java.lang.IllegalArgumentException if the initialAccumulatorValue,
+   *     l1RegularizationStrength, l2RegularizationStrength, or l2ShrinkageRegularizationStrength
+   *     are less than 0.0, or learningRatePower is greater than 0.0.
+   */
+  public Ftrl(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float learningRatePower,
+      float initialAccumulatorValue,
+      float l1Strength,
+      float l2Strength,
+      float l2ShrinkageRegularizationStrength) {
+    super(graph, name, learningRateOperand);
+    this.learningRatePower = learningRatePower;
+    this.initialAccumulatorValue = initialAccumulatorValue;
+    this.l1RegularizationStrength = l1Strength;
+    this.l2RegularizationStrength = l2Strength;
+    this.l2ShrinkageRegularizationStrength = l2ShrinkageRegularizationStrength;
+    validateParams();
+  }
+
+  /** Validates all the settings of the Ftrl Optimizer */
   private void validateParams() {
     if (this.initialAccumulatorValue < 0.0F) {
       throw new IllegalArgumentException(
@@ -257,6 +402,6 @@ public class Ftrl extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "Ftrl";
+    return DEFAULT_NAME;
   }
 }

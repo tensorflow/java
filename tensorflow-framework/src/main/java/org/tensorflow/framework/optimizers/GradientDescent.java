@@ -16,8 +16,10 @@
 package org.tensorflow.framework.optimizers;
 
 import org.tensorflow.Graph;
+import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -26,10 +28,12 @@ import org.tensorflow.types.family.TType;
  */
 public class GradientDescent extends Optimizer {
 
+  public static final String DEFAULT_NAME = "GradientDescent";
   public static final float LEARNING_RATE_DEFAULT = 0.01f;
 
   /**
-   * Creates a GradientDescent Optimizer
+   * Creates a GradientDescent Optimizer using {@link #DEFAULT_NAME} for the Optimizer name and
+   * {@link #LEARNING_RATE_DEFAULT} for the learning rate.
    *
    * @param graph the TensorFlow graph
    */
@@ -38,24 +42,47 @@ public class GradientDescent extends Optimizer {
   }
 
   /**
-   * Creates a GradientDescent Optimizer
+   * Creates a GradientDescent Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow graph
-   * @param learningRate the learning rate, defaults to 0.01
+   * @param learningRate the learning rate.
    */
   public GradientDescent(Graph graph, float learningRate) {
     super(graph, null, learningRate);
   }
 
   /**
+   * Creates a GradientDescent Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
+   *
+   * @param graph the TensorFlow graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public GradientDescent(Graph graph, Operand<TFloat32> learningRateOperand) {
+    super(graph, null, learningRateOperand);
+  }
+
+  /**
    * Creates a GradientDescent Optimizer
    *
    * @param graph the TensorFlow graph
-   * @param name the name for this Optimizer, default is "GradientDescent"
-   * @param learningRate the learning rate, defaults to 0.01
+   * @param name the name for this Optimizer.
+   * @param learningRate the learning rate.
    */
   public GradientDescent(Graph graph, String name, float learningRate) {
     super(graph, name, learningRate);
+  }
+
+  /**
+   * Creates a GradientDescent Optimizer
+   *
+   * @param graph the TensorFlow graph
+   * @param name the name for this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public GradientDescent(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    super(graph, name, learningRateOperand);
   }
 
   /** {@inheritDoc} */
@@ -74,6 +101,6 @@ public class GradientDescent extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "GradientDescent";
+    return DEFAULT_NAME;
   }
 }

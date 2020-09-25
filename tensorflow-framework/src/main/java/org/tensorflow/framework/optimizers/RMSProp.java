@@ -20,6 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.List;
  */
 public class RMSProp extends Optimizer {
 
+  public static final String DEFAULT_NAME = "RMSProp";
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
   public static final float DECAY_DEFAULT = 0.9f;
   public static final float MOMENTUM_DEFAULT = 0.0f;
@@ -62,7 +64,10 @@ public class RMSProp extends Optimizer {
   private final boolean centered;
 
   /**
-   * Creates an RMSPRrop Optimizer
+   * Creates an RMSPRrop Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #LEARNING_RATE_DEFAULT} for the learning rate, {@link #DECAY_DEFAULT} for the decay, {@link
+   * #MOMENTUM_DEFAULT} for the momentum, {@link #EPSILON_DEFAULT} for the epsilon value and {@link
+   * #CENTERED_DEFAULT} for the centered flag.
    *
    * @param graph the TensorFlow Graph
    */
@@ -77,7 +82,9 @@ public class RMSProp extends Optimizer {
   }
 
   /**
-   * Creates an RMSPRrop Optimizer
+   * Creates an RMSPRrop Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #DECAY_DEFAULT} for the decay, {@link #MOMENTUM_DEFAULT} for the momentum, {@link
+   * #EPSILON_DEFAULT} for the epsilon value and {@link #CENTERED_DEFAULT} for the centered flag.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
@@ -87,17 +94,36 @@ public class RMSProp extends Optimizer {
   }
 
   /**
-   * Creates an RMSPRrop Optimizer
+   * Creates an RMSPRrop Optimizer using {@link #DEFAULT_NAME} for the Optimizer name, {@link
+   * #DECAY_DEFAULT} for the decay, {@link #MOMENTUM_DEFAULT} for the momentum, {@link
+   * #EPSILON_DEFAULT} for the epsilon value and {@link #CENTERED_DEFAULT} for the centered flag.
+   *
+   * @param graph the TensorFlow Graph
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public RMSProp(Graph graph, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        learningRateOperand,
+        DECAY_DEFAULT,
+        MOMENTUM_DEFAULT,
+        EPSILON_DEFAULT,
+        CENTERED_DEFAULT);
+  }
+
+  /**
+   * Creates an RMSPRrop Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow Graph
    * @param learningRate the learning rate
-   * @param decay Discounting factor for the history/coming gradient. Defaults to 0.9.
-   * @param momentum the acceleration factor, default is 0.
+   * @param decay Discounting factor for the history/coming gradient.
+   * @param momentum the acceleration factor.
    * @param epsilon A small constant for numerical stability
    * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
    *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
    *     true</code>> may help with training, but is slightly more expensive in terms of computation
-   *     and memory. Defaults to <code>false</code>.
+   *     and memory.
    */
   public RMSProp(
       Graph graph,
@@ -110,10 +136,36 @@ public class RMSProp extends Optimizer {
   }
 
   /**
-   * Creates an RMSPRrop Optimizer
+   * Creates an RMSPRrop Optimizer using {@link #DEFAULT_NAME} for the Optimizer name.
    *
    * @param graph the TensorFlow Graph
-   * @param name the name of this Optimizer. Defaults to "RMSProp".
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param decay Discounting factor for the history/coming gradient.
+   * @param momentum the acceleration factor.
+   * @param epsilon A small constant for numerical stability
+   * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
+   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
+   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     and memory.
+   */
+  public RMSProp(
+      Graph graph,
+      Operand<TFloat32> learningRateOperand,
+      float decay,
+      float momentum,
+      float epsilon,
+      boolean centered) {
+    this(graph, null, learningRateOperand, decay, momentum, epsilon, centered);
+  }
+
+  /**
+   * Creates an RMSPRrop Optimizer using {@link #DECAY_DEFAULT} for the decay, {@link
+   * #MOMENTUM_DEFAULT} for the momentum, {@link #EPSILON_DEFAULT} for the epsilon value and {@link
+   * #CENTERED_DEFAULT} for the centered flag.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer.
    * @param learningRate the learning rate
    */
   public RMSProp(Graph graph, String name, float learningRate) {
@@ -128,18 +180,39 @@ public class RMSProp extends Optimizer {
   }
 
   /**
+   * Creates an RMSPRrop Optimizer using {@link #DECAY_DEFAULT} for the decay, {@link
+   * #MOMENTUM_DEFAULT} for the momentum, {@link #EPSILON_DEFAULT} for the epsilon value and {@link
+   * #CENTERED_DEFAULT} for the centered flag.
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   */
+  public RMSProp(Graph graph, String name, Operand<TFloat32> learningRateOperand) {
+    this(
+        graph,
+        name,
+        learningRateOperand,
+        DECAY_DEFAULT,
+        MOMENTUM_DEFAULT,
+        EPSILON_DEFAULT,
+        CENTERED_DEFAULT);
+  }
+
+  /**
    * Creates an RMSPRrop Optimizer
    *
    * @param graph the TensorFlow Graph
-   * @param name the name of this Optimizer. Defaults to "RMSProp".
+   * @param name the name of this Optimizer.
    * @param learningRate the learning rate
-   * @param decay Discounting factor for the history/coming gradient. Defaults to 0.9.
-   * @param momentum The acceleration factor, default is 0.
+   * @param decay Discounting factor for the history/coming gradient.
+   * @param momentum The acceleration factor,.
    * @param epsilon A small constant for numerical stability
    * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
    *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
    *     true</code>> may help with training, but is slightly more expensive in terms of computation
-   *     and memory. Defaults to <code>false</code>.
+   *     and memory.
    */
   public RMSProp(
       Graph graph,
@@ -150,6 +223,36 @@ public class RMSProp extends Optimizer {
       float epsilon,
       boolean centered) {
     super(graph, name, learningRate);
+    this.decay = decay;
+    this.momentum = momentum;
+    this.epsilon = epsilon;
+    this.centered = centered;
+  }
+
+  /**
+   * Creates an RMSPRrop Optimizer
+   *
+   * @param graph the TensorFlow Graph
+   * @param name the name of this Optimizer.
+   * @param learningRateOperand the learning rate Operand, this is used to calculate the learning
+   *     rate.
+   * @param decay Discounting factor for the history/coming gradient.
+   * @param momentum The acceleration factor.
+   * @param epsilon A small constant for numerical stability
+   * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
+   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
+   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     and memory.
+   */
+  public RMSProp(
+      Graph graph,
+      String name,
+      Operand<TFloat32> learningRateOperand,
+      float decay,
+      float momentum,
+      float epsilon,
+      boolean centered) {
+    super(graph, name, learningRateOperand);
     this.decay = decay;
     this.momentum = momentum;
     this.epsilon = epsilon;
@@ -233,6 +336,6 @@ public class RMSProp extends Optimizer {
   /** {@inheritDoc} */
   @Override
   public String getOptimizerName() {
-    return "RMSProp";
+    return DEFAULT_NAME;
   }
 }
