@@ -77,8 +77,6 @@ public class He<T extends TType, U extends TNumber> extends VarianceScaling<T, U
    * @param distribution The distribution type for the He initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
-   * @throws java.lang.IllegalArgumentException if the distribution is not TRUNCATED_NORMAL or
-   *     UNIFORM
    * @see VarianceScaling.Distribution
    */
   public He(Ops tf, Distribution distribution, Long seed) {

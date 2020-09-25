@@ -27,7 +27,7 @@ import org.tensorflow.types.family.TType;
 public interface Initializer<T extends TType> {
 
   /**
-   * The call operation for the initializer
+   * Generates the operation used to perform the initialization.
    *
    * @param dims the shape dimensions
    * @param dtype the data type
