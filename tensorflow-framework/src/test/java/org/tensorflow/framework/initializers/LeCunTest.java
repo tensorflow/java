@@ -128,12 +128,12 @@ public class LeCunTest {
   }
 
   @Test
-  public void testCallUNTRUNCATED_NORMALReproducible() {
+  public void testCall_NORMALReproducible() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        LeCun<TFloat64, TFloat64> instance = new LeCun<>(tf, Distribution.UNTRUNCATED_NORMAL, SEED);
+        LeCun<TFloat64, TFloat64> instance = new LeCun<>(tf, Distribution.NORMAL, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
         session.evaluate(operand1, operand2);

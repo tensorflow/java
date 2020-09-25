@@ -85,7 +85,7 @@ public class VarianceScalingTest {
 
   /** Test of call method, of class VarianceScaling. */
   @Test
-  public void testCall_Float_1_FAN_IN_UNTRUNCATED_NORMAL() {
+  public void testCall_Float_1_FAN_IN_NORMAL() {
     float[] expected = {-0.46082667F, -0.25798687F, -0.06924929F, -0.28017485F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -96,7 +96,7 @@ public class VarianceScalingTest {
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.UNTRUNCATED_NORMAL,
+                VarianceScaling.Distribution.NORMAL,
                 SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
         session.evaluate(expected, operand);
@@ -104,7 +104,7 @@ public class VarianceScalingTest {
   }
 
   @Test
-  public void testCall_Double_1_FAN_IN_UNTRUNCATED_NORMAL() {
+  public void testCall_Double_1_FAN_IN_NORMAL() {
     double[] expected = {
       1.3169108626945392, -1.0985224689731887, -0.13536536217837225, -1.698770780615686
     };
@@ -117,7 +117,7 @@ public class VarianceScalingTest {
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.UNTRUNCATED_NORMAL,
+                VarianceScaling.Distribution.NORMAL,
                 SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
         session.evaluate(expected, operand);
@@ -185,7 +185,7 @@ public class VarianceScalingTest {
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.UNTRUNCATED_NORMAL,
+                VarianceScaling.Distribution.NORMAL,
                 SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
