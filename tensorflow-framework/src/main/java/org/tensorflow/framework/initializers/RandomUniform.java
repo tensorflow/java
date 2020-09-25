@@ -48,7 +48,8 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
   private final Long seed;
 
   /**
-   * Creates a RandomUniform initializer
+   * Creates a RandomUniform initializer using {@link #MINVAL_DEFAULT} for the minval and
+   * {@link #MAXVAL_DEFAULT} for the maxval
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -62,10 +63,8 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
    * Creates a RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
-   * @param minval Lower bound of the range of random values to generate (inclusive). Default is
-   *     -0.05.
-   * @param maxval Upper bound of the range of random values to generate (exclusive). Default is
-   *     0.05.
+   * @param minval Lower bound of the range of random values to generate (inclusive).
+   * @param maxval Upper bound of the range of random values to generate (exclusive).
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */

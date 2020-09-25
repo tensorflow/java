@@ -45,7 +45,7 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
    * Creates an Initializer that generates tensors with a constant value.
    *
    * @param tf the TensorFlow Ops
-   * @param value a double value
+   * @param value a long value used for the constant.
    */
   public Constant(Ops tf, long value) {
     super(tf);
@@ -59,7 +59,7 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
    * Creates an Initializer that generates tensors with a constant value.
    *
    * @param tf the TensorFlow Ops
-   * @param value a double value
+   * @param value a double value used for the constant.
    */
   public Constant(Ops tf, double value) {
     super(tf);
@@ -73,7 +73,7 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
    * Creates an Initializer that generates tensors with a constant value.
    *
    * @param tf the TensorFlow Ops
-   * @param value a boolean value
+   * @param value a boolean value used for the constant.
    */
   public Constant(Ops tf, boolean value) {
     super(tf);

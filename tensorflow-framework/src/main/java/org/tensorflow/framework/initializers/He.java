@@ -53,6 +53,13 @@ import org.tensorflow.types.family.TType;
  *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
  * </pre>
  *
+ * <p><b>NOTE:</b>
+ * <p>For an HeNormal equivalent initializer, use {@link
+ * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
+ * <p>For an HeUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
+ * for the distribution parameter.
+ * <p></p>
+ *
  * @param <T> The TType for the call operation
  * @param <U> The TNumber for the call operation
  * @see <a

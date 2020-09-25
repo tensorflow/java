@@ -58,7 +58,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
   private final Long seed;
 
   /**
-   * Creates an Orthogonal Initializer
+   * Creates an Orthogonal Initializer using {@link #GAIN_DEFAULT} for the gain.
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -72,7 +72,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
    * Creates an Orthogonal Initializer
    *
    * @param tf the TensorFlow Ops
-   * @param gain the gain to be applied to the Matrix. Default is 1.0.
+   * @param gain the gain to be applied to the Matrix.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */

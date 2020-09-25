@@ -20,11 +20,10 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * A Functional Interface for Initializers
+ * An interface for Initializers
  *
  * @param <T> The data Type for initializer operation
  */
-@FunctionalInterface
 public interface Initializer<T extends TType> {
 
   /**

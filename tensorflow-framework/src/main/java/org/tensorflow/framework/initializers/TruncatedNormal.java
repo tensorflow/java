@@ -47,7 +47,8 @@ public class TruncatedNormal<T extends TType, U extends TNumber> extends BaseIni
   private final Long seed;
 
   /**
-   * Creates a TruncatedNormal Initializer
+   * Creates a TruncatedNormal Initializer using {@link #MEAN_DEFAULT} for the mean and {@link
+   * #STDDEV_DEFAULT} for the standard deviation.
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -58,11 +59,11 @@ public class TruncatedNormal<T extends TType, U extends TNumber> extends BaseIni
   }
 
   /**
-   * Creates a TruncatedNormal Initializer
+   * Creates a TruncatedNormal Initializer.
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate. Default is 0.
-   * @param stddev Standard deviation of the random values to generate. Default is 0.05.
+   * @param mean Mean of the random values to generate.
+   * @param stddev Standard deviation of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */

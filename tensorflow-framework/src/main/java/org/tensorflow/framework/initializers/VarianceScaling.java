@@ -28,7 +28,7 @@ import org.tensorflow.types.family.TType;
  *
  * <p>
  *
- * <p>With <code>distribution=TRUNCATED_NORMAL or UNTRUNCATED_NORMAL</code>, samples are drawn from
+ * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from
  * a truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
  * truncation, if used) <code>stddev = Math.sqrt(scale / n)</code>, where <code>n</code> is:
  *
@@ -138,11 +138,10 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
     switch (distribution) {
       case TRUNCATED_NORMAL:
         distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), numdType);
-        // constant from scipy.stats.truncnorm.std(a=-2, b=2, loc=0., scale=1.)
         stddev = Math.sqrt(lscale) / .87962566103423978;
         mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), numdType));
         break;
-      case UNTRUNCATED_NORMAL:
+      case NORMAL:
         distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), numdType);
         stddev = Math.sqrt(lscale);
         mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), numdType));
@@ -197,7 +196,7 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
   /** The random distribution to use when initializing the values. */
   public enum Distribution {
     TRUNCATED_NORMAL,
-    UNTRUNCATED_NORMAL,
+    NORMAL,
     UNIFORM
   }
 }

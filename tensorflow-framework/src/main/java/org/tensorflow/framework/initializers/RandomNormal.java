@@ -46,7 +46,8 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
   private final Long seed;
 
   /**
-   * creates the RandomUniform initializer
+   * Creates the RandomUniform initializer using {@link #MEAN_DEFAULT} for the mean and {@link
+   * #STDDEV_DEFAULT} for the standard deviation.
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -57,10 +58,10 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
   }
 
   /**
-   * creates the RandomUniform initializer
+   * Creates the RandomUniform initializer using {@link #STDDEV_DEFAULT} for the standard deviation.
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate. Default is 0.
+   * @param mean Mean of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
@@ -72,8 +73,8 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
    * creates the RandomUniform initializer
    *
    * @param tf the TensorFlow Ops
-   * @param mean Mean of the random values to generate. Default is 0.
-   * @param stddev Standard deviation of the random values to generate. Default is 1.0.
+   * @param mean Mean of the random values to generate.
+   * @param stddev Standard deviation of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
