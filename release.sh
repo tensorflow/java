@@ -28,21 +28,22 @@ then
   SETTINGS_XML="$HOME/.m2/settings.xml"
 fi
 
-if [[ -z "${CMD}" ]]
-then
-  CMD="bash run_inside_container.sh"
-fi
-
 if [[ ! -f "${SETTINGS_XML}" ]]
 then
   echo "No settings.xml (containing credentials for upload) found"
   exit 1
 fi
 
+if [[ -z "${CMD}" ]]
+then
+  CMD="bash deploy.sh"
+fi
+
 export GPG_TTY=$(tty)
 set -ex
 
 docker run \
+  -e IN_CONTAINER="true" \
   -e DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}" \
   -e DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}" \
   -e DEPLOY_LOCAL="${DEPLOY_LOCAL:-false}" \

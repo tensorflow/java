@@ -42,6 +42,7 @@
     <jmh.version>1.21</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
   </properties>
 
@@ -115,6 +116,17 @@
       </modules>
     </profile>
     <!--
+    Profile deploy
+        Build the Javadoc on deployment
+    -->
+    <profile>
+      <id>deploy</id>
+      <properties>
+        <maven.javadoc.skip>false</maven.javadoc.skip>
+        <maven.source.skip>false</maven.source.skip>
+      </properties>
+    </profile>
+    <!--
     Profile release
         Activate GPG signing on all built artifacts and build the Javadoc
     -->
@@ -122,7 +134,6 @@
       <id>release</id>
       <properties>
         <gpg.skip>false</gpg.skip>
-        <maven.javadoc.skip>false</maven.javadoc.skip>
       </properties>
     </profile>
     <!--
