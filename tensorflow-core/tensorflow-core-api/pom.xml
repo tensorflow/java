@@ -99,88 +99,46 @@
       </properties>
     </profile>
     <!--
-    Release Profile
-      In release mode, all native artifacts, for all platforms, have been first downloaded from
-      external storage (previoulsy uploaded by the build servers) and placed under the target
-      directory, so we don't need to build them again. Plus, we want to generate the Javadoc.
+    Deploy Profile
+      When deploying, we do not rebuild the native libraries but fetch them from the Maven repository
+      where the external builders have uploaded them. All core API artifacts at once. This is
+      especially important for snapshots since all artifacts must have the same timestamp to avoid
+      issues when using Gradle.
+      To do so, we cannot rely simply on `deploy:deploy` goal, we need to configure the
+      deployment by hand, bundling all artifacts together.
     -->
     <profile>
-      <id>release</id>
+      <id>deploy</id>
       <properties>
         <native.build.skip>true</native.build.skip>
       </properties>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.0.0</version>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8.2</version>
             <executions>
-              <!--
-              Attach native artifacts for release
-                Only operation systems and platform extension officially supported are deployed
-                during the release. Other experimental configurations, if any, are excluded from
-                this process.
-              -->
               <execution>
-                <id>attach-artifacts</id>
-                <phase>package</phase>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
                 <goals>
-                  <goal>attach-artifact</goal>
+                  <goal>deploy-file</goal>
                 </goals>
                 <configuration>
-                  <artifacts>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64.jar</file>
-                      <type>jar</type>
-                      <classifier>linux-x86_64</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-macosx-x86_64.jar</file>
-                      <type>jar</type>
-                      <classifier>macosx-x86_64</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64.jar</file>
-                      <type>jar</type>
-                      <classifier>windows-x86_64</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-mkl.jar</file>
-                      <type>jar</type>
-                      <classifier>linux-x86_64-mkl</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-macosx-x86_64-mkl.jar</file>
-                      <type>jar</type>
-                      <classifier>macosx-x86_64-mkl</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-mkl.jar</file>
-                      <type>jar</type>
-                      <classifier>windows-x86_64-mkl</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-mkl-gpu.jar</file>
-                      <type>jar</type>
-                      <classifier>linux-x86_64-mkl-gpu</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-mkl-gpu.jar</file>
-                      <type>jar</type>
-                      <classifier>windows-x86_64-mkl-gpu</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-linux-x86_64-gpu.jar</file>
-                      <type>jar</type>
-                      <classifier>linux-x86_64-gpu</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-windows-x86_64-gpu.jar</file>
-                      <type>jar</type>
-                      <classifier>windows-x86_64-gpu</classifier>
-                    </artifact>
-                  </artifacts>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
+                  <sources>${project.build.directory}/${project.artifactId}-${project.version}-sources.jar</sources>
+                  <javadoc>${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar</javadoc>
+                  <files>${tensorflow.core.api.files}</files>
+                  <types>${tensorflow.core.api.types}</types>
+                  <classifiers>${tensorflow.core.api.classifiers}</classifiers>
+                  <pomFile>pom.xml</pomFile>
+                  <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
+                  <url>${project.distributionManagement.snapshotRepository.url}</url>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <packaging>jar</packaging>
+                  <generatePom>false</generatePom>
                 </configuration>
               </execution>
             </executions>
@@ -455,7 +413,12 @@
           </execution>
         </executions>
         <configuration>
-          <additionalClasspathElements>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElements>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
+            <!-- Note: the following path is not accessible in deploy profile, so other libraries like
+                       OpenMP must be installed manually when running the tests -->
+            <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
+          </additionalClasspathElements>
         </configuration>
       </plugin>
       <plugin>

@@ -19,13 +19,13 @@
 
 set -e
 
-STAGING_S3_BUCKET="s3://tensorflow-java/staging/"
-
 # By default we deploy to both ossrh and bintray. These two
 # environment variables can be set to skip either repository.
-DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-true}"
 DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}"
+DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}"
 DEPLOY_LOCAL="${DEPLOY_LOCAL:-false}"
+
+IN_CONTAINER="${IN_CONTAINER:-false}"
 
 if [[ "${DEPLOY_BINTRAY}" != "true" && "${DEPLOY_OSSRH}" != "true" && "${DEPLOY_LOCAL}" != "true" ]]; then
   echo "Must deploy to at least one of Bintray, OSSRH or local" >&2
@@ -33,39 +33,9 @@ if [[ "${DEPLOY_BINTRAY}" != "true" && "${DEPLOY_OSSRH}" != "true" && "${DEPLOY_
 fi
 
 clean() {
-  echo "Cleaning working directory"
+  echo "Cleaning working directory..."
   # Clean up any existing artifacts
-  mvn -q clean -Prelease
-}
-
-# Fetch a property from pom files for a given profile.
-# Arguments:
-#   property - name of the property to be retrieved.
-#   profile - name of the selected profile.
-# Output:
-#   Echo property value to stdout
-mvn_property() {
-  local prop="$1"
-  local profile="$2"
-  mvn -q --non-recursive exec:exec -P "${profile}" -Dexec.executable='echo' -Dexec.args="\${${prop}}"
-}
-
-# Clean the working directory before doing anything else
-clean
-
-# Extract the TensorFlow version we are releasing from pom
-TF_VERSION=`mvn_property "project.version"`
-echo
-echo "Starting release of TensorFlow Java, version ${TF_VERSION}"
-
-# Download native artifacts that were built and uploaded by the build system for each supported
-# platform.
-# The goal is to drop these artifacts under the `tensorflow-core-api` build directory so that they
-# can get signed and deployed with all the other artifacts.
-download_native_artifacts() {
-  echo "Downloading native artifacts from ${STAGING_S3_BUCKET}"
-  aws s3 cp "${STAGING_S3_BUCKET}" "${DIR}/tensorflow-core/tensorflow-core-api/target/" \
-      --recursive --include "*-${TF_VERSION}*.jar" --no-sign-request
+  mvn clean $MVN_OPTIONS -q
 }
 
 # Try to build and deploy.
@@ -76,27 +46,33 @@ download_native_artifacts() {
 build_and_deploy_artifacts() {
   # Deploy artifacts to local maven repository if requested
   if [[ "${DEPLOY_LOCAL}" == "true" ]]; then
-    mvn install -Prelease
+    mvn install $MVN_OPTIONS
   fi
   # Deploy artifacts to ossrh if requested.
   if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-    mvn deploy -Prelease -Possrh
+    mvn deploy $MVN_OPTIONS -Possrh
   fi
   # Deploy artifacts to bintray if requested.
   if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-    mvn deploy -Prelease -Pbintray
+    mvn deploy $MVN_OPTIONS -Pbintray
   fi
   # Clean up when everything works
   # clean
 }
 
-if [ -z "${TF_VERSION}" ]
-then
-  echo "Must set the TF_VERSION environment variable"
+MVN_OPTIONS="-B -e -U --settings settings.xml -Pdeploy"
+
+# Clean the working directory before doing anything else
+clean
+
+echo "Parsing Maven configuration..."
+TF_VERSION=`mvn exec:exec $MVN_OPTIONS -q -N -Dexec.executable='echo' -Dexec.args="\\${project.version}"`
+if [ -z "${TF_VERSION}" ]; then
+  echo "Fail to extract TF_VERSION from POM"
   exit 1
 fi
-
-echo "Deploying on"
+echo
+echo "Deploying TensorFlow Java, version ${TF_VERSION}, on:"
 if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
   echo "* OSSRH"
 fi
@@ -106,20 +82,36 @@ fi
 if [[ "${DEPLOY_LOCAL}" == "true" ]]; then
   echo "* Local"
 fi
+echo
 
-DIR="$(realpath $(dirname $0))"
-cd "${DIR}"
+if ! [[ $TF_VERSION = *-SNAPSHOT ]]; then
+  if ! $IN_CONTAINER; then
+    echo "Release must be executed from a Docker container, please make sure to invoke release.sh"
+    exit 1
+  fi
+  MVN_OPTIONS="$MVN_OPTIONS -Prelease"
+  # gnupg2 is required for signing releases
+  apt-get -qq update
+  apt-get -qq install -y gnupg2
+fi
 
-# The meat of the script.
-# Comment lines out appropriately if debugging/tinkering with the release
-# process.
-# gnupg2 is required for signing
-apt-get -qq update
-apt-get -qq install -y gnupg2
-apt-get -qq install -y awscli
+echo "Downloading native artifacts from Maven repository..."
+for p in `find tensorflow-core -name tensorflow-core-platform* -type d -exec basename {} \;`; do
+  mvn dependency:get $MVN_OPTIONS -N -U -q -Possrh -DgroupId=org.tensorflow -DartifactId=$p -Dversion=$TF_VERSION
+done
 
-# Download native artifacts already assembled and uploaded by the build servers
-download_native_artifacts
+mkdir -p tensorflow-core/tensorflow-core-api/target
+for f in $HOME/.m2/repository/org/tensorflow/tensorflow-core-api/$TF_VERSION/tensorflow-core-api-$TF_VERSION-*.jar; do
+  echo "Found native artifact: $f"
+  cp $f tensorflow-core/tensorflow-core-api/target/
+  if [[ $f =~ tensorflow-core-api-$TF_VERSION-(.*).jar ]]; then
+    [[ -n $FILES ]] && FILES=$FILES,$f || FILES=$f
+    [[ -n $TYPES ]] && TYPES=$TYPES,jar || TYPES=jar
+    [[ -n $CLASSIFIERS ]] && CLASSIFIERS=$CLASSIFIERS,${BASH_REMATCH[1]} || CLASSIFIERS=${BASH_REMATCH[1]}
+  fi
+done
+
+MVN_OPTIONS="$MVN_OPTIONS -Dtensorflow.core.api.files=$FILES -Dtensorflow.core.api.types=$TYPES -Dtensorflow.core.api.classifiers=$CLASSIFIERS"
 
 # Build other artifacts and push them all to the repositories
 build_and_deploy_artifacts

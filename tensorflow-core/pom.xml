@@ -33,7 +33,6 @@
   <modules>
     <module>tensorflow-core-generator</module>
     <module>tensorflow-core-api</module>
-    <module>tensorflow-core-platform${javacpp.platform.extension}</module>
   </modules>
 
   <properties>
@@ -64,75 +63,37 @@
   </properties>
 
   <profiles>
-    <!-- Build other officially supported platforms on a release -->
     <profile>
-      <id>release</id>
+      <id>javacpp-platform-extension-default</id>
+      <activation>
+        <property>
+          <name>!javacpp.platform.extension</name>
+        </property>
+      </activation>
+      <modules>
+        <module>tensorflow-core-platform</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>javacpp-platform-extension-custom</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.extension</name>
+        </property>
+      </activation>
+      <modules>
+        <module>tensorflow-core-platform${javacpp.platform.extension}</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>deploy</id>
       <modules>
         <module>tensorflow-core-platform-mkl</module>
         <module>tensorflow-core-platform-mkl-gpu</module>
         <module>tensorflow-core-platform-gpu</module>
       </modules>
-    </profile>
-    <!-- Redeploys in one shot the snapshot artifacts of tensorflow-core-api
-         given to maven-deploy-plugin to get consistent timestamps among them -->
-    <profile>
-      <id>redeploy</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-mkl</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-gpu</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-mkl-gpu</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.2</version>
-            <executions>
-              <execution>
-                <id>deploy-file</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <file>tensorflow-core-api-${project.version}.jar</file>
-                  <pomFile>META-INF/maven/org.tensorflow/tensorflow-core-api/pom.xml</pomFile>
-                  <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
-                  <url>${project.distributionManagement.snapshotRepository.url}</url>
-                  <groupId>org.tensorflow</groupId>
-                  <artifactId>tensorflow-core-api</artifactId>
-                  <version>${project.version}</version>
-                  <packaging>jar</packaging>
-                  <generatePom>false</generatePom>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
 
     <profile>
@@ -483,7 +444,7 @@
     </profile>
 
     <!-- Disable platform dependency when building the artifact for the dependency itself -->
-    <profile>
+    <!--profile>
       <id>no-platform-dependency</id>
       <activation>
         <file>
@@ -508,7 +469,7 @@
         <javacpp.platform.windows-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
         <javacpp.platform.windows-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
       </properties>
-    </profile>
+    </profile-->
 
     <!-- Profiles to modify the transitive dependencies when picked up from other pom.xml files, for example:
          mvn -Djavacpp.platform.custom -Djavacpp.platform.host -Djavacpp.platform.linux-x86_64 -Djavacpp.platform.windows-x86_64 ... -->
