@@ -77,9 +77,19 @@ public class ELU<T extends TNumber> extends Activation<T> {
     this.alpha = alpha;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Gets the calculation operation for the activation.
+   *
+   * @param input the input tensor
+   * @return The operand for the activation
+   * @throws IllegalArgumentException if the data type is not a floating data type.
+   */
   @Override
   public Operand<T> call(Operand<T> input) {
+    if (!input.asTensor().dataType().isFloating()) {
+      throw new IllegalArgumentException(
+              "Must be a Floating Point DataType: " + input.asOutput().dataType());
+    }
     Operand<T> result = tf.nn.elu(input);
     if (alpha == 1.0) {
       return result;
