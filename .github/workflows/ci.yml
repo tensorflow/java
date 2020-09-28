@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - r[0-9].*
+      - r+[0-9].*
   pull_request:
     branches:
       - master
@@ -158,7 +158,7 @@ jobs:
           call mvn -version
           bazel version
           mkdir %USERPROFILE%\.m2
-          if ${{ env.IS_SNAPSHOT }} (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
+          if %IS_SNAPSHOT%==true (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           df -h
           wmic pagefile list /format:list
