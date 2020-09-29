@@ -56,6 +56,22 @@ public class ELU<T extends TNumber> extends Activation<T> {
   /** A scalar, slope of negative section. */
   private final double alpha;
 
+  /** Creates a new ELU with alpha={@link #ALPHA_DEFAULT}. */
+  public ELU() {
+    this(ALPHA_DEFAULT);
+  }
+
+  /**
+   * Creates a new ELU
+   *
+   * @param alpha A scalar, slope of negative section. It controls the value to which an ELU
+   *     saturates for negative net inputs.
+   */
+  public ELU(double alpha) {
+    super();
+    this.alpha = alpha;
+  }
+
   /**
    * Creates a new ELU with alpha={@link #ALPHA_DEFAULT}.
    *
@@ -88,7 +104,7 @@ public class ELU<T extends TNumber> extends Activation<T> {
   public Operand<T> call(Operand<T> input) {
     if (!input.asTensor().dataType().isFloating()) {
       throw new IllegalArgumentException(
-              "Must be a Floating Point DataType: " + input.asOutput().dataType());
+          "Must be a Floating Point DataType: " + input.asOutput().dataType());
     }
     Operand<T> result = tf.nn.elu(input);
     if (alpha == 1.0) {

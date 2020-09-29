@@ -47,8 +47,13 @@ import org.tensorflow.types.family.TNumber;
  */
 public class SELU<T extends TNumber> extends Activation<T> {
 
+  /** Creates a Scaled Exponential Linear Unit (SELU) activation. */
+  public SELU() {
+    super();
+  }
+
   /**
-   * Create a Scaled Exponential Linear Unit (SELU) activation.
+   * Creates a Scaled Exponential Linear Unit (SELU) activation.
    *
    * @param tf the TensorFlow Ops
    */

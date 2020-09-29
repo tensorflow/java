@@ -72,6 +72,29 @@ public class ReLU<T extends TNumber> extends Activation<T> {
   /**
    * Creates a new ReLU with alpha={@link #ALPHA_DEFAULT}, maxValue={@link #MAX_VALUE_DEFAULT},
    * threshold={@link #THRESHOLD_DEFAULT},
+   */
+  public ReLU() {
+    this(ALPHA_DEFAULT, MAX_VALUE_DEFAULT, THRESHOLD_DEFAULT);
+  }
+
+  /**
+   * Creates a new ReLU
+   *
+   * @param alpha governs the slope for values lower than the threshold.
+   * @param maxValue sets the saturation threshold (the largest value the function will return).
+   * @param threshold the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   */
+  public ReLU(float alpha, Float maxValue, float threshold) {
+    super();
+    this.alpha = alpha;
+    this.maxValue = maxValue;
+    this.threshold = threshold;
+  }
+
+  /**
+   * Creates a new ReLU with alpha={@link #ALPHA_DEFAULT}, maxValue={@link #MAX_VALUE_DEFAULT},
+   * threshold={@link #THRESHOLD_DEFAULT},
    *
    * @param tf the TensorFlow Ops
    */

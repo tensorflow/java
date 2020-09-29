@@ -43,7 +43,18 @@ import org.tensorflow.types.family.TNumber;
 public class Swish<T extends TNumber> extends Activation<T> {
 
   /**
-   * Create a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
+   * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
+   *
+   * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
+   * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
+   * unbounded above and bounded below.
+   */
+  public Swish() {
+    super();
+  }
+
+  /**
+   * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
    *
    * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
    * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is

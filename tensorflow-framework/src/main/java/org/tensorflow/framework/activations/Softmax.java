@@ -47,6 +47,24 @@ public class Softmax<T extends TNumber> extends Activation<T> {
   /**
    * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
    * the last dimension.
+   */
+  public Softmax() {
+    this(AXIS_DEFAULT);
+  }
+
+  /**
+   * Creates a Softmax activation
+   *
+   * @param axis The dimension softmax would be performed on.
+   */
+  public Softmax(int axis) {
+    super();
+    this.axis = axis;
+  }
+
+  /**
+   * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
+   * the last dimension.
    *
    * @param tf the TensorFlow Ops
    */

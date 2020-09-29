@@ -35,8 +35,13 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Exponential<T extends TNumber> extends Activation<T> {
 
+  /** Creates an Exponential activation. */
+  public Exponential() {
+    super();
+  }
+
   /**
-   * Create an Exponential activation.
+   * Creates an Exponential activation.
    *
    * @param tf the TensorFlow Ops
    */

@@ -21,19 +21,42 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Abstract base class for Activations
  *
+ * <p><b>Note:</b> The Ops must be set prior to invoking the call method.
+ *
  * @param <T> the data type of the activation
  */
 public abstract class Activation<T extends TNumber> {
 
-  protected final Ops tf;
+  protected Ops tf;
+
+  /** Creates the abstract class for an Activation */
+  public Activation() {}
 
   /**
-   * Create the abstract class for an Activation
+   * Creates the abstract class for an Activation
    *
    * @param tf the TensorFlow Ops
    */
   public Activation(Ops tf) {
     this.tf = tf;
+  }
+
+  /**
+   * Sets the TensorFlow Ops
+   *
+   * @param tf the TensorFlow Ops
+   */
+  public void setTF(Ops tf) {
+    this.tf = tf;
+  }
+
+  /**
+   * Gets the TensorFlow Ops
+   *
+   * @return the TensorFlow Ops
+   */
+  public Ops getTF() {
+    return this.tf;
   }
 
   /**

@@ -35,8 +35,13 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Tanh<T extends TNumber> extends Activation<T> {
 
+  /** Creates a Hyperbolic tangent activation. */
+  public Tanh() {
+    super();
+  }
+
   /**
-   * Create a Hyperbolic tangent activation.
+   * Creates a Hyperbolic tangent activation.
    *
    * @param tf the TensorFlow Ops
    */
