@@ -46,7 +46,7 @@ public class SoftmaxTest {
   /** Test of Softmax method, of class Activations. */
   @Test
   public void testIntThrowsIAE() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
+    int[][] input = {{1, -2, 3, -4}, {-1, 2, -3, 4}};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
           java.lang.IllegalArgumentException.class,
@@ -61,42 +61,36 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testRelu_Ops_Operand_Float() {
-    float[] input = {1, 2, 3, 4, 5, 6, 7, 8};
-    float[] expected = {
-      0.07550783F,
-      0.20525156F,
-      0.5579316F,
-      1.5166154F,
-      4.1225877F,
-      11.206356F,
-      30.462032F,
-      82.80439F
+  public void testSoftmax_Ops_Operand_Float() {
+    float[][] input = {{1, 2, 3, 4}, {5, 6, 7, 8}};
+    float[][] expected = {
+            {0.032059f, 0.087144f, 0.236883f, 0.643914f},
+            {0.032059f, 0.087144f, 0.236883f, 0.643914f}
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Softmax<TFloat32> instance = new Softmax<>(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
-        session.evaluate(expected, result);
+        session.evaluate(tf.constant(expected), result);
       }
   }
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testRelu_Ops_Operand_Double() {
-    double[] input = {1, 2, 3, 4, 5, 6, 7, 8};
-    double[] expected = {
-      0.07550782856830682, 0.20525155830362918, 0.5579315811996575,
-      1.516615278698451, 4.12258775284935, 11.206355374798198,
-      30.462032178568293, 82.8043885289369
+  public void testSoftmax_Ops_Operand_Double() {
+    double[][] input = {{1, 2, 3, 4}, {5, 6, 7, 8}};
+    double[][] expected = {
+      {0.032059, 0.087144, 0.236883, 0.643914},
+      {0.032059, 0.087144, 0.236883, 0.643914}
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Softmax<TFloat64> instance = new Softmax<>(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
-        session.evaluate(expected, result);
+        session.print(System.out, result);
+        session.evaluate(tf.constant(expected), result);
       }
   }
 }

@@ -17,13 +17,11 @@ package org.tensorflow.framework.activations;
 import org.junit.jupiter.api.*;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
-import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** @author Jim Clarke */
@@ -57,9 +55,7 @@ public class ExponentialTest {
             try (TestSession session = TestSession.createTestSession(tfMode)) {
               Ops tf = session.getTF();
               Exponential<TInt32> instance = new Exponential<>(tf);
-              Operand<TInt32> operand = instance.call(tf.constant(input));
-              operand.asTensor().data().read(DataBuffers.of(actual));
-              assertArrayEquals(expected, actual);
+              Operand<TInt32> result = instance.call(tf.constant(input));
             }
           });
   }

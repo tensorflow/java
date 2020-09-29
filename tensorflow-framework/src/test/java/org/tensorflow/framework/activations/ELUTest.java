@@ -56,7 +56,7 @@ public class ELUTest {
               Ops tf = session.getTF();
               Operand<TInt32> input = tf.constant(new int[] {1, 2, 3, 4, 5});
               ELU<TInt32> instance = new ELU<>(tf);
-              Operand<TInt32> operand = instance.call(input);
+              Operand<TInt32> result = instance.call(input);
             }
           });
   }
@@ -65,7 +65,6 @@ public class ELUTest {
   @Test
   public void testCall_Float() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    float[] actual = {0, 0, 0, 0, 0, 0, 0, 0};
     float[] expected = {1F, -0.86466473F, 3F, -0.9816844F, -0.63212055F, 2F, -0.95021296F, 4F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
