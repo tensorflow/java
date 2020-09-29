@@ -89,7 +89,6 @@ public class SoftmaxTest {
         Ops tf = session.getTF();
         Softmax<TFloat64> instance = new Softmax<>(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
-        session.print(System.out, result);
         session.evaluate(tf.constant(expected), result);
       }
   }
