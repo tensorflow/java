@@ -102,7 +102,7 @@ public class ELU<T extends TNumber> extends Activation<T> {
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asTensor().dataType().isFloating()) {
+    if (!input.asOutput().dataType().isFloating()) {
       throw new IllegalArgumentException(
           "Must be a Floating Point DataType: " + input.asOutput().dataType());
     }
@@ -110,7 +110,7 @@ public class ELU<T extends TNumber> extends Activation<T> {
     if (alpha == 1.0) {
       return result;
     } else {
-      DataType<T> dataType = input.asTensor().dataType();
+      DataType<T> dataType = input.asOutput().dataType();
       Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), dataType));
       Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), dataType));
       return tf.select(cond, result, y);

@@ -69,11 +69,11 @@ public class HardSigmoid<T extends TNumber> extends Activation<T> {
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asTensor().dataType().isFloating()) {
+    if (!input.asOutput().dataType().isFloating()) {
       throw new IllegalArgumentException(
           "Must be a Floating Point DataType: " + input.asOutput().dataType());
     }
-    DataType<T> dataType = input.asTensor().dataType();
+    DataType<T> dataType = input.asOutput().dataType();
     Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), dataType);
     Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), dataType);
 

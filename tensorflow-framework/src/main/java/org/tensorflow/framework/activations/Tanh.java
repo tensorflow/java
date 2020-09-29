@@ -52,7 +52,7 @@ public class Tanh<T extends TNumber> extends Activation<T> {
   /** {@inheritDoc} */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asTensor().dataType().isFloating()) {
+    if (!input.asOutput().dataType().isFloating()) {
       throw new IllegalArgumentException(
           "Must be a Floating Point DataType: " + input.asOutput().dataType());
     }
