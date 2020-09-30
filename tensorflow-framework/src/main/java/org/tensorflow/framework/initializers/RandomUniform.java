@@ -45,7 +45,7 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
 
   private final Double minval;
   private final Double maxval;
-  private final Long seed;
+  private final long seed;
 
   /**
    * Creates a RandomUniform initializer using {@link #MINVAL_DEFAULT} for the minval and
@@ -55,7 +55,7 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomUniform(Ops tf, Long seed) {
+  public RandomUniform(Ops tf, long seed) {
     this(tf, MINVAL_DEFAULT, MAXVAL_DEFAULT, seed);
   }
 
@@ -68,7 +68,7 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomUniform(Ops tf, double minval, double maxval, Long seed) {
+  public RandomUniform(Ops tf, double minval, double maxval, long seed) {
     super(tf);
     this.minval = minval;
     this.maxval = maxval;
@@ -96,9 +96,7 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
       Operand<T> distOpT = (Operand<T>) distOp;
       return distOpT;
     } else {
-      long lseed = this.seed == null ? 0L : this.seed;
-      long[] seeds = {lseed, 0L};
-
+      long[] seeds = {seed, 0};
       distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), numdType);
       @SuppressWarnings("unchecked")
       Operand<T> distOpT = (Operand<T>) distOp;

@@ -43,7 +43,7 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
 
   private final double mean;
   private final double stddev;
-  private final Long seed;
+  private final long seed;
 
   /**
    * Creates the RandomUniform initializer using {@link #MEAN_DEFAULT} for the mean and {@link
@@ -53,7 +53,7 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, Long seed) {
+  public RandomNormal(Ops tf, long seed) {
     this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, seed);
   }
 
@@ -65,7 +65,7 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, double mean, Long seed) {
+  public RandomNormal(Ops tf, double mean, long seed) {
     this(tf, mean, STDDEV_DEFAULT, seed);
   }
 
@@ -78,7 +78,7 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, double mean, double stddev, Long seed) {
+  public RandomNormal(Ops tf, double mean, double stddev, long seed) {
     super(tf);
     this.mean = mean;
     this.stddev = stddev;
@@ -90,8 +90,7 @@ public class RandomNormal<T extends TType, U extends TNumber> extends BaseInitia
   public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
     if (!dtype.isNumeric())
       throw new IllegalArgumentException("The data type must be numeric. Found : " + dtype.name());
-    long lseed = this.seed == null ? 0L : this.seed;
-    long[] seeds = {lseed, 0L};
+    long[] seeds = {seed, 0};
     @SuppressWarnings("unchecked")
     DataType<U> numdType = (DataType<U>) dtype;
     @SuppressWarnings("unchecked")

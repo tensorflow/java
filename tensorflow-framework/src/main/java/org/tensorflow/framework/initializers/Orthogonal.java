@@ -55,7 +55,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
   public static final double GAIN_DEFAULT = 1.0;
 
   private final double gain;
-  private final Long seed;
+  private final long seed;
 
   /**
    * Creates an Orthogonal Initializer using {@link #GAIN_DEFAULT} for the gain.
@@ -64,7 +64,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public Orthogonal(Ops tf, Long seed) {
+  public Orthogonal(Ops tf, long seed) {
     this(tf, GAIN_DEFAULT, seed);
   }
 
@@ -76,7 +76,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public Orthogonal(Ops tf, double gain, Long seed) {
+  public Orthogonal(Ops tf, double gain, long seed) {
     super(tf);
     this.gain = gain;
     this.seed = seed;
@@ -99,8 +99,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
     for (; i < dimsShape.numDimensions() - 1; i++) num_rows *= dimsShape.size(i);
     long num_cols = dimsShape.size(i);
     Shape flat_shape = Shape.of(Math.max(num_rows, num_cols), Math.min(num_rows, num_cols));
-    long lseed = this.seed == null ? 0L : this.seed;
-    long[] seeds = {lseed, 0};
+    long[] seeds = {seed, 0};
     @SuppressWarnings("unchecked")
     DataType<U> numdType = (DataType<U>) dtype;
     @SuppressWarnings("unchecked")

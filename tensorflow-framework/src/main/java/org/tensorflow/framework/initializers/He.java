@@ -79,7 +79,7 @@ public class He<T extends TType, U extends TNumber> extends VarianceScaling<T, U
    *     will always produce the same random tensor for a given shape and dtype.
    * @see VarianceScaling.Distribution
    */
-  public He(Ops tf, Distribution distribution, Long seed) {
+  public He(Ops tf, Distribution distribution, long seed) {
     super(tf, SCALE, Mode.FAN_IN, distribution, seed);
   }
 }

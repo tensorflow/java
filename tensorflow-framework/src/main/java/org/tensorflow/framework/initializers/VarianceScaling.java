@@ -67,16 +67,8 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
   private final double scale;
   private final Mode mode;
   private final Distribution distribution;
-  private final Long seed;
+  private final long seed;
 
-  /**
-   * Creates a VarianceScaling Initializer
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public VarianceScaling(Ops tf) {
-    this(tf, SCALE_DEFAULT, MODE_DEFAULT, DISTRIBUTION_DEFAULT, null);
-  }
 
   /**
    * Creates a VarianceScaling Initializer
@@ -97,7 +89,7 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
    * @param distribution Random distribution to use.
    * @param seed Used to create random seeds.
    */
-  public VarianceScaling(Ops tf, double scale, Mode mode, Distribution distribution, Long seed) {
+  public VarianceScaling(Ops tf, double scale, Mode mode, Distribution distribution, long seed) {
     super(tf);
     if (scale <= 0.0) {
       throw new IllegalArgumentException("scale must be greater than 0, got " + scale);
@@ -133,8 +125,7 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
     @SuppressWarnings("unchecked")
     DataType<U> numdType = (DataType<U>) dtype;
     double stddev;
-    long lseed = this.seed == null ? 0L : this.seed;
-    long[] seeds = {lseed, 0L};
+    long[] seeds = {seed, 0};
     switch (distribution) {
       case TRUNCATED_NORMAL:
         distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), numdType);

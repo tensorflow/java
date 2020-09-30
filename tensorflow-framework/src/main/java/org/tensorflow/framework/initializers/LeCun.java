@@ -87,7 +87,7 @@ public class LeCun<T extends TType, U extends TNumber> extends VarianceScaling<T
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public LeCun(Ops tf, Distribution distribution, Long seed) {
+  public LeCun(Ops tf, Distribution distribution, long seed) {
     super(tf, 1.0, Mode.FAN_IN, distribution, seed);
   }
 }

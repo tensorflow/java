@@ -83,7 +83,7 @@ public class Glorot<T extends TType, U extends TNumber> extends VarianceScaling<
    *     will always produce the same random tensor for a given shape and dtype.
    * @see VarianceScaling.Distribution
    */
-  public Glorot(Ops tf, Distribution distribution, Long seed) {
+  public Glorot(Ops tf, Distribution distribution, long seed) {
     super(tf, SCALE, Mode.FAN_AVG, distribution, seed);
   }
 }
