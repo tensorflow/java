@@ -47,7 +47,7 @@ public class RandomUniformTest {
 
   /** Test of call method, of class RandomUniform. */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     int[] expected = {6, 1, 4, 1};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -62,7 +62,7 @@ public class RandomUniformTest {
 
   /** Test of call method, of class RandomUniform. */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] expected = {7.5660157f, 6.6877327f, 9.200811f, 5.385646F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -76,7 +76,7 @@ public class RandomUniformTest {
   }
 
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] expected = {
       0.5281258126492294, 3.6064922351122752, 0.5479556897864346, 5.126554100456142
     };

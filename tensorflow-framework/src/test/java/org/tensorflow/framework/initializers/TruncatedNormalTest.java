@@ -46,7 +46,7 @@ public class TruncatedNormalTest {
 
   /** Test of call method, of class TruncatedNormal. */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] expected = {-1.955122F, -1.0945456F, -0.29379985F, -1.1886811F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -60,7 +60,7 @@ public class TruncatedNormalTest {
   }
 
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] expected = {
       5.58717960737721, -4.6606361225803825, -2.0188567598844402, 1.8179715736711362
     };

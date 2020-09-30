@@ -46,7 +46,7 @@ public class RandomNormalTest {
 
   /** Test of call method, of class RandomNormal. */
   @Test
-  public void testCall_Float() {
+  public void testCalltestSoftmaxFloat() {
     float[] expected = {-1.955122f, -1.0945456f, -0.29379985f, -1.1886811f};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -60,7 +60,7 @@ public class RandomNormalTest {
   }
 
   @Test
-  public void testCall_Double() {
+  public void testCalltestSoftmaxDouble() {
     double[] expected = {
       5.58717960737721, -4.6606361225803825, -0.5743065932046001, -7.207274031929497
     };

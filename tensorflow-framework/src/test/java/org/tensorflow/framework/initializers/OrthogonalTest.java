@@ -49,7 +49,7 @@ public class OrthogonalTest {
 
   /** Test of call method, of class Orthogonal. */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
           java.lang.IllegalArgumentException.class,
@@ -66,7 +66,7 @@ public class OrthogonalTest {
 
   /** Test of call method, of class Orthogonal. */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] expected = {
       -0.3097564f,
       -0.11214957f,
@@ -181,7 +181,7 @@ public class OrthogonalTest {
 
   /** Test of call method, of class Orthogonal. */
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] expected = {
       0.4852166440161694,
       -0.4290733656784607,

@@ -45,7 +45,7 @@ public class HeTest {
 
   /** Test of call method, of class He. */
   @Test
-  public void testCallNormal_Float() {
+  public void testCallNormalFloat() {
     float[] expected = {-0.7408917F, -0.41477704F, -0.11133519F, -0.45044965F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -58,7 +58,7 @@ public class HeTest {
   }
 
   @Test
-  public void testCallNormal_Double() {
+  public void testCallNormalDouble() {
     double[] expected = {
       2.117256561466521, -1.7661437620712939, -0.7650439080001085, 0.6889186518780481
     };
@@ -74,7 +74,7 @@ public class HeTest {
 
   /** Test of call method, of class He. */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] expected = {1.3104724f, 1.1583493f, 1.5936272f, 0.93282115f};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -87,7 +87,7 @@ public class HeTest {
   }
 
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] expected = {
       .09147407402970674, 0.6246627788317102, 0.09490870950065552, 0.8879452169740599
     };
@@ -128,7 +128,7 @@ public class HeTest {
   }
 
   @Test
-  public void testCall_NORMALReproducible() {
+  public void testCallNORMALReproducible() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();

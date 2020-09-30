@@ -45,7 +45,7 @@ public class GlorotTest {
 
   /** Test of call method, of class Glorot. */
   @Test
-  public void testCallNormal_Float() {
+  public void testCallNormalFloat() {
     float[] expected = {-0.52388954F, -0.29329166F, -0.07872587F, -0.31851602F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -59,7 +59,7 @@ public class GlorotTest {
   }
 
   @Test
-  public void testCallNormal_Double() {
+  public void testCallNormalDouble() {
     double[] expected = {
       1.4971264721246893, -1.2488522307109322, -0.5409677352523339, 0.4871390504288623
     };
@@ -76,7 +76,7 @@ public class GlorotTest {
 
   /** Test of call method, of class Glorot. */
   @Test
-  public void testCallUniform_Float() {
+  public void testCallUniformFloat() {
     float[] expected = {0.9266439F, 0.8190767F, 1.1268647F, 0.6596042F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -89,7 +89,7 @@ public class GlorotTest {
   }
 
   @Test
-  public void testCallUniform_Double() {
+  public void testCallUniformDouble() {
     double[] expected = {
       0.06468193804916589, 0.44170328686673477, 0.06711059208157763, 0.6278720842445181
     };
@@ -130,7 +130,7 @@ public class GlorotTest {
   }
 
   @Test
-  public void testCall_NORMALReproducible() {
+  public void testCallNORMALReproducible() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
