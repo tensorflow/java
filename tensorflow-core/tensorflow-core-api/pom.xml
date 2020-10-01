@@ -76,7 +76,7 @@
 
   <profiles>
     <!--
-    Dev Profile
+    Developing Profile
       This profile skips the tedious native build for local development, fetching the artifacts as a
       dependency from the Maven repositories instead. If no native artifact matching the current
       version have been deployed previously, building with this profile active will fail.
@@ -99,7 +99,7 @@
       </properties>
     </profile>
     <!--
-    Deploy Profile
+    Deploying Profile
       When deploying, we do not rebuild the native libraries but fetch them from the Maven repository
       where the external builders have uploaded them. All core API artifacts at once. This is
       especially important for snapshots since all artifacts must have the same timestamp to avoid
@@ -108,7 +108,7 @@
       deployment by hand, bundling all artifacts together.
     -->
     <profile>
-      <id>deploy</id>
+      <id>deploying</id>
       <properties>
         <native.build.skip>true</native.build.skip>
       </properties>
@@ -122,9 +122,22 @@
                 <id>default-deploy</id>
                 <phase>deploy</phase>
                 <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <skip>true</skip>
+                </configuration>
+              </execution>
+              <execution>
+                <id>bundle-deploy</id>
+                <phase>deploy</phase>
+                <goals>
                   <goal>deploy-file</goal>
                 </goals>
                 <configuration>
+                  <!-- In addition to this config, all files added to the $FILES environment variable will be
+                       deployed with this artifact. When running the deploy.sh scripts, all native artifacts
+                       are downloaded then appended to this variable -->
                   <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                   <sources>${project.build.directory}/${project.artifactId}-${project.version}-sources.jar</sources>
                   <javadoc>${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar</javadoc>
@@ -415,7 +428,7 @@
         <configuration>
           <additionalClasspathElements>
             <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
-            <!-- Note: the following path is not accessible in deploy profile, so other libraries like
+            <!-- Note: the following path is not accessible in deploying profile, so other libraries like
                        OpenMP must be installed manually when running the tests -->
             <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
           </additionalClasspathElements>
