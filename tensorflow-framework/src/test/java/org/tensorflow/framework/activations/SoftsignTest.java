@@ -76,15 +76,15 @@ public class SoftsignTest {
   /** Test of Softsign call method */
   @Test
   public void testCall_Double() {
-    double[] input = {1, 2, 3, 4, 5, 6, 7, 8};
+    double[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     double[] expected = {
       0.5,
-      0.6666666666666666,
+      -0.6666666666666666,
       0.75,
-      0.8,
-      0.8333333333333334,
+      -0.8,
+      -0.8333333333333334,
       0.8571428571428571,
-      0.875,
+      -0.875,
       0.8888888888888888
     };
     for (TestSession.Mode tfMode : tfModes)

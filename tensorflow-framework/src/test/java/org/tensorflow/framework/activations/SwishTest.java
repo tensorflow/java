@@ -61,9 +61,16 @@ public class SwishTest {
   /** Test of Swish call method */
   @Test
   public void testCall__Float() {
-    float[] input = {1, 2, 3, 4, 5, 6, 7, 8};
+    float[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     float[] expected = {
-      0.7310586F, 1.7615942F, 2.8577223F, 3.928055F, 4.9665356F, 5.985164F, 6.993623F, 7.9973164F
+      0.7310585786300049f,
+      -.238405844f,
+      2.8577223804673f,
+      -7.19448398e-02f,
+      -3.34642546e-02f,
+      5.985164261060192f,
+      -6.37735836e-03f,
+      7.997317198956269f
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -77,11 +84,16 @@ public class SwishTest {
   /** Test of Swish call method */
   @Test
   public void testCall__Double() {
-    double[] input = {1, 2, 3, 4, 5, 6, 7, 8};
+    double[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     double[] expected = {
-      0.7310585786300049, 1.7615941559557646, 2.8577223804673,
-      3.928055160151634, 4.966535745378576, 5.985164261060192,
-      6.993622641639195, 7.997317198956269
+      0.7310585786300049,
+      -.238405844,
+      2.8577223804673,
+      -7.19448398e-02,
+      -3.34642546e-02,
+      5.985164261060192,
+      -6.37735836e-03,
+      7.997317198956269
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {

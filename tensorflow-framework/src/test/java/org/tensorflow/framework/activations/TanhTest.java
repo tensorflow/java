@@ -62,9 +62,12 @@ public class TanhTest {
   /** Test of Tanh call method. */
   @Test
   public void testCall__Float() {
-    float[] input = {1, 2, 3, 4, 5, 6, 7, 8};
+    float[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     float[] expected = {
-      0.7615942F, 0.9640276F, 0.9950547F, 0.9993292F, 0.99990916F, 0.99998784F, 0.99999833F, 1.0F
+      0.76159416F, -0.96402758F,
+      0.99505475F, -0.9993293F,
+      -0.9999092F, 0.99998771F,
+      -0.99999834F, 0.99999977F
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -78,11 +81,12 @@ public class TanhTest {
   /** Test of Tanh call method. */
   @Test
   public void testCall__Double() {
-    double[] input = {1, 2, 3, 4, 5, 6, 7, 8};
+    double[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     double[] expected = {
-      0.7615941559557649, 0.9640275800758169, 0.9950547536867305,
-      0.999329299739067, 0.9999092042625951, 0.9999877116507956,
-      0.9999983369439447, 0.9999997749296758
+      0.76159416, -0.96402758,
+      0.99505475, -0.9993293,
+      -0.9999092, 0.99998771,
+      -0.99999834, 0.99999977
     };
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {

@@ -62,8 +62,8 @@ public class HardSigmoidTest {
   /** Test of HardSigmoid call method. */
   @Test
   public void testCall__Float() {
-    float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    float[] expected = {0.7F, 0.099999994F, 1.1F, -0.3F, 0.3F, 0.9F, -0.100000024F, 1.3F};
+    float[] input = {-3.0f, -1.0f, 0.0f, 1.0f, 3.0f};
+    float[] expected = {0.f, 0.3f, 0.5f, 0.7f, 1.f};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -76,10 +76,8 @@ public class HardSigmoidTest {
   /** Test of HardSigmoid call method. */
   @Test
   public void testCall__Double() {
-    double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    double[] expected = {
-      0.7, 0.09999999999999998, 1.1, -0.30000000000000004, 0.3, 0.9, -0.10000000000000009, 1.3
-    };
+    double[] input = {-3.0, -1.0, 0.0, 1.0, 3.0};
+    double[] expected = {0., 0.3, 0.5, 0.7, 1.};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
