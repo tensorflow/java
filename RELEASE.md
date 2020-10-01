@@ -1,4 +1,4 @@
-# TensorFlow for Java using Maven
+# Releasing TensorFlow Java
 
 The
 [TensorFlow Java API](https://github.com/tensorflow/java) is available on Maven Central and JCenter
@@ -20,13 +20,13 @@ Hence, the process for building and uploading release artifacts is not a single
 
 ## Release process overview
 
-The process of releasing TensorFlow for Java is splitted in two major steps:
-* Build of the native artifacts
-* Build and deployment of all artifacts consolidated
+The process of releasing TensorFlow Java is split in two major steps:
+* Building and deploying the native artifacts
+* Building and deploying all artifacts consolidated
 
-While the first step should be done on different servers, each configured for building the native
-artifact for a specific architecture and platform, the second step is conducted locally in
-a [Docker](https://www.docker.com) container for a more hermetic process.
+The first step is executed on different build servers, each responsible to build the native
+artifact for a specific architecture and platform. The second step is conducted locally in
+a [Docker](https://www.docker.com) container for a hermetic release process.
 
 ### Pre-requisites
 
@@ -36,7 +36,7 @@ a [Docker](https://www.docker.com) container for a more hermetic process.
     account does not have permissions, then you'll need to ask someone who does
     to [file a ticket](https://issues.sonatype.org/) to add to the permissions
     ([sample ticket](https://issues.sonatype.org/browse/MVNCENTRAL-1637)).
--   An account at [bintray.com](https://bintray.com) that has permissions to
+-   Optionally, an account at [bintray.com](https://bintray.com) that has permissions to
     update the [tensorflow repository](https://bintray.com/google/tensorflow).
     If your account does not have permissions, then you'll need to ask one of
     the [organization administrators](https://bintray.com/google) to give you
@@ -51,56 +51,82 @@ a [Docker](https://www.docker.com) container for a more hermetic process.
 
 #### Major or minor release
 
-1.  Clone a clean version of the
+1.  Get a clean version of the source code by cloning the
     [TensorFlow Java GitHub repository](https://github.com/tensorflow-java)
-
-2.  Switch to a new branch named to the version of the release (only major and minor digits), prefixed
-    by the letter `r`. For example, for releasing 1.0.0, `git checkout -b `r1.0`
-
-3.  Update the version of the Maven artifacts in the branch to match the three-digit version of the
-    release. Normally, that should result in removing the suffix `-SNAPSHOT` of the actual version of
-    the master branch. This could be done using the Maven version plugin: `mvn versions:use-releases`
-    (it is always possible to use `mvn versions:set` to force a specific version).
-
-4.  Commit the changes and push the new branch to the GitHub repository.
+    ```
+    git clone https://github.com/tensorflow/java
+    ```
+2.  Create a new branch for the release named `r<MajorVersion>.<MinorVersion>`
+    ```
+    git checkout -b r1.0
+    ```
+3.  Update the version of the Maven artifacts to the full version of the release
+    ```
+    mvn versions:set -DnewVersion=1.0.0
+    ``` 
+4.  Commit the changes and push the new branch to the GitHub repository
+    ```
+    git add .
+    git commit -m "Releasing 1.0.0"
+    git push --set-upstream upstream r1.0
+    ```
 
 #### Patch release
 
-1.  Clone a clean version of the
+1.  Get a clean version of the source code by cloning the
     [TensorFlow Java GitHub repository](https://github.com/tensorflow-java)
+    ```
+    git clone https://github.com/tensorflow/java
+    ```
+2.  Switch to the release branch of the version to patch
+    ```
+    git checkout r1.0
+    ```
+3.  Patch the code with your changes. For example, changes could be merged from another branch you
+    were working on or be applied directly to this branch when the required changes are minimal.
 
-2.  Switch to a release branch to patch. For example, for releasing 1.0.1, `git checkout `r1.0`
-
-3.  Update the version of the Maven artifacts in the branch to match the three-digit version of the
-    patched release. Normally, that should result in increasing the last digit of the latest version.
-    This could be done using the Maven version plugin: `mvn versions:use-next-releases`
-    (it is always possible to use `mvn versions:set` to force a specific version)
-
-4.  Commit the changes and push the branch to the GitHub repository.
+4.  Update the version of the Maven artifacts to the full version of the release
+    ```
+    mvn versions:set -DnewVersion=1.0.1
+    ``` 
+4.  Commit the changes and push the branch to the GitHub repository
+    ```
+    git add .
+    git commit -m "Releasing 1.0.1"
+    git push
+    ```
 
 ### Building native artifacts
 
 Once a release branch (i.e. a branch prefixed by `r`) is pushed on the repository, a workflow will
-automatically start in GitHub Action to build the native artifacts for all supported
-architures/platforms and upload them in a cloud storage for the next step (we use for actual cloud
-storage is the 's3://tensorflow-java/staging' AWS S3 bucket).
+automatically start in GitHub Actions to build the native artifacts for all supported
+architures/platforms and deploy them temporarily on OSSRH for staging.
 
 There is no user action required for this step other than watching the progress of the GitHub
-Action workflow and making sure that all steps have been completed successfully.
+Actions workflow and making sure that all steps have been completed successfully.
+
+#### Build native artifacts manually
+
+Some platforms cannot be build successfully on GitHub Actions, due to some limits to their resources
+(e.g. max 6 hours for a job). For this reasons, we need to build manually some of our artifacts on
+private servers. 
+
+To do so, follow the same steps as the [CI build](https://github.com/tensorflow/java/.github/workflows/ci.yml) 
+for the same platform and make sure to checkout the release branch and to provide your Sonatype credentials
+for temporary staging.
 
 ### Building and deploying all artifacts to Sonatype and Bintray
 
-1.  Create a file with your OSSRH credentials and
-    [Bintray API key](https://bintray.com/docs/usermanual/interacting/interacting_interacting.html#anchorAPIKEY)
-    (or place it in your existing `~/.m2/settings.xml`):
-
+1.  At the root of your TensorFlow Java copy, create a Maven settings.xml file with your OSSRH credentials and
+    [Bintray API key](https://bintray.com/docs/usermanual/interacting/interacting_interacting.html#anchorAPIKEY),
+    plus your GPG key passphrase:
     ```sh
     SONATYPE_USERNAME="your_sonatype.org_username_here"
     SONATYPE_PASSWORD="your_sonatype.org_password_here"
     BINTRAY_USERNAME="your_bintray_username_here"
     BINTRAY_API_KEY="your_bintray_api_key_here"
     GPG_PASSPHRASE="your_gpg_passphrase_here"
-    cat >/tmp/settings.xml <<EOF
+    cat > settings.xml <<EOF
     <settings>
       <servers>
         <server>
@@ -128,13 +154,19 @@ Action workflow and making sure that all steps have been completed successfully.
     </settings>
     EOF
     ```
+2.  Execute the `release.sh` script. This will deploy only on OSSRH by default. To enable Bintray
+    deployment as well, pass the environment variable DEPLOY_BINTRAY=true. All native artifacts 
+    previously temporarily staged by GitHub Actions will be fetched, signed and redeployed with 
+    all the other artifacts.
 
-2.  Run the `release.sh` script. This will deploy only on OSSRH by default. To enable Bintray
-    deployment as well, pass the environment variable DEPLOY_BINTRAY=true.
-
-    This script will fetch back all native artifacts previously uploaded in cloud storage by
-    the GitHub Action workflow so they can be signed and deployed with all the other artifacts.
-
+    The script takes in paramater the sequence number of the staging repository created in OSSRH
+    by the GitHub Actions workflow. You can retrieve this ID by looking in the staging repositories
+    in OSSRH console directly, or check at the output of the step `Create Staging Repository` of the
+    `prepare` job in the workflow execution, where the ID is printed.
+    ```
+    # Staging repository created: orgtensorflow-1100
+    sh release.sh 1100
+    ```
 3.  If the script above succeeds then the artifacts would have been uploaded to
     the private staging repository in Sonatype, and as unpublished artifacts in
     Bintray. After verifying the release, you should finalize or abort the
@@ -157,12 +189,29 @@ Action workflow and making sure that all steps have been completed successfully.
     - For Bintray details, refer to their guide on
       [managing uploaded content](https://bintray.com/docs/usermanual/uploads/uploads_managinguploadedcontent.html#_publishing).
 
-### Skip deploying to a repository
+#### Skip deploying to a repository
 
 Should you need, setting environment variables `DEPLOY_OSSRH=false` or
 `DEPLOY_BINTRAY=false` when calling `release.sh` will skip deploying to OSSRH or
 Bintray respectively. Note that snapshots are only uploaded to OSSRH, so you
 cannot skip deploying to OSSRH for a `-SNAPSHOT` version.
+
+### Finishing a release
+
+Go to GitHub and create a release tag at the release branch with a summary of what the version includes.
+
+#### Major or minor release
+
+1. In your local copy, checkout the master branch and increase the next snapshot version.
+   ```
+   mvn versions:set -DnewVersion=1.1.0-SNAPSHOT
+   ```
+2. Commit your changes and push the master branch to the GitHub repository
+   ```
+   git add .
+   git commit -m "Increase version for next iteration"
+   git push
+   ```
 
 ## References
 

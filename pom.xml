@@ -48,8 +48,8 @@
 
   <repositories>
     <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
+      <id>ossrh-snapshots</id>
+      <name>OSSRH Sonatype Snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <releases>
         <enabled>false</enabled>
@@ -61,8 +61,8 @@
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
+      <id>ossrh-snapshots</id>
+      <name>OSSRH Sonatype Snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <releases>
         <enabled>false</enabled>
@@ -104,7 +104,7 @@
 
   <profiles>
     <!--
-    Profile dev
+    Developing profile
         The 'dev' profile is used for local development or PR compilation check only.
         Here, we enable the `tensorflow-keras` module only under this profile, until
         it is mature enough for being deployed and distributed for the end users.
@@ -116,25 +116,38 @@
       </modules>
     </profile>
     <!--
-    Profile deploy
-        Build the Javadoc on deployment
+    Deploying profile
+        Build the Javadoc when deploying
     -->
     <profile>
-      <id>deploy</id>
+      <id>deploying</id>
       <properties>
         <maven.javadoc.skip>false</maven.javadoc.skip>
         <maven.source.skip>false</maven.source.skip>
       </properties>
     </profile>
     <!--
-    Profile release
+    Releasing profile
         Activate GPG signing on all built artifacts and build the Javadoc
     -->
     <profile>
-      <id>release</id>
+      <id>releasing</id>
       <properties>
         <gpg.skip>false</gpg.skip>
       </properties>
+      <repositories>
+        <repository>
+          <id>ossrh-staging</id>
+          <name>OSSRH Sonatype Staging</name>
+          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
     </profile>
     <!--
     Profile ossrh
@@ -150,7 +163,7 @@
         </snapshotRepository>
         <repository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
         </repository>
       </distributionManagement>
     </profile>

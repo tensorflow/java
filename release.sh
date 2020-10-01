@@ -18,22 +18,20 @@
 # Maven Central. See RELEASE.md for an explanation.
 
 cd $(dirname "$0")
-SETTINGS_XML="$1"
+STAGING_SEQ="$1"
 shift
 shift
 CMD="$*"
 
-if [[ -z "${SETTINGS_XML}" ]]
+if [[ -z "${STAGING_SEQ}" ]]
 then
-  SETTINGS_XML="$HOME/.m2/settings.xml"
-fi
-
-if [[ ! -f "${SETTINGS_XML}" ]]
-then
-  echo "No settings.xml (containing credentials for upload) found"
+  echo "Usage: ./release.sh <staging repository sequence number> [<cmd>]"
   exit 1
 fi
 
+# If release fails, debug with
+#   ./release.sh ${STAGING_SEQ} bash
+# To get a shell to poke around the maven artifacts with.
 if [[ -z "${CMD}" ]]
 then
   CMD="bash deploy.sh"
@@ -47,9 +45,9 @@ docker run \
   -e DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}" \
   -e DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}" \
   -e DEPLOY_LOCAL="${DEPLOY_LOCAL:-false}" \
+  -e STAGING_SEQ="${STAGING_SEQ}" \
   -e GPG_TTY="${GPG_TTY}" \
   -v ${PWD}:/tensorflow-java \
-  -v "${SETTINGS_XML}":/root/.m2/settings.xml \
   -v ${HOME}/.gnupg:/root/.gnupg \
   -w /tensorflow-java \
   -it \

@@ -23,48 +23,24 @@ set -e
 # environment variables can be set to skip either repository.
 DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}"
 DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}"
-DEPLOY_LOCAL="${DEPLOY_LOCAL:-false}"
-
 IN_CONTAINER="${IN_CONTAINER:-false}"
 
-if [[ "${DEPLOY_BINTRAY}" != "true" && "${DEPLOY_OSSRH}" != "true" && "${DEPLOY_LOCAL}" != "true" ]]; then
+if [[ "${DEPLOY_BINTRAY}" != "true" && "${DEPLOY_OSSRH}" != "true" ]]; then
   echo "Must deploy to at least one of Bintray, OSSRH or local" >&2
   exit 2
 fi
 
-clean() {
-  echo "Cleaning working directory..."
-  # Clean up any existing artifacts
-  mvn clean $MVN_OPTIONS -q
-}
+MVN_OPTIONS="-B -e --settings ${PWD}/settings.xml -Pdeploying"
 
-# Try to build and deploy.
-# If successfully deployed, clean.
-# If deployment fails, debug with
-#   ./release.sh ${TF_VERSION} ${SETTINGS_XML} bash
-# To get a shell to poke around the maven artifacts with.
-build_and_deploy_artifacts() {
-  # Deploy artifacts to local maven repository if requested
-  if [[ "${DEPLOY_LOCAL}" == "true" ]]; then
-    mvn install $MVN_OPTIONS
-  fi
-  # Deploy artifacts to ossrh if requested.
-  if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-    mvn deploy $MVN_OPTIONS -Possrh
-  fi
-  # Deploy artifacts to bintray if requested.
-  if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-    mvn deploy $MVN_OPTIONS -Pbintray
-  fi
-  # Clean up when everything works
-  # clean
-}
+#
+# Clean the working directory before doing anything
+#
+echo "Cleaning working directory..."
+mvn clean $MVN_OPTIONS -q -U
 
-MVN_OPTIONS="-B -e -U --settings settings.xml -Pdeploy"
-
-# Clean the working directory before doing anything else
-clean
-
+#
+# Extract deployed version from POM
+#
 echo "Parsing Maven configuration..."
 TF_VERSION=`mvn exec:exec $MVN_OPTIONS -q -N -Dexec.executable='echo' -Dexec.args="\\${project.version}"`
 if [ -z "${TF_VERSION}" ]; then
@@ -79,31 +55,55 @@ fi
 if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
   echo "* Bintray"
 fi
-if [[ "${DEPLOY_LOCAL}" == "true" ]]; then
-  echo "* Local"
-fi
 echo
 
+#
+# Validate the environment based on if we are deploying a snapshot or a release version
+#
+NATIVE_ARTIFACTS_REPO=ossrh
 if ! [[ $TF_VERSION = *-SNAPSHOT ]]; then
-  if ! $IN_CONTAINER; then
+  if [[ "${IN_CONTAINER}" != "true" ]]; then
     echo "Release must be executed from a Docker container, please make sure to invoke release.sh"
     exit 1
   fi
-  MVN_OPTIONS="$MVN_OPTIONS -Prelease"
+ if [[ -z "${STAGING_SEQ}" ]]; then
+    echo "Staging sequence is required for release"
+    exit 1
+  fi
+
+  # In release mode, fetch the native artifacts from the staging repository created by the CI build
+  MVN_OPTIONS="$MVN_OPTIONS -Preleasing -DstagingRepositoryId=orgtensorflow-${STAGING_SEQ}"
+  NATIVE_ARTIFACTS_REPO=ossrh-staging
+
   # gnupg2 is required for signing releases
   apt-get -qq update
   apt-get -qq install -y gnupg2
 fi
 
+#
+# Copy tensorflow-core-api dependencies for each supported platforms to our local maven tree,
+# so retrieve the native artifacts that have been build and uploaded by the build servers
+#
 echo "Downloading native artifacts from Maven repository..."
 for p in `find tensorflow-core -name tensorflow-core-platform* -type d -exec basename {} \;`; do
-  mvn dependency:get $MVN_OPTIONS -N -U -q -Possrh -DgroupId=org.tensorflow -DartifactId=$p -Dversion=$TF_VERSION
+  if [[ $p =~ tensorflow-core-platform(.*) ]]; then
+    # Remember each of our platform extension, we will it that when deploying the artifacts
+    PLATFORM_EXT=${BASH_REMATCH[1]}
+    if [[ -n $PLATFORM_EXT ]]; then
+      [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
+    fi
+    mvn dependency:copy-dependencies $MVN_OPTIONS -q -P$NATIVE_ARTIFACTS_REPO \
+        -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-api \
+        -DoutputDirectory=../../tensorflow-core/tensorflow-core-api/target -pl tensorflow-core/$p
+  fi
 done
 
-mkdir -p tensorflow-core/tensorflow-core-api/target
-for f in $HOME/.m2/repository/org/tensorflow/tensorflow-core-api/$TF_VERSION/tensorflow-core-api-$TF_VERSION-*.jar; do
+#
+# Feed the FILES,TYPES and CLASSIFIERS variables for the maven-deploy-plugin with our native artifacts
+# so that tensorflow-core-api can be deployed as a bundle
+#
+for f in tensorflow-core/tensorflow-core-api/target/tensorflow-core-api-$TF_VERSION-*.jar; do
   echo "Found native artifact: $f"
-  cp $f tensorflow-core/tensorflow-core-api/target/
   if [[ $f =~ tensorflow-core-api-$TF_VERSION-(.*).jar ]]; then
     [[ -n $FILES ]] && FILES=$FILES,$f || FILES=$f
     [[ -n $TYPES ]] && TYPES=$TYPES,jar || TYPES=jar
@@ -111,18 +111,42 @@ for f in $HOME/.m2/repository/org/tensorflow/tensorflow-core-api/$TF_VERSION/ten
   fi
 done
 
-MVN_OPTIONS="$MVN_OPTIONS -Dtensorflow.core.api.files=$FILES -Dtensorflow.core.api.types=$TYPES -Dtensorflow.core.api.classifiers=$CLASSIFIERS"
+MVN_DEPLOY_OPTIONS="$MVN_OPTIONS -Dtensorflow.core.api.files=$FILES -Dtensorflow.core.api.types=$TYPES -Dtensorflow.core.api.classifiers=$CLASSIFIERS"
 
-# Build other artifacts and push them all to the repositories
-build_and_deploy_artifacts
+#
+# Build and deploy the artifacts on OSSRH and/or Bintray
+# We need to do it manually for all non-default platforms, as they are not automatically included as
+# modules in the POM and depends on the javacpp.platform.extension property
+#
+mvn_all_platforms() {
+  local options="$1"
+  mvn $options
+  for p in $PLATFORM_EXTS; do
+    mvn $options -Djavacpp.platform.extension=$p -pl tensorflow-core/tensorflow-core-platform$p
+  done
+}
 
-echo "Uploaded to the staging repository"
-echo "After validating the release: "
 if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-  echo "* Login to https://oss.sonatype.org/#stagingRepositories"
-  echo "* Find the 'org.tensorflow' staging release and click either 'Release' to release or 'Drop' to abort"
+  mvn_all_platforms "deploy $MVN_DEPLOY_OPTIONS -Possrh"
 fi
+# Deploy artifacts to bintray if requested.
 if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-  echo "* Login to https://bintray.com/google/tensorflow/tensorflow"
-  echo "* Either 'Publish' unpublished items to release, or 'Discard' to abort"
+  mvn_all_platforms "deploy $MVN_DEPLOY_OPTIONS -Pbintray"
 fi
+
+echo
+if [[ $TF_VERSION = *-SNAPSHOT ]]; then
+  echo "Uploaded to snapshot repository"
+else
+  echo "Uploaded to the staging repository"
+  echo "After validating the release: "
+  if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
+    echo "* Login to https://oss.sonatype.org/#stagingRepositories"
+    echo "* Find the 'org.tensorflow' staging release and click either 'Release' to release or 'Drop' to abort"
+  fi
+  if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
+    echo "* Login to https://bintray.com/google/tensorflow/tensorflow"
+    echo "* Either 'Publish' unpublished items to release, or 'Discard' to abort"
+  fi
+fi
+echo

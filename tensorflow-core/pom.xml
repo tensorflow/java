@@ -63,23 +63,17 @@
   </properties>
 
   <profiles>
+    <!--
+    Include a single platform module in a Maven execution.
+      This is the default behaviour. Since platform modules relies on the value of the
+      javacpp.platform.extension, only one of them can be build in a single execution.
+    -->
     <profile>
       <id>javacpp-platform-extension-default</id>
       <activation>
         <property>
-          <name>!javacpp.platform.extension</name>
-        </property>
-      </activation>
-      <modules>
-        <module>tensorflow-core-platform</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>javacpp-platform-extension-custom</id>
-      <activation>
-        <property>
           <name>javacpp.platform.extension</name>
+          <value>!all</value>
         </property>
       </activation>
       <modules>
@@ -87,9 +81,25 @@
       </modules>
     </profile>
 
+    <!--
+    Include all platform modules for a Maven execution.
+      Some plugin goals, like versions-maven-plugins:set, will apply changes to all modules found in
+      the aggregator POM. Since tensorflow-core-platform-* modules are not declared explicitly, they
+      will not be intercepted by these plugins.
+      While this profile can be activated explicitly to include all platforms modules in a single
+      Maven execution, just declaring them in its list of modules will expose them to the aggregator
+      and plugins like versions-maven-plugin will automatically pick them up.
+    -->
     <profile>
-      <id>deploy</id>
+      <id>javacpp-platform-extension-all</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.extension</name>
+          <value>all</value>
+        </property>
+      </activation>
       <modules>
+        <module>tensorflow-core-platform</module>
         <module>tensorflow-core-platform-mkl</module>
         <module>tensorflow-core-platform-mkl-gpu</module>
         <module>tensorflow-core-platform-gpu</module>
