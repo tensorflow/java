@@ -47,24 +47,6 @@ public class Softmax<T extends TNumber> extends Activation<T> {
   /**
    * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
    * the last dimension.
-   */
-  public Softmax() {
-    this(AXIS_DEFAULT);
-  }
-
-  /**
-   * Creates a Softmax activation
-   *
-   * @param axis The dimension softmax would be performed on.
-   */
-  public Softmax(int axis) {
-    super();
-    this.axis = axis;
-  }
-
-  /**
-   * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
-   * the last dimension.
    *
    * @param tf the TensorFlow Ops
    */
@@ -88,8 +70,6 @@ public class Softmax<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type of if the input a
-   *     one dimensional
    */
   @Override
   public Operand<T> call(Operand<T> input) {
@@ -101,16 +81,12 @@ public class Softmax<T extends TNumber> extends Activation<T> {
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {
       return tf.nn.softmax(input);
-    } else if (numDimensions > 2) {
+    } else {
       Operand<T> e =
           tf.math.exp(
               tf.math.sub(input, tf.reduceMax(input, tf.constant(axis), ReduceMax.keepDims(true))));
       Operand<T> s = tf.reduceSum(input, tf.constant(axis), ReduceSum.keepDims(true));
       return tf.math.div(e, s);
-    } else {
-      throw new IllegalArgumentException(
-          String.format(
-              "Cannot apply softmax to a tensor that is 1D. Received input %s", shape.toString()));
     }
   }
 }

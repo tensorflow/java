@@ -42,11 +42,6 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Sigmoid<T extends TNumber> extends Activation<T> {
 
-  /** Creates a Sigmoid activation. */
-  public Sigmoid() {
-    super();
-  }
-
   /**
    * Creates a Sigmoid activation.
    *

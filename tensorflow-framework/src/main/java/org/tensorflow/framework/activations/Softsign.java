@@ -35,11 +35,6 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Softsign<T extends TNumber> extends Activation<T> {
 
-  /** Creates a Softsign activation. */
-  public Softsign() {
-    super();
-  }
-
   /**
    * Creates a Softsign activation.
    *

@@ -33,11 +33,6 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Linear<U extends TNumber> extends Activation<U> {
 
-  /** Creates a linear activation. */
-  public Linear() {
-    super();
-  }
-
   /**
    * Creates a linear activation.
    *

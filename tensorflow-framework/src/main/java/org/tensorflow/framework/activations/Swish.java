@@ -48,17 +48,6 @@ public class Swish<T extends TNumber> extends Activation<T> {
    * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
    * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
    * unbounded above and bounded below.
-   */
-  public Swish() {
-    super();
-  }
-
-  /**
-   * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
-   *
-   * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
-   * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
-   * unbounded above and bounded below.
    *
    * @param tf the TensorFlow Ops
    */
@@ -73,7 +62,7 @@ public class Swish<T extends TNumber> extends Activation<T> {
       throw new IllegalArgumentException(
           "Must be a Floating Point DataType: " + input.asOutput().dataType());
     }
-    // TODO What about the "grad" return from python tensorflow impl?
+    // TODO Python Keras returns a "grad", which is an optimization not implmented in Java.
     return tf.math.mul(input, tf.math.sigmoid(input));
   }
 }

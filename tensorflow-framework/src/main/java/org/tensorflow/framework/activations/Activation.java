@@ -31,9 +31,6 @@ public abstract class Activation<T extends TNumber> {
   /** The TensorFlow Ops */
   protected Ops tf;
 
-  /** Creates the abstract class for an Activation */
-  protected Activation() {}
-
   /**
    * Creates the abstract class for an Activation
    *

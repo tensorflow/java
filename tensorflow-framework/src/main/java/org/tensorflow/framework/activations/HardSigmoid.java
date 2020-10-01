@@ -46,11 +46,6 @@ import org.tensorflow.types.family.TNumber;
  */
 public class HardSigmoid<T extends TNumber> extends Activation<T> {
 
-  /** Creates Hard sigmoid activation. */
-  public HardSigmoid() {
-    super();
-  }
-
   /**
    * Creates Hard sigmoid activation.
    *

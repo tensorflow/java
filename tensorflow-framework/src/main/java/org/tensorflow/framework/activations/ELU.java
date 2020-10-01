@@ -56,22 +56,6 @@ public class ELU<T extends TNumber> extends Activation<T> {
   /** A scalar, slope of negative section. */
   private final double alpha;
 
-  /** Creates a new ELU with alpha={@link #ALPHA_DEFAULT}. */
-  public ELU() {
-    this(ALPHA_DEFAULT);
-  }
-
-  /**
-   * Creates a new ELU
-   *
-   * @param alpha A scalar, slope of negative section. It controls the value to which an ELU
-   *     saturates for negative net inputs.
-   */
-  public ELU(double alpha) {
-    super();
-    this.alpha = alpha;
-  }
-
   /**
    * Creates a new ELU with alpha={@link #ALPHA_DEFAULT}.
    *

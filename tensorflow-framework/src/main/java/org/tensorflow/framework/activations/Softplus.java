@@ -34,11 +34,6 @@ import org.tensorflow.types.family.TNumber;
  */
 public class Softplus<T extends TNumber> extends Activation<T> {
 
-  /** Creates a Softplus activation function. */
-  public Softplus() {
-    super();
-  }
-
   /**
    * Creates a Softplus activation function.
    *
