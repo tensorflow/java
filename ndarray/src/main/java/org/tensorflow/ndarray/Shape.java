@@ -52,10 +52,10 @@ public final class Shape {
   /**
    * Create a Shape representing a scalar or an N-dimensional value.
    *
-   * <p>Creates a Shape representing a scalar or an N-dimensional value (N being at least 1),
-   * with the provided size for each dimension. A -1 indicates that the size of the corresponding
-   * dimension is unknown. If no sizes are provided, a Shape representing a scalar is created.
-   * For example:
+   * <p>Creates a Shape representing a scalar or an N-dimensional value (N being at least 1), with
+   * the provided size for each dimension. A -1 indicates that the size of the corresponding
+   * dimension is unknown. If no sizes are provided, a Shape representing a scalar is created. For
+   * example:
    *
    * <pre>{@code
    * // A 2-element vector.
@@ -84,11 +84,11 @@ public final class Shape {
   /**
    * Returns the total number of elements a Tensor with this Shape would have.
    *
-   * <p>If {@link Shape#isUnknown()} is true or {@link Shape#hasUnknownDimension()} is true,
-   * {@link Shape#UNKNOWN_SIZE} is returned.
+   * <p>If {@link Shape#isUnknown()} is true or {@link Shape#hasUnknownDimension()} is true, {@link
+   * Shape#UNKNOWN_SIZE} is returned.
    *
    * @return The total number of elements a Tensor with this shape would have if it can be
-   * calculated, else {@link Shape#UNKNOWN_SIZE}.
+   *     calculated, else {@link Shape#UNKNOWN_SIZE}.
    */
   public long size() {
     if (size == null) {
@@ -104,12 +104,11 @@ public final class Shape {
    * an unknown size, {@link Shape#UNKNOWN_SIZE} is returned.
    *
    * @param i the index of the dimension to get the size for. If this Shape has a known number of
-   *          dimensions, it must be < {@link Shape#numDimensions()}. The index may be negative,
-   *          in which case the position is counted from the end of the shape. E.g.:
-   *          {@code size(-1)} returns the size of the last dimension, {@code size(-2)} the size of
-   *          the second to last dimension etc.
+   *     dimensions, it must be < {@link Shape#numDimensions()}. The index may be negative, in which
+   *     case the position is counted from the end of the shape. E.g.: {@code size(-1)} returns the
+   *     size of the last dimension, {@code size(-2)} the size of the second to last dimension etc.
    * @return The size of the dimension with the given index if known, {@link Shape#UNKNOWN_SIZE}
-   *         otherwise.
+   *     otherwise.
    */
   public long size(int i) {
     if (dimensionSizes == null) {
@@ -163,8 +162,8 @@ public final class Shape {
   }
 
   /**
-   * Returns a defensive copy of the this Shape's axes. Changes to the returned array to not
-   * change this Shape's state. Returns null if {@link Shape#isUnknown()} is true.
+   * Returns a defensive copy of the this Shape's axes. Changes to the returned array to not change
+   * this Shape's state. Returns null if {@link Shape#isUnknown()} is true.
    */
   public long[] asArray() {
     if (this.dimensionSizes == null) {
@@ -182,15 +181,17 @@ public final class Shape {
   /**
    * Equals implementation for Shapes. Two Shapes are considered equal iff:
    *
-   * <p><ul>
-   * <li>the number of dimensions is defined and equal for both
-   * <li>the size of each dimension is defined and equal for both
+   * <p>
+   *
+   * <ul>
+   *   <li>the number of dimensions is defined and equal for both
+   *   <li>the size of each dimension is defined and equal for both
    * </ul>
    *
    * <p>If either Shape has unknown dimensions (even if they are the same in both) or if either
-   * shape has an unknown number of dimensions (even if both return {@code true} for
-   * {@link Shape#isUnknown()}), they are not considered equal! However, a shape will always
-   * equal itself, even if it is unknown or contains unknown dimensions.
+   * shape has an unknown number of dimensions (even if both return {@code true} for {@link
+   * Shape#isUnknown()}), they are not considered equal! However, a shape will always equal itself,
+   * even if it is unknown or contains unknown dimensions.
    */
   @Override
   public boolean equals(Object obj) {
@@ -229,17 +230,17 @@ public final class Shape {
   }
 
   /**
-   * Returns an n-dimensional Shape with the dimensions matching the first n dimensions
-   * of this shape
+   * Returns an n-dimensional Shape with the dimensions matching the first n dimensions of this
+   * shape
    *
    * @param n the number of leading dimensions to get, must be <= than {@link Shape#numDimensions()}
-   * @return an n-dimensional Shape with the first n dimensions matching the first n dimensions
-   * of this Shape
+   * @return an n-dimensional Shape with the first n dimensions matching the first n dimensions of
+   *     this Shape
    */
   public Shape take(int n) {
     if (n > numDimensions()) {
-      throw new ArrayIndexOutOfBoundsException("Cannot take " + n +
-              " dimensions, shape has only " + numDimensions() + ".");
+      throw new ArrayIndexOutOfBoundsException(
+          "Cannot take " + n + " dimensions, shape has only " + numDimensions() + ".");
     }
     long[] newDimensions = new long[n];
     System.arraycopy(dimensionSizes, 0, newDimensions, 0, n);
@@ -253,18 +254,18 @@ public final class Shape {
   }
 
   /**
-   * Returns an n-dimensional Shape with the dimensions matching the last n dimensions
-   * of this Shape.
+   * Returns an n-dimensional Shape with the dimensions matching the last n dimensions of this
+   * Shape.
    *
-   * @param n the number of trailing dimensions to get, must be <= than
-   *          {@link Shape#numDimensions()}
+   * @param n the number of trailing dimensions to get, must be <= than {@link
+   *     Shape#numDimensions()}
    * @return an n-dimensional shape with the dimensions matching the last n dimensions of this
-   *         Shape, never null
+   *     Shape, never null
    */
   public Shape takeLast(int n) {
     if (n > numDimensions()) {
-      throw new ArrayIndexOutOfBoundsException("Cannot take last " + n +
-              " dimensions, shape has only " + numDimensions() + ".");
+      throw new ArrayIndexOutOfBoundsException(
+          "Cannot take last " + n + " dimensions, shape has only " + numDimensions() + ".");
     }
     long[] newDimensions = new long[n];
     System.arraycopy(dimensionSizes, numDimensions() - n, newDimensions, 0, n);
@@ -276,8 +277,8 @@ public final class Shape {
    * {@link Shape#isUnknown()} must be {@code false}.
    *
    * @param firstDimension the dimension to prepend
-   * @return a new shape with the given dimension first, followed by this Shape's dimensions,
-   *         never null
+   * @return a new shape with the given dimension first, followed by this Shape's dimensions, never
+   *     null
    */
   public Shape prepend(long firstDimension) {
     long[] newDimensions = new long[dimensionSizes.length + 1];
@@ -288,8 +289,8 @@ public final class Shape {
   }
 
   /**
-   * Returns a new Shape, with a new last dimension added. In order for this call to succeed,
-   * {@link Shape#isUnknown()} must be {@code false}.
+   * Returns a new Shape, with a new last dimension added. In order for this call to succeed, {@link
+   * Shape#isUnknown()} must be {@code false}.
    *
    * @param lastDimension the dimension to append
    * @return a new Shape with this Shape's dimensions followed by the given dimension, never null
@@ -303,38 +304,36 @@ public final class Shape {
   }
 
   /**
-   * Returns a new Shape, with another Shape's dimensions prepended.
-   * For both this Shape and the other Shape, {@link Shape#isUnknown()} must return false.
-   * E.g. {@code Shape.of(3,4).prepend(Shape.of(1,2)) => Shape.of(1,2,3,4) }
+   * Returns a new Shape, with another Shape's dimensions prepended. For both this Shape and the
+   * other Shape, {@link Shape#isUnknown()} must return false. E.g. {@code
+   * Shape.of(3,4).prepend(Shape.of(1,2)) => Shape.of(1,2,3,4) }
    *
    * @param other another Shape, must not be {@code null}, must not be unknown
-   * @return A new Shape consisting of the given Shapes's dimensions followed by this Shape's
-   *         dimensions, never null
+   * @return A new Shape consisting of the given Shape's dimensions followed by this Shape's
+   *     dimensions, never null
    */
   public Shape prepend(Shape other) {
     long[] newDimensions = new long[other.dimensionSizes.length + dimensionSizes.length];
-    System.arraycopy(other.dimensionSizes, 0,
-                     newDimensions, 0, other.dimensionSizes.length);
-    System.arraycopy(dimensionSizes, 0,
-                     newDimensions, other.dimensionSizes.length, dimensionSizes.length);
+    System.arraycopy(other.dimensionSizes, 0, newDimensions, 0, other.dimensionSizes.length);
+    System.arraycopy(
+        dimensionSizes, 0, newDimensions, other.dimensionSizes.length, dimensionSizes.length);
     return Shape.of(newDimensions);
   }
 
   /**
-   * Returns a new Shape, with another Shapes' dimensions appended.
-   * For both this Shape and the other Shape, {@link Shape#isUnknown()} must return false.
-   * E.g. @code Shape.of(3,4).append(Shape.of(1,2)) => Shape.of(3,4,1,2) }
+   * Returns a new Shape, with another Shapes' dimensions appended. For both this Shape and the
+   * other Shape, {@link Shape#isUnknown()} must return false. E.g. @code
+   * Shape.of(3,4).append(Shape.of(1,2)) => Shape.of(3,4,1,2) }
    *
    * @param other another Shape, must not be {@code null}, must not be unknown
-   * @return A new Shape consisting of this Shapes's dimensions followed by the given Shape's
-   *         dimensions
+   * @return A new Shape consisting of this Shape's dimensions followed by the given Shape's
+   *     dimensions
    */
   public Shape append(Shape other) {
     long[] newDimensions = new long[dimensionSizes.length + other.dimensionSizes.length];
-    System.arraycopy(dimensionSizes, 0,
-            newDimensions, 0, dimensionSizes.length);
-    System.arraycopy(other.dimensionSizes, 0,
-            newDimensions, dimensionSizes.length, other.dimensionSizes.length);
+    System.arraycopy(dimensionSizes, 0, newDimensions, 0, dimensionSizes.length);
+    System.arraycopy(
+        other.dimensionSizes, 0, newDimensions, dimensionSizes.length, other.dimensionSizes.length);
     return Shape.of(newDimensions);
   }
 
@@ -350,5 +349,75 @@ public final class Shape {
       computedSize *= dimensionSize;
     }
     return computedSize;
+  }
+
+  /**
+   * Determines whether another shape is compatible with this one.
+   *
+   * <p>
+   *
+   * <p>Two possibly-partially-defined shapes are compatible if there exists a fully-defined shape
+   * that both shapes can represent. Thus, compatibility allows the shape inference code to reason
+   * about partially-defined shapes. For example:
+   *
+   * <ul>
+   *   <li><code>Shape.unknown()</code> is compatible with all shapes.
+   *   <li><code>Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> is compatible with all two-dimensional
+   *       shapes, such as <code>Shape(32, 784)</code>, and also <code>Shape.unknown()</code>. It is
+   *       not compatible with, for example, <code>Shape(UNKNOWN_SIZE)</code> or <code>
+   *       Shape(UNKNOWN_SIZE, UNKNOWN_SIZE, UNKNOWN_SIZE)</code>.
+   *   <li><code>Shape(32, UNKNOWN_SIZE)</code> is compatible with all two-dimensional shapes with
+   *       size 32 in the 0th dimension, and also <code>Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> and
+   *       <code>Shape.unknown()</code>. It is not compatible with, for example, <code>Shape(32)
+   *       </code>, <code>Shape(32, UNKNOWN_SIZE, 1)</code> or <code>Shape(64, UNKNOWN_SIZE)</code>.
+   *   <li><code>Shape(32, 784)</code> is compatible with itself, and also <code>
+   *       Shape(32, UNKNOWN_SIZE)</code>, <code>Shape(UNKNOWN_SIZE, 784)</code>, <code>
+   *       Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> and <code>Shape.unknown()</code>. It is not
+   *       compatible with, for example, <code>Shape(32, 1, 784)</code> or <code>Shape(UNKNOWN_SIZE)
+   *       </code>.
+   * </ul>
+   *
+   * <p>The compatibility relation is reflexive and symmetric, but not transitive. For example,
+   * <code>Shape(32, 784)</code> is compatible with <code>Shape.unknown()</code>, and <code>
+   * Shape.unknown()</code> is compatible with <code>Shape(4, 4)</code>, but <code>Shape(32, 784)
+   * </code> is not compatible with <code>Shape(4, 4)</code>.
+   *
+   * <p>Compatibility is not the same as broadcasting. Compatible shapes must have the same number
+   * of dimensions and for each dimension pair, one dimension has to equal the other dimensions or
+   * at least one of the dimensions in the pair has to be UNKNOWN_SIZE.
+   *
+   * <p>Broadcasting allows different dimensions, but paired dimensions have to either be equal, or
+   * one dimension must be 1. If one shape has less dimensions than another shape, the smaller shape
+   * is "stretched" with dimensions of 1.
+   *
+   * @param shape The other shape
+   * @return true, if the two shapes are compatible.
+   */
+  public boolean isCompatibleWith(Shape shape) {
+    if (!this.isUnknown() && !shape.isUnknown()) {
+      if (numDimensions() != shape.numDimensions()) {
+        return false;
+      }
+      for (int i = 0; i < numDimensions(); i++) {
+        if (!isCompatible(size(i), shape.size(i))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Test to see if two shape dimensions are compatible.
+   *
+   * <p>The dimensions are compatible if either dimension is <code>Shape.UNKNOWN_SIZE</code> or both
+   * dimensions are equal
+   *
+   * @param dim the first dimension
+   * @param otherDim the second dimension
+   * @return true, if both dimensions are compatible
+   */
+  public static boolean isCompatible(long dim, long otherDim) {
+    return dim == Shape.UNKNOWN_SIZE || otherDim == Shape.UNKNOWN_SIZE || dim == otherDim;
   }
 }

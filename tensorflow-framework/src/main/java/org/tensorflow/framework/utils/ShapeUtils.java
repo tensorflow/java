@@ -124,73 +124,6 @@ public class ShapeUtils {
   }
 
   /**
-   * Determines whether two shapes are compatible.
-   *
-   * <p>
-   *
-   * <p>Two possibly-partially-defined shapes are compatible if there exists a fully-defined shape
-   * that both shapes can represent. Thus, compatibility allows the shape inference code to reason
-   * about partially-defined shapes. For example:
-   *
-   * <ul>
-   *   <li><code>Shape.unknown()</code> is compatible with all shapes.
-   *   <li><code>Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> is compatible with all two-dimensional
-   *       shapes, such as <code>Shape(32, 784)</code>, and also <code>Shape.unknown()</code>. It is
-   *       not compatible with, for example, <code>Shape(UNKNOWN_SIZE)</code> or <code>
-   *       Shape(UNKNOWN_SIZE, UNKNOWN_SIZE, UNKNOWN_SIZE)</code>.
-   *   <li><code>Shape(32, UNKNOWN_SIZE)</code> is compatible with all two-dimensional shapes with
-   *       size 32 in the 0th dimension, and also <code>Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> and
-   *       <code>Shape.unknown()</code>. It is not compatible with, for example, <code>Shape(32)
-   *       </code>, <code>Shape(32, UNKNOWN_SIZE, 1)</code> or <code>Shape(64, UNKNOWN_SIZE)</code>.
-   *   <li><code>Shape(32, 784)</code> is compatible with itself, and also <code>
-   *       Shape(32, UNKNOWN_SIZE)</code>, <code>Shape(UNKNOWN_SIZE, 784)</code>, <code>
-   *       Shape(UNKNOWN_SIZE, UNKNOWN_SIZE)</code> and <code>Shape.unknown()</code>. It is not
-   *       compatible with, for example, <code>Shape(32, 1, 784)</code> or <code>Shape(UNKNOWN_SIZE)
-   *       </code>.
-   * </ul>
-   *
-   * <p>The compatibility relation is reflexive and symmetric, but not transitive. For example,
-   * <code>Shape(32, 784)</code> is compatible with <code>Shape.unknown()</code>, and <code>
-   * Shape.unknown()</code> is compatible with <code>Shape(4, 4)</code>, but <code>Shape(32, 784)
-   * </code> is not compatible with <code>Shape(4, 4)</code>.
-   *
-   * <p>Compatibility is not the same as broadcasting. Compatible shapes must have the same number
-   * of dimensions and for each dimension pair, one dimension has to equal the other dimensions or
-   * at least one of the dimensions in the pair has to be UNKNOWN_SIZE.
-   *
-   * <p>Broadcasting allows different dimensions, but paired dimensions have to either be equal, or
-   * one dimension must be 1. If one shape has less dimensions than another shape, the smaller shape
-   * is "stretched" with dimensions of 1. See {@link org.tensorflow.op.Ops#broadcastTo}.
-   *
-   * @param a The first shape
-   * @param b The second shape
-   * @return true, if the two shapes are compatible.
-   */
-  public static boolean isCompatibleWith(Shape a, Shape b) {
-    if (isUnknownShape(a) && isUnknownShape(b)) {
-      if (a.numDimensions() != b.numDimensions()) {
-        return false;
-      }
-      for (int i = 0; i < a.numDimensions(); i++) {
-        if (!isCompatible(a.size(i), b.size(i))) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Determines if a shape is an unknown shape as provided in <code>Shape.unknown()</code>.
-   *
-   * @param a the shape to test.
-   * @return true if the shape is an unknown shape
-   */
-  public static boolean isUnknownShape(Shape a) {
-    return a.equals(Shape.unknown());
-  }
-
-  /**
    * Reduces the shape by eliminating trailing Dimensions.
    *
    * <p>The last dimension, specified by axis, will be a product of all remaining dimensions
@@ -214,19 +147,5 @@ public class ShapeUtils {
     }
     newArray[axis - 1] = prod;
     return Shape.of(newArray);
-  }
-
-  /**
-   * Test to see if two shape dimensions are compatible.
-   *
-   * <p>The dimensions are compatible if either dimension is <code>Shape.UNKNOWN_SIZE</code> or both
-   * dimensions are equal
-   *
-   * @param dim the first dimension
-   * @param otherDim the second dimension
-   * @return true, if both dimensions are compatible
-   */
-  public static boolean isCompatible(long dim, long otherDim) {
-    return dim == Shape.UNKNOWN_SIZE || otherDim == Shape.UNKNOWN_SIZE || dim == otherDim;
   }
 }
