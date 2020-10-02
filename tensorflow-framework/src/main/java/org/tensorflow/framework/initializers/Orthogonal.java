@@ -94,18 +94,18 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
           "The tensor to initialize must be at least two-dimensional, got "
               + dimsShape.numDimensions());
     }
-    long num_rows = 1;
+    long numRows = 1;
     int i = 0;
-    for (; i < dimsShape.numDimensions() - 1; i++) num_rows *= dimsShape.size(i);
-    long num_cols = dimsShape.size(i);
-    Shape flat_shape = Shape.of(Math.max(num_rows, num_cols), Math.min(num_rows, num_cols));
+    for (; i < dimsShape.numDimensions() - 1; i++) numRows *= dimsShape.size(i);
+    long numCols = dimsShape.size(i);
+    Shape flatShape = Shape.of(Math.max(numRows, numCols), Math.min(numRows, numCols));
     long[] seeds = {seed, 0};
     @SuppressWarnings("unchecked")
     DataType<U> numdType = (DataType<U>) dtype;
     @SuppressWarnings("unchecked")
     Operand<T> op =
         (Operand<T>)
-            tf.random.statelessRandomNormal(tf.constant(flat_shape), tf.constant(seeds), numdType);
+            tf.random.statelessRandomNormal(tf.constant(flatShape), tf.constant(seeds), numdType);
 
     Qr.Options qrOptions = Qr.fullMatrices(false);
     Qr<T> qrOp = tf.linalg.qr(op, qrOptions);
@@ -114,7 +114,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
     Operand<T> diagOp =
         tf.linalg.matrixDiagPart(ro, tf.constant(0), tf.dtypes.cast(tf.constant(0), dtype));
     Operand<T> qop = tf.math.mul(qo, tf.math.sign(diagOp));
-    if (num_rows < num_cols) qop = tf.linalg.transpose(qop, null);
+    if (numRows < numCols) qop = tf.linalg.transpose(qop, null);
 
     return tf.math.mul(qop, tf.dtypes.cast(tf.constant(this.gain), dtype));
   }

@@ -75,24 +75,24 @@ public class Identity<T extends TType> extends BaseInitializer<T> {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
     }
     boolean isSquare = shape.size(0) == shape.size(1);
-    long diag_size = Math.min(shape.size(0), shape.size(1));
-    Shape diagShape = Shape.of(diag_size);
+    long diagSize = Math.min(shape.size(0), shape.size(1));
+    Shape diagShape = Shape.of(diagSize);
 
     Operand<T> op;
     Operand<T> zero = tf.dtypes.cast(tf.constant(0), dtype);
-    Operand<T> diag_ones =
+    Operand<T> diagOnes =
         tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), dtype));
     if (isSquare) {
       op =
           tf.linalg.matrixDiag(
-              diag_ones,
+              diagOnes,
               tf.constant(0), // don't cast here, expecting TInt32
               tf.constant((int) shape.size(0)),
               tf.constant((int) shape.size(1)),
               zero);
     } else {
-      Operand<T> zero_matrix = tf.zeros(dims, dtype);
-      op = tf.linalg.matrixSetDiag(zero_matrix, diag_ones, tf.constant(0));
+      Operand<T> zeroMatrix = tf.zeros(dims, dtype);
+      op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 
     return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), dtype));

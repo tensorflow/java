@@ -166,12 +166,12 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
       fanIn = dims[0];
       fanOut = dims[1];
     } else {
-      double receptive_field_size = 1.;
+      double receptiveFieldSize = 1.;
       for (int i = dims.length - 2; i >= 0; i--) {
-        receptive_field_size *= dims[i];
+        receptiveFieldSize *= dims[i];
       }
-      fanIn = dims[dims.length - 2] * receptive_field_size;
-      fanOut = dims[dims.length - 1] * receptive_field_size;
+      fanIn = dims[dims.length - 2] * receptiveFieldSize;
+      fanOut = dims[dims.length - 1] * receptiveFieldSize;
     }
 
     return new double[] {fanIn, fanOut};
