@@ -21,6 +21,8 @@
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
+    <deploy.repository.id>${project.distributionManagement.snapshotRepository.id}</deploy.repository.id>
+    <deploy.repository.url>${project.distributionManagement.snapshotRepository.url}</deploy.repository.url>
   </properties>
 
   <dependencies>
@@ -145,8 +147,8 @@
                   <types>${tensorflow.core.api.types}</types>
                   <classifiers>${tensorflow.core.api.classifiers}</classifiers>
                   <pomFile>pom.xml</pomFile>
-                  <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
-                  <url>${project.distributionManagement.snapshotRepository.url}</url>
+                  <repositoryId>${deploy.repository.id}</repositoryId>
+                  <url>${deploy.repository.url}</url>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>${project.artifactId}</artifactId>
                   <version>${project.version}</version>
@@ -158,6 +160,17 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <!--
+    Releasing Profile
+      Make sure the deploy-file goal picks the staging repository for release deployment
+    -->
+    <profile>
+      <id>releasing</id>
+      <properties>
+        <deploy.repository.id>${project.distributionManagement.repository.id}</deploy.repository.id>
+        <deploy.repository.url>${project.distributionManagement.repository.url}</deploy.repository.url>
+      </properties>
     </profile>
   </profiles>
 
