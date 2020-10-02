@@ -85,7 +85,7 @@ public class Softmax<T extends TNumber> extends Activation<T> {
       Operand<T> e =
           tf.math.exp(
               tf.math.sub(input, tf.reduceMax(input, tf.constant(axis), ReduceMax.keepDims(true))));
-      Operand<T> s = tf.reduceSum(input, tf.constant(axis), ReduceSum.keepDims(true));
+      Operand<T> s = tf.reduceSum(e, tf.constant(axis), ReduceSum.keepDims(true));
       return tf.math.div(e, s);
     }
   }
