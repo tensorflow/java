@@ -44,7 +44,7 @@ public class VarianceScalingTest {
 
   /** Test of call method, of class VarianceScaling. */
   @Test
-  public void testCallFloat_1_FAN_IN_TRUNCATED_NORMAL() {
+  public void testCallFloat1FanInTruncatedNormal() {
     float[] expected = {-0.52388954F, -0.29329166F, -0.07872587F, -0.31851602F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -63,7 +63,7 @@ public class VarianceScalingTest {
   }
 
   @Test
-  public void testCallDouble_1_FAN_IN_TRUNCATED_NORMAL() {
+  public void testCallDouble1FanInTruncatedNormal() {
     double[] expected = {
       1.4971264721246893, -1.2488522307109322, -0.5409677352523339, 0.4871390504288623
     };
@@ -85,7 +85,7 @@ public class VarianceScalingTest {
 
   /** Test of call method, of class VarianceScaling. */
   @Test
-  public void testCallFloat_1_FAN_IN_NORMAL() {
+  public void testCallFloat1FanInNormal() {
     float[] expected = {-0.46082667F, -0.25798687F, -0.06924929F, -0.28017485F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -104,7 +104,7 @@ public class VarianceScalingTest {
   }
 
   @Test
-  public void testCalltestSoftmaxDouble_1_FAN_IN_NORMAL() {
+  public void testCalltestSoftmaxDouble1FanInNormal() {
     double[] expected = {
       1.3169108626945392, -1.0985224689731887, -0.13536536217837225, -1.698770780615686
     };
@@ -126,7 +126,7 @@ public class VarianceScalingTest {
 
   /** Test of call method, of class VarianceScaling. */
   @Test
-  public void testCalltestSoftmaxFloat_1_FAN_IN_UNIFORM() {
+  public void testCalltestSoftmaxFloat1FanInUNIFORM() {
     float[] expected = {0.9266439F, 0.8190767F, 1.1268647F, 0.6596042F};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -141,7 +141,7 @@ public class VarianceScalingTest {
   }
 
   @Test
-  public void testCalltestSoftmaxDouble_1_FAN_IN_UNIFORM() {
+  public void testCalltestSoftmaxDouble1FanInUNIFORM() {
     double[] expected = {
       0.06468193804916589, 0.44170328686673477, 0.06711059208157763, 0.6278720842445181
     };

@@ -47,7 +47,7 @@ public class IdentityTest {
 
   /** Test of call method, of class Orthogonal. */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
           java.lang.IllegalArgumentException.class,
