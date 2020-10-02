@@ -61,9 +61,9 @@ import org.tensorflow.types.family.TNumber;
  */
 public class ReLU<T extends TNumber> extends Activation<T> {
 
-  private static final float ALPHA_DEFAULT = 0.0f;
-  private static final float MAX_VALUE_DEFAULT = Float.NaN;
-  private static final float THRESHOLD_DEFAULT = 0.0f;
+  public static final float ALPHA_DEFAULT = 0.0f;
+  public static final float MAX_VALUE_DEFAULT = Float.NaN;
+  public static final float THRESHOLD_DEFAULT = 0.0f;
 
   private final float alpha;
   private final float maxValue;
