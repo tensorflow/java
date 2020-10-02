@@ -40,7 +40,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     float[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -54,7 +54,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall_int() {
+  public void testCallint() {
     int[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     int[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -68,7 +68,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall_Long() {
+  public void testCallLong() {
     long[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     long[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -82,7 +82,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall_Float16() {
+  public void testCallFloat16() {
     float[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     float[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -97,7 +97,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     double[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)

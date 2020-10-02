@@ -45,7 +45,7 @@ public class ELUTest {
 
   /** Test of ELU call method */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
           java.lang.IllegalArgumentException.class,
@@ -61,7 +61,7 @@ public class ELUTest {
 
   /** Test of ELU call method */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     float[] expected = {1f, -0.86466473f, 3f, -0.9816844f, -0.63212055f, 2f, -0.95021296f, 4f};
     for (TestSession.Mode tfMode : tfModes)
@@ -75,7 +75,7 @@ public class ELUTest {
 
   /** Test of ELU call method */
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     double[] expected = {1, -0.86466473, 3, -0.9816844, -0.63212055, 2, -0.95021293, 4F};
     for (TestSession.Mode tfMode : tfModes)

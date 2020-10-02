@@ -100,7 +100,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
   public Operand<T> call(Operand<T> input) {
 
     DataType<T> dataType = input.asOutput().dataType();
-    Operand<T> negative_part = null;
+    Operand<T> negativePart = null;
     boolean clipMax = !Float.isNaN(maxValue);
     if (alpha != 0) {
       if (Float.isNaN(maxValue) && threshold == 0) {
@@ -108,11 +108,11 @@ public class ReLU<T extends TNumber> extends Activation<T> {
         return LeakyRelu.create(tf.scope(), input, LeakyRelu.alpha(alpha));
       }
       if (threshold != 0) {
-        negative_part =
+        negativePart =
             tf.nn.relu(
                 tf.math.add(tf.math.neg(input), tf.dtypes.cast(tf.constant(threshold), dataType)));
       } else {
-        negative_part = tf.nn.relu(tf.math.neg(input));
+        negativePart = tf.nn.relu(tf.math.neg(input));
       }
     }
 
@@ -136,7 +136,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
     if (alpha != 0.) {
       input =
           tf.math.sub(
-              input, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), dataType), negative_part));
+              input, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), dataType), negativePart));
     }
     return input;
   }

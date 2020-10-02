@@ -63,7 +63,7 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testSoftmax_Ops_Operand_Float() {
+  public void testSoftmaxOpsOperandFloat() {
     float[][] input = {{1, 2, 3, 4}, {5, 6, 7, 8}};
     float[][] expected = {
       {0.032059f, 0.087144f, 0.236883f, 0.643914f},
@@ -80,7 +80,7 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testSoftmax_Ops_Operand_Double() {
+  public void testSoftmaxOpsOperandDouble() {
     double[][] input = {{1, 2, 3, 4}, {5, 6, 7, 8}};
     double[][] expected = {
       {0.032059, 0.087144, 0.236883, 0.643914},
@@ -97,7 +97,7 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testSoftmax_Ops_Operand_Double_Negative() {
+  public void testSoftmaxOpsOperandDoubleNegative() {
     double[][] input = {{1, -2, 3, -4}, {-5, 6, -7, 8}};
     double[][] expected = {
       {1.18405115e-01, 5.89504354e-03, 8.74902034e-01, 7.97807387e-04},
@@ -114,7 +114,7 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testSoftmax_1D() {
+  public void testSoftmax1D() {
     double[] input = {1, -2, 3, -4, -5, 6, 7, 8};
     double[] expected = {
             6.0352829e-04, 3.0047902e-05, 4.4595040e-03, 4.0665414e-06,
@@ -131,7 +131,7 @@ public class SoftmaxTest {
 
   /** Test of Softmax method, of class Activations. */
   @Test
-  public void testSoftmax_3D() {
+  public void testSoftmax3D() {
     double[][][] input = {{{1, -2}, {3, -4}}, {{-5, 6}, {-7, 8}}};
     double[][][] expected = {
             {{9.5257413e-01, 4.7425874e-02}, {9.9908900e-01, 9.1105123e-04}},

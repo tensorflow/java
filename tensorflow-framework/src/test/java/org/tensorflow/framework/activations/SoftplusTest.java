@@ -45,7 +45,7 @@ public class SoftplusTest {
 
   /** Test of Softplus call method */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
 
     for (TestSession.Mode tfMode : tfModes)
@@ -62,7 +62,7 @@ public class SoftplusTest {
 
   /** Test of Softplus call method */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, 2, 3, 4, 5, 6, 7, 8};
     float[] expected = {
       1.3132616F, 2.126928F, 3.0485873F, 4.01815F, 5.0067153F, 6.0024757F, 7.0009117F, 8.000336F
@@ -78,7 +78,7 @@ public class SoftplusTest {
 
   /** Test of Softplus call method */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, 2, 3, 4, 5, 6, 7, 8};
     double[] expected = {
       1.3132616875182228, 2.1269280110429727, 3.048587351573742,

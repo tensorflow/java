@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TNumber;
  * <p>Softmax is often used as the activation for the last layer of a classification network because
  * the result could be interpreted as a probability distribution.
  *
- * <p>The softmax of each vector x is computed as: <code>exp(x) / tf.reduce_sum(exp(x))</code>.
+ * <p>The softmax of each vector x is computed as: <code>exp(x) / tf.sum(exp(x))</code>.
  *
  * <p>The input values in are the log-odds of the resulting probability.
  *

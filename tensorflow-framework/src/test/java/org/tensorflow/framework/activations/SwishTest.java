@@ -44,7 +44,7 @@ public class SwishTest {
 
   /** Test of Swish call method */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
@@ -60,7 +60,7 @@ public class SwishTest {
 
   /** Test of Swish call method */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     float[] expected = {
       0.7310585786300049f,
@@ -83,7 +83,7 @@ public class SwishTest {
 
   /** Test of Swish call method */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     double[] expected = {
       0.7310585786300049,

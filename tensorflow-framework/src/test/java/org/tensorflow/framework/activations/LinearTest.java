@@ -42,7 +42,7 @@ public class LinearTest {
 
   /** Test of Linear call method. */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     int[] expected = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
@@ -56,7 +56,7 @@ public class LinearTest {
 
   /** Test of Linear call method. */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     float[] expected = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
@@ -70,7 +70,7 @@ public class LinearTest {
 
   /** Test of Linear call method. */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     double[] expected = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)

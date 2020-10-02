@@ -44,7 +44,7 @@ public class ExponentialTest {
 
   /** Test of Exponential call method. */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
@@ -60,7 +60,7 @@ public class ExponentialTest {
 
   /** Test of Exponential call method. */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     float[] expected = {
       2.7182817F,
@@ -83,7 +83,7 @@ public class ExponentialTest {
 
   /** TTest of Exponential call method. */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     double[] expected = {
       2.7182818284590455, 0.1353352832366127, 20.085536923187668,

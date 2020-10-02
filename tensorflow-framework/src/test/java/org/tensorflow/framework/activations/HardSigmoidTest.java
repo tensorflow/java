@@ -44,7 +44,7 @@ public class HardSigmoidTest {
 
   /** Test of HardSigmoid call method. */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
 
     for (TestSession.Mode tfMode : tfModes)
@@ -61,7 +61,7 @@ public class HardSigmoidTest {
 
   /** Test of HardSigmoid call method. */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {-3.0f, -1.0f, 0.0f, 1.0f, 3.0f};
     float[] expected = {0.f, 0.3f, 0.5f, 0.7f, 1.f};
     for (TestSession.Mode tfMode : tfModes)
@@ -75,7 +75,7 @@ public class HardSigmoidTest {
 
   /** Test of HardSigmoid call method. */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {-3.0, -1.0, 0.0, 1.0, 3.0};
     double[] expected = {0., 0.3, 0.5, 0.7, 1.};
     for (TestSession.Mode tfMode : tfModes)

@@ -44,7 +44,7 @@ public class SigmoidTest {
 
   /** Test of Sigmoid call method */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
@@ -60,7 +60,7 @@ public class SigmoidTest {
 
   /** Test of Sigmoid call method */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     float[] expected = {
       0.7310586F,
@@ -83,7 +83,7 @@ public class SigmoidTest {
 
   /** Test of Sigmoid call method */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     double[] expected = {
       0.7310585786300049, 0.11920292202211755, 0.9525741268224334,

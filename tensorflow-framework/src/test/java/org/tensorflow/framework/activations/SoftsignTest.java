@@ -45,7 +45,7 @@ public class SoftsignTest {
 
   /** Test of Softsign call method */
   @Test
-  public void testCall_Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
@@ -61,7 +61,7 @@ public class SoftsignTest {
 
   /** Test of Softsign call method */
   @Test
-  public void testCall_Float() {
+  public void testCallFloat() {
     float[] input = {1, 2, 3, 4, 5, 6, 7, 8};
     float[] expected = {0.5F, 0.6666667F, 0.75F, 0.8F, 0.8333333F, 0.85714287F, 0.875F, 0.8888889F};
     for (TestSession.Mode tfMode : tfModes)
@@ -75,7 +75,7 @@ public class SoftsignTest {
 
   /** Test of Softsign call method */
   @Test
-  public void testCall_Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -5, 6, -7, 8};
     double[] expected = {
       0.5,

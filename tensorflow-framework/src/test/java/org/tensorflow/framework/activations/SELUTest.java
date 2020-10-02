@@ -44,7 +44,7 @@ public class SELUTest {
 
   /** Test of SELU call method */
   @Test
-  public void testCall__Int() {
+  public void testCallInt() {
     int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
@@ -60,7 +60,7 @@ public class SELUTest {
 
   /** Test of SELU call method */
   @Test
-  public void testCall__Float() {
+  public void testCallFloat() {
     float[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     float[] expected = {
       1.050701F, -1.5201665F, 3.152103F, -1.7258986F, -1.1113307F, 2.101402F, -1.6705687F, 4.202804F
@@ -76,7 +76,7 @@ public class SELUTest {
 
   /** Test of SELU call method */
   @Test
-  public void testCall__Double() {
+  public void testCallDouble() {
     double[] input = {1, -2, 3, -4, -1, 2, -3, 4};
     double[] expected = {
       1.0507009873554805, -1.520166468595695, 3.1521029620664414,
