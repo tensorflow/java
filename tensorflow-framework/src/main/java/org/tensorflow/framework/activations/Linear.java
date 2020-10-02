@@ -19,7 +19,9 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Linear activation function.
+ * Linear activation function  (pass-through).
+ *
+ * <p>The linear activation returns its input. It is also known as the Identity activation function.</p>
  *
  * <p>For example:
  *
