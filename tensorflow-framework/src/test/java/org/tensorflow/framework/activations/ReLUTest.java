@@ -40,7 +40,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall__Float() {
+  public void testCall_Float() {
     float[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     float[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -54,7 +54,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall__int() {
+  public void testCall_int() {
     int[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     int[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -68,7 +68,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall__Long() {
+  public void testCall_Long() {
     long[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     long[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -82,7 +82,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall__Float16() {
+  public void testCall_Float16() {
     float[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     float[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
@@ -97,13 +97,52 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCall__Double() {
+  public void testCall_Double() {
     double[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     double[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         ReLU<TFloat64> instance = new ReLU<>(tf);
+        Operand<TFloat64> result = instance.call(tf.constant(input));
+        session.evaluate(tf.constant(expected), result);
+      }
+  }
+
+  @Test
+  public void testAlpha() {
+    double[] input = {-10., -5., 0.0, 5., 10.};
+    double[] expected = {-5. , -2.5,  0.,  5., 10.};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        ReLU<TFloat64> instance = new ReLU<>(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
+        Operand<TFloat64> result = instance.call(tf.constant(input));
+        session.evaluate(tf.constant(expected), result);
+      }
+  }
+
+  @Test
+  public void testMaxValue() {
+    double[] input = {-10., -5., 0.0, 5., 10.};
+    double[] expected = {0., 0., 0., 5., 5.};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        ReLU<TFloat64> instance = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, 5, ReLU.THRESHOLD_DEFAULT);
+        Operand<TFloat64> result = instance.call(tf.constant(input));
+        session.evaluate(tf.constant(expected), result);
+      }
+  }
+
+  @Test
+  public void testThreshold() {
+    double[] input = {-10., -5., 0.0, 5., 10.};
+    double[] expected = {-0., -0.,  0.,  0., 10.};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        ReLU<TFloat64> instance = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5.0f);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }

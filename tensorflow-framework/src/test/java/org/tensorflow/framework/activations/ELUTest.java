@@ -86,4 +86,18 @@ public class ELUTest {
         session.evaluate(expected, result);
       }
   }
+
+  /** Test of ELU call method */
+  @Test
+  public void testAlpha() {
+    double[] input = {1, -2, 3, -4, -5, 6, 7, 8};
+    double[] expected = {1, -1.7293295, 3, -1.9633688, -1.9865241, 6, 7, 8};
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        ELU<TFloat64> instance = new ELU<>(tf, 2.0f);
+        Operand<TFloat64> result = instance.call(tf.constant(input));
+        session.evaluate(expected, result);
+      }
+  }
 }
