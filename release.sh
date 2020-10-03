@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+# Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,9 +42,6 @@ set -ex
 
 docker run \
   -e IN_CONTAINER="true" \
-  -e DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}" \
-  -e DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}" \
-  -e DEPLOY_LOCAL="${DEPLOY_LOCAL:-false}" \
   -e STAGING_SEQ="${STAGING_SEQ}" \
   -e GPG_TTY="${GPG_TTY}" \
   -v ${PWD}:/tensorflow-java \

@@ -21,8 +21,6 @@
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
-    <deploy.repository.id>${project.distributionManagement.snapshotRepository.id}</deploy.repository.id>
-    <deploy.repository.url>${project.distributionManagement.snapshotRepository.url}</deploy.repository.url>
   </properties>
 
   <dependencies>
@@ -102,74 +100,18 @@
     </profile>
     <!--
     Deploying Profile
-      When deploying, we do not rebuild the native libraries but fetch them from the Maven repository
-      where the external builders have uploaded them. All core API artifacts at once. This is
-      especially important for snapshots since all artifacts must have the same timestamp to avoid
-      issues when using Gradle.
-      To do so, we cannot rely simply on `deploy:deploy` goal, we need to configure the
-      deployment by hand, bundling all artifacts together.
+      When deploying, native libraries are not rebuilt but fetched from the Maven repository
+      where the external builders have uploaded them. All artifacts are then bundled together to be
+      deploy at once using the `deploy:deploy-file` or `gpg:sign-and-deploy-file` goal (this is
+      done by the `deploy.sh` script).
+      This is also important for snapshots since all artifacts must have the same timestamp to avoid
+      issues when using Gradle. So the default deploy goal is skipped.
     -->
     <profile>
       <id>deploying</id>
       <properties>
         <native.build.skip>true</native.build.skip>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.2</version>
-            <executions>
-              <execution>
-                <id>default-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy</goal>
-                </goals>
-                <configuration>
-                  <skip>true</skip>
-                </configuration>
-              </execution>
-              <execution>
-                <id>bundle-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <!-- In addition to this config, all files added to the $FILES environment variable will be
-                       deployed with this artifact. When running the deploy.sh scripts, all native artifacts
-                       are downloaded then appended to this variable -->
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
-                  <sources>${project.build.directory}/${project.artifactId}-${project.version}-sources.jar</sources>
-                  <javadoc>${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar</javadoc>
-                  <files>${tensorflow.core.api.files}</files>
-                  <types>${tensorflow.core.api.types}</types>
-                  <classifiers>${tensorflow.core.api.classifiers}</classifiers>
-                  <pomFile>pom.xml</pomFile>
-                  <repositoryId>${deploy.repository.id}</repositoryId>
-                  <url>${deploy.repository.url}</url>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <version>${project.version}</version>
-                  <packaging>jar</packaging>
-                  <generatePom>false</generatePom>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <!--
-    Releasing Profile
-      Make sure the deploy-file goal picks the staging repository for release deployment
-    -->
-    <profile>
-      <id>releasing</id>
-      <properties>
-        <deploy.repository.id>${project.distributionManagement.repository.id}</deploy.repository.id>
-        <deploy.repository.url>${project.distributionManagement.repository.url}</deploy.repository.url>
+        <maven.deploy.skip>true</maven.deploy.skip>
       </properties>
     </profile>
   </profiles>

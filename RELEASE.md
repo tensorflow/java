@@ -3,8 +3,7 @@
 The
 [TensorFlow Java API](https://github.com/tensorflow/java) is available on Maven Central and JCenter
 through artifacts uploaded to
-[OSS Sonatype](https://oss.sonatype.org/content/repositories/releases/org/tensorflow/) and/or
-[Bintray](https://bintray.com/google/tensorflow/tensorflow). This
+[OSS Sonatype](https://oss.sonatype.org/content/repositories/releases/org/tensorflow/). This
 document describes the process of updating the release artifacts. It does _not_ describe how to use
 the artifacts, for which the reader is referred to the
 [TensorFlow for Java installation instructions](https://github.com/tensorflow/java/blob/master/README.md).
@@ -36,14 +35,6 @@ a [Docker](https://www.docker.com) container for a hermetic release process.
     account does not have permissions, then you'll need to ask someone who does
     to [file a ticket](https://issues.sonatype.org/) to add to the permissions
     ([sample ticket](https://issues.sonatype.org/browse/MVNCENTRAL-1637)).
--   Optionally, an account at [bintray.com](https://bintray.com) that has permissions to
-    update the [tensorflow repository](https://bintray.com/google/tensorflow).
-    If your account does not have permissions, then you'll need to ask one of
-    the [organization administrators](https://bintray.com/google) to give you
-    permissions to update the `tensorflow` repository. Please keep the
-    [repository option](https://bintray.com/google/tensorflow/edit?tab=general)
-    to *"GPG sign uploaded files using Bintray's public/private key pair"*
-    **unchecked**, otherwise it will conflict with locally signed artifacts.
 -   A GPG signing key, required
     [to sign the release artifacts](http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components).
 
@@ -52,7 +43,7 @@ a [Docker](https://www.docker.com) container for a hermetic release process.
 #### Major or minor release
 
 1.  Get a clean version of the source code by cloning the
-    [TensorFlow Java GitHub repository](https://github.com/tensorflow-java)
+    [TensorFlow Java GitHub repository](https://github.com/tensorflow/java)
     ```
     git clone https://github.com/tensorflow/java
     ```
@@ -74,7 +65,7 @@ a [Docker](https://www.docker.com) container for a hermetic release process.
 #### Patch release
 
 1.  Get a clean version of the source code by cloning the
-    [TensorFlow Java GitHub repository](https://github.com/tensorflow-java)
+    [TensorFlow Java GitHub repository](https://github.com/tensorflow/java)
     ```
     git clone https://github.com/tensorflow/java
     ```
@@ -111,20 +102,17 @@ Some platforms cannot be build successfully on GitHub Actions, due to some limit
 (e.g. max 6 hours for a job). For this reasons, we need to build manually some of our artifacts on
 private servers. 
 
-To do so, follow the same steps as the [CI build](https://github.com/tensorflow/java/.github/workflows/ci.yml) 
+To do so, follow the same steps as the [CI build](https://github.com/tensorflow/java/blob/master/.github/workflows/ci.yml)
 for the same platform and make sure to checkout the release branch and to provide your Sonatype credentials
 for temporary staging.
 
-### Building and deploying all artifacts to Sonatype and Bintray
+### Building and deploying all artifacts to Sonatype
 
 1.  At the root of your TensorFlow Java copy, create a Maven settings.xml file with your OSSRH credentials and
-    [Bintray API key](https://bintray.com/docs/usermanual/interacting/interacting_interacting.html#anchorAPIKEY),
-    plus your GPG key passphrase:
+    your GPG key passphrase:
     ```sh
     SONATYPE_USERNAME="your_sonatype.org_username_here"
     SONATYPE_PASSWORD="your_sonatype.org_password_here"
-    BINTRAY_USERNAME="your_bintray_username_here"
-    BINTRAY_API_KEY="your_bintray_api_key_here"
     GPG_PASSPHRASE="your_gpg_passphrase_here"
     cat > settings.xml <<EOF
     <settings>
@@ -135,9 +123,9 @@ for temporary staging.
           <password>${SONATYPE_PASSWORD}</password>
         </server>
         <server>
-          <id>bintray</id>
-          <username>${BINTRAY_USERNAME}</username>
-          <password>${BINTRAY_API_KEY}</password>
+          <id>ossrh-staging</id>
+          <username>${SONATYPE_USERNAME}</username>
+          <password>${SONATYPE_PASSWORD}</password>
         </server>
       </servers>
       <profiles>
@@ -154,10 +142,8 @@ for temporary staging.
     </settings>
     EOF
     ```
-2.  Execute the `release.sh` script. This will deploy only on OSSRH by default. To enable Bintray
-    deployment as well, pass the environment variable DEPLOY_BINTRAY=true. All native artifacts 
-    previously temporarily staged by GitHub Actions will be fetched, signed and redeployed with 
-    all the other artifacts.
+2.  Execute the `release.sh` script. This will deploy artifacts on OSS Sonatype. All native artifacts
+    previously temporarily staged by GitHub Actions will be fetched, signed and redeployed as well.
 
     The script takes in paramater the sequence number of the staging repository created in OSSRH
     by the GitHub Actions workflow. You can retrieve this ID by looking in the staging repositories
@@ -168,33 +154,16 @@ for temporary staging.
     sh release.sh 1100
     ```
 3.  If the script above succeeds then the artifacts would have been uploaded to
-    the private staging repository in Sonatype, and as unpublished artifacts in
-    Bintray. After verifying the release, you should finalize or abort the
-    release on both sites.
-
-4.  Visit https://oss.sonatype.org/#stagingRepositories, find the `org.tensorflow`
+    the private staging repository in Sonatype. After verifying the release, you should finalize or
+    abort the release. Visit https://oss.sonatype.org/#stagingRepositories, find the `org.tensorflow`
     release and click on either `Release` to finalize the release, or `Drop` to
     abort.
 
-5.  Visit https://bintray.com/google/tensorflow/tensorflow, and select the
-    version you just uploaded. Notice there's a message about unpublished
-    artifacts. Click on either `Publish` to finalize the release, or `Discard`
-    to abort.
-
-6.  Some things of note:
+4.  Some things of note:
     - For details, look at the [Sonatype guide](http://central.sonatype.org/pages/releasing-the-deployment.html).
     - Syncing with [Maven Central](http://repo1.maven.org/maven2/org/tensorflow/)
       can take 10 minutes to 2 hours (as per the [OSSRH
       guide](http://central.sonatype.org/pages/ossrh-guide.html#releasing-to-central)).
-    - For Bintray details, refer to their guide on
-      [managing uploaded content](https://bintray.com/docs/usermanual/uploads/uploads_managinguploadedcontent.html#_publishing).
-
-#### Skip deploying to a repository
-
-Should you need, setting environment variables `DEPLOY_OSSRH=false` or
-`DEPLOY_BINTRAY=false` when calling `release.sh` will skip deploying to OSSRH or
-Bintray respectively. Note that snapshots are only uploaded to OSSRH, so you
-cannot skip deploying to OSSRH for a `-SNAPSHOT` version.
 
 ### Finishing a release
 
@@ -218,4 +187,3 @@ Go to GitHub and create a release tag at the release branch with a summary of wh
 -   [Sonatype guide](http://central.sonatype.org/pages/ossrh-guide.html) for
     hosting releases.
 -   [Ticket that created the `org/tensorflow` configuration](https://issues.sonatype.org/browse/OSSRH-28072) on OSSRH.
--   The [Bintray User Manual](https://bintray.com/docs/usermanual/index.html)

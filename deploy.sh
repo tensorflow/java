@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+# Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,18 +19,14 @@
 
 set -e
 
-# By default we deploy to both ossrh and bintray. These two
-# environment variables can be set to skip either repository.
-DEPLOY_OSSRH="${DEPLOY_OSSRH:-true}"
-DEPLOY_BINTRAY="${DEPLOY_BINTRAY:-false}"
 IN_CONTAINER="${IN_CONTAINER:-false}"
 
-if [[ "${DEPLOY_BINTRAY}" != "true" && "${DEPLOY_OSSRH}" != "true" ]]; then
-  echo "Must deploy to at least one of Bintray, OSSRH or local" >&2
-  exit 2
-fi
-
 MVN_OPTIONS="-B -e --settings ${PWD}/settings.xml -Pdeploying"
+
+mvn_property() {
+  local property="$1"
+  mvn exec:exec $MVN_OPTIONS -q -N -Dexec.executable='echo' -Dexec.args="\${${property}}"
+}
 
 #
 # Clean the working directory before doing anything
@@ -42,42 +38,39 @@ mvn clean $MVN_OPTIONS -q -U
 # Extract deployed version from POM
 #
 echo "Parsing Maven configuration..."
-TF_VERSION=`mvn exec:exec $MVN_OPTIONS -q -N -Dexec.executable='echo' -Dexec.args="\\${project.version}"`
+TF_VERSION=`mvn_property "project.version"`
 if [ -z "${TF_VERSION}" ]; then
   echo "Fail to extract TF_VERSION from POM"
   exit 1
 fi
-echo
-echo "Deploying TensorFlow Java, version ${TF_VERSION}, on:"
-if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-  echo "* OSSRH"
-fi
-if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-  echo "* Bintray"
-fi
-echo
 
 #
 # Validate the environment based on if we are deploying a snapshot or a release version
 #
-NATIVE_ARTIFACTS_REPO=ossrh
-if ! [[ $TF_VERSION = *-SNAPSHOT ]]; then
+echo
+if [[ $TF_VERSION = *-SNAPSHOT ]]; then
+  echo "===> Deploying TensorFlow Java, version ${TF_VERSION} <==="
+  echo
+  DEPLOY_FILE_GOAL=deploy:deploy-file
+  DEPLOY_REPOSITORY_URL=`mvn_property "project.distributionManagement.snapshotRepository.url"`
+
+else
+  echo "===> Releasing TensorFlow Java, version ${TF_VERSION} <==="
+  echo
   if [[ "${IN_CONTAINER}" != "true" ]]; then
     echo "Release must be executed from a Docker container, please make sure to invoke release.sh"
     exit 1
   fi
- if [[ -z "${STAGING_SEQ}" ]]; then
+  if [[ -z "${STAGING_SEQ}" ]]; then
     echo "Staging sequence is required for release"
     exit 1
   fi
+  DEPLOY_FILE_GOAL=gpg:sign-and-deploy-file
+  DEPLOY_REPOSITORY_URL=`mvn_property "project.distributionManagement.repository.url"`
 
-  # In release mode, fetch the native artifacts from the staging repository created by the CI build
   MVN_OPTIONS="$MVN_OPTIONS -Preleasing -DstagingRepositoryId=orgtensorflow-${STAGING_SEQ}"
-  NATIVE_ARTIFACTS_REPO=ossrh-staging
 
-  # gnupg2 is required for signing releases
-  apt-get -qq update
-  apt-get -qq install -y gnupg2
+  apt-get -qq update && apt-get -qq install -y gnupg2
 fi
 
 #
@@ -92,7 +85,7 @@ for p in `find tensorflow-core -name tensorflow-core-platform* -type d -exec bas
     if [[ -n $PLATFORM_EXT ]]; then
       [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
     fi
-    mvn dependency:copy-dependencies $MVN_OPTIONS -q -P$NATIVE_ARTIFACTS_REPO \
+    mvn dependency:copy-dependencies $MVN_OPTIONS -q \
         -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-api \
         -DoutputDirectory=../../tensorflow-core/tensorflow-core-api/target -pl tensorflow-core/$p
   fi
@@ -105,34 +98,32 @@ done
 for f in tensorflow-core/tensorflow-core-api/target/tensorflow-core-api-$TF_VERSION-*.jar; do
   echo "Found native artifact: $f"
   if [[ $f =~ tensorflow-core-api-$TF_VERSION-(.*).jar ]]; then
-    [[ -n $FILES ]] && FILES=$FILES,$f || FILES=$f
-    [[ -n $TYPES ]] && TYPES=$TYPES,jar || TYPES=jar
-    [[ -n $CLASSIFIERS ]] && CLASSIFIERS=$CLASSIFIERS,${BASH_REMATCH[1]} || CLASSIFIERS=${BASH_REMATCH[1]}
+    [[ -n $NATIVE_FILES ]] && NATIVE_FILES=$NATIVE_FILES,$f || NATIVE_FILES=$f
+    [[ -n $NATIVE_FILE_TYPES ]] && NATIVE_FILE_TYPES=$NATIVE_FILE_TYPES,jar || NATIVE_FILE_TYPES=jar
+    [[ -n $NATIVE_CLASSIFIERS ]] && NATIVE_CLASSIFIERS=$NATIVE_CLASSIFIERS,${BASH_REMATCH[1]} || NATIVE_CLASSIFIERS=${BASH_REMATCH[1]}
   fi
 done
 
-MVN_DEPLOY_OPTIONS="$MVN_OPTIONS -Dtensorflow.core.api.files=$FILES -Dtensorflow.core.api.types=$TYPES -Dtensorflow.core.api.classifiers=$CLASSIFIERS"
-
 #
-# Build and deploy the artifacts on OSSRH and/or Bintray
+# Build and deploy the artifacts on OSSRH
 # We need to do it manually for all non-default platforms, as they are not automatically included as
-# modules in the POM and depends on the javacpp.platform.extension property
+# modules in the POM and depends on the javacpp.platform.extension property.
+# Note that the tensorflow-core-api, which needs special care, won't be deployed yet, see below.
 #
-mvn_all_platforms() {
-  local options="$1"
-  mvn $options
-  for p in $PLATFORM_EXTS; do
-    mvn $options -Djavacpp.platform.extension=$p -pl tensorflow-core/tensorflow-core-platform$p
-  done
-}
+mvn deploy $MVN_OPTIONS
+for p in $PLATFORM_EXTS; do
+  mvn deploy $MVN_OPTIONS -Djavacpp.platform.extension=$p -pl tensorflow-core/tensorflow-core-platform$p
+done
 
-if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-  mvn_all_platforms "deploy $MVN_DEPLOY_OPTIONS -Possrh"
-fi
-# Deploy artifacts to bintray if requested.
-if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-  mvn_all_platforms "deploy $MVN_DEPLOY_OPTIONS -Pbintray"
-fi
+# Now deploy manually the tensorflow-core-api with all its native artifacts.
+mvn $DEPLOY_FILE_GOAL $MVN_OPTIONS -pl tensorflow-core/tensorflow-core-api \
+    -DgroupId=org.tensorflow -DartifactId=tensorflow-core-api -Dversion=$TF_VERSION -Dpackaging=jar \
+    -Dfile=target/tensorflow-core-api-$TF_VERSION.jar \
+    -Dfiles=$NATIVE_FILES -Dtypes=$NATIVE_FILE_TYPES -Dclassifiers=$NATIVE_CLASSIFIERS \
+    -Dsources=target/tensorflow-core-api-$TF_VERSION-sources.jar \
+    -Djavadoc=target/tensorflow-core-api-$TF_VERSION-javadoc.jar \
+    -DpomFile=pom.xml \
+    -DrepositoryId=ossrh -Durl=$DEPLOY_REPOSITORY_URL
 
 echo
 if [[ $TF_VERSION = *-SNAPSHOT ]]; then
@@ -140,13 +131,7 @@ if [[ $TF_VERSION = *-SNAPSHOT ]]; then
 else
   echo "Uploaded to the staging repository"
   echo "After validating the release: "
-  if [[ "${DEPLOY_OSSRH}" == "true" ]]; then
-    echo "* Login to https://oss.sonatype.org/#stagingRepositories"
-    echo "* Find the 'org.tensorflow' staging release and click either 'Release' to release or 'Drop' to abort"
-  fi
-  if [[ "${DEPLOY_BINTRAY}" == "true" ]]; then
-    echo "* Login to https://bintray.com/google/tensorflow/tensorflow"
-    echo "* Either 'Publish' unpublished items to release, or 'Discard' to abort"
-  fi
+  echo "* Login to https://oss.sonatype.org/#stagingRepositories"
+  echo "* Find the 'org.tensorflow' staging release and click either 'Release' to release or 'Drop' to abort"
 fi
 echo

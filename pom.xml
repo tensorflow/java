@@ -73,6 +73,22 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <!--
+  Deploys to OSSRH/Maven central
+    We don't need to deploy to Bintray, as JCenter will eventually proxy artifacts upload in Maven
+    central. See Sonatype requirements at http://central.sonatype.org/pages/apache-maven.html
+  -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -128,7 +144,7 @@
     </profile>
     <!--
     Releasing profile
-        Activate GPG signing on all built artifacts and build the Javadoc
+        Activate GPG signing on all built artifacts and fetch native artifacts from staging repository
     -->
     <profile>
       <id>releasing</id>
@@ -148,38 +164,6 @@
           </snapshots>
         </repository>
       </repositories>
-    </profile>
-    <!--
-    Profile ossrh
-        Deploys to ossrh/maven central
-    -->
-    <profile>
-      <id>ossrh</id>
-      <distributionManagement>
-        <!-- Sonatype requirements from http://central.sonatype.org/pages/apache-maven.html -->
-        <snapshotRepository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
-        </repository>
-      </distributionManagement>
-    </profile>
-    <!--
-    Profile bintray
-        Deploys to bintray/jcenter
-    -->
-    <profile>
-      <id>bintray</id>
-      <distributionManagement>
-        <!-- https://blog.bintray.com/2015/09/17/publishing-your-maven-project-to-bintray/ -->
-        <repository>
-          <id>bintray</id>
-          <url>https://api.bintray.com/maven/google/tensorflow/tensorflow/;publish=0</url>
-        </repository>
-      </distributionManagement>
     </profile>
   </profiles>
 
