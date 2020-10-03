@@ -155,9 +155,9 @@ for temporary staging.
     ```
 3.  If the script above succeeds then the artifacts would have been uploaded to
     the private staging repository in Sonatype. After verifying the release, you should finalize or
-    abort the release. Visit https://oss.sonatype.org/#stagingRepositories, find the `org.tensorflow`
-    release and click on either `Release` to finalize the release, or `Drop` to
-    abort.
+    abort the release. Visit https://oss.sonatype.org/#stagingRepositories, find the `orgtensorflow-*`
+    of your release and click `Close` and `Release` to finalize the release. You always have the option
+    to `Drop` it to abort and restart if something went wrong.
 
 4.  Some things of note:
     - For details, look at the [Sonatype guide](http://central.sonatype.org/pages/releasing-the-deployment.html).
