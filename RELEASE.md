@@ -27,6 +27,10 @@ The first step is executed on different build servers, each responsible to build
 artifact for a specific architecture and platform. The second step is conducted locally in
 a [Docker](https://www.docker.com) container for a hermetic release process.
 
+It is important to note that any change pushed to a release branch (i.e. a branch prefixed
+by `r`) will start a new release workflow. Therefore, these changes should always increment the
+version number.
+
 ### Pre-requisites
 
 -   `docker`
@@ -89,9 +93,8 @@ a [Docker](https://www.docker.com) container for a hermetic release process.
 
 ### Building native artifacts
 
-Once a release branch (i.e. a branch prefixed by `r`) is pushed on the repository, a workflow will
-automatically start in GitHub Actions to build the native artifacts for all supported
-architures/platforms and deploy them temporarily on OSSRH for staging.
+Any change pushed to a release branch will trigger a new release workflow. GitHub Actions builds the native artifacts 
+for all supported architures/platforms and deploy them temporarily on OSSRH for staging.
 
 There is no user action required for this step other than watching the progress of the GitHub
 Actions workflow and making sure that all steps have been completed successfully.
