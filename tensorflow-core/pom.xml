@@ -453,34 +453,6 @@
       </properties>
     </profile>
 
-    <!-- Disable platform dependency when building the artifact for the dependency itself -->
-    <!--profile>
-      <id>no-platform-dependency</id>
-      <activation>
-        <file>
-          <exists>${basedir}</exists>
-        </file>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-armhf>${javacpp.platform}</javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64>${javacpp.platform}</javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le>${javacpp.platform}</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86>${javacpp.platform}</javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86_64>${javacpp.platform}</javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-x86_64>${javacpp.platform}</javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86>${javacpp.platform}</javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86_64>${javacpp.platform}</javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
-        <javacpp.platform.linux-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
-        <javacpp.platform.windows-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile-->
-
     <!-- Profiles to modify the transitive dependencies when picked up from other pom.xml files, for example:
          mvn -Djavacpp.platform.custom -Djavacpp.platform.host -Djavacpp.platform.linux-x86_64 -Djavacpp.platform.windows-x86_64 ... -->
     <profile>

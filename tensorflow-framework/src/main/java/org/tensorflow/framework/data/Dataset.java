@@ -255,7 +255,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
 
   /**
    * Creates an in-memory `Dataset` whose elements are slices of the given tensors. Each element of
-   * this dataset will be a {@code ListOperand<?>>}, representing slices (e.g. batches) of the
+   * this dataset will be a {@code List<Operand<?>>}, representing slices (e.g. batches) of the
    * provided tensors.
    *
    * @param tf Ops Accessor
