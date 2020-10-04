@@ -518,6 +518,7 @@ public final class StdArrays {
    * Copy an array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[] array) {
@@ -531,6 +532,7 @@ public final class StdArrays {
    * Copy a 2-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[][] array) {
@@ -544,6 +546,7 @@ public final class StdArrays {
    * Copy a 3-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[][][] array) {
@@ -557,6 +560,7 @@ public final class StdArrays {
    * Copy a 4-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][] array) {
@@ -570,6 +574,7 @@ public final class StdArrays {
    * Copy a 5-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][][] array) {
@@ -583,6 +588,7 @@ public final class StdArrays {
    * Copy a 6-dimensional array of objects in a new {@link NdArray}
    *
    * @param array source array
+   * @param <T> data type
    * @return the {@code NdArray} copy
    */
   public static <T> NdArray<T> ndCopyOf(T[][][][][][] array) {
@@ -1223,10 +1229,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 1-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 1-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-1 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1239,10 +1246,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 2-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 2-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-2 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1255,10 +1263,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 3-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 3-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-3 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1271,10 +1280,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 4-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 4-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-4 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1287,10 +1297,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 5-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 5-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-5 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1304,10 +1315,11 @@ public final class StdArrays {
   }
 
   /**
-   * Copy a {@link NdArray<T>} in a new 6-dimension standard array of objects
+   * Copy a {@link NdArray NdArray&lt;T&gt;} in a new 6-dimension standard array of objects
    *
    * @param ndArray source array
    * @param objectType type of object
+   * @param <T> data type
    * @return the array copy
    * @throws IllegalArgumentException if {@code ndArray} is not of rank-6 or has a shape that
    *                                  exceeds standard arrays limits
@@ -1899,6 +1911,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-1 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-1 or has an incompatible shape
    *                                  with the source array
    */
@@ -1911,6 +1924,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-2 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-2 or has an incompatible shape
    *                                  with the source array
    */
@@ -1925,6 +1939,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-3 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-3 or has an incompatible shape
    *                                  with the source array
    */
@@ -1939,6 +1954,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-4 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-4 or has an incompatible shape
    *                                  with the source array
    */
@@ -1953,6 +1969,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-5 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-5 or has an incompatible shape
    *                                  with the source array
    */
@@ -1967,6 +1984,7 @@ public final class StdArrays {
    *
    * @param src source array
    * @param dst destination rank-6 array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code dst} is not of rank-6 or has an incompatible shape
    *                                  with the source array
    */
@@ -2703,6 +2721,7 @@ public final class StdArrays {
    *
    * @param src source rank-1 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-1
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -2721,6 +2740,7 @@ public final class StdArrays {
    *
    * @param src source rank-2 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-2
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -2738,6 +2758,7 @@ public final class StdArrays {
    *
    * @param src source rank-3 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-3
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -2755,6 +2776,7 @@ public final class StdArrays {
    *
    * @param src source rank-4 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-4
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -2772,6 +2794,7 @@ public final class StdArrays {
    *
    * @param src source rank-5 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-5
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -2789,6 +2812,7 @@ public final class StdArrays {
    *
    * @param src source rank-6 array
    * @param dst destination array
+   * @param <T> data type
    * @throws IllegalArgumentException if {@code src} is not of rank-6
    * @throws ArrayIndexOutOfBoundsException if not all elements of {@code src} can fit it the destination array
    */
@@ -3225,6 +3249,7 @@ public final class StdArrays {
    * Compute the shape of an object array.
    *
    * @param array 1D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[] array) {
@@ -3235,6 +3260,7 @@ public final class StdArrays {
    * Compute the shape of a 2-dimensional object array.
    *
    * @param array 2D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[][] array) {
@@ -3245,6 +3271,7 @@ public final class StdArrays {
    * Compute the shape of a 3-dimensional object array.
    *
    * @param array 3D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[][][] array) {
@@ -3255,6 +3282,7 @@ public final class StdArrays {
    * Compute the shape of a 4-dimensional object array.
    *
    * @param array 4D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[][][][] array) {
@@ -3265,6 +3293,7 @@ public final class StdArrays {
    * Compute the shape of a 5-dimensional object array.
    *
    * @param array 5D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[][][][][] array) {
@@ -3275,6 +3304,7 @@ public final class StdArrays {
    * Compute the shape of a 6-dimensional object array.
    *
    * @param array 6D array
+   * @param <T> data type
    * @return shape of the array
    */
   public static <T> Shape shapeOf(T[][][][][][] array) {

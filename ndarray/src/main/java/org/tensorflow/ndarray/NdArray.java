@@ -88,9 +88,7 @@ public interface NdArray<T> {
    *
    * <p>For example, given a {@code n x m} matrix on the {@code [x, y]} axes, elements are iterated in
    * the following order:
-   * <pre>
-   * x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
-   * </pre>
+   * <p>x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
    *
    * <p>The returned sequence can then be iterated to visit each elements, either by calling
    * {@link NdArraySequence#forEach(Consumer)} or {@link NdArraySequence#forEachIndexed(BiConsumer)}.
@@ -106,7 +104,7 @@ public interface NdArray<T> {
    *    });
    * }</pre>
    *
-   * @params dimensionIdx index of the dimension
+   * @param dimensionIdx index of the dimension
    * @return an {@code NdArray} sequence
    * @throws IllegalArgumentException if {@code dimensionIdx} is greater or equal to the total
    *                                  number of dimensions of this array
@@ -192,6 +190,7 @@ public interface NdArray<T> {
    *  matrix.set(scalar(10.0f), 1, 0); // success
    * }</pre>
    *
+   * @param src an array of the values to assign
    * @param coordinates coordinates of the element to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their
@@ -242,6 +241,7 @@ public interface NdArray<T> {
    * Note: if this array stores values of a primitive type, prefer the usage of the specialized
    * method in the subclass for that type. For example, {@code floatArray.setFloat(10.0f, 0); }
    *
+   * @param value the value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their

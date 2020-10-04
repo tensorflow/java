@@ -33,7 +33,6 @@
   <modules>
     <module>tensorflow-core-generator</module>
     <module>tensorflow-core-api</module>
-    <module>tensorflow-core-platform${javacpp.platform.extension}</module>
   </modules>
 
   <properties>
@@ -64,72 +63,47 @@
   </properties>
 
   <profiles>
-    <!-- Redeploys in one shot the snapshot artifacts of tensorflow-core-api
-         given to maven-deploy-plugin to get consistent timestamps among them -->
+    <!--
+    Include a single platform module in a Maven execution.
+      This is the default behaviour. Since platform modules relies on the value of the
+      javacpp.platform.extension, only one of them can be build in a single execution.
+    -->
     <profile>
-      <id>redeploy</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>javadoc</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-mkl</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-gpu</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-platform-mkl-gpu</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>2.8.2</version>
-            <executions>
-              <execution>
-                <id>deploy-file</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <file>tensorflow-core-api-${project.version}.jar</file>
-                  <pomFile>META-INF/maven/org.tensorflow/tensorflow-core-api/pom.xml</pomFile>
-                  <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
-                  <url>${project.distributionManagement.snapshotRepository.url}</url>
-                  <groupId>org.tensorflow</groupId>
-                  <artifactId>tensorflow-core-api</artifactId>
-                  <version>${project.version}</version>
-                  <packaging>jar</packaging>
-                  <generatePom>false</generatePom>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+      <id>javacpp-platform-extension-default</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.extension</name>
+          <value>!all</value>
+        </property>
+      </activation>
+      <modules>
+        <module>tensorflow-core-platform${javacpp.platform.extension}</module>
+      </modules>
+    </profile>
+
+    <!--
+    Include all platform modules for a Maven execution.
+      Some plugin goals, like versions-maven-plugins:set, will apply changes to all modules found in
+      the aggregator POM. Since tensorflow-core-platform-* modules are not declared explicitly, they
+      will not be intercepted by these plugins.
+      While this profile can be activated explicitly to include all platforms modules in a single
+      Maven execution, just declaring them in its list of modules will expose them to the aggregator
+      and plugins like versions-maven-plugin will automatically pick them up.
+    -->
+    <profile>
+      <id>javacpp-platform-extension-all</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.extension</name>
+          <value>all</value>
+        </property>
+      </activation>
+      <modules>
+        <module>tensorflow-core-platform</module>
+        <module>tensorflow-core-platform-mkl</module>
+        <module>tensorflow-core-platform-mkl-gpu</module>
+        <module>tensorflow-core-platform-gpu</module>
+      </modules>
     </profile>
 
     <profile>
@@ -475,34 +449,6 @@
         <javacpp.platform.linux-x86_64.extension></javacpp.platform.linux-x86_64.extension>
         <javacpp.platform.macosx-x86_64.extension></javacpp.platform.macosx-x86_64.extension>
         <javacpp.platform.windows-x86.extension></javacpp.platform.windows-x86.extension>
-        <javacpp.platform.windows-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile>
-
-    <!-- Disable platform dependency when building the artifact for the dependency itself -->
-    <profile>
-      <id>no-platform-dependency</id>
-      <activation>
-        <file>
-          <exists>${basedir}</exists>
-        </file>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-armhf>${javacpp.platform}</javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64>${javacpp.platform}</javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le>${javacpp.platform}</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86>${javacpp.platform}</javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86_64>${javacpp.platform}</javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-x86_64>${javacpp.platform}</javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86>${javacpp.platform}</javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86_64>${javacpp.platform}</javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
-        <javacpp.platform.linux-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
         <javacpp.platform.windows-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
       </properties>
     </profile>

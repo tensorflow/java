@@ -107,8 +107,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
      * Configures the session based on the data found in the provided configuration.
      *
      * @param config a config protocol buffer
-     * @see <a
-     *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto"/>
+     * @see <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto">config.proto</a></a>
      */
     public Options config(ConfigProto config) {
       this.config = config;

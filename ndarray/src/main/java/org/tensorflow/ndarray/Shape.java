@@ -73,6 +73,10 @@ public final class Shape {
    * // A scalar. For readability, you should prefer calling Shape.scalar()
    * Shape scalar = Shape.of()
    * }</pre>
+   *
+   * @param dimensionSizes number of elements in each dimension of this shape, if any, or
+   *                       {@link Shape#UNKNOWN_SIZE} if unknown.
+   * @return a new shape
    */
   public static Shape of(long... dimensionSizes) {
     if (dimensionSizes == null || dimensionSizes.length == 0) {
@@ -182,7 +186,6 @@ public final class Shape {
    * Equals implementation for Shapes. Two Shapes are considered equal iff:
    *
    * <p>
-   *
    * <ul>
    *   <li>the number of dimensions is defined and equal for both
    *   <li>the size of each dimension is defined and equal for both
