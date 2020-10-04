@@ -26,7 +26,7 @@ import org.tensorflow.types.family.TNumber;
  * <p>The exponential linear unit (ELU) with <code>alpha &gt; 0</code> is:
  *
  * <p><code>x</code> if <code>x &gt; 0</code> and <code>alpha * (exp(x) -
- * 1)</code> if <code>x &gt; 0</code>.
+ * 1)</code> if <code>x &lt; 0</code>.
  *
  * <p>The ELU hyperparameter <code>alpha</code> controls the value to which an ELU saturates for
  * negative net inputs. ELUs diminish the vanishing gradient effect.
@@ -40,14 +40,14 @@ import org.tensorflow.types.family.TNumber;
  * <p>Example Usage:
  *
  * <pre>
- *     ELU&lt;TFloat32&gt; input = ...;
- *     ELU&lt;TFloat32&gt;elu = new ELU&lt;&gt;(tf, 2.0f);
+ *     Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+ *     ELU&lt;TFloat32&gt; elu = new ELU&lt;&gt;(tf, 2.0f);
  *     Operand&lt;TFloat32&gt; result = elu.call(input);
  * </pre>
  *
  * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
- *     Network Learning by Exponential Linear Units (ELUs)</a>.
+ *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
 public class ELU<T extends TNumber> extends Activation<T> {
 

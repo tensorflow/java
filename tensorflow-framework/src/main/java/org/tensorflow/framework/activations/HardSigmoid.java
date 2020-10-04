@@ -27,9 +27,9 @@ import org.tensorflow.types.family.TNumber;
  * <p>Defined as:
  *
  * <ul>
- *   <li><code>if x < -2.5: return 0</code>
- *   <li><code>if x > 2.5: return 1</code>
- *   <li><code>if -2.5 <= x <= 2.5: return 0.2 * x + 0.5</code>
+ *   <li><code>if x &lt; -2.5: return 0</code>
+ *   <li><code>if x &gt; 2.5: return 1</code>
+ *   <li><code>if -2.5 &lt;= x &lt;= 2.5: return 0.2 * x + 0.5</code>
  * </ul>
  *
  * <p>For example:

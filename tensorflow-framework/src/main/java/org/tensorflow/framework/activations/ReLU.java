@@ -100,8 +100,9 @@ public class ReLU<T extends TNumber> extends Activation<T> {
   public Operand<T> call(Operand<T> input) {
 
     DataType<T> dataType = input.asOutput().dataType();
-    Operand<T> negativePart = null;
+
     boolean clipMax = !Float.isNaN(maxValue);
+    Operand<T> negativePart = null;
     if (alpha != 0) {
       if (Float.isNaN(maxValue) && threshold == 0) {
         // TODO LeakyRelu is not in tf.nn ????

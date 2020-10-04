@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  * </pre>
  *
  * @param <T> the data type of the activation
- * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>.
+ * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
 public class Swish<T extends TNumber> extends Activation<T> {
 
