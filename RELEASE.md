@@ -63,7 +63,7 @@ version number.
     ```
     git add .
     git commit -m "Releasing 1.0.0"
-    git push --set-upstream upstream r1.0
+    git push --set-upstream origin r1.0
     ```
 
 #### Patch release
