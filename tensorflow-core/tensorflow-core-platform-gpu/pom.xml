@@ -45,6 +45,12 @@
       <classifier>${javacpp.platform.linux-x86_64}</classifier>
     </dependency>
     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
+      <classifier>${javacpp.platform.windows-x86_64}</classifier>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>
@@ -55,32 +61,13 @@
       <version>${project.version}</version>
       <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${javacpp.moduleId}</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
+    </dependency>
   </dependencies>
-
-  <!--
-  TODO: GitHub Actions fail miserably to build our Windows artifacts for this platform and it
-        must be done manually on release. Move this dependencies out of this profile once we
-        have stable Windows CI builds.
-  -->
-  <profiles>
-    <profile>
-      <id>releasing</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.bytedeco</groupId>
-          <artifactId>javacpp</artifactId>
-          <version>${javacpp.version}</version>
-          <classifier>${javacpp.platform.windows-x86_64}</classifier>
-        </dependency>
-        <dependency>
-          <groupId>${project.groupId}</groupId>
-          <artifactId>${javacpp.moduleId}</artifactId>
-          <version>${project.version}</version>
-          <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>
