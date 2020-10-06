@@ -63,9 +63,9 @@ build tool and a few Python dependencies (please read [TensorFlow documentation]
 for more details).
 
 This step can take multiple hours on a regular laptop. It is possible though to skip completely the native build if you are
-working on a version that already has pre-compiled native artifacts for your platform [available on Sonatype OSS Nexus repository](#Snapshots).
-You just need to activate the `dev` profile in your Maven command to use those artifacts instead of building them from scratch
-(e.g. `mvn install -Pdev`).
+working on a version that already has pre-compiled native artifacts for your platform 
+[available on Sonatype OSS Nexus repository](#Snapshots). You just need to activate the `dev` profile in your Maven command 
+to use those artifacts instead of building them from scratch (e.g. `mvn install -Pdev`).
 
 Note that modifying any source files under `tensorflow-core` may impact the low-level TensorFlow bindings, in which case a
 complete build could be required to reflect the changes.
