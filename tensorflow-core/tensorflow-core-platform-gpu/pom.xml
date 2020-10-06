@@ -64,7 +64,7 @@
   -->
   <profiles>
     <profile>
-      <id>release</id>
+      <id>releasing</id>
       <dependencies>
         <dependency>
           <groupId>org.bytedeco</groupId>

@@ -85,12 +85,12 @@ systems, you should add the following dependencies:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
@@ -101,24 +101,24 @@ native dependencies as follows:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <classifier>macosx-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <classifier>windows-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
@@ -131,7 +131,7 @@ artifact includes transitively all the artifacts above as a single dependency:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
@@ -173,7 +173,8 @@ This table shows the mapping between different version of TensorFlow for Java an
 | TensorFlow Java Version  | TensorFlow Version |
 | ------------- | ------------- |
 | 0.1.0-SNAPSHOT  | 2.2.0  |
-| 0.2.0-SNAPSHOT  | 2.3.0  |
+| 0.2.0-SNAPSHOT  | 2.3.1  |
+| 0.2.0  | 2.3.1  |
 
 ## How to Contribute?
 
