@@ -58,8 +58,13 @@ version number.
 3.  Update the version of the Maven artifacts to the full version of the release
     ```
     mvn versions:set -DnewVersion=1.0.0
-    ``` 
-4.  Commit the changes and push the new branch to the GitHub repository
+    ```
+4.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
+    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
+    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
+    table to reflect the new version being released.
+
+5.  Commit the changes and push the new branch to the GitHub repository
     ```
     git add .
     git commit -m "Releasing 1.0.0"
@@ -83,8 +88,13 @@ version number.
 4.  Update the version of the Maven artifacts to the full version of the release
     ```
     mvn versions:set -DnewVersion=1.0.1
-    ``` 
-4.  Commit the changes and push the branch to the GitHub repository
+    ```
+5.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
+    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
+    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
+    table to reflect the new version being released.
+
+6.  Commit the changes and push the branch to the GitHub repository
     ```
     git add .
     git commit -m "Releasing 1.0.1"
@@ -109,7 +119,7 @@ To do so, follow the same steps as the [CI build](https://github.com/tensorflow/
 for the same platform and make sure to checkout the release branch and to provide your Sonatype credentials
 for temporary staging.
 
-### Building and deploying all artifacts to Sonatype
+### Performing the release
 
 1.  At the root of your TensorFlow Java copy, create a Maven settings.xml file with your OSSRH credentials and
     your GPG key passphrase:
@@ -162,7 +172,9 @@ for temporary staging.
     of your release and click `Close` and `Release` to finalize the release. You always have the option
     to `Drop` it to abort and restart if something went wrong.
 
-4.  Some things of note:
+4.  Go to GitHub and create a release tag on the release branch with a summary of what the version includes.
+
+Some things of note:
     - For details, look at the [Sonatype guide](http://central.sonatype.org/pages/releasing-the-deployment.html).
     - Syncing with [Maven Central](http://repo1.maven.org/maven2/org/tensorflow/)
       can take 10 minutes to 2 hours (as per the [OSSRH
@@ -170,18 +182,40 @@ for temporary staging.
 
 ### Finishing a release
 
-Go to GitHub and create a release tag at the release branch with a summary of what the version includes.
-
 #### Major or minor release
 
-1. In your local copy, checkout the master branch and increase the next snapshot version.
+1. Checkout the master branch and merge back changes from the released branch
+   ```
+   git checkout master
+   git merge r1.0
+   ```
+2. In your local copy, checkout the master branch and increase the next snapshot version.
    ```
    mvn versions:set -DnewVersion=1.1.0-SNAPSHOT
    ```
-2. Commit your changes and push the master branch to the GitHub repository
+3.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
+    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
+    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
+    table to reflect the new snapshot version.
+
+4. Commit your changes and push the master branch to the GitHub repository
    ```
    git add .
    git commit -m "Increase version for next iteration"
+   git push
+   ```
+
+#### Patch release
+
+1. Checkout the master branch and merge back changes from the released branch
+   ```
+   git checkout master
+   git merge r1.0
+   ```
+2. Commit the changes and push the master branch to the GitHub repository
+   ```
+   git add .
+   git commit -m "Merge release 1.0.1"
    git push
    ```
 
