@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-java</artifactId>
-        <version>0.2.0</version>
+        <version>0.3.0-SNAPSHOT</version>
     </parent>
     <artifactId>tensorflow-keras</artifactId>
     <packaging>jar</packaging>
