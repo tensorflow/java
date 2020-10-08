@@ -511,14 +511,14 @@ public class Losses {
       predictions = tf.clipByValue(predictions, epsilonConst, oneMinusEpsilonConst);
       predictions = tf.math.log(predictions);
     }
-    Shape outputShape = predictions.asOutput().shape();
-    int outputRank = outputShape.numDimensions();
-    axis %= outputRank;
+    Shape predictionsShape = predictions.asOutput().shape();
+    int predictionsRank = predictionsShape.numDimensions();
+    axis %= predictionsRank;
     if (axis < 0) {
-      axis += outputRank;
+      axis += predictionsRank;
     }
-    if (axis != outputRank - 1) {
-      int[] axisNew = moveAxisToEnd(axis, outputRank);
+    if (axis != predictionsRank - 1) {
+      int[] axisNew = moveAxisToEnd(axis, predictionsRank);
       predictions = tf.linalg.transpose(predictions, tf.constant(axisNew));
     }
 
@@ -528,20 +528,21 @@ public class Losses {
     Shape labelsShape = labels.asOutput().shape();
     int labelsRank = labelsShape.numDimensions();
 
-    boolean updateShape = labelsRank != outputRank - 1;
+    boolean updateShape = labelsRank != predictionsRank - 1;
     if (updateShape) { // TODO check to see if this is right
-      iLabels = tf.reshape(iLabels, tf.constant(-1)); // flatten one dimension
+      Shape newShape = labelsShape.take(labelsRank-1);
+      iLabels = tf.reshape(iLabels, tf.constant(newShape)); // flatten one dimension
       predictions =
           tf.reshape(
               predictions,
-              tf.constant(new long[] {-1L, outputShape.size(outputShape.numDimensions() - 1)}));
+              tf.constant(new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
     }
 
 
     @SuppressWarnings("unchecked")
     Operand<T> loss = tf.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
-    if (updateShape && outputRank >= 3) {
-      Shape newShape = outputShape.take(outputShape.numDimensions() - 1);
+    if (updateShape && predictionsRank >= 3) {
+      Shape newShape = predictionsShape.take(predictionsShape.numDimensions() - 1);
       loss = tf.reshape(loss, tf.constant(newShape));
     }
     return loss;
