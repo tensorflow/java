@@ -128,7 +128,8 @@
     <profile>
       <id>dev</id>
       <modules>
-        <module>tensorflow-keras</module>
+        <!-- Disabled while the library is still empty -->
+        <!--module>tensorflow-keras</module-->
       </modules>
     </profile>
     <!--

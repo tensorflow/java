@@ -108,7 +108,7 @@ public final class Shape {
    * an unknown size, {@link Shape#UNKNOWN_SIZE} is returned.
    *
    * @param i the index of the dimension to get the size for. If this Shape has a known number of
-   *     dimensions, it must be < {@link Shape#numDimensions()}. The index may be negative, in which
+   *     dimensions, it must be &lt; {@link Shape#numDimensions()}. The index may be negative, in which
    *     case the position is counted from the end of the shape. E.g.: {@code size(-1)} returns the
    *     size of the last dimension, {@code size(-2)} the size of the second to last dimension etc.
    * @return The size of the dimension with the given index if known, {@link Shape#UNKNOWN_SIZE}
@@ -236,7 +236,7 @@ public final class Shape {
    * Returns an n-dimensional Shape with the dimensions matching the first n dimensions of this
    * shape
    *
-   * @param n the number of leading dimensions to get, must be <= than {@link Shape#numDimensions()}
+   * @param n the number of leading dimensions to get, must be &lt;= than {@link Shape#numDimensions()}
    * @return an n-dimensional Shape with the first n dimensions matching the first n dimensions of
    *     this Shape
    */
@@ -260,7 +260,7 @@ public final class Shape {
    * Returns an n-dimensional Shape with the dimensions matching the last n dimensions of this
    * Shape.
    *
-   * @param n the number of trailing dimensions to get, must be <= than {@link
+   * @param n the number of trailing dimensions to get, must be &lt;= than {@link
    *     Shape#numDimensions()}
    * @return an n-dimensional shape with the dimensions matching the last n dimensions of this
    *     Shape, never null
@@ -326,7 +326,7 @@ public final class Shape {
   /**
    * Returns a new Shape, with another Shapes' dimensions appended. For both this Shape and the
    * other Shape, {@link Shape#isUnknown()} must return false. E.g. @code
-   * Shape.of(3,4).append(Shape.of(1,2)) => Shape.of(3,4,1,2) }
+   * Shape.of(3,4).append(Shape.of(1,2)) =&gt; Shape.of(3,4,1,2) }
    *
    * @param other another Shape, must not be {@code null}, must not be unknown
    * @return A new Shape consisting of this Shape's dimensions followed by the given Shape's

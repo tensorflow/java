@@ -60,8 +60,7 @@ import org.tensorflow.types.family.TType;
  *
  * <p><b>NOTE:</b> *
  *
- * <p>For a LeCunNormal equivalent initializer, use {@link *
- * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
+ * <p>For a LeCunNormal equivalent initializer, use {@link VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
  *
  * <p>For a LeCunUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM} *
  * for the distribution parameter. *
