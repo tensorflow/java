@@ -16,9 +16,9 @@ limitations under the License.
 */
 package org.tensorflow.ndarray;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShapeTest {
 
@@ -134,5 +134,37 @@ public class ShapeTest {
     assertNotNull(internalShape);
     internalShape[0] = 42L;
     assertEquals(2L, one.size(0));
+  }
+
+  @Test
+  public void testShapeCompatible() {
+    Shape a = Shape.unknown();
+    Shape b = Shape.of(2, 2);
+    assertTrue(a.isCompatibleWith(b));
+    assertTrue(b.isCompatibleWith(a));
+
+    a = Shape.of(2, 2);
+    assertTrue(a.isCompatibleWith(b));
+    assertTrue(b.isCompatibleWith(a));
+
+    a = Shape.of(2, -1);
+    assertTrue(a.isCompatibleWith(b));
+    assertTrue(b.isCompatibleWith(a));
+
+    a = Shape.of(-1, 2);
+    assertTrue(a.isCompatibleWith(b));
+    assertTrue(b.isCompatibleWith(a));
+
+    a = Shape.of(-1, -1);
+    assertTrue(a.isCompatibleWith(b));
+    assertTrue(b.isCompatibleWith(a));
+
+    a = Shape.of(1, 2);
+    assertFalse(a.isCompatibleWith(b));
+    assertFalse(b.isCompatibleWith(a));
+
+    a = Shape.of(1, 2, 3);
+    assertFalse(a.isCompatibleWith(b));
+    assertFalse(b.isCompatibleWith(a));
   }
 }
