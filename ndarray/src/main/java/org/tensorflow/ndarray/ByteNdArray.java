@@ -60,6 +60,7 @@ public interface ByteNdArray extends NdArray<Byte> {
    *  scalar.setByte(10);  // succeeds
    * }</pre>
    *
+   * @param value the value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
    * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension

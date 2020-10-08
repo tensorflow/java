@@ -5,7 +5,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -41,13 +41,15 @@
     <junit.version>5.6.2</junit.version>
     <jmh.version>1.21</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
-    <skipAssembly>true</skipAssembly>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
+    <gpg.skip>true</gpg.skip>
   </properties>
 
   <repositories>
     <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
+      <id>ossrh-snapshots</id>
+      <name>OSSRH Sonatype Snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <releases>
         <enabled>false</enabled>
@@ -59,8 +61,8 @@
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
+      <id>ossrh-snapshots</id>
+      <name>OSSRH Sonatype Snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <releases>
         <enabled>false</enabled>
@@ -70,6 +72,22 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+
+  <!--
+  Deploys to OSSRH/Maven central
+    We don't need to deploy to Bintray, as JCenter will eventually proxy artifacts upload in Maven
+    central. See Sonatype requirements at http://central.sonatype.org/pages/apache-maven.html
+  -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+    </repository>
+  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -102,7 +120,7 @@
 
   <profiles>
     <!--
-    Profile dev
+    Developing profile
         The 'dev' profile is used for local development or PR compilation check only.
         Here, we enable the `tensorflow-keras` module only under this profile, until
         it is mature enough for being deployed and distributed for the end users.
@@ -110,40 +128,43 @@
     <profile>
       <id>dev</id>
       <modules>
-        <module>tensorflow-keras</module>
+        <!-- Disabled while the library is still empty -->
+        <!--module>tensorflow-keras</module-->
       </modules>
     </profile>
     <!--
-    Profile ossrh
-        Deploys to ossrh/maven central
+    Deploying profile
+        Build the Javadoc when deploying
     -->
     <profile>
-      <id>ossrh</id>
-      <distributionManagement>
-        <!-- Sonatype requirements from http://central.sonatype.org/pages/apache-maven.html -->
-        <snapshotRepository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-      </distributionManagement>
+      <id>deploying</id>
+      <properties>
+        <maven.javadoc.skip>false</maven.javadoc.skip>
+        <maven.source.skip>false</maven.source.skip>
+      </properties>
     </profile>
     <!--
-    Profile bintray
-        Deploys to bintray/jcenter
+    Releasing profile
+        Activate GPG signing on all built artifacts and fetch native artifacts from staging repository
     -->
     <profile>
-      <id>bintray</id>
-      <distributionManagement>
-        <!-- https://blog.bintray.com/2015/09/17/publishing-your-maven-project-to-bintray/ -->
+      <id>releasing</id>
+      <properties>
+        <gpg.skip>false</gpg.skip>
+      </properties>
+      <repositories>
         <repository>
-          <id>bintray</id>
-          <url>https://api.bintray.com/maven/google/tensorflow/tensorflow/;publish=0</url>
+          <id>ossrh-staging</id>
+          <name>OSSRH Sonatype Staging</name>
+          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
         </repository>
-      </distributionManagement>
+      </repositories>
     </profile>
   </profiles>
 
@@ -159,10 +180,10 @@
   <build>
     <plugins>
       <!-- GPG signed components: http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->
-      <!--plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -172,7 +193,40 @@
             </goals>
           </execution>
         </executions>
-      </plugin-->
+        <configuration>
+          <gpgArguments>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
+          </gpgArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <quiet>true</quiet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>

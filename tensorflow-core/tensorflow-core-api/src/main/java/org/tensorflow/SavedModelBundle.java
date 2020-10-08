@@ -125,7 +125,7 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Sets the set of tags that identify the specific graph in the saved model to save.
      *
-     * <p/>Note that only one graph per model can be saved right now using this API.
+     * <p>Note that only one graph per model can be saved right now using this API.
      *
      * @param tags the tags identifying the specific MetaGraphDef to save.
      * @return this object
@@ -140,15 +140,15 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Save a concrete function of this model.
      *
-     * <p/>The concrete function carries a signature (i.e. a list of user-friendly input and outputs
+     * <p>The concrete function carries a signature (i.e. a list of user-friendly input and outputs
      * names to a graph) and a valid session to a graph to be saved in the model.
      *
-     * <p/><i>Note:Eventually, TensorFlow for Java will support the export of functions objects like
+     * <p><i>Note:Eventually, TensorFlow for Java will support the export of functions objects like
      * the Python API does but right now, only session-centric models are supported (i.e. models that
      * has a single main graph and one or more signatures). These models are compatible with those
      * exported by TensorFlow 1.x or by TensorFlow 2.x estimators.
      *
-     * <p>Therefore, all functions exported in a model should share the same session at the moment
+     * <br>Therefore, all functions exported in a model should share the same session at the moment
      * or an exception will be thrown.</i>
      *
      * @param function a function carrying a signature and a valid session to the graph to be saved
@@ -245,7 +245,7 @@ public class SavedModelBundle implements AutoCloseable {
   /**
    * Load a saved model.
    *
-   * <p/>Returns a <code>Loader</code> object that can set configuration options before actually
+   * <p>Returns a <code>Loader</code> object that can set configuration options before actually
    * loading the model,
    *
    * @param exportDir the directory path containing a saved model.
@@ -257,7 +257,7 @@ public class SavedModelBundle implements AutoCloseable {
   /**
    * Export a saved model.
    *
-   * <p/>Returns a <code>Exporter</code> object for setting configuration options before actually
+   * <p>Returns a <code>Exporter</code> object for setting configuration options before actually
    * saving the model.
    *
    * @param exportDir the directory path containing a saved model.
@@ -321,7 +321,7 @@ public class SavedModelBundle implements AutoCloseable {
   /**
    * Invokes the default function directly from this model.
    *
-   * <p/>The default function selection is done based on the first of the following conditions that
+   * <p>The default function selection is done based on the first of the following conditions that
    * is true:
    * <ul>
    *   <li>The function is the only signature available attached to the main graph of this saved model</li>

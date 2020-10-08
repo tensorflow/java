@@ -139,6 +139,7 @@ public final class DataBuffers {
    *
    * @param type the type of object stored in this buffer
    * @param size size of the buffer to allocate
+   * @param <T> data type
    * @return a new buffer
    */
   public static <T> DataBuffer<T> ofObjects(Class<T> type, long size) {
@@ -243,9 +244,10 @@ public final class DataBuffers {
    * Create a buffer from an array of objects into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(T[], boolean, boolean)} of(values, false, false}}
+   * array, which is equivalent to call {@link #of(Object[], boolean, boolean) of(values, false, false}}
    *
    * @param values objects values
+   * @param <T> data type
    * @return a new buffer
    */
   @SafeVarargs
@@ -377,6 +379,7 @@ public final class DataBuffers {
    * @param array array of objects
    * @param readOnly true if the buffer created must be read-only
    * @param makeCopy true if the array must be copied, false will wrap the provided array
+   * @param <T> data type
    * @return a new buffer
    */
   public static <T> DataBuffer<T> of(T[] array, boolean readOnly, boolean makeCopy) {

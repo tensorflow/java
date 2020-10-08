@@ -285,6 +285,10 @@ build:windows --verbose_failures
 # On windows, we never cross compile
 build:windows --distinct_host_configuration=false
 
+# Following option reduces considerably the compilation time on Windows with VS16.4+
+build:windows --copt=/d2ReducedOptimizeHugeFunctions
+build:windows --host_copt=/d2ReducedOptimizeHugeFunctions
+
 # Suppress all warning messages.
 build:short_logs --output_filter=DONT_MATCH_ANYTHING
 

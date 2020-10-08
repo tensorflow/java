@@ -27,23 +27,17 @@ import java.util.List;
 /**
  * Optimizer that implements the RMSProp algorithm.
  *
- * <p>The gist of RMSprop is to: <nl>
+ * <p>The gist of RMSprop is to: <ul>
  * <li>Maintain a moving (discounted) average of the square of gradients
- * <li>Divide the gradient by the root of this average </nl>
- *
- *     <p>
+ * <li>Divide the gradient by the root of this average </ul>
  *
  *     <p>This implementation of RMSprop uses plain momentum, not Nesterov momentum.
- *
- *     <p>
  *
  *     <p>The centered version additionally maintains a moving average of the gradients, and uses
  *     that average to estimate the variance.
  *
- *     <p>
- *
  * @see <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">Hinton G,
- *     et al. 2012, lecture notes</a> that is inexplicably the canonical reference.
+ *    et al. 2012, lecture notes</a> that is inexplicably the canonical reference.
  */
 public class RMSProp extends Optimizer {
 
@@ -96,8 +90,8 @@ public class RMSProp extends Optimizer {
    * @param momentum the acceleration factor, default is 0.
    * @param epsilon A small constant for numerical stability
    * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
-   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
-   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     gradient; if <code>false</code>, by the uncentered second moment. Setting this to <code>
+   *     true</code> may help with training, but is slightly more expensive in terms of computation
    *     and memory. Defaults to <code>false</code>.
    */
   public RMSProp(
@@ -143,8 +137,8 @@ public class RMSProp extends Optimizer {
    * @param momentum The acceleration factor, default is 0.
    * @param epsilon A small constant for numerical stability
    * @param centered If <code>true</code>, gradients are normalized by the estimated variance of the
-   *     gradient; if <code>false</code>>, by the uncentered second moment. Setting this to <code>
-   *     true</code>> may help with training, but is slightly more expensive in terms of computation
+   *     gradient; if <code>false</code>, by the uncentered second moment. Setting this to <code>
+   *     true</code> may help with training, but is slightly more expensive in terms of computation
    *     and memory. Defaults to <code>false</code>.
    */
   public RMSProp(
