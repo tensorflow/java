@@ -48,7 +48,7 @@ public abstract class Loss {
    * @param <T> The data type of the labels, predictions and loss.
    * @return the loss
    */
-  public <T extends TNumber> Operand<T> call(Operand<T> labels, Operand<T> predictions) {
+  public <T extends TNumber, U extends TNumber> Operand<T> call(Operand<U> labels, Operand<T> predictions) {
     return call(labels, predictions, null);
   }
 
@@ -62,13 +62,14 @@ public abstract class Loss {
    *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
    *     corresponding element in the sample_weight vector. If the shape of sample_weight is
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
-   *     y_pred is scaled by the corresponding value of sample_weight. (Note on dN-1: all loss
+   *     predictions is scaled by the corresponding value of sample_weight. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
-   * @param <T> The data type of the labels, predictions, sampleWeights and loss.
+   * @param <T> The data type of the predictions, sampleWeights and loss.
+   * @param <U> The data type of the labels.
    * @return the loss
    */
-  public abstract <T extends TNumber> Operand<T> call(
-      Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights);
+  public abstract <T extends TNumber, U extends TNumber> Operand<T> call(
+      Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights);
 
   /**
    * Gets the TensorFlow Ops
