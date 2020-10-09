@@ -1,11 +1,5 @@
 # TensorFlow for Java
 
-***!!! IMPORTANT NOTICE !!! This repository is UNDER CONSTRUCTION and does not yet host the code of the 
-offical TensorFlow Java artifacts!***
-
-***Please refer to the [TensorFlow Java module](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/java) 
-of the main repository for the actual code.***
-
 ## Welcome to the Java world of TensorFlow!
 
 TensorFlow can run on any JVM for building, training and running machine learning models. It comes with 
