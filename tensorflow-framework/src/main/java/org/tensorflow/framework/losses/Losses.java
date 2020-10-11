@@ -97,7 +97,7 @@ public class Losses {
   }
 
   /**
-   * Calculates the mean squared logarithmic percentage error between labels and predictions.
+   * Calculates the mean squared logarithmic error between labels and predictions.
    *
    * <p><code>loss = reduceMean(square(log(labels + 1) - log(predictions + 1)))</code>
    *
@@ -111,7 +111,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredLogarithmicError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, predictions.asOutput().dataType());
+    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
