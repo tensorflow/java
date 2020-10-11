@@ -29,12 +29,12 @@ public class LossesImpl {
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
    *     </code>.
-   * @return Tuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will be
+   * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will be
    *     null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
    *     could be extended by one dimension. If <code>sampleWeight</code> is null, (prediction,
    *     label) is returned.
    */
-  public static <T extends TNumber> Tuple<T> squeezeOrExpandDimensions(
+  public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions) {
     return squeezeOrExpandDimensions(tf, labels, predictions, null);
   }
@@ -56,12 +56,12 @@ public class LossesImpl {
    *     </code>.
    * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match<code>
    *     prediction</code>.
-   * @return Tuple of <code>prediction<s/code>, <code>labels</code> and <code>sampleWeight</code>.
+   * @return LossTuple of <code>prediction<s/code>, <code>labels</code> and <code>sampleWeight</code>.
    *     Each of them possibly has the last dimension squeezed, <code>sampleWeight</code> could be
    *     extended by one dimension. If <code>sampleWeight</code> is null, only the possibly shape modified <code>predictions</code> and <code>labels</code> are
    *     returned.
    */
-  public static <T extends TNumber> Tuple<T> squeezeOrExpandDimensions(
+  public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights) {
 
 
@@ -69,7 +69,7 @@ public class LossesImpl {
     long predictionsRank = predictionsShape.numDimensions();
 
     // Default case when no modifications are made.
-    Tuple<T> tuple = new Tuple<>(labels, predictions, sampleWeights);
+    LossTuple<T> lossTuple = new LossTuple<>(labels, predictions, sampleWeights);
     if (labels != null) {
       Shape labelsShape = labels.asOutput().shape();
       long labelsRank = labelsShape.numDimensions();
@@ -77,19 +77,19 @@ public class LossesImpl {
         // Use static rank for 'label' and 'prediction'.
         if (predictionsRank - labelsRank != 1 || predictionsShape.size(-1) == 1) {
           // label, prediction = confusion_matrix.remove_squeezable_dimensions(label, prediction)
-          tuple = removeSqueezableDimensions(tf, labels, predictions);
+          lossTuple = removeSqueezableDimensions(tf, labels, predictions);
         }
       } else { // use dynamic rank
-        tuple = removeSqueezableDimensions(tf, labels, predictions);
+        lossTuple = removeSqueezableDimensions(tf, labels, predictions);
       }
     }
     if (sampleWeights == null) { // nothing more to do.
-      return tuple;
+      return lossTuple;
     }
     Shape weightsShape = sampleWeights.asOutput().shape();
     long weightsRank = weightsShape.numDimensions();
     if (weightsRank == 0) { // scalar
-      return new Tuple<>(labels, predictions, sampleWeights);
+      return new LossTuple<>(labels, predictions, sampleWeights);
     }
 
     if (predictionsRank != Shape.UNKNOWN_SIZE && weightsRank != Shape.UNKNOWN_SIZE) {
@@ -99,7 +99,7 @@ public class LossesImpl {
       } else if (predictionsRank - weightsRank == 1) {
         sampleWeights = tf.expandDims(sampleWeights, tf.constant(-1L));
       }
-      return new Tuple<>(labels, predictions, sampleWeights);
+      return new LossTuple<>(labels, predictions, sampleWeights);
     }
     // Use dynamic rank.
     Operand<TInt32> weightsRankTensor = tf.rank(sampleWeights);
@@ -109,7 +109,7 @@ public class LossesImpl {
             tf.math.equal(weightsRankTensor, tf.constant(0)),
             sampleWeights,
             maybeAdjustWeights(tf, sampleWeights, rankDiff));
-    return new Tuple<>(labels, predictions, sampleWeights);
+    return new LossTuple<>(labels, predictions, sampleWeights);
   }
 
   /**
@@ -159,7 +159,7 @@ public class LossesImpl {
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
-  public static <T extends TNumber> Tuple<T> removeSqueezableDimensions(
+  public static <T extends TNumber> LossTuple<T> removeSqueezableDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions) {
     return removeSqueezableDimensions(tf, labels, predictions, 0);
   }
@@ -174,7 +174,7 @@ public class LossesImpl {
    * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
-  public static <T extends TNumber> Tuple<T> removeSqueezableDimensions(
+  public static <T extends TNumber> LossTuple<T> removeSqueezableDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, int expectedRankDiff) {
 
     tf = tf.withSubScope("removeSqueezableDimensions");
@@ -191,7 +191,7 @@ public class LossesImpl {
       } else if (rankDiff == expectedRankDiff - 1 && Shape.isCompatible(labelsShape.size(-1), 1)) {
         labels = tf.squeeze(labels);
       }
-      return new Tuple<>(labels, predictions);
+      return new LossTuple<>(labels, predictions);
     }
     // Use dynamic rank.
 
@@ -212,7 +212,7 @@ public class LossesImpl {
        */
       labels = tf.squeeze(labels, Squeeze.axis(Collections.singletonList(-1L)));
     }
-    return new Tuple<>(labels, predictions);
+    return new LossTuple<>(labels, predictions);
   }
 
   /**
@@ -231,7 +231,7 @@ public class LossesImpl {
     if (sampleWeight == null) {
       sampleWeight = tf.dtypes.cast(tf.constant(1), dataType);
     }
-    Tuple<T> result = squeezeOrExpandDimensions(tf, null, loss, sampleWeight);
+    LossTuple<T> result = squeezeOrExpandDimensions(tf, null, loss, sampleWeight);
     loss = result.getTarget();
     sampleWeight = result.getSampleWeights();
 
