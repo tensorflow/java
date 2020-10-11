@@ -11,6 +11,8 @@ import org.tensorflow.types.family.TNumber;
  * <p><code>loss = maximum(neg - pos + 1, 0)</code> where <code>neg=maximum((1-labels)*predictions)
  * </code> and <code>pos=sum(labels*predictions)</code>
  *
+ * <p><code>labels</code> values are expected to be 0 or 1.</p>
+ *
  * <p>Standalone usage:
  *
  * <pre>
@@ -52,7 +54,7 @@ public class CategoricalHinge extends Loss {
 
   /**
    * Creates a Categorical Hinge Loss using {@link Class#getSimpleName()} as the loss name and a
-   * Loss Reduction of {@link * Reduction#AUTO}
+   * Loss Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -85,7 +87,7 @@ public class CategoricalHinge extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.categoricalHinge(tf, labels, predictions);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.categoricalHinge(getTF(), labels, predictions);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

@@ -59,7 +59,7 @@ public class BinaryCrossentropy extends Loss {
   /**
    * Creates a Binary Crossentropy Loss using {@link Class#getSimpleName()} as the loss name, {@link
    * #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing and a
-   * Loss Reduction of {@link * Reduction#AUTO}
+   * Loss Reduction of {@link Reduction#AUTO}
    *
    *
    *
@@ -173,7 +173,7 @@ public class BinaryCrossentropy extends Loss {
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses =
-        Losses.binaryCrossentropy(tf, labels, predictions, fromLogits, labelSmoothing);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+        Losses.binaryCrossentropy(getTF(), labels, predictions, fromLogits, labelSmoothing);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

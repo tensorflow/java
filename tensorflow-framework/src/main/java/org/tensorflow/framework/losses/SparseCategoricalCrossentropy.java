@@ -164,7 +164,7 @@ public class SparseCategoricalCrossentropy extends Loss {
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses =
-        Losses.sparseCategoricalCrossentropy(tf, labels, predictions, fromLogits, axis);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+        Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axis);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

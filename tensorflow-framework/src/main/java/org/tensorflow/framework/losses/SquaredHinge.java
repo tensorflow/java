@@ -10,7 +10,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p><code>loss = square(maximum(1 - labels * predictions, 0))</code>
  *
- * <p>labels values are expected to be -1 or 1. If binary (0 or 1) labels are provided, they will be
+ * <p><code>labels</code> values are expected to be -1 or 1. If binary (0 or 1) labels are provided, they will be
  * converted to -1 or 1.
  *
  * <p>Standalone usage:
@@ -54,7 +54,7 @@ public class SquaredHinge extends Loss {
 
   /**
    * Creates a Squared Hinge Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link * Reduction#AUTO}
+   * Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -87,7 +87,7 @@ public class SquaredHinge extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.squaredHinge(tf, labels, predictions);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.squaredHinge(getTF(), labels, predictions);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

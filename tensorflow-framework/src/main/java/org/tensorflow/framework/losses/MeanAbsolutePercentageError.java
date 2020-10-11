@@ -50,7 +50,7 @@ public class MeanAbsolutePercentageError extends Loss {
 
   /**
    * Creates a MeanAbsolutePercentageError Loss using {@link Class#getSimpleName()} as the loss name
-   * and a Loss Reduction of {@link * Reduction#AUTO}
+   * and a Loss Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -83,7 +83,7 @@ public class MeanAbsolutePercentageError extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.meanAbsolutePercentageError(tf, labels, predictions);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.meanAbsolutePercentageError(getTF(), labels, predictions);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

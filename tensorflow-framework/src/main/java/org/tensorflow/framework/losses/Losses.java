@@ -32,7 +32,7 @@ public class Losses {
    * @param tf The TensorFlow Ops
    * @param labels the labels
    * @param predictions the predictions
-   * @param <T> the data type of the result
+   * @param <T> the data type of the predictions and result
    * @param <U> the data type of the labels
    * @return the mean absolute error
    */
@@ -54,7 +54,7 @@ public class Losses {
    * @param tf The TensorFlow Ops
    * @param labels the labels
    * @param predictions the predictions
-   * @param <T> the data type of the result
+   * @param <T> the data type of the predictions and result
    * @param <U> the data type of the labels
    * @return the mean squared error
    */
@@ -75,14 +75,14 @@ public class Losses {
    * @param tf The TensorFlow Ops
    * @param labels the labels
    * @param predictions the predictions
-   * @param <T> the data type of the result
+   * @param <T> the data type of the predictions and result
    * @param <U> the data type of the labels
    * @return the mean absolute percentage error
    */
   public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsolutePercentageError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, predictions.asOutput().dataType());
+    Operand<T> tLabels = tf.dtypes.cast(labels,dataType);
     Tuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -104,7 +104,7 @@ public class Losses {
    * @param tf The TensorFlow Ops
    * @param labels the labels
    * @param predictions the predictions
-   * @param <T> the data type of the result
+   * @param <T> the data type of the predictions and result
    * @param <U> the data type of the labels
    * @return the mean squared logarithmic percentage error
    */
@@ -262,7 +262,7 @@ public class Losses {
    * Computes the categorical hinge loss between labels and predictions.
    *
    * @param tf the TensorFlow Ops
-   * @param labels true targets
+   * @param labels true targets,  values are expected to be 0 or 1.
    * @param predictions the predictions
    * @param <T> the data type of the predictions and labels
    * @return the categorical hinge loss
@@ -330,7 +330,8 @@ public class Losses {
    * <p><code>loss = reduceMean(maximum(1 - labels * predictions, 0))</code>
    *
    * @param tf the TensorFlow Ops
-   * @param labels true targets
+   * @param labels true targets, values are expected to be -1 or 1. If binary (0 or 1) labels are
+   *     provided, they will be converted to -1 or 1.
    * @param predictions the predictions
    * @param <T> the data type of the predictions and labels
    * @return the hinge loss
@@ -554,7 +555,8 @@ public class Losses {
    * <p><code>loss = reduceMean(square(maximum(1 - labels * predictions, 0)))</code>
    *
    * @param tf the TensorFlow Ops
-   * @param labels true targets
+   * @param labels true targets, values are expected to be -1 or 1. If binary (0 or 1) labels are *
+   *     provided, they will be converted to -1 or 1.
    * @param predictions the predictions
    * @param <T> the data type of the predictions and labels
    * @return the squared hinge loss

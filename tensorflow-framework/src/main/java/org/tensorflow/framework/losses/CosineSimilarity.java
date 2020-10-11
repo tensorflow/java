@@ -158,7 +158,7 @@ public class CosineSimilarity extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.cosineSimilarity(tf, labels, predictions, axis);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.cosineSimilarity(getTF(), labels, predictions, axis);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

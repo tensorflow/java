@@ -118,7 +118,7 @@ public class Huber extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.huber(tf, labels, predictions, delta);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.huber(getTF(), labels, predictions, delta);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

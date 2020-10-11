@@ -18,18 +18,21 @@ public class LossesImpl {
    * Squeeze or expand last dimension if needed with a sampleWeights of one.
    *
    * <ol type="1">
-   *   <li>Squeezes last dim of <code>predictions</code> or <code>labels</code> if their rank differs by 1 (using
-   *       {@link #removeSqueezableDimensions}).
-   *   <li>Squeezes or expands last dim of <code>sampleWeight` if its rank differs by 1 from the new
-   *       rank of <code>predictions`. If <code>sampleWeight` is scalar, it is kept scalar./li>
+   *   <li>Squeezes last dim of <code>predictions</code> or <code>labels</code> if their rank
+   *       differs by 1 (using {@link #removeSqueezableDimensions}).
+   *   <li>Squeezes or expands last dim of <code>sampleWeight</code> if its rank differs by 1 from
+   *       the new rank of <code>predictions</code>. If <code>sampleWeight</code> is scalar, it is
+   *       kept scalar./li>
    * </ol>
    *
    * @param tf the TensorFlow Ops
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
-   * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction</code>.
-   * @return Tuple of <code>prediction</code>, <code>label</code> and <code>sampleWeight</code>. Each of them possibly has the last
-   *     dimension squeezed, <code>sampleWeight</code> could be extended by one dimension. If <code>sampleWeight</code>
-   *     is null, (prediction, label) is returned.
+   * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
+   *     </code>.
+   * @return Tuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will be
+   *     null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
+   *     could be extended by one dimension. If <code>sampleWeight</code> is null, (prediction,
+   *     label) is returned.
    */
   public static <T extends TNumber> Tuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions) {
@@ -40,36 +43,39 @@ public class LossesImpl {
    * Squeeze or expand last dimension if needed.
    *
    * <ol type="1">
-   *   <li>Squeezes last dim of `predictions` or `labels` if their rank differs by 1 (using *
-   *       `confusion_matrix.remove_squeezable_dimensions`). *
-   *   <li>Squeezes or expands last dim of `sampleWeight` if its rank differs by 1 from the new *
-   *       rank of `predictions`. If `sampleWeight` is scalar, it is kept scalar./li> *
+   *   <li>Squeezes last dim of <code>predictions</code> or <code>labels</code> if their rank do not
+   *       differ by 1.
+   *   <li>Squeezes or expands last dim of <code>sampleWeight</code> if its rank differs by 1 from
+   *       the new rank of <code>predictions</code>. If <code>sampleWeight</code> is scalar, it is
+   *       kept scalar.
    * </ol>
    *
    * @param tf the TensorFlow Ops
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
    *     </code>.
-   * @param sampleWeight Optional sample weight(s) <code>Operand</code> whose dimensions match<code>
+   * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match<code>
    *     prediction</code>.
-   * @return Tuple of <code>prediction</code>, <code>label</code> and <code>sampleWeight</code>.
+   * @return Tuple of <code>prediction<s/code>, <code>labels</code> and <code>sampleWeight</code>.
    *     Each of them possibly has the last dimension squeezed, <code>sampleWeight</code> could be
-   *     extended by one dimension. If <code>sampleWeight</code> is null, (prediction, label) is
+   *     extended by one dimension. If <code>sampleWeight</code> is null, only the possibly shape modified <code>predictions</code> and <code>labels</code> are
    *     returned.
    */
   public static <T extends TNumber> Tuple<T> squeezeOrExpandDimensions(
-      Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeight) {
-    Tuple<T> tuple = new Tuple<>(labels, predictions);
+      Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
 
     Shape predictionsShape = predictions.asOutput().shape();
     long predictionsRank = predictionsShape.numDimensions();
 
+    // Default case when no modifications are made.
+    Tuple<T> tuple = new Tuple<>(labels, predictions, sampleWeights);
     if (labels != null) {
       Shape labelsShape = labels.asOutput().shape();
-      long labelRank = labelsShape.numDimensions();
-      if (labelRank != Shape.UNKNOWN_SIZE && predictionsRank != Shape.UNKNOWN_SIZE) {
-        // Use static rank for `label` and `prediction`.
-        if (predictionsRank - labelRank != 1 || predictionsShape.size(-1) == 1) {
+      long labelsRank = labelsShape.numDimensions();
+      if (labelsRank != Shape.UNKNOWN_SIZE && predictionsRank != Shape.UNKNOWN_SIZE) {
+        // Use static rank for 'label' and 'prediction'.
+        if (predictionsRank - labelsRank != 1 || predictionsShape.size(-1) == 1) {
           // label, prediction = confusion_matrix.remove_squeezable_dimensions(label, prediction)
           tuple = removeSqueezableDimensions(tf, labels, predictions);
         }
@@ -77,33 +83,33 @@ public class LossesImpl {
         tuple = removeSqueezableDimensions(tf, labels, predictions);
       }
     }
-    if (sampleWeight == null) {
+    if (sampleWeights == null) { // nothing more to do.
       return tuple;
     }
-    Shape weightsShape = sampleWeight.asOutput().shape();
+    Shape weightsShape = sampleWeights.asOutput().shape();
     long weightsRank = weightsShape.numDimensions();
     if (weightsRank == 0) { // scalar
-      return new Tuple<>(labels, predictions, sampleWeight);
+      return new Tuple<>(labels, predictions, sampleWeights);
     }
 
     if (predictionsRank != Shape.UNKNOWN_SIZE && weightsRank != Shape.UNKNOWN_SIZE) {
 
       if (weightsRank - predictionsRank == 1) {
-        sampleWeight = tf.squeeze(sampleWeight);
+        sampleWeights = tf.squeeze(sampleWeights);
       } else if (predictionsRank - weightsRank == 1) {
-        sampleWeight = tf.expandDims(sampleWeight, tf.constant(-1L));
+        sampleWeights = tf.expandDims(sampleWeights, tf.constant(-1L));
       }
-      return new Tuple<>(labels, predictions, sampleWeight);
+      return new Tuple<>(labels, predictions, sampleWeights);
     }
     // Use dynamic rank.
-    Operand<TInt32> weightsRankTensor = tf.rank(sampleWeight);
+    Operand<TInt32> weightsRankTensor = tf.rank(sampleWeights);
     Operand<TInt32> rankDiff = tf.math.sub(weightsRankTensor, tf.rank(predictions));
-    sampleWeight =
+    sampleWeights =
         tf.select(
             tf.math.equal(weightsRankTensor, tf.constant(0)),
-            sampleWeight,
-            maybeAdjustWeights(tf, sampleWeight, rankDiff));
-    return new Tuple<>(labels, predictions, sampleWeight);
+            sampleWeights,
+            maybeAdjustWeights(tf, sampleWeights, rankDiff));
+    return new Tuple<>(labels, predictions, sampleWeights);
   }
 
   /**
@@ -148,9 +154,10 @@ public class LossesImpl {
    * Squeeze last dim if ranks differ from expected by exactly 1.
    *
    * @param tf the TensorFlowOps
-   * @param labels Label values, a `Tensor` whose dimensions match `predictions`.
-   * @param predictions Predicted values, a `Tensor` of arbitrary dimensions.
-   * @return `labels` and `predictions`, possibly with last dim squeezed.
+   * @param labels Label values, a <code>Tensor</code> whose dimensions match <code>predictions
+   *     </code>.
+   * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
+   * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
   public static <T extends TNumber> Tuple<T> removeSqueezableDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions) {
@@ -161,10 +168,11 @@ public class LossesImpl {
    * Squeeze last dim if ranks differ from expected by exactly 1.
    *
    * @param tf the TensorFlowOps
-   * @param labels Label values, a `Tensor` whose dimensions match `predictions`.
-   * @param predictions Predicted values, a `Tensor` of arbitrary dimensions.
-   * @param expectedRankDiff Expected result of `rank(predictions) - rank(labels)`.
-   * @return `labels` and `predictions`, possibly with last dim squeezed.
+   * @param labels Label values, a <code>Operand</code> whose dimensions match <code>predictions
+   *     </code>.
+   * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
+   * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
+   * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
   public static <T extends TNumber> Tuple<T> removeSqueezableDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, int expectedRankDiff) {

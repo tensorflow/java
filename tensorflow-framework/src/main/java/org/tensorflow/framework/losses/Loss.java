@@ -45,7 +45,8 @@ public abstract class Loss {
    *
    * @param labels the truth values or labels
    * @param predictions the predictions
-   * @param <T> The data type of the labels, predictions and loss.
+   * @param <T> The data type of the predictions and loss.
+   * @param <U> The data type of the labels.
    * @return the loss
    */
   public <T extends TNumber, U extends TNumber> Operand<T> call(Operand<U> labels, Operand<T> predictions) {

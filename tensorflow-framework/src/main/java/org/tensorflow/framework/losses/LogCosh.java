@@ -51,7 +51,7 @@ public class LogCosh extends Loss {
 
   /**
    * Creates a LogCosh Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link * Reduction#AUTO}
+   * Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -60,7 +60,7 @@ public class LogCosh extends Loss {
   }
 
   /**
-   * Creates a LogCosh Loss using a Loss Reduction of {@link * Reduction#AUTO}
+   * Creates a LogCosh Loss using a Loss Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -93,7 +93,7 @@ public class LogCosh extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.logCosh(tf, labels, predictions);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.logCosh(getTF(), labels, predictions);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

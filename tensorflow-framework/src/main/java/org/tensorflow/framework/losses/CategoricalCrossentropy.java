@@ -63,7 +63,7 @@ public class CategoricalCrossentropy extends Loss {
   /**
    * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
    * {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
-   * labelSmoothing, a Loss Reduction of {@link * Reduction#AUTO}, and an axis of {@link
+   * labelSmoothing, a Loss Reduction of {@link Reduction#AUTO}, and an axis of {@link
    * #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
@@ -74,7 +74,7 @@ public class CategoricalCrossentropy extends Loss {
 
   /**
    * Creates a categorical cross entropy Loss using {@link #FROM_LOGITS_DEFAULT} for fromLogits,
-   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link *
+   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link
    * Reduction#AUTO}, and an axis of {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
@@ -110,7 +110,7 @@ public class CategoricalCrossentropy extends Loss {
 
   /**
    * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link *
+   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link
    * Reduction#AUTO}, and an axis of {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
@@ -122,7 +122,7 @@ public class CategoricalCrossentropy extends Loss {
 
   /**
    * Creates a categorical cross entropy Loss using {@link #LABEL_SMOOTHING_DEFAULT} for
-   * labelSmoothing, a Loss Reduction of {@link * Reduction#AUTO}, and a channel axis of {@link
+   * labelSmoothing, a Loss Reduction of {@link Reduction#AUTO}, and a channel axis of {@link
    * #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
@@ -135,7 +135,7 @@ public class CategoricalCrossentropy extends Loss {
 
   /**
    * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * a Loss Reduction of {@link * Reduction#AUTO}, and a channel axis of {@link #DEFAULT_AXIS}
+   * a Loss Reduction of {@link Reduction#AUTO}, and a channel axis of {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
@@ -149,7 +149,7 @@ public class CategoricalCrossentropy extends Loss {
   }
 
   /**
-   * Creates a categorical cross entropy Loss using a Loss Reduction of {@link * Reduction#AUTO},
+   * Creates a categorical cross entropy Loss using a Loss Reduction of {@link Reduction#AUTO},
    * and a channel axis of {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
@@ -213,7 +213,7 @@ public class CategoricalCrossentropy extends Loss {
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses =
-        Losses.categoricalCrossentropy(tf, labels, predictions, fromLogits, labelSmoothing, axis);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+        Losses.categoricalCrossentropy(getTF(), labels, predictions, fromLogits, labelSmoothing, axis);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

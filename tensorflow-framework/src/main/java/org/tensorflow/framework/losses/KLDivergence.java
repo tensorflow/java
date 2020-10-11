@@ -53,7 +53,7 @@ public class KLDivergence extends Loss {
 
   /**
    * Creates a Kullback Leibler Divergence Loss using {@link Class#getSimpleName()} as the loss name
-   * and a Loss Reduction of {@link * Reduction#AUTO}
+   * and a Loss Reduction of {@link Reduction#AUTO}
    *
    * @param tf the TensorFlow Ops
    */
@@ -87,7 +87,7 @@ public class KLDivergence extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.kullbackLeiblerDivergence(tf, labels, predictions);
-    return LossesImpl.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
+    Operand<T> losses = Losses.kullbackLeiblerDivergence(getTF(), labels, predictions);
+    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }
