@@ -29,8 +29,8 @@ public class LossesImpl {
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
    *     </code>.
-   * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will be
-   *     null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
+   * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will
+   *     be null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
    *     could be extended by one dimension. If <code>sampleWeight</code> is null, (prediction,
    *     label) is returned.
    */
@@ -63,7 +63,6 @@ public class LossesImpl {
    */
   public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-
 
     Shape predictionsShape = predictions.asOutput().shape();
     long predictionsRank = predictionsShape.numDimensions();
@@ -183,7 +182,7 @@ public class LossesImpl {
     Shape labelsShape = labels.asOutput().shape();
     int labelsRank = labelsShape.numDimensions();
 
-    if (predictionsRank != Shape.UNKNOWN_SIZE && labelsRank != Shape.UNKNOWN_SIZE) {
+    if (predictionsRank != Shape.UNKNOWN_SIZE || labelsRank != Shape.UNKNOWN_SIZE) {
       // Use static rank.
       int rankDiff = predictionsRank - labelsRank;
       if (rankDiff == expectedRankDiff + 1 && Shape.isCompatible(predictionsShape.size(-1), 1)) {
@@ -290,23 +289,15 @@ public class LossesImpl {
    * @return a Constant that represents all the axes of the operand.
    */
   public static <T extends TNumber> Operand<TInt32> allAxis(Ops tf, Operand<T> op) {
-    int[] ranks = allAxis(op);
-    return tf.constant(ranks);
-  }
-
-  /**
-   * Gets an integer array representing all the axes of the operand.
-   *
-   * @param op the Operand
-   * @param <T> the type of Operand
-   * @return the integer array representing all the axes of the operand.
-   */
-  private static <T extends TNumber> int[] allAxis(Operand<T> op) {
     int rank = op.asOutput().shape().numDimensions();
-    int[] axes = new int[rank];
-    for (int i = 0; i < rank; i++) {
-      axes[i] = i;
+    if (rank != Shape.UNKNOWN_SIZE) {
+      int[] axes = new int[rank];
+      for (int i = 0; i < rank; i++) {
+        axes[i] = i;
+      }
+      return tf.constant(axes);
+    } else {
+      return tf.range(tf.constant(0), tf.rank(op), tf.constant(1));
     }
-    return axes;
   }
 }
