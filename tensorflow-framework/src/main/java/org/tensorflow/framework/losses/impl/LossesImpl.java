@@ -255,7 +255,7 @@ public class LossesImpl {
       loss = weightedLoss;
     } else {
       loss =
-          tf.reduceSum(weightedLoss, allAxis(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
+          tf.reduceSum(weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
       if (reduction == Reduction.AUTO || reduction == Reduction.SUM_OVER_BATCH_SIZE) {
         loss = safeMean(tf, loss, weightedLoss.asOutput().shape().size());
       }
@@ -275,7 +275,7 @@ public class LossesImpl {
    */
   public static <T extends TNumber> Operand<T> safeMean(
       Ops tf, Operand<T> losses, long numElements) {
-    Operand<T> totalLoss = tf.reduceSum(losses, allAxis(tf, losses));
+    Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
     return tf.math.divNoNan(
         totalLoss, tf.dtypes.cast(tf.constant(numElements), losses.asOutput().dataType()));
   }
@@ -288,7 +288,7 @@ public class LossesImpl {
    * @param <T> the type of Operand
    * @return a Constant that represents all the axes of the operand.
    */
-  public static <T extends TNumber> Operand<TInt32> allAxis(Ops tf, Operand<T> op) {
+  public static <T extends TNumber> Operand<TInt32> allAxes(Ops tf, Operand<T> op) {
     int rank = op.asOutput().shape().numDimensions();
     if (rank != Shape.UNKNOWN_SIZE) {
       int[] axes = new int[rank];
