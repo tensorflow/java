@@ -166,8 +166,6 @@ This table shows the mapping between different version of TensorFlow for Java an
 
 | TensorFlow Java Version  | TensorFlow Version |
 | ------------- | ------------- |
-| 0.1.0-SNAPSHOT  | 2.2.0  |
-| 0.2.0-SNAPSHOT  | 2.3.1  |
 | 0.2.0  | 2.3.1  |
 | 0.3.0-SNAPSHOT  | 2.3.1  |
 
