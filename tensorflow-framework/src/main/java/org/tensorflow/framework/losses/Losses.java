@@ -150,12 +150,12 @@ public class Losses {
     if (labelSmoothing != 0.0f) {
       tLabels = smoothLabelsBinaryX(tf, tLabels, labelSmoothing);
     }
-    Operand<T> bce = binaryCrossentropy(tf, tLabels, predictions, fromLogits);
+    Operand<T> bce = binaryCrossentropyHelper(tf, tLabels, predictions, fromLogits);
     return tf.math.mean(bce, tf.constant(-1));
   }
 
   /**
-   * Compute binary crossentropy loss between labels and predictions.
+   * Computes the unreduced crossentropy loss between labels and predictions.
    *
    * @param tf the TensorFlow Ops
    * @param target the target Operand
@@ -165,7 +165,7 @@ public class Losses {
    * @param <T> the data type of the Operands
    * @return the binary crossentropy loss.
    */
-  private static <T extends TNumber> Operand<T> binaryCrossentropy(
+  private static <T extends TNumber> Operand<T> binaryCrossentropyHelper(
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
     if (fromLogits) {
       return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
