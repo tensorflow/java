@@ -88,7 +88,7 @@ public class LossesImpl {
     Shape weightsShape = sampleWeights.asOutput().shape();
     long weightsRank = weightsShape.numDimensions();
     if (weightsRank == 0) { // scalar
-      return new LossTuple<>(labels, predictions, sampleWeights);
+      return new LossTuple<>(lossTuple.getLabels(), lossTuple.getTarget(), sampleWeights);
     }
 
     if (predictionsRank != Shape.UNKNOWN_SIZE && weightsRank != Shape.UNKNOWN_SIZE) {
@@ -98,7 +98,7 @@ public class LossesImpl {
       } else if (predictionsRank - weightsRank == 1) {
         sampleWeights = tf.expandDims(sampleWeights, tf.constant(-1L));
       }
-      return new LossTuple<>(labels, predictions, sampleWeights);
+      return new LossTuple<>(lossTuple.getLabels(), lossTuple.getTarget(), sampleWeights);
     }
     // Use dynamic rank.
     Operand<TInt32> weightsRankTensor = tf.rank(sampleWeights);
@@ -108,7 +108,7 @@ public class LossesImpl {
             tf.math.equal(weightsRankTensor, tf.constant(0)),
             sampleWeights,
             maybeAdjustWeights(tf, sampleWeights, rankDiff));
-    return new LossTuple<>(labels, predictions, sampleWeights);
+    return new LossTuple<>(lossTuple.getLabels(), lossTuple.getTarget(), sampleWeights);
   }
 
   /**
