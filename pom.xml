@@ -120,19 +120,6 @@
 
   <profiles>
     <!--
-    Developing profile
-        The 'dev' profile is used for local development or PR compilation check only.
-        Here, we enable the `tensorflow-keras` module only under this profile, until
-        it is mature enough for being deployed and distributed for the end users.
-    -->
-    <profile>
-      <id>dev</id>
-      <modules>
-        <!-- Disabled while the library is still empty -->
-        <!--module>tensorflow-keras</module-->
-      </modules>
-    </profile>
-    <!--
     Deploying profile
         Build the Javadoc when deploying
     -->
