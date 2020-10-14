@@ -429,7 +429,7 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   private static void validateTags(String[] tags) {
-    if (tags == null || tags.length == 0 || Arrays.stream(tags).anyMatch(t -> t == null || t.isEmpty())) {
+    if (tags == null || Arrays.stream(tags).anyMatch(t -> t == null || t.isEmpty())) {
       throw new IllegalArgumentException("Invalid tags: " + Arrays.toString(tags));
     }
   }
