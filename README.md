@@ -26,31 +26,13 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-framework`
   * Primary API for building and training neural networks with TensorFlow
   * Intended audience: neural network developers
+  * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
      
 * `ndarray`
   * Generic utility library for n-dimensional data I/O operations
   * Used by TensorFlow but does not depend on TensorFlow
   * Intended audience: any developer who needs a Java n-dimensional array implementation, whether or not they
     use it with TensorFlow
-    
-More specifically, here are the goals for the framework API:
-
-* If either you know how to implement a model in the Python Keras API, or you are reimplementing an 
-  existing Python Keras model in Java, you should be able to cleanly and naturally follow the same 
-  high-level structure in the framework API.
-
-* Also, given some familiarity with patterns followed throughout the framework API, you should be 
-  able to easily translate every detail of a Python Keras implementation into the framework API.
-
-* However, the framework API is not intended to literally mimic the Python Keras API. Rather, it 
-  should expose the same capabilities in an API that feels natural and idiomatic to a Java 
-  programmer who does not know Keras. If we ever find ourselves unable to reconcile this goal with 
-  easy translation from Python Keras, we may split out a Keras layer.
-
-* Also, the framework API should support fine control over all aspects of modeling, training, and 
-  inference. Unlike with Python Keras, we want this to feel like staying in the same API rather 
-  than diving into a separate layer. But here again, if we are ever unable to reconcile this goal 
-  with easy translation from Python Keras, we may split the framework API into two layers.
   
 ## Building Sources
 
