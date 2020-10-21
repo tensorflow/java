@@ -42,21 +42,7 @@ public class SwishTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of Swish call method */
-  @Test
-  public void testCallInt() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          java.lang.IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Swish<TInt32> instance = new Swish<>(tf);
-              Operand<TInt32> result = instance.call(tf.constant(input));
-            }
-          });
-  }
+
 
   /** Test of Swish call method */
   @Test

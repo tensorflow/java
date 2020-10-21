@@ -20,9 +20,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** @author Jim Clarke */
 public class SoftplusTest {
@@ -42,23 +39,6 @@ public class SoftplusTest {
 
   @AfterEach
   public void tearDown() {}
-
-  /** Test of Softplus call method */
-  @Test
-  public void testCallInt() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          java.lang.IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Softplus<TInt32> instance = new Softplus<>(tf);
-              Operand<TInt32> result = instance.call(tf.constant(input));
-            }
-          });
-  }
 
   /** Test of Softplus call method */
   @Test

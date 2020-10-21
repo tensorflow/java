@@ -54,7 +54,7 @@ public class ReLUTest {
 
   /** Test of ReLU call method */
   @Test
-  public void testCallint() {
+  public void testCallInt() {
     int[][] input = {{1, -2}, {3, -4}, {-1, 2}, {-3, 4}};
     int[][] expected = {{1, 0}, {3, 0}, {0, 2}, {0, 4}};
     for (TestSession.Mode tfMode : tfModes)

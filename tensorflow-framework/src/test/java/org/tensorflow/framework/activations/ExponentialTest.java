@@ -42,21 +42,7 @@ public class ExponentialTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of Exponential call method. */
-  @Test
-  public void testCallInt() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Exponential<TInt32> instance = new Exponential<>(tf);
-              Operand<TInt32> result = instance.call(tf.constant(input));
-            }
-          });
-  }
+
 
   /** Test of Exponential call method. */
   @Test

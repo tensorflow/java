@@ -43,21 +43,7 @@ public class ELUTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of ELU call method */
-  @Test
-  public void testCallInt() {
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          java.lang.IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Operand<TInt32> input = tf.constant(new int[] {1, 2, 3, 4, 5});
-              ELU<TInt32> instance = new ELU<>(tf);
-              Operand<TInt32> result = instance.call(input);
-            }
-          });
-  }
+
 
   /** Test of ELU call method */
   @Test

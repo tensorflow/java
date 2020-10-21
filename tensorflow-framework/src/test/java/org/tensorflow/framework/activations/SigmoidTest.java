@@ -42,21 +42,6 @@ public class SigmoidTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of Sigmoid call method */
-  @Test
-  public void testCallInt() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          java.lang.IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Sigmoid<TInt32> instance = new Sigmoid<>(tf);
-              Operand<TInt32> result = instance.call(tf.constant(input));
-            }
-          });
-  }
 
   /** Test of Sigmoid call method */
   @Test
