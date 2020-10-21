@@ -19,14 +19,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceMax;
 import org.tensorflow.op.core.ReduceSum;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Softmax converts a real vector to a vector of categorical probabilities.
  *
  * <p>The elements of the output vector are in range (0, 1) and sum to 1.
  *
- * <p>Each vector is handled independently. The <code>axis</code>argument sets which axis of the
+ * <p>Each vector is handled independently. The <code>axis</code> argument sets which axis of the
  * input the function is applied along.
  *
  * <p>Softmax is often used as the activation for the last layer of a classification network because
@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the activation
  */
-public class Softmax<T extends TNumber> extends Activation<T> {
+public class Softmax<T extends TFloating> extends Activation<T> {
 
   private static final int AXIS_DEFAULT = -1;
 
@@ -73,10 +73,6 @@ public class Softmax<T extends TNumber> extends Activation<T> {
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     Shape shape = input.asOutput().shape();
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {

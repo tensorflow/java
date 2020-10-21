@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Softsign activation function, <code>softsign(x) = x / (abs(x) + 1)</code>.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the activation
  */
-public class Softsign<T extends TNumber> extends Activation<T> {
+public class Softsign<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates a Softsign activation.
@@ -49,14 +49,9 @@ public class Softsign<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.nn.softsign(input);
   }
 }

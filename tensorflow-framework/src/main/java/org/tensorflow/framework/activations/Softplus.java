@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Softplus activation function, <code>softplus(x) = log(exp(x) + 1)</code>.
@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TNumber;
  *     //                 1.3132616e+00f, 2.0000000e+01f]
  * </pre>
  */
-public class Softplus<T extends TNumber> extends Activation<T> {
+public class Softplus<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates a Softplus activation function.
@@ -48,14 +48,9 @@ public class Softplus<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.math.softplus(input);
   }
 }

@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Scaled Exponential Linear Unit (SELU).
@@ -31,8 +31,8 @@ import org.tensorflow.types.family.TNumber;
  * <p>where <code>alpha</code> and <code>scale</code> are pre-defined constants (<code>
  * alpha=1.67326324</code> and <code>scale=1.05070098</code>).
  *
- * <p>Basically, the SELU activation function multiplies <code>scale</code> (&gt; 1) with the output of
- * the elu function to ensure a slope larger than one for positive inputs.
+ * <p>Basically, the SELU activation function multiplies <code>scale</code> (&gt; 1) with the output
+ * of the elu function to ensure a slope larger than one for positive inputs.
  *
  * <p>The values of <code>alpha</code> and <code>scale</code> are chosen so that the mean and
  * variance of the inputs are preserved between two consecutive layers as long as the weights are
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
-public class SELU<T extends TNumber> extends Activation<T> {
+public class SELU<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates a Scaled Exponential Linear Unit (SELU) activation.
@@ -61,14 +61,9 @@ public class SELU<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.nn.selu(input);
   }
 }

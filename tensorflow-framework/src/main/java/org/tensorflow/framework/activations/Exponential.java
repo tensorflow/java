@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Exponential activation function.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the activation
  */
-public class Exponential<T extends TNumber> extends Activation<T> {
+public class Exponential<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates an Exponential activation.
@@ -49,14 +49,9 @@ public class Exponential<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return an Operand for the exponential activation: <code>exp(x)</code>.
-   * @throws IllegalArgumentException if the input is not a floating type
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.math.exp(input);
   }
 }

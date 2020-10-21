@@ -17,7 +17,7 @@ package org.tensorflow.framework.activations;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Hard sigmoid activation.
@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the result
  */
-public class HardSigmoid<T extends TNumber> extends Activation<T> {
+public class HardSigmoid<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates Hard sigmoid activation.
@@ -60,14 +60,9 @@ public class HardSigmoid<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     DataType<T> dataType = input.asOutput().dataType();
     Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), dataType);
     Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), dataType);

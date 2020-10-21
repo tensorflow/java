@@ -117,28 +117,29 @@ public class ReLU<T extends TNumber> extends Activation<T> {
       }
     }
 
+    Operand<T> lInput;
     if (threshold != 0) {
       // computes input for input > threshold else 0
       Greater greater = tf.math.greater(input, tf.dtypes.cast(tf.constant(threshold), dataType));
-      input = tf.math.mul(input, tf.dtypes.cast(greater, dataType));
+      lInput = tf.math.mul(input, tf.dtypes.cast(greater, dataType));
     } else if (maxValue == 6) {
       // if no threshold, then can use nn.relu6 native TF op for performance
-      input = tf.nn.relu6(input);
+      lInput = tf.nn.relu6(input);
       clipMax = false;
     } else {
-      input = tf.nn.relu(input);
+      lInput = tf.nn.relu(input);
     }
     if (clipMax) {
       Operand<T> lmaxValue = tf.dtypes.cast(tf.constant(maxValue), dataType);
       Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
-      input = tf.clipByValue(input, zero, lmaxValue);
+      lInput = tf.clipByValue(lInput, zero, lmaxValue);
     }
 
     if (alpha != 0.) {
-      input =
+      lInput =
           tf.math.sub(
-              input, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), dataType), negativePart));
+              lInput, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), dataType), negativePart));
     }
-    return input;
+    return lInput;
   }
 }

@@ -18,7 +18,7 @@ import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Exponential linear unit.
@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TNumber;
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
-public class ELU<T extends TNumber> extends Activation<T> {
+public class ELU<T extends TFloating> extends Activation<T> {
 
   private static final double ALPHA_DEFAULT = 1.0;
 
@@ -82,18 +82,13 @@ public class ELU<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
+
     Operand<T> result = tf.nn.elu(input);
-    if (alpha == 1.0) {
-      return result;
-    } else {
+    if (alpha == 1.0) return result;
+    else {
       DataType<T> dataType = input.asOutput().dataType();
       Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), dataType));
       Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), dataType));

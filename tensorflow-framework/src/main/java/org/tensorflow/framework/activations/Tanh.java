@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Hyperbolic tangent activation function.
@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the activation
  */
-public class Tanh<T extends TNumber> extends Activation<T> {
+public class Tanh<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates a Hyperbolic tangent activation.
@@ -47,10 +47,6 @@ public class Tanh<T extends TNumber> extends Activation<T> {
   /** {@inheritDoc} */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.math.tanh(input);
   }
 }

@@ -16,13 +16,14 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Sigmoid activation. <code>sigmoid(x) = 1 / (1 + exp(-x))</code>.
  *
- * <p>Applies the sigmoid activation function. For small values (&lt;-5), <code>sigmoid</code> returns
- * a value close to zero, and for large values (&gt;5) the result of the function gets close to 1.
+ * <p>Applies the sigmoid activation function. For small values (&lt;-5), <code>sigmoid</code>
+ * returns a value close to zero, and for large values (&gt;5) the result of the function gets close
+ * to 1.
  *
  * <p>Sigmoid is equivalent to a 2-element Softmax, where the second element is assumed to be zero.
  * The sigmoid function always returns a value between 0 and 1.
@@ -40,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> the data type of the activation
  */
-public class Sigmoid<T extends TNumber> extends Activation<T> {
+public class Sigmoid<T extends TFloating> extends Activation<T> {
 
   /**
    * Creates a Sigmoid activation.
@@ -56,14 +57,9 @@ public class Sigmoid<T extends TNumber> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
-   * @throws IllegalArgumentException if the data type is not a floating data type.
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    if (!input.asOutput().dataType().isFloating()) {
-      throw new IllegalArgumentException(
-          "Must be a Floating Point DataType: " + input.asOutput().dataType());
-    }
     return tf.math.sigmoid(input);
   }
 }
