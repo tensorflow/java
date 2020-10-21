@@ -45,21 +45,6 @@ public class SoftmaxTest {
   @AfterEach
   public void tearDown() {}
 
-  /** Test of Softmax method, of class Activations. */
-  @Test
-  public void testIntThrowsIAE() {
-    int[][] input = {{1, -2, 3, -4}, {-1, 2, -3, 4}};
-    for (TestSession.Mode tfMode : tfModes)
-      assertThrows(
-          java.lang.IllegalArgumentException.class,
-          () -> {
-            try (TestSession session = TestSession.createTestSession(tfMode)) {
-              Ops tf = session.getTF();
-              Softmax<TInt32> instance = new Softmax<>(tf);
-              Operand<TInt32> result = instance.call(tf.constant(input));
-            }
-          });
-  }
 
   /** Test of Softmax method, of class Activations. */
   @Test
