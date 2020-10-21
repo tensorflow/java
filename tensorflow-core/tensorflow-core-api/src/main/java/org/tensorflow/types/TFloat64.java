@@ -29,10 +29,11 @@ import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
 /** IEEE-754 double-precision 64-bit float tensor type. */
-public interface TFloat64 extends DoubleNdArray, TNumber {
+public interface TFloat64 extends DoubleNdArray, TFloating {
 
   /** readable-name for the data type */
   static final String NAME = "DOUBLE";
