@@ -105,8 +105,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
     Operand<T> negativePart = null;
     if (alpha != 0) {
       if (Float.isNaN(maxValue) && threshold == 0) {
-        // TODO LeakyRelu is not in tf.nn ????
-        return LeakyRelu.create(tf.scope(), input, LeakyRelu.alpha(alpha));
+        return tf.nn.leakyRelu(input, LeakyRelu.alpha(alpha));
       }
       if (threshold != 0) {
         negativePart =

@@ -59,6 +59,7 @@ import org.tensorflow.op.nn.FusedPadConv2d;
 import org.tensorflow.op.nn.FusedResizeAndPadConv2d;
 import org.tensorflow.op.nn.InTopK;
 import org.tensorflow.op.nn.L2Loss;
+import org.tensorflow.op.nn.LeakyRelu;
 import org.tensorflow.op.nn.LearnedUnigramCandidateSampler;
 import org.tensorflow.op.nn.LocalResponseNormalization;
 import org.tensorflow.op.nn.LogSoftmax;
@@ -1224,6 +1225,19 @@ public final class NnOps {
    */
   public <T extends TNumber> L2Loss<T> l2Loss(Operand<T> t) {
     return L2Loss.create(scope, t);
+  }
+
+  /**
+   * Computes rectified linear: `max(features, features * alpha)`.
+   *
+   * @param <T> data type for {@code activations()} output
+   * @param features
+   * @param options carries optional attributes values
+   * @return a new instance of LeakyRelu
+   */
+  public <T extends TNumber> LeakyRelu<T> leakyRelu(Operand<T> features,
+      LeakyRelu.Options... options) {
+    return LeakyRelu.create(scope, features, options);
   }
 
   /**
