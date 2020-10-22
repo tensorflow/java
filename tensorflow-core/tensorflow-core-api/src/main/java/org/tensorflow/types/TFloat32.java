@@ -30,7 +30,6 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
 
 /** IEEE-754 single-precision 32-bit float tensor type. */
 public interface TFloat32 extends FloatNdArray, TFloating {

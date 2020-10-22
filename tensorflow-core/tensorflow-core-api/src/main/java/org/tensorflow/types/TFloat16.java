@@ -31,7 +31,6 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * IEEE-754 half-precision 16-bit float tensor type.
