@@ -370,6 +370,30 @@ public class EagerTestSession extends TestSession {
             .scalars()
             .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getDouble())));
       }
+    } else if (dtype == TFloat16.DTYPE) {
+      Output<TFloat16> o = (Output<TFloat16>) input;
+      if (debug) {
+        if (isScalar) {
+          System.out.printf(
+              "0). %b <==> %f\n", predicate.test(o.data().getFloat()), o.data().getFloat());
+        } else {
+          o.data()
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) ->
+                      System.out.printf(
+                          "%d). %b <==> %f\n",
+                          index.getAndIncrement(), predicate.test(f.getFloat()), f.getFloat()));
+        }
+      }
+      index.set(0);
+      if (isScalar) {
+        assertTrue(predicate.test(o.data().getFloat()));
+      } else {
+        o.data()
+            .scalars()
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getFloat())));
+      }
     } else if (dtype == TInt32.DTYPE) {
       Output<TInt32> o = (Output<TInt32>) input;
       if (debug) {

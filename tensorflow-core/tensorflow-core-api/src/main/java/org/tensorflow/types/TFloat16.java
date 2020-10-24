@@ -30,7 +30,7 @@ import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 half-precision 16-bit float tensor type.
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TNumber;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
-public interface TFloat16 extends FloatNdArray, TNumber {
+public interface TFloat16 extends FloatNdArray, TFloating {
 
   /** readable-name for the data type */
   static final String NAME = "FLOAT16";

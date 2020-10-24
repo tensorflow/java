@@ -29,10 +29,10 @@ import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /** IEEE-754 single-precision 32-bit float tensor type. */
-public interface TFloat32 extends FloatNdArray, TNumber {
+public interface TFloat32 extends FloatNdArray, TFloating {
 
   /** readable-name for the data type */
   static final String NAME = "FLOAT";
