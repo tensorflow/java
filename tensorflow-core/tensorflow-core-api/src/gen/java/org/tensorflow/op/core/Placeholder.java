@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -70,7 +69,7 @@ public final class Placeholder<T extends TType> extends RawOp implements Operand
    * @return a new instance of Placeholder
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
+  public static <T extends TType> Placeholder<T> create(Scope scope, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

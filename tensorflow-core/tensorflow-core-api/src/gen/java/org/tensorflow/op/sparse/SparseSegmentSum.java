@@ -25,7 +25,6 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -76,7 +75,7 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
    * @return a new instance of SparseSegmentSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSum", scope.makeOpName("SparseSegmentSum"));
     opBuilder.addInput(data.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));
@@ -97,6 +96,9 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
   public Output<T> asOutput(Scope scope) {
     return output;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSum";
   
   private Output<T> output;
   

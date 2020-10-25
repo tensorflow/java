@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -50,7 +49,7 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
    * @return a new instance of ExtractJpegShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
+  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, Class<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -67,7 +66,7 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
    */
   @Endpoint(describeByClass = true)
   public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
-    return create(scope, contents, TInt32.DTYPE);
+    return create(scope, contents, TInt32.class);
   }
   
   /**

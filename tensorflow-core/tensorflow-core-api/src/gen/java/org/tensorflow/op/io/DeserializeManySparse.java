@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -90,7 +89,7 @@ public final class DeserializeManySparse<T extends TType> extends RawOp {
    * @return a new instance of DeserializeManySparse
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DeserializeManySparse<T> create(Scope scope, Operand<TString> serializedSparse, DataType<T> dtype) {
+  public static <T extends TType> DeserializeManySparse<T> create(Scope scope, Operand<TString> serializedSparse, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeManySparse", scope.makeOpName("DeserializeManySparse"));
     opBuilder.addInput(serializedSparse.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

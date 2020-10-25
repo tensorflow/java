@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -48,14 +47,14 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
    * @return a new instance of SetStatsAggregatorDataset
    */
   @Endpoint(describeByClass = true)
-  public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<TString> tag, Operand<TString> counterPrefix, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static SetStatsAggregatorDataset create(Scope scope, Operand<?> inputDataset, Operand<?> statsAggregator, Operand<TString> tag, Operand<TString> counterPrefix, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetStatsAggregatorDataset", scope.makeOpName("SetStatsAggregatorDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(statsAggregator.asOutput(scope));
     opBuilder.addInput(tag.asOutput(scope));
     opBuilder.addInput(counterPrefix.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

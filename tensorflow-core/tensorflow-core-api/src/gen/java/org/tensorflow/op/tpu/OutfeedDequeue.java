@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -69,7 +68,7 @@ public final class OutfeedDequeue<T extends TType> extends RawOp implements Oper
    * @return a new instance of OutfeedDequeue
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> OutfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> OutfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeue", scope.makeOpName("OutfeedDequeue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -51,7 +50,7 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
    * @return a new instance of StatelessRandomNormal
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder.addInput(seed.asOutput(scope));
@@ -70,7 +69,7 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
-    return create(scope, shape, seed, TFloat32.DTYPE);
+    return create(scope, shape, seed, TFloat32.class);
   }
   
   /**

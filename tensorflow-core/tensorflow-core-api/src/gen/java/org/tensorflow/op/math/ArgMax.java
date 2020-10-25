@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -63,7 +62,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMax
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, DataType<V> outputType) {
+  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> create(Scope scope, Operand<T> input, Operand<U> dimension, Class<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(dimension.asOutput(scope));
@@ -84,7 +83,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ArgMax<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
-    return create(scope, input, dimension, TInt64.DTYPE);
+    return create(scope, input, dimension, TInt64.class);
   }
   
   /**

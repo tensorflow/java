@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -54,7 +53,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    * @return a new instance of StatelessRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs, DataType<W> dtype) {
+  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomBinomial", scope.makeOpName("StatelessRandomBinomial"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder.addInput(seed.asOutput(scope));
@@ -79,7 +78,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<TInt64> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs) {
-    return create(scope, shape, seed, counts, probs, TInt64.DTYPE);
+    return create(scope, shape, seed, counts, probs, TInt64.class);
   }
   
   /**

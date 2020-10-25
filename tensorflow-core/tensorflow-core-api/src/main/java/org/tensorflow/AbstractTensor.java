@@ -15,17 +15,11 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_Dim;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
-import java.util.function.Consumer;
-import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.tensor.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.types.family.TType;
 
@@ -37,26 +31,11 @@ import org.tensorflow.types.family.TType;
  *
  * <p>Usage of this class is meant to be kept internal.
  */
-public abstract class AbstractDenseTensor<T> implements Tensor<T> {
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <U extends TType> U expect(DataType<U> dt) {
-    if (!dt.equals(this.dtype)) {
-      throw new IllegalArgumentException(
-          "Cannot cast from tensor of " + dtype + " to tensor of " + dt);
-    }
-    return (U)this;
-  }
+public abstract class AbstractTensor<T> implements Tensor<T> {
 
   @Override
   public void close() {
     nativeHandle().close();
-  }
-
-  @Override
-  public DataType<?> dataType() {
-    return dtype;
   }
 
   @Override
@@ -71,12 +50,11 @@ public abstract class AbstractDenseTensor<T> implements Tensor<T> {
 
   @Override
   public String toString() {
-    return String.format("%s tensor with shape %s", dtype.toString(), shape());
+    return String.format("%s tensor with shape %s", TensorTypes.find(type()).dataType(), shape());
   }
 
-  protected AbstractDenseTensor(TF_Tensor nativeHandle, DataType<?> dtype) {
+  protected AbstractTensor(TF_Tensor nativeHandle) {
     this.nativeHandle = nativeHandle;
-    this.dtype = dtype;
     nativeHandle.retainReference();
   }
 
@@ -100,6 +78,5 @@ public abstract class AbstractDenseTensor<T> implements Tensor<T> {
     return handle;
   }
 
-  private final TF_Tensor nativeHandle;
-  private final DataType<?> dtype;
+  protected final TF_Tensor nativeHandle;
 }

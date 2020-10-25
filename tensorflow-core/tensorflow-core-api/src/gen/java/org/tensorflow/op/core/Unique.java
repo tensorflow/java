@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -90,7 +89,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    * @return a new instance of Unique
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
+  public static <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, Class<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput(scope));
     opBuilder.addInput(axis.asOutput(scope));
@@ -110,7 +109,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
-    return create(scope, x, axis, TInt32.DTYPE);
+    return create(scope, x, axis, TInt32.class);
   }
   
   /**

@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -46,12 +45,12 @@ public final class ThreadPoolDataset extends RawOp implements Operand<TType> {
    * @return a new instance of ThreadPoolDataset
    */
   @Endpoint(describeByClass = true)
-  public static ThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<?> threadPool, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static ThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<?> threadPool, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ThreadPoolDataset", scope.makeOpName("ThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(threadPool.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

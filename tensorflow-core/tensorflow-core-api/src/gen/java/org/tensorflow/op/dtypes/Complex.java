@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.dtypes;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -62,7 +61,7 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
    * @return a new instance of Complex
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, DataType<U> Tout) {
+  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput(scope));
     opBuilder.addInput(imag.asOutput(scope));

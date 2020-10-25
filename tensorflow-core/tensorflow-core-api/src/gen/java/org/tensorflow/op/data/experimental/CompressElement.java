@@ -43,7 +43,7 @@ public final class CompressElement extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static CompressElement create(Scope scope, Iterable<Operand<?>> components) {
     OperationBuilder opBuilder = scope.env().opBuilder("CompressElement", scope.makeOpName("CompressElement"));
-    opBuilder.addInputList(Operands.asOutputs(components));
+    opBuilder.addInputList(Operands.asOutputs(scope, components));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CompressElement(opBuilder.build());
   }
@@ -56,7 +56,7 @@ public final class CompressElement extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
+  public Output<TType> asOutput(Scope scope) {
     return (Output<TType>) compressed;
   }
   

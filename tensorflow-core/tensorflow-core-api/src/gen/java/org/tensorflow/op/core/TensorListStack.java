@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -74,7 +73,7 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
    * @return a new instance of TensorListStack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, DataType<T> elementDtype, Options... options) {
+  public static <T extends TType> TensorListStack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, Class<T> elementDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListStack", scope.makeOpName("TensorListStack"));
     opBuilder.addInput(inputHandle.asOutput(scope));
     opBuilder.addInput(elementShape.asOutput(scope));

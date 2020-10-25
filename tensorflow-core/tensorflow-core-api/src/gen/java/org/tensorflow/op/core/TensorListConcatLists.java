@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -43,7 +42,7 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
    * @return a new instance of TensorListConcatLists
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput(scope));
     opBuilder.addInput(inputB.asOutput(scope));

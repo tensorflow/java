@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -44,7 +43,7 @@ public final class CSRSparseMatrixToDense<T extends TType> extends RawOp impleme
    * @return a new instance of CSRSparseMatrixToDense
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope, Operand<?> sparseInput, DataType<T> type) {
+  public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope, Operand<?> sparseInput, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToDense", scope.makeOpName("CSRSparseMatrixToDense"));
     opBuilder.addInput(sparseInput.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

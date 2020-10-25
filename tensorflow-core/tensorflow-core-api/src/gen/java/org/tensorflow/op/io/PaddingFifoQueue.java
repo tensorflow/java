@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.io;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -105,10 +104,10 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
    * @return a new instance of PaddingFifoQueue
    */
   @Endpoint(describeByClass = true)
-  public static PaddingFifoQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
+  public static PaddingFifoQueue create(Scope scope, List<Class<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddingFIFOQueueV2", scope.makeOpName("PaddingFifoQueue"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] componentTypesArray = new DataType[componentTypes.size()];
+    Class[] componentTypesArray = new Class[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);
     }

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -49,7 +48,7 @@ public final class RequantizePerChannel<U extends TType> extends RawOp {
    * @return a new instance of RequantizePerChannel
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(inputMin.asOutput(scope));

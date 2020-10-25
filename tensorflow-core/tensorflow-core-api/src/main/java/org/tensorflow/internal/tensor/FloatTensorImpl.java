@@ -11,15 +11,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.FloatTensor;
+import org.tensorflow.types.tensor.FloatTensor;
 
 public class FloatTensorImpl extends AbstractTensor<Float> implements FloatTensor {
 
   private final FloatNdArray data;
 
-  public FloatTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      FloatDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public FloatTensorImpl(TF_Tensor nativeHandle, Shape shape, FloatDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

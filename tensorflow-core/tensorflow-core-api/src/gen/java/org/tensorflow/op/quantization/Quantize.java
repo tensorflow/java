@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -220,7 +219,7 @@ public final class Quantize<T extends TType> extends RawOp {
    * @return a new instance of Quantize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
+  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(minRange.asOutput(scope));

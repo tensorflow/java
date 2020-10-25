@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -79,7 +78,7 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
    * @return a new instance of RestoreSlice
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
+  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput(scope));
     opBuilder.addInput(tensorName.asOutput(scope));

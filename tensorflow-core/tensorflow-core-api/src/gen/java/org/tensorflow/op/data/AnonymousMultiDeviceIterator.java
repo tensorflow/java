@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
@@ -43,7 +42,7 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
    * @return a new instance of AnonymousMultiDeviceIterator
    */
   @Endpoint(describeByClass = true)
-  public static AnonymousMultiDeviceIterator create(Scope scope, List<String> devices, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static AnonymousMultiDeviceIterator create(Scope scope, List<String> devices, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousMultiDeviceIterator", scope.makeOpName("AnonymousMultiDeviceIterator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     String[] devicesArray = new String[devices.size()];
@@ -51,7 +50,7 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
       devicesArray[i] = devices.get(i);
     }
     opBuilder.setAttr("devices", devicesArray);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

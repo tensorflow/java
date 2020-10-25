@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -49,7 +48,7 @@ public final class StatelessRandomUniformFullInt<V extends TNumber> extends RawO
    * @return a new instance of StatelessRandomUniformFullInt
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformFullInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformFullInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformFullInt", scope.makeOpName("StatelessRandomUniformFullInt"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder.addInput(seed.asOutput(scope));

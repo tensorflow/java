@@ -74,9 +74,9 @@ abstract class AbstractOperation implements Operation {
    * Returns the datatype of the tensor of the {@code outputIdx}th output of this operation.
    *
    * @param outputIdx index of the output of this operation
-   * @return output tensor datatype
+   * @return datatype native code
    */
-  abstract DataType<?> dtype(int outputIdx);
+  abstract int dtype(int outputIdx);
 
   /**
    * Returns the tensor of the {@code outputIdx}th output of this operation.

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -46,7 +45,7 @@ public final class GetSessionTensor<T extends TType> extends RawOp implements Op
    * @return a new instance of GetSessionTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, DataType<T> dtype) {
+  public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

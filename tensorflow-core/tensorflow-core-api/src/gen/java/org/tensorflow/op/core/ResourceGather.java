@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -90,7 +89,7 @@ public final class ResourceGather<U extends TType> extends RawOp implements Oper
    * @return a new instance of ResourceGather
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> ResourceGather<U> create(Scope scope, Operand<?> resource, Operand<T> indices, DataType<U> dtype, Options... options) {
+  public static <U extends TType, T extends TNumber> ResourceGather<U> create(Scope scope, Operand<?> resource, Operand<T> indices, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGather", scope.makeOpName("ResourceGather"));
     opBuilder.addInput(resource.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));

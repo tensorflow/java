@@ -20,7 +20,6 @@ package org.tensorflow.op.data;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -48,11 +47,11 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<TT
    * @return a new instance of OptionalGetValue
    */
   @Endpoint(describeByClass = true)
-  public static OptionalGetValue create(Scope scope, Operand<?> optional, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static OptionalGetValue create(Scope scope, Operand<?> optional, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
     opBuilder.addInput(optional.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

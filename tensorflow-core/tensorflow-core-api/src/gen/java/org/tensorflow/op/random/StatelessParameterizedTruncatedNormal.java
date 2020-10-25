@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <V> data type for {@code output()} output
@@ -49,12 +48,12 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
   @Endpoint(describeByClass = true)
   public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessParameterizedTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> means, Operand<V> stddevs, Operand<V> minvals, Operand<V> maxvals) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessParameterizedTruncatedNormal", scope.makeOpName("StatelessParameterizedTruncatedNormal"));
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
-    opBuilder.addInput(means.asOutput());
-    opBuilder.addInput(stddevs.asOutput());
-    opBuilder.addInput(minvals.asOutput());
-    opBuilder.addInput(maxvals.asOutput());
+    opBuilder.addInput(shape.asOutput(scope));
+    opBuilder.addInput(seed.asOutput(scope));
+    opBuilder.addInput(means.asOutput(scope));
+    opBuilder.addInput(stddevs.asOutput(scope));
+    opBuilder.addInput(minvals.asOutput(scope));
+    opBuilder.addInput(maxvals.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new StatelessParameterizedTruncatedNormal<V>(opBuilder.build());
   }
@@ -68,7 +67,7 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
   }
   
   @Override
-  public Output<V> asOutput() {
+  public Output<V> asOutput(Scope scope) {
     return output;
   }
   

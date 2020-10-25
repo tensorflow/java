@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code y()} output
@@ -43,7 +42,7 @@ public final class BesselK0<T extends TNumber> extends RawOp implements Operand<
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> BesselK0<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("BesselK0", scope.makeOpName("BesselK0"));
-    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(x.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BesselK0<T>(opBuilder.build());
   }
@@ -55,7 +54,7 @@ public final class BesselK0<T extends TNumber> extends RawOp implements Operand<
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return y;
   }
   

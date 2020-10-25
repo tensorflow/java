@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -53,12 +52,12 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
    * @return a new instance of CacheDataset
    */
   @Endpoint(describeByClass = true)
-  public static CacheDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static CacheDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDataset", scope.makeOpName("CacheDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(filename.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

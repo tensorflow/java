@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -88,7 +87,7 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
    * @return a new instance of MutableHashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> MutableHashTable create(Scope scope, Class<T> keyDtype, Class<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);

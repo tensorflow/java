@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -92,7 +91,7 @@ public final class SparseConditionalAccumulator extends RawOp implements Operand
    * @return a new instance of SparseConditionalAccumulator
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> SparseConditionalAccumulator create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseConditionalAccumulator", scope.makeOpName("SparseConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

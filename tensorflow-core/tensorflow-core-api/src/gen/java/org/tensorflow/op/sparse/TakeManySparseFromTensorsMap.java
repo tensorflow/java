@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -124,7 +123,7 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
    * @return a new instance of TakeManySparseFromTensorsMap
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
     opBuilder.addInput(sparseHandles.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.collective;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -77,7 +76,7 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
    * @return a new instance of BroadcastRecv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> BroadcastRecv<T> create(Scope scope, DataType<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
+  public static <T extends TType> BroadcastRecv<T> create(Scope scope, Class<T> T, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("T", T);

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -63,7 +62,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    * @return a new instance of RaggedRange
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, DataType<U> Tsplits) {
+  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, Class<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput(scope));
     opBuilder.addInput(limits.asOutput(scope));
@@ -84,7 +83,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
-    return create(scope, starts, limits, deltas, TInt64.DTYPE);
+    return create(scope, starts, limits, deltas, TInt64.class);
   }
   
   /**

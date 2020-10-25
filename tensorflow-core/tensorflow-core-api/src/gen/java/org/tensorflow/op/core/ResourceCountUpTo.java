@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -47,7 +46,7 @@ public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements
    * @return a new instance of ResourceCountUpTo
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
+  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, Class<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
     opBuilder.addInput(resource.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

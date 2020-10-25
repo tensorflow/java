@@ -43,24 +43,23 @@ public final class Output<T extends TType> implements Operand<T> {
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
-  @SuppressWarnings("unchecked")
-  public DataType<T> dataType() {
-    return (DataType<T>)operation.dtype(index);
+  public Class<T> type() {
+    return (Class)TensorTypes.find(operation.dtype(index)).typeClass();
   }
 
   /**
    * Returns this Output object with the type {@code Output<U>}. This method is useful when given a
    * value of type {@code Output<?>}.
    *
-   * @param dt any supported tensor data type
+   * @param tensorType type of tensor at this output
    * @throws IllegalArgumentException if the actual data type of this object does not match the type
    *     {@code U}.
    */
   @SuppressWarnings("unchecked")
-  public <U extends TType> Output<U> expect(DataType<U> dt) {
-    if (!dt.equals(this.dataType())) {
+  public <U extends TType> Output<U> expect(Class<U> tensorType) {
+    if (tensorType == type()) {
       throw new IllegalArgumentException(
-          "Cannot cast from output of " + this.dataType() + " to output of " + dt);
+          "Cannot cast from output of " + type().getSimpleName() + " to output of type " + tensorType.getSimpleName());
     }
     return ((Output<U>) this);
   }
@@ -116,7 +115,7 @@ public final class Output<T extends TType> implements Operand<T> {
   public String toString() {
     return String.format(
         "<%s '%s:%d' shape=%s dtype=%s>",
-        operation.type(), operation.name(), index, shape().toString(), dataType());
+        operation.type(), operation.name(), index, shape().toString(), type().getSimpleName());
   }
 
   /** Handle to the idx-th output of the Operation {@code op}. */

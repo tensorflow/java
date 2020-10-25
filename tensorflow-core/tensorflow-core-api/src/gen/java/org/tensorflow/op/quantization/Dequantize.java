@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -137,7 +136,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of Dequantize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Dequantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype, Options... options) {
+  public static <U extends TNumber, T extends TType> Dequantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(minRange.asOutput(scope));
@@ -172,7 +171,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Dequantize<TFloat32> create(Scope scope, Operand<T> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
-    return create(scope, input, minRange, maxRange, TFloat32.DTYPE, options);
+    return create(scope, input, minRange, maxRange, TFloat32.class, options);
   }
   
   /**

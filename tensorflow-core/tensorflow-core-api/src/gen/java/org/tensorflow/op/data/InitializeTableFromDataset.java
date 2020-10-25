@@ -40,8 +40,8 @@ public final class InitializeTableFromDataset extends RawOp {
   @Endpoint(describeByClass = true)
   public static InitializeTableFromDataset create(Scope scope, Operand<?> tableHandle, Operand<?> dataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromDataset", scope.makeOpName("InitializeTableFromDataset"));
-    opBuilder.addInput(tableHandle.asOutput());
-    opBuilder.addInput(dataset.asOutput());
+    opBuilder.addInput(tableHandle.asOutput(scope));
+    opBuilder.addInput(dataset.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new InitializeTableFromDataset(opBuilder.build());
   }

@@ -78,24 +78,20 @@ public class SoftmaxCrossEntropyWithLogits {
       axis += logits.asOutput().shape().numDimensions();
     }
 
-
-    boolean convertToFloat32 =
-        logits.asOutput().dataType() == TFloat16.DTYPE
-            || logits.asOutput().dataType() == TBfloat16.DTYPE;
-    if (convertToFloat32) {
+    if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
       Operand<TFloat32> result =  softmaxCrossEntropyWithLogits(scope,
-              Cast.create(scope, labels, TFloat32.DTYPE),
-              Cast.create(scope, logits, TFloat32.DTYPE),
+              Cast.create(scope, labels, TFloat32.class),
+              Cast.create(scope, logits, TFloat32.class),
               axis);
-      return Cast.create(scope, result, logits.asOutput().dataType());
-    } else if(!logits.asOutput().dataType().equals(labels.asOutput().dataType())) {
+      return Cast.create(scope, result, logits.asOutput().type());
+    } else if(!logits.asOutput().type().equals(labels.asOutput().type())) {
       return softmaxCrossEntropyWithLogits(scope,
-              Cast.create(scope, labels, logits.asOutput().dataType()),
+              Cast.create(scope, labels, logits.asOutput().type()),
               logits,
               axis);
     }
 
-    Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, logits), TInt64.DTYPE);
+    Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, logits), TInt64.class);
     Shape shape = logits.asOutput().shape();
 
     // Move the dim to the end if dim is not the last dimension.
@@ -167,13 +163,13 @@ public class SoftmaxCrossEntropyWithLogits {
       }
     }
 
-    Operand<TInt64> rank = Cast.create(scope, Rank.create(scope, logits), TInt64.DTYPE);
+    Operand<TInt64> rank = Cast.create(scope, Rank.create(scope, logits), TInt64.class);
     Operand<TInt64> rankMinusOne = Sub.create(scope, rank, one);
 
     Operand<TInt64> lastDimSize =
         Slice.create(
             scope,
-            org.tensorflow.op.core.Shape.create(scope, logits, TInt64.DTYPE),
+            org.tensorflow.op.core.Shape.create(scope, logits, TInt64.class),
             rankMinusOne,
             one);
     Operand<TInt64> concat =
@@ -197,7 +193,7 @@ public class SoftmaxCrossEntropyWithLogits {
    */
   private static <T extends TNumber, U extends TNumber> Operand<T> moveDimToEnd(
       Scope scope, Operand<T> input, int dimIndex, Operand<U> rank) {
-    DataType<? extends TNumber> rankDType = rank.asOutput().dataType();
+    Class<? extends TNumber> rankDType = rank.asOutput().type();
     Operand one = Cast.create(scope, Constant.scalarOf(scope, 1), rankDType);
     List<Operand<U>> concatList =
         Arrays.asList(

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -92,7 +91,7 @@ public final class ConditionalAccumulator extends RawOp implements Operand<TStri
    * @return a new instance of ConditionalAccumulator
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> ConditionalAccumulator create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConditionalAccumulator", scope.makeOpName("ConditionalAccumulator"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -57,7 +56,7 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp 
    * @return a new instance of SparseAccumulatorTakeGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(numRequired.asOutput(scope));

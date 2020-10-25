@@ -12,7 +12,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.StringTensor;
+import org.tensorflow.types.tensor.StringTensor;
 
 public class StringTensorImpl extends AbstractTensor<String> implements StringTensor {
 
@@ -21,12 +21,11 @@ public class StringTensorImpl extends AbstractTensor<String> implements StringTe
 
   public StringTensorImpl(
       TF_Tensor nativeHandle,
-      DataType<?> dataType,
       Shape shape,
       DataLayout<DataBuffer<byte[]>, String> layout,
       ByteSequenceTensorBuffer buffer
   ) {
-    super(nativeHandle, dataType);
+    super(nativeHandle);
     this.rawBuffer = buffer;
     data = NdArrays.wrap(shape, layout.applyTo(buffer));
   }

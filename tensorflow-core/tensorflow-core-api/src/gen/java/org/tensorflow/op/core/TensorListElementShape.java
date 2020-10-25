@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -48,7 +47,7 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
    * @return a new instance of TensorListElementShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
+  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, Class<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
     opBuilder.addInput(inputHandle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

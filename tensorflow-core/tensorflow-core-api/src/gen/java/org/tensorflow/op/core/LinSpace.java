@@ -42,7 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * 
  * @param <T> data type for {@code output()} output
  */
-@Operator
 public final class LinSpace<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
@@ -75,6 +74,9 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
   public Output<T> asOutput(Scope scope) {
     return output;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "LinSpace";
   
   private Output<T> output;
   

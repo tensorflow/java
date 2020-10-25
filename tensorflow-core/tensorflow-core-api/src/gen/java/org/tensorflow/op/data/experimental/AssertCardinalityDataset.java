@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data.experimental;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -46,12 +45,12 @@ public final class AssertCardinalityDataset extends RawOp implements Operand<TTy
    * @return a new instance of AssertCardinalityDataset
    */
   @Endpoint(describeByClass = true)
-  public static AssertCardinalityDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> cardinality, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static AssertCardinalityDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> cardinality, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssertCardinalityDataset", scope.makeOpName("AssertCardinalityDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(cardinality.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

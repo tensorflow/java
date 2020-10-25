@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -65,7 +64,7 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
    * @return a new instance of SparseMatrixTranspose
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
+  public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, Class<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixTranspose", scope.makeOpName("SparseMatrixTranspose"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

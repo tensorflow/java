@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -47,7 +46,7 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
    * @return a new instance of NonDeterministicInts
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonDeterministicInts", scope.makeOpName("NonDeterministicInts"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -64,7 +63,7 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> NonDeterministicInts<TInt64> create(Scope scope, Operand<T> shape) {
-    return create(scope, shape, TInt64.DTYPE);
+    return create(scope, shape, TInt64.class);
   }
   
   /**

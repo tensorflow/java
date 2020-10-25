@@ -89,13 +89,13 @@ public final class SparseCrossHashed extends RawOp {
   @Endpoint(describeByClass = true)
   public static SparseCrossHashed create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes, Iterable<Operand<?>> denseInputs, Operand<TInt64> numBuckets, Operand<TBool> strongHash, Operand<TInt64> salt) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCrossHashed", scope.makeOpName("SparseCrossHashed"));
-    opBuilder.addInputList(Operands.asOutputs(indices));
-    opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder.addInputList(Operands.asOutputs(shapes));
-    opBuilder.addInputList(Operands.asOutputs(denseInputs));
-    opBuilder.addInput(numBuckets.asOutput());
-    opBuilder.addInput(strongHash.asOutput());
-    opBuilder.addInput(salt.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(scope, indices));
+    opBuilder.addInputList(Operands.asOutputs(scope, values));
+    opBuilder.addInputList(Operands.asOutputs(scope, shapes));
+    opBuilder.addInputList(Operands.asOutputs(scope, denseInputs));
+    opBuilder.addInput(numBuckets.asOutput(scope));
+    opBuilder.addInput(strongHash.asOutput(scope));
+    opBuilder.addInput(salt.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseCrossHashed(opBuilder.build());
   }

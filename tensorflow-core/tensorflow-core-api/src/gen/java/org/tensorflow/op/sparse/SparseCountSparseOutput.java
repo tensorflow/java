@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs sparse-output bin counting for a sparse tensor input.
@@ -82,10 +81,10 @@ public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
   @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> SparseCountSparseOutput<U> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<U> weights, Boolean binaryOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCountSparseOutput", scope.makeOpName("SparseCountSparseOutput"));
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(denseShape.asOutput());
-    opBuilder.addInput(weights.asOutput());
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
+    opBuilder.addInput(denseShape.asOutput(scope));
+    opBuilder.addInput(weights.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {

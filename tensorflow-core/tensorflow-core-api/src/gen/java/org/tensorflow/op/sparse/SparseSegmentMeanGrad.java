@@ -50,7 +50,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
    * @return a new instance of SparseSegmentMeanGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<TInt32> segmentIds, Operand<TInt32> outputDim0) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad, Operand<U> indices, Operand<V> segmentIds, Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMeanGrad", scope.makeOpName("SparseSegmentMeanGrad"));
     opBuilder.addInput(grad.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));
@@ -70,6 +70,9 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
   public Output<T> asOutput(Scope scope) {
     return output;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentMeanGrad";
   
   private Output<T> output;
   

@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.nn;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -73,7 +72,7 @@ public final class QuantizedConv2DPerChannel<V extends TType> extends RawOp {
    * @return a new instance of QuantizedConv2DPerChannel
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DPerChannel<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DPerChannel<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DPerChannel", scope.makeOpName("QuantizedConv2DPerChannel"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(filter.asOutput(scope));

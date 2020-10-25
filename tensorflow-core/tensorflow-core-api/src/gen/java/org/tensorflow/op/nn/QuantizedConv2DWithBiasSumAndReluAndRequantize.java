@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.nn;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -86,7 +85,7 @@ public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends TTyp
    * @return a new instance of QuantizedConv2DWithBiasSumAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <X extends TType, T extends TType, U extends TType, V extends TType, W extends TType> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Operand<W> summand, Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, DataType<X> outType, List<Long> strides, String padding, Options... options) {
+  public static <X extends TType, T extends TType, U extends TType, V extends TType, W extends TType> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Operand<W> summand, Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, Class<X> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasSumAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(filter.asOutput(scope));

@@ -72,8 +72,8 @@ public final class BandedTriangularSolve<T extends TType> extends RawOp implemen
   @Endpoint(describeByClass = true)
   public static <T extends TType> BandedTriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BandedTriangularSolve", scope.makeOpName("BandedTriangularSolve"));
-    opBuilder.addInput(matrix.asOutput());
-    opBuilder.addInput(rhs.asOutput());
+    opBuilder.addInput(matrix.asOutput(scope));
+    opBuilder.addInput(rhs.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -109,7 +109,7 @@ public final class BandedTriangularSolve<T extends TType> extends RawOp implemen
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -83,7 +82,7 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
    * @return a new instance of TensorArrayConcat
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(flowIn.asOutput(scope));

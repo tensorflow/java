@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs sparse-output bin counting for a ragged tensor input.
@@ -81,9 +80,9 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
   @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> RaggedCountSparseOutput<U> create(Scope scope, Operand<TInt64> splits, Operand<T> values, Operand<U> weights, Boolean binaryOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedCountSparseOutput", scope.makeOpName("RaggedCountSparseOutput"));
-    opBuilder.addInput(splits.asOutput());
-    opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(weights.asOutput());
+    opBuilder.addInput(splits.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
+    opBuilder.addInput(weights.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {

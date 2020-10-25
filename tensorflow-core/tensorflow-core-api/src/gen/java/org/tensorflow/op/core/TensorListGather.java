@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -55,7 +54,7 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
    * @return a new instance of TensorListGather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGather", scope.makeOpName("TensorListGather"));
     opBuilder.addInput(inputHandle.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));

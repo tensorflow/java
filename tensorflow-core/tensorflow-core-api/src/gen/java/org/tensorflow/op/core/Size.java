@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -57,7 +56,7 @@ public final class Size<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Size
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -74,7 +73,7 @@ public final class Size<U extends TNumber> extends RawOp implements Operand<U> {
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Size<TInt32> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TInt32.DTYPE);
+    return create(scope, input, TInt32.class);
   }
   
   /**

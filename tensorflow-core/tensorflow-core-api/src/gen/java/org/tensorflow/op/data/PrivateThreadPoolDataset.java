@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -47,12 +46,12 @@ public final class PrivateThreadPoolDataset extends RawOp implements Operand<TTy
    * @return a new instance of PrivateThreadPoolDataset
    */
   @Endpoint(describeByClass = true)
-  public static PrivateThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numThreads, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static PrivateThreadPoolDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numThreads, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrivateThreadPoolDataset", scope.makeOpName("PrivateThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(numThreads.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

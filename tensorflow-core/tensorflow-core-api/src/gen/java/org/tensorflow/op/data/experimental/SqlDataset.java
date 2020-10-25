@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data.experimental;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -48,13 +47,13 @@ public final class SqlDataset extends RawOp implements Operand<TType> {
    * @return a new instance of SqlDataset
    */
   @Endpoint(describeByClass = true)
-  public static SqlDataset create(Scope scope, Operand<TString> driverName, Operand<TString> dataSourceName, Operand<TString> query, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static SqlDataset create(Scope scope, Operand<TString> driverName, Operand<TString> dataSourceName, Operand<TString> query, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSqlDataset", scope.makeOpName("SqlDataset"));
     opBuilder.addInput(driverName.asOutput(scope));
     opBuilder.addInput(dataSourceName.asOutput(scope));
     opBuilder.addInput(query.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

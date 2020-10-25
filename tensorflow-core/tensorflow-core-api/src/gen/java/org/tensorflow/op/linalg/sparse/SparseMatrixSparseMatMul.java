@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -163,7 +162,7 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
    * @return a new instance of SparseMatrixSparseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
+  public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, Class<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseMatMul", scope.makeOpName("SparseMatrixSparseMatMul"));
     opBuilder.addInput(a.asOutput(scope));
     opBuilder.addInput(b.asOutput(scope));

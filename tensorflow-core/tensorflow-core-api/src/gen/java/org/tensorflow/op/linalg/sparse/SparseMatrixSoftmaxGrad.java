@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -44,7 +43,7 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
    * @return a new instance of SparseMatrixSoftmaxGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SparseMatrixSoftmaxGrad create(Scope scope, Operand<?> softmax, Operand<?> gradSoftmax, DataType<T> type) {
+  public static <T extends TNumber> SparseMatrixSoftmaxGrad create(Scope scope, Operand<?> softmax, Operand<?> gradSoftmax, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmaxGrad", scope.makeOpName("SparseMatrixSoftmaxGrad"));
     opBuilder.addInput(softmax.asOutput(scope));
     opBuilder.addInput(gradSoftmax.asOutput(scope));

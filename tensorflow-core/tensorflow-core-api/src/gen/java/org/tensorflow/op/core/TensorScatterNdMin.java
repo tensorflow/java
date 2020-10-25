@@ -46,9 +46,9 @@ public final class TensorScatterNdMin<T extends TType> extends RawOp implements 
   @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> TensorScatterNdMin<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterMin", scope.makeOpName("TensorScatterNdMin"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(tensor.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorScatterNdMin<T>(opBuilder.build());
   }
@@ -61,7 +61,7 @@ public final class TensorScatterNdMin<T extends TType> extends RawOp implements 
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return output;
   }
   

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -82,7 +81,7 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
    * @return a new instance of TemporaryVariable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);

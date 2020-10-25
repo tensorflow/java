@@ -767,14 +767,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
     List<String> varNames = new ArrayList<>();
     List<Operand<?>> varOutputs = new ArrayList<>();
-    List<DataType<?>> varTypes = new ArrayList<>();
+    List<Class<?>> varTypes = new ArrayList<>();
 
     for (Iterator<Operation> iter = graph.operations(); iter.hasNext();) {
       Operation op = iter.next();
       if (op.type().equals("VariableV2")) {
         varNames.add(op.name());
         varOutputs.add(op.output(0));
-        varTypes.add(op.output(0).dataType());
+        varTypes.add(op.output(0).type());
       }
     }
 
@@ -783,7 +783,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
     Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
 
-    Placeholder<TString> saveFilename = tf.placeholder(TString.DTYPE);
+    Placeholder<TString> saveFilename = tf.placeholder(TString.class);
     Save saveVariables = tf.train.save(
         saveFilename,
         varNamesTensor,

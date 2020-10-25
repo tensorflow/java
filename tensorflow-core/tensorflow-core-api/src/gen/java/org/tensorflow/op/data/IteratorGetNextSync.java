@@ -20,7 +20,6 @@ package org.tensorflow.op.data;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -53,11 +52,11 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
    * @return a new instance of IteratorGetNextSync
    */
   @Endpoint(describeByClass = true)
-  public static IteratorGetNextSync create(Scope scope, Operand<?> iterator, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static IteratorGetNextSync create(Scope scope, Operand<?> iterator, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
     opBuilder.addInput(iterator.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

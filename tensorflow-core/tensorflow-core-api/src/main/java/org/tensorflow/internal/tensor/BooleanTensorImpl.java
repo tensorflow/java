@@ -12,15 +12,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.BooleanTensor;
+import org.tensorflow.types.tensor.BooleanTensor;
 
 public class BooleanTensorImpl extends AbstractTensor<Boolean> implements BooleanTensor {
 
   private final BooleanNdArray data;
 
-  public BooleanTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      BooleanDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public BooleanTensorImpl(TF_Tensor nativeHandle, Shape shape, BooleanDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

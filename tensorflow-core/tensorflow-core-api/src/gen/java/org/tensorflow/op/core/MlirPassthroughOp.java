@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -78,12 +77,12 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
    * @return a new instance of MlirPassthroughOp
    */
   @Endpoint(describeByClass = true)
-  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<DataType<?>> Toutputs) {
+  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<Class<?>> Toutputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MlirPassthroughOp", scope.makeOpName("MlirPassthroughOp"));
     opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mlir_module", mlirModule);
-    DataType[] ToutputsArray = new DataType[Toutputs.size()];
+    Class[] ToutputsArray = new Class[Toutputs.size()];
     for (int i = 0; i < ToutputsArray.length; ++i) {
       ToutputsArray[i] = Toutputs.get(i);
     }

@@ -83,10 +83,10 @@ public final class LoadTPUEmbeddingProximalYogiParametersGradAccumDebug extends 
   @Endpoint(describeByClass = true)
   public static LoadTPUEmbeddingProximalYogiParametersGradAccumDebug create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> v, Operand<TFloat32> m, Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingProximalYogiParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingProximalYogiParametersGradAccumDebug"));
-    opBuilder.addInput(parameters.asOutput());
-    opBuilder.addInput(v.asOutput());
-    opBuilder.addInput(m.asOutput());
-    opBuilder.addInput(gradientAccumulators.asOutput());
+    opBuilder.addInput(parameters.asOutput(scope));
+    opBuilder.addInput(v.asOutput(scope));
+    opBuilder.addInput(m.asOutput(scope));
+    opBuilder.addInput(gradientAccumulators.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

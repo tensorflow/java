@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -49,7 +48,7 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
    * @return a new instance of TensorArrayRead
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
+  public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(index.asOutput(scope));

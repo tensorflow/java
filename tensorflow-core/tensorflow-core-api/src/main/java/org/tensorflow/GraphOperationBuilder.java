@@ -52,6 +52,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.types.family.TType;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
@@ -221,10 +222,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, DataType value) {
+  public GraphOperationBuilder setAttr(String name, Class<? extends TType> type) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrType(unsafeNativeHandle, name, value.nativeCode());
+      setAttrType(unsafeNativeHandle, name, TensorTypes.numberOf(type));
     } finally {
       r.close();
     }
@@ -232,10 +233,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, DataType[] value) {
-    int[] ctypes = new int[value.length];
-    for (int i = 0; i < value.length; ++i) {
-      ctypes[i] = value[i].nativeCode();
+  public GraphOperationBuilder setAttr(String name, Class<? extends TType>[] types) {
+    int[] ctypes = new int[types.length];
+    for (int i = 0; i < types.length; ++i) {
+      ctypes[i] = TensorTypes.numberOf(types[i]);
     }
     Graph.Reference r = graph.ref();
     try {

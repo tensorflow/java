@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -145,7 +144,7 @@ public final class CudnnRnnParamsSize<U extends TNumber> extends RawOp implement
    * @return a new instance of CudnnRnnParamsSize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T, DataType<U> S, Options... options) {
+  public static <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> create(Scope scope, Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Class<T> T, Class<U> S, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsSize", scope.makeOpName("CudnnRnnParamsSize"));
     opBuilder.addInput(numLayers.asOutput(scope));
     opBuilder.addInput(numUnits.asOutput(scope));

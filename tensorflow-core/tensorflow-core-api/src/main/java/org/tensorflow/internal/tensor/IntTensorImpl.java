@@ -12,15 +12,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.IntTensor;
+import org.tensorflow.types.tensor.IntTensor;
 
 public class IntTensorImpl extends AbstractTensor<Integer> implements IntTensor {
 
   private final IntNdArray data;
 
-  public IntTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      IntDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public IntTensorImpl(TF_Tensor nativeHandle, Shape shape, IntDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

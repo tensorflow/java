@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -53,7 +52,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
    * @return a new instance of SobolSample
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, DataType<T> dtype) {
+  public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SobolSample", scope.makeOpName("SobolSample"));
     opBuilder.addInput(dim.asOutput(scope));
     opBuilder.addInput(numResults.asOutput(scope));
@@ -76,7 +75,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
    */
   @Endpoint(describeByClass = true)
   public static SobolSample<TFloat32> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip) {
-    return create(scope, dim, numResults, skip, TFloat32.DTYPE);
+    return create(scope, dim, numResults, skip, TFloat32.class);
   }
   
   /**

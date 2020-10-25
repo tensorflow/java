@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -51,7 +50,7 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
    * @return a new instance of StatelessRandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, DataType<W> dtype) {
+  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomPoisson", scope.makeOpName("StatelessRandomPoisson"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder.addInput(seed.asOutput(scope));

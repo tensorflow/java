@@ -43,7 +43,6 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.tensor.BooleanTensor;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -998,7 +997,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Create a constant with data from the given buffer.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param type the tensor datatype.
+   * @param type the tensor type.
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a constant of type `type`
@@ -1006,7 +1005,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *     buffer
    */
   @Endpoint
-  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+  public static <T extends TType> Constant<T> tensorOf(Scope scope, Class<T> type, Shape shape,
       ByteDataBuffer data) {
     try (T value = Tensors.of(type, shape, data)) {
       return create(scope, value);
@@ -1272,7 +1271,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
             .env()
             .opBuilder("Const", scope.makeOpName("Const"))
             .setAttr("value", tensor)
-            .setAttr("dtype", tensor.dataType())
+            .setAttr("dtype", tensor.type())
             .build());
   }
 

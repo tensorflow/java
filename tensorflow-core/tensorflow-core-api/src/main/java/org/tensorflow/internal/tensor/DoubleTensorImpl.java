@@ -12,15 +12,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.DoubleTensor;
+import org.tensorflow.types.tensor.DoubleTensor;
 
 public class DoubleTensorImpl extends AbstractTensor<Double> implements DoubleTensor {
 
   private final DoubleNdArray data;
 
-  public DoubleTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      DoubleDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public DoubleTensorImpl(TF_Tensor nativeHandle, Shape shape, DoubleDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

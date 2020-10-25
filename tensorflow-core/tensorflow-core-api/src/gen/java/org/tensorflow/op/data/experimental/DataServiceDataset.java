@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data.experimental;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -73,17 +72,17 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
    * @return a new instance of DataServiceDataset
    */
   @Endpoint(describeByClass = true)
-  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId, Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol, Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId, Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol, Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataServiceDataset", scope.makeOpName("DataServiceDataset"));
-    opBuilder.addInput(datasetId.asOutput());
-    opBuilder.addInput(processingMode.asOutput());
-    opBuilder.addInput(address.asOutput());
-    opBuilder.addInput(protocol.asOutput());
-    opBuilder.addInput(jobName.asOutput());
-    opBuilder.addInput(maxOutstandingRequests.asOutput());
-    opBuilder.addInput(iterationCounter.asOutput());
+    opBuilder.addInput(datasetId.asOutput(scope));
+    opBuilder.addInput(processingMode.asOutput(scope));
+    opBuilder.addInput(address.asOutput(scope));
+    opBuilder.addInput(protocol.asOutput(scope));
+    opBuilder.addInput(jobName.asOutput(scope));
+    opBuilder.addInput(maxOutstandingRequests.asOutput(scope));
+    opBuilder.addInput(iterationCounter.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }
@@ -118,7 +117,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
+  public Output<TType> asOutput(Scope scope) {
     return (Output<TType>) handle;
   }
   

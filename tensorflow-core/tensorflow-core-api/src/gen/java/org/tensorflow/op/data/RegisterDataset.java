@@ -46,9 +46,9 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
   @Endpoint(describeByClass = true)
   public static RegisterDataset create(Scope scope, Operand<?> dataset, Operand<TString> address, Operand<TString> protocol, Long externalStatePolicy) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegisterDataset", scope.makeOpName("RegisterDataset"));
-    opBuilder.addInput(dataset.asOutput());
-    opBuilder.addInput(address.asOutput());
-    opBuilder.addInput(protocol.asOutput());
+    opBuilder.addInput(dataset.asOutput(scope));
+    opBuilder.addInput(address.asOutput(scope));
+    opBuilder.addInput(protocol.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("external_state_policy", externalStatePolicy);
     return new RegisterDataset(opBuilder.build());
@@ -61,7 +61,7 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
   }
   
   @Override
-  public Output<TInt64> asOutput() {
+  public Output<TInt64> asOutput(Scope scope) {
     return datasetId;
   }
   

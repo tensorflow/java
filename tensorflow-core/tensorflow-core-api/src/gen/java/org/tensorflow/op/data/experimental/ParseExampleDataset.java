@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data.experimental;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -101,7 +100,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
    * @return a new instance of ParseExampleDataset
    */
   @Endpoint(describeByClass = true)
-  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes, List<DataType<?>> outputTypes, List<Shape> outputShapes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, Options... options) {
+  public static ParseExampleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys, List<String> denseKeys, List<Class<?>> sparseTypes, List<Shape> denseShapes, List<Class<?>> outputTypes, List<Shape> outputShapes, List<Class<?>> raggedValueTypes, List<Class<?>> raggedSplitTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleDatasetV2", scope.makeOpName("ParseExampleDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(numParallelCalls.asOutput(scope));
@@ -117,7 +116,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       denseKeysArray[i] = denseKeys.get(i);
     }
     opBuilder.setAttr("dense_keys", denseKeysArray);
-    DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
+    Class[] sparseTypesArray = new Class[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
       sparseTypesArray[i] = sparseTypes.get(i);
     }
@@ -127,7 +126,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       denseShapesArray[i] = denseShapes.get(i);
     }
     opBuilder.setAttr("dense_shapes", denseShapesArray);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }
@@ -137,12 +136,12 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    DataType[] raggedValueTypesArray = new DataType[raggedValueTypes.size()];
+    Class[] raggedValueTypesArray = new Class[raggedValueTypes.size()];
     for (int i = 0; i < raggedValueTypesArray.length; ++i) {
       raggedValueTypesArray[i] = raggedValueTypes.get(i);
     }
     opBuilder.setAttr("ragged_value_types", raggedValueTypesArray);
-    DataType[] raggedSplitTypesArray = new DataType[raggedSplitTypes.size()];
+    Class[] raggedSplitTypesArray = new Class[raggedSplitTypes.size()];
     for (int i = 0; i < raggedSplitTypesArray.length; ++i) {
       raggedSplitTypesArray[i] = raggedSplitTypes.get(i);
     }

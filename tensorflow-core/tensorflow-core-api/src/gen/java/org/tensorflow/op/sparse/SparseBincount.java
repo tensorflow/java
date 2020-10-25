@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
@@ -81,11 +80,11 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
   @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> SparseBincount<U> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> size, Operand<U> weights, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseBincount", scope.makeOpName("SparseBincount"));
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(denseShape.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder.addInput(weights.asOutput());
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(values.asOutput(scope));
+    opBuilder.addInput(denseShape.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
+    opBuilder.addInput(weights.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -113,7 +112,7 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   

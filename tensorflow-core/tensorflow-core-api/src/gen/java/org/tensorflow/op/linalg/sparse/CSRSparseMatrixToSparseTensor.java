@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -45,7 +44,7 @@ public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp 
    * @return a new instance of CSRSparseMatrixToSparseTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, DataType<T> type) {
+  public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
     opBuilder.addInput(sparseMatrix.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

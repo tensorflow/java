@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -67,7 +66,7 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
    * @return a new instance of TensorArrayPack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayPack", scope.makeOpName("TensorArrayPack"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(flowIn.asOutput(scope));

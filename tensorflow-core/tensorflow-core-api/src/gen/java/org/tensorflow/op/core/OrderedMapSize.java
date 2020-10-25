@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -90,10 +89,10 @@ public final class OrderedMapSize extends RawOp implements Operand<TInt32> {
    * @return a new instance of OrderedMapSize
    */
   @Endpoint(describeByClass = true)
-  public static OrderedMapSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
+  public static OrderedMapSize create(Scope scope, List<Class<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapSize", scope.makeOpName("OrderedMapSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
+    Class[] dtypesArray = new Class[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);
     }

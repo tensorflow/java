@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -53,7 +52,7 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends RawO
    * @return a new instance of ResourceAccumulatorTakeGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceAccumulatorTakeGradient<T> create(Scope scope, Operand<?> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+  public static <T extends TType> ResourceAccumulatorTakeGradient<T> create(Scope scope, Operand<?> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorTakeGradient", scope.makeOpName("ResourceAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(numRequired.asOutput(scope));

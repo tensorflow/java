@@ -81,18 +81,4 @@ public interface Operand<T extends TType> extends Op {
   default T asTensor() {
     return asOutput().tensor();
   }
-
-  /**
-   * Returns this operand as a tensor of the given type.
-   *
-   * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asOutput().tensor()}
-   *
-   * @return the tensor
-   * @throws IllegalStateException if this is an operand of a graph
-   * @throws IllegalArgumentException if the {@code dataType} is incompatible with tensor type
-   */
-  default <U extends TType> U asTensor(DataType<U> dataType) {
-    return (U)asOutput().tensor().expect(dataType);
-  }
 }

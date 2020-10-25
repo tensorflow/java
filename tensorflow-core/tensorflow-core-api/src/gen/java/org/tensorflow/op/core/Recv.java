@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -70,7 +69,7 @@ public final class Recv<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Recv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Recv<T> create(Scope scope, DataType<T> tensorType, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
+  public static <T extends TType> Recv<T> create(Scope scope, Class<T> tensorType, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Recv", scope.makeOpName("Recv"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("tensor_type", tensorType);

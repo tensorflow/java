@@ -177,7 +177,7 @@ void RenderSecondaryFactoryMethod(const OpSpec& op, const Type& op_class,
     if (attr.type().kind() == Type::GENERIC &&
         default_types.find(attr.type().name()) != default_types.end()) {
       factory_statement << default_types.at(attr.type().name()).name()
-                        << ".DTYPE";
+                        << ".class";
     } else {
       AddArgument(attr.var(), attr.description(), &factory, &factory_doc);
       factory_statement << attr.var().name();

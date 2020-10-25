@@ -19,7 +19,6 @@ package org.tensorflow.op.ragged;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -67,7 +66,7 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
    * @return a new instance of RaggedTensorFromVariant
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
+  public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, Class<T> Tvalues, Class<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -91,8 +90,8 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
    * @return a new instance of RaggedTensorFromVariant
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues) {
-    return create(scope, encodedRagged, inputRaggedRank, outputRaggedRank, Tvalues, TInt64.DTYPE);
+  public static <T extends TType> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, Class<T> Tvalues) {
+    return create(scope, encodedRagged, inputRaggedRank, outputRaggedRank, Tvalues, TInt64.class);
   }
   
   /**

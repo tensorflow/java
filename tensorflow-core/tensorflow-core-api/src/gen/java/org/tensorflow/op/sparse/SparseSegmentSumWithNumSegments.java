@@ -25,14 +25,13 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the sum along sparse segments of a tensor.
  * <p>
  * Like `SparseSegmentSum`, but allows missing ids in `segment_ids`. If an id is
- * misisng, the `output` tensor at that position will be zeroed.
+ * missing, the `output` tensor at that position will be zeroed.
  * <p>
  * Read
  * [the section on segmentation](https://tensorflow.org/api_docs/python/tf/sparse#Segmentation)
@@ -75,7 +74,7 @@ public final class SparseSegmentSumWithNumSegments<T extends TNumber> extends Ra
    * @return a new instance of SparseSegmentSumWithNumSegments
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSumWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<TInt32> segmentIds, Operand<V> numSegments) {
+  public static <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSumWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSumWithNumSegments", scope.makeOpName("SparseSegmentSumWithNumSegments"));
     opBuilder.addInput(data.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));
@@ -97,6 +96,9 @@ public final class SparseSegmentSumWithNumSegments<T extends TNumber> extends Ra
   public Output<T> asOutput(Scope scope) {
     return output;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "SparseSegmentSumWithNumSegments";
   
   private Output<T> output;
   

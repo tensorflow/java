@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -63,7 +62,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Angle
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -80,7 +79,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TFloat32.DTYPE);
+    return create(scope, input, TFloat32.class);
   }
   
   /**

@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -98,11 +97,11 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of StagePeek
    */
   @Endpoint(describeByClass = true)
-  public static StagePeek create(Scope scope, Operand<TInt32> index, List<DataType<?>> dtypes, Options... options) {
+  public static StagePeek create(Scope scope, Operand<TInt32> index, List<Class<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StagePeek", scope.makeOpName("StagePeek"));
     opBuilder.addInput(index.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
+    Class[] dtypesArray = new Class[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);
     }

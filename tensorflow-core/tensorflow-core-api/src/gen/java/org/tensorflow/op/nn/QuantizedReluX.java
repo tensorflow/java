@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -49,7 +48,7 @@ public final class QuantizedReluX<U extends TType> extends RawOp {
    * @return a new instance of QuantizedReluX
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReluX", scope.makeOpName("QuantizedReluX"));
     opBuilder.addInput(features.asOutput(scope));
     opBuilder.addInput(maxValue.asOutput(scope));

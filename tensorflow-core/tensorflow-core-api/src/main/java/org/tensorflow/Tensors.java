@@ -31,13 +31,13 @@ public final class Tensors {
    * }</pre>
    *
    * @param <T> the tensor element type
-   * @param dtype datatype of the tensor
+   * @param type tensor type
    * @param shape shape of the tensor
    * @return an allocated but uninitialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> T of(DataType<T> dtype, Shape shape) {
-    return of(dtype, shape, shape.size() * dtype.byteSize());
+  public static <T extends TType> T of(Class<T> type, Shape shape) {
+    return of(type, shape, -1);
   }
 
   /**
@@ -50,7 +50,7 @@ public final class Tensors {
    * like {@link org.tensorflow.types.TString TString}.
    *
    * @param <T> the tensor element type
-   * @param dtype datatype of the tensor
+   * @param type tensor type
    * @param shape shape of the tensor
    * @param size size, in bytes, of the tensor
    * @return an allocated but uninitialized tensor
@@ -59,8 +59,8 @@ public final class Tensors {
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> T of(DataType<T> dtype, Shape shape, long size) {
-    return Tensors.allocate(dtype, shape, size);
+  public static <T extends TType> T of(Class<T> type, Shape shape, long size) {
+    return allocate(type, shape, size);
   }
 
   /**
@@ -81,14 +81,14 @@ public final class Tensors {
    * automatically released before rethrowing the same exception.
    *
    * @param <T> the tensor element type
-   * @param dtype datatype of the tensor
+   * @param type tensor type
    * @param shape shape of the tensor
    * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
    * @return an allocated and initialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> T of(DataType<T> dtype, Shape shape, Consumer<T> dataInitializer) {
-    return of(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
+  public static <T extends TType> T of(Class<T> type, Shape shape, Consumer<T> dataInitializer) {
+    return of(type, shape, -1, dataInitializer);
   }
 
   /**
@@ -101,20 +101,20 @@ public final class Tensors {
    * such as {@link org.tensorflow.types.TString TString}.
    *
    * @param <T> the tensor element type
-   * @param dtype datatype of the tensor
+   * @param type tensor type
    * @param shape shape of the tensor
    * @param size size, in bytes, of the tensor
-   * @param tensorInit method receiving accessor to the allocated tensor data for initialization
+   * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
    * @return an allocated and initialized tensor
    * @see #of(DataType, Shape, long, Consumer)
    * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> T of(DataType<T> dtype, Shape shape, long size, Consumer<T> tensorInit) {
-    T tensor = of(dtype, shape, size);
+  public static <T extends TType> T of(Class<T> type, Shape shape, long size, Consumer<T> dataInitializer) {
+    T tensor = of(type, shape, size);
     try {
-      tensorInit.accept(tensor);
+      dataInitializer.accept(tensor);
       return tensor;
     } catch (Throwable t) {
       tensor.close();
@@ -129,29 +129,17 @@ public final class Tensors {
    * href="https://www.tensorflow.org/code/tensorflow/c/c_api.h">C API</a>.
    *
    * @param <T> the tensor element type
+   * @param type tensor type
    * @param dtype the tensor element data type
    * @param shape the tensor shape.
    * @param rawData a buffer containing the tensor raw data.
    * @throws IllegalArgumentException if {@code rawData} is not large enough to contain the tensor data
    * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
-  public static <T extends TType> T of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
-    T tensor = of(dtype, shape, rawData.size());
+  public static <T extends TType> T of(Class<T> type, Shape shape, ByteDataBuffer rawData) {
+    T tensor = of(type, shape, rawData.size());
     rawData.copyTo(TensorBuffers.toBytes(((AbstractTensor)tensor).nativeHandle()), rawData.size());
     return tensor;
-  }
-
-  static <T extends TType> T allocate(DataType<T> dataType, Shape shape, long size) {
-    // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
-    // we only validate them for fixed length datatypes
-    if (!dataType.isVariableLength() && shape.size() * dataType.byteSize() > size) {
-      throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
-    }
-    TF_Tensor nativeHandle = allocate(dataType.nativeCode(), shape.asArray(), size);
-    try (PointerScope scope = new PointerScope()) {
-      scope.attach(nativeHandle);
-      return dataType.instantiateTensor(nativeHandle, shape);
-    }
   }
 
   /**
@@ -160,9 +148,29 @@ public final class Tensors {
    * <p>Takes ownership of the handle.
    */
   static Tensor<?> fromHandle(TF_Tensor handle) {
-    DataType<?> dataType = DataTypes.fromNativeCode(dtype(handle));
+    TensorType type = TensorTypes.find(dtype(handle));
     Shape shape = Shape.of(shape(handle));
-    return dataType.instantiateTensor(handle, shape);
+    return type.newInstance(handle, shape);
+  }
+
+  private static <T extends TType> T allocate(Class<T> type, Shape shape, long size) {
+    TensorType tensorType = TensorTypes.find(type);
+    DataType dataType = tensorType.dataType();
+    long effectiveSize = size;
+    if (effectiveSize < 0) {
+      // Size of the tensor is by default the sum of the size of all its element
+      effectiveSize = shape.size() * dataType.byteSize;
+
+    } else if (dataType.byteSize > 0 && shape.size() * dataType.byteSize > effectiveSize) {
+      // Minimum requirements for datatypes of variable length cannot be verified in a relevant way
+      // so we only validate them for fixed length datatypes
+      throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
+    }
+    TF_Tensor nativeHandle = allocate(dataType.number, shape.asArray(), effectiveSize);
+    try (PointerScope scope = new PointerScope()) {
+      scope.attach(nativeHandle);
+      return tensorType.newInstance(nativeHandle, shape);
+    }
   }
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {

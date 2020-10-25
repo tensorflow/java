@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -70,7 +69,7 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
    * @return a new instance of DecodePaddedRaw
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
+  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, Class<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput(scope));
     opBuilder.addInput(fixedLength.asOutput(scope));

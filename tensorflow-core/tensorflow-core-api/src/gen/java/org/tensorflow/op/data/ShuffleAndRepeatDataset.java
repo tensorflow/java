@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -32,40 +31,54 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that shuffles and repeats elements from `input_dataset`
- * <p>
- * pseudorandomly.
  */
 public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TType> {
+  
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.ShuffleAndRepeatDataset}
+   */
+  public static class Options {
+    
+    /**
+     * @param reshuffleEachIteration 
+     */
+    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+      this.reshuffleEachIteration = reshuffleEachIteration;
+      return this;
+    }
+    
+    private Boolean reshuffleEachIteration;
+    
+    private Options() {
+    }
+  }
   
   /**
    * Factory method to create a class wrapping a new ShuffleAndRepeatDataset operation.
    * 
    * @param scope current scope
    * @param inputDataset 
-   * @param bufferSize The number of output elements to buffer in an iterator over
-   * this dataset. Compare with the `min_after_dequeue` attr when creating a
-   * `RandomShuffleQueue`.
-   * @param seed A scalar seed for the random number generator. If either `seed` or
-   * `seed2` is set to be non-zero, the random number generator is seeded
-   * by the given seed.  Otherwise, a random seed is used.
-   * @param seed2 A second scalar seed to avoid seed collision.
-   * @param count A scalar representing the number of times the underlying dataset
-   * should be repeated. The default is `-1`, which results in infinite repetition.
+   * @param bufferSize 
+   * @param seed 
+   * @param seed2 
+   * @param count 
+   * @param seedGenerator 
    * @param outputTypes 
    * @param outputShapes 
+   * @param options carries optional attributes values
    * @return a new instance of ShuffleAndRepeatDataset
    */
   @Endpoint(describeByClass = true)
-  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDataset", scope.makeOpName("ShuffleAndRepeatDataset"));
+  public static ShuffleAndRepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TInt64> count, Operand<?> seedGenerator, List<Class<?>> outputTypes, List<Shape> outputShapes, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDatasetV2", scope.makeOpName("ShuffleAndRepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(bufferSize.asOutput(scope));
     opBuilder.addInput(seed.asOutput(scope));
     opBuilder.addInput(seed2.asOutput(scope));
     opBuilder.addInput(count.asOutput(scope));
+    opBuilder.addInput(seedGenerator.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }
@@ -75,7 +88,21 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.reshuffleEachIteration != null) {
+          opBuilder.setAttr("reshuffle_each_iteration", opts.reshuffleEachIteration);
+        }
+      }
+    }
     return new ShuffleAndRepeatDataset(opBuilder.build());
+  }
+  
+  /**
+   * @param reshuffleEachIteration 
+   */
+  public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+    return new Options().reshuffleEachIteration(reshuffleEachIteration);
   }
   
   /**
@@ -89,6 +116,9 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
   public Output<TType> asOutput(Scope scope) {
     return (Output<TType>) handle;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "ShuffleAndRepeatDatasetV2";
   
   private Output<?> handle;
   

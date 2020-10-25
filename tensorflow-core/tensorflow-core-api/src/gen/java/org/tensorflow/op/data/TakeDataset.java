@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -50,12 +49,12 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
    * @return a new instance of TakeDataset
    */
   @Endpoint(describeByClass = true)
-  public static TakeDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static TakeDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeDataset", scope.makeOpName("TakeDataset"));
     opBuilder.addInput(inputDataset.asOutput(scope));
     opBuilder.addInput(count.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -69,7 +68,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
    * @return a new instance of SetDiff1d
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SetDiff1d<T, U> create(Scope scope, Operand<T> x, Operand<T> y, DataType<U> outIdx) {
+  public static <T extends TType, U extends TNumber> SetDiff1d<T, U> create(Scope scope, Operand<T> x, Operand<T> y, Class<U> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("ListDiff", scope.makeOpName("SetDiff1d"));
     opBuilder.addInput(x.asOutput(scope));
     opBuilder.addInput(y.asOutput(scope));
@@ -88,7 +87,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> SetDiff1d<T, TInt32> create(Scope scope, Operand<T> x, Operand<T> y) {
-    return create(scope, x, y, TInt32.DTYPE);
+    return create(scope, x, y, TInt32.class);
   }
   
   /**

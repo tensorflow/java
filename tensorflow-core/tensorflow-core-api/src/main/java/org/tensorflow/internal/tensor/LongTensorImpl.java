@@ -12,15 +12,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.LongTensor;
+import org.tensorflow.types.tensor.LongTensor;
 
 public class LongTensorImpl extends AbstractTensor<Long> implements LongTensor {
 
   private final LongNdArray data;
 
-  public LongTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      LongDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public LongTensorImpl(TF_Tensor nativeHandle, Shape shape, LongDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

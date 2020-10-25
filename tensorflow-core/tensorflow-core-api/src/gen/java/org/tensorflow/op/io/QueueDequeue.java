@@ -20,7 +20,6 @@ package org.tensorflow.op.io;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -75,11 +74,11 @@ public final class QueueDequeue extends RawOp implements Iterable<Operand<TType>
    * @return a new instance of QueueDequeue
    */
   @Endpoint(describeByClass = true)
-  public static QueueDequeue create(Scope scope, Operand<?> handle, List<DataType<?>> componentTypes, Options... options) {
+  public static QueueDequeue create(Scope scope, Operand<?> handle, List<Class<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueV2", scope.makeOpName("QueueDequeue"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] componentTypesArray = new DataType[componentTypes.size()];
+    Class[] componentTypesArray = new Class[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);
     }

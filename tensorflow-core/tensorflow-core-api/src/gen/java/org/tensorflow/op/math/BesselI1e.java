@@ -28,16 +28,8 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the Bessel i1e function of `x` element-wise.
- * <p>
- * Exponentially scaled modified Bessel function of order 0 defined as
- * `bessel_i1e(x) = exp(-abs(x)) bessel_i1(x)`.
- * <p>
- * This function is faster and numerically stabler than `bessel_i1(x)`.
- * 
  * @param <T> data type for {@code y()} output
  */
-@Operator(group = "math")
 public final class BesselI1e<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**
@@ -65,6 +57,9 @@ public final class BesselI1e<T extends TNumber> extends RawOp implements Operand
   public Output<T> asOutput(Scope scope) {
     return y;
   }
+  
+  /** The name of this op, as known by TensorFlow core engine */
+  public static final String OP_NAME = "BesselI1e";
   
   private Output<T> y;
   

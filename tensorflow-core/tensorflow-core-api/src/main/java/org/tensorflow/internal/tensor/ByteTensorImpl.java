@@ -12,15 +12,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.index.Index;
-import org.tensorflow.tensor.ByteTensor;
+import org.tensorflow.types.tensor.ByteTensor;
 
 public class ByteTensorImpl extends AbstractTensor<Byte> implements ByteTensor {
 
   private final ByteNdArray data;
 
-  public ByteTensorImpl(TF_Tensor nativeHandle, DataType<?> dataType, Shape shape,
-      ByteDataBuffer buffer) {
-    super(nativeHandle, dataType);
+  public ByteTensorImpl(TF_Tensor nativeHandle, Shape shape, ByteDataBuffer buffer) {
+    super(nativeHandle);
     data = NdArrays.wrap(shape, buffer);
   }
 

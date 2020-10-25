@@ -29,6 +29,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Ops;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
@@ -104,15 +105,9 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public DataType<?> dtype(int outputIndex) {
-    // If the tensor of this output has already been resolved, return its datatype.
-    // Otherwise, retrieve the tensor datatype from the native library.
-    Tensor<?> tensor = outputTensors.get(outputIndex);
-    if (tensor != null) {
-      return tensor.dataType();
-    }
+  public int dtype(int outputIndex) {
     TFE_TensorHandle outputNativeHandle = getUnsafeNativeHandle(outputIndex);
-    return DataTypes.fromNativeCode(dataType(outputNativeHandle));
+    return dataType(outputNativeHandle);
   }
 
   @Override

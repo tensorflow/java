@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -121,7 +120,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
    * @return a new instance of UnicodeDecodeWithOffsets
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
+  public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, Class<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecodeWithOffsets", scope.makeOpName("UnicodeDecodeWithOffsets"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -156,7 +155,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
    */
   @Endpoint(describeByClass = true)
   public static UnicodeDecodeWithOffsets<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
-    return create(scope, input, inputEncoding, TInt64.DTYPE, options);
+    return create(scope, input, inputEncoding, TInt64.class, options);
   }
   
   /**

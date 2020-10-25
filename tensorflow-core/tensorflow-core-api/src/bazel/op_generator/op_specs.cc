@@ -163,7 +163,7 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
 
   } else if (attr_type == "type") {
     Type type = *iterable_out ? Type::Wildcard() : NextGeneric(FamilyOf(attr_def));
-    types = MakeTypePair(type, Type::Enum("DataType", "org.tensorflow"));
+    types = MakeTypePair(type, Type::Class("Class"));
 
   } else {
     LOG(FATAL) << "Cannot resolve data type for attribute \"" << attr_type
@@ -317,7 +317,7 @@ AttributeSpec CreateAttribute(const OpDef_AttrDef& attr_def,
   bool iterable = false;
   std::pair<Type, Type> types = type_resolver->TypesOf(attr_def, &iterable);
   Type var_type = types.first.kind() == Type::GENERIC
-                      ? Type::DataTypeOf(types.first)
+                      ? Type::ClassOf(types.first)
                       : types.first;
   if (iterable) {
     var_type = Type::ListOf(var_type);

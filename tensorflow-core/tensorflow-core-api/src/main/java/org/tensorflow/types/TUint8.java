@@ -28,19 +28,15 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.tensor.ByteTensor;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.tensor.ByteTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 8-bit unsigned integer tensor type.
  */
+@TensorType(dataType = DataType.UINT8, impl = TUint8Impl.class)
 public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
-
-  /** readable-name for the data type */
-  static final String NAME = "UINT8";
-
-  /** Type metadata */
-  DataType<TUint8> DTYPE = DataType.create(NAME, 4, 1, TUint8Impl::new);
 
   /**
    * Allocates a new tensor for storing a single byte value.
@@ -49,7 +45,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    * @return the new tensor
    */
   static TUint8 scalarOf(byte value) {
-    return Tensors.of(DTYPE, Shape.scalar(), t -> t.setByte(value));
+    return Tensors.of(TUint8.class, Shape.scalar(), t -> t.setByte(value));
   }
 
   /**
@@ -62,7 +58,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensors.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
+    return Tensors.of(TUint8.class, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -74,7 +70,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    * @return the new tensor
    */
   static TUint8 tensorOf(NdArray<Byte> src) {
-    return Tensors.of(DTYPE, src.shape(), src::copyTo);
+    return Tensors.of(TUint8.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -84,7 +80,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    * @return the new tensor
    */
   static TUint8 tensorOf(Shape shape) {
-    return Tensors.of(DTYPE, shape);
+    return Tensors.of(TUint8.class, shape);
   }
 
   /**
@@ -95,7 +91,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    * @return the new tensor
    */
   static TUint8 tensorOf(Shape shape, ByteDataBuffer data) {
-    return Tensors.of(DTYPE, shape, d -> d.write(data));
+    return Tensors.of(TUint8.class, shape, d -> d.write(data));
   }
 
   /**
@@ -107,7 +103,7 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TUint8 tensorOf(Shape shape, Consumer<TUint8> tensorInit) {
-    return Tensors.of(DTYPE, shape, tensorInit);
+    return Tensors.of(TUint8.class, shape, tensorInit);
   }
 }
 
@@ -117,6 +113,11 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
 class TUint8Impl extends ByteTensorImpl implements TUint8 {
 
   TUint8Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, DTYPE, shape, TensorBuffers.toBytes(nativeTensor));
+    super(nativeTensor, shape, TensorBuffers.toBytes(nativeTensor));
+  }
+
+  @Override
+  public Class<TUint8> type() {
+    return TUint8.class;
   }
 }

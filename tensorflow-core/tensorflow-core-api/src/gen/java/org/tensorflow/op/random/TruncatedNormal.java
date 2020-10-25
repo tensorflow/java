@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -80,7 +79,7 @@ public final class TruncatedNormal<U extends TNumber> extends RawOp implements O
    * @return a new instance of TruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> TruncatedNormal<U> create(Scope scope, Operand<T> shape, DataType<U> dtype, Options... options) {
+  public static <U extends TNumber, T extends TNumber> TruncatedNormal<U> create(Scope scope, Operand<T> shape, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncatedNormal", scope.makeOpName("TruncatedNormal"));
     opBuilder.addInput(shape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

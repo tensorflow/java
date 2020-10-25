@@ -51,10 +51,10 @@ public final class Zeros<T extends TType> implements Op, Operand<T> {
    */
   @Endpoint
   @SuppressWarnings("unchecked")
-  public static <T extends TType, U extends TNumber> Zeros<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
+  public static <T extends TType, U extends TNumber> Zeros<T> create(Scope scope, Operand<U> dims, Class<T> type) {
     Scope zerosScope = scope.withSubScope("Zeros");
     Operand<T> zero;
-    if (type == TString.DTYPE) {
+    if (type == TString.class) {
       zero = (Operand<T>)Constant.scalarOf(zerosScope.withName("Zero"), "");
     } else {
       zero = Cast.create(zerosScope.withName("Zero"), Constant.scalarOf(zerosScope, 0), type);

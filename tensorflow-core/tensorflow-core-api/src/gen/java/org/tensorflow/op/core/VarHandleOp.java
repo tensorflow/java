@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -85,7 +84,7 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
    * @return a new instance of VarHandleOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
+  public static <T extends TType> VarHandleOp create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);

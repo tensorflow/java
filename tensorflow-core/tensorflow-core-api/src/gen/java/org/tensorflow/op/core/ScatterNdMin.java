@@ -71,9 +71,9 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
   @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TNumber> ScatterNdMin<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdMin", scope.makeOpName("ScatterNdMin"));
-    opBuilder.addInput(ref.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -103,7 +103,7 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
   }
   
   @Override
-  public Output<T> asOutput() {
+  public Output<T> asOutput(Scope scope) {
     return outputRef;
   }
   

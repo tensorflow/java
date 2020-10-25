@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -43,7 +42,7 @@ public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
    * @return a new instance of SparseMatrixZeros
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, DataType<T> type) {
+  public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixZeros", scope.makeOpName("SparseMatrixZeros"));
     opBuilder.addInput(denseShape.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

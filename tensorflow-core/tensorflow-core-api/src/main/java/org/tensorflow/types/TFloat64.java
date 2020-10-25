@@ -28,19 +28,15 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.tensor.DoubleTensor;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.tensor.DoubleTensor;
 import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 double-precision 64-bit float tensor type.
  */
+@TensorType(dataType = DataType.DOUBLE, impl = TFloat64Impl.class)
 public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
-
-  /** readable-name for the data type */
-  static final String NAME = "DOUBLE";
-
-  /** Type metadata */
-  DataType<TFloat64> DTYPE = DataType.create(NAME, 2, 8, TFloat64Impl::new);
 
   /**
    * Allocates a new tensor for storing a single double value.
@@ -49,7 +45,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    * @return the new tensor
    */
   static TFloat64 scalarOf(double value) {
-    return Tensors.of(DTYPE, Shape.scalar(), t -> t.setDouble(value));
+    return Tensors.of(TFloat64.class, Shape.scalar(), t -> t.setDouble(value));
   }
 
   /**
@@ -62,7 +58,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensors.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
+    return Tensors.of(TFloat64.class, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -74,7 +70,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    * @return the new tensor
    */
   static TFloat64 tensorOf(NdArray<Double> src) {
-    return Tensors.of(DTYPE, src.shape(), src::copyTo);
+    return Tensors.of(TFloat64.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -84,7 +80,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    * @return the new tensor
    */
   static TFloat64 tensorOf(Shape shape) {
-    return Tensors.of(DTYPE, shape);
+    return Tensors.of(TFloat64.class, shape);
   }
 
   /**
@@ -95,7 +91,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    * @return the new tensor
    */
   static TFloat64 tensorOf(Shape shape, DoubleDataBuffer data) {
-    return Tensors.of(DTYPE, shape, t -> t.write(data));
+    return Tensors.of(TFloat64.class, shape, t -> t.write(data));
   }
 
   /**
@@ -107,7 +103,7 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> tensorInit) {
-    return Tensors.of(DTYPE, shape, tensorInit);
+    return Tensors.of(TFloat64.class, shape, tensorInit);
   }
 }
 
@@ -117,6 +113,11 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
 class TFloat64Impl extends DoubleTensorImpl implements TFloat64 {
 
   TFloat64Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, DTYPE, shape, TensorBuffers.toDoubles(nativeTensor));
+    super(nativeTensor, shape, TensorBuffers.toDoubles(nativeTensor));
+  }
+
+  @Override
+  public Class<TFloat64> type() {
+    return TFloat64.class;
   }
 }

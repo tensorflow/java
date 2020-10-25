@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -96,7 +95,7 @@ public final class ParseExample extends RawOp {
    * @return a new instance of ParseExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, List<Shape> denseShapes) {
+  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<Class<?>> sparseTypes, List<Class<?>> raggedValueTypes, List<Class<?>> raggedSplitTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput(scope));
     opBuilder.addInput(names.asOutput(scope));
@@ -106,17 +105,17 @@ public final class ParseExample extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(scope, denseDefaults));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
-    DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
+    Class[] sparseTypesArray = new Class[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
       sparseTypesArray[i] = sparseTypes.get(i);
     }
     opBuilder.setAttr("sparse_types", sparseTypesArray);
-    DataType[] raggedValueTypesArray = new DataType[raggedValueTypes.size()];
+    Class[] raggedValueTypesArray = new Class[raggedValueTypes.size()];
     for (int i = 0; i < raggedValueTypesArray.length; ++i) {
       raggedValueTypesArray[i] = raggedValueTypes.get(i);
     }
     opBuilder.setAttr("ragged_value_types", raggedValueTypesArray);
-    DataType[] raggedSplitTypesArray = new DataType[raggedSplitTypes.size()];
+    Class[] raggedSplitTypesArray = new Class[raggedSplitTypes.size()];
     for (int i = 0; i < raggedSplitTypesArray.length; ++i) {
       raggedSplitTypesArray[i] = raggedSplitTypes.get(i);
     }

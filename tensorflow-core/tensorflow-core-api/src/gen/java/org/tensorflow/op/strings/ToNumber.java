@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -57,7 +56,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of ToNumber
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
+  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, Class<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToNumber", scope.makeOpName("ToNumber"));
     opBuilder.addInput(stringTensor.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -74,7 +73,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    */
   @Endpoint(describeByClass = true)
   public static ToNumber<TFloat32> create(Scope scope, Operand<TString> stringTensor) {
-    return create(scope, stringTensor, TFloat32.DTYPE);
+    return create(scope, stringTensor, TFloat32.class);
   }
   
   /**

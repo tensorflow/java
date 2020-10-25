@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -116,7 +115,7 @@ public final class TensorArray extends RawOp {
    * @return a new instance of TensorArray
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> size, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> size, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayV3", scope.makeOpName("TensorArray"));
     opBuilder.addInput(size.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);

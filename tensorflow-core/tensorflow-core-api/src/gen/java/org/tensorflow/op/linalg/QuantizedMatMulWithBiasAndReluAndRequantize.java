@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -101,7 +100,7 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> 
    * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, DataType<W> Toutput, Options... options) {
+  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndReluAndRequantize"));
     opBuilder.addInput(a.asOutput(scope));
     opBuilder.addInput(b.asOutput(scope));

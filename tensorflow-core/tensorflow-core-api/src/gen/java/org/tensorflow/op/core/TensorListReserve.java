@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -51,7 +50,7 @@ public final class TensorListReserve extends RawOp implements Operand<TType> {
    * @return a new instance of TensorListReserve
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
+  public static <T extends TNumber, U extends TType> TensorListReserve create(Scope scope, Operand<T> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
     opBuilder.addInput(elementShape.asOutput(scope));
     opBuilder.addInput(numElements.asOutput(scope));

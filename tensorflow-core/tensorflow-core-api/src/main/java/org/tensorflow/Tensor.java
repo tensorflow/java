@@ -15,7 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.checkerframework.checker.units.qual.C;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
@@ -39,18 +38,6 @@ import org.tensorflow.types.family.TType;
 public interface Tensor<T> extends NdArray<T>, AutoCloseable {
 
   /**
-   * Returns this Tensor object with the type {@code Tensor<U>}. This method is useful when given a
-   * value of type {@code Tensor<?>}.
-   *
-   * @param dt any supported tensor data type
-   * @param <U> a tensor type
-   * @return a tensor of the requested data type
-   * @throws IllegalArgumentException if the actual data type of this object does not match the type
-   *     {@code U}.
-   */
-  <U extends TType> U expect(DataType<U> dt);
-
-  /**
    * Release resources associated with the Tensor.
    *
    * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager
@@ -60,9 +47,6 @@ public interface Tensor<T> extends NdArray<T>, AutoCloseable {
    */
   @Override
   void close();
-
-  /** Returns the {@link DataType} of elements stored in the Tensor. */
-  DataType<?> dataType();
 
   /** Returns the size, in bytes, of the tensor data. */
   long numBytes();

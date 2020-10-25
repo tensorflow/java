@@ -19,7 +19,6 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -98,12 +97,12 @@ public final class BarrierTakeMany extends RawOp {
    * @return a new instance of BarrierTakeMany
    */
   @Endpoint(describeByClass = true)
-  public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<DataType<?>> componentTypes, Options... options) {
+  public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<Class<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(numElements.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] componentTypesArray = new DataType[componentTypes.size()];
+    Class[] componentTypesArray = new Class[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);
     }

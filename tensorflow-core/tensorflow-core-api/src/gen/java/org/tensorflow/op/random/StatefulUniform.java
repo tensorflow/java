@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -51,7 +50,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
    * @return a new instance of StatefulUniform
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput(scope));
     opBuilder.addInput(algorithm.asOutput(scope));
@@ -72,7 +71,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> StatefulUniform<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
+    return create(scope, resource, algorithm, shape, TFloat32.class);
   }
   
   /**

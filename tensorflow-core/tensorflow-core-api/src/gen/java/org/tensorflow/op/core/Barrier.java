@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -105,10 +104,10 @@ public final class Barrier extends RawOp implements Operand<TString> {
    * @return a new instance of Barrier
    */
   @Endpoint(describeByClass = true)
-  public static Barrier create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
+  public static Barrier create(Scope scope, List<Class<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] componentTypesArray = new DataType[componentTypes.size()];
+    Class[] componentTypesArray = new Class[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);
     }

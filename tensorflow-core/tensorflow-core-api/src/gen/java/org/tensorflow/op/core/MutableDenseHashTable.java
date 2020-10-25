@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -122,7 +121,7 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
    * @return a new instance of MutableDenseHashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope, Operand<T> emptyKey, Operand<T> deletedKey, Class<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput(scope));
     opBuilder.addInput(deletedKey.asOutput(scope));

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -49,7 +48,7 @@ public final class StatefulUniformFullInt<U extends TType> extends RawOp impleme
    * @return a new instance of StatefulUniformFullInt
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulUniformFullInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformFullInt", scope.makeOpName("StatefulUniformFullInt"));
     opBuilder.addInput(resource.asOutput(scope));
     opBuilder.addInput(algorithm.asOutput(scope));

@@ -19,7 +19,6 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -96,11 +95,11 @@ public final class MapUnstageNoKey extends RawOp {
    * @return a new instance of MapUnstageNoKey
    */
   @Endpoint(describeByClass = true)
-  public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
+  public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<Class<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
+    Class[] dtypesArray = new Class[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);
     }

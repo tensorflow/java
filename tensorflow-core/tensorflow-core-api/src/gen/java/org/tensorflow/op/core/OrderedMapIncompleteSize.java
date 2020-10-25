@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -90,10 +89,10 @@ public final class OrderedMapIncompleteSize extends RawOp implements Operand<TIn
    * @return a new instance of OrderedMapIncompleteSize
    */
   @Endpoint(describeByClass = true)
-  public static OrderedMapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
+  public static OrderedMapIncompleteSize create(Scope scope, List<Class<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapIncompleteSize", scope.makeOpName("OrderedMapIncompleteSize"));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
+    Class[] dtypesArray = new Class[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);
     }

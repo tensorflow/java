@@ -27,19 +27,15 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
-import org.tensorflow.tensor.IntTensor;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.tensor.IntTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 32-bit signed integer tensor type.
  */
+@TensorType(dataType = DataType.INT32, impl = TInt32Impl.class)
 public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
-
-  /** readable-name for the data type */
-  static final String NAME = "INT32";
-
-  /** Type metadata */
-  DataType<TInt32> DTYPE = DataType.create(NAME, 3, 4, TInt32Impl::new);
 
   /**
    * Allocates a new tensor for storing a single int value.
@@ -48,7 +44,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    * @return the new tensor
    */
   static TInt32 scalarOf(int value) {
-    return Tensors.of(DTYPE, Shape.scalar(), t -> t.setInt(value));
+    return Tensors.of(TInt32.class, Shape.scalar(), t -> t.setInt(value));
   }
 
   /**
@@ -62,7 +58,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensors.of(DTYPE, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
+    return Tensors.of(TInt32.class, Shape.of(values.length), t -> StdArrays.copyTo(values, t));
   }
 
   /**
@@ -74,7 +70,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    * @return the new tensor
    */
   static TInt32 tensorOf(NdArray<Integer> src) {
-    return Tensors.of(DTYPE, src.shape(), src::copyTo);
+    return Tensors.of(TInt32.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -84,7 +80,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    * @return the new tensor
    */
   static TInt32 tensorOf(Shape shape) {
-    return Tensors.of(DTYPE, shape);
+    return Tensors.of(TInt32.class, shape);
   }
 
   /**
@@ -95,7 +91,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    * @return the new tensor
    */
   static TInt32 tensorOf(Shape shape, IntDataBuffer data) {
-    return Tensors.of(DTYPE, shape, t -> t.write(data));
+    return Tensors.of(TInt32.class, shape, t -> t.write(data));
   }
 
   /**
@@ -106,7 +102,7 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    * @return the new tensor
    */
   static TInt32 tensorOf(Shape shape, Consumer<TInt32> tensorInit) {
-    return Tensors.of(DTYPE, shape, tensorInit);
+    return Tensors.of(TInt32.class, shape, tensorInit);
   }
 }
 
@@ -116,6 +112,11 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
 class TInt32Impl extends IntTensorImpl implements TInt32 {
 
   TInt32Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, DTYPE, shape, TensorBuffers.toInts(nativeTensor));
+    super(nativeTensor, shape, TensorBuffers.toInts(nativeTensor));
+  }
+
+  @Override
+  public Class<TInt32> type() {
+    return TInt32.class;
   }
 }

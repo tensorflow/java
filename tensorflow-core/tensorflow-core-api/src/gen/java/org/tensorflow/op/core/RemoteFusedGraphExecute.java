@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -57,11 +56,11 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
    * @return a new instance of RemoteFusedGraphExecute
    */
   @Endpoint(describeByClass = true)
-  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
+  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<Class<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
     opBuilder.addInputList(Operands.asOutputs(scope, inputs));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] ToutputsArray = new DataType[Toutputs.size()];
+    Class[] ToutputsArray = new Class[Toutputs.size()];
     for (int i = 0; i < ToutputsArray.length; ++i) {
       ToutputsArray[i] = Toutputs.get(i);
     }

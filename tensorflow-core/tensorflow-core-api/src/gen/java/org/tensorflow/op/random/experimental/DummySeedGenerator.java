@@ -52,7 +52,7 @@ public final class DummySeedGenerator extends RawOp implements Operand<TType> {
   
   @Override
   @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
+  public Output<TType> asOutput(Scope scope) {
     return (Output<TType>) handle;
   }
   

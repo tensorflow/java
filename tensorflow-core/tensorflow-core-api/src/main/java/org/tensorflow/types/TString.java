@@ -32,7 +32,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.tensor.StringTensor;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.tensor.StringTensor;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -44,15 +45,8 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
+@TensorType(dataType = DataType.STRING, impl = TStringImpl.class)
 public interface TString extends StringTensor, TType<TString, String> {
-
-  /** readable-name for the data type */
-  static final String NAME = "STRING";
-
-  /**
-   * Type metadata
-   */
-  DataType<TString> DTYPE = DataType.create(NAME, 7, -1, TStringImpl::new);
 
   /**
    * Allocates a new tensor for storing a string scalar.
@@ -230,7 +224,7 @@ class TStringImpl extends StringTensorImpl implements TString {
 
   static <T> TString createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
     long size = ByteSequenceTensorBuffer.computeSize(src, getBytes);
-    return Tensors.of(TString.DTYPE, src.shape(), size, t ->
+    return Tensors.of(TString.class, src.shape(), size, t ->
         ((TStringImpl)t).rawBuffer().init(src, getBytes)
     );
   }
@@ -242,7 +236,12 @@ class TStringImpl extends StringTensorImpl implements TString {
   private static final DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT = DataLayouts.ofStrings(StandardCharsets.UTF_8);
 
   private TStringImpl(TF_Tensor nativeTensor, Shape shape, DataLayout<DataBuffer<byte[]>, String> layout, ByteSequenceTensorBuffer rawBuffer) {
-    super(nativeTensor, TString.DTYPE, shape, layout, rawBuffer);
+    super(nativeTensor, shape, layout, rawBuffer);
+  }
+
+  @Override
+  public Class<TString> type() {
+    return TString.class;
   }
 }
 

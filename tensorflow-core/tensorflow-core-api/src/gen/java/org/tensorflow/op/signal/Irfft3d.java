@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -64,7 +63,7 @@ public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U
    * @return a new instance of Irfft3d
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Irfft3d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Treal) {
+  public static <U extends TNumber, T extends TType> Irfft3d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, Class<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT3D", scope.makeOpName("Irfft3d"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(fftLength.asOutput(scope));
@@ -83,7 +82,7 @@ public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Irfft3d<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
-    return create(scope, input, fftLength, TFloat32.DTYPE);
+    return create(scope, input, fftLength, TFloat32.class);
   }
   
   /**

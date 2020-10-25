@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -74,7 +73,7 @@ public final class TensorArrayGather<T extends TType> extends RawOp implements O
    * @return a new instance of TensorArrayGather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
     opBuilder.addInput(handle.asOutput(scope));
     opBuilder.addInput(indices.asOutput(scope));

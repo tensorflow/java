@@ -20,7 +20,6 @@ package org.tensorflow.op.train;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -65,13 +64,13 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of Restore
    */
   @Endpoint(describeByClass = true)
-  public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<DataType<?>> dtypes) {
+  public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<Class<?>> dtypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreV2", scope.makeOpName("Restore"));
     opBuilder.addInput(prefix.asOutput(scope));
     opBuilder.addInput(tensorNames.asOutput(scope));
     opBuilder.addInput(shapeAndSlices.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
+    Class[] dtypesArray = new Class[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);
     }

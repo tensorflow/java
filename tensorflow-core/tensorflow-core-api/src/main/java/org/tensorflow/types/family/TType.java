@@ -60,4 +60,6 @@ public interface TType<T extends TType, U> extends Tensor<U>, Operand<T> {
   default Operation op() {
     throw new IllegalStateException("A tensor is not attached to a specific operation");
   }
+
+  Class<T> type();
 }

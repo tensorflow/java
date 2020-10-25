@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -50,7 +49,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * @return a new instance of StatelessMultinomial
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, DataType<V> outputDtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, Class<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput(scope));
     opBuilder.addInput(numSamples.asOutput(scope));
@@ -72,7 +71,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
-    return create(scope, logits, numSamples, seed, TInt64.DTYPE);
+    return create(scope, logits, numSamples, seed, TInt64.class);
   }
   
   /**

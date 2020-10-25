@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -76,7 +75,7 @@ public final class ParseSingleExample extends RawOp {
    * @return a new instance of ParseSingleExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
+  public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<Class<?>> sparseTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleExample", scope.makeOpName("ParseSingleExample"));
     opBuilder.addInput(serialized.asOutput(scope));
     opBuilder.addInputList(Operands.asOutputs(scope, denseDefaults));
@@ -92,7 +91,7 @@ public final class ParseSingleExample extends RawOp {
       denseKeysArray[i] = denseKeys.get(i);
     }
     opBuilder.setAttr("dense_keys", denseKeysArray);
-    DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
+    Class[] sparseTypesArray = new Class[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {
       sparseTypesArray[i] = sparseTypes.get(i);
     }

@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -88,7 +87,7 @@ public final class HashTable extends RawOp implements Operand<TType> {
    * @return a new instance of HashTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> HashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
+  public static <T extends TType, U extends TType> HashTable create(Scope scope, Class<T> keyDtype, Class<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("HashTableV2", scope.makeOpName("HashTable"));
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);

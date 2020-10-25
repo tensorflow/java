@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Eases the porting of code that uses tf.nn.embedding_lookup().
@@ -116,10 +115,10 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> EnqueueTPUEmbeddingRaggedTensorBatch create(Scope scope, Iterable<Operand<T>> sampleSplits, Iterable<Operand<U>> embeddingIndices, Iterable<Operand<V>> aggregationWeights, Operand<TString> modeOverride, List<Long> tableIds, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingRaggedTensorBatch", scope.makeOpName("EnqueueTPUEmbeddingRaggedTensorBatch"));
-    opBuilder.addInputList(Operands.asOutputs(sampleSplits));
-    opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
-    opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
-    opBuilder.addInput(modeOverride.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(scope, sampleSplits));
+    opBuilder.addInputList(Operands.asOutputs(scope, embeddingIndices));
+    opBuilder.addInputList(Operands.asOutputs(scope, aggregationWeights));
+    opBuilder.addInput(modeOverride.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0; i < tableIdsArray.length; ++i) {

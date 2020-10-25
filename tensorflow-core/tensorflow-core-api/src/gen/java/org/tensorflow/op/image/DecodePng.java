@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -91,7 +90,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
    * @return a new instance of DecodePng
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
+  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
@@ -116,7 +115,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
    */
   @Endpoint(describeByClass = true)
   public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
-    return create(scope, contents, TUint8.DTYPE, options);
+    return create(scope, contents, TUint8.class, options);
   }
   
   /**

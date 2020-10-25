@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -115,7 +114,7 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
    * @return a new instance of SparseMatrixSparseCholesky
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, DataType<T> type) {
+  public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput(scope));
     opBuilder.addInput(permutation.asOutput(scope));

@@ -20,7 +20,6 @@ package org.tensorflow.op.data.experimental;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -47,11 +46,11 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
    * @return a new instance of UncompressElement
    */
   @Endpoint(describeByClass = true)
-  public static UncompressElement create(Scope scope, Operand<?> compressed, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static UncompressElement create(Scope scope, Operand<?> compressed, List<Class<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("UncompressElement", scope.makeOpName("UncompressElement"));
-    opBuilder.addInput(compressed.asOutput());
+    opBuilder.addInput(compressed.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
+    Class[] outputTypesArray = new Class[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);
     }

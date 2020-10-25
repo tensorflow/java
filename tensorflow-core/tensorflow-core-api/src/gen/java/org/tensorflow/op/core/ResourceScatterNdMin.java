@@ -68,9 +68,9 @@ public final class ResourceScatterNdMin extends RawOp {
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TType> ResourceScatterNdMin create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdMin", scope.makeOpName("ResourceScatterNdMin"));
-    opBuilder.addInput(ref.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(updates.asOutput());
+    opBuilder.addInput(ref.asOutput(scope));
+    opBuilder.addInput(indices.asOutput(scope));
+    opBuilder.addInput(updates.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

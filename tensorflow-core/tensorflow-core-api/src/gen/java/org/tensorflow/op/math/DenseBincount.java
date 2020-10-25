@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
@@ -78,9 +77,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
   @Endpoint(describeByClass = true)
   public static <U extends TNumber, T extends TNumber> DenseBincount<U> create(Scope scope, Operand<T> input, Operand<T> size, Operand<U> weights, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseBincount", scope.makeOpName("DenseBincount"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder.addInput(weights.asOutput());
+    opBuilder.addInput(input.asOutput(scope));
+    opBuilder.addInput(size.asOutput(scope));
+    opBuilder.addInput(weights.asOutput(scope));
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -108,7 +107,7 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
   }
   
   @Override
-  public Output<U> asOutput() {
+  public Output<U> asOutput(Scope scope) {
     return output;
   }
   
