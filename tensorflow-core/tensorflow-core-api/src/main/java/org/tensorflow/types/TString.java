@@ -20,7 +20,6 @@ package org.tensorflow.types;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensors;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.tensor.StringTensorImpl;
@@ -32,6 +31,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.tensor.StringTensor;
 import org.tensorflow.types.family.TType;
@@ -45,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
-@TensorType(dataType = DataType.STRING, impl = TStringImpl.class)
+@TensorType(dataType = DataType.DT_STRING, byteSize = -1, impl = TStringImpl.class)
 public interface TString extends StringTensor, TType<TString, String> {
 
   /**

@@ -1,6 +1,5 @@
 package org.tensorflow.op.nn;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;

@@ -18,7 +18,6 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Tensor;
@@ -29,6 +28,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.tensor.FloatTensor;
 import org.tensorflow.types.family.TFloating;
@@ -46,7 +46,7 @@ import org.tensorflow.types.family.TFloating;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
-@TensorType(dataType = DataType.HALF, impl = TFloat16Impl.class)
+@TensorType(dataType = DataType.DT_HALF, byteSize = 2, impl = TFloat16Impl.class)
 public interface TFloat16 extends FloatTensor, TFloating<TFloat16, Float> {
 
   /**

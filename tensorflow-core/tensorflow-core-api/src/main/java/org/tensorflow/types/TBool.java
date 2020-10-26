@@ -18,7 +18,6 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Tensor;
@@ -29,6 +28,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.tensor.BooleanTensor;
 import org.tensorflow.types.family.TType;
@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TType;
  * explicit mapping between Java boolean values and byte buffers using the {@link DataLayouts#BOOL
  * BOOL} layout, which may impact I/O performances.
  */
-@TensorType(dataType = DataType.BOOL, impl = TBoolImpl.class)
+@TensorType(dataType = DataType.DT_BOOL, byteSize = 1, impl = TBoolImpl.class)
 public interface TBool extends BooleanTensor, TType<TBool, Boolean> {
 
   /**

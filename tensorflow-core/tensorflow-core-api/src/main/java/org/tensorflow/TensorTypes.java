@@ -70,7 +70,7 @@ final class TensorTypes {
   }
 
   static int numberOf(Class<? extends TType> typeClass) {
-    return find(typeClass).dataType().number;
+    return find(typeClass).dataType().getNumber();
   }
 
   private static final Map<Integer, TensorType> TYPES_BY_CODE = new HashMap<>();
@@ -90,14 +90,14 @@ final class TensorTypes {
       throw new IllegalArgumentException("Class \"" + typeClass.getName() + "\" must have a constructor "
           + "accepting a native `TF_Tensor` handle and a `Shape` to be implement as a tensor type");
     }
-    TensorType type = new TensorType(typeClass, typeAnnot.dataType(), implConstructor);
+    TensorType type = new TensorType(typeClass, typeAnnot.dataType(), typeAnnot.byteSize(), implConstructor);
     TYPES_BY_CLASS.put(typeClass, type);
 
     // If more than one tensor type is mapped to a given native code, the last registered will
     // have priority. This way, we can allow user to register their own classes to map tensors
     // of a given data type.
-    TYPES_BY_CODE.put(type.dataType().number, type);
-    TYPES_BY_CODE.put(type.dataType().number + 100, type);
+    TYPES_BY_CODE.put(type.dataType().getNumber(), type);
+    TYPES_BY_CODE.put(type.dataType().getNumber() + 100, type);
   }
 
   static {

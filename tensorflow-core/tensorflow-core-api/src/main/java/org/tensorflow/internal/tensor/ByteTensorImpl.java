@@ -1,7 +1,6 @@
 package org.tensorflow.internal.tensor;
 
 import org.tensorflow.AbstractTensor;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.ByteNdArray;

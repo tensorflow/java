@@ -155,18 +155,17 @@ public final class Tensors {
 
   private static <T extends TType> T allocate(Class<T> type, Shape shape, long size) {
     TensorType tensorType = TensorTypes.find(type);
-    DataType dataType = tensorType.dataType();
     long effectiveSize = size;
     if (effectiveSize < 0) {
       // Size of the tensor is by default the sum of the size of all its element
-      effectiveSize = shape.size() * dataType.byteSize;
+      effectiveSize = shape.size() * tensorType.byteSize();
 
-    } else if (dataType.byteSize > 0 && shape.size() * dataType.byteSize > effectiveSize) {
+    } else if (!tensorType.isVariableLength() && shape.size() * tensorType.byteSize() > effectiveSize) {
       // Minimum requirements for datatypes of variable length cannot be verified in a relevant way
       // so we only validate them for fixed length datatypes
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
-    TF_Tensor nativeHandle = allocate(dataType.number, shape.asArray(), effectiveSize);
+    TF_Tensor nativeHandle = allocate(tensorType.dataType().getNumber(), shape.asArray(), effectiveSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
       return tensorType.newInstance(nativeHandle, shape);

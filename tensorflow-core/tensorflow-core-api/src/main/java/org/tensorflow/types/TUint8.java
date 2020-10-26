@@ -18,7 +18,6 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Tensor;
@@ -28,6 +27,7 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.tensor.ByteTensor;
 import org.tensorflow.types.family.TNumber;
@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * 8-bit unsigned integer tensor type.
  */
-@TensorType(dataType = DataType.UINT8, impl = TUint8Impl.class)
+@TensorType(dataType = DataType.DT_UINT8, byteSize = 1, impl = TUint8Impl.class)
 public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
 
   /**

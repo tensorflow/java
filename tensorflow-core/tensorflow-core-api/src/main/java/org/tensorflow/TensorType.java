@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 class TensorType {
@@ -16,8 +17,12 @@ class TensorType {
     return dataType;
   }
 
+  int byteSize() {
+    return byteSize;
+  }
+
   boolean isVariableLength() {
-    return dataType.byteSize < 0;
+    return byteSize < 0;
   }
 
   <T extends TType> T newInstance(TF_Tensor nativeHandle, Shape shape) {
@@ -28,13 +33,15 @@ class TensorType {
     }
   }
 
-  TensorType(Class<?> typeClass, DataType dataType, Constructor<?> implConstructor) {
+  TensorType(Class<?> typeClass, DataType dataType, int byteSize, Constructor<?> implConstructor) {
     this.typeClass = typeClass;
     this.dataType = dataType;
+    this.byteSize = byteSize;
     this.implConstructor = implConstructor;
   }
 
   private final Class<?> typeClass;
   private final DataType dataType;
+  private final int byteSize;
   private final Constructor<?> implConstructor;
 }

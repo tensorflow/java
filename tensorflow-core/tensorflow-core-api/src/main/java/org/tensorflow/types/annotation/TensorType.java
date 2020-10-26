@@ -15,13 +15,15 @@ limitations under the License.
 
 package org.tensorflow.types.annotation;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
+import org.tensorflow.proto.framework.DataType;
 
 /** Represents a type of elements in a {@link Tensor} */
 public @interface TensorType {
 
   DataType dataType();
+
+  int byteSize();
 
   /**
    * The class implementing this tensor type
