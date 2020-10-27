@@ -2,8 +2,8 @@ package org.tensorflow.framework.losses;
 
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.framework.losses.impl.LossTuple;
+import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceAll;
@@ -82,7 +82,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsolutePercentageError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels,dataType);
+    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -171,16 +171,19 @@ public class Losses {
       return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
     }
 
+    /* TODO - skip this loggic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {
-      // TODO - this does not work, cannot walk back, work around is only go back 1.
-      // output = backtrackIdentity(output);
-      if (output.op().type().equals(Sigmoid.OP_NAME)) {
-        if (output.op().numOutputs() != 1)
-          throw new IllegalArgumentException("output can only have 1 output");
-        output = output.op().output(0);
-        return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
-      }
+      // TODO - this does not work
+      // TODO output = backtrackIdentity(output);
+      // TODO if (output.op().type().equals(Sigmoid.OP_NAME)) {
+      // TODO   if (output.op().numInputess() != 1)
+      // TODO     throw new IllegalArgumentException("output can only have 1 output");
+      // TODO   output = output.op().inout(0);
+       // TODO   return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
+      // TODO}
     }
+    */
+
     DataType<T> dataType = output.asOutput().dataType();
     Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
     Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
@@ -205,10 +208,9 @@ public class Losses {
    * @param labels true targets
    * @param predictions the predictions
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in [0, 1]. When 0, no smoothing occurs. When &gt; 0, compute the
-   *     loss between the predicted labels and a smoothed version of the true labels, where the
-   *     smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing correspond to
-   *     heavier smoothing.
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
+   *     confidence on label values are relaxed. e.g. <code>label_smoothing=0.2<code> means that we will use a
+   *     value of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
    * @param axis the
    * @param <T> the data type of the predictions and labels
    * @return the categorical crossentropy loss.
@@ -232,7 +234,9 @@ public class Losses {
     if (fromLogits) {
       return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
     }
+    /* TODO
     if (!(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
+
       // TODO output = backtrackIdentity(output); doesn't seem to work with Java version.
       if (predictions.op().type().equals("Softmax")) {
         if (predictions.op().numOutputs() != 1)
@@ -241,6 +245,8 @@ public class Losses {
         return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
       }
     }
+    */
+
     Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
     Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
@@ -262,7 +268,7 @@ public class Losses {
    * Computes the categorical hinge loss between labels and predictions.
    *
    * @param tf the TensorFlow Ops
-   * @param labels true targets,  values are expected to be 0 or 1.
+   * @param labels true targets, values are expected to be 0 or 1.
    * @param predictions the predictions
    * @param <T> the data type of the predictions and labels
    * @return the categorical hinge loss
@@ -495,8 +501,10 @@ public class Losses {
     Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
 
+    /* TODO need ability to walk back inputs
     if (!fromLogits && !(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
       // TODO output = backtrackIdentity(output); doesn't seem to work with Java version.
+      /* TODO
       if (predictions.op().type().equals(Softmax.OP_NAME)) {
         // When softmax activation function is used for output operation, we
         // use logits from the softmax function directly to compute loss in order
@@ -506,7 +514,9 @@ public class Losses {
         // TODO output = output.op.inputs[0]
         fromLogits = true;
       }
+
     }
+     */
     if (!fromLogits) {
 
       predictions = tf.clipByValue(predictions, epsilonConst, oneMinusEpsilonConst);
@@ -531,14 +541,14 @@ public class Losses {
 
     boolean updateShape = labelsRank != predictionsRank - 1;
     if (updateShape) { // TODO check to see if this is right
-      Shape newShape = labelsShape.take(labelsRank-1);
+      Shape newShape = labelsShape.take(labelsRank - 1);
       iLabels = tf.reshape(iLabels, tf.constant(newShape)); // flatten one dimension
       predictions =
           tf.reshape(
               predictions,
-              tf.constant(new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
+              tf.constant(
+                  new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
     }
-
 
     @SuppressWarnings("unchecked")
     Operand<T> loss = tf.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
@@ -577,7 +587,27 @@ public class Losses {
         tf.constant(-1));
   }
 
-  // private methods
+  // private methods/**
+  //   * Calculates the loss
+  //   *
+  //   * @param labels the truth values or labels
+  //   * @param predictions the predictions
+  //   * @param sampleWeights Optional sample_weight acts as a coefficient for the loss. If a scalar
+  // is
+  //   *     provided, then the loss is simply scaled by the given value. If sample_weight is a
+  // tensor
+  //   *     of size [batch_size], then the total loss for each sample of the batch is rescaled by
+  // the
+  //   *     corresponding element in the sample_weight vector. If the shape of sample_weight is
+  //   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element
+  // of
+  //   *     predictions is scaled by the corresponding value of sample_weight. (Note on dN-1: all
+  // loss
+  //   *     functions reduce by 1 dimension, usually axis=-1.)
+  //   * @param <T> The data type of the predictions, sampleWeights and loss.
+  //   * @param <U> The data type of the labels.
+  //   * @return the loss
+  //   *
 
   /**
    * Smooths binary labels
@@ -604,10 +634,9 @@ public class Losses {
    *
    * @param tf the TensorFlow Ops
    * @param labels true targets
-   * @param labelSmoothing A number in the range [0, 1]. When 0, no smoothing occurs. When &gt; 0,
-   *     compute the loss between the predicted labels and a smoothed version of the true labels,
-   *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
-   *     correspond to heavier smoothing.
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
+   *    confidence on label values are relaxed. e.g. <code>label_smoothing=0.2<code> means that we will use a
+   *    value of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
    * @param <T> the data type of the labels
    * @return the smoothed categorical labels
    */

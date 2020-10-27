@@ -5,12 +5,14 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 public abstract class Loss {
+  public static final Reduction REDUCTION_DEFAULT = Reduction.AUTO;
+
   protected final Ops tf;
   protected final Reduction reduction;
 
   /**
    * Creates a Loss using {@link Class#getSimpleName()}  as the name and a Loss Reduction of {@link
-   * Reduction#AUTO}
+   * Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -19,10 +21,10 @@ public abstract class Loss {
   }
 
   /**
-   * Creates a Loss using a Loss Reduction of {@link Reduction#AUTO}
+   * Creates a Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
-   * @param name the name of this Loss
+   * @param name the name of this Loss, if null the name will be {@link Class#getSimpleName()}.
    */
   protected Loss(Ops tf, String name) {
     this(tf, name, Reduction.AUTO);
@@ -32,7 +34,7 @@ public abstract class Loss {
    * Creates a Loss
    *
    * @param tf the TensorFlow Ops
-   * @param name the name of this loss
+   * @param name the name of this loss, if null the name will be {@link Class#getSimpleName()}.
    * @param reduction Type of Reduction to apply to the loss.
    */
   protected Loss(Ops tf, String name, Reduction reduction) {
@@ -54,7 +56,7 @@ public abstract class Loss {
   }
 
   /**
-   * Calculates the loss
+   * Generates an Operand that calculates the loss.
    *
    * @param labels the truth values or labels
    * @param predictions the predictions

@@ -50,7 +50,7 @@ public class MeanAbsolutePercentageError extends Loss {
 
   /**
    * Creates a MeanAbsolutePercentageError Loss using {@link Class#getSimpleName()} as the loss name
-   * and a Loss Reduction of {@link Reduction#AUTO}
+   * and a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */

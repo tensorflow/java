@@ -7,6 +7,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class BinaryCrossentropyTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -30,11 +32,38 @@ public class BinaryCrossentropyTest {
           -100.0f, 100.0f, -100.0f,
           -100.0f, -100.0f, 100.0f
         };
-        Operand<TFloat32> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
+        Operand<TFloat32> logits =
+            tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
         instance = new BinaryCrossentropy(tf, true);
 
         loss = instance.call(yTrue, logits);
         testSession.evaluate(expected, loss);
+      }
+  }
+
+  @Test
+  public void testInvalidPredictionsRange() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+        Class catchClass =
+            tfMode == TestSession.Mode.EAGER
+                ? IllegalArgumentException.class
+                : org.tensorflow.exceptions.TFInvalidArgumentException.class;
+        assertThrows(
+            catchClass,
+            () -> {
+              Ops tf = testSession.getTF();
+              BinaryCrossentropy instance = new BinaryCrossentropy(tf);
+              float[] trueArray = {1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f};
+              float[] predArray = {2f, 1f, -1f, 0f};
+              Operand<TFloat32> yTrue =
+                  tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
+              Operand<TFloat32> yPred =
+                  tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
+
+              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              testSession.run(loss);
+            });
       }
   }
 
@@ -60,7 +89,8 @@ public class BinaryCrossentropyTest {
           100.0f, 100.0f, -100.0f
         };
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
+        Operand<TFloat32> logits =
+            tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
         instance = new BinaryCrossentropy(tf, true);
         loss = instance.call(yTrue1, logits);
         expected = 33.33333f;
@@ -91,7 +121,8 @@ public class BinaryCrossentropyTest {
           100.0f, 100.0f, -100.0f
         };
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
+        Operand<TFloat32> logits =
+            tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
         instance = new BinaryCrossentropy(tf, true);
         loss = instance.call(yTrue1, logits, sampleWeight);
         expected = 76.66667f;
@@ -124,7 +155,8 @@ public class BinaryCrossentropyTest {
         };
         float[] sampleWeightArray1 = {4f, 3f};
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
+        Operand<TFloat32> logits =
+            tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight1 = tf.constant(sampleWeightArray1);
         instance = new BinaryCrossentropy(tf, true);
         loss = instance.call(yTrue1, logits, sampleWeight1);
@@ -146,7 +178,8 @@ public class BinaryCrossentropyTest {
           100.0f, 100.0f, -100.0f
         };
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
+        Operand<TFloat32> logits =
+            tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
         BinaryCrossentropy instance =
             new BinaryCrossentropy(
                 tf, true, BinaryCrossentropy.LABEL_SMOOTHING_DEFAULT, Reduction.NONE);

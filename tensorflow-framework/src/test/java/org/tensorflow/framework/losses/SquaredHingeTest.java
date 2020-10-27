@@ -7,6 +7,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class SquaredHingeTest {
     private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -26,6 +28,31 @@ public class SquaredHingeTest {
             Operand<TFloat32> loss = instance.call(yTrue, yPred);
             float expected = 0.364062f;
             testSession.evaluate(expected, loss);
+        }
+    }
+
+    @Test
+    public void testInvalidLabelValue() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+        Class catchClass =
+            tfMode == TestSession.Mode.EAGER
+                ? IllegalArgumentException.class
+                : org.tensorflow.exceptions.TFInvalidArgumentException.class;
+        assertThrows(
+            catchClass,
+            () -> {
+              Ops tf = testSession.getTF();
+              SquaredHinge instance = new SquaredHinge(tf);
+              float[] trueArray = {0, 2, 0, 1, 0, 0, 1, 1};
+              float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
+              Operand<TFloat32> yTrue =
+                  tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
+              Operand<TFloat32> yPred =
+                  tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
+              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              testSession.run(loss);
+            });
         }
     }
 

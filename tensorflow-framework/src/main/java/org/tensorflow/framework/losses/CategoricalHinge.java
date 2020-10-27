@@ -54,7 +54,7 @@ public class CategoricalHinge extends Loss {
 
   /**
    * Creates a Categorical Hinge Loss using {@link Class#getSimpleName()} as the loss name and a
-   * Loss Reduction of {@link Reduction#AUTO}
+   * Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */

@@ -5,13 +5,21 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.AssertThat;
 import org.tensorflow.op.core.ReduceSum;
+import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.core.Squeeze;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
+import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * These are helper methods for Losses and will be module private when Java modularity is applied to
+ * TensorFlow Java. These methods should not be used outside of the Loss package.
+ */
 public class LossesImpl {
 
   /**
@@ -298,6 +306,97 @@ public class LossesImpl {
       return tf.constant(axes);
     } else {
       return tf.range(tf.constant(0), tf.rank(op), tf.constant(1));
+    }
+  }
+
+  /**
+   * Perform an inclusive range check on the values
+   *
+   * @param tf the TensorFlow Ops
+   * @param prefix A String prefix to include in the error message
+   * @param values the values to check
+   * @param minValue the minimum value
+   * @param maxValue the maximum value
+   * @param <T> the datatype for the values
+   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph
+   *     Session
+   * @throws IllegalArgumentException if the TensorFlow Ops represents an Eager Session
+   */
+  public static <T extends TNumber> Operand<T> rangeCheck(
+      Ops tf, String prefix, Operand<T> values, Operand<T> minValue, Operand<T> maxValue) {
+    Operand<TInt32> allDims = allAxes(tf, values);
+    Operand<TBool> cond =
+        tf.math.logicalAnd(
+            tf.reduceAll(tf.math.greaterEqual(values, minValue), allDims),
+            tf.reduceAll(tf.math.lessEqual(values, maxValue), allDims));
+    // Graph and Eager mode need to be handled differently, control dependencies are not allowed in
+    // Eager mode
+    if (tf.scope().env().isGraph()) {
+      AssertThat assertThat =
+          tf.assertThat(
+              cond,
+              Arrays.asList(
+                  tf.constant(prefix),
+                  tf.constant(": values out of range, "),
+                  tf.constant("minimum = "),
+                  minValue,
+                  tf.constant(", maximum = "),
+                  maxValue));
+      Ops ltf =
+          tf.withSubScope("rangeCheck")
+              .withControlDependencies(Collections.singletonList(assertThat));
+      return ltf.identity(values);
+    } else if (!cond.asOutput().data().getBoolean())
+      throw new IllegalArgumentException(String.format("%s : values out of range", prefix));
+    else return values;
+  }
+
+  /**
+   * Checks to see if all the values are in the allowed values set. Running the operand in Graph
+   * mode will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}, if at least one
+   * value is not in the allowed values set. In Eager mode, this method will throw an {@link
+   * IllegalArgumentException} if at least one value is not in the allowed values set.
+   *
+   * @param tf The TensorFlow Ops
+   * @param prefix A String prefix to include in the error message
+   * @param values the values to check
+   * @param allowedValues the allowed values
+   * @param <T> the data type for values and allowed values
+   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph
+   *     Session
+   * @throws IllegalArgumentException if the Session is in Eager mode and at least one value is not
+   *     in the allowed values set
+   */
+  public static <T extends TNumber> Operand<T> valueCheck(
+      Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
+    Operand<T> flatValues =
+        tf.reshape(values, tf.constant(Shape.of(values.asOutput().shape().size())));
+    SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.DTYPE);
+    long diffSize = diff.out().asOutput().shape().size();
+
+    if (diffSize != Shape.UNKNOWN_SIZE) {
+      if (diffSize != 0) { // at least 1 value in the diff did not match the allowed values.
+        throw new IllegalArgumentException(String.format("%s : values not in value set,", prefix));
+      } else return values;
+    } else { // use dynamic shape
+      Operand<TBool> cond = tf.math.equal(tf.shape.size(tf.shape(diff.out())), tf.constant(0));
+      // Graph and Eager mode need to be handled differently, control dependencies are not allowed
+      // in Eager mode
+      if (tf.scope().env().isGraph()) {
+        AssertThat assertThat =
+            tf.assertThat(
+                cond,
+                Arrays.asList(
+                    tf.constant(prefix),
+                    tf.constant(": values not in value set, values = "),
+                    values));
+        Ops ltf =
+            tf.withSubScope("valueCheck")
+                .withControlDependencies(Collections.singletonList(assertThat));
+        return ltf.identity(values);
+      } else if (!cond.asOutput().data().getBoolean())
+        throw new IllegalArgumentException(String.format("%s : values not in value set", prefix));
+      else return values;
     }
   }
 }

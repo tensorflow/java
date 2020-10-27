@@ -51,7 +51,7 @@ public class LogCosh extends Loss {
 
   /**
    * Creates a LogCosh Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link Reduction#AUTO}
+   * Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -60,7 +60,7 @@ public class LogCosh extends Loss {
   }
 
   /**
-   * Creates a LogCosh Loss using a Loss Reduction of {@link Reduction#AUTO}
+   * Creates a LogCosh Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -79,7 +79,7 @@ public class LogCosh extends Loss {
   }
 
   /**
-   * Creates a Kullback Leibler Divergence Loss
+   * Creates a LogCosh Loss
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the loss

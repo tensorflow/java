@@ -58,14 +58,13 @@ import org.tensorflow.types.family.TNumber;
 public class SparseCategoricalCrossentropy extends Loss {
   public static final boolean FROM_LOGITS_DEFAULT = false;
   public static final int AXIS_DEFAULT = -1;
-  public static final Reduction REDUCTION_DEFAULT = Reduction.AUTO;
 
   private final boolean fromLogits;
   private final int axis;
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Reduction#AUTO}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    */
@@ -74,7 +73,7 @@ public class SparseCategoricalCrossentropy extends Loss {
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy loss using a Loss Reduction of {@link Reduction#AUTO},
+   * Creates a SparseCategoricalCrossentropy loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT},
    * and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
@@ -108,7 +107,7 @@ public class SparseCategoricalCrossentropy extends Loss {
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy using a Loss Reduction of {@link Reduction#AUTO}, and
+   * Creates a SparseCategoricalCrossentropy using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and
    * fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
@@ -121,7 +120,7 @@ public class SparseCategoricalCrossentropy extends Loss {
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Reduction#AUTO} and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT} and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
@@ -159,12 +158,46 @@ public class SparseCategoricalCrossentropy extends Loss {
     this.axis = axis;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Generates an Operand the calculates the loss.
+   *
+   * If run in Graph mode, the computation will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}
+   * if the predictions values are outside the range o [0. to 1.]. In Eager Mode, this call
+   * will throw {@link IllegalArgumentException}, if the predictions values are outside the range o [0. to 1.]
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
+   * @param sampleWeights Optional sample_weight acts as a coefficient for the loss. If a scalar is
+   *     provided, then the loss is simply scaled by the given value. If sample_weight is a tensor
+   *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
+   *     corresponding element in the sample_weight vector. If the shape of sample_weight is
+   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
+   *     predictions is scaled by the corresponding value of sample_weight. (Note on dN-1: all loss
+   *     functions reduce by 1 dimension, usually axis=-1.)
+   * @param <T> The data type of the predictions, sampleWeights and loss.
+   * @param <U> The data type of the labels.
+   * @return the loss
+   * @throws IllegalArgumentException if the predictions are outside the range [0.-1.].
+   */
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+    Operand<T> lPredictions;
+    if (!fromLogits) {
+      // add predictions range check for 0 - 1
+      lPredictions =
+              LossesImpl.rangeCheck(
+                      getTF(),
+                      "predictions range check [0-1]",
+                      predictions,
+                      getTF().dtypes.cast(getTF().constant(0), predictions.asOutput().dataType()),
+                      getTF().dtypes.cast(getTF().constant(1), predictions.asOutput().dataType()));
+
+    } else {
+      lPredictions = predictions;
+    }
     Operand<T> losses =
-        Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axis);
+        Losses.sparseCategoricalCrossentropy(getTF(), labels, lPredictions, fromLogits, axis);
     return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

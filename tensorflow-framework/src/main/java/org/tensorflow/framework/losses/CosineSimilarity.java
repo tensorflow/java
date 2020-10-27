@@ -8,11 +8,12 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes the cosine similarity between labels and predictions.
  *
- * <p>Note that it is a negative quantity between -1 and 0, where 0 indicates orthogonality and
- * values closer to -1 indicate greater similarity. This makes it usable as a loss function in a
- * setting where you try to maximize the proximity between predictions and targets. If either labels
- * or predictions is a zero vector, cosine similarity will be 0 regardless of the proximity between
- * predictions and targets.
+ * <p>Note that it is a number between <code>-1</code> and <code>1</code>. When it is a negative number between <code>-1</code> and <code>0</code>, <code>0</code>
+ * indicates orthogonality and values closer to <code>-1</code>indicate greater similarity. The values closer to
+ * <code>1</code> indicate greater dissimilarity. This makes it usable as a loss function in a setting where you
+ * try to maximize the proximity between predictions and targets. If either <code>labels</code> or <code>predictions</code> is
+ * a zero vector, cosine similarity will be <code>0</code> regardless of the proximity between predictions and
+ * targets.
  *
  * <p><code>loss = -sum(l2Norm(labels) * l2Norm(predictions))</code>
  *

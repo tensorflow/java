@@ -51,7 +51,7 @@ public class Poisson extends Loss {
 
   /**
    * Creates a Poisson Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link Reduction#AUTO}
+   * Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -60,7 +60,7 @@ public class Poisson extends Loss {
   }
 
   /**
-   * Creates a Poisson Loss using a Loss Reduction of {@link Reduction#AUTO}
+   * Creates a Poisson Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */

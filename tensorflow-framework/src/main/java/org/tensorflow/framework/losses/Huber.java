@@ -62,7 +62,7 @@ public class Huber extends Loss {
 
   /**
    * Creates a Huber Loss using {@link Class#getSimpleName()} as the loss name, {@link
-   * #DELTA_DEFAULT} as the delta and a Loss Reduction of {@link Reduction#AUTO}
+   * #DELTA_DEFAULT} as the delta and a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -72,7 +72,7 @@ public class Huber extends Loss {
 
   /**
    * Creates a Huber Loss using {@link #DELTA_DEFAULT} as the delta and a Loss Reduction of {@link
-   * Reduction#AUTO}
+   * Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */

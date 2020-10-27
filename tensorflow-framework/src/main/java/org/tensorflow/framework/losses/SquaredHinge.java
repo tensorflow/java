@@ -54,7 +54,7 @@ public class SquaredHinge extends Loss {
 
   /**
    * Creates a Squared Hinge Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link Reduction#AUTO}
+   * Reduction of {@link Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
    */
@@ -83,11 +83,42 @@ public class SquaredHinge extends Loss {
     super(tf, name, reduction);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Generates an Operand that calculates the loss.
+   *
+   * <p>If run in Graph mode, the computation will throw {@link
+   * org.tensorflow.exceptions.TFInvalidArgumentException} if the label values are not in the set
+   * [-1., 0., 1.]. In Eager Mode, this call will throw {@link IllegalArgumentException}, if the
+   * label values are not in the set [-1., 0., 1.].
+   *
+   * @param labels the truth values or labels, must be either -1, 0, or 1. Values are expected to be
+   *     -1 or 1. If binary (0 or 1) labels are provided they will be converted  to -1 or 1.
+   * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
+   * @param sampleWeights Optional sample_weight acts as a coefficient for the loss. If a scalar is
+   *     provided, then the loss is simply scaled by the given value. If sample_weight is a tensor
+   *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
+   *     corresponding element in the sample_weight vector. If the shape of sample_weight is
+   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
+   *     predictions is scaled by the corresponding value of sample_weight. (Note on dN-1: all loss
+   *     functions reduce by 1 dimension, usually axis=-1.)
+   * @param <T> The data type of the predictions, sampleWeights and loss.
+   * @param <U> The data type of the labels.
+   * @return the loss
+   * @throws IllegalArgumentException if the predictions are outside the range [0.-1.].
+   */
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.squaredHinge(getTF(), labels, predictions);
+    Operand<T> tLabels = predictions.asOutput().dataType() == labels.asOutput().dataType() ?
+            (Operand<T>)labels :
+            tf.dtypes.cast(labels, predictions.asOutput().dataType());
+    tLabels = LossesImpl.valueCheck(
+            getTF(),
+            "labels value check [-1, 0, 1]",
+            tLabels,
+            getTF().dtypes.cast(getTF().constant(new int[] { -1, 0, 1}),
+                    predictions.asOutput().dataType()));
+    Operand<T> losses = Losses.squaredHinge(getTF(), tLabels, predictions);
     return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

@@ -9,6 +9,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class SparseCategoricalCrossentropyTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -44,6 +46,33 @@ public class SparseCategoricalCrossentropyTest {
         instance = new SparseCategoricalCrossentropy(tf, true);
         loss = instance.call(yTrue, logits);
         testSession.evaluate(0.0f, loss);
+      }
+  }
+
+  @Test
+  public void testInvalidPredictionsRange() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+        Class<? extends Throwable> catchClass =
+                tfMode == TestSession.Mode.EAGER
+                        ? IllegalArgumentException.class
+                        : org.tensorflow.exceptions.TFInvalidArgumentException.class;
+        assertThrows(
+                catchClass,
+                () -> {
+                  Ops tf = testSession.getTF();
+                  SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
+                  int[] trueArray = {0, 1, 2};
+                  float[] predArray = {
+                          1.9f, .05f, .05f,
+                          .5f, .89f, .6f,
+                          .05f, .01f, .94f
+                  };
+                  Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
+                  Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
+                  Operand<TFloat32> loss = instance.call(yTrue, yPred);
+                  testSession.run(loss);
+                });
       }
   }
 
