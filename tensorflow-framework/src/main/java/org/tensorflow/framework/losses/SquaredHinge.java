@@ -109,6 +109,7 @@ public class SquaredHinge extends Loss {
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+    @SuppressWarnings("unchecked")
     Operand<T> tLabels = predictions.asOutput().dataType() == labels.asOutput().dataType() ?
             (Operand<T>)labels :
             tf.dtypes.cast(labels, predictions.asOutput().dataType());

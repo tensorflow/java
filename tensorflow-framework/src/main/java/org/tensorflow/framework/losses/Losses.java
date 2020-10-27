@@ -9,11 +9,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceAll;
 import org.tensorflow.op.core.ReduceMax;
 import org.tensorflow.op.core.ReduceSum;
-import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
-import org.tensorflow.op.math.Sigmoid;
 import org.tensorflow.op.math.Softplus;
-import org.tensorflow.op.nn.Softmax;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -167,9 +164,9 @@ public class Losses {
    */
   private static <T extends TNumber> Operand<T> binaryCrossentropyHelper(
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
-    if (fromLogits) {
+    if (fromLogits)
       return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
-    }
+
 
     /* TODO - skip this loggic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {

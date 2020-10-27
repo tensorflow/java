@@ -4,7 +4,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the Poisson loss between labels and predictions.
