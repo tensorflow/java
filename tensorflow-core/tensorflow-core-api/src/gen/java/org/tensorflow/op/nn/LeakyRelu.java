@@ -33,6 +33,7 @@ import org.tensorflow.types.family.TType;
  * 
  * @param <T> data type for {@code activations()} output
  */
+@Operator(group = "nn")
 public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand<T> {
   
   /**

@@ -570,6 +570,46 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.data().getDouble(idx), f.getDouble(), epsilon));
         }
       }
+    } else if (dtype == TFloat16.DTYPE) {
+      final Output<TFloat16> finalExpected = (Output<TFloat16>) expected;
+      if (debug) {
+        try (Tensor<TFloat16> result =
+                     this.getGraphSession().runner().fetch(input).run().get(0).expect(TFloat16.DTYPE);
+             Tensor<TFloat16> expectedResult =
+                     this.getGraphSession().runner().fetch(input).run().get(0).expect(TFloat16.DTYPE)) {
+          if (isScalar) {
+            System.out.printf(
+                    "0). %f <==> %f\n", expectedResult.data().getFloat(), result.data().getFloat());
+          } else {
+            result
+                    .data()
+                    .scalars()
+                    .forEachIndexed(
+                            (idx, f) ->
+                                    System.out.printf(
+                                            "%d). %f <==> %f\n",
+                                            index.getAndIncrement(),
+                                            finalExpected.data().getFloat(idx),
+                                            f.getFloat()));
+          }
+        }
+      }
+      index.set(0);
+      try (Tensor<TFloat16> result =
+                   this.getGraphSession().runner().fetch(input).run().get(0).expect(TFloat16.DTYPE);
+           Tensor<TFloat16> expectedResult =
+                   this.getGraphSession().runner().fetch(input).run().get(0).expect(TFloat16.DTYPE)) {
+        if (isScalar) {
+          assertEquals(expectedResult.data().getFloat(), result.data().getFloat(), epsilon);
+        } else {
+          result
+                  .data()
+                  .scalars()
+                  .forEachIndexed(
+                          (idx, f) ->
+                                  assertEquals(expectedResult.data().getFloat(idx), f.getFloat(), epsilon));
+        }
+      }
     } else if (dtype == TInt32.DTYPE) {
       final Output<TInt32> finalExpected = (Output<TInt32>) expected;
       if (debug) {

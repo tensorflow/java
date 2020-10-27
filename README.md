@@ -1,11 +1,5 @@
 # TensorFlow for Java
 
-***!!! IMPORTANT NOTICE !!! This repository is UNDER CONSTRUCTION and does not yet host the code of the 
-offical TensorFlow Java artifacts!***
-
-***Please refer to the [TensorFlow Java module](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/java) 
-of the main repository for the actual code.***
-
 ## Welcome to the Java world of TensorFlow!
 
 TensorFlow can run on any JVM for building, training and running machine learning models. It comes with 
@@ -30,19 +24,10 @@ The following describes the layout of the repository and its different artifacts
     TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM 
     
 * `tensorflow-framework`
-  * Complete but fairly primitive API for building and training neural networks with TensorFlow
-  * Intended audience: expert neural network developers who prefer to make explicit, detailed decisions 
-    about their models and training algorithms
-    
-* `tensorflow-keras` (early WIP; only defined in `dev` profile)
-  * Partially covers the framework API to allow simpler definition of models and training algorithms
-  * Intended to be familiar if you know the Python Keras API, but prioritizes clean, idiomatic Java 
-    over fidelity to Python
-  * Provides defaults based on common best practices
-  * Allows developers to selectively be more explicit by overriding defaults or dipping into the framework API
-  * Intended audience: neural network developers across the spectrum from beginner to expert who prefer to
-    rely mostly on best-practice defaults and then selectively fine-tune
-  
+  * Primary API for building and training neural networks with TensorFlow
+  * Intended audience: neural network developers
+  * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
+     
 * `ndarray`
   * Generic utility library for n-dimensional data I/O operations
   * Used by TensorFlow but does not depend on TensorFlow
@@ -172,8 +157,6 @@ This table shows the mapping between different version of TensorFlow for Java an
 
 | TensorFlow Java Version  | TensorFlow Version |
 | ------------- | ------------- |
-| 0.1.0-SNAPSHOT  | 2.2.0  |
-| 0.2.0-SNAPSHOT  | 2.3.1  |
 | 0.2.0  | 2.3.1  |
 | 0.3.0-SNAPSHOT  | 2.3.1  |
 

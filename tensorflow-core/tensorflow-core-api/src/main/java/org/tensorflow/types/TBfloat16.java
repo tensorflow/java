@@ -30,7 +30,7 @@ import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Brain 16-bit float tensor type.
@@ -48,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster
  * computation compared to {@link TFloat16} when GPUs are not used.
  */
-public interface TBfloat16 extends FloatNdArray, TNumber {
+public interface TBfloat16 extends FloatNdArray, TFloating {
   /** readable-name for the data type */
   static final String NAME = "BFLOAT16";
 
