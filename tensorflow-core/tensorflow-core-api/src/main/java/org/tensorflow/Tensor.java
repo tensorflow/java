@@ -15,10 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
-import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * A statically typed multi-dimensional array whose elements are of a type described by T.
@@ -35,7 +33,7 @@ import org.tensorflow.types.family.TType;
  * }
  * }</pre>
  */
-public interface Tensor<T> extends NdArray<T>, AutoCloseable {
+public interface Tensor extends AutoCloseable {
 
   /**
    * Release resources associated with the Tensor.
@@ -47,9 +45,6 @@ public interface Tensor<T> extends NdArray<T>, AutoCloseable {
    */
   @Override
   void close();
-
-  /** Returns the size, in bytes, of the tensor data. */
-  long numBytes();
 
   /**
    * Returns the raw data of this tensor as a buffer of bytes.
@@ -63,20 +58,10 @@ public interface Tensor<T> extends NdArray<T>, AutoCloseable {
    */
   ByteDataBuffer rawData();
 
-  @Override
-  Tensor<T> set(NdArray<T> src, long... coordinates);
+  /** Returns the size, in bytes, of the tensor data. */
+  long numBytes();
 
-  @Override
-  Tensor<T> setObject(T value, long... coordinates);
-
-  @Override
-  Tensor<T> copyTo(NdArray<T> dst);
-
-  @Override
-  Tensor<T> read(DataBuffer<T> dst);
-
-  @Override
-  Tensor<T> write(DataBuffer<T> src);
+  DataType dataType();
 }
 
 

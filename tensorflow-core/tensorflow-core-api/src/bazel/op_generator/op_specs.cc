@@ -65,13 +65,6 @@ class TypeResolver {
   std::pair<Type, Type> TypesOf(const OpDef_AttrDef& attr_def,
                                 bool* iterable_out);
 
-  // Returns the highest type family this attribute is part of
-  //
-  // For example, if the attribute is of type 'bool', the base 'TType' family
-  // returned. But if it represents a number, like a float or an integer,
-  // then 'TNumber' (which supersedes 'TType') is returned.
-  Type FamilyOf(const OpDef_AttrDef& attr_def);
-
   // Returns true if the type of this attribute has already been resolved
   bool IsAttributeVisited(const string& attr_name) {
     return visited_attrs_.find(attr_name) != visited_attrs_.cend();
@@ -88,12 +81,19 @@ class TypeResolver {
   std::pair<Type, Type> MakeTypePair(const Type& type) {
     return std::make_pair(type, type);
   }
-  Type NextGeneric(const Type& typeFamily) {
+  Type NextGeneric(const OpDef_AttrDef& attr_def) {
     char generic_letter = next_generic_letter_++;
     if (next_generic_letter_ > 'Z') {
       next_generic_letter_ = 'A';
     }
-    return Type::Generic(string(1, generic_letter)).add_supertype(typeFamily);
+    Type generic_type = Type::Generic(string(1, generic_letter));
+    // TODO(karllessard) support more type families
+    if (IsRealNumbers(attr_def.allowed_values())) {
+      generic_type.add_supertype(Type::Interface("TNumber", "org.tensorflow.types.family"));
+    } else {
+      generic_type.add_supertype(Type::Interface("TType", "org.tensorflow.types.family"));
+    }
+    return generic_type;
   }
 };
 
@@ -158,11 +158,11 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
     types = MakeTypePair(Type::Class("Shape", "org.tensorflow.ndarray"));
 
   } else if (attr_type == "tensor") {
-    types = MakeTypePair(Type::Class("Tensor", "org.tensorflow")
-                             .add_parameter(Type::Wildcard()));
+    types = MakeTypePair(Type::Class("TType", "org.tensorflow.types.family")
+        .add_parameter(Type::Wildcard()));
 
   } else if (attr_type == "type") {
-    Type type = *iterable_out ? Type::Wildcard() : NextGeneric(FamilyOf(attr_def));
+    Type type = *iterable_out ? Type::Wildcard() : NextGeneric(attr_def);
     types = MakeTypePair(type, Type::Class("Class"));
 
   } else {
@@ -171,14 +171,6 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
   }
   visited_attrs_.insert(std::make_pair(attr_def.name(), types.first));
   return types;
-}
-
-Type TypeResolver::FamilyOf(const OpDef_AttrDef& attr_def) {
-  // TODO (karlllessard): add more type families
-  if (IsRealNumbers(attr_def.allowed_values())) {
-    return Type::Interface("TNumber", "org.tensorflow.types.family");
-  }
-  return Type::Interface("TType", "org.tensorflow.types.family");
 }
 
 string SnakeToCamelCase(const string& str, bool upper = false) {

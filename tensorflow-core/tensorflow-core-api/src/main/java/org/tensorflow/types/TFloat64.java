@@ -20,23 +20,21 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.DoubleTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TFloat64Factory;
+import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.DoubleTensor;
 import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 double-precision 64-bit float tensor type.
  */
-@TensorType(dataType = DataType.DT_DOUBLE, byteSize = 8, impl = TFloat64Impl.class)
-public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
+@TensorType(dataType = DataType.DT_DOUBLE, byteSize = 8, factory = TFloat64Factory.class)
+public interface TFloat64 extends TFloating<Double>, DoubleNdArray {
 
   /**
    * Allocates a new tensor for storing a single double value.
@@ -104,20 +102,5 @@ public interface TFloat64 extends DoubleTensor, TFloating<TFloat64, Double> {
    */
   static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> tensorInit) {
     return Tensors.of(TFloat64.class, shape, tensorInit);
-  }
-}
-
-/**
- * Hidden implementation of a {@code TFloat64}
- */
-class TFloat64Impl extends DoubleTensorImpl implements TFloat64 {
-
-  TFloat64Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toDoubles(nativeTensor));
-  }
-
-  @Override
-  public Class<TFloat64> type() {
-    return TFloat64.class;
   }
 }

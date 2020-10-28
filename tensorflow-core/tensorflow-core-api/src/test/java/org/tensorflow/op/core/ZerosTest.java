@@ -19,12 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
+import org.tensorflow.util.TensorList;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -41,8 +40,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.DTYPE);
-      try (TInt32 result = sess.runner().fetch(op).run().get(0).expect(TInt32.DTYPE)) {
+      Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.class);
+      try (TInt32 result = sess.runner().fetch(op).run().single()) {
         result.scalars().forEach(s -> assertEquals(0, s.getInt()));
       }
     }
@@ -54,8 +53,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
-      try (TFloat32 result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
+      try (TFloat32 result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(0.0f, s.getFloat(), 0));
       }
     }
@@ -67,8 +66,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.DTYPE);
-      try (TFloat64 result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat64.DTYPE)) {
+      Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.class);
+      try (TFloat64 result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(0.0f, s.getDouble(), 0));
       }
     }
@@ -80,8 +79,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.DTYPE);
-      try (TInt64 result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+      Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.class);
+      try (TInt64 result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(0L, s.getLong()));
       }
     }
@@ -93,8 +92,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.DTYPE);
-      try (TBool result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TBool.DTYPE)) {
+      Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.class);
+      try (TBool result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertFalse(s.getBoolean()));
       }
    }
@@ -106,8 +105,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.DTYPE);
-      try (TUint8 result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TUint8.DTYPE)) {
+      Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.class);
+      try (TUint8 result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(0, s.getByte()));
       }
     }
@@ -119,8 +118,8 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.DTYPE);
-      try (TString result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TString.DTYPE)) {
+      Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.class);
+      try (TString result = sess.runner().fetch(op.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertTrue(s.getObject().isEmpty()));
       }
     }
@@ -132,8 +131,10 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.DTYPE);
-      List<Tensor<?>> results = sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
+      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.class);
+      try (TensorList results =
+          sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run()) {
+      }
     }
   }
 }

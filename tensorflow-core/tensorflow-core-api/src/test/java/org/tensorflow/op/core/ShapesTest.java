@@ -20,12 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.TestTemplate;
 import org.tensorflow.Graph;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -40,19 +38,16 @@ public class ShapesTest {
         Session session = new Session(g)) {
       Scope scope = new Scope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.DTYPE);
+      Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> reshaped =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Operand actual = Shapes.flatten(scope, reshaped);
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
-      try (TInt64 result1 =
-              session.runner().fetch(tfshape.asOutput()).run().get(0).expect(TInt64.DTYPE);
-          TInt64 result2 =
-              session.runner().fetch(expResult.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+      try (TInt64 result1 = session.runner().fetch(tfshape.asOutput()).run().single();
+          TInt64 result2 = session.runner().fetch(expResult.asOutput()).run().single()) {
         result1
-
             .scalars()
             .forEach(
                 s -> assertEquals(result2.getLong(index.getAndIncrement()), s.getLong()));
@@ -66,11 +61,11 @@ public class ShapesTest {
     try (EagerSession session = EagerSession.create()) {
       Scope scope = new Scope(session);
       Operand operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.DTYPE);
+      Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.class);
       Operand actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> flattened = Shapes.flatten(scope, tfshape, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
+      Operand<TInt64> flattened = Shapes.flatten(scope, tfshape, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
       flattened
@@ -93,12 +88,11 @@ public class ShapesTest {
       Operand operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
+      Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
-      try (TInt64 result1 =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+      try (TInt64 result1 = session.runner().fetch(size.asOutput()).run().single()) {
         result1.scalars().forEach(s -> assertEquals(8, s.getLong()));
       }
     }
@@ -117,19 +111,19 @@ public class ShapesTest {
 
       Operand<TInt32> size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 0));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
       size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 1));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
       size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 2));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(1, s.getInt()));
       }
     }
@@ -147,19 +141,19 @@ public class ShapesTest {
 
       Operand<TInt32> size = Shapes.size(scope, actual, Constant.scalarOf(scope, 0));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
       size = Shapes.size(scope, actual, Constant.scalarOf(scope, 1));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
       size = Shapes.size(scope, actual, Constant.scalarOf(scope, 2));
       try (TInt32 result =
-          session.runner().fetch(size.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(size.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(1, s.getInt()));
       }
     }
@@ -178,7 +172,7 @@ public class ShapesTest {
 
       Operand<TInt32> nDims = Shapes.numDimensions(scope, tfshape);
       try (TInt32 result =
-          session.runner().fetch(nDims.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(nDims.asOutput()).run().single()) {
         result.scalars().forEach(s -> assertEquals(3, s.getInt()));
       }
     }
@@ -275,7 +269,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2};
       try (TInt32 result =
-          session.runner().fetch(squeezed.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(squeezed.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -302,7 +296,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4};
       try (TInt32 result =
-          session.runner().fetch(head.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(head.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -329,7 +323,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 1};
       try (TInt32 result =
-          session.runner().fetch(take.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(take.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -356,7 +350,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1};
       try (TInt32 result =
-          session.runner().fetch(tail.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(tail.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -383,7 +377,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1, 2, 1};
       try (TInt32 result =
-          session.runner().fetch(takeLast.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(takeLast.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -409,7 +403,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {3, 4, 2};
       try (TInt32 result =
-          session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(prepend.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -429,13 +423,13 @@ public class ShapesTest {
       Scope scope = new Scope(g);
       Operand operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape, 1L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {1, 4, 2};
       try (TInt64 result =
-          session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+          session.runner().fetch(prepend.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -466,7 +460,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {2, 4, 4, 2};
       try (TInt32 result =
-          session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(prepend.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -490,14 +484,14 @@ public class ShapesTest {
       Operand operand2 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand actual2 =
           Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[] {2, 4}));
-      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
-      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.class);
+      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.class);
 
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {2, 4, 4, 2};
       try (TInt64 result =
-          session.runner().fetch(prepend.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+          session.runner().fetch(prepend.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -517,13 +511,13 @@ public class ShapesTest {
       Scope scope = new Scope(g);
       Operand operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> append = Shapes.append(scope, tfshape, 2L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4L, 2L, 2L};
       try (TInt64 result =
-          session.runner().fetch(append.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+          session.runner().fetch(append.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -549,7 +543,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2};
       try (TInt32 result =
-          session.runner().fetch(append.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(append.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -580,7 +574,7 @@ public class ShapesTest {
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2, 4};
       try (TInt32 result =
-          session.runner().fetch(append.asOutput()).run().get(0).expect(TInt32.DTYPE)) {
+          session.runner().fetch(append.asOutput()).run().single()) {
         result
 
             .scalars()
@@ -604,16 +598,15 @@ public class ShapesTest {
       Operand operand2 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand actual2 =
           Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[] {2, 4}));
-      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
-      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.class);
+      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.class);
 
       Operand<TInt64> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4, 2, 2, 4};
       try (TInt64 result =
-          session.runner().fetch(append.asOutput()).run().get(0).expect(TInt64.DTYPE)) {
+          session.runner().fetch(append.asOutput()).run().single()) {
         result
-
             .scalars()
             .forEach(
                 s -> {

@@ -20,17 +20,14 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.FloatTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TFloat16Factory;
+import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.FloatTensor;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -46,8 +43,8 @@ import org.tensorflow.types.family.TFloating;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
-@TensorType(dataType = DataType.DT_HALF, byteSize = 2, impl = TFloat16Impl.class)
-public interface TFloat16 extends FloatTensor, TFloating<TFloat16, Float> {
+@TensorType(dataType = DataType.DT_HALF, byteSize = 2, factory = TFloat16Factory.class)
+public interface TFloat16 extends TFloating<Float>, FloatNdArray {
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -116,24 +113,5 @@ public interface TFloat16 extends FloatTensor, TFloating<TFloat16, Float> {
   static TFloat16 tensorOf(Shape shape, Consumer<TFloat16> tensorInit) {
     return Tensors.of(TFloat16.class, shape, tensorInit);
   }
+
 }
-
-/**
- * Hidden implementation of a {@code TFloat16}
- */
-class TFloat16Impl extends FloatTensorImpl implements TFloat16 {
-
-  TFloat16Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, mapMemory(nativeTensor));
-  }
-
-  private static FloatDataBuffer mapMemory(TF_Tensor nativeTensor) {
-    return DataLayouts.FLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor));
-  }
-
-  @Override
-  public Class<TFloat16> type() {
-    return TFloat16.class;
-  }
-}
-

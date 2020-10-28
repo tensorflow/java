@@ -46,6 +46,8 @@ import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
 import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.types.family.TType;
+import org.tensorflow.util.TensorMap;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
@@ -334,7 +336,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @return list of output tensors, mapped by the signature name
    * @throws IllegalArgumentException if no function can be selected by default
    */
-  public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments) {
+  public TensorMap call(Map<String, TType<?>> arguments) {
     ConcreteFunction function = null;
     if (functions.size() == 1) {
       function = functions.values().iterator().next();

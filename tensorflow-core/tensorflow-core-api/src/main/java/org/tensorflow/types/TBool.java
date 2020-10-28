@@ -20,9 +20,8 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.BooleanTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TBoolFactory;
+import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
@@ -30,7 +29,6 @@ import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.BooleanTensor;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -40,8 +38,8 @@ import org.tensorflow.types.family.TType;
  * explicit mapping between Java boolean values and byte buffers using the {@link DataLayouts#BOOL
  * BOOL} layout, which may impact I/O performances.
  */
-@TensorType(dataType = DataType.DT_BOOL, byteSize = 1, impl = TBoolImpl.class)
-public interface TBool extends BooleanTensor, TType<TBool, Boolean> {
+@TensorType(dataType = DataType.DT_BOOL, byteSize = 1, factory = TBoolFactory.class)
+public interface TBool extends TType<Boolean>, BooleanNdArray {
 
   /**
    * Allocates a new tensor for storing a single boolean value.
@@ -110,19 +108,5 @@ public interface TBool extends BooleanTensor, TType<TBool, Boolean> {
   static TBool tensorOf(Shape shape, Consumer<TBool> tensorInit) {
     return Tensors.of(TBool.class, shape, tensorInit);
   }
-}
 
-/**
- * Hidden implementation of a {@code TBool}
- */
-class TBoolImpl extends BooleanTensorImpl implements TBool {
-
-  TBoolImpl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toBooleans(nativeTensor));
-  }
-
-  @Override
-  public Class<TBool> type() {
-    return TBool.class;
-  }
 }

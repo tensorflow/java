@@ -17,7 +17,6 @@
 
 package org.tensorflow.types;
 
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;

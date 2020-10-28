@@ -32,10 +32,10 @@
  *
  * <p>Instances of tensor types must also implement the {@link org.tensorflow.ndarray.NdArray NdArray}
  * interface so a user can access directly the tensor data in a n-dimensional space by invoking
- * {@link org.tensorflow.Tensor#data() Tensor.data()}.
+ * {@link org.tensorflow.util.Tensor#data() Tensor.data()}.
  *
  * <p>Note that while it is always possible to allocate a tensor using the
- * {@link org.tensorflow.Tensor#of(org.tensorflow.DataType, Shape) Tensor.of(...)}
+ * {@link org.tensorflow.util.Tensor#of(org.tensorflow.DataType, Shape) Tensor.of(...)}
  * method, most tensor types expose factory methods that simplify the creation process, like
  * {@code scalarOf(...)}, {@code vectorOf(...)}, {@code tensorOf(...)}, etc.
  */

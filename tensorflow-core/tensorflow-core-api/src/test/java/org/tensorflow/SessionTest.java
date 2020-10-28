@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
@@ -36,6 +35,7 @@ import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.util.TensorList;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -49,10 +49,9 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       transpose_A_times_X(tf, new int[][] {{2}, {3}});
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor<?>> outputs =
-              new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
+          TensorList outputs = s.runner().feed("X", x).fetch("Y").run()) {
         assertEquals(1, outputs.size());
-        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).getInt(0, 0));
+        assertEquals(31, ((TInt32)outputs.single()).getInt(0, 0));
       }
     }
   }
@@ -66,10 +65,9 @@ public class SessionTest {
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor<?>> outputs =
-              new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
+          TensorList outputs = s.runner().feed(feed, x).fetch(fetch).run()) {
         assertEquals(1, outputs.size());
-        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).getInt(0, 0));
+        assertEquals(31, ((TInt32)outputs.single()).getInt(0, 0));
       }
     }
   }
@@ -83,8 +81,7 @@ public class SessionTest {
       tf.math.add(split.output().get(0), split.output().get(1));
 
       // Fetch using colon separated names.
-      try (TInt32 fetched =
-          s.runner().fetch("Split:1").run().get(0).expect(TInt32.DTYPE)) {
+      try (TInt32 fetched = s.runner().fetch("Split:1").run().get(0)) {
         assertEquals(3, fetched.getInt(0));
         assertEquals(4, fetched.getInt(1));
       }
@@ -96,8 +93,7 @@ public class SessionTest {
                   .feed("Split:1", fed)
                   .fetch("Add")
                   .run()
-                  .get(0)
-                  .expect(TInt32.DTYPE)) {
+                  .single()) {
         assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched);
       }
     }
@@ -117,9 +113,9 @@ public class SessionTest {
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        AutoCloseableList<Tensor<?>> outputs = new AutoCloseableList<>(result.outputs);
+        TensorList outputs = result.outputs;
         assertEquals(1, outputs.size());
-        assertEquals(31, outputs.get(0).expect(TInt32.DTYPE).getInt(0, 0));
+        assertEquals(31, ((TInt32)outputs.single()).getInt(0, 0));
         // Sanity check on metadata
         assertNotNull(result.metadata);
         assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
@@ -135,11 +131,10 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       tf.withName("c1").constant(2718);
       tf.withName("c2").constant(31415);
-      AutoCloseableList<Tensor<?>> outputs =
-          new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
+      TensorList outputs = s.runner().fetch("c2").fetch("c1").run();
       assertEquals(2, outputs.size());
-      assertEquals(31415, outputs.get(0).expect(TInt32.DTYPE).getInt());
-      assertEquals(2718, outputs.get(1).expect(TInt32.DTYPE).getInt());
+      assertEquals(31415, ((TInt32)outputs.get(0)).getInt());
+      assertEquals(2718, ((TInt32)outputs.get(1)).getInt());
       outputs.close();
     }
   }
@@ -169,7 +164,7 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.DTYPE);
+      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
       tf.initAdd(tf.assign(var1, tf.constant(10)));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
@@ -177,7 +172,7 @@ public class SessionTest {
       try (Session s = new Session(g)) {
         s.run(tf.init());
 
-        try (TInt32 t = s.runner().fetch(add).run().get(0).expect(TInt32.DTYPE)) {
+        try (TInt32 t = s.runner().fetch(add).run().single()) {
           assertEquals(30, t.getInt());
         }
       }
@@ -189,7 +184,7 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.DTYPE);
+      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
       tf.initAdd(tf.assign(var1, tf.constant(10)));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
@@ -198,7 +193,7 @@ public class SessionTest {
       try (Session s = new Session(g)) {
         s.run("init_test");
 
-        try (TInt32 t = s.runner().fetch(add).run().get(0).expect(TInt32.DTYPE)) {
+        try (TInt32 t = s.runner().fetch(add).run().single()) {
           assertEquals(30, t.getInt());
         }
         try {
@@ -216,8 +211,8 @@ public class SessionTest {
     Path testFolder = Files.createTempDirectory("tf-session-save-test");
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
-      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
+      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
 
       try (Session s = new Session(g)) {
@@ -245,7 +240,7 @@ public class SessionTest {
   private static void transpose_A_times_X(Ops tf, int[][] a) {
     tf.withName("Y").linalg.matMul(
         tf.withName("A").constant(a),
-        tf.withName("X").placeholder(TInt32.DTYPE),
+        tf.withName("X").placeholder(TInt32.class),
         MatMul.transposeA(true).transposeB(false)
     );
   }

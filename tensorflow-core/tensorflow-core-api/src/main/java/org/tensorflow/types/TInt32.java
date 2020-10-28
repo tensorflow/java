@@ -19,23 +19,21 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.IntTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TInt32Factory;
+import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.IntTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 32-bit signed integer tensor type.
  */
-@TensorType(dataType = DataType.DT_INT32, byteSize = 4, impl = TInt32Impl.class)
-public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
+@TensorType(dataType = DataType.DT_INT32, byteSize = 4, factory = TInt32Factory.class)
+public interface TInt32 extends TNumber<Integer>, IntNdArray {
 
   /**
    * Allocates a new tensor for storing a single int value.
@@ -103,20 +101,5 @@ public interface TInt32 extends IntTensor, TNumber<TInt32, Integer> {
    */
   static TInt32 tensorOf(Shape shape, Consumer<TInt32> tensorInit) {
     return Tensors.of(TInt32.class, shape, tensorInit);
-  }
-}
-
-/**
- * Hidden implementation of a {@code TInt32}
- */
-class TInt32Impl extends IntTensorImpl implements TInt32 {
-
-  TInt32Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toInts(nativeTensor));
-  }
-
-  @Override
-  public Class<TInt32> type() {
-    return TInt32.class;
   }
 }

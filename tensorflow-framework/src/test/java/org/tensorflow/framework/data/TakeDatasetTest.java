@@ -17,7 +17,6 @@ package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 

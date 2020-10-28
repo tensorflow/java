@@ -18,11 +18,11 @@ package org.tensorflow;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.framework.TensorShapeProto.Dim;
+import org.tensorflow.types.TypeRegistry;
 
 /**
  * Describe the inputs and outputs of an executable entity, such as a {@link ConcreteFunction}, among
@@ -113,7 +113,7 @@ public class Signature  {
         tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.size(i)));
       }
       return TensorInfo.newBuilder()
-          .setDtype(DataType.forNumber(TensorTypes.numberOf(operand.type())))
+          .setDtype(TypeRegistry.find(operand.type()).dataType())
           .setTensorShape(tensorShapeBuilder)
           .setName(operand.op().name() + ":" + operand.index())
           .build();

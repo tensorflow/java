@@ -16,7 +16,7 @@ package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
-import org.tensorflow.Tensor;
+import org.tensorflow.tensor.Tensor;
 import org.tensorflow.framework.utils.ND;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;

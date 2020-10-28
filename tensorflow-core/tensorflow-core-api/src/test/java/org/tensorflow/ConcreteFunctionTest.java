@@ -29,14 +29,14 @@ import org.tensorflow.types.TFloat32;
 public class ConcreteFunctionTest {
 
   private static Signature plusFive(Ops tf) {
-    Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+    Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
     Add<TFloat32> output = tf.math.add(input, tf.constant(5.0f));
     Init init = tf.init();  // for native resource management tests
     return Signature.builder().key("plusFive").input("x", input).output("y", output).build();
   }
 
   private static Signature minusTwo(Ops tf) {
-    Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+    Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
     Sub<TFloat32> output = tf.math.sub(input, tf.constant(2.0f));
     return Signature.builder().key("minusTwo").input("x", input).output("y", output).build();
   }
@@ -44,8 +44,8 @@ public class ConcreteFunctionTest {
   @Test
   public void createFunction() {
     try (ConcreteFunction f = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
-        Tensor<TFloat32> x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(8.0f, f.call(x).expect(TFloat32.DTYPE).data().getFloat());
+        TFloat32 x = TFloat32.scalarOf(3.0f)) {
+      assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
     }
   }
 
@@ -54,8 +54,8 @@ public class ConcreteFunctionTest {
     try (Graph g = new Graph()) {
       Signature signature = plusFive(Ops.create(g));
       try (ConcreteFunction f = ConcreteFunction.create(signature, g);
-          Tensor<TFloat32> x = TFloat32.scalarOf(3.0f)) {
-        assertEquals(8.0f, f.call(x).expect(TFloat32.DTYPE).data().getFloat());
+          TFloat32 x = TFloat32.scalarOf(3.0f)) {
+        assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
       }
     }
   }
@@ -66,8 +66,8 @@ public class ConcreteFunctionTest {
       Signature signature = plusFive(Ops.create(g));
       try (Session s = new Session(g)) {
         try (ConcreteFunction f = ConcreteFunction.create(signature, s);
-            Tensor<TFloat32> x = TFloat32.scalarOf(3.0f)) {
-          assertEquals(8.0f, f.call(x).expect(TFloat32.DTYPE).data().getFloat());
+            TFloat32 x = TFloat32.scalarOf(3.0f)) {
+          assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
         }
       }
     }
@@ -77,8 +77,9 @@ public class ConcreteFunctionTest {
   public void chainFunctions() {
     try (ConcreteFunction f1 = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
         ConcreteFunction f2 = ConcreteFunction.create(ConcreteFunctionTest::minusTwo);
-        Tensor<TFloat32> x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(6.0f, f2.call(f1.call(x)).expect(TFloat32.DTYPE).data().getFloat());
+        TFloat32 x = TFloat32.scalarOf(3.0f)) {
+      TFloat32 y = f1.call(x);
+      assertEquals(6.0f, ((TFloat32)f2.call(y)).getFloat());
     }
   }
 

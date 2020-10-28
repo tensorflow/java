@@ -52,6 +52,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
@@ -225,7 +226,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, Class<? extends TType> type) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrType(unsafeNativeHandle, name, TensorTypes.numberOf(type));
+      setAttrType(unsafeNativeHandle, name, TypeRegistry.find(type).dataType().getNumber());
     } finally {
       r.close();
     }
@@ -236,7 +237,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, Class<? extends TType>[] types) {
     int[] ctypes = new int[types.length];
     for (int i = 0; i < types.length; ++i) {
-      ctypes[i] = TensorTypes.numberOf(types[i]);
+      ctypes[i] = TypeRegistry.find(types[i]).dataType().getNumber();
     }
     Graph.Reference r = graph.ref();
     try {
@@ -248,10 +249,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, Tensor<?> value) {
+  public GraphOperationBuilder setAttr(String name, TType<?> value) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrTensor(unsafeNativeHandle, name, ((AbstractTensor)value).nativeHandle());
+      setAttrTensor(unsafeNativeHandle, name, value.tensorHandle().nativeHandle());
     } finally {
       r.close();
     }
@@ -259,11 +260,11 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, Tensor<?>[] value) {
+  public GraphOperationBuilder setAttr(String name, TType<?>[] value) {
     TF_Tensor[] handles = new TF_Tensor[value.length];
     int idx = 0;
-    for (Tensor<?> t : value) {
-      handles[idx++] = ((AbstractTensor)t).nativeHandle();
+    for (TType<?> t : value) {
+      handles[idx++] = t.tensorHandle().nativeHandle();
     }
     Graph.Reference r = graph.ref();
     try {

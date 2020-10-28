@@ -1,5 +1,8 @@
 package org.tensorflow.op.nn;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -17,10 +20,6 @@ import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Operator(group = "nn")
 public class SparseSoftmaxCrossEntropyWithLogits {

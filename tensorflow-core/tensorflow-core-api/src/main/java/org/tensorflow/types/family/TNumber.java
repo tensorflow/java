@@ -32,4 +32,4 @@ package org.tensorflow.types.family;
  * tf.nn.softmax(tf.constant(tensor2));  // Compilation failure
  * }</pre>
  */
-public interface TNumber<T extends TNumber, U> extends TType<T, U> {}
+public interface TNumber<T> extends TType<T> {}

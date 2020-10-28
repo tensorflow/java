@@ -21,19 +21,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.tensorflow.Tensors;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.StringTensorImpl;
-import org.tensorflow.internal.tensor.buffer.ByteSequenceTensorBuffer;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
+import org.tensorflow.internal.types.TStringFactory;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayout;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.StringTensor;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -45,8 +40,8 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
-@TensorType(dataType = DataType.DT_STRING, byteSize = -1, impl = TStringImpl.class)
-public interface TString extends StringTensor, TType<TString, String> {
+@TensorType(dataType = DataType.DT_STRING, byteSize = -1, factory = TStringFactory.class)
+public interface TString extends TType<String> {
 
   /**
    * Allocates a new tensor for storing a string scalar.
@@ -110,7 +105,9 @@ public interface TString extends StringTensor, TType<TString, String> {
    * @return the new tensor
    */
   static TString tensorOf(Charset charset, NdArray<String> src) {
-    return TStringImpl.createTensor(src, s -> s.getBytes(charset));
+    Function<String, byte[]> getBytes = s -> s.getBytes(charset);
+    long size = ByteSequenceTensorBuffer.computeSize(src, getBytes);
+    return Tensors.of(TString.class, src.shape(), size, t -> t.write(src, getBytes));
   }
 
   /**
@@ -170,7 +167,9 @@ public interface TString extends StringTensor, TType<TString, String> {
    * @return the new tensor
    */
   static TString tensorOfBytes(NdArray<byte[]> src) {
-    return TStringImpl.createTensor(src, Function.identity());
+    Function<byte[], byte[]> getBytes = Function.identity();
+    long size = ByteSequenceTensorBuffer.computeSize(src, getBytes);
+    return Tensors.of(TString.class, src.shape(), size, t -> t.write(src, getBytes));
   }
 
   /**
@@ -210,38 +209,8 @@ public interface TString extends StringTensor, TType<TString, String> {
    * @return string tensor data using this charset
    */
   TString using(Charset charset);
+
+  <T> void write(NdArray<T> src, Function<T, byte[]> getBytes);
+
+  NdArray<byte[]> asBytes();
 }
-
-/**
- * Hidden implementation of a {@code TString}
- */
-class TStringImpl extends StringTensorImpl implements TString {
-
-  @Override
-  public TString using(Charset charset) {
-    return new TStringImpl(nativeHandle, shape(), DataLayouts.ofStrings(charset), rawBuffer());
-  }
-
-  static <T> TString createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
-    long size = ByteSequenceTensorBuffer.computeSize(src, getBytes);
-    return Tensors.of(TString.class, src.shape(), size, t ->
-        ((TStringImpl)t).rawBuffer().init(src, getBytes)
-    );
-  }
-
-  TStringImpl(TF_Tensor nativeTensor, Shape shape) {
-    this(nativeTensor, shape, UTF_8_LAYOUT, TensorBuffers.toStrings(nativeTensor, shape.size()));
-  }
-
-  private static final DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT = DataLayouts.ofStrings(StandardCharsets.UTF_8);
-
-  private TStringImpl(TF_Tensor nativeTensor, Shape shape, DataLayout<DataBuffer<byte[]>, String> layout, ByteSequenceTensorBuffer rawBuffer) {
-    super(nativeTensor, shape, layout, rawBuffer);
-  }
-
-  @Override
-  public Class<TString> type() {
-    return TString.class;
-  }
-}
-

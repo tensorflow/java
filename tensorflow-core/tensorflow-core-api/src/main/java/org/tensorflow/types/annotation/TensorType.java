@@ -15,10 +15,18 @@ limitations under the License.
 
 package org.tensorflow.types.annotation;
 
-import org.tensorflow.Tensor;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TypeFactory;
 
 /** Represents a type of elements in a {@link Tensor} */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface TensorType {
 
   DataType dataType();
@@ -28,5 +36,5 @@ public @interface TensorType {
   /**
    * The class implementing this tensor type
    */
-  Class<?> impl();
+  Class<? extends TypeFactory> factory();
 }

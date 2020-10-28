@@ -348,7 +348,7 @@ void RenderInterfaceImpl(const OpSpec& op, RenderMode mode,
   if (mode == OPERAND) {
     bool cast2obj = output.type().wildcard();
     Type return_type = Type::Class("Output", "org.tensorflow")
-        .add_parameter(cast2obj ? Type::Interface("TType", "org.tensorflow.types.family") : output.type());
+        .add_parameter(cast2obj ? Type::Class("TType", "org.tensorflow.types.family") : output.type());
     Method as_output = Method::Create("asOutput", return_type)
         .add_argument(Variable::Create("scope", Type::Class("Scope", "org.tensorflow.op")))
         .add_annotation(Annotation::Create("Override"));
@@ -367,7 +367,7 @@ void RenderInterfaceImpl(const OpSpec& op, RenderMode mode,
   } else if (mode == LIST_OPERAND) {
     Type operand = Type::Interface("Operand", "org.tensorflow");
     if (output.type().wildcard()) {
-      operand.add_parameter(Type::Interface("TType", "org.tensorflow.types.family"));
+      operand.add_parameter(Type::Class("TType", "org.tensorflow.types.family"));
     } else {
       operand.add_parameter(output.type());
     }
@@ -431,9 +431,10 @@ void GenerateOp(const OpSpec& op, const EndpointSpec& endpoint,
   RenderMode mode = DEFAULT;
   if (op.outputs().size() == 1) {
     const ArgumentSpec& output = op.outputs().front();
-    Type operand_type(output.type().wildcard() ? Type::Interface("TType", "org.tensorflow.types.family")
+    Type operand_type(output.type().wildcard() ? Type::Class("TType", "org.tensorflow.types.family")
                                                : output.type());
-    Type operand_inf(Type::Interface("Operand", "org.tensorflow").add_parameter(operand_type));
+    Type operand_inf(Type::Interface("Operand", "org.tensorflow")
+                         .add_parameter(operand_type));
     if (output.iterable()) {
       mode = LIST_OPERAND;
       op_class.add_supertype(Type::IterableOf(operand_inf));

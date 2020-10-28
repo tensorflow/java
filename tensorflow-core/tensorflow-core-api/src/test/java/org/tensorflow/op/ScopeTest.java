@@ -23,9 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
+import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
 public class ScopeTest {
@@ -169,11 +168,12 @@ public class ScopeTest {
       // assertNotNull(g.operation("variance/zero"));
 
       // Verify correct results as well.
-      TInt32 result =
-          sess.runner().fetch(var1.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.getInt());
-      result = sess.runner().fetch(var2.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.getInt());
+      try (TInt32 result = sess.runner().fetch(var1.output()).run().single()) {
+        assertEquals(21704, result.getInt());
+      }
+      try (TInt32 result = sess.runner().fetch(var2.output()).run().single()) {
+        assertEquals(21704, result.getInt());
+      }
     }
   }
 
@@ -193,7 +193,7 @@ public class ScopeTest {
       return new Const<>(
           s.env()
               .opBuilder("Const", s.makeOpName("Const"))
-              .setAttr("dtype", value.dataType())
+              .setAttr("dtype", value.type())
               .setAttr("value", value)
               .build()
               .output(0));

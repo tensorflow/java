@@ -1,11 +1,18 @@
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.op.core.*;
+import org.tensorflow.op.core.Concat;
+import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Range;
+import org.tensorflow.op.core.Rank;
+import org.tensorflow.op.core.Reshape;
+import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.linalg.Transpose;
 import org.tensorflow.op.math.Sub;
@@ -14,10 +21,6 @@ import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Operator(group = "nn")
 public class SoftmaxCrossEntropyWithLogits {
@@ -192,7 +195,7 @@ public class SoftmaxCrossEntropyWithLogits {
    */
   private static <T extends TNumber, U extends TNumber> Operand<T> moveDimToEnd(
       Scope scope, Operand<T> input, int dimIndex, Operand<U> rank) {
-    Class<? extends TNumber> rankDType = rank.asOutput().type();
+    Class<U> rankDType = rank.asOutput().type();
     Operand one = Cast.create(scope, Constant.scalarOf(scope, 1), rankDType);
     List<Operand<U>> concatList =
         Arrays.asList(

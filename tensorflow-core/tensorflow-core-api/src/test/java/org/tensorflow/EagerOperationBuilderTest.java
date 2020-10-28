@@ -45,7 +45,7 @@ public class EagerOperationBuilderTest {
       opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
     }
     try {
-      opBuilder.setAttr("dtype", TFloat32.DTYPE);
+      opBuilder.setAttr("dtype", TFloat32.class);
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -95,7 +95,7 @@ public class EagerOperationBuilderTest {
       // dtype, tensor attributes.
       try (TInt32 t = TInt32.scalarOf(1)) {
         opBuilder(session, "Const", "DataTypeAndTensor")
-            .setAttr("dtype", TInt32.DTYPE)
+            .setAttr("dtype", TInt32.class)
             .setAttr("value", t)
             .build();
       }
@@ -103,7 +103,7 @@ public class EagerOperationBuilderTest {
       opBuilder(session, "RandomUniform", "DataTypeAndInt")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat32.DTYPE)
+          .setAttr("dtype", TFloat32.class)
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")
@@ -124,7 +124,7 @@ public class EagerOperationBuilderTest {
           .build();
       // list(shape)
       opBuilder(session, "FIFOQueue", "queue")
-          .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
+          .setAttr("component_types", new Class[] {TInt32.class, TInt32.class})
           .setAttr("shapes", new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)})
           .build();
       // bool

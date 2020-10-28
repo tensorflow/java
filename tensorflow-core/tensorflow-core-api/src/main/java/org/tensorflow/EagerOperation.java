@@ -29,7 +29,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.Ops;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
@@ -90,12 +90,6 @@ class EagerOperation extends AbstractOperation {
 
   @Override
   public Shape shape(int outputIndex) {
-    // If the tensor of this output has already been resolved, return its shape.
-    // Otherwise, retrieve the tensor shape from the native library.
-    Tensor<?> tensor = outputTensors.get(outputIndex);
-    if (tensor != null) {
-      return tensor.shape();
-    }
     TFE_TensorHandle outputNativeHandle = getUnsafeNativeHandle(outputIndex);
     long[] shape = new long[numDims(outputNativeHandle)];
     for (int i = 0; i < shape.length; ++i) {
@@ -105,14 +99,14 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public int dtype(int outputIndex) {
+  public DataType dtype(int outputIndex) {
     TFE_TensorHandle outputNativeHandle = getUnsafeNativeHandle(outputIndex);
-    return dataType(outputNativeHandle);
+    return DataType.forNumber(dataType(outputNativeHandle));
   }
 
   @Override
-  public Tensor<?> tensor(int outputIndex) {
-    Tensor<?> tensor = outputTensors.get(outputIndex);
+  public TensorHandle tensor(int outputIndex) {
+    TensorHandle tensor = outputTensors.get(outputIndex);
     if (tensor == null) {
       tensor = resolveTensor(outputIndex);
     }
@@ -122,15 +116,15 @@ class EagerOperation extends AbstractOperation {
   private final EagerSession session;
   private final String type;
   private final String name;
-  private final AtomicReferenceArray<Tensor<?>> outputTensors;
+  private final AtomicReferenceArray<TensorHandle> outputTensors;
 
-  private Tensor<?> resolveTensor(int outputIndex) {
+  private TensorHandle resolveTensor(int outputIndex) {
     // Take an optimistic approach, where we attempt to resolve the output tensor without locking.
     // If another thread has resolved it meanwhile, release our copy and reuse the existing one
     // instead.
-    Tensor<?> tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
+    TensorHandle tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      session.detach(((AbstractTensor)tensor).nativeHandle());
+      session.detach(tensor.nativeHandle());
       tensor = outputTensors.get(outputIndex);
     }
     return tensor;
@@ -151,14 +145,14 @@ class EagerOperation extends AbstractOperation {
     }
   }
 
-  private static Tensor<?> resolveTensorHandle(TFE_TensorHandle handle, EagerSession session) {
+  private static TensorHandle resolveTensorHandle(TFE_TensorHandle handle, EagerSession session) {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor nativeTensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      Tensor<?> t = Tensors.fromHandle(nativeTensor);
-      ((AbstractTensor)t).attachTo(session);
+      TensorHandle t = TensorHandle.of(nativeTensor);
+      t.attachTo(session);
       return t;
     }
   }

@@ -16,14 +16,13 @@
 package org.tensorflow;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import org.tensorflow.op.Ops;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.types.family.TType;
+import org.tensorflow.util.TensorMap;
 
 /**
  * A graph that can be invoked as a single function, with an input and output signature.
@@ -163,14 +162,14 @@ public class ConcreteFunction implements AutoCloseable {
    * @return output tensors resulting from the execution of the function,
    *         mapped by their signature name
    */
-  public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments)
+  public TensorMap call(Map<String, TType<?>> arguments)
       throws IllegalArgumentException {
 
     final SignatureDef signatureDef = signature.asSignatureDef();
     final Session.Runner runner = session.runner();
 
     signatureDef.getInputsMap().forEach((argName, t) -> {
-      Tensor<?> tensor = arguments.get(argName);
+      TType<?> tensor = arguments.get(argName);
       if (tensor == null) {
         throw new IllegalArgumentException(String.format("Missing argument [%s]", argName));
       }
@@ -180,24 +179,7 @@ public class ConcreteFunction implements AutoCloseable {
     Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
     outputToNode.values().forEach(t -> runner.fetch(t.getName()));
 
-    List<Tensor<?>> resultTensors = runner.run();
-    try {
-      ListIterator<Tensor<?>> resultTensorIter = resultTensors.listIterator();
-      Map<String, Tensor<?>> returnMap = new HashMap<String, Tensor<?>>();
-
-      // Use the output names as present in the signature definition
-      for (String nodeName: outputToNode.keySet()) {
-        returnMap.put(nodeName, resultTensorIter.next());
-      }
-      return returnMap;
-
-    } catch (Exception e) {
-      // Release tensors before throwing exception
-      for (Tensor<?> t : resultTensors) {
-        t.close();
-      }
-      throw e;
-    }
+    return runner.run().toMap(outputToNode.keySet());
   }
 
   /**
@@ -210,7 +192,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @throws IllegalArgumentException if there are multiple input or output parameters defined
    *                                  in the function
    */
-  public Tensor<?> call(Tensor<?> tensor) throws IllegalArgumentException {
+  public <T extends TType> T call(TType<?> tensor) throws IllegalArgumentException {
     final SignatureDef signatureDef = signature.asSignatureDef();
 
     if (signatureDef.getInputsCount() != 1) {
@@ -225,7 +207,7 @@ public class ConcreteFunction implements AutoCloseable {
     }
     String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
 
-    return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
+    return (T)session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
   }
 
   /**

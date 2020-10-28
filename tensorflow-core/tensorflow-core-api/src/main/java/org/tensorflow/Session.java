@@ -15,7 +15,15 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -33,14 +41,10 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.types.family.TType;
+import org.tensorflow.util.TensorList;
 import org.tensorflow.types.TString;
-
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /**
  * Driver for {@link Graph} execution.
@@ -158,7 +162,7 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, Tensor<?> t) {
+    public Runner feed(String operation, TType<?> t) {
       return feed(parseOutput(operation), t);
     }
 
@@ -173,11 +177,11 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, int index, Tensor<?> t) {
+    public Runner feed(String operation, int index, TType<?> t) {
       Operation op = operationByName(operation);
       if (op != null) {
         inputs.add(op.output(index));
-        inputTensors.add(t);
+        inputTensors.add(t.tensorHandle());
       }
       return this;
     }
@@ -190,9 +194,9 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(Operand<?> operand, Tensor<?> t) {
+    public Runner feed(Operand<?> operand, TType<?> t) {
       inputs.add(operand.asOutput());
-      inputTensors.add(t);
+      inputTensors.add(t.tensorHandle());
       return this;
     }
 
@@ -325,7 +329,7 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner
      */
-    public List<Tensor<?>> run() {
+    public TensorList run() {
       return runHelper(false).outputs;
     }
 
@@ -354,8 +358,8 @@ public final class Session implements AutoCloseable {
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
       int idx = 0;
-      for (Tensor<?> t : inputTensors) {
-        inputTensorHandles[idx++] = ((AbstractTensor)t).nativeHandle();
+      for (TensorHandle t : inputTensors) {
+        inputTensorHandles[idx++] = t.nativeHandle();
       }
       idx = 0;
       for (Output<?> o : inputs) {
@@ -375,7 +379,7 @@ public final class Session implements AutoCloseable {
       }
       Reference runRef = new Reference();
       RunMetadata metadata = null;
-      List<Tensor<?>> outputs = new ArrayList<>();
+      TensorList outputs = new TensorList();
       try {
         metadata =
             Session.run(
@@ -390,10 +394,7 @@ public final class Session implements AutoCloseable {
                 wantMetadata,
                 outputs);
       } catch (Exception e) {
-        for (Tensor<?> t : outputs) {
-          t.close();
-        }
-        outputs.clear();
+        outputs.close();
         throw e;
       } finally {
         runRef.close();
@@ -451,7 +452,7 @@ public final class Session implements AutoCloseable {
     }
 
     private ArrayList<Output<?>> inputs = new ArrayList<>();
-    private ArrayList<Tensor<?>> inputTensors = new ArrayList<>();
+    private ArrayList<TensorHandle> inputTensors = new ArrayList<>();
     private ArrayList<Output<?>> outputs = new ArrayList<>();
     private ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
@@ -518,7 +519,7 @@ public final class Session implements AutoCloseable {
    */
   public static final class Run {
     /** Tensors from requested fetches. */
-    public List<Tensor<?>> outputs;
+    public TensorList outputs;
 
     /**
      * Metadata about the run.
@@ -627,7 +628,7 @@ public final class Session implements AutoCloseable {
       int[] outputOpIndices,
       TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      List<Tensor<?>> outputTensors) {
+      TensorList outputTensors) {
     requireHandle(handle);
 
     int ninputs = inputTensorHandles.length;
@@ -667,7 +668,7 @@ public final class Session implements AutoCloseable {
 
       for (int i = 0; i < noutputs; ++i) {
         TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputTensors.add(Tensors.fromHandle(h));
+        outputTensors.add(Tensors.fromHandle(TensorHandle.of(h)));
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

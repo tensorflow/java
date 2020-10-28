@@ -44,6 +44,7 @@ import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.util.TensorMap;
 import org.tensorflow.types.TFloat32;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
@@ -107,9 +108,9 @@ public class SavedModelBundleTest {
       f.session().run(Init.DEFAULT_NAME);
 
       // Call the graph and remember the result of computation for later
-      try (Tensor<TFloat32> xTensor = TFloat32.tensorOf(xValue);
-          Tensor<TFloat32> zTensor = f.call(xTensor).expect(TFloat32.DTYPE)) {
-        reducedSum = zTensor.data().getFloat();
+      try (TFloat32 xTensor = TFloat32.tensorOf(xValue);
+          TFloat32 zTensor = f.call(xTensor)) {
+        reducedSum = zTensor.getFloat();
       }
       // Save/export the model (which is a single function in this case)
       f.save(testFolder.toString());
@@ -153,15 +154,15 @@ public class SavedModelBundleTest {
       assertNotNull(outputInfo);
       assertEquals(0, outputInfo.getTensorShape().getDimCount());
 
-      try (Tensor<TFloat32> xTensor = TFloat32.tensorOf(xValue)) {
+      try (TFloat32 xTensor = TFloat32.tensorOf(xValue)) {
         // Call the saved model function and make sure it returns the same result as before
-        try (Tensor<TFloat32> zTensor = function.call(xTensor).expect(TFloat32.DTYPE)) {
-          assertEquals(reducedSum, zTensor.data().getFloat(), EPSILON);
+        try (TFloat32 zTensor = function.call(xTensor)) {
+          assertEquals(reducedSum, zTensor.getFloat(), EPSILON);
         }
         // Now call the same function directly from the model
-        try (Tensor<TFloat32> zTensor =
-            savedModel.call(Collections.singletonMap("input", xTensor)).get("reducedSum").expect(TFloat32.DTYPE)) {
-          assertEquals(reducedSum, zTensor.data().getFloat(), EPSILON);
+        try (TFloat32 zTensor =
+            savedModel.call(Collections.singletonMap("input", xTensor)).get("reducedSum")) {
+          assertEquals(reducedSum, zTensor.getFloat(), EPSILON);
         }
       }
     }
@@ -179,9 +180,9 @@ public class SavedModelBundleTest {
           ConcreteFunction f1 = ConcreteFunction.create(f1Signature, s);
           ConcreteFunction f2 = ConcreteFunction.create(f2Signature, s)) {
         f1.session().run(Init.DEFAULT_NAME);
-        try (Tensor<TFloat32> x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
-            Tensor<TFloat32> t = f1.call(x).expect(TFloat32.DTYPE)) {
-          reducedSum = t.data().getFloat();
+        try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
+            TFloat32 t = f1.call(x)) {
+          reducedSum = t.getFloat();
         }
         SavedModelBundle.exporter(testFolder.toString())
             .withFunction(f1)
@@ -193,15 +194,15 @@ public class SavedModelBundleTest {
       assertEquals(2, model.signatures().size());
       ConcreteFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
-      try (Tensor<TFloat32> x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
-          Tensor<TFloat32> t = f1.call(x).expect(TFloat32.DTYPE)) {
-        assertEquals(reducedSum, t.data().getFloat(), EPSILON);
+      try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
+          TFloat32 t = f1.call(x)) {
+        assertEquals(reducedSum, t.getFloat(), EPSILON);
       }
       ConcreteFunction f2 = model.function("identity");
       assertNotNull(f2);
-      try (Tensor<TFloat32> x = TFloat32.scalarOf(10.0f);
-          Tensor<TFloat32> t = f2.call(x).expect(TFloat32.DTYPE)) {
-        assertEquals(10.0f, t.data().getFloat(), 0.0f);
+      try (TFloat32 x = TFloat32.scalarOf(10.0f);
+          TFloat32 t = f2.call(x)) {
+        assertEquals(10.0f, t.getFloat(), 0.0f);
       }
       try {
         model.function("NoSuchFunction");
@@ -290,31 +291,29 @@ public class SavedModelBundleTest {
        *   Signature name used for saving 'add', argument names 'a' and 'b'
        */
       ConcreteFunction add = bundle.function("add");
-      Map<String, Tensor<?>> args = new HashMap();
-      try (Tensor<TFloat32> a = TFloat32.scalarOf(10.0f);
-           Tensor<TFloat32> b = TFloat32.scalarOf(15.5f)) {
-        args.put("a", a);
-        args.put("b", b);
-        Map<String, Tensor<?>> result = add.call(args);
+      try (TensorMap args = new TensorMap()) {
+        args.put("a", TFloat32.scalarOf(10.0f));
+        args.put("b", TFloat32.scalarOf(15.5f));
+        TensorMap result = add.call(args);
         assertEquals(result.size(), 1);
-        try (Tensor<TFloat32> c = result.values().iterator().next().expect(TFloat32.DTYPE)) {
-          assertEquals(25.5f, c.data().getFloat());
+        try (TFloat32 c = result.single()) {
+          assertEquals(25.5f, c.getFloat());
         }
       }
     }
   }
 
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
-    Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE, Placeholder.shape(xShape));
+    Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
     Variable<TFloat32> y = tf
-        .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.DTYPE));
+        .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     Init init = tf.init();
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }
 
   private static Signature buildIdentityGraph(Ops tf, String signatureKey) {
-    Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(Shape.scalar()));
     Identity<TFloat32> xprime = tf.identity(x);
     return Signature.builder().key(signatureKey).input("x", x).output("x", xprime).build();
   }

@@ -19,6 +19,7 @@ import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -44,7 +45,7 @@ public final class Output<T extends TType> implements Operand<T> {
 
   /** Returns the DataType of the tensor referred to by this Output. */
   public Class<T> type() {
-    return (Class)TensorTypes.find(operation.dtype(index)).typeClass();
+    return (Class) TypeRegistry.find(operation.dtype(index)).typeClass();
   }
 
   /**
@@ -81,7 +82,7 @@ public final class Output<T extends TType> implements Operand<T> {
    */
   @SuppressWarnings("unchecked")
   public T tensor() {
-    return (T)operation.tensor(index);
+    return Tensors.fromHandle(operation.tensor(index));
   }
 
   @Override

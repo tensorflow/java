@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;

@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
@@ -36,7 +35,7 @@ public final class GeneratedOperationsTest {
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
       Operand<TInt32> x = ops.math.add(ops.constant(1), ops.constant(2));
-      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+      try (TInt32 result = sess.runner().fetch(x).run().single()) {
         assertEquals(3, result.getInt());
       }
     }
@@ -52,7 +51,7 @@ public final class GeneratedOperationsTest {
       inputs.add(ops.constant(2));
       inputs.add(ops.constant(3));
       Operand<TInt32> x = ops.math.addN(inputs);
-      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+      try (TInt32 result = sess.runner().fetch(x).run().single()) {
         assertEquals(6, result.getInt());
       }
     }
@@ -70,14 +69,14 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.DTYPE);
+      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.class);
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
       ArrayList<Op> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
       Operand<TInt32> x =
           ops.withControlDependencies(controls).math.add(variable, ops.constant(0));
       sess.runner().addTarget(initVariable).run();
-      try (TInt32 result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
+      try (TInt32 result = sess.runner().fetch(x).run().single()) {
         assertEquals(3, result.getInt());
       }
     }

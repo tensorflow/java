@@ -19,7 +19,6 @@ import java.nio.charset.Charset;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.Tensors;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;

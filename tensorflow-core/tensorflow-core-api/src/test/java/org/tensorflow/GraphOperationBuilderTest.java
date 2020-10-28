@@ -52,10 +52,10 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph();
         TInt32 t = TInt32.scalarOf(1)) {
       OperationBuilder b =
-          g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
+          g.opBuilder("Const", "Const").setAttr("dtype", t.type()).setAttr("value", t);
       b.build();
       try {
-        b.setAttr("dtype", t.dataType());
+        b.setAttr("dtype", t.type());
       } catch (IllegalStateException e) {
         // expected exception.
       }
@@ -67,7 +67,7 @@ public class GraphOperationBuilderTest {
     OperationBuilder b = null;
     try (Graph g = new Graph();
         TInt32 t = TInt32.scalarOf(1)) {
-      b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
+      b = g.opBuilder("Const", "Const").setAttr("dtype", t.type()).setAttr("value", t);
     }
     try {
       b.build();
@@ -90,7 +90,7 @@ public class GraphOperationBuilderTest {
       // dtype, tensor attributes.
       try (TInt32 t = TInt32.scalarOf(1)) {
         g.opBuilder("Const", "DataTypeAndTensor")
-            .setAttr("dtype", TInt32.DTYPE)
+            .setAttr("dtype", TInt32.class)
             .setAttr("value", t)
             .build()
             .output(0);
@@ -106,7 +106,7 @@ public class GraphOperationBuilderTest {
       g.opBuilder("RandomUniform", "Int")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat32.DTYPE)
+          .setAttr("dtype", TFloat32.class)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
@@ -132,23 +132,23 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Output<?> n =
           g.opBuilder("Placeholder", "unknown")
-              .setAttr("dtype", TFloat32.DTYPE)
+              .setAttr("dtype", TFloat32.class)
               .setAttr("shape", Shape.unknown())
               .build()
               .output(0);
       assertEquals(-1, n.shape().numDimensions());
-      assertEquals(TFloat32.DTYPE, n.dataType());
+      assertEquals(TFloat32.class, n.type());
 
       n =
           g.opBuilder("Placeholder", "batch_of_vectors")
-              .setAttr("dtype", TFloat32.DTYPE)
+              .setAttr("dtype", TFloat32.class)
               .setAttr("shape", Shape.of(-1, 784))
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
       assertEquals(-1, n.shape().size(0));
       assertEquals(784, n.shape().size(1));
-      assertEquals(TFloat32.DTYPE, n.dataType());
+      assertEquals(TFloat32.class, n.type());
     }
   }
 
@@ -172,7 +172,7 @@ public class GraphOperationBuilderTest {
         TBool yes = TBool.scalarOf(true);
         TBool no = TBool.scalarOf(false)) {
       Ops tf = Ops.create(g);
-      Output<TBool> placeholder = tf.placeholder(TBool.DTYPE).asOutput();
+      Output<TBool> placeholder = tf.placeholder(TBool.class).asOutput();
       GraphOperation check =
           g.opBuilder("Assert", "assert")
               .addInput(placeholder)
@@ -200,7 +200,7 @@ public class GraphOperationBuilderTest {
       int[][] matrix = new int[][] {{0, 0}, {0, 0}};
       Output<?> queue =
           g.opBuilder("FIFOQueue", "queue")
-              .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
+              .setAttr("component_types", new Class[] {TInt32.class, TInt32.class})
               .setAttr("shapes", shapes)
               .build()
               .output(0);

@@ -21,12 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
-import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
+import org.tensorflow.util.TensorList;
 import org.tensorflow.types.TFloat32;
 
 public class GradientsTest {
@@ -37,7 +36,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -48,12 +47,9 @@ public class GradientsTest {
       assertEquals(2, grads.dy().size());
 
       try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor<?>> outputs =
-              new AutoCloseableList<>(
-                  sess.runner().feed(x, c).fetch(grads.dy(0)).fetch(grads.dy(1)).run())) {
-
-        assertEquals(108.0f, outputs.get(0).expect(TFloat32.DTYPE).getFloat(), 0.0f);
-        assertEquals(18.0f, outputs.get(1).expect(TFloat32.DTYPE).getFloat(), 0.0f);
+          TensorList outputs = sess.runner().feed(x, c).fetch(grads.dy(0)).fetch(grads.dy(1)).run()) {
+        assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
+        assertEquals(18.0f, ((TFloat32)outputs.get(1)).getFloat(), 0.0f);
       }
     }
   }
@@ -64,7 +60,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -75,10 +71,8 @@ public class GradientsTest {
       assertEquals(1, grads.dy().size());
 
       try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor<?>> outputs =
-              new AutoCloseableList<>(sess.runner().feed(x, c).fetch(grads.dy(0)).run())) {
-
-        assertEquals(114.0f, outputs.get(0).expect(TFloat32.DTYPE).getFloat(), 0.0f);
+          TensorList outputs = sess.runner().feed(x, c).fetch(grads.dy(0)).run()) {
+        assertEquals(114.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
       }
     }
   }
@@ -89,7 +83,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -101,11 +95,8 @@ public class GradientsTest {
       assertEquals(1, grads1.dy().size());
 
       try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor<?>> outputs =
-              new AutoCloseableList<>(
-                  sess.runner().feed(x, c).fetch(grads1.dy(0)).run())) {
-
-        assertEquals(108.0f, outputs.get(0).expect(TFloat32.DTYPE).getFloat(), 0.0f);
+          TensorList outputs = sess.runner().feed(x, c).fetch(grads1.dy(0)).run()) {
+        assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
       }
     }
   }
@@ -115,7 +106,7 @@ public class GradientsTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g).withSubScope("sub");
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y = tf.math.square(x).y();
 
       Gradients grad0 = Gradients.create(tf.scope(), y, Arrays.asList(x));

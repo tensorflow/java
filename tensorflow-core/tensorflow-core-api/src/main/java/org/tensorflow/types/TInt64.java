@@ -20,23 +20,21 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.LongTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TInt64Factory;
+import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.LongTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 64-bit signed integer tensor type.
  */
-@TensorType(dataType = DataType.DT_INT64, byteSize = 8, impl = TInt64Impl.class)
-public interface TInt64 extends LongTensor, TNumber<TInt64, Long> {
+@TensorType(dataType = DataType.DT_INT64, byteSize = 8, factory = TInt64Factory.class)
+public interface TInt64 extends TNumber<Long>, LongNdArray {
 
   /**
    * Allocates a new tensor for storing a single long value.
@@ -104,20 +102,5 @@ public interface TInt64 extends LongTensor, TNumber<TInt64, Long> {
    */
   static TInt64 tensorOf(Shape shape, Consumer<TInt64> tensorInit) {
     return Tensors.of(TInt64.class, shape, tensorInit);
-  }
-}
-
-/**
- * Hidden implementation of a {@code TInt64}
- */
-class TInt64Impl extends LongTensorImpl implements TInt64 {
-
-  TInt64Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toLongs(nativeTensor));
-  }
-
-  @Override
-  public Class<TInt64> type() {
-    return TInt64.class;
   }
 }

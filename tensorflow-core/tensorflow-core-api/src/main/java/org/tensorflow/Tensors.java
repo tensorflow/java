@@ -7,9 +7,12 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 import java.util.function.Consumer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.Type;
+import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
 public final class Tensors {
@@ -137,9 +140,9 @@ public final class Tensors {
    * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
   public static <T extends TType> T of(Class<T> type, Shape shape, ByteDataBuffer rawData) {
-    T tensor = of(type, shape, rawData.size());
-    rawData.copyTo(TensorBuffers.toBytes(((AbstractTensor)tensor).nativeHandle()), rawData.size());
-    return tensor;
+    T t = of(type, shape, rawData.size());
+    rawData.copyTo(TensorBuffers.toBytes(t.tensorHandle().nativeHandle()), rawData.size());
+    return t;
   }
 
   /**
@@ -147,28 +150,28 @@ public final class Tensors {
    *
    * <p>Takes ownership of the handle.
    */
-  static Tensor<?> fromHandle(TF_Tensor handle) {
-    TensorType type = TensorTypes.find(dtype(handle));
-    Shape shape = Shape.of(shape(handle));
-    return type.newInstance(handle, shape);
+  static <T extends TType> T fromHandle(TensorHandle handle) {
+    Type<T> type = TypeRegistry.find(handle.dataType());
+    Shape shape = Shape.of(shape(handle.nativeHandle()));
+    return type.factory().createDense(handle, shape);
   }
 
-  private static <T extends TType> T allocate(Class<T> type, Shape shape, long size) {
-    TensorType tensorType = TensorTypes.find(type);
+  private static <T extends TType> T allocate(Class<T> typeClass, Shape shape, long size) {
+    Type<T> type = TypeRegistry.find(typeClass);
     long effectiveSize = size;
     if (effectiveSize < 0) {
       // Size of the tensor is by default the sum of the size of all its element
-      effectiveSize = shape.size() * tensorType.byteSize();
+      effectiveSize = shape.size() * type.byteSize();
 
-    } else if (!tensorType.isVariableLength() && shape.size() * tensorType.byteSize() > effectiveSize) {
+    } else if (!type.isVariableLength() && shape.size() * type.byteSize() > effectiveSize) {
       // Minimum requirements for datatypes of variable length cannot be verified in a relevant way
       // so we only validate them for fixed length datatypes
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
-    TF_Tensor nativeHandle = allocate(tensorType.dataType().getNumber(), shape.asArray(), effectiveSize);
+    TF_Tensor nativeHandle = allocate(type.dataType().getNumber(), shape.asArray(), effectiveSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
-      return tensorType.newInstance(nativeHandle, shape);
+      return type.factory().createDense(TensorHandle.of(nativeHandle), shape);
     }
   }
 
@@ -185,11 +188,6 @@ public final class Tensors {
       throw new IllegalStateException("unable to allocate memory for the Tensor");
     }
     return t;
-  }
-
-  private static int dtype(TF_Tensor handle) {
-    requireHandle(handle);
-    return TF_TensorType(handle);
   }
 
   private static long[] shape(TF_Tensor handle) {

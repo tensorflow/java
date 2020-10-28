@@ -20,23 +20,21 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.FloatTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TFloat32Factory;
+import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.FloatTensor;
 import org.tensorflow.types.family.TFloating;
 
 /**
  * IEEE-754 single-precision 32-bit float tensor type.
  */
-@TensorType(dataType = DataType.DT_FLOAT, byteSize = 4, impl = TFloat32Impl.class)
-public interface TFloat32 extends FloatTensor, TFloating<TFloat32, Float> {
+@TensorType(dataType = DataType.DT_FLOAT, byteSize = 4, factory = TFloat32Factory.class)
+public interface TFloat32 extends TFloating<Float>, FloatNdArray {
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -105,20 +103,5 @@ public interface TFloat32 extends FloatTensor, TFloating<TFloat32, Float> {
   static TFloat32 tensorOf(Shape shape, Consumer<TFloat32> tensorInit) {
     return Tensors.of(TFloat32.class, shape, tensorInit);
   }
+
 }
-
-/**
- * Hidden implementation of a {@code TFloat32}
- */
-class TFloat32Impl extends FloatTensorImpl implements TFloat32 {
-
-  TFloat32Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toFloats(nativeTensor));
-  }
-
-  @Override
-  public Class<TFloat32> type() {
-    return TFloat32.class;
-  }
-}
-

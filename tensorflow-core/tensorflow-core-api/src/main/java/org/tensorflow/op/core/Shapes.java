@@ -16,7 +16,6 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;

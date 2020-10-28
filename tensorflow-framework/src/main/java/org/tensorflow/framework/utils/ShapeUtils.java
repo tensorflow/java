@@ -18,6 +18,7 @@ import org.tensorflow.*;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.tensor.Tensor;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;

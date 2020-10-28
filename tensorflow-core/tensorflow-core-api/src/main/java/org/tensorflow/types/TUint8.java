@@ -20,23 +20,21 @@ package org.tensorflow.types;
 import java.util.function.Consumer;
 import org.tensorflow.Tensors;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.internal.tensor.ByteTensorImpl;
-import org.tensorflow.internal.tensor.buffer.TensorBuffers;
+import org.tensorflow.internal.types.TUint8Factory;
+import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
-import org.tensorflow.types.tensor.ByteTensor;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 8-bit unsigned integer tensor type.
  */
-@TensorType(dataType = DataType.DT_UINT8, byteSize = 1, impl = TUint8Impl.class)
-public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
+@TensorType(dataType = DataType.DT_UINT8, byteSize = 1, factory = TUint8Factory.class)
+public interface TUint8 extends TNumber<Byte>, ByteNdArray {
 
   /**
    * Allocates a new tensor for storing a single byte value.
@@ -104,20 +102,5 @@ public interface TUint8 extends ByteTensor, TNumber<TUint8, Byte> {
    */
   static TUint8 tensorOf(Shape shape, Consumer<TUint8> tensorInit) {
     return Tensors.of(TUint8.class, shape, tensorInit);
-  }
-}
-
-/**
- * Hidden implementation of a {@code TUint8}
- */
-class TUint8Impl extends ByteTensorImpl implements TUint8 {
-
-  TUint8Impl(TF_Tensor nativeTensor, Shape shape) {
-    super(nativeTensor, shape, TensorBuffers.toBytes(nativeTensor));
-  }
-
-  @Override
-  public Class<TUint8> type() {
-    return TUint8.class;
   }
 }

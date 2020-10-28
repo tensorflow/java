@@ -48,6 +48,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -161,7 +162,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder setAttr(String name, Class<? extends TType> type) {
-    setAttrType(opHandle, name, TensorTypes.numberOf(type));
+    setAttrType(opHandle, name, TypeRegistry.find(type).dataType().getNumber());
     return this;
   }
 
@@ -169,20 +170,20 @@ final class EagerOperationBuilder implements OperationBuilder {
   public EagerOperationBuilder setAttr(String name, Class<? extends TType>[] types) {
     int[] c = new int[types.length];
     for (int i = 0; i < types.length; ++i) {
-      c[i] = TensorTypes.numberOf(types[i]);
+      c[i] = TypeRegistry.find(types[i]).dataType().getNumber();
     }
     setAttrTypeList(opHandle, name, c);
     return this;
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, Tensor<?> value) {
-    setAttrTensor(opHandle, name, ((AbstractTensor)value).nativeHandle());
+  public EagerOperationBuilder setAttr(String name, TType<?> value) {
+    setAttrTensor(opHandle, name, value.tensorHandle().nativeHandle());
     return this;
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, Tensor<?>[] values) {
+  public EagerOperationBuilder setAttr(String name, TType<?>[] values) {
     // TODO (karllessard) could be supported by adding this attribute type in the eager C API
     throw new UnsupportedOperationException(
         "Tensor list attributes are not supported in eager mode");

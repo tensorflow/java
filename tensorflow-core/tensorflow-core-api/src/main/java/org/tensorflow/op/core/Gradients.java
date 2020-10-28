@@ -22,7 +22,6 @@ import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;

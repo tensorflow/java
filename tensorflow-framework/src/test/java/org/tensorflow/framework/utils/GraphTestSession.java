@@ -19,6 +19,7 @@ import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.tensor.Tensor;
 import org.tensorflow.types.*;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
