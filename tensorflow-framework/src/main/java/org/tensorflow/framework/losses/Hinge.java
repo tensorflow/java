@@ -19,6 +19,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the hinge loss between labels and predictions.
@@ -126,12 +127,12 @@ public class Hinge extends Loss {
     @SuppressWarnings("unchecked")
     Operand<T> tLabels = predictions.asOutput().dataType() == labels.asOutput().dataType() ?
             (Operand<T>)labels :
-            tf.dtypes.cast(labels, predictions.asOutput().dataType());
+            cast(tf,  labels, predictions.asOutput().dataType());
     tLabels = LossesImpl.valueCheck(
             getTF(),
             "labels value check [-1, 0, 1]",
             tLabels,
-            getTF().dtypes.cast(getTF().constant(new int[] { -1, 0, 1}),
+            cast(getTF(), getTF().constant(new int[] { -1, 0, 1}),
                     predictions.asOutput().dataType()));
 
     Operand<T> losses = Losses.hinge(getTF(), tLabels, predictions);

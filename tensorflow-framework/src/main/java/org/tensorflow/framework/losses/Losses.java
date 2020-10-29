@@ -30,6 +30,8 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /** Built-in loss functions. */
 public class Losses {
 
@@ -50,7 +52,7 @@ public class Losses {
    */
   public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsoluteError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
-    Operand<T> tLabels = tf.dtypes.cast(labels, predictions.asOutput().dataType());
+    Operand<T> tLabels = cast(tf,  labels, predictions.asOutput().dataType());
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -72,7 +74,7 @@ public class Losses {
    */
   public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
-    Operand<T> tLabels = tf.dtypes.cast(labels, predictions.asOutput().dataType());
+    Operand<T> tLabels = cast(tf,  labels, predictions.asOutput().dataType());
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -94,7 +96,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsolutePercentageError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -103,9 +105,9 @@ public class Losses {
             tf.math.div(
                 tf.math.sub(tLabels, predictions),
                 tf.math.maximum(
-                    tf.math.abs(tLabels), tf.dtypes.cast(tf.constant(EPSILON), dataType))));
+                    tf.math.abs(tLabels), cast(tf,  tf.constant(EPSILON), dataType))));
     return tf.math.mul(
-        tf.dtypes.cast(tf.constant(100), dataType), tf.math.mean(diff, tf.constant(-1)));
+        cast(tf,  tf.constant(100), dataType), tf.math.mean(diff, tf.constant(-1)));
   }
 
   /**
@@ -123,13 +125,13 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredLogarithmicError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
 
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
 
     Operand<T> firstLog = tf.math.log(tf.math.add(tf.math.maximum(predictions, epsilonConst), one));
     Operand<T> secondLog = tf.math.log(tf.math.add(tf.math.maximum(tLabels, epsilonConst), one));
@@ -154,7 +156,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> binaryCrossentropy(
       Ops tf, Operand<U> labels, Operand<T> predictions, boolean fromLogits, float labelSmoothing) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -197,8 +199,8 @@ public class Losses {
     */
 
     DataType<T> dataType = output.asOutput().dataType();
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
     output = tf.clipByValue(output, epsilonConst, oneMinusEpsilonConst);
 
@@ -235,7 +237,7 @@ public class Losses {
       float labelSmoothing,
       int axis) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
@@ -259,8 +261,8 @@ public class Losses {
     }
     */
 
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
     predictions =
         tf.math.div(
@@ -288,12 +290,12 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> categoricalHinge(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> zero = cast(tf,  tf.constant(0), dataType);
 
     Operand<T> pos =
         tf.reduceSum(
@@ -330,7 +332,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> cosineSimilarity(
       Ops tf, Operand<U> labels, Operand<T> predictions, int axis) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
@@ -357,12 +359,12 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> hinge(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> zero = cast(tf,  tf.constant(0), dataType);
 
     tLabels = maybeConvertLabels(tf, tLabels);
 
@@ -393,14 +395,14 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> huber(
       Ops tf, Operand<U> labels, Operand<T> predictions, float delta) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
 
     Operand<T> error = tf.math.sub(predictions, tLabels);
-    Operand<T> deltaConst = tf.dtypes.cast(tf.constant(delta), dataType);
-    Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), dataType);
+    Operand<T> deltaConst = cast(tf,  tf.constant(delta), dataType);
+    Operand<T> point5 = cast(tf,  tf.constant(0.5), dataType);
     Operand<T> absError = tf.math.abs(error);
     Operand<T> quadratic = tf.math.minimum(absError, deltaConst);
     Operand<T> linear = tf.math.sub(absError, quadratic);
@@ -424,12 +426,12 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> kullbackLeiblerDivergence(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
 
     tLabels = tf.clipByValue(tLabels, epsilonConst, one);
     predictions = tf.clipByValue(predictions, epsilonConst, one);
@@ -454,12 +456,12 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> logCosh(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> minusTwo = tf.dtypes.cast(tf.constant(-2), dataType);
-    Operand<T> two = tf.dtypes.cast(tf.constant(2), dataType);
+    Operand<T> minusTwo = cast(tf,  tf.constant(-2), dataType);
+    Operand<T> two = cast(tf,  tf.constant(2), dataType);
 
     Operand<T> diff = tf.math.sub(predictions, tLabels);
     Softplus<T> softplus = tf.math.softplus(tf.math.mul(minusTwo, diff));
@@ -482,11 +484,11 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> poisson(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
 
     return tf.math.mean(
         tf.math.sub(
@@ -509,8 +511,8 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> sparseCategoricalCrossentropy(
       Ops tf, Operand<U> labels, Operand<T> predictions, boolean fromLogits, int axis) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> epsilonConst = tf.dtypes.cast(tf.constant(EPSILON), dataType);
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
+    Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
 
     /* TODO need ability to walk back inputs
@@ -545,7 +547,7 @@ public class Losses {
       predictions = tf.linalg.transpose(predictions, tf.constant(axisNew));
     }
 
-    Operand<TInt64> iLabels = tf.dtypes.cast(labels, TInt64.DTYPE);
+    Operand<TInt64> iLabels = cast(tf,  labels, TInt64.DTYPE);
 
     // Try to adjust the shape so that rank of labels = rank of logits - 1.
     Shape labelsShape = labels.asOutput().shape();
@@ -586,12 +588,12 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> squaredHinge(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
-    Operand<T> tLabels = tf.dtypes.cast(labels, dataType);
+    Operand<T> tLabels = cast(tf,  labels, dataType);
     LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> zero = cast(tf,  tf.constant(0), dataType);
 
     tLabels = maybeConvertLabels(tf, tLabels);
     return tf.math.mean(
@@ -636,8 +638,8 @@ public class Losses {
   private static <T extends TNumber> Operand<T> smoothLabelsBinaryX(
       Ops tf, Operand<T> labels, float labelSmoothing) {
     DataType<T> dataType = labels.asOutput().dataType();
-    Operand<T> oneMinusSmoothing = tf.dtypes.cast(tf.constant(1.f - labelSmoothing), dataType);
-    Operand<T> halfSmoothing = tf.dtypes.cast(tf.constant(0.5F * labelSmoothing), dataType);
+    Operand<T> oneMinusSmoothing = cast(tf,  tf.constant(1.f - labelSmoothing), dataType);
+    Operand<T> halfSmoothing = cast(tf,  tf.constant(0.5F * labelSmoothing), dataType);
     return tf.math.add(tf.math.mul(labels, oneMinusSmoothing), halfSmoothing);
   }
 
@@ -655,11 +657,11 @@ public class Losses {
   private static <T extends TNumber> Operand<T> smoothLabelsCatX(
       Ops tf, Operand<T> labels, float labelSmoothing) {
     DataType<T> dataType = labels.asOutput().dataType();
-    Operand<T> smoothing = tf.dtypes.cast(tf.constant(labelSmoothing), dataType);
+    Operand<T> smoothing = cast(tf,  tf.constant(labelSmoothing), dataType);
     Shape labelsShape = labels.asOutput().shape();
     int numDims = labelsShape.numDimensions();
-    Operand<T> numClasses = tf.dtypes.cast(tf.constant(labelsShape.size(numDims - 1)), dataType);
-    Operand<T> oneMinusSmoothing = tf.dtypes.cast(tf.constant(1.f - labelSmoothing), dataType);
+    Operand<T> numClasses = cast(tf,  tf.constant(labelsShape.size(numDims - 1)), dataType);
+    Operand<T> oneMinusSmoothing = cast(tf,  tf.constant(1.f - labelSmoothing), dataType);
     return tf.math.add(tf.math.mul(labels, oneMinusSmoothing), tf.math.div(smoothing, numClasses));
   }
 
@@ -678,7 +680,7 @@ public class Losses {
     Operand<T> invNorm =
         tf.math.rsqrt(
             tf.math.maximum(
-                squareSum, tf.dtypes.cast(tf.constant(1e-12F), x.asOutput().dataType())));
+                squareSum, cast(tf,  tf.constant(1e-12F), x.asOutput().dataType())));
     return tf.math.mul(x, invNorm);
   }
 
@@ -693,9 +695,9 @@ public class Losses {
   private static <T extends TNumber> Operand<T> maybeConvertLabels(Ops tf, Operand<T> labels) {
     DataType<T> dataType = labels.asOutput().dataType();
 
-    Operand<T> one = tf.dtypes.cast(tf.constant(1), dataType);
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
-    Operand<T> two = tf.dtypes.cast(tf.constant(2), dataType);
+    Operand<T> one = cast(tf,  tf.constant(1), dataType);
+    Operand<T> zero = cast(tf,  tf.constant(0), dataType);
+    Operand<T> two = cast(tf,  tf.constant(2), dataType);
     Operand<TBool> areZeros = tf.math.equal(labels, zero);
     Operand<TBool> areOnes = tf.math.equal(labels, one);
     Operand<TBool> isBinary =

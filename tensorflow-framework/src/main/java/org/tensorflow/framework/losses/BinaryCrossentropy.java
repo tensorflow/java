@@ -20,6 +20,8 @@ import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Computes the cross-entropy loss between true labels and predicted labels.
  *
@@ -214,8 +216,8 @@ public class BinaryCrossentropy extends Loss {
               getTF(),
               "predictions range check [0-1]",
               predictions,
-              getTF().dtypes.cast(getTF().constant(0), predictions.asOutput().dataType()),
-              getTF().dtypes.cast(getTF().constant(1), predictions.asOutput().dataType()));
+              cast(getTF(), getTF().constant(0), predictions.asOutput().dataType()),
+              cast(getTF(), getTF().constant(1), predictions.asOutput().dataType()));
 
     } else {
       lPredictions = predictions;

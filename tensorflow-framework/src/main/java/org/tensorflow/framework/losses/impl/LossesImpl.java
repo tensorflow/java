@@ -31,6 +31,8 @@ import org.tensorflow.types.family.TNumber;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * These are helper methods for Losses and will be module private when Java modularity is applied to
  * TensorFlow Java. These methods should not be used outside of the Loss package.
@@ -251,15 +253,15 @@ public class LossesImpl {
       Ops tf, Operand<T> loss, Reduction reduction, Operand<T> sampleWeight) {
     DataType<T> dataType = loss.asOutput().dataType();
     if (sampleWeight == null) {
-      sampleWeight = tf.dtypes.cast(tf.constant(1), dataType);
+      sampleWeight = cast(tf, tf.constant(1), dataType);
     }
     LossTuple<T> result = squeezeOrExpandDimensions(tf, null, loss, sampleWeight);
     loss = result.getTarget();
     sampleWeight = result.getSampleWeights();
 
-    Operand<T> weighted_losses = tf.math.mul(loss, tf.dtypes.cast(sampleWeight, dataType));
+    Operand<T> weighted_losses = tf.math.mul(loss, cast(tf, sampleWeight, dataType));
     loss = reduceWeightedLoss(tf, weighted_losses, reduction);
-    return tf.dtypes.cast(loss, dataType);
+    return cast(tf, loss, dataType);
   }
 
   /**
@@ -300,7 +302,7 @@ public class LossesImpl {
       Ops tf, Operand<T> losses, long numElements) {
     Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
     return tf.math.divNoNan(
-        totalLoss, tf.dtypes.cast(tf.constant(numElements), losses.asOutput().dataType()));
+        totalLoss, cast(tf, tf.constant(numElements), losses.asOutput().dataType()));
   }
 
   /**

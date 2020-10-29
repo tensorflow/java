@@ -19,6 +19,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesImpl;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the crossentropy loss between the labels and predictions.
@@ -256,8 +257,8 @@ public class CategoricalCrossentropy extends Loss {
                       getTF(),
                       "predictions range check [0-1]",
                       predictions,
-                      getTF().dtypes.cast(getTF().constant(0), predictions.asOutput().dataType()),
-                      getTF().dtypes.cast(getTF().constant(1), predictions.asOutput().dataType()));
+                      cast(getTF(), getTF().constant(0), predictions.asOutput().dataType()),
+                      cast(getTF(), getTF().constant(1), predictions.asOutput().dataType()));
 
     } else {
       lPredictions = predictions;
