@@ -89,8 +89,8 @@ public class AdaDeltaTest {
           float[] var1Init = {3.0F, 4.0F};
           float[] fgrads = {grad, grad};
           Shape shape = Shape.of(var0Init.length);
-          Variable<TFloat32> var0 = tf.withName("var0").variable(shape, TFloat32.DTYPE);
-          Variable<TFloat32> var1 = tf.withName("var1").variable(shape, TFloat32.DTYPE);
+          Variable<TFloat32> var0 = tf.withName("var0").variable(shape, TFloat32.class);
+          Variable<TFloat32> var1 = tf.withName("var1").variable(shape, TFloat32.class);
 
           Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
           Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));

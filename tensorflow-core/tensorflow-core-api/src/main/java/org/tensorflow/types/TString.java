@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
 @TensorType(dataType = DataType.DT_STRING, byteSize = -1, factory = TStringFactory.class)
-public interface TString extends TType<String> {
+public interface TString extends TType, NdArray<String> {
 
   /**
    * Allocates a new tensor for storing a string scalar.

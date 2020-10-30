@@ -27,13 +27,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.family.TInteger;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 32-bit signed integer tensor type.
  */
 @TensorType(dataType = DataType.DT_INT32, byteSize = 4, factory = TInt32Factory.class)
-public interface TInt32 extends TNumber<Integer>, IntNdArray {
+public interface TInt32 extends TInteger, IntNdArray {
 
   /**
    * Allocates a new tensor for storing a single int value.

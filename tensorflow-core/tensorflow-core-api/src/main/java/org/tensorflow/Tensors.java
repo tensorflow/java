@@ -2,7 +2,6 @@ package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Dim;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NumDims;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
 import java.util.function.Consumer;
 import org.bytedeco.javacpp.PointerScope;
@@ -141,7 +140,7 @@ public final class Tensors {
    */
   public static <T extends TType> T of(Class<T> type, Shape shape, ByteDataBuffer rawData) {
     T t = of(type, shape, rawData.size());
-    rawData.copyTo(TensorBuffers.toBytes(t.tensorHandle().nativeHandle()), rawData.size());
+    rawData.copyTo(TensorBuffers.toBytes(t.handle().get()), rawData.size());
     return t;
   }
 
@@ -152,7 +151,7 @@ public final class Tensors {
    */
   static <T extends TType> T fromHandle(TensorHandle handle) {
     Type<T> type = TypeRegistry.find(handle.dataType());
-    Shape shape = Shape.of(shape(handle.nativeHandle()));
+    Shape shape = Shape.of(shape(handle.get()));
     return type.factory().createDense(handle, shape);
   }
 

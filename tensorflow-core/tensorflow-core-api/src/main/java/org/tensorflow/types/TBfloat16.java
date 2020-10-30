@@ -47,7 +47,7 @@ import org.tensorflow.types.family.TFloating;
  * computation compared to {@link TFloat16} when GPUs are not used.
  */
 @TensorType(dataType = DataType.DT_BFLOAT16, byteSize = 2, factory = TBfloat16Factory.class)
-public interface TBfloat16 extends TFloating<Float>, FloatNdArray {
+public interface TBfloat16 extends TFloating, FloatNdArray {
 
   /**
    * Allocates a new tensor for storing a single float value.

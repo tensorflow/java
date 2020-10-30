@@ -1,22 +1,21 @@
 package org.tensorflow.internal.types;
 
+import org.tensorflow.AbstractTypeFactory;
 import org.tensorflow.TensorHandle;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
 import org.tensorflow.types.TUint8;
-import org.tensorflow.types.TypeFactory;
 
 /**
  * Factory of {@link TUint8} tensor instances
  */
-public class TUint8Factory implements TypeFactory<TUint8> {
+public class TUint8Factory extends AbstractTypeFactory<TUint8> {
 
   @Override
   public TUint8 createDense(TensorHandle tensorHandle, Shape shape) {
-    ByteDataBuffer buffer = TensorBuffers.toBytes(tensorHandle.nativeHandle());
+    ByteDataBuffer buffer = TensorBuffers.toBytes(getNative(tensorHandle));
     return new TUint8Impl(tensorHandle, buffer, shape);
   }
 
@@ -28,7 +27,7 @@ public class TUint8Factory implements TypeFactory<TUint8> {
     }
 
     @Override
-    public TensorHandle tensorHandle() {
+    public TensorHandle handle() {
       return tensorHandle;
     }
 

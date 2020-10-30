@@ -52,7 +52,7 @@ public class OnesTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
         Ones<TUint8> instance = new Ones<>(tf);
-        Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.DTYPE);
+        Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.class);
         session.evaluate(expected, operand);
       }
   }
@@ -66,7 +66,7 @@ public class OnesTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
         Ones<TInt32> instance = new Ones<>(tf);
-        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.DTYPE);
+        Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.class);
         session.evaluate(expected, operand);
       }
   }
@@ -80,7 +80,7 @@ public class OnesTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
         Ones<TInt64> instance = new Ones<>(tf);
-        Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.DTYPE);
+        Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.class);
         session.evaluate(expected, operand);
       }
   }
@@ -94,7 +94,7 @@ public class OnesTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
         Ones<TFloat32> instance = new Ones<>(tf);
-        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
   }
@@ -109,7 +109,7 @@ public class OnesTest {
         Shape shape = Shape.of(2, 2);
 
         Ones<TFloat64> instance = new Ones<>(tf);
-        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
   }
@@ -126,7 +126,7 @@ public class OnesTest {
               Shape shape = Shape.of(2, 2);
 
               Ones<TString> instance = new Ones<>(tf);
-              instance.call(tf.constant(shape), TString.DTYPE);
+              instance.call(tf.constant(shape), TString.class);
               fail("IllegalArgumentException should have been thrown for TString");
             }
           });
@@ -141,7 +141,7 @@ public class OnesTest {
         Shape shape = Shape.of(2, 2);
 
         Ones<TBool> instance = new Ones<>(tf);
-        Operand<TBool> operand = instance.call(tf.constant(shape), TBool.DTYPE);
+        Operand<TBool> operand = instance.call(tf.constant(shape), TBool.class);
         session.evaluate(expected, operand);
       }
   }
@@ -154,8 +154,8 @@ public class OnesTest {
         Shape shape = Shape.of(2, 2);
 
         Ones<TFloat64> instance = new Ones<>(tf);
-        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
-        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
   }

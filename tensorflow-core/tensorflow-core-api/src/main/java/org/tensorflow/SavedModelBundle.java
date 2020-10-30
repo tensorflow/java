@@ -336,7 +336,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @return list of output tensors, mapped by the signature name
    * @throws IllegalArgumentException if no function can be selected by default
    */
-  public TensorMap call(Map<String, TType<?>> arguments) {
+  public TensorMap call(Map<String, TType> arguments) {
     ConcreteFunction function = null;
     if (functions.size() == 1) {
       function = functions.values().iterator().next();

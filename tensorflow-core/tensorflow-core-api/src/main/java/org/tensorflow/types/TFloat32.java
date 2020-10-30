@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TFloating;
  * IEEE-754 single-precision 32-bit float tensor type.
  */
 @TensorType(dataType = DataType.DT_FLOAT, byteSize = 4, factory = TFloat32Factory.class)
-public interface TFloat32 extends TFloating<Float>, FloatNdArray {
+public interface TFloat32 extends TFloating, FloatNdArray {
 
   /**
    * Allocates a new tensor for storing a single float value.

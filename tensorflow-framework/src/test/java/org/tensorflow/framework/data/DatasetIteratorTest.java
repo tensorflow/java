@@ -16,17 +16,17 @@
 package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.Test;
-import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.tensor.Tensor;
+import org.tensorflow.types.family.TType;
 import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.util.TensorList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,7 +39,7 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
       List<Operand<?>> tensors = Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2));
 
-      List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
+      List<Class<? extends TType>> dataTypes = Arrays.asList(TInt32.class, TInt32.class);
 
       Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
       DatasetIterator iterator = dataset.makeOneShotIterator();
@@ -53,15 +53,12 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
         int batches = 0;
         while (true) {
-          try {
-            List<Tensor<?>> outputs = session.runner().fetch(x).fetch(y).run();
-
-            try (TInt32 xBatch = outputs.get(0).expect(TInt32.DTYPE);
-                TInt32 yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
-              assertEquals(testMatrix1.get(batches), xBatch);
-              assertEquals(testMatrix2.get(batches), yBatch);
-              batches++;
-            }
+          try (TensorList outputs = session.runner().fetch(x).fetch(y).run()) {
+            TInt32 xBatch = outputs.get(0);
+            TInt32 yBatch = outputs.get(1);
+            assertEquals(testMatrix1.get(batches), xBatch);
+            assertEquals(testMatrix2.get(batches), yBatch);
+            batches++;
           } catch (TFOutOfRangeException e) {
             break;
           }
@@ -77,13 +74,13 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
     List<Operand<?>> tensors = Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2));
 
-    List<DataType<?>> dataTypes = Arrays.asList(TInt32.DTYPE, TInt32.DTYPE);
+    List<Class<? extends TType>> dataTypes = Arrays.asList(TInt32.class, TInt32.class);
 
     Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (TInt32 batch1 = outputs.get(0).asTensor(TInt32.DTYPE);
-          TInt32 batch2 = outputs.get(1).asTensor(TInt32.DTYPE); ) {
+      try (TInt32 batch1 = (TInt32)outputs.get(0).asTensor();
+          TInt32 batch2 = (TInt32)outputs.get(1).asTensor()) {
         assertEquals(testMatrix1.get(count), batch1);
         assertEquals(testMatrix2.get(count), batch2);
         count++;

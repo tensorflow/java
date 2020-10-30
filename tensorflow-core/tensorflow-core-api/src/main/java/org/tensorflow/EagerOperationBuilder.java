@@ -177,13 +177,13 @@ final class EagerOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, TType<?> value) {
-    setAttrTensor(opHandle, name, value.tensorHandle().nativeHandle());
+  public EagerOperationBuilder setAttr(String name, TType value) {
+    setAttrTensor(opHandle, name, value.handle().get());
     return this;
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, TType<?>[] values) {
+  public EagerOperationBuilder setAttr(String name, TType[] values) {
     // TODO (karllessard) could be supported by adding this attribute type in the eager C API
     throw new UnsupportedOperationException(
         "Tensor list attributes are not supported in eager mode");

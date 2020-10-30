@@ -4,42 +4,41 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import org.tensorflow.types.family.TType;
 
-public class TensorMap extends HashMap<String, TType<?>> implements AutoCloseable {
+public class TensorMap extends HashMap<String, TType> implements AutoCloseable {
 
   @Override
-  public TType<?> put(String key, TType<?> value) {
-    value.tensorHandle().nativeHandle().retainReference();
-    TType<?> t = super.put(key, value);
+  public TType put(String key, TType value) {
+    value.handle().retain();
+    TType t = super.put(key, value);
     if (t != null) {
-      t.tensorHandle().nativeHandle().releaseReference();
+      t.handle().release();
     }
     return t;
   }
 
   @Override
-  public TType<?> remove(Object key) {
-    TType<?> t = super.remove(key);
+  public TType remove(Object key) {
+    TType t = super.remove(key);
     if (t != null) {
-      t.tensorHandle().nativeHandle().releaseReference();
+      t.handle().release();
     }
     return t;
   }
 
   @Override
-  public void putAll(Map<? extends String, ? extends TType<?>> m) {
+  public void putAll(Map<? extends String, ? extends TType> m) {
     super.putAll(m);
-    for (TType<?> t : m.values()) {
-      t.tensorHandle().nativeHandle().retainReference();
+    for (TType t : m.values()) {
+      t.handle().retain();
     }
   }
 
   @Override
   public void clear() {
-    for (TType<?> t : values()) {
-      t.tensorHandle().nativeHandle().releaseReference();
+    for (TType t : values()) {
+      t.handle().release();
     }
     super.clear();
   }
@@ -53,7 +52,7 @@ public class TensorMap extends HashMap<String, TType<?>> implements AutoCloseabl
     return (T) super.get(name);
   }
 
-  public <T extends TType<?>> T single() {
+  public <T extends TType> T single() {
     if (size() != 1) {
       throw new IllegalStateException("List must contain a single tensor to use non-indexed getter");
     }

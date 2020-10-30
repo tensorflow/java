@@ -189,10 +189,10 @@ public class Adam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamSlot(v.asOutput());
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.DTYPE);
+    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
     Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne));
     graph.addInitializer(betaOnePowerInit);
-    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.DTYPE);
+    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
     Assign<TFloat32> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo));
     graph.addInitializer(betaTwoPowerInit);
   }
@@ -215,10 +215,10 @@ public class Adam extends Optimizer {
    */
   private <T extends TType> void createAdamSlot(Output<T> v) {
     Operand<T> firstMomentInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), FIRST_MOMENT, firstMomentInitializer);
     Operand<T> secondMomentInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), SECOND_MOMENT, secondMomentInitializer);
   }
 
@@ -231,12 +231,12 @@ public class Adam extends Optimizer {
         variable,
         firstMomentSlot,
         secondMomentSlot,
-        tf.dtypes.cast(betaOnePower, gradient.dataType()),
-        tf.dtypes.cast(betaTwoPower, gradient.dataType()),
-        tf.dtypes.cast(learningRateConst, gradient.dataType()),
-        tf.dtypes.cast(betaOneConst, gradient.dataType()),
-        tf.dtypes.cast(betaTwoConst, gradient.dataType()),
-        tf.dtypes.cast(epsilonConst, gradient.dataType()),
+        tf.dtypes.cast(betaOnePower, gradient.type()),
+        tf.dtypes.cast(betaTwoPower, gradient.type()),
+        tf.dtypes.cast(learningRateConst, gradient.type()),
+        tf.dtypes.cast(betaOneConst, gradient.type()),
+        tf.dtypes.cast(betaTwoConst, gradient.type()),
+        tf.dtypes.cast(epsilonConst, gradient.type()),
         gradient);
   }
 

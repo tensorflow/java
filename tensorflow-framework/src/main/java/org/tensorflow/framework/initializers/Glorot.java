@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -70,7 +71,7 @@ import org.tensorflow.types.family.TType;
  * @see VarianceScaling.Distribution
  * @see <a href="http://proceedings.mlr.press/v9/glorot10a.html">Glorot et al., 2010</a>
  */
-public class Glorot<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class Glorot<T extends TFloating> extends VarianceScaling<T> {
 
   public static final double SCALE = 1.0;
 

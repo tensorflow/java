@@ -468,18 +468,12 @@ public class TensorTest {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
       sum = tf.math.add(tf.constant(10), tf.constant(20)).asTensor();
-      sum.tensorHandle().nativeHandle(); // does not throw
+      sum.handle().get(); // does not throw
       assertEquals(30, sum.getInt());
     }
     try {
-      sum.tensorHandle().nativeHandle();
+      sum.handle().get();
       fail("Tensor native handle should have been closed by ending eager session");
-    } catch (IllegalStateException e) {
-      // as expected
-    }
-    try {
-      sum.getInt();
-      fail("Tensor data should not be accessible after tensor is closed");
     } catch (IllegalStateException e) {
       // as expected
     }
@@ -495,7 +489,7 @@ public class TensorTest {
     // close() on both Tensors.
     final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
     try (TFloat32 src = TFloat32.tensorOf(matrix)) {
-      TFloat32 cpy = Tensors.fromHandle(src.tensorHandle());
+      TFloat32 cpy = Tensors.fromHandle(src.handle());
       assertEquals(src.type(), cpy.type());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
       assertEquals(src.shape(), cpy.shape());

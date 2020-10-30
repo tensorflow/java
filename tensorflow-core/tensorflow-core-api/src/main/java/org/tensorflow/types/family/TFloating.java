@@ -16,4 +16,4 @@ package org.tensorflow.types.family;
  * exp.call(tf.constant(tensor2));  // Compilation failure
  * }</pre>
  */
-public interface TFloating<T> extends TNumber<T> {}
+public interface TFloating extends TNumber {}

@@ -196,7 +196,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, TType<?> value);
+   OperationBuilder setAttr(String name, TType value);
 
   /**
    * Set the tensor values of an attribute of the operation being built.
@@ -205,7 +205,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, TType<?>[] value);
+   OperationBuilder setAttr(String name, TType[] value);
 
   /**
    * Set the shape value of an attribute of the operation being built.

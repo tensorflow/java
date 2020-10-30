@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TFloating;
  * IEEE-754 double-precision 64-bit float tensor type.
  */
 @TensorType(dataType = DataType.DT_DOUBLE, byteSize = 8, factory = TFloat64Factory.class)
-public interface TFloat64 extends TFloating<Double>, DoubleNdArray {
+public interface TFloat64 extends TFloating, DoubleNdArray {
 
   /**
    * Allocates a new tensor for storing a single double value.

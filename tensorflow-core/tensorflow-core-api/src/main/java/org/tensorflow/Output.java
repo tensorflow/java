@@ -39,11 +39,13 @@ public final class Output<T extends TType> implements Operand<T> {
   }
 
   /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
+  @Override
   public Shape shape() {
     return operation.shape(index);
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
+  @Override
   public Class<T> type() {
     return (Class) TypeRegistry.find(operation.dtype(index)).typeClass();
   }

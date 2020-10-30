@@ -14,10 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -56,10 +57,10 @@ public class Ones<T extends TType> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!(dtype.isNumeric() || dtype.isBoolean())) {
-      throw new IllegalArgumentException("DataType must be numeric or boolean: " + dtype.name());
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+    if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
+      throw new IllegalArgumentException("DataType must be numeric or boolean: " + type.getSimpleName());
     }
-    return tf.fill(dims, tf.dtypes.cast(tf.constant(1.0), dtype));
+    return tf.fill(dims, tf.dtypes.cast(tf.constant(1.0), type));
   }
 }

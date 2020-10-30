@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
@@ -46,7 +45,7 @@ public class Zeros<T extends TType> extends BaseInitializer<T> {
   }
 
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
+  public Operand<T> call(Operand<TInt64> dims, Class<T> dtype) {
     return tf.zeros(dims, dtype);
   }
 }

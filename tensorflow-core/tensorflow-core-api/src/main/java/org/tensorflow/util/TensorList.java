@@ -34,14 +34,14 @@ public class TensorList implements AutoCloseable {
     return tensors.add(tensor);
   }
 
-  public <T extends TType<?>> T single() {
+  public <T extends TType> T single() {
     if (tensors.size() != 1) {
       throw new IllegalStateException("List must contain a single tensor to use non-indexed getter");
     }
     return get(0);
   }
 
-  public <T extends TType<?>> T get(int index) {
+  public <T extends TType> T get(int index) {
     return (T)tensors.get(index);
   }
 
@@ -51,8 +51,8 @@ public class TensorList implements AutoCloseable {
 
   @Override
   public void close() {
-    for (TType<?> t : tensors) {
-      t.tensorHandle().nativeHandle().releaseReference();
+    for (TType t : tensors) {
+      t.handle().release();
     }
   }
 

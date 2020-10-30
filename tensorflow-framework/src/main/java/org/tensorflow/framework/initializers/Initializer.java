@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -30,8 +29,8 @@ public interface Initializer<T extends TType> {
    * Generates the operation used to perform the initialization.
    *
    * @param dims the shape dimensions
-   * @param dtype the data type
+   * @param type the type of tensor
    * @return An operand for the initialization.
    */
-  Operand<T> call(Operand<TInt64> dims, DataType<T> dtype);
+  Operand<T> call(Operand<TInt64> dims, Class<T> type);
 }

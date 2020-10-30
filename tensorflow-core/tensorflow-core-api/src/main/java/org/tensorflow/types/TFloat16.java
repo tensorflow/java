@@ -44,7 +44,7 @@ import org.tensorflow.types.family.TFloating;
  * TBfloat16} tensor type might be a better option.
  */
 @TensorType(dataType = DataType.DT_HALF, byteSize = 2, factory = TFloat16Factory.class)
-public interface TFloat16 extends TFloating<Float>, FloatNdArray {
+public interface TFloat16 extends TFloating, FloatNdArray {
 
   /**
    * Allocates a new tensor for storing a single float value.

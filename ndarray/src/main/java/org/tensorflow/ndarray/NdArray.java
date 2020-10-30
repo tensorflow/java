@@ -55,29 +55,7 @@ import org.tensorflow.ndarray.index.Index;
  *
  * @param <T> the type of values to be mapped
  */
-public interface NdArray<T> {
-
-  /**
-   * @return the shape of this N-dimensional array
-   */
-  Shape shape();
-
-  /**
-   * @return the rank of this N-dimensional array
-   */
-  default int rank() {
-    return shape().numDimensions();
-  }
-
-  /**
-   * Computes and returns the total size of this N-dimensional array, in number of values.
-   *
-   * <p>For example, given a 3x3x2 matrix, the return value will be 18.
-   * @return total size of this nd array
-   */
-  default long size() {
-    return shape().size();
-  }
+public interface NdArray<T> extends NdArrayBase {
 
   /**
    * Returns a sequence of all elements at a given dimension.

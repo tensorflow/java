@@ -1,21 +1,21 @@
 package org.tensorflow.internal.types;
 
+import org.tensorflow.AbstractTypeFactory;
 import org.tensorflow.TensorHandle;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.TypeFactory;
 
 /**
  * Factory of {@link TInt32} tensor instances
  */
-public class TInt32Factory implements TypeFactory<TInt32> {
+public class TInt32Factory extends AbstractTypeFactory<TInt32> {
 
   @Override
   public TInt32 createDense(TensorHandle tensorHandle, Shape shape) {
-    IntDataBuffer buffer = TensorBuffers.toInts(tensorHandle.nativeHandle());
+    IntDataBuffer buffer = TensorBuffers.toInts(getNative(tensorHandle));
     return new TInt32Impl(tensorHandle, buffer, shape);
   }
 
@@ -27,7 +27,7 @@ public class TInt32Factory implements TypeFactory<TInt32> {
     }
 
     @Override
-    public TensorHandle tensorHandle() {
+    public TensorHandle handle() {
       return tensorHandle;
     }
 

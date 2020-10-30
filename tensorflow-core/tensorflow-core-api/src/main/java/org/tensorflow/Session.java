@@ -162,7 +162,7 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, TType<?> t) {
+    public Runner feed(String operation, TType t) {
       return feed(parseOutput(operation), t);
     }
 
@@ -177,11 +177,11 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, int index, TType<?> t) {
+    public Runner feed(String operation, int index, TType t) {
       Operation op = operationByName(operation);
       if (op != null) {
         inputs.add(op.output(index));
-        inputTensors.add(t.tensorHandle());
+        inputTensors.add(t.handle());
       }
       return this;
     }
@@ -194,9 +194,9 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(Operand<?> operand, TType<?> t) {
+    public Runner feed(Operand<?> operand, TType t) {
       inputs.add(operand.asOutput());
-      inputTensors.add(t.tensorHandle());
+      inputTensors.add(t.handle());
       return this;
     }
 
@@ -359,7 +359,7 @@ public final class Session implements AutoCloseable {
       // validity of the Graph and graphRef ensures that.
       int idx = 0;
       for (TensorHandle t : inputTensors) {
-        inputTensorHandles[idx++] = t.nativeHandle();
+        inputTensorHandles[idx++] = t.get();
       }
       idx = 0;
       for (Output<?> o : inputs) {

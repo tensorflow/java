@@ -34,7 +34,7 @@ public class TFRecordDataset extends Dataset {
     super(
         tf,
         tf.data.tfRecordDataset(filenames, compressionType, bufferSize),
-        Collections.singletonList(TString.DTYPE),
+        Collections.singletonList(TString.class),
         Collections.singletonList(Shape.scalar()));
   }
 }

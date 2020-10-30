@@ -86,14 +86,14 @@ class TypeResolver {
     if (next_generic_letter_ > 'Z') {
       next_generic_letter_ = 'A';
     }
-    Type generic_type = Type::Generic(string(1, generic_letter));
+    return Type::Generic(string(1, generic_letter));
+  }
+  Type TypeFamilyOf(const OpDef_AttrDef& attr_def) {
     // TODO(karllessard) support more type families
     if (IsRealNumbers(attr_def.allowed_values())) {
-      generic_type.add_supertype(Type::Interface("TNumber", "org.tensorflow.types.family"));
-    } else {
-      generic_type.add_supertype(Type::Interface("TType", "org.tensorflow.types.family"));
+      return Type::Interface("TNumber", "org.tensorflow.types.family");
     }
-    return generic_type;
+    return Type::Interface("TType", "org.tensorflow.types.family");
   }
 };
 
@@ -158,11 +158,11 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
     types = MakeTypePair(Type::Class("Shape", "org.tensorflow.ndarray"));
 
   } else if (attr_type == "tensor") {
-    types = MakeTypePair(Type::Class("TType", "org.tensorflow.types.family")
-        .add_parameter(Type::Wildcard()));
+    types = MakeTypePair(Type::Class("TType", "org.tensorflow.types.family"));
 
   } else if (attr_type == "type") {
     Type type = *iterable_out ? Type::Wildcard() : NextGeneric(attr_def);
+    type.add_supertype(TypeFamilyOf(attr_def));
     types = MakeTypePair(type, Type::Class("Class"));
 
   } else {

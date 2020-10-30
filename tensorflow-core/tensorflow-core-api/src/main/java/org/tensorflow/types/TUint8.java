@@ -28,13 +28,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.family.TInteger;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 8-bit unsigned integer tensor type.
  */
 @TensorType(dataType = DataType.DT_UINT8, byteSize = 1, factory = TUint8Factory.class)
-public interface TUint8 extends TNumber<Byte>, ByteNdArray {
+public interface TUint8 extends TInteger, ByteNdArray {
 
   /**
    * Allocates a new tensor for storing a single byte value.

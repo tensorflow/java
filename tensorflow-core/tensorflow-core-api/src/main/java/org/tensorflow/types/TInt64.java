@@ -28,13 +28,14 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.family.TInteger;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * 64-bit signed integer tensor type.
  */
 @TensorType(dataType = DataType.DT_INT64, byteSize = 8, factory = TInt64Factory.class)
-public interface TInt64 extends TNumber<Long>, LongNdArray {
+public interface TInt64 extends TInteger, LongNdArray {
 
   /**
    * Allocates a new tensor for storing a single long value.

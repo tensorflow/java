@@ -15,44 +15,67 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_Dim;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorElementCount;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 
 public final class TensorHandle implements Tensor {
 
   @Override
+  public TensorHandle handle() {
+    return this;
+  }
+
+  public void retain() {
+    requireHandle(nativeHandle).retainReference();
+  }
+
+  public void release() {
+    requireHandle(nativeHandle).releaseReference();
+  }
+
+  @Override
+  public Shape shape() {
+    return Shape.of(shape(nativeHandle));
+  }
+
+  @Override
+  public int rank() {
+    return numDims(nativeHandle);
+  }
+
+  @Override
+  public long size() {
+    return numElements(nativeHandle);
+  }
+
+  @Override
   public void close() {
-    nativeHandle().close();
+    get().close();
     this.nativeHandle = null;
   }
 
   @Override
   public long numBytes() {
-    return TF_TensorByteSize(nativeHandle());
+    return TF_TensorByteSize(get());
   }
 
   @Override
   public ByteDataBuffer rawData() {
-    return TensorBuffers.toBytes(nativeHandle(), true);
+    return TensorBuffers.toBytes(get(), true);
   }
 
   @Override
   public DataType dataType() {
-    return DataType.forNumber(dtype(nativeHandle()));
-  }
-
-  /**
-   * FIXME public??
-   * @return native handle to this tensor
-   * @throws IllegalStateException if tensor has been closed
-   */
-  public TF_Tensor nativeHandle() {
-    return requireHandle(nativeHandle);
+    return DataType.forNumber(dtype(get()));
   }
 
   static TensorHandle of(TF_Tensor nativeHandle) {
@@ -60,8 +83,12 @@ public final class TensorHandle implements Tensor {
   }
 
   void attachTo(EagerSession session) {
-    session.attach(nativeHandle());
+    session.attach(get());
     nativeHandle.releaseReference();
+  }
+
+  TF_Tensor get() {
+    return requireHandle(nativeHandle);
   }
 
   private TensorHandle(TF_Tensor nativeHandle) {
@@ -79,6 +106,26 @@ public final class TensorHandle implements Tensor {
   private static int dtype(TF_Tensor handle) {
     requireHandle(handle);
     return TF_TensorType(handle);
+  }
+
+  private static int numDims(TF_Tensor handle) {
+    requireHandle(handle);
+    return TF_NumDims(handle);
+  }
+
+  private static long numElements(TF_Tensor handle) {
+    requireHandle(handle);
+    return TF_TensorElementCount(handle);
+  }
+
+  private static long[] shape(TF_Tensor handle) {
+    requireHandle(handle);
+    int numDims = TF_NumDims(handle);
+    long[] dims = new long[numDims];
+    for (int i = 0; i < numDims; ++i) {
+      dims[i] = TF_Dim(handle, i);
+    }
+    return dims;
   }
 
   private TF_Tensor nativeHandle;

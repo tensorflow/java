@@ -1,21 +1,21 @@
 package org.tensorflow.internal.types;
 
+import org.tensorflow.AbstractTypeFactory;
 import org.tensorflow.TensorHandle;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.impl.dense.BooleanDenseNdArray;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TypeFactory;
 
 /**
  * Factory of {@link TBool} tensor instances
  */
-public class TBoolFactory implements TypeFactory<TBool> {
+public class TBoolFactory extends AbstractTypeFactory<TBool> {
 
   @Override
   public TBool createDense(TensorHandle tensorHandle, Shape shape) {
-    BooleanDataBuffer buffer = TensorBuffers.toBooleans(tensorHandle.nativeHandle());
+    BooleanDataBuffer buffer = TensorBuffers.toBooleans(getNative(tensorHandle));
     return new TBoolImpl(tensorHandle, buffer, shape);
   }
 
@@ -27,7 +27,7 @@ public class TBoolFactory implements TypeFactory<TBool> {
     }
 
     @Override
-    public TensorHandle tensorHandle() {
+    public TensorHandle handle() {
       return tensorHandle;
     }
 

@@ -1,21 +1,21 @@
 package org.tensorflow.internal.types;
 
+import org.tensorflow.AbstractTypeFactory;
 import org.tensorflow.TensorHandle;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TypeFactory;
 
 /**
  * Factory of {@link TFloat64} tensor instances
  */
-public class TFloat64Factory implements TypeFactory<TFloat64> {
+public class TFloat64Factory extends AbstractTypeFactory<TFloat64> {
 
   @Override
   public TFloat64 createDense(TensorHandle tensorHandle, Shape shape) {
-    DoubleDataBuffer buffer = TensorBuffers.toDoubles(tensorHandle.nativeHandle());
+    DoubleDataBuffer buffer = TensorBuffers.toDoubles(getNative(tensorHandle));
     return new TFloat64Impl(tensorHandle, buffer, shape);
   }
 
@@ -27,7 +27,7 @@ public class TFloat64Factory implements TypeFactory<TFloat64> {
     }
 
     @Override
-    public TensorHandle tensorHandle() {
+    public TensorHandle handle() {
       return tensorHandle;
     }
 

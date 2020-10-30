@@ -39,22 +39,23 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
 
     assertEquals(3, tensor.rank());
     assertEquals(12, tensor.size());
+    NdArray<U> data = (NdArray<U>)tensor;
 
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
 
       // Initialize tensor memory with zeros and take a snapshot
-      tensor.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(0)));
+      data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(0)));
       Constant<T> x = tf.capture(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
-      tensor.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(1)));
+      data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(1)));
       Constant<T> y = tf.capture(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
-      sub.asTensor().scalars().forEach(scalar ->
-          assertEquals(valueOf(-1), ((NdArray<U>)scalar).getObject())
+      ((NdArray<U>)sub.asTensor()).scalars().forEach(scalar ->
+          assertEquals(valueOf(-1), scalar.getObject())
       );
     }
   }
@@ -69,20 +70,21 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
 
     // Creates a 2x2 matrix
     try (T tensor = allocateTensor(Shape.of(2, 2))) {
+      NdArray<U> data = (NdArray<U>)tensor;
 
       // Copy first 2 values of the vector to the first row of the matrix
-      tensor.set(heapData.slice(Indices.range(0, 2)), 0);
+      data.set(heapData.slice(Indices.range(0, 2)), 0);
 
       // Copy values at an odd position in the vector as the second row of the matrix
-      tensor.set(heapData.slice(Indices.odd()), 1);
+      data.set(heapData.slice(Indices.odd()), 1);
 
-      assertEquals(valueOf(0), tensor.getObject(0, 0));
-      assertEquals(valueOf(1), tensor.getObject(0, 1));
-      assertEquals(valueOf(1), tensor.getObject(1, 0));
-      assertEquals(valueOf(3), tensor.getObject(1, 1));
+      assertEquals(valueOf(0), data.getObject(0, 0));
+      assertEquals(valueOf(1), data.getObject(0, 1));
+      assertEquals(valueOf(1), data.getObject(1, 0));
+      assertEquals(valueOf(3), data.getObject(1, 1));
 
       // Read rows of the tensor in reverse order
-      NdArray<U> flippedData = tensor.slice(Indices.flip(), Indices.flip());
+      NdArray<U> flippedData = data.slice(Indices.flip(), Indices.flip());
 
       assertEquals(valueOf(3), flippedData.getObject(0, 0));
       assertEquals(valueOf(1), flippedData.getObject(0, 1));
@@ -93,7 +95,7 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
         Ops tf = Ops.create(session);
 
         Add<T> add = tf.math.add(tf.capture(tensor), tf.capture(tensor));
-        T result = add.asTensor();
+        NdArray<U> result = (NdArray<U>)add.asTensor();
 
         assertEquals(valueOf(0), result.getObject(0, 0));
         assertEquals(valueOf(2), result.getObject(0, 1));

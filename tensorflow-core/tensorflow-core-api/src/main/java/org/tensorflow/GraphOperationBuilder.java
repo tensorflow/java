@@ -249,10 +249,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, TType<?> value) {
+  public GraphOperationBuilder setAttr(String name, TType value) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrTensor(unsafeNativeHandle, name, value.tensorHandle().nativeHandle());
+      setAttrTensor(unsafeNativeHandle, name, value.handle().get());
     } finally {
       r.close();
     }
@@ -260,11 +260,11 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public GraphOperationBuilder setAttr(String name, TType<?>[] value) {
+  public GraphOperationBuilder setAttr(String name, TType[] value) {
     TF_Tensor[] handles = new TF_Tensor[value.length];
     int idx = 0;
-    for (TType<?> t : value) {
-      handles[idx++] = t.tensorHandle().nativeHandle();
+    for (TType t : value) {
+      handles[idx++] = t.handle().get();
     }
     Graph.Reference r = graph.ref();
     try {

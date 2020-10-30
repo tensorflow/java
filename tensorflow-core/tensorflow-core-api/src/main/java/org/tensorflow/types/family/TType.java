@@ -2,33 +2,30 @@ package org.tensorflow.types.family;
 
 import org.tensorflow.Tensor;
 import org.tensorflow.TensorHandle;
-import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 
-public interface TType<T> extends NdArray<T>, Tensor {
+public interface TType extends Tensor {
 
   Class<? extends TType> type();
 
-  TensorHandle tensorHandle();
-
   @Override
   default void close() {
-    tensorHandle().close();
+    handle().close();
   }
 
   @Override
   default ByteDataBuffer rawData() {
-    return tensorHandle().rawData();
+    return handle().rawData();
   }
 
   @Override
   default DataType dataType() {
-    return tensorHandle().dataType();
+    return handle().dataType();
   }
 
   @Override
   default long numBytes() {
-    return tensorHandle().numBytes();
+    return handle().numBytes();
   }
 }

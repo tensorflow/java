@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
@@ -23,6 +22,7 @@ import org.tensorflow.types.TBool;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.tensorflow.types.family.TType;
 
 /**
  * An optional represents the result of a dataset getNext operation that may fail, when the end of
@@ -36,11 +36,11 @@ public class DatasetOptional {
   }
 
   private Operand<?> optionalVariant;
-  private List<DataType<?>> outputTypes;
+  private List<Class<? extends TType>> outputTypes;
   private List<Shape> outputShapes;
 
   public DatasetOptional(
-      Ops tf, Operand<?> optionalVariant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      Ops tf, Operand<?> optionalVariant, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     this.tf = tf;
     this.optionalVariant = optionalVariant;
     this.outputTypes = outputTypes;
@@ -75,7 +75,7 @@ public class DatasetOptional {
   public static DatasetOptional fromComponents(
       Ops tf,
       List<Operand<?>> components,
-      List<DataType<?>> outputTypes,
+      List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     Operand<?> optionalVariant = tf.data.optionalFromValue(components);
     return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);

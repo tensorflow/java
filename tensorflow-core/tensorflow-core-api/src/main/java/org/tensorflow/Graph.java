@@ -54,6 +54,7 @@ import org.tensorflow.op.train.Save;
 import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 
 /**
@@ -766,8 +767,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     Ops tf = Ops.create(graph).withSubScope("save");
 
     List<String> varNames = new ArrayList<>();
-    List<Operand<?>> varOutputs = new ArrayList<>();
-    List<Class<?>> varTypes = new ArrayList<>();
+    List<Operand<? extends TType>> varOutputs = new ArrayList<>();
+    List<Class<? extends TType>> varTypes = new ArrayList<>();
 
     for (Iterator<Operation> iter = graph.operations(); iter.hasNext();) {
       Operation op = iter.next();
@@ -798,7 +799,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     );
     List<Op> restoreOps = new ArrayList<>(varOutputs.size());
     for (int i = 0; i < varOutputs.size(); ++i) {
-      restoreOps.add(tf.assign(varOutputs.get(i), (Operand) restoreVariables.tensors().get(i)));
+      restoreOps.add(tf.assign(varOutputs.get(i), (Operand)restoreVariables.tensors().get(i)));
     }
     NoOp restoreAll = tf.withControlDependencies(restoreOps).noOp();
 

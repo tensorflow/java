@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -76,7 +77,7 @@ import org.tensorflow.types.family.TType;
  *     al., 1998</a>
  * @see VarianceScaling.Distribution
  */
-public class LeCun<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class LeCun<T extends TFloating> extends VarianceScaling<T> {
 
   /**
    * Creates a LeCunNormal Initializer

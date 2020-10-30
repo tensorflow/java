@@ -3,6 +3,7 @@ package org.tensorflow.internal.types;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
+import org.tensorflow.AbstractTypeFactory;
 import org.tensorflow.TensorHandle;
 import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -14,16 +15,15 @@ import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.TypeFactory;
 
 /**
  * Factory of {@link TString} tensor instances
  */
-public class TStringFactory implements TypeFactory<TString> {
+public class TStringFactory extends AbstractTypeFactory<TString> {
 
   @Override
   public TString createDense(TensorHandle tensorHandle, Shape shape) {
-    ByteSequenceTensorBuffer buffer = TensorBuffers.toStrings(tensorHandle.nativeHandle(), shape.size());
+    ByteSequenceTensorBuffer buffer = TensorBuffers.toStrings(getNative(tensorHandle), shape.size());
     return new TStringImpl(tensorHandle, buffer, shape);
   }
 
@@ -43,7 +43,7 @@ public class TStringFactory implements TypeFactory<TString> {
     }
 
     @Override
-    public TensorHandle tensorHandle() {
+    public TensorHandle handle() {
       return tensorHandle;
     }
 

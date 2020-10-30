@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -66,7 +67,7 @@ import org.tensorflow.types.family.TType;
  *     href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html">He
  *     et al., 2015</a>
  */
-public class He<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class He<T extends TFloating> extends VarianceScaling<T> {
 
   public static final double SCALE = 2.0;
 

@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  * BOOL} layout, which may impact I/O performances.
  */
 @TensorType(dataType = DataType.DT_BOOL, byteSize = 1, factory = TBoolFactory.class)
-public interface TBool extends TType<Boolean>, BooleanNdArray {
+public interface TBool extends TType, BooleanNdArray {
 
   /**
    * Allocates a new tensor for storing a single boolean value.

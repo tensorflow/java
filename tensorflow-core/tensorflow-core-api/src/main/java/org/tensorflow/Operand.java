@@ -15,8 +15,10 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -41,6 +43,16 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 public interface Operand<T extends TType> extends Op {
+
+  /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
+  default Shape shape() {
+    return asOutput().shape();
+  }
+
+  /** Returns the DataType of the tensor referred to by this Output. */
+  default Class<T> type() {
+    return asOutput().type();
+  }
 
   /**
    * Returns the symbolic handle of the tensor.
@@ -80,5 +92,13 @@ public interface Operand<T extends TType> extends Op {
    */
   default T asTensor() {
     return asOutput().tensor();
+  }
+
+  default <U extends TType> Operand<U> expect(Class<U> type) {
+    if (asOutput().type() != type) {
+      throw new IllegalArgumentException(
+          "Cannot cast from tensor of " + asOutput().type().getSimpleName() + " to tensor of " + type.getSimpleName());
+    }
+    return (Operand<U>)this;
   }
 }

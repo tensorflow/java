@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.ndarray.NdArrayBase;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 
@@ -33,7 +34,12 @@ import org.tensorflow.proto.framework.DataType;
  * }
  * }</pre>
  */
-public interface Tensor extends AutoCloseable {
+public interface Tensor extends NdArrayBase, AutoCloseable {
+
+  /**
+   * Return the handle to the native tensor
+   */
+  TensorHandle handle();
 
   /**
    * Release resources associated with the Tensor.

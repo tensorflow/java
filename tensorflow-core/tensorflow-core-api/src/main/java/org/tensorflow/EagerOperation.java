@@ -124,7 +124,7 @@ class EagerOperation extends AbstractOperation {
     // instead.
     TensorHandle tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      session.detach(tensor.nativeHandle());
+      session.detach(tensor.get());
       tensor = outputTensors.get(outputIndex);
     }
     return tensor;

@@ -162,14 +162,14 @@ public class ConcreteFunction implements AutoCloseable {
    * @return output tensors resulting from the execution of the function,
    *         mapped by their signature name
    */
-  public TensorMap call(Map<String, TType<?>> arguments)
+  public TensorMap call(Map<String, TType> arguments)
       throws IllegalArgumentException {
 
     final SignatureDef signatureDef = signature.asSignatureDef();
     final Session.Runner runner = session.runner();
 
     signatureDef.getInputsMap().forEach((argName, t) -> {
-      TType<?> tensor = arguments.get(argName);
+      TType tensor = arguments.get(argName);
       if (tensor == null) {
         throw new IllegalArgumentException(String.format("Missing argument [%s]", argName));
       }
@@ -192,7 +192,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @throws IllegalArgumentException if there are multiple input or output parameters defined
    *                                  in the function
    */
-  public <T extends TType> T call(TType<?> tensor) throws IllegalArgumentException {
+  public <T extends TType> T call(TType tensor) throws IllegalArgumentException {
     final SignatureDef signatureDef = signature.asSignatureDef();
 
     if (signatureDef.getInputsCount() != 1) {
