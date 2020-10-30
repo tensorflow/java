@@ -105,7 +105,8 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
     int length = 0;
     do {
       b = data.getByte(offset++);
-      length |= (b & 0x7F) << pos++;
+      length |= (b & 0x7F) << pos;
+      pos += 7;
     } while ((b & 0x80) != 0);
 
     // Read string of the given length
