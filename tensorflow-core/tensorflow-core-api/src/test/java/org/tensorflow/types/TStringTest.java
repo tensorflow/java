@@ -41,7 +41,19 @@ public class TStringTest {
     assertEquals("Pretty vacant", data.getObject());
   }
 
-  @Test
+    @Test
+    public void createrScalarLongerThan127() {
+        Tensor<TString> tensor = TString.scalarOf("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
+        assertNotNull(tensor);
+
+        TString data = tensor.data();
+        assertNotNull(data);
+        assertEquals(Shape.scalar(), data.shape());
+        assertEquals("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !", data.getObject());
+    }
+
+
+    @Test
   public void createVector() {
     Tensor<TString> tensor = TString.vectorOf("Pretty", "vacant");
     assertNotNull(tensor);
