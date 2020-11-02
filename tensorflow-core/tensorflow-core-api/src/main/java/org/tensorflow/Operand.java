@@ -54,20 +54,6 @@ public interface Operand<T extends TType> extends Op {
     return asOutput().type();
   }
 
-  /**
-   * Returns the symbolic handle of the tensor.
-   *
-   * <p>Inputs to TensorFlow operations are outputs of another TensorFlow operation. This method is
-   * used to obtain a symbolic handle that represents the computation of the input.
-   *
-   * <p>If a valid non-null value is provided as the {@code scope} of this operand, the implementor
-   * can program additional computations before returning its output. This might be required if,
-   * for instance, the implementor has not yet been added as a node to the graph.</p>
-   *
-   * @param scope if non-null, scope that can be used by the operand to produce a new output
-   * @see OperationBuilder#addInput(Output)
-   */
-  Output<T> asOutput(Scope scope);
 
   /**
    * Returns the symbolic handle of the tensor.
@@ -77,9 +63,7 @@ public interface Operand<T extends TType> extends Op {
    *
    * @see OperationBuilder#addInput(Output)
    */
-  default Output<T> asOutput() {
-    return asOutput(null);
-  }
+  Output<T> asOutput();
 
   /**
    * Returns this operand as a tensor.

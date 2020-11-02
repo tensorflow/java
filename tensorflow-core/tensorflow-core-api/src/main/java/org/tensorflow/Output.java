@@ -19,6 +19,7 @@ import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.Type;
 import org.tensorflow.types.TypeRegistry;
 import org.tensorflow.types.family.TType;
 
@@ -47,7 +48,7 @@ public final class Output<T extends TType> implements Operand<T> {
   /** Returns the DataType of the tensor referred to by this Output. */
   @Override
   public Class<T> type() {
-    return (Class) TypeRegistry.find(operation.dtype(index)).typeClass();
+    return ((Type<T>)TypeRegistry.find(operation.dtype(index))).typeClass();
   }
 
   /**
@@ -60,7 +61,7 @@ public final class Output<T extends TType> implements Operand<T> {
    */
   @SuppressWarnings("unchecked")
   public <U extends TType> Output<U> expect(Class<U> tensorType) {
-    if (tensorType == type()) {
+    if (tensorType != type()) {
       throw new IllegalArgumentException(
           "Cannot cast from output of " + type().getSimpleName() + " to output of type " + tensorType.getSimpleName());
     }
@@ -93,7 +94,7 @@ public final class Output<T extends TType> implements Operand<T> {
   }
 
   @Override
-  public Output<T> asOutput(Scope scope) {
+  public Output<T> asOutput() {
     return this;
   }
 

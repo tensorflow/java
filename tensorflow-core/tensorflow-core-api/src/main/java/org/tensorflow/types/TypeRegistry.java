@@ -36,11 +36,11 @@ public final class TypeRegistry {
    * @throws IllegalArgumentException if the code matches no registered data type
    */
   public static <T extends TType> Type<T> find(DataType dataType) {
-    Type entry = TYPES_BY_CODE.get(dataType.getNumber());
+    Type<?> entry = TYPES_BY_CODE.get(dataType.getNumber());
     if (entry == null) {
       throw new IllegalArgumentException("No type has been registered for datatype " + dataType);
     }
-    return entry;
+    return (Type<T>)entry;
   }
 
   /**
@@ -51,15 +51,15 @@ public final class TypeRegistry {
    * @throws IllegalArgumentException if the code matches no registered data type
    */
   public static <T extends TType> Type<T> find(Class<T> typeClass) {
-    Type entry = TYPES_BY_CLASS.get(typeClass);
+    Type<?> entry = TYPES_BY_CLASS.get(typeClass);
     if (entry == null) {
       throw new IllegalArgumentException("Class \"" + typeClass.getName() + "\" is not a valid datatype class");
     }
-    return entry;
+    return (Type<T>)entry;
   }
 
-  private static final Map<Integer, Type> TYPES_BY_CODE = new HashMap<>();
-  private static final Map<Class<? extends TType>, Type> TYPES_BY_CLASS = new HashMap<>();
+  private static final Map<Integer, Type<?>> TYPES_BY_CODE = new HashMap<>();
+  private static final Map<Class<? extends TType>, Type<?>> TYPES_BY_CLASS = new HashMap<>();
 
   private static <T extends TType> void register(Class<T> typeClass) {
     TensorType typeAnnot = typeClass.getDeclaredAnnotation(TensorType.class);

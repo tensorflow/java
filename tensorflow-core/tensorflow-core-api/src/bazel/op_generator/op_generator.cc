@@ -237,12 +237,12 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
   writer->EndLine();
   for (const ArgumentSpec& input : op.inputs()) {
     if (input.iterable()) {
-      writer->Append("opBuilder.addInputList(Operands.asOutputs(scope, " +
+      writer->Append("opBuilder.addInputList(Operands.asOutputs(" +
                      input.var().name() + "));");
       writer->EndLine();
     } else {
       writer->Append("opBuilder.addInput(" + input.var().name() +
-                     ".asOutput(scope));");
+                     ".asOutput());");
       writer->EndLine();
     }
   }
@@ -350,7 +350,6 @@ void RenderInterfaceImpl(const OpSpec& op, RenderMode mode,
     Type return_type = Type::Class("Output", "org.tensorflow")
         .add_parameter(cast2obj ? Type::Class("TType", "org.tensorflow.types.family") : output.type());
     Method as_output = Method::Create("asOutput", return_type)
-        .add_argument(Variable::Create("scope", Type::Class("Scope", "org.tensorflow.op")))
         .add_annotation(Annotation::Create("Override"));
     if (cast2obj) {
       as_output.add_annotation(

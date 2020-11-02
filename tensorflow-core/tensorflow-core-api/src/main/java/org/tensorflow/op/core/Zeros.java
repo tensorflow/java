@@ -67,7 +67,7 @@ public final class Zeros<T extends TType> implements Op, Operand<T> {
   }
 
   @Override
-  public Output<T> asOutput(Scope scope) {
+  public Output<T> asOutput() {
     return fill.asOutput();
   }
   

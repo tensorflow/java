@@ -96,14 +96,14 @@ public final class Gradients implements Iterable<Operand<?>> {
     if (options != null) {
       for (Options opts : options) {
         if (opts.dx != null) {
-          dx = Operands.asOutputs(scope, opts.dx);
+          dx = Operands.asOutputs(opts.dx);
         }
       }
     }
     Output<?>[] dy = graph.addGradients(
         scope.makeOpName("Gradients"),
-        Operands.asOutputs(scope, y),
-        Operands.asOutputs(scope, x), dx
+        Operands.asOutputs(y),
+        Operands.asOutputs(x), dx
     );
     return new Gradients(Arrays.asList(dy));
   }

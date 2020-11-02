@@ -1262,7 +1262,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  @Endpoint(name = "capture")
+  @Endpoint
   public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
     return new Constant<>(
         scope
@@ -1274,7 +1274,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   }
 
   @Override
-  public Output<T> asOutput(Scope scope) {
+  public Output<T> asOutput() {
     return output;
   }
 
