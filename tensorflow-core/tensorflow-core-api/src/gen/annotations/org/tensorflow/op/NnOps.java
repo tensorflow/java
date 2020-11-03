@@ -638,8 +638,8 @@ public final class NnOps {
    * @return a new instance of CudnnRnnParamsSize
    */
   public <U extends TNumber, T extends TNumber> CudnnRnnParamsSize<U> cudnnRnnParamsSize(
-      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, DataType<T> T,
-      DataType<U> S, CudnnRnnParamsSize.Options... options) {
+      Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Class<T> T,
+      Class<U> S, CudnnRnnParamsSize.Options... options) {
     return CudnnRnnParamsSize.create(scope, numLayers, numUnits, inputSize, T, S, options);
   }
 
@@ -1497,7 +1497,7 @@ public final class NnOps {
    * @return a new instance of MaxPoolWithArgmax
    */
   public <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> maxPoolWithArgmax(
-      Operand<T> input, List<Long> ksize, List<Long> strides, DataType<U> Targmax, String padding,
+      Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding,
       MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, Targmax, padding, options);
   }
@@ -1584,7 +1584,7 @@ public final class NnOps {
       Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m,
       Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin,
       Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax,
-      Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, DataType<U> outType,
+      Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, Class<U> outType,
       Float varianceEpsilon, Boolean scaleAfterNormalization) {
     return QuantizedBatchNormWithGlobalNormalization.create(scope, t, tMin, tMax, m, mMin, mMax, v, vMin, vMax, beta, betaMin, betaMax, gamma, gammaMin, gammaMax, outType, varianceEpsilon, scaleAfterNormalization);
   }
@@ -1606,7 +1606,7 @@ public final class NnOps {
    */
   public <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> quantizedBiasAdd(
       Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
-      Operand<TFloat32> minBias, Operand<TFloat32> maxBias, DataType<V> outType) {
+      Operand<TFloat32> minBias, Operand<TFloat32> maxBias, Class<V> outType) {
     return QuantizedBiasAdd.create(scope, input, bias, minInput, maxInput, minBias, maxBias, outType);
   }
 
@@ -1634,7 +1634,7 @@ public final class NnOps {
    */
   public <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> quantizedConv2d(
       Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
-      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, DataType<V> outType,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType,
       List<Long> strides, String padding, QuantizedConv2d.Options... options) {
     return QuantizedConv2d.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
   }
@@ -1685,7 +1685,7 @@ public final class NnOps {
    * @return a new instance of QuantizedRelu
    */
   public <U extends TType, T extends TType> QuantizedRelu<U> quantizedRelu(Operand<T> features,
-      Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
+      Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     return QuantizedRelu.create(scope, features, minFeatures, maxFeatures, outType);
   }
 
@@ -1700,7 +1700,7 @@ public final class NnOps {
    * @return a new instance of QuantizedRelu6
    */
   public <U extends TType, T extends TType> QuantizedRelu6<U> quantizedRelu6(Operand<T> features,
-      Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
+      Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     return QuantizedRelu6.create(scope, features, minFeatures, maxFeatures, outType);
   }
 
@@ -1717,7 +1717,7 @@ public final class NnOps {
    */
   public <U extends TType, T extends TType> QuantizedReluX<U> quantizedReluX(Operand<T> features,
       Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures,
-      DataType<U> outType) {
+      Class<U> outType) {
     return QuantizedReluX.create(scope, features, maxValue, minFeatures, maxFeatures, outType);
   }
 

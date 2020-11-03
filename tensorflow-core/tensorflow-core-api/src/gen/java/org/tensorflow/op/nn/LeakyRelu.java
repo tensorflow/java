@@ -65,7 +65,7 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
-    opBuilder.addInput(features.asOutput(scope));
+    opBuilder.addInput(features.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -91,7 +91,7 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
   }
   
   @Override
-  public Output<T> asOutput(Scope scope) {
+  public Output<T> asOutput() {
     return activations;
   }
   
