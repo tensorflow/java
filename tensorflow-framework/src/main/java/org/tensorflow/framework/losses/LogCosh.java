@@ -24,7 +24,7 @@ import org.tensorflow.types.family.TNumber;
  * Computes Computes the logarithm of the hyperbolic cosine of the prediction error.
  *
  * <p><code>logcosh = log((exp(x) + exp(-x))/2)</code>, where <code>x</code> is the error <code>
- * predictions - y_true</code>.
+ * predictions - labels</code>.
  *
  * <p>Standalone usage:
  *

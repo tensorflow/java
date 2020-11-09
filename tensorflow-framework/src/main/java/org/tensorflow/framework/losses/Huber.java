@@ -23,7 +23,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes the Huber loss between labels and predictions.
  *
- * <p>For each value x in error = y_true - y_pred:
+ * <p>For each value x in <code>error = labels - predictions</code>:
  *
  * <pre>
  *     loss = 0.5 * x^2                  if |x| &lt;= d

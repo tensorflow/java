@@ -100,7 +100,6 @@ public class LossesImpl {
       if (labelsRank != Shape.UNKNOWN_SIZE && predictionsRank != Shape.UNKNOWN_SIZE) {
         // Use static rank for 'label' and 'prediction'.
         if (predictionsRank - labelsRank != 1 || predictionsShape.size(-1) == 1) {
-          // label, prediction = confusion_matrix.remove_squeezable_dimensions(label, prediction)
           lossTuple = removeSqueezableDimensions(tf, labels, predictions);
         }
       } else { // use dynamic rank
@@ -259,8 +258,8 @@ public class LossesImpl {
     loss = result.getTarget();
     sampleWeight = result.getSampleWeights();
 
-    Operand<T> weighted_losses = tf.math.mul(loss, cast(tf, sampleWeight, dataType));
-    loss = reduceWeightedLoss(tf, weighted_losses, reduction);
+    Operand<T> weightedLosses = tf.math.mul(loss, cast(tf, sampleWeight, dataType));
+    loss = reduceWeightedLoss(tf, weightedLosses, reduction);
     return cast(tf, loss, dataType);
   }
 

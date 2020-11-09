@@ -183,12 +183,12 @@ public class SparseCategoricalCrossentropy extends Loss {
    *
    * @param labels the truth values or labels
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
-   * @param sampleWeights Optional sample_weight acts as a coefficient for the loss. If a scalar is
-   *     provided, then the loss is simply scaled by the given value. If sample_weight is a tensor
+   * @param sampleWeights Optional SampleWeights acts as a coefficient for the loss. If a scalar is
+   *     provided, then the loss is simply scaled by the given value. If SampleWeights is a tensor
    *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
-   *     corresponding element in the sample_weight vector. If the shape of sample_weight is
+   *     corresponding element in the SampleWeights vector. If the shape of SampleWeights is
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
-   *     predictions is scaled by the corresponding value of sample_weight. (Note on dN-1: all loss
+   *     predictions is scaled by the corresponding value of SampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
    * @param <T> The data type of the predictions, sampleWeights and loss.
    * @param <U> The data type of the labels.
