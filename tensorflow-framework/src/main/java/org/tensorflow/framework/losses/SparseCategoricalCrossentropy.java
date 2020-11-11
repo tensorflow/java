@@ -16,7 +16,7 @@
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.losses.impl.LossesImpl;
+import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -202,7 +202,7 @@ public class SparseCategoricalCrossentropy extends Loss {
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
-              LossesImpl.rangeCheck(
+              LossesHelper.rangeCheck(
                       getTF(),
                       "predictions range check [0-1]",
                       predictions,
@@ -214,6 +214,6 @@ public class SparseCategoricalCrossentropy extends Loss {
     }
     Operand<T> losses =
         Losses.sparseCategoricalCrossentropy(getTF(), labels, lPredictions, fromLogits, axis);
-    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

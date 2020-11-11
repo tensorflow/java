@@ -16,7 +16,7 @@
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.losses.impl.LossesImpl;
+import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
@@ -134,6 +134,6 @@ public class Huber extends Loss {
   public <T extends TNumber, U extends TNumber> Operand<T> call(
           Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses = Losses.huber(getTF(), labels, predictions, delta);
-    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

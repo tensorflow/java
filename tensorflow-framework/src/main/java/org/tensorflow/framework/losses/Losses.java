@@ -18,7 +18,7 @@ package org.tensorflow.framework.losses;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
-import org.tensorflow.framework.losses.impl.LossesImpl;
+import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceAll;
@@ -53,7 +53,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsoluteError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     Operand<T> tLabels = cast(tf,  labels, predictions.asOutput().dataType());
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
     return tf.math.mean(
@@ -75,7 +75,7 @@ public class Losses {
   public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredError(
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     Operand<T> tLabels = cast(tf,  labels, predictions.asOutput().dataType());
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
     return tf.math.mean(tf.math.squaredDifference(predictions, tLabels), tf.constant(-1));
@@ -97,7 +97,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
     Operand<T> diff =
@@ -126,7 +126,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
 
@@ -157,7 +157,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions, boolean fromLogits, float labelSmoothing) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
 
@@ -238,7 +238,7 @@ public class Losses {
       int axis) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> ops = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
     tLabels = ops.getLabels();
 
@@ -291,7 +291,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> one = cast(tf,  tf.constant(1), dataType);
@@ -333,7 +333,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions, int axis) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
 
@@ -360,7 +360,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> one = cast(tf,  tf.constant(1), dataType);
@@ -396,7 +396,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions, float delta) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
 
@@ -427,7 +427,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> one = cast(tf,  tf.constant(1), dataType);
@@ -457,7 +457,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> minusTwo = cast(tf,  tf.constant(-2), dataType);
@@ -485,7 +485,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> epsilonConst = cast(tf,  tf.constant(EPSILON), dataType);
@@ -589,7 +589,7 @@ public class Losses {
       Ops tf, Operand<U> labels, Operand<T> predictions) {
     DataType<T> dataType = predictions.asOutput().dataType();
     Operand<T> tLabels = cast(tf,  labels, dataType);
-    LossTuple<T> lossTuple = LossesImpl.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
+    LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
     Operand<T> one = cast(tf,  tf.constant(1), dataType);

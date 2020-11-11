@@ -34,10 +34,10 @@ import java.util.Collections;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
- * These are helper methods for Losses and will be module private when Java modularity is applied to
- * TensorFlow Java. These methods should not be used outside of the Loss package.
+ * These are helper methods for Losses and Metrics and will be module private when Java modularity is applied to
+ * TensorFlow Java. These methods should not be used outside of the losses and metrics packages.
  */
-public class LossesImpl {
+public class LossesHelper {
 
   /**
    * Squeeze or expand last dimension if needed with a sampleWeights of one.

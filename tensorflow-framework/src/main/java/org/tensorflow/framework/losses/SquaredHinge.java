@@ -16,7 +16,7 @@
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.losses.impl.LossesImpl;
+import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -129,13 +129,13 @@ public class SquaredHinge extends Loss {
     Operand<T> tLabels = predictions.asOutput().dataType() == labels.asOutput().dataType() ?
             (Operand<T>)labels :
             cast(tf,  labels, predictions.asOutput().dataType());
-    tLabels = LossesImpl.valueCheck(
+    tLabels = LossesHelper.valueCheck(
             getTF(),
             "labels value check [-1, 0, 1]",
             tLabels,
             cast(getTF(), getTF().constant(new int[] { -1, 0, 1}),
                     predictions.asOutput().dataType()));
     Operand<T> losses = Losses.squaredHinge(getTF(), tLabels, predictions);
-    return LossesImpl.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }
