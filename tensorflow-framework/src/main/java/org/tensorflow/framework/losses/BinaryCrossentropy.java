@@ -125,7 +125,7 @@ public class BinaryCrossentropy extends Loss {
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
-   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    */
   public BinaryCrossentropy(Ops tf, boolean fromLogits, float labelSmoothing) {
@@ -140,7 +140,7 @@ public class BinaryCrossentropy extends Loss {
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
-   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    */
   public BinaryCrossentropy(Ops tf, String name, boolean fromLogits, float labelSmoothing) {
@@ -154,7 +154,7 @@ public class BinaryCrossentropy extends Loss {
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
-   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    * @param reduction Type of Reduction to apply to the loss.
    */
@@ -170,7 +170,7 @@ public class BinaryCrossentropy extends Loss {
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
-   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    * @param reduction Type of Reduction to apply to the loss.
    * @throws IllegalArgumentException if labelSmoothing is not in the inclusive range of 0. - 1.
