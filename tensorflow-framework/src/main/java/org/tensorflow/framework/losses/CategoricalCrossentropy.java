@@ -19,6 +19,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
@@ -137,8 +138,8 @@ public class CategoricalCrossentropy extends Loss {
 
   /**
    * Creates a categorical cross entropy Loss using {@link #LABEL_SMOOTHING_DEFAULT} for
-   * labelSmoothing, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and a channel axis of {@link
-   * #DEFAULT_AXIS}
+   * labelSmoothing, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and a channel axis of
+   * {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this loss
@@ -169,10 +170,9 @@ public class CategoricalCrossentropy extends Loss {
    * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in [0, 1]. When 0, no smoothing occurs. When > 0, we compute the
-   *     loss between the predicted labels and a smoothed version of the true labels, where the
-   *     smoothing squeezes the labels towards 0.5. Larger values of label_smoothing correspond to
-   *     heavier smoothing.
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
+   *    confidence on label values are relaxed. e.g. <code>label_smoothing=0.2<code> means that we will use a
+   *    value of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
    */
   public CategoricalCrossentropy(Ops tf, String name, boolean fromLogits, float labelSmoothing) {
     this(tf, name, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
@@ -184,10 +184,9 @@ public class CategoricalCrossentropy extends Loss {
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in [0, 1]. When 0, no smoothing occurs. When > 0, we compute the
-   *     loss between the predicted labels and a smoothed version of the true labels, where the
-   *     smoothing squeezes the labels towards 0.5. Larger values of label_smoothing correspond to
-   *     heavier smoothing.
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
+   *    confidence on label values are relaxed. e.g. <code>label_smoothing=0.2<code> means that we will use a
+   *    alue of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
    * @param reduction Type of Reduction to apply to loss.
    */
   public CategoricalCrossentropy(
@@ -201,10 +200,9 @@ public class CategoricalCrossentropy extends Loss {
    * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in [0, 1]. When 0, no smoothing occurs. When > 0, we compute the
-   *     loss between the predicted labels and a smoothed version of the true labels, where the
-   *     smoothing squeezes the labels towards 0.5. Larger values of label_smoothing correspond to
-   *     heavier smoothing.
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
+   *    confidence on label values are relaxed. e.g. <code>label_smoothing=0.2<code> means that we will use a
+   *    value of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
    * @param reduction Type of Reduction to apply to loss.
    * @param axis The channels axis. <code>axis=-1</code> corresponds to data format `Channels Last'
    *     and <code>axis=1</code> corresponds to data format 'Channels First'.
@@ -218,8 +216,9 @@ public class CategoricalCrossentropy extends Loss {
       Reduction reduction,
       int axis) {
     super(tf, name, reduction);
-    if(labelSmoothing < 0 || labelSmoothing > 1)
-      throw new IllegalArgumentException("labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
+    if (labelSmoothing < 0 || labelSmoothing > 1)
+      throw new IllegalArgumentException(
+          "labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
     this.fromLogits = fromLogits;
     this.labelSmoothing = labelSmoothing;
     this.axis = axis;
@@ -228,9 +227,10 @@ public class CategoricalCrossentropy extends Loss {
   /**
    * Generates an Operand that calculates the loss.
    *
-   * If run in Graph mode, the computation will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}
-   * if the predictions values are outside the range o [0. to 1.]. In Eager Mode, this call
-   * will throw {@link IllegalArgumentException}, if the predictions values are outside the range o [0. to 1.]
+   * <p>If run in Graph mode, the computation will throw {@link
+   * org.tensorflow.exceptions.TFInvalidArgumentException} if the predictions values are outside the
+   * range o [0. to 1.]. In Eager Mode, this call will throw {@link IllegalArgumentException}, if
+   * the predictions values are outside the range o [0. to 1.]
    *
    * @param labels the truth values or labels
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
@@ -248,23 +248,24 @@ public class CategoricalCrossentropy extends Loss {
    */
   @Override
   public <T extends TNumber, U extends TNumber> Operand<T> call(
-          Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> lPredictions;
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
-              LossesHelper.rangeCheck(
-                      getTF(),
-                      "predictions range check [0-1]",
-                      predictions,
-                      cast(getTF(), getTF().constant(0), predictions.asOutput().dataType()),
-                      cast(getTF(), getTF().constant(1), predictions.asOutput().dataType()));
+          LossesHelper.rangeCheck(
+              getTF(),
+              "predictions range check [0-1]",
+              predictions,
+              cast(getTF(), getTF().constant(0), predictions.asOutput().dataType()),
+              cast(getTF(), getTF().constant(1), predictions.asOutput().dataType()));
 
     } else {
       lPredictions = predictions;
     }
     Operand<T> losses =
-        Losses.categoricalCrossentropy(getTF(), labels, lPredictions, fromLogits, labelSmoothing, axis);
+        Losses.categoricalCrossentropy(
+            getTF(), labels, lPredictions, fromLogits, labelSmoothing, axis);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }
