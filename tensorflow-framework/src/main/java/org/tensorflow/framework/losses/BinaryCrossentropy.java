@@ -178,8 +178,9 @@ public class BinaryCrossentropy extends Loss {
   public BinaryCrossentropy(
       Ops tf, String name, boolean fromLogits, float labelSmoothing, Reduction reduction) {
     super(tf, name, reduction);
-    if(labelSmoothing < 0 || labelSmoothing > 1)
-      throw new IllegalArgumentException("labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
+    if (labelSmoothing < 0 || labelSmoothing > 1)
+      throw new IllegalArgumentException(
+          "labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
     this.fromLogits = fromLogits;
     this.labelSmoothing = labelSmoothing;
   }
@@ -187,9 +188,10 @@ public class BinaryCrossentropy extends Loss {
   /**
    * Generates an Operand that calculates the loss.
    *
-   * If run in Graph mode, the computation will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}
-   * if the predictions values are outside the range o [0. to 1.]. In Eager Mode, this call
-   * will throw {@link IllegalArgumentException}, if the predictions values are outside the range o [0. to 1.]
+   * <p>If run in Graph mode, the computation will throw {@link
+   * org.tensorflow.exceptions.TFInvalidArgumentException} if the predictions values are outside the
+   * range o [0. to 1.]. In Eager Mode, this call will throw {@link IllegalArgumentException}, if
+   * the predictions values are outside the range o [0. to 1.]
    *
    * @param labels the truth values or labels
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
