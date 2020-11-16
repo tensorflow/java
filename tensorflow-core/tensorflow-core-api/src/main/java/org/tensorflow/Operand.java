@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.types.family.TType;
 
@@ -75,5 +76,19 @@ public interface Operand<T extends TType> extends Op {
    */
   default T data() {
     return asOutput().tensor().data();
+  }
+
+  /**
+   * Returns the build-time shape of this operand.  May be only partially known.
+   */
+  default Shape shape(){
+    return asOutput().shape();
+  }
+
+  /**
+   * Returns the {@link DataType} of this operand.
+   */
+  default DataType<T> dataType(){
+    return asOutput().dataType();
   }
 }
