@@ -108,9 +108,12 @@ public final class NnOps {
 
   private final Scope scope;
 
-  NnOps(Scope scope) {
-    this.scope = scope;
-    raw = new NnRawOps(scope);
+  private final Ops ops;
+
+  NnOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
+    raw = new NnRawOps(ops);
   }
 
   /**
@@ -2147,5 +2150,12 @@ public final class NnOps {
   public <T extends TNumber> TopK<T> topK(Operand<T> input, Operand<TInt32> k,
       TopK.Options... options) {
     return TopK.create(scope, input, k, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

@@ -30,8 +30,11 @@ import org.tensorflow.types.family.TNumber;
 public final class NnRawOps {
   private final Scope scope;
 
-  NnRawOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  NnRawOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -70,5 +73,12 @@ public final class NnRawOps {
   public <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
       Operand<T> features, Operand<U> labels) {
     return SparseSoftmaxCrossEntropyWithLogits.create(scope, features, labels);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

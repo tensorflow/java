@@ -82,8 +82,11 @@ import org.tensorflow.types.family.TType;
 public final class IoOps {
   private final Scope scope;
 
-  IoOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  IoOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -1029,5 +1032,12 @@ public final class IoOps {
    */
   public WriteFile writeFile(Operand<TString> filename, Operand<TString> contents) {
     return WriteFile.create(scope, filename, contents);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

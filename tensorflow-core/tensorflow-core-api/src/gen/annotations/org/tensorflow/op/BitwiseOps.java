@@ -34,8 +34,11 @@ import org.tensorflow.types.family.TNumber;
 public final class BitwiseOps {
   private final Scope scope;
 
-  BitwiseOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  BitwiseOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -267,5 +270,12 @@ public final class BitwiseOps {
    */
   public <T extends TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {
     return RightShift.create(scope, x, y);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

@@ -66,8 +66,11 @@ import org.tensorflow.types.family.TType;
 public final class ImageOps {
   private final Scope scope;
 
-  ImageOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  ImageOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -941,5 +944,12 @@ public final class ImageOps {
       Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
     return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

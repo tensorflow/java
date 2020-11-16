@@ -60,9 +60,12 @@ public final class DataOps {
 
   private final Scope scope;
 
-  DataOps(Scope scope) {
-    this.scope = scope;
-    experimental = new DataExperimentalOps(scope);
+  private final Ops ops;
+
+  DataOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
+    experimental = new DataExperimentalOps(ops);
   }
 
   /**
@@ -409,5 +412,12 @@ public final class DataOps {
   public ZipDataset zipDataset(Iterable<Operand<?>> inputDatasets, List<DataType<?>> outputTypes,
       List<Shape> outputShapes) {
     return ZipDataset.create(scope, inputDatasets, outputTypes, outputShapes);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

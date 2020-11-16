@@ -30,8 +30,11 @@ import org.tensorflow.types.family.TNumber;
 public final class RaggedOps {
   private final Scope scope;
 
-  RaggedOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  RaggedOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -59,5 +62,12 @@ public final class RaggedOps {
       Operand<TInt64> splits, Operand<T> values, Operand<T> size, Operand<U> weights,
       RaggedBincount.Options... options) {
     return RaggedBincount.create(scope, splits, values, size, weights, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

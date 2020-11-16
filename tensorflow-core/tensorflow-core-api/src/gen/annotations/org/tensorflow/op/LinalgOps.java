@@ -78,8 +78,11 @@ import org.tensorflow.types.family.TType;
 public final class LinalgOps {
   private final Scope scope;
 
-  LinalgOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  LinalgOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -1605,5 +1608,12 @@ public final class LinalgOps {
   public <T extends TType> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
       TriangularSolve.Options... options) {
     return TriangularSolve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

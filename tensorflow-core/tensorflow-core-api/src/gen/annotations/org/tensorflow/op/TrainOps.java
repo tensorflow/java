@@ -98,8 +98,11 @@ import org.tensorflow.types.family.TType;
 public final class TrainOps {
   private final Scope scope;
 
-  TrainOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  TrainOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -1657,5 +1660,12 @@ public final class TrainOps {
    */
   public <T extends TType> TileGrad<T> tileGrad(Operand<T> input, Operand<TInt32> multiples) {
     return TileGrad.create(scope, input, multiples);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

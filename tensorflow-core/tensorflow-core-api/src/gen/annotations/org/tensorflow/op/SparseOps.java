@@ -80,8 +80,11 @@ import org.tensorflow.types.family.TType;
 public final class SparseOps {
   private final Scope scope;
 
-  SparseOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  SparseOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -1496,5 +1499,12 @@ public final class SparseOps {
       Operand<TInt64> sparseHandles, DataType<T> dtype,
       TakeManySparseFromTensorsMap.Options... options) {
     return TakeManySparseFromTensorsMap.create(scope, sparseHandles, dtype, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

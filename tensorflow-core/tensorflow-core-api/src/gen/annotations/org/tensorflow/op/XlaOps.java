@@ -49,8 +49,11 @@ import org.tensorflow.types.family.TType;
 public final class XlaOps {
   private final Scope scope;
 
-  XlaOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  XlaOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -378,5 +381,12 @@ public final class XlaOps {
   public <T extends TType> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
       String precisionConfig) {
     return Svd.create(scope, a, maxIter, epsilon, precisionConfig);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

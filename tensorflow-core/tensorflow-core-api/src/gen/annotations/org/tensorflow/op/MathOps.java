@@ -138,8 +138,11 @@ import org.tensorflow.types.family.TType;
 public final class MathOps {
   private final Scope scope;
 
-  MathOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  MathOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -2390,5 +2393,12 @@ public final class MathOps {
    */
   public <T extends TNumber> Zeta<T> zeta(Operand<T> x, Operand<T> q) {
     return Zeta.create(scope, x, q);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

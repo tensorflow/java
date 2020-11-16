@@ -52,8 +52,11 @@ import org.tensorflow.types.family.TType;
 public final class RandomOps {
   private final Scope scope;
 
-  RandomOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  RandomOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -582,5 +585,12 @@ public final class RandomOps {
   public UniformCandidateSampler uniformCandidateSampler(Operand<TInt64> trueClasses, Long numTrue,
       Long numSampled, Boolean unique, Long rangeMax, UniformCandidateSampler.Options... options) {
     return UniformCandidateSampler.create(scope, trueClasses, numTrue, numSampled, unique, rangeMax, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }
