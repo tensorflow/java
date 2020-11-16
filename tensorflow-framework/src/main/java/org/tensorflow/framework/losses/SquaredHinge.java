@@ -113,7 +113,7 @@ public class SquaredHinge extends Loss {
    *     provided, then the loss is simply scaled by the given value. If SampleWeights is a tensor
    *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
    *     corresponding element in the SampleWeights vector. If the shape of SampleWeights is
-   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
+   *     [batch_size, d0, .. dN-1] (or can be broadcast to this shape), then each loss element of
    *     predictions is scaled by the corresponding value of SampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
    * @param <T> The data type of the predictions, sampleWeights and loss.
