@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.tensorflow.framework.losses;
 
 import org.junit.jupiter.api.Test;
@@ -6,7 +21,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
@@ -60,33 +74,33 @@ public class CategoricalCrossentropyTest {
   public void testInvalidPredictionsRange() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
-        Class catchClass =
-                tfMode == TestSession.Mode.EAGER
-                        ? IllegalArgumentException.class
-                        : org.tensorflow.exceptions.TFInvalidArgumentException.class;
+        Class<? extends Throwable> catchClass =
+            tfMode == TestSession.Mode.EAGER
+                ? IllegalArgumentException.class
+                : org.tensorflow.exceptions.TFInvalidArgumentException.class;
         assertThrows(
-                catchClass,
-                () -> {
-                  Ops tf = testSession.getTF();
-                  CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
-                  float[] trueArray = {
-                          1L, 0L, 0L,
-                          0L, 1L, 0L,
-                          0L, 0L, 1L
-                  };
-                  float[] predArray = {
-                          -1.F, 0.F, 0.F,
-                          0.F, 1.F, 0.F,
-                          0.F, 0.F, 1.F
-                  };
-                  Operand<TFloat32> yTrue =
-                          tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
-                  Operand<TFloat32> yPred =
-                          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
+            catchClass,
+            () -> {
+              Ops tf = testSession.getTF();
+              CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
+              float[] trueArray = {
+                1L, 0L, 0L,
+                0L, 1L, 0L,
+                0L, 0L, 1L
+              };
+              float[] predArray = {
+                -1.F, 0.F, 0.F,
+                0.F, 1.F, 0.F,
+                0.F, 0.F, 1.F
+              };
+              Operand<TFloat32> yTrue =
+                  tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
+              Operand<TFloat32> yPred =
+                  tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
 
-                  Operand<TFloat32> loss = instance.call(yTrue, yPred);
-                  testSession.run(loss);
-                });
+              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              testSession.run(loss);
+            });
       }
   }
 

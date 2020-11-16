@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.tensorflow.framework.losses;
 
 import org.junit.jupiter.api.Test;
@@ -54,25 +69,27 @@ public class SparseCategoricalCrossentropyTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Class<? extends Throwable> catchClass =
-                tfMode == TestSession.Mode.EAGER
-                        ? IllegalArgumentException.class
-                        : org.tensorflow.exceptions.TFInvalidArgumentException.class;
+            tfMode == TestSession.Mode.EAGER
+                ? IllegalArgumentException.class
+                : org.tensorflow.exceptions.TFInvalidArgumentException.class;
         assertThrows(
-                catchClass,
-                () -> {
-                  Ops tf = testSession.getTF();
-                  SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
-                  int[] trueArray = {0, 1, 2};
-                  float[] predArray = {
-                          1.9f, .05f, .05f,
-                          .5f, .89f, .6f,
-                          .05f, .01f, .94f
-                  };
-                  Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
-                  Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-                  Operand<TFloat32> loss = instance.call(yTrue, yPred);
-                  testSession.run(loss);
-                });
+            catchClass,
+            () -> {
+              Ops tf = testSession.getTF();
+              SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
+              int[] trueArray = {0, 1, 2};
+              float[] predArray = {
+                1.9f, .05f, .05f,
+                .5f, .89f, .6f,
+                .05f, .01f, .94f
+              };
+              Operand<TInt32> yTrue =
+                  tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
+              Operand<TFloat32> yPred =
+                  tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
+              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              testSession.run(loss);
+            });
       }
   }
 
