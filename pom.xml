@@ -120,6 +120,18 @@
 
   <profiles>
     <!--
+    Developer profile
+        Enable javadoc generation so the developer is aware of any mistake that might prevent
+        ultimately the deployment of the artifacts
+    -->
+    <profile>
+      <id>dev</id>
+      <properties>
+        <maven.javadoc.skip>false</maven.javadoc.skip>
+      </properties>
+    </profile>
+
+    <!--
     Deploying profile
         Build the Javadoc when deploying
     -->

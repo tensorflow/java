@@ -218,8 +218,8 @@ public class Losses {
    * @param predictions the predictions
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *     confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2<code> means that we will use a
-   *     value of </code>0.1<code> for label </code>0<code> and </code>0.9<code> for label </code>1<code>
+   *     confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
+   *     value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
    * @param axis the
    * @param <T> the data type of the predictions and labels
    * @return the categorical crossentropy loss.
