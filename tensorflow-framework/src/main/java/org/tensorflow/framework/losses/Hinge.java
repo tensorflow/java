@@ -25,7 +25,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <p><code>loss = maximum(1 - labels * predictions, 0)</code></p>.
  *
- * <p><code>labels/code> values are expected to be -1 or 1.
+ * <p><code>labels</code> values are expected to be -1 or 1.
  * If binary (0 or 1) labels are provided, they will be converted to -1 or 1.</p>
  *
  * <p>Standalone usage:

@@ -43,10 +43,10 @@ public class LossesHelper {
    *
    * <ol type="1">
    *   <li>Squeezes last dim of <code>predictions</code> or <code>labels</code> if their rank
-   *       differs by 1 (using {@link #removeSqueezableDimensions}).
+   *       differs by 1 (using {@link #removeSqueezableDimensions}).</li>
    *   <li>Squeezes or expands last dim of <code>sampleWeight</code> if its rank differs by 1 from
    *       the new rank of <code>predictions</code>. If <code>sampleWeight</code> is scalar, it is
-   *       kept scalar./li>
+   *       kept scalar.</li>
    * </ol>
    *
    * @param tf the TensorFlow Ops
@@ -80,7 +80,7 @@ public class LossesHelper {
    *     </code>.
    * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match<code>
    *     prediction</code>.
-   * @return LossTuple of <code>prediction<s/code>, <code>labels</code> and <code>sampleWeight</code>.
+   * @return LossTuple of <code>predictions</code>, <code>labels</code> and <code>sampleWeight</code>.
    *     Each of them possibly has the last dimension squeezed, <code>sampleWeight</code> could be
    *     extended by one dimension. If <code>sampleWeight</code> is null, only the possibly shape modified <code>predictions</code> and <code>labels</code> are
    *     returned.
@@ -290,7 +290,7 @@ public class LossesHelper {
    * Computes a safe mean of the losses.
    *
    * @param tf the TensorFlow Ops
-   * @param losses </code>Operand</code> whose elements contain individual loss measurements.
+   * @param losses <code>Operand</code> whose elements contain individual loss measurements.
    * @param numElements The number of measurable elements in <code>losses</code>.
    * @param <T> the data type of the losses
    * @return A scalar representing the mean of <code>losses</code>. If <code>numElements</code> is
