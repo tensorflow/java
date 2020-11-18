@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses.impl;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
@@ -249,7 +248,7 @@ public class LossesHelper {
    */
   public static <T extends TNumber> Operand<T> computeWeightedLoss(
       Ops tf, Operand<T> loss, Reduction reduction, Operand<T> sampleWeight) {
-    DataType<T> dataType = loss.asOutput().dataType();
+    Class<T> dataType = loss.asOutput().type();
     if (sampleWeight == null) {
       sampleWeight = cast(tf, tf.constant(1), dataType);
     }
@@ -300,7 +299,7 @@ public class LossesHelper {
       Ops tf, Operand<T> losses, long numElements) {
     Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
     return tf.math.divNoNan(
-        totalLoss, cast(tf, tf.constant(numElements), losses.asOutput().dataType()));
+        totalLoss, cast(tf, tf.constant(numElements), losses.asOutput().type()));
   }
 
   /**
@@ -361,7 +360,7 @@ public class LossesHelper {
           tf.withSubScope("rangeCheck")
               .withControlDependencies(Collections.singletonList(assertThat));
       return ltf.identity(values);
-    } else if (!cond.asOutput().data().getBoolean())
+    } else if (!cond.asOutput().asTensor().getBoolean())
       throw new IllegalArgumentException(String.format("%s : values out of range", prefix));
     else return values;
   }
@@ -386,7 +385,7 @@ public class LossesHelper {
       Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
     Operand<T> flatValues =
         tf.reshape(values, tf.constant(Shape.of(values.asOutput().shape().size())));
-    SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.DTYPE);
+    SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.class);
     long diffSize = diff.out().asOutput().shape().size();
 
     if (diffSize != Shape.UNKNOWN_SIZE) {
@@ -409,7 +408,7 @@ public class LossesHelper {
             tf.withSubScope("valueCheck")
                 .withControlDependencies(Collections.singletonList(assertThat));
         return ltf.identity(values);
-      } else if (!cond.asOutput().data().getBoolean())
+      } else if (!cond.asOutput().asTensor().getBoolean())
         throw new IllegalArgumentException(String.format("%s : values not in value set", prefix));
       else return values;
     }

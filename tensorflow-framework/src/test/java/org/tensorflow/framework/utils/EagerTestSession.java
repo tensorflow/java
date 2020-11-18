@@ -370,7 +370,7 @@ public class EagerTestSession extends TestSession {
             .scalars()
             .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getDouble())));
       }
-    } else if (type == TFloat16.DTYPE) {
+    } else if (type == TFloat16.class) {
       Output<TFloat16> o = (Output<TFloat16>) input;
       if (debug) {
         if (isScalar) {

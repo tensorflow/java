@@ -537,43 +537,42 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getDouble(idx), f.getDouble(), epsilon));
         }
       }
-    } else if (dtype == TFloat16.DTYPE) {
-        final Output<TFloat16> finalExpected = (Output<TFloat16>) expected;
-        if (debug) {
-          try (TFloat16 result =
-                  this.getGraphSession().runner().fetch(input).run().get(0);
-              TFloat16 expectedResult =
-                  this.getGraphSession().runner().fetch(input).run().get(0)) {
-            if (isScalar) {
-              System.out.printf(
-                  "0). %f <==> %f\n", expectedResult.getFloat(), result.getFloat());
-            } else {
-              result
-                  .scalars()
-                  .forEachIndexed(
-                      (idx, f) ->
-                          System.out.printf(
-                              "%d). %f <==> %f\n",
-                              index.getAndIncrement(),
-                              finalExpected.asTensor().getFloat(idx),
-                              f.getFloat()));
-            }
-          }
-        }
-        index.set(0);
+    } else if (dtype == TFloat16.class) {
+      final Output<TFloat16> finalExpected = (Output<TFloat16>) expected;
+      if (debug) {
         try (TFloat16 result =
                 this.getGraphSession().runner().fetch(input).run().get(0);
             TFloat16 expectedResult =
                 this.getGraphSession().runner().fetch(input).run().get(0)) {
           if (isScalar) {
-            assertEquals(expectedResult.getFloat(), result.getFloat(), epsilon);
+            System.out.printf(
+                "0). %f <==> %f\n", expectedResult.getFloat(), result.getFloat());
           } else {
             result
                 .scalars()
                 .forEachIndexed(
                     (idx, f) ->
-                        assertEquals(expectedResult.getFloat(idx), f.getFloat(), epsilon));
+                        System.out.printf(
+                            "%d). %f <==> %f\n",
+                            index.getAndIncrement(),
+                            finalExpected.asTensor().getFloat(idx),
+                            f.getFloat()));
           }
+        }
+      }
+      index.set(0);
+      try (TFloat16 result =
+              this.getGraphSession().runner().fetch(input).run().get(0);
+          TFloat16 expectedResult =
+              this.getGraphSession().runner().fetch(input).run().get(0)) {
+        if (isScalar) {
+          assertEquals(expectedResult.getFloat(), result.getFloat(), epsilon);
+        } else {
+          result
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) ->
+                      assertEquals(expectedResult.getFloat(idx), f.getFloat(), epsilon));
         }
       }
     } else if (dtype == TInt32.class) {

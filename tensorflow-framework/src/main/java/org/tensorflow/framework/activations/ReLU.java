@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.math.Greater;
@@ -99,7 +98,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
   @Override
   public Operand<T> call(Operand<T> input) {
 
-    DataType<T> dataType = input.asOutput().dataType();
+    Class<T> dataType = input.asOutput().type();
 
     boolean clipMax = !Float.isNaN(maxValue);
     Operand<T> negativePart = null;
