@@ -3,4 +3,8 @@ op {
   endpoint {
     name: "TensorArraySize"
   }
+  out_arg {
+    name: "size"
+    rename_to: "output"
+  }
 }

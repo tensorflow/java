@@ -99,10 +99,10 @@ public class AdaGradTest {
 
       Variable<TFloat32>[] accumulatorSlots = new Variable[2];
       accumulatorSlots[0] = instance.getSlot(var0.asOutput(), ACCUMULATOR).get();
-      assertEquals(accumulatorSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(accumulatorSlots[0].shape(), var0.shape());
 
       accumulatorSlots[1] = instance.getSlot(var1.asOutput(), ACCUMULATOR).get();
-      assertEquals(accumulatorSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(accumulatorSlots[1].shape(), var1.shape());
 
       /* initialize the local variables */
       session.run(var0Initializer);

@@ -3,4 +3,8 @@ op {
   endpoint {
     name: "io.QueueSize"
   }
+  out_arg {
+    name: "size"
+    rename_to: "output"
+  }
 }

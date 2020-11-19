@@ -148,9 +148,9 @@ public class MomentumTest {
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
       Variable<TFloat32> momentumSlot0 = instance.getSlot(var0.asOutput(), MOMENTUM).get();
-      assertEquals(momentumSlot0.asOutput().shape(), var0.asOutput().shape());
+      assertEquals(momentumSlot0.shape(), var0.shape());
       Variable<TFloat32> momentumSlot1 = instance.getSlot(var1.asOutput(), MOMENTUM).get();
-      assertEquals(momentumSlot1.asOutput().shape(), var1.asOutput().shape());
+      assertEquals(momentumSlot1.shape(), var1.shape());
 
       /* initialize the local variables */
       session.run(var0Initializer);

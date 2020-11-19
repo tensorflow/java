@@ -147,23 +147,23 @@ public final class MapSize extends RawOp implements Operand<TInt32> {
   
   /**
    */
-  public Output<TInt32> size() {
-    return size;
+  public Output<TInt32> output() {
+    return output;
   }
   
   @Override
   public Output<TInt32> asOutput() {
-    return size;
+    return output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "MapSize";
   
-  private Output<TInt32> size;
+  private Output<TInt32> output;
   
   private MapSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    size = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

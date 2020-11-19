@@ -118,16 +118,16 @@ public class AdaDeltaTest {
           Variable<TFloat32>[] slotUpdates = new Variable[2];
 
           slots[0] = adaDelta.getSlot(var0.asOutput(), ACCUMULATOR).get();
-          assertEquals(slots[0].asOutput().shape(), var0.asOutput().shape());
+          assertEquals(slots[0].shape(), var0.shape());
 
           slotUpdates[0] = adaDelta.getSlot(var0.asOutput(), ACCUMULATOR_UPDATE).get();
-          assertEquals(slotUpdates[0].asOutput().shape(), var0.asOutput().shape());
+          assertEquals(slotUpdates[0].shape(), var0.shape());
 
           slots[1] = adaDelta.getSlot(var1.asOutput(), ACCUMULATOR).get();
-          assertEquals(slots[1].asOutput().shape(), var1.asOutput().shape());
+          assertEquals(slots[1].shape(), var1.shape());
 
           slotUpdates[1] = adaDelta.getSlot(var1.asOutput(), ACCUMULATOR_UPDATE).get();
-          assertEquals(slotUpdates[1].asOutput().shape(), var1.asOutput().shape());
+          assertEquals(slotUpdates[1].shape(), var1.shape());
 
           /* initialize the local variables */
           session.run(var0Initializer);

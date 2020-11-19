@@ -51,23 +51,23 @@ public final class LookupTableSize extends RawOp implements Operand<TInt64> {
   /**
    * Scalar that contains number of elements in the table.
    */
-  public Output<TInt64> size() {
-    return size;
+  public Output<TInt64> output() {
+    return output;
   }
   
   @Override
   public Output<TInt64> asOutput() {
-    return size;
+    return output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LookupTableSizeV2";
   
-  private Output<TInt64> size;
+  private Output<TInt64> output;
   
   private LookupTableSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    size = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

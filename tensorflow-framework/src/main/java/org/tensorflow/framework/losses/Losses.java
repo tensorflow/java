@@ -535,7 +535,7 @@ public class Losses {
       predictions = tf.clipByValue(predictions, epsilonConst, oneMinusEpsilonConst);
       predictions = tf.math.log(predictions);
     }
-    Shape predictionsShape = predictions.asOutput().shape();
+    Shape predictionsShape = predictions.shape();
     int predictionsRank = predictionsShape.numDimensions();
     axis %= predictionsRank;
     if (axis < 0) {
@@ -549,7 +549,7 @@ public class Losses {
     Operand<TInt64> iLabels = cast(tf, labels, TInt64.DTYPE);
 
     // Try to adjust the shape so that rank of labels = rank of logits - 1.
-    Shape labelsShape = labels.asOutput().shape();
+    Shape labelsShape = labels.shape();
     int labelsRank = labelsShape.numDimensions();
 
     boolean updateShape = labelsRank != predictionsRank - 1;
@@ -635,7 +635,7 @@ public class Losses {
       Ops tf, Operand<T> labels, float labelSmoothing) {
     DataType<T> dataType = labels.asOutput().dataType();
     Operand<T> smoothing = cast(tf, tf.constant(labelSmoothing), dataType);
-    Shape labelsShape = labels.asOutput().shape();
+    Shape labelsShape = labels.shape();
     int numDims = labelsShape.numDimensions();
     Operand<T> numClasses = cast(tf, tf.constant(labelsShape.size(numDims - 1)), dataType);
     Operand<T> oneMinusSmoothing = cast(tf, tf.constant(1.f - labelSmoothing), dataType);

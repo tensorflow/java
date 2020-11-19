@@ -73,7 +73,7 @@ public class Softmax<T extends TFloating> extends Activation<T> {
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    Shape shape = input.asOutput().shape();
+    Shape shape = input.shape();
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {
       return tf.nn.softmax(input);

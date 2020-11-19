@@ -88,13 +88,13 @@ public class LossesHelper {
   public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights) {
 
-    Shape predictionsShape = predictions.asOutput().shape();
+    Shape predictionsShape = predictions.shape();
     long predictionsRank = predictionsShape.numDimensions();
 
     // Default case when no modifications are made.
     LossTuple<T> lossTuple = new LossTuple<>(labels, predictions, sampleWeights);
     if (labels != null) {
-      Shape labelsShape = labels.asOutput().shape();
+      Shape labelsShape = labels.shape();
       long labelsRank = labelsShape.numDimensions();
       if (labelsRank != Shape.UNKNOWN_SIZE && predictionsRank != Shape.UNKNOWN_SIZE) {
         // Use static rank for 'label' and 'prediction'.
@@ -108,7 +108,7 @@ public class LossesHelper {
     if (sampleWeights == null) { // nothing more to do.
       return lossTuple;
     }
-    Shape weightsShape = sampleWeights.asOutput().shape();
+    Shape weightsShape = sampleWeights.shape();
     long weightsRank = weightsShape.numDimensions();
     if (weightsRank == 0) { // scalar
       return new LossTuple<>(lossTuple.getLabels(), lossTuple.getTarget(), sampleWeights);
@@ -200,9 +200,9 @@ public class LossesHelper {
       Ops tf, Operand<T> labels, Operand<T> predictions, int expectedRankDiff) {
 
     tf = tf.withSubScope("removeSqueezableDimensions");
-    Shape predictionsShape = predictions.asOutput().shape();
+    Shape predictionsShape = predictions.shape();
     int predictionsRank = predictionsShape.numDimensions();
-    Shape labelsShape = labels.asOutput().shape();
+    Shape labelsShape = labels.shape();
     int labelsRank = labelsShape.numDimensions();
 
     if (predictionsRank != Shape.UNKNOWN_SIZE || labelsRank != Shape.UNKNOWN_SIZE) {
@@ -280,7 +280,7 @@ public class LossesHelper {
       loss =
           tf.reduceSum(weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
       if (reduction == Reduction.AUTO || reduction == Reduction.SUM_OVER_BATCH_SIZE) {
-        loss = safeMean(tf, loss, weightedLoss.asOutput().shape().size());
+        loss = safeMean(tf, loss, weightedLoss.shape().size());
       }
     }
     return loss;
@@ -312,7 +312,7 @@ public class LossesHelper {
    * @return a Constant that represents all the axes of the operand.
    */
   public static <T extends TNumber> Operand<TInt32> allAxes(Ops tf, Operand<T> op) {
-    int rank = op.asOutput().shape().numDimensions();
+    int rank = op.shape().numDimensions();
     if (rank != Shape.UNKNOWN_SIZE) {
       int[] axes = new int[rank];
       for (int i = 0; i < rank; i++) {
@@ -385,9 +385,9 @@ public class LossesHelper {
   public static <T extends TNumber> Operand<T> valueCheck(
       Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
     Operand<T> flatValues =
-        tf.reshape(values, tf.constant(Shape.of(values.asOutput().shape().size())));
+        tf.reshape(values, tf.constant(Shape.of(values.shape().size())));
     SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.DTYPE);
-    long diffSize = diff.out().asOutput().shape().size();
+    long diffSize = diff.out().shape().size();
 
     if (diffSize != Shape.UNKNOWN_SIZE) {
       if (diffSize != 0) { // at least 1 value in the diff did not match the allowed values.

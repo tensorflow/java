@@ -80,10 +80,10 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     if (convertToFloat32) {
       preciseLogits = Cast.create(scope, logits, TFloat32.DTYPE);
     }
-    Shape labelsStaticShape = labels.asOutput().shape();
+    Shape labelsStaticShape = labels.shape();
     org.tensorflow.op.core.Shape<TInt32> labelsShape =
         org.tensorflow.op.core.Shape.create(scope, labels);
-    Shape logitsShape = logits.asOutput().shape();
+    Shape logitsShape = logits.shape();
     Shape logitsShortened = logitsShape.take(logitsShape.numDimensions() - 1);
 
     boolean staticShapesFullyDefined =
