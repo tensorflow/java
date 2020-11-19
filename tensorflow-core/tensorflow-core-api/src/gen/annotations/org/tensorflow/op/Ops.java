@@ -347,33 +347,33 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
   private Ops(Scope scope) {
     this.scope = scope;
-    nn = new NnOps(scope);
-    summary = new SummaryOps(scope);
-    image = new ImageOps(scope);
-    ragged = new RaggedOps(scope);
-    data = new DataOps(scope);
-    shape = new ShapeOps(scope);
-    io = new IoOps(scope);
-    dtypes = new DtypesOps(scope);
-    xla = new XlaOps(scope);
-    linalg = new LinalgOps(scope);
-    random = new RandomOps(scope);
-    strings = new StringsOps(scope);
-    sparse = new SparseOps(scope);
-    bitwise = new BitwiseOps(scope);
-    math = new MathOps(scope);
-    audio = new AudioOps(scope);
-    signal = new SignalOps(scope);
-    quantization = new QuantizationOps(scope);
-    train = new TrainOps(scope);
+    nn = new NnOps(this);
+    summary = new SummaryOps(this);
+    image = new ImageOps(this);
+    ragged = new RaggedOps(this);
+    data = new DataOps(this);
+    shape = new ShapeOps(this);
+    io = new IoOps(this);
+    dtypes = new DtypesOps(this);
+    xla = new XlaOps(this);
+    linalg = new LinalgOps(this);
+    random = new RandomOps(this);
+    strings = new StringsOps(this);
+    sparse = new SparseOps(this);
+    bitwise = new BitwiseOps(this);
+    math = new MathOps(this);
+    audio = new AudioOps(this);
+    signal = new SignalOps(this);
+    train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**

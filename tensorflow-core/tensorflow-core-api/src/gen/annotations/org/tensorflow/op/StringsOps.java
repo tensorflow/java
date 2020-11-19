@@ -52,8 +52,11 @@ import org.tensorflow.types.family.TNumber;
 public final class StringsOps {
   private final Scope scope;
 
-  StringsOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  StringsOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -616,5 +619,12 @@ public final class StringsOps {
    */
   public Upper upper(Operand<TString> input, Upper.Options... options) {
     return Upper.create(scope, input, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

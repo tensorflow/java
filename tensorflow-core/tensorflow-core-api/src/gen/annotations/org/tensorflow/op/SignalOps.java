@@ -50,8 +50,11 @@ import org.tensorflow.types.family.TType;
 public final class SignalOps {
   private final Scope scope;
 
-  SignalOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  SignalOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -433,5 +436,12 @@ public final class SignalOps {
   public <U extends TType, T extends TNumber> Rfft3d<U> rfft3d(Operand<T> input,
       Operand<TInt32> fftLength, DataType<U> Tcomplex) {
     return Rfft3d.create(scope, input, fftLength, Tcomplex);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

@@ -33,8 +33,11 @@ import org.tensorflow.types.family.TType;
 public final class DtypesOps {
   private final Scope scope;
 
-  DtypesOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  DtypesOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -101,5 +104,12 @@ public final class DtypesOps {
   public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
       DataType<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

@@ -34,8 +34,11 @@ import org.tensorflow.types.TString;
 public final class AudioOps {
   private final Scope scope;
 
-  AudioOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  AudioOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -143,5 +146,12 @@ public final class AudioOps {
   public Mfcc mfcc(Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate,
       Mfcc.Options... options) {
     return Mfcc.create(scope, spectrogram, sampleRate, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

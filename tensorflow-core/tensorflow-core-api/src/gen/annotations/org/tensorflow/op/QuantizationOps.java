@@ -45,8 +45,11 @@ import org.tensorflow.types.family.TType;
 public final class QuantizationOps {
   private final Scope scope;
 
-  QuantizationOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  QuantizationOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -627,5 +630,12 @@ public final class QuantizationOps {
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin,
       Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
     return Requantize.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

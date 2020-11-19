@@ -33,8 +33,11 @@ import org.tensorflow.types.TString;
 public final class DataExperimentalOps {
   private final Scope scope;
 
-  DataExperimentalOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  DataExperimentalOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -57,5 +60,12 @@ public final class DataExperimentalOps {
       List<DataType<?>> outputTypes, List<Shape> outputShapes,
       DataServiceDataset.Options... options) {
     return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

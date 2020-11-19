@@ -34,8 +34,11 @@ import org.tensorflow.types.family.TType;
 public final class ShapeOps {
   private final Scope scope;
 
-  ShapeOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  ShapeOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -468,5 +471,12 @@ public final class ShapeOps {
    */
   public <U extends TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n, DataType<U> dType) {
     return Shapes.takeLast(scope, shape, n, dType);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

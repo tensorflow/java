@@ -428,8 +428,9 @@ public final class OperatorProcessor extends AbstractProcessor {
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
-            .addParameter(T_SCOPE, "scope")
-            .addStatement("this.scope = scope");
+            .addParameter(T_OPS, "ops")
+            .addStatement("this.scope = ops.scope()")
+            .addStatement("this.ops = ops");
 
     TypeSpec.Builder builder =
         TypeSpec.classBuilder(spec.className)
@@ -442,12 +443,23 @@ public final class OperatorProcessor extends AbstractProcessor {
                 T_OPS)
             .addMethods(spec.methods);
 
-    addGroupFields(builder, ctorBuilder, spec.subGroups);
+    MethodSpec.Builder opsBuilder = MethodSpec.methodBuilder("ops")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .returns(T_OPS)
+            .addJavadoc("Get the parent {@link " + T_OPS.simpleName() + "} object.")
+            .addStatement("return ops");
+
+    builder.addMethod(opsBuilder.build());
+
+    addGroupFields(builder, ctorBuilder, spec.subGroups, false);
 
     builder.addMethod(ctorBuilder.build());
 
     builder.addField(
         FieldSpec.builder(T_SCOPE, "scope").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build());
+
+    builder.addField(
+            FieldSpec.builder(T_OPS, "ops").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build());
 
     return builder.build();
   }
@@ -497,7 +509,7 @@ public final class OperatorProcessor extends AbstractProcessor {
                 T_OPERATOR)
             .addMethods(spec.methods);
 
-    addGroupFields(opsBuilder, ctorBuilder, spec.subGroups);
+    addGroupFields(opsBuilder, ctorBuilder, spec.subGroups, true);
 
     opsBuilder.addMethod(ctorBuilder.build());
 
@@ -571,14 +583,14 @@ public final class OperatorProcessor extends AbstractProcessor {
     return opsBuilder.build();
   }
 
-  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder, List<OpsSpec> groups) {
+  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder, List<OpsSpec> groups, boolean isTopClass) {
     groups.forEach(group -> {
       classBuilder.addField(
           FieldSpec.builder(group.className, group.fieldName)
               .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
               .build()
       );
-      ctorBuilder.addStatement("$L = new $T(scope)", group.fieldName, group.className).build();
+      ctorBuilder.addStatement("$L = new $T(" + (isTopClass ? "this" : "ops") + ")", group.fieldName, group.className).build();
     });
   }
 
