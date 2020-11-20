@@ -79,6 +79,9 @@ public interface Operand<T extends TType> extends Op, Shaped {
     return asOutput().tensor().data();
   }
 
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+   */
   @Override
   default Shape shape() {
     return asOutput().shape();

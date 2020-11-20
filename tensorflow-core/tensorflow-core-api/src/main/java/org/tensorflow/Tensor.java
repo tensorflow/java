@@ -233,6 +233,7 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
     return numBytes;
   }
 
+  /** Returns the shape of this tensor. */
   @Override
   public Shape shape() {
     return shape;

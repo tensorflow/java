@@ -80,6 +80,9 @@ public final class Output<T extends TType> implements Operand<T> {
     return (Tensor<T>) operation.tensor(index);
   }
 
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by this output.
+   */
   @Override
   public Shape shape() {
     return operation.shape(index);

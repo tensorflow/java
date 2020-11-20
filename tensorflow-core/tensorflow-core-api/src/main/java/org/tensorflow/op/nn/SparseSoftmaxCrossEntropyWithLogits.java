@@ -98,7 +98,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
       throw new IllegalArgumentException(
           String.format(
               "Rank mismatch: Rank of labels (received %s) should equal rank of logits minus 1 (received %s).",
-              labelsStaticShape.toString(), logitsShape.toString()));
+              labelsStaticShape, logitsShape));
     }
 
     if (staticShapesFullyDefined && !labelsStaticShape.equals(logitsShortened)) {
@@ -107,7 +107,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
               "Shape mismatch: The shape of labels (received %s) "
                   + "should equal the shape of logits except for the last "
                   + "dimension (received %s).",
-              labelsStaticShape.toString(), logitsShape.toString()));
+              labelsStaticShape, logitsShape));
     }
     // Check if no reshapes are required.
     if (logitsShape.numDimensions() == 2) {

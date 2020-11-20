@@ -67,7 +67,7 @@ public class SigmoidCrossEntropyWithLogits {
       throw new IllegalArgumentException(
           String.format(
               "logits and labels must have the same shape (%s vs %s)",
-              labels.shape().toString(), logits.shape()));
+              labels.shape(), logits.shape()));
     }
     scope = scope.withSubScope("SigmoidCrossEntropyWithLogits");
 
