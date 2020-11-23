@@ -124,16 +124,16 @@ public class NadamTest {
       Variable<TFloat32>[] secondMomentSlots = new Variable[2];
 
       firstMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.FIRST_MOMENT).get();
-      assertEquals(firstMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(firstMomentSlots[0].shape(), var0.shape());
 
       secondMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.SECOND_MOMENT).get();
-      assertEquals(secondMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(secondMomentSlots[0].shape(), var0.shape());
 
       firstMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.FIRST_MOMENT).get();
-      assertEquals(firstMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(firstMomentSlots[1].shape(), var1.shape());
 
       secondMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.SECOND_MOMENT).get();
-      assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(secondMomentSlots[1].shape(), var1.shape());
 
       /* initialize the local variables */
       session.run(var0Initializer);

@@ -73,9 +73,9 @@ public class SoftmaxCrossEntropyWithLogits {
   public static <T extends TNumber, U extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
       Scope scope, Operand<U> labels, Operand<T> logits, int axis) {
     scope = scope.withSubScope("SoftmaxCrossEntropyWithLogits");
-    axis = axis % logits.asOutput().shape().numDimensions();
+    axis = axis % logits.shape().numDimensions();
     if (axis < 0) {
-      axis += logits.asOutput().shape().numDimensions();
+      axis += logits.shape().numDimensions();
     }
 
 
@@ -96,15 +96,15 @@ public class SoftmaxCrossEntropyWithLogits {
     }
 
     Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, logits), TInt64.DTYPE);
-    Shape shape = logits.asOutput().shape();
+    Shape shape = logits.shape();
 
     // Move the dim to the end if dim is not the last dimension.
-    if (axis != -1 && axis != logits.asOutput().shape().numDimensions() - 1) {
+    if (axis != -1 && axis != logits.shape().numDimensions() - 1) {
       logits = moveDimToEnd(scope, logits, axis, inputRank);
       labels = moveDimToEnd(scope, labels, axis, inputRank);
     }
 
-    Shape inputShape = logits.asOutput().shape();
+    Shape inputShape = logits.shape();
     logits = flattenOuterDims(scope, logits);
     labels = flattenOuterDims(scope, labels);
 
@@ -149,7 +149,7 @@ public class SoftmaxCrossEntropyWithLogits {
   private static <T extends TNumber> Operand<T> flattenOuterDims(Scope scope, Operand<T> logits) {
     Operand<TInt64> one = Constant.scalarOf(scope, 1L);
 
-    Shape shape = logits.asOutput().shape();
+    Shape shape = logits.shape();
     int ndims = shape.numDimensions();
     if (!shape.hasUnknownDimension()) {
       long product = 1L;

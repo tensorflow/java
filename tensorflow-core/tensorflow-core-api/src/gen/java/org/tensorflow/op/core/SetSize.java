@@ -100,23 +100,23 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
    * `n-1` dimensions as `set`. Each value is the number of unique elements in
    * the corresponding `[0...n-1]` dimension of `set`.
    */
-  public Output<TInt32> size() {
-    return size;
+  public Output<TInt32> output() {
+    return output;
   }
   
   @Override
   public Output<TInt32> asOutput() {
-    return size;
+    return output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "SetSize";
   
-  private Output<TInt32> size;
+  private Output<TInt32> output;
   
   private SetSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    size = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

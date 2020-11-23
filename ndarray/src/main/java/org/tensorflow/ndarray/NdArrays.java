@@ -65,7 +65,7 @@ public final class NdArrays {
     if (values == null) {
       throw new IllegalArgumentException("Values cannot be null");
     }
-    return wrap(DataBuffers.of(values, false, false), Shape.of(values.length));
+    return wrap(Shape.of(values.length), DataBuffers.of(values, false, false));
   }
 
   /**
@@ -81,19 +81,19 @@ public final class NdArrays {
     if (shape == null) {
       throw new IllegalArgumentException("Shape cannot be null");
     }
-    return wrap(DataBuffers.ofBytes(shape.size()), shape);
+    return wrap(shape, DataBuffers.ofBytes(shape.size()));
   }
 
   /**
    * Wraps a buffer in a byte N-dimensional array of a given shape.
    *
-   * @param buffer buffer to wrap
    * @param shape shape of the array
+   * @param buffer buffer to wrap
    * @return new byte N-dimensional array
    * @throws IllegalArgumentException if shape is null, has unknown dimensions or has size bigger
    *                                  in the buffer size
    */
-  public static ByteNdArray wrap(ByteDataBuffer buffer, Shape shape) {
+  public static ByteNdArray wrap(Shape shape, ByteDataBuffer buffer) {
     return ByteDenseNdArray.create(buffer, shape);
   }
 

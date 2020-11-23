@@ -26,6 +26,7 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.types.family.TType;
 
@@ -44,7 +45,7 @@ import org.tensorflow.types.family.TType;
  * }
  * }</pre>
  */
-public final class Tensor<T extends TType> implements AutoCloseable {
+public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
 
   /**
    * Allocates a tensor of a given datatype and shape.
@@ -232,12 +233,8 @@ public final class Tensor<T extends TType> implements AutoCloseable {
     return numBytes;
   }
 
-  /**
-   * Returns the <a href="https://www.tensorflow.org/resources/dims_types.html#shape">shape</a> of
-   * the Tensor, i.e., the sizes of each dimension.
-   *
-   * @return shape of this tensor
-   */
+  /** Returns the shape of this tensor. */
+  @Override
   public Shape shape() {
     return shape;
   }

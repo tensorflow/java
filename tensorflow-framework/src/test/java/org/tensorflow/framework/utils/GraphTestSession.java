@@ -1021,7 +1021,7 @@ public class GraphTestSession extends TestSession {
   /** {@inheritDoc} */
   @Override
   public <T extends TType> void print(PrintWriter writer, Output<T> input) {
-    boolean isScalar = input.asOutput().shape().size() == 1;
+    boolean isScalar = input.shape().size() == 1;
 
     DataType<T> dtype = input.dataType();
     if (dtype == TFloat32.DTYPE) {

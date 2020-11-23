@@ -15,6 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.op.Op;
 import org.tensorflow.types.family.TType;
 
@@ -39,7 +41,7 @@ import org.tensorflow.types.family.TType;
  * tf.concat(split, tf.constant(0));
  * }</pre>
  */
-public interface Operand<T extends TType> extends Op {
+public interface Operand<T extends TType> extends Op, Shaped {
 
   /**
    * Returns the symbolic handle of the tensor.
@@ -75,5 +77,13 @@ public interface Operand<T extends TType> extends Op {
    */
   default T data() {
     return asOutput().tensor().data();
+  }
+
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+   */
+  @Override
+  default Shape shape() {
+    return asOutput().shape();
   }
 }

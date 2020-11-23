@@ -31,7 +31,7 @@ public class TensorSliceDataset extends Dataset {
   }
 
   private static List<Shape> outputShapes(List<Operand<?>> components) {
-    return components.stream().map(c -> c.asOutput().shape().tail()).collect(Collectors.toList());
+    return components.stream().map(c -> c.shape().tail()).collect(Collectors.toList());
   }
 
   private static Operand<?> makeVariant(

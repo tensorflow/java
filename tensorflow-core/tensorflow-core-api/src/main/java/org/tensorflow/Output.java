@@ -18,6 +18,7 @@ package org.tensorflow;
 import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -34,11 +35,6 @@ public final class Output<T extends TType> implements Operand<T> {
   /** Returns the index into the outputs of the Operation. */
   public int index() {
     return index;
-  }
-
-  /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
-  public Shape shape() {
-    return operation.shape(index);
   }
 
   /** Returns the DataType of the tensor referred to by this Output. */
@@ -82,6 +78,14 @@ public final class Output<T extends TType> implements Operand<T> {
   @SuppressWarnings("unchecked")
   public Tensor<T> tensor() {
     return (Tensor<T>) operation.tensor(index);
+  }
+
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by this output.
+   */
+  @Override
+  public Shape shape() {
+    return operation.shape(index);
   }
 
   @Override

@@ -80,10 +80,10 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     if (convertToFloat32) {
       preciseLogits = Cast.create(scope, logits, TFloat32.DTYPE);
     }
-    Shape labelsStaticShape = labels.asOutput().shape();
+    Shape labelsStaticShape = labels.shape();
     org.tensorflow.op.core.Shape<TInt32> labelsShape =
         org.tensorflow.op.core.Shape.create(scope, labels);
-    Shape logitsShape = logits.asOutput().shape();
+    Shape logitsShape = logits.shape();
     Shape logitsShortened = logitsShape.take(logitsShape.numDimensions() - 1);
 
     boolean staticShapesFullyDefined =
@@ -98,7 +98,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
       throw new IllegalArgumentException(
           String.format(
               "Rank mismatch: Rank of labels (received %s) should equal rank of logits minus 1 (received %s).",
-              labelsStaticShape.toString(), logitsShape.toString()));
+              labelsStaticShape, logitsShape));
     }
 
     if (staticShapesFullyDefined && !labelsStaticShape.equals(logitsShortened)) {
@@ -107,7 +107,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
               "Shape mismatch: The shape of labels (received %s) "
                   + "should equal the shape of logits except for the last "
                   + "dimension (received %s).",
-              labelsStaticShape.toString(), logitsShape.toString()));
+              labelsStaticShape, logitsShape));
     }
     // Check if no reshapes are required.
     if (logitsShape.numDimensions() == 2) {
