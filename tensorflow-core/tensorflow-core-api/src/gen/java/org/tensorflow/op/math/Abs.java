@@ -50,6 +50,7 @@ public final class Abs<T extends TNumber> extends RawOp implements Operand<T> {
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> Abs<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abs", scope.makeOpName("Abs"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Abs<T>(opBuilder.build());

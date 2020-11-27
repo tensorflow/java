@@ -246,6 +246,10 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
       writer->EndLine();
     }
   }
+  // Add Device String
+  writer->Append("opBuilder.setDevice(scope.makeDeviceString());");
+  writer->EndLine();
+
   // Add control dependencies, if any.
   writer->Append("opBuilder = scope.applyControlDependencies(opBuilder);");
   writer->EndLine();

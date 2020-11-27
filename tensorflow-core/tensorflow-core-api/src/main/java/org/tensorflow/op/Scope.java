@@ -16,6 +16,8 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
+
+import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.OperationBuilder;
 
@@ -83,7 +85,7 @@ public final class Scope {
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(), new ArrayList<>());
+    this(env, new NameScope(), new ArrayList<>(), DeviceSpec.newBuilder().build());
   }
 
   /** Returns the execution environment used by this scope. */
@@ -105,7 +107,7 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withSubScope(String childScopeName) {
-    return new Scope(env, nameScope.withSubScope(childScopeName), controlDependencies);
+    return new Scope(env, nameScope.withSubScope(childScopeName), controlDependencies, deviceSpec);
   }
 
   /**
@@ -121,7 +123,12 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withName(String opName) {
-    return new Scope(env, nameScope.withName(opName), controlDependencies);
+    return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec);
+  }
+
+  // TODO: add docs
+  public Scope withDevice(DeviceSpec deviceSpec) {
+    return new Scope(env, nameScope, controlDependencies, deviceSpec);
   }
 
   /**
@@ -149,10 +156,11 @@ public final class Scope {
   }
 
   private Scope(
-      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies) {
+      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies, DeviceSpec deviceSpec) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
+    this.deviceSpec = deviceSpec;
   }
 
   /**
@@ -165,7 +173,7 @@ public final class Scope {
    * @return a new scope with the provided control dependencies
    */
   public Scope withControlDependencies(Iterable<Op> controls) {
-    return new Scope(env, nameScope, controls);
+    return new Scope(env, nameScope, controls, deviceSpec);
   }
 
   /**
@@ -183,4 +191,9 @@ public final class Scope {
   private final ExecutionEnvironment env;
   private final Iterable<Op> controlDependencies;
   private final NameScope nameScope;
+  private final DeviceSpec deviceSpec;
+
+  public String makeDeviceString() {
+    return deviceSpec.toString();
+  }
 }
