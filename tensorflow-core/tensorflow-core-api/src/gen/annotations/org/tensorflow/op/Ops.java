@@ -7722,15 +7722,6 @@ public final class Ops {
   }
 
   /**
-   * Returns an API that uses the provided DeviceSpec for an op.
-   *
-   * @see {@link Scope#withDevice(DeviceSpec)} (String)}
-   */
-  public Ops withDevice(DeviceSpec deviceSpec) {
-    return new Ops(scope.withDevice(deviceSpec));
-  }
-
-  /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
    * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
