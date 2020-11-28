@@ -89,52 +89,52 @@ public class EagerTestSession extends TestSession {
       Operand<TFloat32> o = (Operand<TFloat32>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
       }
       index.set(0);
-      o.data().scalars().forEach(f -> assertEquals(expected, f.getFloat(), epsilon));
+      o.asTensor().scalars().forEach(f -> assertEquals(expected, f.getFloat(), epsilon));
     } else if (dtype == TFloat64.DTYPE) {
       Operand<TFloat64> o = (Operand<TFloat64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
       }
       index.set(0);
-      o.data().scalars().forEach(f -> assertEquals(expected, f.getDouble(), epsilon));
+      o.asTensor().scalars().forEach(f -> assertEquals(expected, f.getDouble(), epsilon));
     } else if (dtype == TInt32.DTYPE) {
       Operand<TInt32> o = (Operand<TInt32>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
       }
       index.set(0);
-      o.data().scalars().forEach(f -> assertEquals((int) expected, f.getInt()));
+      o.asTensor().scalars().forEach(f -> assertEquals((int) expected, f.getInt()));
     } else if (dtype == TInt64.DTYPE) {
       Operand<TInt64> o = (Operand<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
       }
       index.set(0);
-      o.data().scalars().forEach(f -> assertEquals((long) expected, f.getLong()));
+      o.asTensor().scalars().forEach(f -> assertEquals((long) expected, f.getLong()));
     } else if (dtype == TUint8.DTYPE) {
       Operand<TUint8> o = (Operand<TUint8>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %x\n", index.getAndIncrement(), f.getByte()));
       }
       index.set(0);
-      o.data().scalars().forEach(f -> assertEquals((long) expected, f.getByte()));
+      o.asTensor().scalars().forEach(f -> assertEquals((long) expected, f.getByte()));
     }
   }
 
@@ -151,12 +151,12 @@ public class EagerTestSession extends TestSession {
       Output<TFloat32> o = (Output<TFloat32>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f ->
@@ -166,12 +166,12 @@ public class EagerTestSession extends TestSession {
       Output<TFloat64> o = (Output<TFloat64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f ->
@@ -181,36 +181,36 @@ public class EagerTestSession extends TestSession {
       Output<TInt32> o = (Output<TInt32>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> assertEquals(expected[index.getAndIncrement()].intValue(), f.getInt()));
     } else if (dtype == TInt64.DTYPE) {
       Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> assertEquals(expected[index.getAndIncrement()].longValue(), f.getLong()));
     } else if (dtype == TUint8.DTYPE) {
       Output<TUint8> o = (Output<TUint8>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%x). %d\n", index.getAndIncrement(), f.getByte()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> assertEquals(expected[index.getAndIncrement()].byteValue(), f.getByte()));
     }
@@ -224,12 +224,12 @@ public class EagerTestSession extends TestSession {
       Output<TFloat32> o = (Output<TFloat32>) input;
       AtomicLong index = new AtomicLong();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f -> assertEquals(expected.getFloat(index.getAndIncrement()), f.getFloat(), epsilon));
@@ -237,12 +237,12 @@ public class EagerTestSession extends TestSession {
       Output<TFloat64> o = (Output<TFloat64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f ->
@@ -251,24 +251,24 @@ public class EagerTestSession extends TestSession {
       Output<TInt32> o = (Output<TInt32>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
       }
       index.set(0);
-      for (IntNdArray f : o.data().scalars()) {
+      for (IntNdArray f : o.asTensor().scalars()) {
         assertEquals((int) expected.getFloat(index.getAndIncrement()), f.getInt());
       }
     } else if (dtype == TInt64.DTYPE) {
       Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f -> assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getLong()));
@@ -276,12 +276,12 @@ public class EagerTestSession extends TestSession {
       Output<TUint8> o = (Output<TUint8>) input;
       AtomicInteger index = new AtomicInteger();
       if (debug) {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEach(f -> System.out.printf("%d). %x\n", index.getAndIncrement(), f.getByte()));
       }
       index.set(0);
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(
               f -> assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getByte()));
@@ -296,10 +296,10 @@ public class EagerTestSession extends TestSession {
     if (debug) {
       if (isScalar) {
         System.out.printf(
-            "0). %b <==> %s\n", predicate.test(input.data().getObject()), input.data().getObject());
+            "0). %b <==> %s\n", predicate.test(input.asTensor().getObject()), input.asTensor().getObject());
       } else {
         input
-            .data()
+            .asTensor()
             .scalars()
             .forEachIndexed(
                 (idx, s) ->
@@ -310,9 +310,9 @@ public class EagerTestSession extends TestSession {
     }
     index.set(0);
     if (isScalar) {
-      assertTrue(predicate.test(input.data().getObject()));
+      assertTrue(predicate.test(input.asTensor().getObject()));
     } else {
-      input.data().scalars().forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
+      input.asTensor().scalars().forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
     }
   }
 
@@ -327,9 +327,9 @@ public class EagerTestSession extends TestSession {
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %f\n", predicate.test(o.data().getFloat()), o.data().getFloat());
+              "0). %b <==> %f\n", predicate.test(o.asTensor().getFloat()), o.asTensor().getFloat());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -340,20 +340,20 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getFloat()));
+        assertTrue(predicate.test(o.asTensor().getFloat()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getFloat())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getFloat())));
       }
     } else if (dtype == TFloat64.DTYPE) {
       Output<TFloat64> o = (Output<TFloat64>) input;
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %f\n", predicate.test(o.data().getDouble()), o.data().getDouble());
+              "0). %b <==> %f\n", predicate.test(o.asTensor().getDouble()), o.asTensor().getDouble());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -364,20 +364,20 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getDouble()));
+        assertTrue(predicate.test(o.asTensor().getDouble()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getDouble())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getDouble())));
       }
     } else if (dtype == TFloat16.DTYPE) {
       Output<TFloat16> o = (Output<TFloat16>) input;
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %f\n", predicate.test(o.data().getFloat()), o.data().getFloat());
+              "0). %b <==> %f\n", predicate.test(o.asTensor().getFloat()), o.asTensor().getFloat());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -388,20 +388,20 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getFloat()));
+        assertTrue(predicate.test(o.asTensor().getFloat()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getFloat())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getFloat())));
       }
     } else if (dtype == TInt32.DTYPE) {
       Output<TInt32> o = (Output<TInt32>) input;
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %d\n", predicate.test(o.data().getInt()), o.data().getInt());
+              "0). %b <==> %d\n", predicate.test(o.asTensor().getInt()), o.asTensor().getInt());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -412,20 +412,20 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getInt()));
+        assertTrue(predicate.test(o.asTensor().getInt()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getInt())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getInt())));
       }
     } else if (dtype == TInt64.DTYPE) {
       Output<TInt64> o = (Output<TInt64>) input;
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %d\n", predicate.test(o.data().getLong()), o.data().getLong());
+              "0). %b <==> %d\n", predicate.test(o.asTensor().getLong()), o.asTensor().getLong());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -436,20 +436,20 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getLong()));
+        assertTrue(predicate.test(o.asTensor().getLong()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getLong())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getLong())));
       }
     } else if (dtype == TUint8.DTYPE) {
       Output<TUint8> o = (Output<TUint8>) input;
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %x\n", predicate.test(o.data().getByte()), o.data().getByte());
+              "0). %b <==> %x\n", predicate.test(o.asTensor().getByte()), o.asTensor().getByte());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
@@ -460,11 +460,11 @@ public class EagerTestSession extends TestSession {
       }
       index.set(0);
       if (isScalar) {
-        assertTrue(predicate.test(o.data().getByte()));
+        assertTrue(predicate.test(o.asTensor().getByte()));
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.data().getByte())));
+            .forEachIndexed((idx, f) -> assertTrue(predicate.test(o.asTensor().getByte())));
       }
     } else {
       fail("Unexpected DataType: " + dtype);
@@ -482,13 +482,13 @@ public class EagerTestSession extends TestSession {
     AtomicInteger index = new AtomicInteger();
     if (debug) {
       input
-          .data()
+          .asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %s\n", index.getAndIncrement(), f.getObject()));
     }
     index.set(0);
     input
-        .data()
+        .asTensor()
         .scalars()
         .forEach(f -> assertEquals(expected[index.getAndIncrement()], f.getObject()));
   }
@@ -504,13 +504,13 @@ public class EagerTestSession extends TestSession {
     AtomicInteger index = new AtomicInteger();
     if (debug) {
       input
-          .data()
+          .asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %b\n", index.getAndIncrement(), f.getBoolean()));
     }
     index.set(0);
     input
-        .data()
+        .asTensor()
         .scalars()
         .forEach(f -> assertEquals(expected[index.getAndIncrement()], f.getBoolean()));
   }
@@ -530,25 +530,25 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %f <==> %f\n", x.data().getFloat(), o.data().getFloat());
+          System.out.printf("0). %f <==> %f\n", x.asTensor().getFloat(), o.asTensor().getFloat());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %f <==> %f\n",
-                          index.getAndIncrement(), x.data().getFloat(idx), f.getFloat()));
+                          index.getAndIncrement(), x.asTensor().getFloat(idx), f.getFloat()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getFloat(), o.data().getFloat(), epsilon);
+        assertEquals(x.asTensor().getFloat(), o.asTensor().getFloat(), epsilon);
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEachIndexed(
-                (idx, f) -> assertEquals(x.data().getFloat(idx), f.getFloat(), epsilon));
+                (idx, f) -> assertEquals(x.asTensor().getFloat(idx), f.getFloat(), epsilon));
       }
     } else if (dtype == TFloat64.DTYPE) {
       Output<TFloat64> x = (Output<TFloat64>) expected;
@@ -556,25 +556,25 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %f <==> %f\n", x.data().getDouble(), o.data().getDouble());
+          System.out.printf("0). %f <==> %f\n", x.asTensor().getDouble(), o.asTensor().getDouble());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %f <==> %f\n",
-                          index.getAndIncrement(), x.data().getDouble(idx), f.getDouble()));
+                          index.getAndIncrement(), x.asTensor().getDouble(idx), f.getDouble()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getDouble(), o.data().getDouble(), epsilon);
+        assertEquals(x.asTensor().getDouble(), o.asTensor().getDouble(), epsilon);
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
             .forEachIndexed(
-                (idx, f) -> assertEquals(x.data().getDouble(idx), f.getDouble(), epsilon));
+                (idx, f) -> assertEquals(x.asTensor().getDouble(idx), f.getDouble(), epsilon));
       }
     } else if (dtype == TInt32.DTYPE) {
       Output<TInt32> x = (Output<TInt32>) expected;
@@ -582,24 +582,24 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %d <==> %d\n", x.data().getInt(), o.data().getInt());
+          System.out.printf("0). %d <==> %d\n", x.asTensor().getInt(), o.asTensor().getInt());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %d <==> %d\n",
-                          index.getAndIncrement(), x.data().getInt(idx), f.getInt()));
+                          index.getAndIncrement(), x.asTensor().getInt(idx), f.getInt()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getInt(), o.data().getInt());
+        assertEquals(x.asTensor().getInt(), o.asTensor().getInt());
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertEquals(x.data().getInt(idx), f.getInt()));
+            .forEachIndexed((idx, f) -> assertEquals(x.asTensor().getInt(idx), f.getInt()));
       }
     } else if (dtype == TInt64.DTYPE) {
       Output<TInt64> x = (Output<TInt64>) expected;
@@ -607,24 +607,24 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %d  <==> %d\n", x.data().getLong(), o.data().getLong());
+          System.out.printf("0). %d  <==> %d\n", x.asTensor().getLong(), o.asTensor().getLong());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %d  <==> %d\n",
-                          index.getAndIncrement(), x.data().getLong(idx), f.getLong()));
+                          index.getAndIncrement(), x.asTensor().getLong(idx), f.getLong()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getLong(), o.data().getLong());
+        assertEquals(x.asTensor().getLong(), o.asTensor().getLong());
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertEquals(x.data().getLong(idx), f.getLong()));
+            .forEachIndexed((idx, f) -> assertEquals(x.asTensor().getLong(idx), f.getLong()));
       }
     } else if (dtype == TUint8.DTYPE) {
       Output<TUint8> x = (Output<TUint8>) expected;
@@ -632,24 +632,24 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %x  <==> %x\n", x.data().getByte(), o.data().getByte());
+          System.out.printf("0). %x  <==> %x\n", x.asTensor().getByte(), o.asTensor().getByte());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %x  <==> %x\n",
-                          index.getAndIncrement(), x.data().getByte(idx), f.getByte()));
+                          index.getAndIncrement(), x.asTensor().getByte(idx), f.getByte()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getByte(), o.data().getByte());
+        assertEquals(x.asTensor().getByte(), o.asTensor().getByte());
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertEquals(x.data().getByte(idx), f.getByte()));
+            .forEachIndexed((idx, f) -> assertEquals(x.asTensor().getByte(idx), f.getByte()));
       }
     } else if (dtype == TString.DTYPE) {
       Output<TString> x = (Output<TString>) expected;
@@ -657,24 +657,24 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %s  <==> %s\n", x.data().getObject(), o.data().getObject());
+          System.out.printf("0). %s  <==> %s\n", x.asTensor().getObject(), o.asTensor().getObject());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %s  <==> %s\n",
-                          index.getAndIncrement(), x.data().getObject(idx), f.getObject()));
+                          index.getAndIncrement(), x.asTensor().getObject(idx), f.getObject()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getObject(), o.data().getObject());
+        assertEquals(x.asTensor().getObject(), o.asTensor().getObject());
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertEquals(x.data().getObject(idx), f.getObject()));
+            .forEachIndexed((idx, f) -> assertEquals(x.asTensor().getObject(idx), f.getObject()));
       }
     } else if (dtype == TBool.DTYPE) {
       Output<TBool> x = (Output<TBool>) expected;
@@ -682,24 +682,24 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %b  <==> %b\n", x.data().getBoolean(), o.data().getBoolean());
+          System.out.printf("0). %b  <==> %b\n", x.asTensor().getBoolean(), o.asTensor().getBoolean());
         } else {
-          o.data()
+          o.asTensor()
               .scalars()
               .forEachIndexed(
                   (idx, f) ->
                       System.out.printf(
                           "%d). %b  <==> %b\n",
-                          index.getAndIncrement(), x.data().getBoolean(idx), f.getBoolean()));
+                          index.getAndIncrement(), x.asTensor().getBoolean(idx), f.getBoolean()));
         }
       }
       index.set(0);
       if (isScalar) {
-        assertEquals(x.data().getBoolean(), o.data().getBoolean());
+        assertEquals(x.asTensor().getBoolean(), o.asTensor().getBoolean());
       } else {
-        o.data()
+        o.asTensor()
             .scalars()
-            .forEachIndexed((idx, f) -> assertEquals(x.data().getBoolean(idx), f.getBoolean()));
+            .forEachIndexed((idx, f) -> assertEquals(x.asTensor().getBoolean(idx), f.getBoolean()));
       }
     }
   }
@@ -711,43 +711,43 @@ public class EagerTestSession extends TestSession {
     if (dtype == TFloat32.DTYPE) {
       Output<TFloat32> o = (Output<TFloat32>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
     } else if (dtype == TFloat64.DTYPE) {
       Output<TFloat64> o = (Output<TFloat64>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
     } else if (dtype == TInt32.DTYPE) {
       Output<TInt32> o = (Output<TInt32>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
     } else if (dtype == TInt64.DTYPE) {
       Output<TInt64> o = (Output<TInt64>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
     } else if (dtype == TUint8.DTYPE) {
       Output<TUint8> o = (Output<TUint8>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %x\n", index.getAndIncrement(), f.getByte()));
     } else if (dtype == TString.DTYPE) {
       Output<TString> o = (Output<TString>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %s\n", index.getAndIncrement(), f.getObject()));
     } else if (dtype == TBool.DTYPE) {
       Output<TBool> o = (Output<TBool>) input;
       AtomicInteger index = new AtomicInteger();
-      o.data()
+      o.asTensor()
           .scalars()
           .forEach(f -> System.out.printf("%d). %b\n", index.getAndIncrement(), f.getBoolean()));
     } else {

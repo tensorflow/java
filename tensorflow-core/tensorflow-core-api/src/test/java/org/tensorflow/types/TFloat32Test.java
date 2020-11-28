@@ -17,14 +17,20 @@
 
 package org.tensorflow.types;
 
-import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 
 public class TFloat32Test extends NumericTypesTestBase<TFloat32, Float> {
 
   @Override
-  Tensor<TFloat32> allocateTensor(Shape shape) {
+  TFloat32 allocateTensor(Shape shape) {
     return TFloat32.tensorOf(shape);
+  }
+
+  @Override
+  NdArray<Float> allocateNdArray(Shape shape) {
+    return NdArrays.ofFloats(shape);
   }
 
   @Override

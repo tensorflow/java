@@ -149,15 +149,14 @@ public class AdamaxTest {
         // Test powers
         final float beta1Power = (float) Math.pow(BETA_ONE_DEFAULT, step + 1);
 
-        try (Tensor<TFloat32> result =
-            session
+        try (TFloat32 result =
+            (TFloat32)session
                 .getGraphSession()
                 .runner()
                 .fetch("beta1_power")
                 .run()
-                .get(0)
-                .expect(TFloat32.DTYPE)) {
-          result.data().scalars().forEach(f -> assertEquals(beta1Power, f.getFloat(), epsilon1));
+                .get(0)) {
+          result.scalars().forEach(f -> assertEquals(beta1Power, f.getFloat(), epsilon1));
         }
         session.run(update);
 

@@ -99,13 +99,13 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     /**
      * @param badColor Color to use for pixels with non-finite values.
      */
-    public Options badColor(Tensor<?> badColor) {
+    public Options badColor(Tensor badColor) {
       this.badColor = badColor;
       return this;
     }
     
     private Long maxImages;
-    private Tensor<?> badColor;
+    private Tensor badColor;
     
     private Options() {
     }
@@ -150,7 +150,7 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
   /**
    * @param badColor Color to use for pixels with non-finite values.
    */
-  public static Options badColor(Tensor<?> badColor) {
+  public static Options badColor(Tensor badColor) {
     return new Options().badColor(badColor);
   }
   

@@ -88,7 +88,7 @@ public class EagerOperationBuilderTest {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
       // dtype, tensor attributes.
-      try (Tensor<TInt32> t = TInt32.scalarOf(1)) {
+      try (TInt32 t = TInt32.scalarOf(1)) {
         opBuilder(session, "Const", "DataTypeAndTensor")
             .setAttr("dtype", TInt32.DTYPE)
             .setAttr("value", t)

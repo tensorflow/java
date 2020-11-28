@@ -24,7 +24,6 @@ import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -349,9 +348,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -374,8 +373,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -1074,6 +1073,17 @@ public final class Ops {
   }
 
   /**
+   * Capture a {@code tensor} by making a constant copy of it.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param tensor a Tensor holding the constant value
+   * @return a constant of the same data type as `tensor`
+   */
+  public <T extends TType> Constant<T> capture(T tensor) {
+    return Constant.create(scope, tensor);
+  }
+
+  /**
    * Clips tensor values to a specified min and max.
    *  <p>
    *  Given a tensor `t`, this operation returns a tensor of the same type and
@@ -1706,17 +1716,6 @@ public final class Ops {
    */
   public Constant<TInt64> constant(Shape shape) {
     return Constant.tensorOf(scope, shape);
-  }
-
-  /**
-   * Create a constant from a Tensor.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param tensor a Tensor holding the constant value
-   * @return a constant of the same data type as `tensor`
-   */
-  public <T extends TType> Constant<T> constant(Tensor<T> tensor) {
-    return Constant.create(scope, tensor);
   }
 
   /**

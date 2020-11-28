@@ -60,7 +60,6 @@ public final class Output<T extends TType> implements Operand<T> {
     return ((Output<U>) this);
   }
 
-
   /**
    * Returns the tensor at this output.
    *
@@ -73,11 +72,12 @@ public final class Output<T extends TType> implements Operand<T> {
    *
    * @return tensor
    * @throws IllegalStateException if this output results from a graph
+   * @throws ClassCastException if the type of the tensor and this output are unexpectedly incompatible
    * @see EagerSession
    */
   @SuppressWarnings("unchecked")
-  public Tensor<T> tensor() {
-    return (Tensor<T>) operation.tensor(index);
+  public T asTensor() {
+    return (T)operation.tensor(index);
   }
 
   /**

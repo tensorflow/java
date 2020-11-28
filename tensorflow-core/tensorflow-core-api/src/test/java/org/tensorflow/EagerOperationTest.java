@@ -46,7 +46,7 @@ public class EagerOperationTest {
   @Test
   public void outputDataTypeAndShape() {
     try (EagerSession session = EagerSession.create();
-         Tensor<TInt32> t = TInt32.tensorOf(Shape.of(2, 3))) {
+         TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
               .setAttr("dtype", TInt32.DTYPE)
@@ -67,7 +67,7 @@ public class EagerOperationTest {
               .addInput(tf.constant(2).asOutput())
               .addInput(tf.constant(4).asOutput())
               .build();
-      assertEquals(6, add.tensor(0).expect(TInt32.DTYPE).data().getInt());
+      assertEquals(6, ((TInt32)add.tensor(0)).getInt());
 
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved

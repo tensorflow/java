@@ -17,14 +17,22 @@
 
 package org.tensorflow.types;
 
-import org.tensorflow.Tensor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 
 public class TInt32Test extends NumericTypesTestBase<TInt32, Integer> {
 
   @Override
-  Tensor<TInt32> allocateTensor(Shape shape) {
+  TInt32 allocateTensor(Shape shape) {
     return TInt32.tensorOf(shape);
+  }
+
+  @Override
+  NdArray<Integer> allocateNdArray(Shape shape) {
+    return NdArrays.ofInts(shape);
   }
 
   @Override

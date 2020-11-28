@@ -169,11 +169,10 @@ public class ScopeTest {
       // assertNotNull(g.operation("variance/zero"));
 
       // Verify correct results as well.
-      Tensor<TInt32> result =
-          sess.runner().fetch(var1.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.data().getInt());
-      result = sess.runner().fetch(var2.output()).run().get(0).expect(TInt32.DTYPE);
-      assertEquals(21704, result.data().getInt());
+      TInt32 result = (TInt32)sess.runner().fetch(var1.output()).run().get(0);
+      assertEquals(21704, result.getInt());
+      result = (TInt32)sess.runner().fetch(var2.output()).run().get(0);
+      assertEquals(21704, result.getInt());
     }
   }
 
@@ -189,7 +188,7 @@ public class ScopeTest {
       return create(s, TInt32.vectorOf(v));
     }
 
-    static <T extends TType> Const<T> create(Scope s, Tensor<T> value) {
+    static <T extends TType> Const<T> create(Scope s, T value) {
       return new Const<>(
           s.env()
               .opBuilder("Const", s.makeOpName("Const"))
