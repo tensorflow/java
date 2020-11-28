@@ -61,12 +61,7 @@ public class EagerOperationBuilderTest {
               .addInput(tf.constant(true).asOutput())
               .addInputList(new Output<?>[] {tf.constant(-1).asOutput()})
               .build();
-      try {
-        opBuilder(session, "Const", "var").addControlInput(asrt);
-        fail();
-      } catch (UnsupportedOperationException e) {
-        // expected
-      }
+      opBuilder(session, "Const", "var").addControlInput(asrt);
     }
   }
 

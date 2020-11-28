@@ -90,8 +90,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public OperationBuilder addControlInput(Operation control) {
-    throw new UnsupportedOperationException(
-        "Control inputs are not supported in an eager execution environment");
+    // No-op.  Any operations passed to this method will already be evaluated (b/c eager evaluation).
+    return this;
   }
 
   @Override
