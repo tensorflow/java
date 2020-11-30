@@ -47,6 +47,7 @@ public final class RefExit<T extends TType> extends RawOp implements Operand<T> 
   public static <T extends TType> RefExit<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefExit", scope.makeOpName("RefExit"));
     opBuilder.addInput(data.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RefExit<T>(opBuilder.build());
   }

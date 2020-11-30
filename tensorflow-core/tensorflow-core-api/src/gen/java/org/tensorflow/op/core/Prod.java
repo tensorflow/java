@@ -75,6 +75,7 @@ public final class Prod<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Prod", scope.makeOpName("Prod"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

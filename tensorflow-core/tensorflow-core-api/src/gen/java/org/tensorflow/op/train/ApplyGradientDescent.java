@@ -71,6 +71,7 @@ public final class ApplyGradientDescent<T extends TType> extends RawOp implement
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(delta.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -126,6 +126,7 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
     OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput());
     opBuilder.addInput(deletedKey.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {

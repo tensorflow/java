@@ -62,6 +62,7 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> NcclAllReduce<T> create(Scope scope, Operand<T> input, String reduction, Long numDevices, String sharedName) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclAllReduce", scope.makeOpName("NcclAllReduce"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("reduction", reduction);
     opBuilder.setAttr("num_devices", numDevices);

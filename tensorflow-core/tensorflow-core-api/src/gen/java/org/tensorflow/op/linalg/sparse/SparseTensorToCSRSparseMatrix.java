@@ -48,6 +48,7 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseTensorToCSRSparseMatrix(opBuilder.build());
   }

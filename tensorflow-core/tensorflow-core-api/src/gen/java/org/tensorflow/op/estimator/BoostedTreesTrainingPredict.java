@@ -60,6 +60,7 @@ public final class BoostedTreesTrainingPredict extends RawOp {
     opBuilder.addInput(cachedTreeIds.asOutput());
     opBuilder.addInput(cachedNodeIds.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesTrainingPredict(opBuilder.build());

@@ -130,6 +130,7 @@ public final class TriangularSolve<T extends TType> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixTriangularSolve", scope.makeOpName("TriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -71,6 +71,7 @@ public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Op
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(filter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mode", mode);
     long[] stridesArray = new long[strides.size()];

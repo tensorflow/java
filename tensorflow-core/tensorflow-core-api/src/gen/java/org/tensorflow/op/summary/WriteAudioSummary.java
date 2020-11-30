@@ -71,6 +71,7 @@ public final class WriteAudioSummary extends RawOp {
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

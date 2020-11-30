@@ -103,6 +103,7 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
     opBuilder.addInput(momentum.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

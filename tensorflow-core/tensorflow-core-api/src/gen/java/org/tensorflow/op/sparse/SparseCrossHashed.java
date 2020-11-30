@@ -96,6 +96,7 @@ public final class SparseCrossHashed extends RawOp {
     opBuilder.addInput(numBuckets.asOutput());
     opBuilder.addInput(strongHash.asOutput());
     opBuilder.addInput(salt.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseCrossHashed(opBuilder.build());
   }

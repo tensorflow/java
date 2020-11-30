@@ -103,6 +103,7 @@ public final class CtcLoss<T extends TNumber> extends RawOp {
     opBuilder.addInput(labelsIndices.asOutput());
     opBuilder.addInput(labelsValues.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

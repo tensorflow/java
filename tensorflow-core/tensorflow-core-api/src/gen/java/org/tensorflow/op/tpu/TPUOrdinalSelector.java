@@ -45,6 +45,7 @@ public final class TPUOrdinalSelector extends RawOp implements Operand<TInt32> {
   @Endpoint(describeByClass = true)
   public static TPUOrdinalSelector create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUOrdinalSelector", scope.makeOpName("TPUOrdinalSelector"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TPUOrdinalSelector(opBuilder.build());
   }

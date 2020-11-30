@@ -61,6 +61,7 @@ public final class QuantizedBiasAdd<V extends TType> extends RawOp {
     opBuilder.addInput(maxInput.asOutput());
     opBuilder.addInput(minBias.asOutput());
     opBuilder.addInput(maxBias.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizedBiasAdd<V>(opBuilder.build());

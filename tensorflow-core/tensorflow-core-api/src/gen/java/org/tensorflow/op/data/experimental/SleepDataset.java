@@ -50,6 +50,7 @@ public final class SleepDataset extends RawOp implements Operand<TType> {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSleepDataset", scope.makeOpName("SleepDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(sleepMicroseconds.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

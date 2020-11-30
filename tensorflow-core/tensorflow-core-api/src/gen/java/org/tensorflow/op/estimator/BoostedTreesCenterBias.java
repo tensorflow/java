@@ -52,6 +52,7 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
     opBuilder.addInput(meanHessians.asOutput());
     opBuilder.addInput(l1.asOutput());
     opBuilder.addInput(l2.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesCenterBias(opBuilder.build());
   }

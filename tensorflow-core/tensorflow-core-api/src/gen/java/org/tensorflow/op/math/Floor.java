@@ -47,6 +47,7 @@ public final class Floor<T extends TNumber> extends RawOp implements Operand<T> 
   public static <T extends TNumber> Floor<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Floor", scope.makeOpName("Floor"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Floor<T>(opBuilder.build());
   }

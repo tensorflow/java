@@ -137,6 +137,7 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixMatMul", scope.makeOpName("SparseMatrixMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

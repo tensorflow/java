@@ -71,6 +71,7 @@ public final class AllToAll<T extends TType> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("AllToAll", scope.makeOpName("AllToAll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("concat_dimension", concatDimension);
     opBuilder.setAttr("split_dimension", splitDimension);

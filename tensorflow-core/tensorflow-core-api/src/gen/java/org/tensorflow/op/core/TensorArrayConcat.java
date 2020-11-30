@@ -87,6 +87,7 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {

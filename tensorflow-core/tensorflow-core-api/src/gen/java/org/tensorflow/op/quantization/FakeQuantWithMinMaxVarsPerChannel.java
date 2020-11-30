@@ -115,6 +115,7 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

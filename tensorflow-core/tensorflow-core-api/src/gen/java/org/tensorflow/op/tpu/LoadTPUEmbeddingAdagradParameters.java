@@ -90,6 +90,7 @@ public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdagradParameters", scope.makeOpName("LoadTPUEmbeddingAdagradParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

@@ -63,6 +63,7 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new SerializeManySparse<U>(opBuilder.build());

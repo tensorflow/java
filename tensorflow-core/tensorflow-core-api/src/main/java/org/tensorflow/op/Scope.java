@@ -126,7 +126,14 @@ public final class Scope {
     return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec);
   }
 
-  // TODO: add docs
+  /**
+   * Return a new scope that uses the provided device specification for an op.
+   *
+   * <p>Operations created within this scope will place the created operations on the device(s) matching the provided spec.
+   *
+   * @param deviceSpec device specification for an operator in the returned scope
+   * @return a new Scope that uses opName for operations.
+   */
   public Scope withDevice(DeviceSpec deviceSpec) {
     return new Scope(env, nameScope, controlDependencies, deviceSpec);
   }

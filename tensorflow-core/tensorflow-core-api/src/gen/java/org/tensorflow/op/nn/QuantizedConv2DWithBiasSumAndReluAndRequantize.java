@@ -100,6 +100,7 @@ public final class QuantizedConv2DWithBiasSumAndReluAndRequantize<X extends TTyp
     opBuilder.addInput(summand.asOutput());
     opBuilder.addInput(minSummand.asOutput());
     opBuilder.addInput(maxSummand.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

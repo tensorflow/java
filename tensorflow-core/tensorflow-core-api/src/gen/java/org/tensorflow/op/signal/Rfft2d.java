@@ -64,6 +64,7 @@ public final class Rfft2d<U extends TType> extends RawOp implements Operand<U> {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT2D", scope.makeOpName("Rfft2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tcomplex", Tcomplex);
     return new Rfft2d<U>(opBuilder.build());

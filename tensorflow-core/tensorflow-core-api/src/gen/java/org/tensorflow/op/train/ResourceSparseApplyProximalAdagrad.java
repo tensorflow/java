@@ -83,6 +83,7 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

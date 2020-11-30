@@ -57,6 +57,7 @@ public final class QuantizedMaxPool<T extends TType> extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
     opBuilder.addInput(maxInput.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {

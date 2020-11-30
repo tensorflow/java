@@ -61,6 +61,7 @@ public final class RegexFullMatch extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexFullMatch", scope.makeOpName("RegexFullMatch"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RegexFullMatch(opBuilder.build());
   }

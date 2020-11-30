@@ -48,6 +48,7 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmaxGrad", scope.makeOpName("SparseMatrixSoftmaxGrad"));
     opBuilder.addInput(softmax.asOutput());
     opBuilder.addInput(gradSoftmax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     return new SparseMatrixSoftmaxGrad(opBuilder.build());

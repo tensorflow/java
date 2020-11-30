@@ -71,6 +71,7 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(rightNodeContribs));
     opBuilder.addInput(maxDepth.asOutput());
     opBuilder.addInput(learningRate.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("pruning_mode", pruningMode);
     return new BoostedTreesUpdateEnsemble(opBuilder.build());

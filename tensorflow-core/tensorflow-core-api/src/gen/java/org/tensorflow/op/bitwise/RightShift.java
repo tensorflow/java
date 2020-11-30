@@ -83,6 +83,7 @@ public final class RightShift<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("RightShift", scope.makeOpName("RightShift"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RightShift<T>(opBuilder.build());
   }

@@ -50,6 +50,7 @@ public final class LookupTableImport extends RawOp {
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LookupTableImport(opBuilder.build());
   }

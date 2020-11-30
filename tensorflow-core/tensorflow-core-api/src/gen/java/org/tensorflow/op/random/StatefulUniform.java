@@ -56,6 +56,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatefulUniform<U>(opBuilder.build());

@@ -48,6 +48,7 @@ public final class Neg<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Neg<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Neg", scope.makeOpName("Neg"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Neg<T>(opBuilder.build());
   }

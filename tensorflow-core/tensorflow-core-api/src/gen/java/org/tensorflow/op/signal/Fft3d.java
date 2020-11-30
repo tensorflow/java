@@ -49,6 +49,7 @@ public final class Fft3d<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Fft3d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("FFT3D", scope.makeOpName("Fft3d"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Fft3d<T>(opBuilder.build());
   }

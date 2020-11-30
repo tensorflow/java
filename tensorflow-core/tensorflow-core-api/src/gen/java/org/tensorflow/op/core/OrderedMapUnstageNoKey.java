@@ -99,6 +99,7 @@ public final class OrderedMapUnstageNoKey extends RawOp {
   public static OrderedMapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapUnstageNoKey", scope.makeOpName("OrderedMapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

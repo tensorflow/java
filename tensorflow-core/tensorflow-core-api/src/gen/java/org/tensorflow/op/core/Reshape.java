@@ -109,6 +109,7 @@ public final class Reshape<T extends TType> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Reshape", scope.makeOpName("Reshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Reshape<T>(opBuilder.build());
   }

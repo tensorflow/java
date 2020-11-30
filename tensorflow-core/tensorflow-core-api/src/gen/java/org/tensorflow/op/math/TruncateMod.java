@@ -55,6 +55,7 @@ public final class TruncateMod<T extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateMod", scope.makeOpName("TruncateMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TruncateMod<T>(opBuilder.build());
   }

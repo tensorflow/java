@@ -51,6 +51,7 @@ public final class LatencyStatsDataset extends RawOp implements Operand<TType> {
     OperationBuilder opBuilder = scope.env().opBuilder("LatencyStatsDataset", scope.makeOpName("LatencyStatsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(tag.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

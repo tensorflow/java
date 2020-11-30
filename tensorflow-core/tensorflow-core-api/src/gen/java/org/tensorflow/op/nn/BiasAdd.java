@@ -77,6 +77,7 @@ public final class BiasAdd<T extends TType> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("BiasAdd", scope.makeOpName("BiasAdd"));
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(bias.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

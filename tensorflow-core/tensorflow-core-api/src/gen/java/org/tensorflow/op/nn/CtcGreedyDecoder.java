@@ -81,6 +81,7 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -114,6 +114,7 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
     opBuilder.addInput(cropSize.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -62,6 +62,7 @@ public final class DynamicUpdateSlice<T extends TType> extends RawOp implements 
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(update.asOutput());
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DynamicUpdateSlice<T>(opBuilder.build());
   }

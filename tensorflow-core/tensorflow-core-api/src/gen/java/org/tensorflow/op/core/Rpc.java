@@ -141,6 +141,7 @@ public final class Rpc extends RawOp implements Operand<TString> {
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(method.asOutput());
     opBuilder.addInput(request.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -44,6 +44,7 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
   public static LogicalNot create(Scope scope, Operand<TBool> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalNot", scope.makeOpName("LogicalNot"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LogicalNot(opBuilder.build());
   }

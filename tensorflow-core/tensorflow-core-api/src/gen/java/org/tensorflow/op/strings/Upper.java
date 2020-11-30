@@ -70,6 +70,7 @@ public final class Upper extends RawOp implements Operand<TString> {
   public static Upper create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringUpper", scope.makeOpName("Upper"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

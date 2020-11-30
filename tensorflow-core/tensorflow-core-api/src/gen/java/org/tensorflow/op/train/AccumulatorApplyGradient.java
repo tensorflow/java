@@ -51,6 +51,7 @@ public final class AccumulatorApplyGradient extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradient.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AccumulatorApplyGradient(opBuilder.build());
   }

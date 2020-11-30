@@ -90,6 +90,7 @@ public final class QuantizedConv2DWithBias<V extends TType> extends RawOp {
     opBuilder.addInput(maxInput.asOutput());
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

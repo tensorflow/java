@@ -77,6 +77,7 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());
     opBuilder.addInput(setShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

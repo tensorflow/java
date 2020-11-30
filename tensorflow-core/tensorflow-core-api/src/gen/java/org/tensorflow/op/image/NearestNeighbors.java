@@ -53,6 +53,7 @@ public final class NearestNeighbors extends RawOp {
     opBuilder.addInput(points.asOutput());
     opBuilder.addInput(centers.asOutput());
     opBuilder.addInput(k.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NearestNeighbors(opBuilder.build());
   }

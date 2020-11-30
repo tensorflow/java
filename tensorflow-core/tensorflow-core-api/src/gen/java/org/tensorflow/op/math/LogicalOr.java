@@ -49,6 +49,7 @@ public final class LogicalOr extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalOr", scope.makeOpName("LogicalOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LogicalOr(opBuilder.build());
   }

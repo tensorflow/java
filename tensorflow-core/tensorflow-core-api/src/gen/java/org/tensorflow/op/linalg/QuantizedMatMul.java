@@ -95,6 +95,7 @@ public final class QuantizedMatMul<V extends TType> extends RawOp {
     opBuilder.addInput(maxA.asOutput());
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     opBuilder.setAttr("Tactivation", Tactivation);

@@ -96,6 +96,7 @@ public final class Conv3dBackpropInput<U extends TNumber> extends RawOp implemen
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

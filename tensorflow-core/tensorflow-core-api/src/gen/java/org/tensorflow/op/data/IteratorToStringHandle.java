@@ -44,6 +44,7 @@ public final class IteratorToStringHandle extends RawOp implements Operand<TStri
   public static IteratorToStringHandle create(Scope scope, Operand<?> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorToStringHandle", scope.makeOpName("IteratorToStringHandle"));
     opBuilder.addInput(resourceHandle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IteratorToStringHandle(opBuilder.build());
   }

@@ -56,6 +56,7 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(counts.asOutput());
     opBuilder.addInput(probs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatefulRandomBinomial<V>(opBuilder.build());

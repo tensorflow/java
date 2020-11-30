@@ -86,6 +86,7 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(alpha.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

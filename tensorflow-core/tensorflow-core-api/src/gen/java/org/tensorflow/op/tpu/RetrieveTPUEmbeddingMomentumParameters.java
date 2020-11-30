@@ -85,6 +85,7 @@ public final class RetrieveTPUEmbeddingMomentumParameters extends RawOp {
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingMomentumParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingMomentumParameters", scope.makeOpName("RetrieveTPUEmbeddingMomentumParameters"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

@@ -53,6 +53,7 @@ public final class Dot<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDot", scope.makeOpName("Dot"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);

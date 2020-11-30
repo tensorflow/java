@@ -73,6 +73,7 @@ public final class Abort extends RawOp {
   @Endpoint(describeByClass = true)
   public static Abort create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abort", scope.makeOpName("Abort"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

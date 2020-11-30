@@ -101,6 +101,7 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(l2Shrinkage.asOutput());
     opBuilder.addInput(lrPower.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

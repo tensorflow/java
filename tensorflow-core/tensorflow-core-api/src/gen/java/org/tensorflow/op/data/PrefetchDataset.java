@@ -81,6 +81,7 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
     OperationBuilder opBuilder = scope.env().opBuilder("PrefetchDataset", scope.makeOpName("PrefetchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

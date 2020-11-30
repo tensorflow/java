@@ -47,6 +47,7 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArraySize(opBuilder.build());
   }

@@ -43,6 +43,7 @@ public final class BatchIfft extends RawOp implements Operand<TType> {
   public static BatchIfft create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchIFFT", scope.makeOpName("BatchIfft"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BatchIfft(opBuilder.build());
   }

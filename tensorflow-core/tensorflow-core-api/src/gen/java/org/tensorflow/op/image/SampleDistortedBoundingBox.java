@@ -167,6 +167,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends RawOp {
     opBuilder.addInput(imageSize.asOutput());
     opBuilder.addInput(boundingBoxes.asOutput());
     opBuilder.addInput(minObjectCovered.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

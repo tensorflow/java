@@ -44,6 +44,7 @@ public final class FresnelSin<T extends TNumber> extends RawOp implements Operan
   public static <T extends TNumber> FresnelSin<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("FresnelSin", scope.makeOpName("FresnelSin"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new FresnelSin<T>(opBuilder.build());
   }

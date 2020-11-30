@@ -109,6 +109,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filterSizes.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

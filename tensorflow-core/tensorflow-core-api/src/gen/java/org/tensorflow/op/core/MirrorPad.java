@@ -81,6 +81,7 @@ public final class MirrorPad<T extends TType> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPad", scope.makeOpName("MirrorPad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mode", mode);
     return new MirrorPad<T>(opBuilder.build());

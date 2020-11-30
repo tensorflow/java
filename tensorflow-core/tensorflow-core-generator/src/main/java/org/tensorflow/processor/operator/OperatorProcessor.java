@@ -545,7 +545,7 @@ public final class OperatorProcessor extends AbstractProcessor {
                     .returns(T_OPS)
                     .addStatement("return new Ops(scope.withDevice(deviceSpec))")
                     .addJavadoc(
-                            "Returns an API that uses the provided DeviceSpec for an op.\n\n"
+                            "Returns an API that places the created operations on the device(s) matching the provided spec.\n\n"
                                     + "@see {@link $T#withDevice(DeviceSpec)}\n",
                             T_SCOPE)
                     .build());

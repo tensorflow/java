@@ -57,6 +57,7 @@ public final class SparseDenseCwiseDiv<T extends TType> extends RawOp implements
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
     opBuilder.addInput(dense.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseDenseCwiseDiv<T>(opBuilder.build());
   }

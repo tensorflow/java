@@ -96,6 +96,7 @@ public final class SparseConcat<T extends TType> extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(shapes));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("concat_dim", concatDim);
     return new SparseConcat<T>(opBuilder.build());

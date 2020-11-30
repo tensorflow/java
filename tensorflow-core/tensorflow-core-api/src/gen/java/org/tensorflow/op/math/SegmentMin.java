@@ -73,6 +73,7 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMin", scope.makeOpName("SegmentMin"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SegmentMin<T>(opBuilder.build());
   }

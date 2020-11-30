@@ -88,6 +88,7 @@ public final class SparseReduceSum<T extends TType> extends RawOp implements Ope
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputShape.asOutput());
     opBuilder.addInput(reductionAxes.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

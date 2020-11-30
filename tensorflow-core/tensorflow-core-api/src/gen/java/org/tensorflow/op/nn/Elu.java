@@ -50,6 +50,7 @@ public final class Elu<T extends TNumber> extends RawOp implements Operand<T> {
   public static <T extends TNumber> Elu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Elu", scope.makeOpName("Elu"));
     opBuilder.addInput(features.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Elu<T>(opBuilder.build());
   }

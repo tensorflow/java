@@ -43,6 +43,7 @@ public final class TensorForestTreeSize extends RawOp implements Operand<TInt32>
   public static TensorForestTreeSize create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSize", scope.makeOpName("TensorForestTreeSize"));
     opBuilder.addInput(treeHandle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorForestTreeSize(opBuilder.build());
   }

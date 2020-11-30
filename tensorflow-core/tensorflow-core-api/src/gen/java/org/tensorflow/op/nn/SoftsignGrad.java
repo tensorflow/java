@@ -48,6 +48,7 @@ public final class SoftsignGrad<T extends TNumber> extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("SoftsignGrad", scope.makeOpName("SoftsignGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SoftsignGrad<T>(opBuilder.build());
   }

@@ -54,6 +54,7 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(flowIn.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArrayScatter(opBuilder.build());
   }

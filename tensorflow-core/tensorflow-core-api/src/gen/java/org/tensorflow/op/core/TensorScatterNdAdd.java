@@ -111,6 +111,7 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorScatterNdAdd<T>(opBuilder.build());
   }

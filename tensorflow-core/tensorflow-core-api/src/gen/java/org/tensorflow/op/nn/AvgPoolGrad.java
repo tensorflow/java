@@ -78,6 +78,7 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPoolGrad", scope.makeOpName("AvgPoolGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {

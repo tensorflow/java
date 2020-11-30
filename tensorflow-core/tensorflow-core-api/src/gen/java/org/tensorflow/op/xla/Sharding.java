@@ -46,6 +46,7 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
   public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSharding", scope.makeOpName("Sharding"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sharding<T>(opBuilder.build());
   }

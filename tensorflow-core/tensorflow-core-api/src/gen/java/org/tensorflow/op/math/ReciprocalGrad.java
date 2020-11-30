@@ -50,6 +50,7 @@ public final class ReciprocalGrad<T extends TType> extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("ReciprocalGrad", scope.makeOpName("ReciprocalGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReciprocalGrad<T>(opBuilder.build());
   }

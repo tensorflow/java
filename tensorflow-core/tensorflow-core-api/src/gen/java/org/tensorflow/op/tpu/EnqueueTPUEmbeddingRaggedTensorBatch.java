@@ -120,6 +120,7 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0; i < tableIdsArray.length; ++i) {

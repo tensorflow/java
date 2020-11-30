@@ -71,6 +71,7 @@ public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T
   public static <T extends TType> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeRaw", scope.makeOpName("DecodeRaw"));
     opBuilder.addInput(bytes.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     if (options != null) {

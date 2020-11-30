@@ -84,6 +84,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("output_dtype", outputDtype);
     if (options != null) {

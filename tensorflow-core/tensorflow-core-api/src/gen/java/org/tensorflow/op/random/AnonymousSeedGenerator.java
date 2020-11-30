@@ -47,6 +47,7 @@ public final class AnonymousSeedGenerator extends RawOp {
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder.addInput(reshuffle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new AnonymousSeedGenerator(opBuilder.build());
   }

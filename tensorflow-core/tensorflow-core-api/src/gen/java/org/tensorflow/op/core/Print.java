@@ -74,6 +74,7 @@ public final class Print extends RawOp {
   public static Print create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrintV2", scope.makeOpName("Print"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

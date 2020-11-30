@@ -134,6 +134,7 @@ public final class TPUReplicateMetadata extends RawOp {
   @Endpoint(describeByClass = true)
   public static TPUReplicateMetadata create(Scope scope, Long numReplicas, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicateMetadata", scope.makeOpName("TPUReplicateMetadata"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_replicas", numReplicas);
     if (options != null) {

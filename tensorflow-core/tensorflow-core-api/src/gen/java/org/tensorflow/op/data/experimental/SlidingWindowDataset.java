@@ -58,6 +58,7 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
     opBuilder.addInput(windowSize.asOutput());
     opBuilder.addInput(windowShift.asOutput());
     opBuilder.addInput(windowStride.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

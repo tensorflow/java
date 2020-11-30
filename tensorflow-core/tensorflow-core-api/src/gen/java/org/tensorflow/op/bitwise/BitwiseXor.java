@@ -69,6 +69,7 @@ public final class BitwiseXor<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseXor", scope.makeOpName("BitwiseXor"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BitwiseXor<T>(opBuilder.build());
   }

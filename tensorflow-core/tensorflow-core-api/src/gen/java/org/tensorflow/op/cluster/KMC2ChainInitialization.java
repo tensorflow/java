@@ -52,6 +52,7 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
     OperationBuilder opBuilder = scope.env().opBuilder("KMC2ChainInitialization", scope.makeOpName("KMC2ChainInitialization"));
     opBuilder.addInput(distances.asOutput());
     opBuilder.addInput(seed.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new KMC2ChainInitialization(opBuilder.build());
   }

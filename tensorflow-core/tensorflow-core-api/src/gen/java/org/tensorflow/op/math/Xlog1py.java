@@ -48,6 +48,7 @@ public final class Xlog1py<T extends TType> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Xlog1py", scope.makeOpName("Xlog1py"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Xlog1py<T>(opBuilder.build());
   }

@@ -45,6 +45,7 @@ public final class AnonymousIterator extends RawOp {
   @Endpoint(describeByClass = true)
   public static AnonymousIterator create(Scope scope, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

@@ -104,6 +104,7 @@ public final class QuantizeAndDequantize<T extends TNumber> extends RawOp implem
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
     opBuilder.addInput(numBits.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

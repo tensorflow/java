@@ -89,6 +89,7 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));
     opBuilder.addInput(paramsDenseValues.asOutput());
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("OUTPUT_RAGGED_RANK", OUTPUTRAGGEDRANK);
     return new RaggedGather<T, U>(opBuilder.build());

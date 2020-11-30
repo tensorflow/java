@@ -63,6 +63,7 @@ public final class Greater extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("Greater", scope.makeOpName("Greater"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Greater(opBuilder.build());
   }

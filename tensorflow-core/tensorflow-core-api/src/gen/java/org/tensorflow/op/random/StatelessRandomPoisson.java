@@ -57,6 +57,7 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(lam.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomPoisson<W>(opBuilder.build());

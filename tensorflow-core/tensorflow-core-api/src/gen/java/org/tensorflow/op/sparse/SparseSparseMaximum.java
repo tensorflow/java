@@ -61,6 +61,7 @@ public final class SparseSparseMaximum<T extends TNumber> extends RawOp {
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSparseMaximum<T>(opBuilder.build());
   }

@@ -118,6 +118,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filterSizes.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

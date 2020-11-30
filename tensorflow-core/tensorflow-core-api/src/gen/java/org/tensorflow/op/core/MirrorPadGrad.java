@@ -69,6 +69,7 @@ public final class MirrorPadGrad<T extends TType> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPadGrad", scope.makeOpName("MirrorPadGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mode", mode);
     return new MirrorPadGrad<T>(opBuilder.build());

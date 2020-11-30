@@ -96,6 +96,7 @@ public final class SparseApplyRmsProp<T extends TType> extends RawOp implements 
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -40,6 +40,7 @@ public final class FlushSummaryWriter extends RawOp {
   public static FlushSummaryWriter create(Scope scope, Operand<?> writer) {
     OperationBuilder opBuilder = scope.env().opBuilder("FlushSummaryWriter", scope.makeOpName("FlushSummaryWriter"));
     opBuilder.addInput(writer.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new FlushSummaryWriter(opBuilder.build());
   }

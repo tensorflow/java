@@ -78,6 +78,7 @@ public final class ApplyProximalGradientDescent<T extends TType> extends RawOp i
     opBuilder.addInput(l1.asOutput());
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(delta.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -47,6 +47,7 @@ public final class LookupTableRemove extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LookupTableRemove(opBuilder.build());
   }

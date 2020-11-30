@@ -79,6 +79,7 @@ public final class DataFormatDimMap<T extends TNumber> extends RawOp implements 
   public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatDimMap", scope.makeOpName("DataFormatDimMap"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

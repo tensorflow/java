@@ -92,6 +92,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TType> exte
     opBuilder.addInput(maxInput.asOutput());
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

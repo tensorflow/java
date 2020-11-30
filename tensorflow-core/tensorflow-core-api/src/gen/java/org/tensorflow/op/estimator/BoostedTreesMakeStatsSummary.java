@@ -55,6 +55,7 @@ public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(hessians.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeaturesList));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     opBuilder.setAttr("num_buckets", numBuckets);

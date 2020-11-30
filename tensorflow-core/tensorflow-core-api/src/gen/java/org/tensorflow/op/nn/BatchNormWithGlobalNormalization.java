@@ -66,6 +66,7 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(beta.asOutput());
     opBuilder.addInput(gamma.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);

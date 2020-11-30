@@ -165,6 +165,7 @@ public final class ParseSequenceExample extends RawOp {
     opBuilder.addInput(featureListRaggedKeys.asOutput());
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {

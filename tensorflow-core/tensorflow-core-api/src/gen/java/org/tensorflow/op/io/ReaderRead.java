@@ -50,6 +50,7 @@ public final class ReaderRead extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadV2", scope.makeOpName("ReaderRead"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderRead(opBuilder.build());
   }

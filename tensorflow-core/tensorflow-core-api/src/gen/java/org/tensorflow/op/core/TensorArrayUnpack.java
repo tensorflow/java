@@ -49,6 +49,7 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(flowIn.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorArrayUnpack(opBuilder.build());
   }

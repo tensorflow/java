@@ -102,6 +102,7 @@ public final class BarrierTakeMany extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numElements.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {

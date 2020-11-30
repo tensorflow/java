@@ -104,6 +104,7 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
     OperationBuilder opBuilder = scope.env().opBuilder("Mfcc", scope.makeOpName("Mfcc"));
     opBuilder.addInput(spectrogram.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

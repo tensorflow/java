@@ -75,6 +75,7 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new UnsortedSegmentProd<T>(opBuilder.build());
   }

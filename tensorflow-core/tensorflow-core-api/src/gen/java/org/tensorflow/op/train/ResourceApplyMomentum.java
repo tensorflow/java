@@ -89,6 +89,7 @@ public final class ResourceApplyMomentum extends RawOp {
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(momentum.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

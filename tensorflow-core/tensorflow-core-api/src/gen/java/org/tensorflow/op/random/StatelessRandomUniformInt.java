@@ -56,6 +56,7 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new StatelessRandomUniformInt<V>(opBuilder.build());
   }

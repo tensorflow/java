@@ -79,6 +79,7 @@ public final class TensorArrayGather<T extends TType> extends RawOp implements O
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(flowIn.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {

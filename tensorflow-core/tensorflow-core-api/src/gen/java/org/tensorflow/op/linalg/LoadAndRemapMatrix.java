@@ -127,6 +127,7 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
     opBuilder.addInput(rowRemapping.asOutput());
     opBuilder.addInput(colRemapping.asOutput());
     opBuilder.addInput(initializingValues.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_rows", numRows);
     opBuilder.setAttr("num_cols", numCols);

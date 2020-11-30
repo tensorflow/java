@@ -78,6 +78,7 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
   public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatVecPermute", scope.makeOpName("DataFormatVecPermute"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

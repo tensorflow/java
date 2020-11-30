@@ -62,6 +62,7 @@ public final class Betainc<T extends TNumber> extends RawOp implements Operand<T
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Betainc<T>(opBuilder.build());
   }

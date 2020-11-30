@@ -48,6 +48,7 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(item.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListSetItem(opBuilder.build());
   }

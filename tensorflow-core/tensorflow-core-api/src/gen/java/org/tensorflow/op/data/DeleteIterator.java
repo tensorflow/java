@@ -44,6 +44,7 @@ public final class DeleteIterator extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DeleteIterator(opBuilder.build());
   }

@@ -74,6 +74,7 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
     opBuilder.addInput(rewrite.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

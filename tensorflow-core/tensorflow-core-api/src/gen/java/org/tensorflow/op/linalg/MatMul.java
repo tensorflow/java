@@ -85,6 +85,7 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("MatMul", scope.makeOpName("MatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

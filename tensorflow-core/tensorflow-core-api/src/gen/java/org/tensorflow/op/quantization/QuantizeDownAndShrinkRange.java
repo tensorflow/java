@@ -76,6 +76,7 @@ public final class QuantizeDownAndShrinkRange<U extends TType> extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizeDownAndShrinkRange<U>(opBuilder.build());

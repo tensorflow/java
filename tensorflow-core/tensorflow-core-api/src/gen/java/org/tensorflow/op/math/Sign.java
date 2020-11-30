@@ -54,6 +54,7 @@ public final class Sign<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sign<T>(opBuilder.build());
   }

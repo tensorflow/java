@@ -47,6 +47,7 @@ public final class IsVariableInitialized extends RawOp implements Operand<TBool>
   public static <T extends TType> IsVariableInitialized create(Scope scope, Operand<T> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new IsVariableInitialized(opBuilder.build());
   }

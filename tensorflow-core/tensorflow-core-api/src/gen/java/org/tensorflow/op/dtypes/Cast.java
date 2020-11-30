@@ -68,6 +68,7 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
   public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("DstT", DstT);
     if (options != null) {

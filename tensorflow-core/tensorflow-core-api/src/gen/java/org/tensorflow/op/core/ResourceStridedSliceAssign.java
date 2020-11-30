@@ -115,6 +115,7 @@ public final class ResourceStridedSliceAssign extends RawOp {
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
     opBuilder.addInput(value.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

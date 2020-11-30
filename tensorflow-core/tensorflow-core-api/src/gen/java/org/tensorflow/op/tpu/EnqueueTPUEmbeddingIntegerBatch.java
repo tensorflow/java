@@ -71,6 +71,7 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingIntegerBatch", scope.makeOpName("EnqueueTPUEmbeddingIntegerBatch"));
     opBuilder.addInputList(Operands.asOutputs(batch));
     opBuilder.addInput(modeOverride.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

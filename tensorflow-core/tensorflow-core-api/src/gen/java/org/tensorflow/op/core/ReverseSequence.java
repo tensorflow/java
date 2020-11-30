@@ -124,6 +124,7 @@ public final class ReverseSequence<T extends TType> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseSequence", scope.makeOpName("ReverseSequence"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(seqLengths.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("seq_dim", seqDim);
     if (options != null) {

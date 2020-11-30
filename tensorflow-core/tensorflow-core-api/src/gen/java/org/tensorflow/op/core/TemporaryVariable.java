@@ -84,6 +84,7 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
   @Endpoint(describeByClass = true)
   public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("shape", shape);
     opBuilder.setAttr("dtype", dtype);

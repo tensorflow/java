@@ -57,6 +57,7 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

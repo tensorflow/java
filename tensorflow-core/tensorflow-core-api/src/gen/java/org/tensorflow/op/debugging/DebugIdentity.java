@@ -133,6 +133,7 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
   public static <T extends TType> DebugIdentity<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugIdentityV2", scope.makeOpName("DebugIdentity"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

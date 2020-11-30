@@ -56,6 +56,7 @@ public final class SparseSegmentMean<T extends TNumber> extends RawOp implements
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentMean<T>(opBuilder.build());
   }

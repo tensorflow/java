@@ -44,6 +44,7 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
   public static OptionalHasValue create(Scope scope, Operand<?> optional) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalHasValue", scope.makeOpName("OptionalHasValue"));
     opBuilder.addInput(optional.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new OptionalHasValue(opBuilder.build());
   }

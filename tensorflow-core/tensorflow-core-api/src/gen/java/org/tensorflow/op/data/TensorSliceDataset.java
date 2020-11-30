@@ -48,6 +48,7 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
   public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSliceDataset", scope.makeOpName("TensorSliceDataset"));
     opBuilder.addInputList(Operands.asOutputs(components));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {

@@ -76,6 +76,7 @@ public final class Solve<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolve", scope.makeOpName("Solve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

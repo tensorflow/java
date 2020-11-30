@@ -54,6 +54,7 @@ public final class RequantizationRange extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RequantizationRange(opBuilder.build());
   }

@@ -75,6 +75,7 @@ public final class Min<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("Min"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

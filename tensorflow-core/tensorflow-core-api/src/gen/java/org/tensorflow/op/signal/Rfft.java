@@ -63,6 +63,7 @@ public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT", scope.makeOpName("Rfft"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Tcomplex", Tcomplex);
     return new Rfft<U>(opBuilder.build());

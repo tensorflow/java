@@ -95,6 +95,7 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
     opBuilder.addInput(outputShape.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

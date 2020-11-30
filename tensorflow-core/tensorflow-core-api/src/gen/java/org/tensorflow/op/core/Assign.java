@@ -83,6 +83,7 @@ public final class Assign<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Assign", scope.makeOpName("Assign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

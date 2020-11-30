@@ -56,6 +56,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentSqrtN<T>(opBuilder.build());
   }

@@ -105,6 +105,7 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(shift.asOutput());
     opBuilder.addInput(stride.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

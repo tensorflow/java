@@ -52,6 +52,7 @@ public final class CacheDatasetV2 extends RawOp implements Operand<TType> {
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(cache.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

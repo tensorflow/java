@@ -142,6 +142,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {

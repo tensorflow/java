@@ -42,6 +42,7 @@ public final class UnwrapDatasetVariant extends RawOp implements Operand<TType> 
   public static UnwrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnwrapDatasetVariant", scope.makeOpName("UnwrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new UnwrapDatasetVariant(opBuilder.build());
   }

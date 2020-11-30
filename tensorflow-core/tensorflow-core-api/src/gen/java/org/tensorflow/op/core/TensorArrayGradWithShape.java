@@ -58,6 +58,7 @@ public final class TensorArrayGradWithShape extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder.addInput(shapeToPrepend.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("source", source);
     return new TensorArrayGradWithShape(opBuilder.build());

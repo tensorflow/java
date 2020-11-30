@@ -65,6 +65,7 @@ public final class Requantize<U extends TType> extends RawOp {
     opBuilder.addInput(inputMax.asOutput());
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new Requantize<U>(opBuilder.build());

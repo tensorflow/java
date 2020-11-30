@@ -54,6 +54,7 @@ public final class ReaderReadUpTo extends RawOp {
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
     opBuilder.addInput(numRecords.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ReaderReadUpTo(opBuilder.build());
   }

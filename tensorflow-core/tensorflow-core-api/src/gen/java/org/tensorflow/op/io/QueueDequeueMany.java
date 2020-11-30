@@ -88,6 +88,7 @@ public final class QueueDequeueMany extends RawOp implements Iterable<Operand<TT
     OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueManyV2", scope.makeOpName("QueueDequeueMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(n.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {

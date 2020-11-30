@@ -62,6 +62,7 @@ public final class Sqrtm<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSquareRoot", scope.makeOpName("Sqrtm"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Sqrtm<T>(opBuilder.build());
   }

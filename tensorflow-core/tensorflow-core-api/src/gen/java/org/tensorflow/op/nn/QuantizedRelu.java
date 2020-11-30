@@ -53,6 +53,7 @@ public final class QuantizedRelu<U extends TType> extends RawOp {
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizedRelu<U>(opBuilder.build());

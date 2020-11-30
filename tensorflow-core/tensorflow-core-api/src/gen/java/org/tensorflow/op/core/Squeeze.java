@@ -86,6 +86,7 @@ public final class Squeeze<T extends TType> extends RawOp implements Operand<T> 
   public static <T extends TType> Squeeze<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Squeeze", scope.makeOpName("Squeeze"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

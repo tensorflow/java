@@ -78,6 +78,7 @@ public final class Roll<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shift.asOutput());
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Roll<T>(opBuilder.build());
   }

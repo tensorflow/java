@@ -136,6 +136,7 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2D", scope.makeOpName("Conv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

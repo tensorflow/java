@@ -50,6 +50,7 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
   public static DatasetToSingleElement create(Scope scope, Operand<?> dataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToSingleElement", scope.makeOpName("DatasetToSingleElement"));
     opBuilder.addInput(dataset.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

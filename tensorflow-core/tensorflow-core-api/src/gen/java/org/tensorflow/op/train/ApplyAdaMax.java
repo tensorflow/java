@@ -87,6 +87,7 @@ public final class ApplyAdaMax<T extends TType> extends RawOp implements Operand
     opBuilder.addInput(beta2.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

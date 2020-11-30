@@ -94,6 +94,7 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(filter.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("mode", mode);
     long[] stridesArray = new long[strides.size()];

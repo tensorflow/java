@@ -69,6 +69,7 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyReluGrad", scope.makeOpName("LeakyReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

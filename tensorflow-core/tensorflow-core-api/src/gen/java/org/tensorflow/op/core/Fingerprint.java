@@ -78,6 +78,7 @@ public final class Fingerprint extends RawOp implements Operand<TUint8> {
     OperationBuilder opBuilder = scope.env().opBuilder("Fingerprint", scope.makeOpName("Fingerprint"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(method.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Fingerprint(opBuilder.build());
   }

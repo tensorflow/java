@@ -82,6 +82,7 @@ public final class ApplyAdagradDa<T extends TType> extends RawOp implements Oper
     opBuilder.addInput(l1.asOutput());
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(globalStep.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

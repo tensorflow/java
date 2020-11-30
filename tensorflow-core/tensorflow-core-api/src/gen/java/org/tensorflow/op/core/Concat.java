@@ -52,6 +52,7 @@ public final class Concat<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatV2", scope.makeOpName("Concat"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Concat<T>(opBuilder.build());
   }

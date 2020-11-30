@@ -62,6 +62,7 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("batched_input", batchedInput);
     return new RaggedTensorToVariant(opBuilder.build());

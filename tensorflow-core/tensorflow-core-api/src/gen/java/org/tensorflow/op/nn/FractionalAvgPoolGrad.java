@@ -90,6 +90,7 @@ public final class FractionalAvgPoolGrad<T extends TNumber> extends RawOp implem
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder.addInput(rowPoolingSequence.asOutput());
     opBuilder.addInput(colPoolingSequence.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

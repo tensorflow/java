@@ -65,6 +65,7 @@ public final class SparseReshape extends RawOp {
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputShape.asOutput());
     opBuilder.addInput(newShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseReshape(opBuilder.build());
   }

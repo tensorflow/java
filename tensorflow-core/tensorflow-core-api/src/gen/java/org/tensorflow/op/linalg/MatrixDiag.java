@@ -148,6 +148,7 @@ public final class MatrixDiag<T extends TType> extends RawOp implements Operand<
     opBuilder.addInput(numRows.asOutput());
     opBuilder.addInput(numCols.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MatrixDiag<T>(opBuilder.build());
   }

@@ -73,6 +73,7 @@ public final class SegmentMax<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMax", scope.makeOpName("SegmentMax"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SegmentMax<T>(opBuilder.build());
   }

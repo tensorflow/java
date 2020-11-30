@@ -116,6 +116,7 @@ public final class SdcaOptimizer extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(sparseWeights));
     opBuilder.addInputList(Operands.asOutputs(denseWeights));
     opBuilder.addInput(exampleStateData.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("loss_type", lossType);
     opBuilder.setAttr("l1", l1);

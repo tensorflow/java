@@ -68,6 +68,7 @@ public final class ResourceScatterSub extends RawOp {
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ResourceScatterSub(opBuilder.build());
   }

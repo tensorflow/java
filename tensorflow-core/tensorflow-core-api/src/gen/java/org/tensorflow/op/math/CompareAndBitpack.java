@@ -69,6 +69,7 @@ public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
     OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(threshold.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CompareAndBitpack(opBuilder.build());
   }

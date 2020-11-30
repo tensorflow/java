@@ -42,6 +42,7 @@ public final class Fact extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Fact create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fact", scope.makeOpName("Fact"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Fact(opBuilder.build());
   }

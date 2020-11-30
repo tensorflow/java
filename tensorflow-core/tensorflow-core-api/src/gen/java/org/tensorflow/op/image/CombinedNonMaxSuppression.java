@@ -110,6 +110,7 @@ public final class CombinedNonMaxSuppression extends RawOp {
     opBuilder.addInput(maxTotalSize.asOutput());
     opBuilder.addInput(iouThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

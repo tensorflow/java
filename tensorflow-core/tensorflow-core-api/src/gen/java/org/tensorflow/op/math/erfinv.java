@@ -45,6 +45,7 @@ public final class erfinv<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> erfinv<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erfinv", scope.makeOpName("erfinv"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new erfinv<T>(opBuilder.build());
   }

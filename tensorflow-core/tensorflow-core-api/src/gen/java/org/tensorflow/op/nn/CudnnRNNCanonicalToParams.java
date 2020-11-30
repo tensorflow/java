@@ -162,6 +162,7 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends RawOp im
     opBuilder.addInput(inputSize.asOutput());
     opBuilder.addInputList(Operands.asOutputs(weights));
     opBuilder.addInputList(Operands.asOutputs(biases));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

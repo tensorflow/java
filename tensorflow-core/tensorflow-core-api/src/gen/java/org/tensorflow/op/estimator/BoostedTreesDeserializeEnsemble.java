@@ -49,6 +49,7 @@ public final class BoostedTreesDeserializeEnsemble extends RawOp {
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(stampToken.asOutput());
     opBuilder.addInput(treeEnsembleSerialized.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesDeserializeEnsemble(opBuilder.build());
   }

@@ -55,6 +55,7 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
   public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new UnicodeScript(opBuilder.build());
   }

@@ -56,6 +56,7 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new QuantizedReshape<T>(opBuilder.build());
   }

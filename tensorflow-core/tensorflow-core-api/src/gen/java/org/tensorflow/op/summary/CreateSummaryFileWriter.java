@@ -50,6 +50,7 @@ public final class CreateSummaryFileWriter extends RawOp {
     opBuilder.addInput(maxQueue.asOutput());
     opBuilder.addInput(flushMillis.asOutput());
     opBuilder.addInput(filenameSuffix.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new CreateSummaryFileWriter(opBuilder.build());
   }

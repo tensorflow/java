@@ -59,6 +59,7 @@ public final class ResourceScatterUpdate extends RawOp {
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ResourceScatterUpdate(opBuilder.build());
   }

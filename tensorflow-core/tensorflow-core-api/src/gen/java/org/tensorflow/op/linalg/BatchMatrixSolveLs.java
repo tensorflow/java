@@ -70,6 +70,7 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implement
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(l2Regularizer.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

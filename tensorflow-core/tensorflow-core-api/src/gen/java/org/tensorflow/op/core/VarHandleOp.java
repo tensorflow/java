@@ -87,6 +87,7 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static <T extends TType> VarHandleOp create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("shape", shape);

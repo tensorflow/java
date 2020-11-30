@@ -47,6 +47,7 @@ public final class Relu6<T extends TNumber> extends RawOp implements Operand<T> 
   public static <T extends TNumber> Relu6<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6", scope.makeOpName("Relu6"));
     opBuilder.addInput(features.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Relu6<T>(opBuilder.build());
   }

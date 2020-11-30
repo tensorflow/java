@@ -79,6 +79,7 @@ public final class ModelDataset extends RawOp implements Operand<TType> {
   public static ModelDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ModelDataset", scope.makeOpName("ModelDataset"));
     opBuilder.addInput(inputDataset.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

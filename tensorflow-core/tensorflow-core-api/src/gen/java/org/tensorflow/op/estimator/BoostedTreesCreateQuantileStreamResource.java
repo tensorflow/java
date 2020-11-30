@@ -67,6 +67,7 @@ public final class BoostedTreesCreateQuantileStreamResource extends RawOp {
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(numStreams.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

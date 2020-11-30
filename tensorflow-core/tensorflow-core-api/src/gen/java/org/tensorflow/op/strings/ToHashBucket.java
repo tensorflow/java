@@ -53,6 +53,7 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
   public static ToHashBucket create(Scope scope, Operand<TString> stringTensor, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucket", scope.makeOpName("ToHashBucket"));
     opBuilder.addInput(stringTensor.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_buckets", numBuckets);
     return new ToHashBucket(opBuilder.build());

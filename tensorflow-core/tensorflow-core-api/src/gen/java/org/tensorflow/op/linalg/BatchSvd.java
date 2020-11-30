@@ -73,6 +73,7 @@ public final class BatchSvd<T extends TType> extends RawOp {
   public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSvd", scope.makeOpName("BatchSvd"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

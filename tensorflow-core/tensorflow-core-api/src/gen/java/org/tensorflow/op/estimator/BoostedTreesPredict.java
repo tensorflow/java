@@ -53,6 +53,7 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesPredict", scope.makeOpName("BoostedTreesPredict"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesPredict(opBuilder.build());

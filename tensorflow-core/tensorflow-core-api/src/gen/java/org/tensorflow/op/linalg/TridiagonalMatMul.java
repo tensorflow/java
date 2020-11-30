@@ -57,6 +57,7 @@ public final class TridiagonalMatMul<T extends TType> extends RawOp implements O
     opBuilder.addInput(maindiag.asOutput());
     opBuilder.addInput(subdiag.asOutput());
     opBuilder.addInput(rhs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TridiagonalMatMul<T>(opBuilder.build());
   }

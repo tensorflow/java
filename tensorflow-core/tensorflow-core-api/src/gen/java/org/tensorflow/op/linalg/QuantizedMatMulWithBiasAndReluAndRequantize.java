@@ -112,6 +112,7 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> 
     opBuilder.addInput(maxB.asOutput());
     opBuilder.addInput(minFreezedOutput.asOutput());
     opBuilder.addInput(maxFreezedOutput.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {

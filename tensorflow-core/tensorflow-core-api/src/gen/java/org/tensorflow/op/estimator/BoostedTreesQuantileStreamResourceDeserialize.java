@@ -47,6 +47,7 @@ public final class BoostedTreesQuantileStreamResourceDeserialize extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceDeserialize", scope.makeOpName("BoostedTreesQuantileStreamResourceDeserialize"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BoostedTreesQuantileStreamResourceDeserialize(opBuilder.build());
   }

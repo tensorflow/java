@@ -122,6 +122,7 @@ public final class MatrixDiagPart<T extends TType> extends RawOp implements Oper
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new MatrixDiagPart<T>(opBuilder.build());
   }

@@ -72,6 +72,7 @@ public final class BarrierClose extends RawOp {
   public static BarrierClose create(Scope scope, Operand<TString> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierClose", scope.makeOpName("BarrierClose"));
     opBuilder.addInput(handle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

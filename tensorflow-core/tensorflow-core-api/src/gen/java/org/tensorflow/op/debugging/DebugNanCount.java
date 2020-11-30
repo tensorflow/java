@@ -100,6 +100,7 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
   public static <T extends TType> DebugNanCount create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNanCount", scope.makeOpName("DebugNanCount"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

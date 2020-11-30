@@ -105,6 +105,7 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

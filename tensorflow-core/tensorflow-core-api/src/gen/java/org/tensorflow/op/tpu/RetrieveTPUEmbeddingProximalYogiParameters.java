@@ -79,6 +79,7 @@ public final class RetrieveTPUEmbeddingProximalYogiParameters extends RawOp {
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingProximalYogiParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingProximalYogiParameters", scope.makeOpName("RetrieveTPUEmbeddingProximalYogiParameters"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

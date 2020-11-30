@@ -96,6 +96,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W extend
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder.addInput(minFreezedOutput.asOutput());
     opBuilder.addInput(maxFreezedOutput.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];

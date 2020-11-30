@@ -102,6 +102,7 @@ public final class MapStage extends RawOp {
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

@@ -73,6 +73,7 @@ public final class QueueEnqueue extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueEnqueueV2", scope.makeOpName("QueueEnqueue"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(components));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

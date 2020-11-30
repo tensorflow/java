@@ -48,6 +48,7 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
   public static IgnoreErrorsDataset create(Scope scope, Operand<?> inputDataset, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalIgnoreErrorsDataset", scope.makeOpName("IgnoreErrorsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

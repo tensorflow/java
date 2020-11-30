@@ -57,6 +57,7 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorListScatterIntoExistingList(opBuilder.build());
   }

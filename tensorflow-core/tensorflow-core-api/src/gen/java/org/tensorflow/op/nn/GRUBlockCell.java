@@ -101,6 +101,7 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
     opBuilder.addInput(wC.asOutput());
     opBuilder.addInput(bRu.asOutput());
     opBuilder.addInput(bC.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new GRUBlockCell<T>(opBuilder.build());
   }

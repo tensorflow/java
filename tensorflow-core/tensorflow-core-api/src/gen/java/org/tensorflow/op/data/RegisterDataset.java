@@ -49,6 +49,7 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(protocol.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("external_state_policy", externalStatePolicy);
     return new RegisterDataset(opBuilder.build());

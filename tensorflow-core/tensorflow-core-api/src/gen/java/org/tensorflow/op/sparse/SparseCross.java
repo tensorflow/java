@@ -91,6 +91,7 @@ public final class SparseCross extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(shapes));
     opBuilder.addInputList(Operands.asOutputs(denseInputs));
     opBuilder.addInput(sep.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseCross(opBuilder.build());
   }

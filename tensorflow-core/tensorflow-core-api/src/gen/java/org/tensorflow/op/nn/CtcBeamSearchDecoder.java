@@ -81,6 +81,7 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("beam_width", beamWidth);
     opBuilder.setAttr("top_paths", topPaths);

@@ -92,6 +92,7 @@ public final class ApplyMomentum<T extends TType> extends RawOp implements Opera
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(momentum.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

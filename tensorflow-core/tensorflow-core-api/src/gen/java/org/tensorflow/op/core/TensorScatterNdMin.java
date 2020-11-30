@@ -49,6 +49,7 @@ public final class TensorScatterNdMin<T extends TType> extends RawOp implements 
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TensorScatterNdMin<T>(opBuilder.build());
   }

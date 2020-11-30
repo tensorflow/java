@@ -55,6 +55,7 @@ public final class Atan2<T extends TNumber> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Atan2<T>(opBuilder.build());
   }

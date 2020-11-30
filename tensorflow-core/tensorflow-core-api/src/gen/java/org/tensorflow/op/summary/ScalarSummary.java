@@ -51,6 +51,7 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
     opBuilder.addInput(tags.asOutput());
     opBuilder.addInput(values.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ScalarSummary(opBuilder.build());
   }

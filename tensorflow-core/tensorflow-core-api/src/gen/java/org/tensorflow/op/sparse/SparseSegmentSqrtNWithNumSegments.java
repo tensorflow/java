@@ -62,6 +62,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseSegmentSqrtNWithNumSegments<T>(opBuilder.build());
   }

@@ -56,6 +56,7 @@ public final class TruncateDiv<T extends TType> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateDiv", scope.makeOpName("TruncateDiv"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new TruncateDiv<T>(opBuilder.build());
   }

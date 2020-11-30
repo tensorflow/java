@@ -155,6 +155,7 @@ public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
     opBuilder.addInput(depth.asOutput());
     opBuilder.addInput(onValue.asOutput());
     opBuilder.addInput(offValue.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

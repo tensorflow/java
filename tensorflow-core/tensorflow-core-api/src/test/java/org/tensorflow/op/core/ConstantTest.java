@@ -18,16 +18,12 @@ package org.tensorflow.op.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
-import org.tensorflow.*;
-import org.tensorflow.op.Ops;
+import org.tensorflow.AutoCloseableList;
+import org.tensorflow.Graph;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
@@ -42,7 +38,6 @@ import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
-import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -59,7 +54,7 @@ public class ConstantTest {
     IntNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
@@ -67,46 +62,6 @@ public class ConstantTest {
           new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
         assertEquals(array, t.get(0).expect(TInt32.DTYPE).data());
         assertEquals(array, t.get(1).expect(TInt32.DTYPE).data());
-      }
-    }
-  }
-
-  @Test
-  public void absDeviceSpec() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
-            .setLogDevicePlacement(true)
-            .build();
-
-    try (Graph g = new Graph();
-         Session sess = new Session(g, config)) {
-
-      Ops tf = Ops.create(g).withSubScope("anotherJob");
-
-      Tensor<TInt32> a = TInt32.scalarOf(-1);
-
-      Output<TInt32> aOps = g
-              .opBuilder("Const", "aOps")
-              .setAttr("dtype", a.dataType())
-              .setAttr("value", a)
-              .setDevice("/job:localhost/replica:0/task:0/device:CPU:0")
-              .build()
-              .output(0);
-      DeviceSpec deviceSpec = DeviceSpec.newBuilder()
-              .job("localhost")
-              .replica(0)
-              .task(1)
-              .deviceType(DeviceSpec.DeviceType.CPU)
-              .build();
-
-      //DeviceSpec deviceSpec = DeviceSpec.newBuilder().build();
-      Output<TInt32> absOps = tf.withName("ABS_OPS")
-              .withDevice(deviceSpec)
-              .math.sub(aOps, aOps).asOutput();
-
-
-      try (AutoCloseableList<Tensor<?>> t =
-                   new AutoCloseableList<>(sess.runner().fetch(absOps).run())) {
-        assertEquals(1, t.get(0).rawData().asInts().getObject(0));
       }
     }
   }

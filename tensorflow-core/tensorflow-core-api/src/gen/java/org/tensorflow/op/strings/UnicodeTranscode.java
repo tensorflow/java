@@ -136,6 +136,7 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
   public static UnicodeTranscode create(Scope scope, Operand<TString> input, String inputEncoding, String outputEncoding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeTranscode", scope.makeOpName("UnicodeTranscode"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
     opBuilder.setAttr("output_encoding", outputEncoding);

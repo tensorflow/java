@@ -104,6 +104,7 @@ public final class Cumsum<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumsum", scope.makeOpName("Cumsum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

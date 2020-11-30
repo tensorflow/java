@@ -89,6 +89,7 @@ public final class BandPart<T extends TType> extends RawOp implements Operand<T>
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BandPart<T>(opBuilder.build());
   }

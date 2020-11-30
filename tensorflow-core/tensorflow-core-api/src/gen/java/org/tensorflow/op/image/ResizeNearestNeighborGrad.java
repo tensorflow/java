@@ -80,6 +80,7 @@ public final class ResizeNearestNeighborGrad<T extends TNumber> extends RawOp im
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighborGrad", scope.makeOpName("ResizeNearestNeighborGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(size.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

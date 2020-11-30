@@ -69,6 +69,7 @@ public final class BitwiseOr<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseOr", scope.makeOpName("BitwiseOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BitwiseOr<T>(opBuilder.build());
   }

@@ -19,8 +19,12 @@ package org.tensorflow.op;
 
 import java.nio.charset.Charset;
 import java.util.List;
-
-import org.tensorflow.*;
+import org.tensorflow.DataType;
+import org.tensorflow.DeviceSpec;
+import org.tensorflow.EagerSession;
+import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -7719,6 +7723,15 @@ public final class Ops {
    */
   public Ops withName(String opName) {
     return new Ops(scope.withName(opName));
+  }
+
+  /**
+   * Returns an API that places the created operations on the device(s) matching the provided spec.
+   *
+   * @see {@link Scope#withDevice(DeviceSpec)}
+   */
+  public Ops withDevice(DeviceSpec deviceSpec) {
+    return new Ops(scope.withDevice(deviceSpec));
   }
 
   /**

@@ -56,6 +56,7 @@ public final class Polygamma<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Polygamma<T>(opBuilder.build());
   }

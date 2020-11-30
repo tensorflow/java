@@ -44,6 +44,7 @@ public final class BesselK0<T extends TNumber> extends RawOp implements Operand<
   public static <T extends TNumber> BesselK0<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("BesselK0", scope.makeOpName("BesselK0"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BesselK0<T>(opBuilder.build());
   }

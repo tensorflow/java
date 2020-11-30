@@ -126,6 +126,7 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatch", scope.makeOpName("SpaceToBatch"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     return new SpaceToBatch<T>(opBuilder.build());

@@ -80,6 +80,7 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
     OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalSolve", scope.makeOpName("TridiagonalSolve"));
     opBuilder.addInput(diagonals.asOutput());
     opBuilder.addInput(rhs.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

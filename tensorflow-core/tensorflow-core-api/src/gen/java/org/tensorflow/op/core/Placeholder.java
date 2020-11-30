@@ -72,6 +72,7 @@ public final class Placeholder<T extends TType> extends RawOp implements Operand
   @Endpoint(describeByClass = true)
   public static <T extends TType> Placeholder<T> create(Scope scope, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {

@@ -85,6 +85,7 @@ public final class RetrieveTPUEmbeddingRMSPropParameters extends RawOp {
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingRMSPropParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingRMSPropParameters", scope.makeOpName("RetrieveTPUEmbeddingRMSPropParameters"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

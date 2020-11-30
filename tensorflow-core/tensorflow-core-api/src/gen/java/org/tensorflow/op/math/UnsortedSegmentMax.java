@@ -82,6 +82,7 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new UnsortedSegmentMax<T>(opBuilder.build());
   }

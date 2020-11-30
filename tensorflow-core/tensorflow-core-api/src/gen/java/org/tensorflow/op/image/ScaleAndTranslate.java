@@ -81,6 +81,7 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(translation.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

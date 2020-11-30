@@ -80,6 +80,7 @@ public final class LeftShift<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("LeftShift", scope.makeOpName("LeftShift"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new LeftShift<T>(opBuilder.build());
   }

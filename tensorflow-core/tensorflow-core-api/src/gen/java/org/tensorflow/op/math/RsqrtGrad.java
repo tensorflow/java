@@ -50,6 +50,7 @@ public final class RsqrtGrad<T extends TType> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("RsqrtGrad", scope.makeOpName("RsqrtGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RsqrtGrad<T>(opBuilder.build());
   }

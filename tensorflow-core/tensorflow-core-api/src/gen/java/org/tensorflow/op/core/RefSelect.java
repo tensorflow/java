@@ -50,6 +50,7 @@ public final class RefSelect<T extends TType> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
     opBuilder.addInput(index.asOutput());
     opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RefSelect<T>(opBuilder.build());
   }

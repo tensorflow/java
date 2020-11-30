@@ -81,6 +81,7 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighbor", scope.makeOpName("ResizeNearestNeighbor"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

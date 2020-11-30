@@ -47,6 +47,7 @@ public final class DatasetToTFRecord extends RawOp {
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(compressionType.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new DatasetToTFRecord(opBuilder.build());
   }

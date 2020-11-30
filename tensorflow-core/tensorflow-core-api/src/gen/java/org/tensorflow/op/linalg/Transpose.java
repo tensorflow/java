@@ -52,6 +52,7 @@ public final class Transpose<T extends TType> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Transpose<T>(opBuilder.build());
   }

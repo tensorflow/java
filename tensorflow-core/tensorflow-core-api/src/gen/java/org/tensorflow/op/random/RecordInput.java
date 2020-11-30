@@ -110,6 +110,7 @@ public final class RecordInput extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static RecordInput create(Scope scope, String filePattern, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecordInput", scope.makeOpName("RecordInput"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("file_pattern", filePattern);
     if (options != null) {

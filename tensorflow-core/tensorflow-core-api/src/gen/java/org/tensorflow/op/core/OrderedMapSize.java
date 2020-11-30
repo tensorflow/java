@@ -92,6 +92,7 @@ public final class OrderedMapSize extends RawOp implements Operand<TInt32> {
   @Endpoint(describeByClass = true)
   public static OrderedMapSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapSize", scope.makeOpName("OrderedMapSize"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

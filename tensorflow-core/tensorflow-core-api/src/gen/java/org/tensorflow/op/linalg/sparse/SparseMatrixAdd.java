@@ -52,6 +52,7 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(beta.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseMatrixAdd(opBuilder.build());
   }

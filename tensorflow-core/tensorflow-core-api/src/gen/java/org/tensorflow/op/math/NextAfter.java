@@ -57,6 +57,7 @@ public final class NextAfter<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
     opBuilder.addInput(x1.asOutput());
     opBuilder.addInput(x2.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new NextAfter<T>(opBuilder.build());
   }

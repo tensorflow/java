@@ -109,6 +109,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     opBuilder.addInput(offset.asOutput());
     opBuilder.addInput(mean.asOutput());
     opBuilder.addInput(variance.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

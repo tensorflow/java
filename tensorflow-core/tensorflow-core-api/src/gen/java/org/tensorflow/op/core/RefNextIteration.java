@@ -46,6 +46,7 @@ public final class RefNextIteration<T extends TType> extends RawOp implements Op
   public static <T extends TType> RefNextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefNextIteration", scope.makeOpName("RefNextIteration"));
     opBuilder.addInput(data.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new RefNextIteration<T>(opBuilder.build());
   }

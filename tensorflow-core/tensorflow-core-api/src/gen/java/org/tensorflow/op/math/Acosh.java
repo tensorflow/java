@@ -54,6 +54,7 @@ public final class Acosh<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Acosh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Acosh", scope.makeOpName("Acosh"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Acosh<T>(opBuilder.build());
   }

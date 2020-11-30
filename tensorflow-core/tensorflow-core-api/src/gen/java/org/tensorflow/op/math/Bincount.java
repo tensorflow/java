@@ -62,6 +62,7 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
     opBuilder.addInput(arr.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Bincount<T>(opBuilder.build());
   }

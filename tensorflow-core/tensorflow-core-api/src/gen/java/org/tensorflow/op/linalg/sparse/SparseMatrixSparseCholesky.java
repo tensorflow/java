@@ -119,6 +119,7 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(permutation.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("type", type);
     return new SparseMatrixSparseCholesky(opBuilder.build());

@@ -109,6 +109,7 @@ public final class QuantizedInstanceNorm<T extends TType> extends RawOp {
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(xMin.asOutput());
     opBuilder.addInput(xMax.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

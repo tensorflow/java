@@ -43,6 +43,7 @@ public final class ImportEvent extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ImportEvent", scope.makeOpName("ImportEvent"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(event.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ImportEvent(opBuilder.build());
   }

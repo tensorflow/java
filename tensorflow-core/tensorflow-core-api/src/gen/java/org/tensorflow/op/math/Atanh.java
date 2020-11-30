@@ -58,6 +58,7 @@ public final class Atanh<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Atanh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Atanh", scope.makeOpName("Atanh"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Atanh<T>(opBuilder.build());
   }

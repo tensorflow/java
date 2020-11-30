@@ -82,6 +82,7 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends RawOp {
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

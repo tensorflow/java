@@ -74,6 +74,7 @@ public final class Any extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("Any"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

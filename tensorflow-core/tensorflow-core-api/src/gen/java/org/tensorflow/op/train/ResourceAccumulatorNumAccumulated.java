@@ -43,6 +43,7 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
   public static ResourceAccumulatorNumAccumulated create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorNumAccumulated", scope.makeOpName("ResourceAccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ResourceAccumulatorNumAccumulated(opBuilder.build());
   }

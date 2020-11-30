@@ -46,6 +46,7 @@ public final class ClusterOutput<T extends TType> extends RawOp implements Opera
   public static <T extends TType> ClusterOutput<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaClusterOutput", scope.makeOpName("ClusterOutput"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new ClusterOutput<T>(opBuilder.build());
   }

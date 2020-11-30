@@ -80,6 +80,7 @@ public final class ResizeBicubicGrad<T extends TNumber> extends RawOp implements
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubicGrad", scope.makeOpName("ResizeBicubicGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -60,6 +60,7 @@ public final class Conj<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Conj<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conj", scope.makeOpName("Conj"));
     opBuilder.addInput(input.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Conj<T>(opBuilder.build());
   }

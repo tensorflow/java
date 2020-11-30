@@ -88,6 +88,7 @@ public final class InitializeTableFromTextFile extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromTextFileV2", scope.makeOpName("InitializeTableFromTextFile"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(filename.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     opBuilder.setAttr("key_index", keyIndex);
     opBuilder.setAttr("value_index", valueIndex);

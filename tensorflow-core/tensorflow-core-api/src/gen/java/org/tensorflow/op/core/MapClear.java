@@ -89,6 +89,7 @@ public final class MapClear extends RawOp {
   @Endpoint(describeByClass = true)
   public static MapClear create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapClear", scope.makeOpName("MapClear"));
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {

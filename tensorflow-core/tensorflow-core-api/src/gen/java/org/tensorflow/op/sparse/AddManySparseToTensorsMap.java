@@ -103,6 +103,7 @@ public final class AddManySparseToTensorsMap extends RawOp implements Operand<TI
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -48,6 +48,7 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new SparseTensorSliceDataset(opBuilder.build());
   }

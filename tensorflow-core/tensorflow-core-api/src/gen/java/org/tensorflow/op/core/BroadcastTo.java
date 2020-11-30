@@ -77,6 +77,7 @@ public final class BroadcastTo<T extends TType> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastTo", scope.makeOpName("BroadcastTo"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shape.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new BroadcastTo<T>(opBuilder.build());
   }

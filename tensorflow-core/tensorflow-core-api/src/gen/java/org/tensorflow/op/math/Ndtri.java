@@ -45,6 +45,7 @@ public final class Ndtri<T extends TNumber> extends RawOp implements Operand<T> 
   public static <T extends TNumber> Ndtri<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Ndtri", scope.makeOpName("Ndtri"));
     opBuilder.addInput(x.asOutput());
+    opBuilder.setDevice(scope.makeDeviceString());
     opBuilder = scope.applyControlDependencies(opBuilder);
     return new Ndtri<T>(opBuilder.build());
   }
