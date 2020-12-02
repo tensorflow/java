@@ -88,6 +88,12 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
+        <configuration>
+          <args>
+            <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
+            <arg>-Xexplicit-api=strict</arg>
+          </args>
+        </configuration>
 
         <executions>
           <execution>
@@ -97,9 +103,10 @@
             </goals>
             <configuration>
               <sourceDirs>
-<!--                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/java</sourceDir>-->
-<!--                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/annotations</sourceDir>-->
-<!--                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/main/java</sourceDir>-->
+                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/java</sourceDir>
+                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/annotations</sourceDir>
+                <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/main/java</sourceDir>
               </sourceDirs>
               <annotationProcessors>
                 <annotationProcessor>org.tensorflow.processor.operator.KotlinOpsProcessor</annotationProcessor>
@@ -108,7 +115,7 @@
                 <!-- Specify your annotation processors here. -->
                 <annotationProcessorPath>
                   <groupId>org.tensorflow</groupId>
-<!--                  <artifactId>tensorflow-core-kotlin-generator</artifactId>-->
+                  <artifactId>tensorflow-core-kotlin-generator</artifactId>
                   <version>${project.version}</version>
                 </annotationProcessorPath>
               </annotationProcessorPaths>
