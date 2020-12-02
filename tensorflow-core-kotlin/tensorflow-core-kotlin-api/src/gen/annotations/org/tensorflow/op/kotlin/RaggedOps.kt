@@ -29,23 +29,31 @@ import org.tensorflow.types.family.TNumber
  * @see {@link org.tensorflow.op.Ops}
  */
 public class RaggedOps(
-  /**
-   * Get the parent {@link KotlinOps} object.
-   */
-  public val ops: KotlinOps
+	/**
+	 * Get the parent {@link KotlinOps} object.
+	 */
+	public val ops: KotlinOps
 ) {
-  public val java: org.tensorflow.op.RaggedOps = ops.java.ragged
+	public val java: org.tensorflow.op.RaggedOps = ops.java.ragged
 
-  /**
-   * Returns the current {@link Scope scope} of this API
-   */
-  public val scope: Scope = ops.scope
+	/**
+	 * Returns the current {@link Scope scope} of this API
+	 */
+	public val scope: Scope = ops.scope
 
-  public fun <U : TNumber, T : TNumber> raggedBincount(
-    splits: Operand<TInt64>,
-    values: Operand<T>,
-    size: Operand<T>,
-    weights: Operand<U>,
-    vararg options: RaggedBincount.Options
-  ): RaggedBincount<U> = java.raggedBincount<U, T>(splits, values, size, weights, *options)
+	public fun <U : TNumber, T : TNumber> raggedBincount(
+		splits: Operand<TInt64>,
+		values: Operand<T>,
+		size: Operand<T>,
+		weights: Operand<U>,
+		binaryOutput: Boolean? = null
+	): RaggedBincount<U> = java.raggedBincount<U, T>(	
+		splits,
+		values,
+		size,
+		weights,
+		*listOfNotNull(
+			binaryOutput?.let{ org.tensorflow.op.ragged.RaggedBincount.binaryOutput(it) }
+		).toTypedArray()
+		)
 }

@@ -5,6 +5,9 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.io.File
 import java.io.IOException
 import javax.annotation.processing.ProcessingEnvironment
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.ArrayType
+import javax.lang.model.util.ElementFilter
 import com.squareup.javapoet.ClassName as JavaClassName
 
 val JavaClassName.kotlin get() = ClassName(this.packageName(), this.simpleNames())
@@ -30,6 +33,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         try {
             val text = buildString {
                 FileSpec.builder(PACKAGE, spec.name ?: error("Type spec has no name"))
+                    .indent("\t")
                     .addComment(LICENSE)
                     .addComment("\nThis class has been generated, DO NOT EDIT!\n")
                     .addType(spec)
@@ -96,12 +100,20 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
 
         val typeParamNames = builder.typeVariables.map { it.name }.toSet()
 
-        builder.addParameters(
-            endpointMethod.parameters.filter {
-                com.squareup.javapoet.TypeName.get(it.asType()) != T_SCOPE
-            }.map {
-                ParameterSpec.get(it)
+        val parameters = endpointMethod.parameters.filter {
+            com.squareup.javapoet.TypeName.get(it.asType()) != T_SCOPE
+        }.map { ParameterSpec.get(it) }
 
+        val optionsParameter = parameters.singleOrNull {
+            if (endpointMethod.isVarArgs && "Array<" in it.type.toString())
+                ((it.type as? ParameterizedTypeName)?.typeArguments?.singleOrNull() as? ClassName)?.simpleName == "Options"
+            else
+                false
+        }
+
+        builder.addParameters(
+            parameters.filter { it != optionsParameter }.map {
+                it
                     .run {
                         if (name in typeParamNames)
                             this.toBuilder(name + "_").build()
@@ -117,6 +129,31 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
                     }
             })
 
+        val optionsClass = if (optionsParameter != null) {
+            val paramElement = endpointMethod.parameters.single { it.simpleName.contentEquals(optionsParameter.name) }
+            val type = paramElement.asType()?.let {
+                if (it is ArrayType)
+                    it.componentType
+                else
+                    it
+            }
+            types.asElement(type) as TypeElement
+        } else
+            null
+
+        val opClassSpec = (optionsClass?.enclosingElement as TypeElement?)?.asClassName()
+
+        val optionParams = if (optionsClass != null)
+            ElementFilter.methodsIn(optionsClass.enclosedElements).map {
+                ParameterSpec.builder(it.simpleName.toString(), it.parameters.single().asType().asTypeName().copy(nullable = true))
+                    .defaultValue("null").build()
+            }.toSet()
+        else
+            emptySet()
+
+        if (optionParams.isNotEmpty())
+            builder.addParameters(optionParams)
+
         builder.addStatement(
             buildString {
                 append("return java.$name")
@@ -124,19 +161,36 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
                     append("<${typeParamNames.joinToString(", ")}>")
 
                 append("(")
-                append(
-                    builder.parameters.joinToString(", ") {
-                        val name = if (it.name == "var") "`var`" else it.name
 
-                        if (KModifier.VARARG in it.modifiers)
-                            "*${name}"
-                        else
-                            name
-                    }
+                val paramStrings = builder.parameters.filter { it !in optionParams }.map {
+                    val name = if (it.name == "var") "`var`" else it.name
+
+                    if (KModifier.VARARG in it.modifiers)
+                        "*${name}"
+                    else
+                        name
+                }.plus(
+                    if (optionParams.isNotEmpty())
+                        listOf(
+                            "*listOfNotNull(${
+                                optionParams.joinToString(",\n", "\n", "\n") {
+                                    "\t${it.name}?.let{ ${opClassSpec!!.canonicalName}.${it.name}(it) }"
+                                }
+                            }).toTypedArray()"
+                        )
+                    else
+                        emptyList()
                 )
+
+                append(
+                    paramStrings.joinToString(",\n", "\n", "\n").prependIndent("\t")
+                )
+
                 append(")")
             }
         )
+
+        //TODO Javadocs/KDocs
 
         return builder.build()
     }

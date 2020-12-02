@@ -29,22 +29,28 @@ import org.tensorflow.types.family.TNumber
  * @see {@link org.tensorflow.op.Ops}
  */
 public class NnRawOps(
-  /**
-   * Get the parent {@link KotlinOps} object.
-   */
-  public val ops: KotlinOps
+	/**
+	 * Get the parent {@link KotlinOps} object.
+	 */
+	public val ops: KotlinOps
 ) {
-  public val java: org.tensorflow.op.NnRawOps = ops.java.nn.raw
+	public val java: org.tensorflow.op.NnRawOps = ops.java.nn.raw
 
-  /**
-   * Returns the current {@link Scope scope} of this API
-   */
-  public val scope: Scope = ops.scope
+	/**
+	 * Returns the current {@link Scope scope} of this API
+	 */
+	public val scope: Scope = ops.scope
 
-  public fun <T : TNumber> softmaxCrossEntropyWithLogits(features: Operand<T>, labels: Operand<T>):
-      SoftmaxCrossEntropyWithLogits<T> = java.softmaxCrossEntropyWithLogits<T>(features, labels)
+	public fun <T : TNumber> softmaxCrossEntropyWithLogits(features: Operand<T>, labels: Operand<T>):
+			SoftmaxCrossEntropyWithLogits<T> = java.softmaxCrossEntropyWithLogits<T>(	
+		features,
+		labels
+		)
 
-  public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
-      labels: Operand<U>): SparseSoftmaxCrossEntropyWithLogits<T> =
-      java.sparseSoftmaxCrossEntropyWithLogits<T, U>(features, labels)
+	public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
+			labels: Operand<U>): SparseSoftmaxCrossEntropyWithLogits<T> =
+			java.sparseSoftmaxCrossEntropyWithLogits<T, U>(	
+		features,
+		labels
+		)
 }

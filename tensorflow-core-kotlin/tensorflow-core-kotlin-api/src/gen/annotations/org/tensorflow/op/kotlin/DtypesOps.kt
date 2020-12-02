@@ -32,30 +32,55 @@ import org.tensorflow.types.family.TType
  * @see {@link org.tensorflow.op.Ops}
  */
 public class DtypesOps(
-  /**
-   * Get the parent {@link KotlinOps} object.
-   */
-  public val ops: KotlinOps
+	/**
+	 * Get the parent {@link KotlinOps} object.
+	 */
+	public val ops: KotlinOps
 ) {
-  public val java: org.tensorflow.op.DtypesOps = ops.java.dtypes
+	public val java: org.tensorflow.op.DtypesOps = ops.java.dtypes
 
-  /**
-   * Returns the current {@link Scope scope} of this API
-   */
-  public val scope: Scope = ops.scope
+	/**
+	 * Returns the current {@link Scope scope} of this API
+	 */
+	public val scope: Scope = ops.scope
 
-  public fun <T : TType> asString(input: Operand<T>, vararg options: AsString.Options): AsString =
-      java.asString<T>(input, *options)
+	public fun <T : TType> asString(
+		input: Operand<T>,
+		precision: Long? = null,
+		scientific: Boolean? = null,
+		shortest: Boolean? = null,
+		width: Long? = null,
+		fill: String? = null
+	): AsString = java.asString<T>(	
+		input,
+		*listOfNotNull(
+			precision?.let{ org.tensorflow.op.dtypes.AsString.precision(it) },
+			scientific?.let{ org.tensorflow.op.dtypes.AsString.scientific(it) },
+			shortest?.let{ org.tensorflow.op.dtypes.AsString.shortest(it) },
+			width?.let{ org.tensorflow.op.dtypes.AsString.width(it) },
+			fill?.let{ org.tensorflow.op.dtypes.AsString.fill(it) }
+		).toTypedArray()
+		)
 
-  public fun <U : TType, T : TType> cast(
-    x: Operand<T>,
-    DstT: DataType<U>,
-    vararg options: Cast.Options
-  ): Cast<U> = java.cast<U, T>(x, DstT, *options)
+	public fun <U : TType, T : TType> cast(
+		x: Operand<T>,
+		DstT: DataType<U>,
+		Truncate: Boolean? = null
+	): Cast<U> = java.cast<U, T>(	
+		x,
+		DstT,
+		*listOfNotNull(
+			Truncate?.let{ org.tensorflow.op.dtypes.Cast.Truncate(it) }
+		).toTypedArray()
+		)
 
-  public fun <U : TType, T : TNumber> complex(
-    real: Operand<T>,
-    imag: Operand<T>,
-    Tout: DataType<U>
-  ): Complex<U> = java.complex<U, T>(real, imag, Tout)
+	public fun <U : TType, T : TNumber> complex(
+		real: Operand<T>,
+		imag: Operand<T>,
+		Tout: DataType<U>
+	): Complex<U> = java.complex<U, T>(	
+		real,
+		imag,
+		Tout
+		)
 }
