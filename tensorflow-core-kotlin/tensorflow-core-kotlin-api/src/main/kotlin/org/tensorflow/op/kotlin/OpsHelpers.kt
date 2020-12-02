@@ -1,8 +1,13 @@
 package org.tensorflow.op.kotlin
 
+import org.tensorflow.DataType
 import org.tensorflow.ExecutionEnvironment
+import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.JavaOps
 import org.tensorflow.op.Op
+import org.tensorflow.op.Ops
+import org.tensorflow.op.core.Placeholder
+import org.tensorflow.types.family.TType
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -19,7 +24,7 @@ public fun KotlinOps.withSubScope(childScopeName: String): KotlinOps = KotlinOps
  *
  * @see {@link Scope#withSubScope(String)}
  */
-public fun <R> KotlinOps.withSubScope(childScopeName: String, block: KotlinOps.() -> R): R {
+public inline fun <R> KotlinOps.withSubScope(childScopeName: String, block: KotlinOps.() -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return withSubScope(childScopeName).run(block)
 }
@@ -44,3 +49,5 @@ public fun KotlinOps.withControlDependencies(controls: Iterable<Op>): KotlinOps 
 public val ExecutionEnvironment.tf: KotlinOps get() = JavaOps.create(this).kotlin
 
 //TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be too error prone to be worth doing
+
+//public fun <T: TType> Ops.placeholder(dtype: DataType<T>, vararg shape: Long): Placeholder<T> = placeholder(dtype, Shape.of(*shape))
