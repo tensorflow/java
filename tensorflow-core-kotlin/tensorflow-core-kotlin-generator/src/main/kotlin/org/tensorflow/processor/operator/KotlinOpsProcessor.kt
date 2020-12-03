@@ -33,7 +33,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         try {
             val text = buildString {
                 FileSpec.builder(PACKAGE, spec.name ?: error("Type spec has no name"))
-                    .indent("\t")
+                    .indent("    ")
                     .addComment(LICENSE)
                     .addComment("\nThis class has been generated, DO NOT EDIT!\n")
                     .addType(spec)
@@ -43,6 +43,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
                 .replace("import java.(lang|util).[\\w.*]+\r?\n".toRegex(), "")
                 .replace("java.lang.", "")
                 .replace("java.util.List", "List")
+                .replace("\t", "    ")
 
             val packageFile = File(sourceDir, PACKAGE.replace(".", "/"))
             packageFile.mkdirs()
