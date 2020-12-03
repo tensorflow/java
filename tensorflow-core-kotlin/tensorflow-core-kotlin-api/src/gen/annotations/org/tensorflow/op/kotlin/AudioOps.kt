@@ -33,65 +33,65 @@ import org.tensorflow.types.TString
  * @see {@link org.tensorflow.op.Ops}
  */
 public class AudioOps(
-	/**
-	 * Get the parent {@link KotlinOps} object.
-	 */
-	public val ops: KotlinOps
+    /**
+     * Get the parent {@link KotlinOps} object.
+     */
+    public val ops: KotlinOps
 ) {
-	public val java: org.tensorflow.op.AudioOps = ops.java.audio
+    public val java: org.tensorflow.op.AudioOps = ops.java.audio
 
-	/**
-	 * Returns the current {@link Scope scope} of this API
-	 */
-	public val scope: Scope = ops.scope
+    /**
+     * Returns the current {@link Scope scope} of this API
+     */
+    public val scope: Scope = ops.scope
 
-	public fun audioSpectrogram(
-		input: Operand<TFloat32>,
-		windowSize: Long,
-		stride: Long,
-		magnitudeSquared: Boolean? = null
-	): AudioSpectrogram = java.audioSpectrogram(	
-		input,
-		windowSize,
-		stride,
-		*listOfNotNull(
-			magnitudeSquared?.let{ org.tensorflow.op.audio.AudioSpectrogram.magnitudeSquared(it) }
-		).toTypedArray()
-		)
+    public fun audioSpectrogram(
+        input: Operand<TFloat32>,
+        windowSize: Long,
+        stride: Long,
+        magnitudeSquared: Boolean? = null
+    ): AudioSpectrogram = java.audioSpectrogram(
+        input,
+        windowSize,
+        stride,
+        *listOfNotNull(
+            magnitudeSquared?.let { org.tensorflow.op.audio.AudioSpectrogram.magnitudeSquared(it) }
+        ).toTypedArray()
+    )
 
-	public fun decodeWav(
-		contents: Operand<TString>,
-		desiredChannels: Long? = null,
-		desiredSamples: Long? = null
-	): DecodeWav = java.decodeWav(	
-		contents,
-		*listOfNotNull(
-			desiredChannels?.let{ org.tensorflow.op.audio.DecodeWav.desiredChannels(it) },
-			desiredSamples?.let{ org.tensorflow.op.audio.DecodeWav.desiredSamples(it) }
-		).toTypedArray()
-		)
+    public fun decodeWav(
+        contents: Operand<TString>,
+        desiredChannels: Long? = null,
+        desiredSamples: Long? = null
+    ): DecodeWav = java.decodeWav(
+        contents,
+        *listOfNotNull(
+            desiredChannels?.let { org.tensorflow.op.audio.DecodeWav.desiredChannels(it) },
+            desiredSamples?.let { org.tensorflow.op.audio.DecodeWav.desiredSamples(it) }
+        ).toTypedArray()
+    )
 
-	public fun encodeWav(audio: Operand<TFloat32>, sampleRate: Operand<TInt32>): EncodeWav =
-			java.encodeWav(	
-		audio,
-		sampleRate
-		)
+    public fun encodeWav(audio: Operand<TFloat32>, sampleRate: Operand<TInt32>): EncodeWav =
+        java.encodeWav(
+            audio,
+            sampleRate
+        )
 
-	public fun mfcc(
-		spectrogram: Operand<TFloat32>,
-		sampleRate: Operand<TInt32>,
-		upperFrequencyLimit: Float? = null,
-		lowerFrequencyLimit: Float? = null,
-		filterbankChannelCount: Long? = null,
-		dctCoefficientCount: Long? = null
-	): Mfcc = java.mfcc(	
-		spectrogram,
-		sampleRate,
-		*listOfNotNull(
-			upperFrequencyLimit?.let{ org.tensorflow.op.audio.Mfcc.upperFrequencyLimit(it) },
-			lowerFrequencyLimit?.let{ org.tensorflow.op.audio.Mfcc.lowerFrequencyLimit(it) },
-			filterbankChannelCount?.let{ org.tensorflow.op.audio.Mfcc.filterbankChannelCount(it) },
-			dctCoefficientCount?.let{ org.tensorflow.op.audio.Mfcc.dctCoefficientCount(it) }
-		).toTypedArray()
-		)
+    public fun mfcc(
+        spectrogram: Operand<TFloat32>,
+        sampleRate: Operand<TInt32>,
+        upperFrequencyLimit: Float? = null,
+        lowerFrequencyLimit: Float? = null,
+        filterbankChannelCount: Long? = null,
+        dctCoefficientCount: Long? = null
+    ): Mfcc = java.mfcc(
+        spectrogram,
+        sampleRate,
+        *listOfNotNull(
+            upperFrequencyLimit?.let { org.tensorflow.op.audio.Mfcc.upperFrequencyLimit(it) },
+            lowerFrequencyLimit?.let { org.tensorflow.op.audio.Mfcc.lowerFrequencyLimit(it) },
+            filterbankChannelCount?.let { org.tensorflow.op.audio.Mfcc.filterbankChannelCount(it) },
+            dctCoefficientCount?.let { org.tensorflow.op.audio.Mfcc.dctCoefficientCount(it) }
+        ).toTypedArray()
+    )
 }

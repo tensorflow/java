@@ -37,69 +37,69 @@ import org.tensorflow.types.family.TType
  * @see {@link org.tensorflow.op.Ops}
  */
 public class SummaryOps(
-	/**
-	 * Get the parent {@link KotlinOps} object.
-	 */
-	public val ops: KotlinOps
+    /**
+     * Get the parent {@link KotlinOps} object.
+     */
+    public val ops: KotlinOps
 ) {
-	public val java: org.tensorflow.op.SummaryOps = ops.java.summary
+    public val java: org.tensorflow.op.SummaryOps = ops.java.summary
 
-	/**
-	 * Returns the current {@link Scope scope} of this API
-	 */
-	public val scope: Scope = ops.scope
+    /**
+     * Returns the current {@link Scope scope} of this API
+     */
+    public val scope: Scope = ops.scope
 
-	public fun audioSummary(
-		tag: Operand<TString>,
-		tensor: Operand<TFloat32>,
-		sampleRate: Operand<TFloat32>,
-		maxOutputs: Long? = null
-	): AudioSummary = java.audioSummary(	
-		tag,
-		tensor,
-		sampleRate,
-		*listOfNotNull(
-			maxOutputs?.let{ org.tensorflow.op.summary.AudioSummary.maxOutputs(it) }
-		).toTypedArray()
-		)
+    public fun audioSummary(
+        tag: Operand<TString>,
+        tensor: Operand<TFloat32>,
+        sampleRate: Operand<TFloat32>,
+        maxOutputs: Long? = null
+    ): AudioSummary = java.audioSummary(
+        tag,
+        tensor,
+        sampleRate,
+        *listOfNotNull(
+            maxOutputs?.let { org.tensorflow.op.summary.AudioSummary.maxOutputs(it) }
+        ).toTypedArray()
+    )
 
-	public fun <T : TNumber> histogramSummary(tag: Operand<TString>, values: Operand<T>):
-			HistogramSummary = java.histogramSummary<T>(	
-		tag,
-		values
-		)
+    public fun <T : TNumber> histogramSummary(tag: Operand<TString>, values: Operand<T>):
+        HistogramSummary = java.histogramSummary<T>(
+            tag,
+            values
+        )
 
-	public fun <T : TNumber> imageSummary(
-		tag: Operand<TString>,
-		tensor: Operand<T>,
-		maxImages: Long? = null,
-		badColor: Tensor<*>? = null
-	): ImageSummary = java.imageSummary<T>(	
-		tag,
-		tensor,
-		*listOfNotNull(
-			maxImages?.let{ org.tensorflow.op.summary.ImageSummary.maxImages(it) },
-			badColor?.let{ org.tensorflow.op.summary.ImageSummary.badColor(it) }
-		).toTypedArray()
-		)
+    public fun <T : TNumber> imageSummary(
+        tag: Operand<TString>,
+        tensor: Operand<T>,
+        maxImages: Long? = null,
+        badColor: Tensor<*>? = null
+    ): ImageSummary = java.imageSummary<T>(
+        tag,
+        tensor,
+        *listOfNotNull(
+            maxImages?.let { org.tensorflow.op.summary.ImageSummary.maxImages(it) },
+            badColor?.let { org.tensorflow.op.summary.ImageSummary.badColor(it) }
+        ).toTypedArray()
+    )
 
-	public fun mergeSummary(inputs: Iterable<Operand<TString>>): MergeSummary = java.mergeSummary(	
-		inputs
-		)
+    public fun mergeSummary(inputs: Iterable<Operand<TString>>): MergeSummary = java.mergeSummary(
+        inputs
+    )
 
-	public fun <T : TNumber> scalarSummary(tags: Operand<TString>, values: Operand<T>): ScalarSummary =
-			java.scalarSummary<T>(	
-		tags,
-		values
-		)
+    public fun <T : TNumber> scalarSummary(tags: Operand<TString>, values: Operand<T>):
+        ScalarSummary = java.scalarSummary<T>(
+            tags,
+            values
+        )
 
-	public fun <T : TType> tensorSummary(
-		tag: Operand<TString>,
-		tensor: Operand<T>,
-		serializedSummaryMetadata: Operand<TString>
-	): TensorSummary = java.tensorSummary<T>(	
-		tag,
-		tensor,
-		serializedSummaryMetadata
-		)
+    public fun <T : TType> tensorSummary(
+        tag: Operand<TString>,
+        tensor: Operand<T>,
+        serializedSummaryMetadata: Operand<TString>
+    ): TensorSummary = java.tensorSummary<T>(
+        tag,
+        tensor,
+        serializedSummaryMetadata
+    )
 }

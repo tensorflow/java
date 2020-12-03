@@ -10,11 +10,10 @@ import kotlin.contracts.contract
  */
 public inline fun <R> Graph(block: Graph.() -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
-    return Graph().use{
+    return Graph().use {
         it.run(block)
     }
 }
-
 
 /**
  * Construct a new session with the associated {@link Graph} and configuration options, and run [block] on it.
@@ -29,7 +28,6 @@ public inline fun <R> Graph.withSession(config: ConfigProto? = null, block: (Ses
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return Session(this, config).use(block)
 }
-
 
 /**
  * An environment for executing TensorFlow operations eagerly.

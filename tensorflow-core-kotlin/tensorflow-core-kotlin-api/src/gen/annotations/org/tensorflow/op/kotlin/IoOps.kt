@@ -21,7 +21,52 @@ import org.tensorflow.DataType
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
-import org.tensorflow.op.io.*
+import org.tensorflow.op.io.DecodeBase64
+import org.tensorflow.op.io.DecodeCompressed
+import org.tensorflow.op.io.DecodeCsv
+import org.tensorflow.op.io.DecodeJsonExample
+import org.tensorflow.op.io.DecodePaddedRaw
+import org.tensorflow.op.io.DecodeRaw
+import org.tensorflow.op.io.DeserializeManySparse
+import org.tensorflow.op.io.EncodeBase64
+import org.tensorflow.op.io.FifoQueue
+import org.tensorflow.op.io.FixedLengthRecordReader
+import org.tensorflow.op.io.IdentityReader
+import org.tensorflow.op.io.LmdbReader
+import org.tensorflow.op.io.MatchingFiles
+import org.tensorflow.op.io.PaddingFifoQueue
+import org.tensorflow.op.io.ParseExample
+import org.tensorflow.op.io.ParseSequenceExample
+import org.tensorflow.op.io.ParseSingleExample
+import org.tensorflow.op.io.ParseSingleSequenceExample
+import org.tensorflow.op.io.ParseTensor
+import org.tensorflow.op.io.PriorityQueue
+import org.tensorflow.op.io.QueueClose
+import org.tensorflow.op.io.QueueDequeue
+import org.tensorflow.op.io.QueueDequeueMany
+import org.tensorflow.op.io.QueueDequeueUpTo
+import org.tensorflow.op.io.QueueEnqueue
+import org.tensorflow.op.io.QueueEnqueueMany
+import org.tensorflow.op.io.QueueIsClosed
+import org.tensorflow.op.io.QueueSize
+import org.tensorflow.op.io.RandomShuffleQueue
+import org.tensorflow.op.io.ReadFile
+import org.tensorflow.op.io.ReaderNumRecordsProduced
+import org.tensorflow.op.io.ReaderNumWorkUnitsCompleted
+import org.tensorflow.op.io.ReaderRead
+import org.tensorflow.op.io.ReaderReadUpTo
+import org.tensorflow.op.io.ReaderReset
+import org.tensorflow.op.io.ReaderRestoreState
+import org.tensorflow.op.io.ReaderSerializeState
+import org.tensorflow.op.io.SerializeManySparse
+import org.tensorflow.op.io.SerializeSparse
+import org.tensorflow.op.io.SerializeTensor
+import org.tensorflow.op.io.ShardedFilename
+import org.tensorflow.op.io.ShardedFilespec
+import org.tensorflow.op.io.TextLineReader
+import org.tensorflow.op.io.TfRecordReader
+import org.tensorflow.op.io.WholeFileReader
+import org.tensorflow.op.io.WriteFile
 import org.tensorflow.types.TBool
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
@@ -52,12 +97,12 @@ public class IoOps(
     )
 
     public fun decodeCompressed(bytes: Operand<TString>, compressionType: String? = null):
-            DecodeCompressed = java.decodeCompressed(
-        bytes,
-        *listOfNotNull(
-            compressionType?.let { org.tensorflow.op.io.DecodeCompressed.compressionType(it) }
-        ).toTypedArray()
-    )
+        DecodeCompressed = java.decodeCompressed(
+            bytes,
+            *listOfNotNull(
+                compressionType?.let { org.tensorflow.op.io.DecodeCompressed.compressionType(it) }
+            ).toTypedArray()
+        )
 
     public fun decodeCsv(
         records: Operand<TString>,
@@ -329,10 +374,10 @@ public class IoOps(
     )
 
     public fun <T : TType> parseTensor(serialized: Operand<TString>, outType: DataType<T>):
-            ParseTensor<T> = java.parseTensor<T>(
-        serialized,
-        outType
-    )
+        ParseTensor<T> = java.parseTensor<T>(
+            serialized,
+            outType
+        )
 
     public fun priorityQueue(
         componentTypes: List<DataType<*>>,
@@ -487,10 +532,10 @@ public class IoOps(
     )
 
     public fun readerRestoreState(readerHandle: Operand<*>, state: Operand<TString>):
-            ReaderRestoreState = java.readerRestoreState(
-        readerHandle,
-        state
-    )
+        ReaderRestoreState = java.readerRestoreState(
+            readerHandle,
+            state
+        )
 
     public fun readerSerializeState(readerHandle: Operand<*>): ReaderSerializeState =
         java.readerSerializeState(
@@ -556,10 +601,11 @@ public class IoOps(
         numShards
     )
 
-    public fun shardedFilespec(basename: Operand<TString>, numShards: Operand<TInt32>): ShardedFilespec = java.shardedFilespec(
-        basename,
-        numShards
-    )
+    public fun shardedFilespec(basename: Operand<TString>, numShards: Operand<TInt32>):
+        ShardedFilespec = java.shardedFilespec(
+            basename,
+            numShards
+        )
 
     public fun textLineReader(
         skipHeaderLines: Long? = null,
@@ -585,12 +631,13 @@ public class IoOps(
         ).toTypedArray()
     )
 
-    public fun wholeFileReader(container: String? = null, sharedName: String? = null): WholeFileReader = java.wholeFileReader(
-        *listOfNotNull(
-            container?.let { org.tensorflow.op.io.WholeFileReader.container(it) },
-            sharedName?.let { org.tensorflow.op.io.WholeFileReader.sharedName(it) }
-        ).toTypedArray()
-    )
+    public fun wholeFileReader(container: String? = null, sharedName: String? = null):
+        WholeFileReader = java.wholeFileReader(
+            *listOfNotNull(
+                container?.let { org.tensorflow.op.io.WholeFileReader.container(it) },
+                sharedName?.let { org.tensorflow.op.io.WholeFileReader.sharedName(it) }
+            ).toTypedArray()
+        )
 
     public fun writeFile(filename: Operand<TString>, contents: Operand<TString>): WriteFile =
         java.writeFile(
