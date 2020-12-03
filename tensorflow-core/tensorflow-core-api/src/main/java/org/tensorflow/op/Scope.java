@@ -190,7 +190,15 @@ public final class Scope {
    */
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
+    return applyControlDependencies(builder);
+  }
 
+  /**
+   * Adds each Operand in controlDependencies as a control input to the provided builder.
+   *
+   * @param builder OperationBuilder to add control inputs to
+   */
+  public OperationBuilder applyControlDependencies(OperationBuilder builder) {
     for (Op control : controlDependencies) {
       builder = builder.addControlInput(control.op());
     }
