@@ -51,8 +51,7 @@ public final class SquaredDifference<T extends TType> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("SquaredDifference", scope.makeOpName("SquaredDifference"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SquaredDifference<T>(opBuilder.build());
   }
   

@@ -60,8 +60,7 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(sumIndices.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseAddGrad<T>(opBuilder.build());
   }
   

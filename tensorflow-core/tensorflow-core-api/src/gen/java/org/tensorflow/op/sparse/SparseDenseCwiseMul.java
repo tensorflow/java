@@ -61,8 +61,7 @@ public final class SparseDenseCwiseMul<T extends TType> extends RawOp implements
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
     opBuilder.addInput(dense.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseDenseCwiseMul<T>(opBuilder.build());
   }
   

@@ -70,8 +70,7 @@ public final class LowerBound<U extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("LowerBound", scope.makeOpName("LowerBound"));
     opBuilder.addInput(sortedInputs.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new LowerBound<U>(opBuilder.build());
   }

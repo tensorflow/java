@@ -45,8 +45,7 @@ public final class DeserializeIterator extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeIterator", scope.makeOpName("DeserializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder.addInput(serialized.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DeserializeIterator(opBuilder.build());
   }
   

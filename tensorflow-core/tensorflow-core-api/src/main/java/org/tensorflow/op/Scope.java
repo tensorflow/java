@@ -184,11 +184,13 @@ public final class Scope {
   }
 
   /**
-   * Adds each Operand in controlDependencies as a control input to the provided builder.
+   * Applies device specification and adds each Operand in controlDependencies as a control input to the provided builder.
    *
-   * @param builder OperationBuilder to add control inputs to
+   * @param builder OperationBuilder to add control inputs and device specification to
    */
-  public OperationBuilder applyControlDependencies(OperationBuilder builder) {
+  public OperationBuilder apply(OperationBuilder builder) {
+    builder.setDevice(deviceSpec.toString());
+
     for (Op control : controlDependencies) {
       builder = builder.addControlInput(control.op());
     }
@@ -200,7 +202,8 @@ public final class Scope {
   private final NameScope nameScope;
   private final DeviceSpec deviceSpec;
 
-  public String makeDeviceString() {
+  /** Returns device string from the scope. */
+  public String getDeviceString() {
     return deviceSpec.toString();
   }
 }

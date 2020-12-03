@@ -95,8 +95,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
   public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {

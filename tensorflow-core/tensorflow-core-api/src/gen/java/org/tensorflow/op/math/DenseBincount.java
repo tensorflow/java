@@ -81,8 +81,7 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {

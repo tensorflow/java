@@ -75,8 +75,7 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());
     opBuilder.addInput(fixedLength.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     if (options != null) {
       for (Options opts : options) {

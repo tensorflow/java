@@ -60,8 +60,7 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentMeanWithNumSegments<T>(opBuilder.build());
   }
   

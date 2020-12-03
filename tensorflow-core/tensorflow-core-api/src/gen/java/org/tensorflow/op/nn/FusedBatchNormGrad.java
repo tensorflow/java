@@ -111,8 +111,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     opBuilder.addInput(reserveSpace1.asOutput());
     opBuilder.addInput(reserveSpace2.asOutput());
     opBuilder.addInput(reserveSpace3.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.epsilon != null) {

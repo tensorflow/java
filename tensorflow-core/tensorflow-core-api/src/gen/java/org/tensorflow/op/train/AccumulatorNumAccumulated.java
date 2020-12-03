@@ -45,8 +45,7 @@ public final class AccumulatorNumAccumulated extends RawOp implements Operand<TI
   public static AccumulatorNumAccumulated create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorNumAccumulated", scope.makeOpName("AccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AccumulatorNumAccumulated(opBuilder.build());
   }
   

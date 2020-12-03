@@ -101,8 +101,7 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> exten
     opBuilder.addInput(maxB.asOutput());
     opBuilder.addInput(minFreezedOutput.asOutput());
     opBuilder.addInput(maxFreezedOutput.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {
       for (Options opts : options) {

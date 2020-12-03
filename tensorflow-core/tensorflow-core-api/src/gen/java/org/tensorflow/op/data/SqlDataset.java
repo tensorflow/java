@@ -53,8 +53,7 @@ public final class SqlDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(driverName.asOutput());
     opBuilder.addInput(dataSourceName.asOutput());
     opBuilder.addInput(query.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

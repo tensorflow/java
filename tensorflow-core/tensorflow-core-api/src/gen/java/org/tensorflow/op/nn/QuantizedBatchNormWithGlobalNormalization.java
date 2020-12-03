@@ -90,8 +90,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
     opBuilder.addInput(gamma.asOutput());
     opBuilder.addInput(gammaMin.asOutput());
     opBuilder.addInput(gammaMax.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);

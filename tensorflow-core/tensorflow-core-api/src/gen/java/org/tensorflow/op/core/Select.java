@@ -49,8 +49,7 @@ public final class Select<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(e.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Select<T>(opBuilder.build());
   }
   

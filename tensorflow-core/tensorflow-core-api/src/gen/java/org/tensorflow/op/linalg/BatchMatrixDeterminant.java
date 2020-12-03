@@ -44,8 +44,7 @@ public final class BatchMatrixDeterminant<T extends TType> extends RawOp impleme
   public static <T extends TType> BatchMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDeterminant", scope.makeOpName("BatchMatrixDeterminant"));
     opBuilder.addInput(input.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BatchMatrixDeterminant<T>(opBuilder.build());
   }
   

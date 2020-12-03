@@ -47,8 +47,7 @@ public final class WriteFile extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(contents.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new WriteFile(opBuilder.build());
   }
   

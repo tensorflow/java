@@ -58,8 +58,7 @@ public final class SparseSliceGrad<T extends TType> extends RawOp implements Ope
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputStart.asOutput());
     opBuilder.addInput(outputIndices.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSliceGrad<T>(opBuilder.build());
   }
   

@@ -50,8 +50,7 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(serializedSummaryMetadata.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorSummary(opBuilder.build());
   }
   

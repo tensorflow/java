@@ -107,8 +107,7 @@ public final class QuantizedMatMulWithBiasAndRelu<V extends TType> extends RawOp
     opBuilder.addInput(maxA.asOutput());
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {
       for (Options opts : options) {

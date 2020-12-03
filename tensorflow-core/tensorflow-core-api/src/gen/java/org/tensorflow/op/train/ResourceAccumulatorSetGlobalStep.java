@@ -47,8 +47,7 @@ public final class ResourceAccumulatorSetGlobalStep extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorSetGlobalStep", scope.makeOpName("ResourceAccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(newGlobalStep.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ResourceAccumulatorSetGlobalStep(opBuilder.build());
   }
   

@@ -225,8 +225,7 @@ public final class Quantize<T extends TType> extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", T);
     if (options != null) {
       for (Options opts : options) {

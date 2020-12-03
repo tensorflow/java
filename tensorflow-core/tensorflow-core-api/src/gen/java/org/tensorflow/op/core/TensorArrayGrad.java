@@ -85,8 +85,7 @@ public final class TensorArrayGrad extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradV3", scope.makeOpName("TensorArrayGrad"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("source", source);
     return new TensorArrayGrad(opBuilder.build());
   }

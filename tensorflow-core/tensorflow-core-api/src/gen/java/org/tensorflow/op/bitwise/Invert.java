@@ -88,8 +88,7 @@ public final class Invert<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
     opBuilder.addInput(x.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Invert<T>(opBuilder.build());
   }
   

@@ -54,8 +54,7 @@ public final class BoostedTreesBucketize extends RawOp implements Iterable<Opera
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesBucketize", scope.makeOpName("BoostedTreesBucketize"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BoostedTreesBucketize(opBuilder.build());
   }
   

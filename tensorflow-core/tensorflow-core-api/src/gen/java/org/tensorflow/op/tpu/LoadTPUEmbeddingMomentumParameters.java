@@ -90,8 +90,7 @@ public final class LoadTPUEmbeddingMomentumParameters extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMomentumParameters", scope.makeOpName("LoadTPUEmbeddingMomentumParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

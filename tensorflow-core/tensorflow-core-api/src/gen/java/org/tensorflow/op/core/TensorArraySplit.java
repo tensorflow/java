@@ -75,8 +75,7 @@ public final class TensorArraySplit extends RawOp implements Operand<TFloat32> {
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(lengths.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorArraySplit(opBuilder.build());
   }
   

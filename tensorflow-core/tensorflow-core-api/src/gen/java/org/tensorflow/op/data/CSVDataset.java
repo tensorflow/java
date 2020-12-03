@@ -66,8 +66,7 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(naValue.asOutput());
     opBuilder.addInput(selectCols.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
       outputShapesArray[i] = outputShapes.get(i);

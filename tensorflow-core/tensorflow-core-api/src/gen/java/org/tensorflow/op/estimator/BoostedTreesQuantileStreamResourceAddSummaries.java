@@ -49,8 +49,7 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp 
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceAddSummaries", scope.makeOpName("BoostedTreesQuantileStreamResourceAddSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(summaries));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BoostedTreesQuantileStreamResourceAddSummaries(opBuilder.build());
   }
   

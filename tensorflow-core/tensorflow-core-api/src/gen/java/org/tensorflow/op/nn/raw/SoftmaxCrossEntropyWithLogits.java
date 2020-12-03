@@ -53,8 +53,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
     OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SoftmaxCrossEntropyWithLogits<T>(opBuilder.build());
   }
   

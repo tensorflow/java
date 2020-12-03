@@ -61,8 +61,7 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp 
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new SparseAccumulatorTakeGradient<T>(opBuilder.build());
   }

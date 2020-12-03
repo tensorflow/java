@@ -56,8 +56,7 @@ public final class InplaceUpdate<T extends TType> extends RawOp implements Opera
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InplaceUpdate<T>(opBuilder.build());
   }
   

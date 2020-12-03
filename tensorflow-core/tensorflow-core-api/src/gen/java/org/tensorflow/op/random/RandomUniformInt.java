@@ -90,8 +90,7 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

@@ -46,8 +46,7 @@ public final class TensorForestTreePredict extends RawOp implements Operand<TFlo
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreePredict", scope.makeOpName("TensorForestTreePredict"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(denseFeatures.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new TensorForestTreePredict(opBuilder.build());
   }

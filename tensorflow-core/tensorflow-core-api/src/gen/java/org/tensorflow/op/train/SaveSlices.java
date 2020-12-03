@@ -82,8 +82,7 @@ public final class SaveSlices extends RawOp {
     opBuilder.addInput(tensorNames.asOutput());
     opBuilder.addInput(shapesAndSlices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SaveSlices(opBuilder.build());
   }
   

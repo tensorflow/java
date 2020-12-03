@@ -131,8 +131,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(offsets.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.centered != null) {

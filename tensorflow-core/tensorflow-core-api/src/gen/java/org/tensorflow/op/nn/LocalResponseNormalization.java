@@ -106,8 +106,7 @@ public final class LocalResponseNormalization<T extends TNumber> extends RawOp i
   public static <T extends TNumber> LocalResponseNormalization<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRN", scope.makeOpName("LocalResponseNormalization"));
     opBuilder.addInput(input.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.depthRadius != null) {

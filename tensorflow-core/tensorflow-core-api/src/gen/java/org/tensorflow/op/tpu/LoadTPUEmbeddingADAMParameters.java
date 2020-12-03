@@ -92,8 +92,7 @@ public final class LoadTPUEmbeddingADAMParameters extends RawOp {
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());
     opBuilder.addInput(velocities.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

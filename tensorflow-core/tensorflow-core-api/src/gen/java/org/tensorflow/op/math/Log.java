@@ -55,8 +55,7 @@ public final class Log<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Log<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Log", scope.makeOpName("Log"));
     opBuilder.addInput(x.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Log<T>(opBuilder.build());
   }
   

@@ -85,8 +85,7 @@ public final class ComputeAccidentalHits extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ComputeAccidentalHits", scope.makeOpName("ComputeAccidentalHits"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder.addInput(sampledCandidates.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);
     if (options != null) {
       for (Options opts : options) {

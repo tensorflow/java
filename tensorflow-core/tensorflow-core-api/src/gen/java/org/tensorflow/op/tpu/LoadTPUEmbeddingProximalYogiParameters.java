@@ -85,8 +85,7 @@ public final class LoadTPUEmbeddingProximalYogiParameters extends RawOp {
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(m.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

@@ -76,8 +76,7 @@ public final class RebatchDataset extends RawOp implements Operand<TType> {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalRebatchDataset", scope.makeOpName("RebatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numReplicas.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

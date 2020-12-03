@@ -89,8 +89,7 @@ public final class GenerateBoundingBoxProposals extends RawOp {
     opBuilder.addInput(nmsThreshold.asOutput());
     opBuilder.addInput(preNmsTopn.asOutput());
     opBuilder.addInput(minSize.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.postNmsTopn != null) {

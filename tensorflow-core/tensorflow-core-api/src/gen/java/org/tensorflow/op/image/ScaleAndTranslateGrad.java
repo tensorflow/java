@@ -80,8 +80,7 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends RawOp implem
     opBuilder.addInput(originalImage.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(translation.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.kernelType != null) {

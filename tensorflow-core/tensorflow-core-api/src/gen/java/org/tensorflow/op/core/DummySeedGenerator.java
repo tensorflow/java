@@ -24,7 +24,6 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -40,7 +39,7 @@ public final class DummySeedGenerator extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static DummySeedGenerator create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("DummySeedGenerator", scope.makeOpName("DummySeedGenerator"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DummySeedGenerator(opBuilder.build());
   }
   

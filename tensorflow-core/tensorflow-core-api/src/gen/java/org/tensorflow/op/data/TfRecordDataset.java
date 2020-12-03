@@ -53,8 +53,7 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TfRecordDataset(opBuilder.build());
   }
   

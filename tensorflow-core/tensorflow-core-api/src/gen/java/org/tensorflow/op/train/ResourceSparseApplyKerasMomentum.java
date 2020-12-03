@@ -94,8 +94,7 @@ public final class ResourceSparseApplyKerasMomentum extends RawOp {
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(momentum.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

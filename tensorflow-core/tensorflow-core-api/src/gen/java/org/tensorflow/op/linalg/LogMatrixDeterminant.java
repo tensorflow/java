@@ -56,8 +56,7 @@ public final class LogMatrixDeterminant<T extends TType> extends RawOp {
   public static <T extends TType> LogMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogMatrixDeterminant", scope.makeOpName("LogMatrixDeterminant"));
     opBuilder.addInput(input.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LogMatrixDeterminant<T>(opBuilder.build());
   }
   

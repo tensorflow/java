@@ -85,8 +85,7 @@ public final class CropAndResizeGradBoxes extends RawOp implements Operand<TFloa
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.method != null) {

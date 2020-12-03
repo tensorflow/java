@@ -70,8 +70,7 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("UpperBound", scope.makeOpName("UpperBound"));
     opBuilder.addInput(sortedInputs.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new UpperBound<U>(opBuilder.build());
   }

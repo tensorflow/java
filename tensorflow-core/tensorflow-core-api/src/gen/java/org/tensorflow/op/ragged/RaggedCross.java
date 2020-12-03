@@ -70,8 +70,7 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     opBuilder.addInputList(Operands.asOutputs(sparseValues));
     opBuilder.addInputList(Operands.asOutputs(sparseShape));
     opBuilder.addInputList(Operands.asOutputs(denseInputs));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_order", inputOrder);
     opBuilder.setAttr("hashed_output", hashedOutput);
     opBuilder.setAttr("num_buckets", numBuckets);

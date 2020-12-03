@@ -79,8 +79,7 @@ public final class DecodeBmp extends RawOp implements Operand<TUint8> {
   public static DecodeBmp create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBmp", scope.makeOpName("DecodeBmp"));
     opBuilder.addInput(contents.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.channels != null) {

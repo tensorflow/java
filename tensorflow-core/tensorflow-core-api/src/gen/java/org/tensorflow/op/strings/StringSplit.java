@@ -91,8 +91,7 @@ public final class StringSplit extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sep.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.maxsplit != null) {

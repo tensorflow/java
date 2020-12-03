@@ -57,8 +57,7 @@ public final class Lgamma<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> Lgamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lgamma", scope.makeOpName("Lgamma"));
     opBuilder.addInput(x.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Lgamma<T>(opBuilder.build());
   }
   

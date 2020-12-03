@@ -54,8 +54,7 @@ public final class Merge<T extends TType> extends RawOp {
   public static <T extends TType> Merge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("Merge", scope.makeOpName("Merge"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Merge<T>(opBuilder.build());
   }
   

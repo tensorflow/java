@@ -97,8 +97,7 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
     opBuilder.addInput(inputGrads.asOutput());
     opBuilder.addInput(inputImage.asOutput());
     opBuilder.addInput(outputImage.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.depthRadius != null) {

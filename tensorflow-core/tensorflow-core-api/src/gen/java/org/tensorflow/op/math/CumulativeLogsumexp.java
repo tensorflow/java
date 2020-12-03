@@ -96,8 +96,7 @@ public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implemen
     OperationBuilder opBuilder = scope.env().opBuilder("CumulativeLogsumexp", scope.makeOpName("CumulativeLogsumexp"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.exclusive != null) {

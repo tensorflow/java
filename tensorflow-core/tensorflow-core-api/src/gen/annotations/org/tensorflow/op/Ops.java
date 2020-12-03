@@ -7726,7 +7726,7 @@ public final class Ops {
   }
 
   /**
-   * Returns an API that places the created operations on the device(s) matching the provided spec.
+   * Returns an API that uses the provided DeviceSpec for an op.
    *
    * @see {@link Scope#withDevice(DeviceSpec)}
    */

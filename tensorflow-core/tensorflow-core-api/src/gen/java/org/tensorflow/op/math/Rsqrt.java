@@ -48,8 +48,7 @@ public final class Rsqrt<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Rsqrt<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rsqrt", scope.makeOpName("Rsqrt"));
     opBuilder.addInput(x.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Rsqrt<T>(opBuilder.build());
   }
   

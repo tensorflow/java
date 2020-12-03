@@ -64,8 +64,7 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
   public static SerializeIterator create(Scope scope, Operand<?> resourceHandle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeIterator", scope.makeOpName("SerializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.externalStatePolicy != null) {

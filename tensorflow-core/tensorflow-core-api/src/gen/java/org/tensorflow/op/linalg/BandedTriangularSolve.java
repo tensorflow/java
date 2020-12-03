@@ -74,8 +74,7 @@ public final class BandedTriangularSolve<T extends TType> extends RawOp implemen
     OperationBuilder opBuilder = scope.env().opBuilder("BandedTriangularSolve", scope.makeOpName("BandedTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.lower != null) {

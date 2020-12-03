@@ -85,8 +85,7 @@ public final class BoostedTreesCalculateBestFeatureSplit extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(treeComplexity.asOutput());
     opBuilder.addInput(minNodeWeight.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     if (options != null) {
       for (Options opts : options) {

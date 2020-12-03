@@ -57,8 +57,7 @@ public final class IsInf extends RawOp implements Operand<TBool> {
   public static <T extends TNumber> IsInf create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsInf", scope.makeOpName("IsInf"));
     opBuilder.addInput(x.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new IsInf(opBuilder.build());
   }
   

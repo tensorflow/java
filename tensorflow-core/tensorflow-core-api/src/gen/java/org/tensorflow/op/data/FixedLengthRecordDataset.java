@@ -54,8 +54,7 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
     opBuilder.addInput(footerBytes.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(compressionType.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new FixedLengthRecordDataset(opBuilder.build());
   }
   

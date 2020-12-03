@@ -80,7 +80,7 @@ public final class Init extends RawOp {
     }
     Graph graph = (Graph)exEnv;
     OperationBuilder opBuilder = scope.env().opBuilder("NoOp", scope.makeOpName(DEFAULT_NAME));
-    scope.withControlDependencies(graph.initializers()).applyControlDependencies(opBuilder);
+    scope.withControlDependencies(graph.initializers()).apply(opBuilder);
     return new Init(opBuilder.build());
   }
 

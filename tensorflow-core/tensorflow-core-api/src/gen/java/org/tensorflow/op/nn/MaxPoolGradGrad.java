@@ -82,8 +82,7 @@ public final class MaxPoolGradGrad<T extends TNumber> extends RawOp implements O
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(ksize.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {

@@ -76,8 +76,7 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp i
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixTriangularSolve", scope.makeOpName("BatchMatrixTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.lower != null) {

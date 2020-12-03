@@ -51,8 +51,7 @@ public final class WriteSummary extends RawOp {
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(summaryMetadata.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new WriteSummary(opBuilder.build());
   }
   

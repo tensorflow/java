@@ -55,8 +55,7 @@ public final class BroadcastHelper<T extends TType> extends RawOp {
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(broadcastDims.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BroadcastHelper<T>(opBuilder.build());
   }
   

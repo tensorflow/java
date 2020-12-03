@@ -90,8 +90,7 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
     opBuilder.addInput(imageSize.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", T);
     if (options != null) {
       for (Options opts : options) {

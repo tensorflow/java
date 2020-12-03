@@ -51,8 +51,7 @@ public final class FloorDiv<T extends TType> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("FloorDiv", scope.makeOpName("FloorDiv"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new FloorDiv<T>(opBuilder.build());
   }
   

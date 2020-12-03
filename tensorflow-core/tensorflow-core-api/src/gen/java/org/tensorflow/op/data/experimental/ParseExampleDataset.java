@@ -107,8 +107,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     String[] sparseKeysArray = new String[sparseKeys.size()];
     for (int i = 0; i < sparseKeysArray.length; ++i) {
       sparseKeysArray[i] = sparseKeys.get(i);

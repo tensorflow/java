@@ -97,8 +97,7 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
     opBuilder.addInput(batchIndex.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(id.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

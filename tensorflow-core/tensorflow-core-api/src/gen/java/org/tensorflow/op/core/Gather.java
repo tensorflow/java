@@ -99,8 +99,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.batchDims != null) {

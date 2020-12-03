@@ -69,8 +69,7 @@ public final class SparseSoftmax<T extends TNumber> extends RawOp implements Ope
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSoftmax<T>(opBuilder.build());
   }
   

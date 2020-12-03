@@ -95,8 +95,7 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjointA != null) {

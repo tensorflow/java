@@ -75,8 +75,7 @@ public final class Mean<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Mean", scope.makeOpName("Mean"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

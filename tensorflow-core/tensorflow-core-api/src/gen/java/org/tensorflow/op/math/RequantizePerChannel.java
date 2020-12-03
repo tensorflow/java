@@ -56,8 +56,7 @@ public final class RequantizePerChannel<U extends TType> extends RawOp {
     opBuilder.addInput(inputMax.asOutput());
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new RequantizePerChannel<U>(opBuilder.build());
   }

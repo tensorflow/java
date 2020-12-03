@@ -54,8 +54,7 @@ public final class DecodeGif extends RawOp implements Operand<TUint8> {
   public static DecodeGif create(Scope scope, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeGif", scope.makeOpName("DecodeGif"));
     opBuilder.addInput(contents.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DecodeGif(opBuilder.build());
   }
   

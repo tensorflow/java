@@ -93,8 +93,7 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseFillEmptyRows<T>(opBuilder.build());
   }
   

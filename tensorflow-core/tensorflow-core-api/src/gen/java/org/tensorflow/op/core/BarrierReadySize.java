@@ -45,8 +45,7 @@ public final class BarrierReadySize extends RawOp implements Operand<TInt32> {
   public static BarrierReadySize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierReadySize", scope.makeOpName("BarrierReadySize"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BarrierReadySize(opBuilder.build());
   }
   

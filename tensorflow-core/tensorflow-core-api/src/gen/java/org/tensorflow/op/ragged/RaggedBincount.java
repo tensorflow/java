@@ -84,8 +84,7 @@ public final class RaggedBincount<U extends TNumber> extends RawOp implements Op
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder.setDevice(scope.makeDeviceString());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {
