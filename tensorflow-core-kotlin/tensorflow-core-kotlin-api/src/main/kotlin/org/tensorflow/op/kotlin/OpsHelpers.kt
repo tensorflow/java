@@ -1,5 +1,6 @@
 package org.tensorflow.op.kotlin
 
+import org.tensorflow.DeviceSpec
 import org.tensorflow.ExecutionEnvironment
 import org.tensorflow.op.JavaOps
 import org.tensorflow.op.Op
@@ -11,12 +12,17 @@ import kotlin.contracts.contract
  */
 public val JavaOps.kotlin: KotlinOps get() = KotlinOps(this)
 
+/**
+ * Returns a child [KotlinOps] builder that builds operations with the provided name prefix.
+ *
+ * @see org.tensorflow.op.Scope.withSubScope
+ */
 public fun KotlinOps.withSubScope(childScopeName: String): KotlinOps = KotlinOps(java.withSubScope(childScopeName))
 
 /**
- * Returns an API that builds operations with the provided name prefix.
+ * Runs [block] on a child [KotlinOps] builder that builds operations with the provided name prefix.
  *
- * @see {@link Scope#withSubScope(String)}
+ * @see org.tensorflow.op.Scope.withSubScope
  */
 public inline fun <R> KotlinOps.withSubScope(childScopeName: String, block: KotlinOps.() -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
@@ -24,25 +30,110 @@ public inline fun <R> KotlinOps.withSubScope(childScopeName: String, block: Kotl
 }
 
 /**
- * Returns an API that uses the provided name for an op.
+ * Returns a child [KotlinOps] builder that uses the provided name for an op.
  *
- * @see {@link Scope#withName(String)}
+ * @see org.tensorflow.op.Scope.withName
  */
 public fun KotlinOps.withName(opName: String): KotlinOps = java.withName(opName).kotlin
 
 /**
- * Returns an API that adds operations to the graph with the provided control dependencies.
+ * Returns a child [KotlinOps] builder that adds operations to the graph with the provided control dependencies.
  *
- * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
+ * @see org.tensorflow.op.Scope.withControlDependencies
  */
 public fun KotlinOps.withControlDependencies(controls: Iterable<Op>): KotlinOps =
     java.withControlDependencies(controls).kotlin
 
 /**
- * Creates an API for building operations in the provided execution environment
+ * Returns a child [KotlinOps] builder that adds operations to the graph with the provided control dependencies.
+ *
+ * @see org.tensorflow.op.Scope.withControlDependencies
+ */
+public fun KotlinOps.withControlDependencies(vararg controls: Op): KotlinOps =
+    withControlDependencies(controls.toList())
+
+/**
+ * Runs [block] on a child [KotlinOps] builder that adds operations to the graph with the provided control dependencies.
+ *
+ * @see org.tensorflow.op.Scope.withControlDependencies
+ */
+public inline fun <R> KotlinOps.withControlDependencies(controls: Iterable<Op>, block: KotlinOps.() -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withControlDependencies(controls).run(block)
+}
+
+/**
+ * Runs [block] on a child [KotlinOps] builder that adds operations to the graph with the provided control dependencies.
+ *
+ * @see org.tensorflow.op.Scope.withControlDependencies
+ */
+public inline fun <R> KotlinOps.withControlDependencies(vararg controls: Op, block: KotlinOps.() -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withControlDependencies(*controls).run(block)
+}
+
+/**
+ * Returns a child [KotlinOps] builder that uses the provided device for created ops.
+ *
+ * @see org.tensorflow.op.Scope.withDevice
+ */
+public fun KotlinOps.withDevice(device: DeviceSpec): KotlinOps = java.withDevice(device).kotlin
+
+/**
+ * Runs [block] on a child [KotlinOps] builder that uses the provided device for created ops.
+ *
+ * @see org.tensorflow.op.Scope.withDevice
+ */
+public inline fun <R> KotlinOps.withDevice(device: DeviceSpec, block: KotlinOps.() -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withDevice(device).run(block)
+}
+
+/**
+ * Returns a child [KotlinOps] builder, combining [withSubScope], [withControlDependencies], and [withDevice].
+ * Null arguments are ignored.
+ *
+ * @see org.tensorflow.op.Scope.withSubScope
+ * @see org.tensorflow.op.Scope.withControlDependencies
+ * @see org.tensorflow.op.Scope.withDevice
+ */
+public fun KotlinOps.with(
+    childScopeName: String? = null,
+    controlDependencies: Iterable<Op>? = null,
+    device: DeviceSpec? = null
+): KotlinOps {
+    var ops = this
+    childScopeName?.let { ops = ops.withSubScope(it) }
+    controlDependencies?.let { ops = ops.withControlDependencies(it) }
+    device?.let { ops = ops.withDevice(it) }
+    return ops
+}
+
+/**
+ * Runs [block] on a child [KotlinOps] builder, combining [withSubScope], [withControlDependencies], and [withDevice].
+ * Null arguments are ignored.
+ *
+ * @see org.tensorflow.op.Scope.withSubScope
+ * @see org.tensorflow.op.Scope.withControlDependencies
+ * @see org.tensorflow.op.Scope.withDevice
+ */
+public inline fun <R> KotlinOps.with(
+    childScopeName: String? = null,
+    controlDependencies: Iterable<Op>? = null,
+    device: DeviceSpec? = null,
+    block: KotlinOps.() -> R
+): R {
+    return with(childScopeName, controlDependencies, device).run(block)
+}
+
+/**
+ * Creates a [KotlinOps] builder for building operations in the provided execution environment.
  */
 public val ExecutionEnvironment.tf: KotlinOps get() = JavaOps.create(this).kotlin
 
-// TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be too error prone to be worth doing
+/**
+ * Creates a [KotlinOps] builder for building operations in the provided execution environment with the provided device.
+ */
+public fun ExecutionEnvironment.tf(device: DeviceSpec): KotlinOps = tf.withDevice(device)
 
-// public fun <T: TType> Ops.placeholder(dtype: DataType<T>, vararg shape: Long): Placeholder<T> = placeholder(dtype, Shape.of(*shape))
+// TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be too error prone to be worth doing
