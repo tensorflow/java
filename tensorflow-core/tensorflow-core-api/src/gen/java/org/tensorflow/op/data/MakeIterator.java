@@ -47,7 +47,7 @@ public final class MakeIterator extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("MakeIterator", scope.makeOpName("MakeIterator"));
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(iterator.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new MakeIterator(opBuilder.build());
   }
   

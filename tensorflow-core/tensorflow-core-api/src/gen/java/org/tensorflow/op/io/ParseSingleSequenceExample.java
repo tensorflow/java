@@ -132,7 +132,7 @@ public final class ParseSingleSequenceExample extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(featureListDenseKeys));
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
     opBuilder.addInput(debugName.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
     for (int i = 0; i < contextSparseTypesArray.length; ++i) {
       contextSparseTypesArray[i] = contextSparseTypes.get(i);

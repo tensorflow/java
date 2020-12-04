@@ -55,7 +55,7 @@ public final class BarrierInsertMany extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_index", componentIndex);
     return new BarrierInsertMany(opBuilder.build());
   }

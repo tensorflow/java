@@ -95,7 +95,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(rate.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {

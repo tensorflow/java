@@ -97,7 +97,7 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3D", scope.makeOpName("Conv3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

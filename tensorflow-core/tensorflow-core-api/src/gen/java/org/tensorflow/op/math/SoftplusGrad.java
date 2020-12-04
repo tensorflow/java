@@ -48,7 +48,7 @@ public final class SoftplusGrad<T extends TNumber> extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("SoftplusGrad", scope.makeOpName("SoftplusGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SoftplusGrad<T>(opBuilder.build());
   }
   

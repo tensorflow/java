@@ -84,7 +84,7 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
     opBuilder.addInput(splits.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {
       for (Options opts : options) {

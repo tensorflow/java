@@ -67,7 +67,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMin", scope.makeOpName("ArgMin"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_type", outputType);
     return new ArgMin<V>(opBuilder.build());
   }

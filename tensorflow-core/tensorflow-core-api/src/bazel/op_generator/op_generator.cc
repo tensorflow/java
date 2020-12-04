@@ -246,8 +246,9 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
       writer->EndLine();
     }
   }
+
   // Add control dependencies, if any.
-  writer->Append("opBuilder = scope.applyControlDependencies(opBuilder);");
+  writer->Append("opBuilder = scope.apply(opBuilder);");
   writer->EndLine();
 
   for (const AttributeSpec& attribute : op.attributes()) {

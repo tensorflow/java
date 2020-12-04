@@ -60,7 +60,7 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSparseMinimum<T>(opBuilder.build());
   }
   

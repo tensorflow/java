@@ -81,7 +81,7 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numWorkers.asOutput());
     opBuilder.addInput(index.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

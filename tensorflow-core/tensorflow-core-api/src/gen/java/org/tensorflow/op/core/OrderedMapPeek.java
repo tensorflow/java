@@ -104,7 +104,7 @@ public final class OrderedMapPeek extends RawOp implements Iterable<Operand<TTyp
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapPeek", scope.makeOpName("OrderedMapPeek"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);

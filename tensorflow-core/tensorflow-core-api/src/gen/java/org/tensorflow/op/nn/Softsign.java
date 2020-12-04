@@ -47,7 +47,7 @@ public final class Softsign<T extends TNumber> extends RawOp implements Operand<
   public static <T extends TNumber> Softsign<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Softsign", scope.makeOpName("Softsign"));
     opBuilder.addInput(features.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Softsign<T>(opBuilder.build());
   }
   

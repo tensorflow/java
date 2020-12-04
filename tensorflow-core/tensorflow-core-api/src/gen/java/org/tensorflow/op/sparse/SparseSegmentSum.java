@@ -81,7 +81,7 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentSum<T>(opBuilder.build());
   }
   

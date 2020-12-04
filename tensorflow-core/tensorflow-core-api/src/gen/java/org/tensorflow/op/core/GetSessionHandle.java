@@ -44,7 +44,7 @@ public final class GetSessionHandle extends RawOp implements Operand<TType> {
   public static <T extends TType> GetSessionHandle create(Scope scope, Operand<T> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionHandleV2", scope.makeOpName("GetSessionHandle"));
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new GetSessionHandle(opBuilder.build());
   }
   

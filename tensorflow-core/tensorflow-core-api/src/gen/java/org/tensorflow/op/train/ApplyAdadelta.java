@@ -84,7 +84,7 @@ public final class ApplyAdadelta<T extends TType> extends RawOp implements Opera
     opBuilder.addInput(rho.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

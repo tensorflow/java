@@ -63,7 +63,7 @@ public final class LessEqual extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("LessEqual", scope.makeOpName("LessEqual"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LessEqual(opBuilder.build());
   }
   

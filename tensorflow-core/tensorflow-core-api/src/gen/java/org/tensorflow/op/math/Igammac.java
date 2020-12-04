@@ -62,7 +62,7 @@ public final class Igammac<T extends TNumber> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("Igammac", scope.makeOpName("Igammac"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Igammac<T>(opBuilder.build());
   }
   

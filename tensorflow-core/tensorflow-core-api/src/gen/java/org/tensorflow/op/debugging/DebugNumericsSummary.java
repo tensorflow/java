@@ -135,7 +135,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
   public static <U extends TNumber, T extends TType> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, DataType<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummaryV2", scope.makeOpName("DebugNumericsSummary"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_dtype", outputDtype);
     if (options != null) {
       for (Options opts : options) {

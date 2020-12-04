@@ -63,7 +63,7 @@ public final class SparseDenseCwiseAdd<T extends TType> extends RawOp implements
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
     opBuilder.addInput(dense.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseDenseCwiseAdd<T>(opBuilder.build());
   }
   

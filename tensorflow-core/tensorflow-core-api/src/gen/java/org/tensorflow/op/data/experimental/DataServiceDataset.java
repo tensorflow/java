@@ -82,7 +82,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(jobName.asOutput());
     opBuilder.addInput(maxOutstandingRequests.asOutput());
     opBuilder.addInput(iterationCounter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

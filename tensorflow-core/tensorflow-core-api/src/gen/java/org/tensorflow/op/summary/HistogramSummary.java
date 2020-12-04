@@ -54,7 +54,7 @@ public final class HistogramSummary extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramSummary", scope.makeOpName("HistogramSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new HistogramSummary(opBuilder.build());
   }
   

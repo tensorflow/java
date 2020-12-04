@@ -56,7 +56,7 @@ public final class EncodeWav extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeWav", scope.makeOpName("EncodeWav"));
     opBuilder.addInput(audio.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new EncodeWav(opBuilder.build());
   }
   

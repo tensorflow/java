@@ -70,7 +70,7 @@ public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements
   @Endpoint(describeByClass = true)
   public static BoostedTreesEnsembleResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesEnsembleResourceHandleOp", scope.makeOpName("BoostedTreesEnsembleResourceHandleOp"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

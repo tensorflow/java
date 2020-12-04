@@ -43,7 +43,7 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
   public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatchingFilesDataset", scope.makeOpName("MatchingFilesDataset"));
     opBuilder.addInput(patterns.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new MatchingFilesDataset(opBuilder.build());
   }
   

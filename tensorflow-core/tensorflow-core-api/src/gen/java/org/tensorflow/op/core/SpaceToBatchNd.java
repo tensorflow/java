@@ -152,7 +152,7 @@ public final class SpaceToBatchNd<T extends TType> extends RawOp implements Oper
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());
     opBuilder.addInput(paddings.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SpaceToBatchNd<T>(opBuilder.build());
   }
   

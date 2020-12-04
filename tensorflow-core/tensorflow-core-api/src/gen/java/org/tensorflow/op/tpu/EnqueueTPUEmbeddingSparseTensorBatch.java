@@ -118,7 +118,7 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0; i < tableIdsArray.length; ++i) {
       tableIdsArray[i] = tableIds.get(i);

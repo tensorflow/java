@@ -50,7 +50,7 @@ public final class WriteHistogramSummary extends RawOp {
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new WriteHistogramSummary(opBuilder.build());
   }
   

@@ -44,7 +44,7 @@ public final class VarIsInitializedOp extends RawOp implements Operand<TBool> {
   public static VarIsInitializedOp create(Scope scope, Operand<?> resource) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarIsInitializedOp", scope.makeOpName("VarIsInitializedOp"));
     opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new VarIsInitializedOp(opBuilder.build());
   }
   

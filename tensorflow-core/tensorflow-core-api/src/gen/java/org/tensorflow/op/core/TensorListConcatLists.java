@@ -47,7 +47,7 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcatLists(opBuilder.build());
   }

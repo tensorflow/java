@@ -52,7 +52,7 @@ public final class Recv<T extends TType> extends RawOp implements Operand<T> {
   @Endpoint(describeByClass = true)
   public static <T extends TType> Recv<T> create(Scope scope, DataType<T> dtype, String tensorName, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaRecv", scope.makeOpName("Recv"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("tensor_name", tensorName);
     opBuilder.setAttr("shape", shape);

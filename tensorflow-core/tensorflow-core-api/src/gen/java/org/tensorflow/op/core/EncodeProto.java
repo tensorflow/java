@@ -111,7 +111,7 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     String[] fieldNamesArray = new String[fieldNames.size()];
     for (int i = 0; i < fieldNamesArray.length; ++i) {
       fieldNamesArray[i] = fieldNames.get(i);

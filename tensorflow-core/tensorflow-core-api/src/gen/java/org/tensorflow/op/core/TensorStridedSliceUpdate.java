@@ -118,7 +118,7 @@ public final class TensorStridedSliceUpdate<T extends TType> extends RawOp imple
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.beginMask != null) {

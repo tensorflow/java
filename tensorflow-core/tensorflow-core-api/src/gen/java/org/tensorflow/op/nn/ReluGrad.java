@@ -49,7 +49,7 @@ public final class ReluGrad<T extends TNumber> extends RawOp implements Operand<
     OperationBuilder opBuilder = scope.env().opBuilder("ReluGrad", scope.makeOpName("ReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ReluGrad<T>(opBuilder.build());
   }
   

@@ -57,7 +57,7 @@ public final class AdjustHue<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AdjustHue<T>(opBuilder.build());
   }
   

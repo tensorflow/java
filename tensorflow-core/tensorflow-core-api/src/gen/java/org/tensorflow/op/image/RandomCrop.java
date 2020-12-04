@@ -88,7 +88,7 @@ public final class RandomCrop<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

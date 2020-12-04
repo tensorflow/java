@@ -67,7 +67,7 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("StringNGrams", scope.makeOpName("StringNGrams"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(dataSplits.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("separator", separator);
     long[] ngramWidthsArray = new long[ngramWidths.size()];
     for (int i = 0; i < ngramWidthsArray.length; ++i) {

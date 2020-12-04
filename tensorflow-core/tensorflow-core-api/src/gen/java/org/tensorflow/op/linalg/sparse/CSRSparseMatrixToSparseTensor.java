@@ -48,7 +48,7 @@ public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp 
   public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, DataType<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
     opBuilder.addInput(sparseMatrix.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", type);
     return new CSRSparseMatrixToSparseTensor<T>(opBuilder.build());
   }

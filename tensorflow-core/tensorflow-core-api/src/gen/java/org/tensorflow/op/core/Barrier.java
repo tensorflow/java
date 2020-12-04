@@ -107,7 +107,7 @@ public final class Barrier extends RawOp implements Operand<TString> {
   @Endpoint(describeByClass = true)
   public static Barrier create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);

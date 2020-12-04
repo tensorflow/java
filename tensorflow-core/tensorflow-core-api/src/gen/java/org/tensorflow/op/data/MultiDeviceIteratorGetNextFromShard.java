@@ -56,7 +56,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(shardNum.asOutput());
     opBuilder.addInput(incarnationId.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

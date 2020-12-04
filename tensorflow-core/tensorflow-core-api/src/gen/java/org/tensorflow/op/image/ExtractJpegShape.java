@@ -54,7 +54,7 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
   public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_type", outputType);
     return new ExtractJpegShape<T>(opBuilder.build());
   }

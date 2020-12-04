@@ -74,7 +74,7 @@ public final class ReduceAny extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("ReduceAny"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

@@ -80,7 +80,7 @@ public final class Equal extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("Equal", scope.makeOpName("Equal"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.incompatibleShapeError != null) {

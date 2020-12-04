@@ -47,7 +47,7 @@ public final class BoostedTreesCreateEnsemble extends RawOp {
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(stampToken.asOutput());
     opBuilder.addInput(treeEnsembleSerialized.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BoostedTreesCreateEnsemble(opBuilder.build());
   }
   

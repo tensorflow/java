@@ -80,7 +80,7 @@ public final class ExpandDims<T extends TType> extends RawOp implements Operand<
     OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ExpandDims<T>(opBuilder.build());
   }
   

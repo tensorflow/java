@@ -151,7 +151,7 @@ public final class CudnnRnnParamsSize<U extends TNumber> extends RawOp implement
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", T);
     opBuilder.setAttr("S", S);
     if (options != null) {

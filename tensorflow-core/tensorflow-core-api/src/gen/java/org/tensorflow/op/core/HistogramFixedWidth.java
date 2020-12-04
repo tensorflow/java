@@ -72,7 +72,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(valueRange.asOutput());
     opBuilder.addInput(nbins.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new HistogramFixedWidth<U>(opBuilder.build());
   }

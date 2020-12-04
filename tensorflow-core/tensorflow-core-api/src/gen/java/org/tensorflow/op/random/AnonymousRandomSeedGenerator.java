@@ -44,7 +44,7 @@ public final class AnonymousRandomSeedGenerator extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousRandomSeedGenerator", scope.makeOpName("AnonymousRandomSeedGenerator"));
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AnonymousRandomSeedGenerator(opBuilder.build());
   }
   

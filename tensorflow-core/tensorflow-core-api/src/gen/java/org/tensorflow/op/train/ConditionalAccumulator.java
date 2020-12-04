@@ -94,7 +94,7 @@ public final class ConditionalAccumulator extends RawOp implements Operand<TStri
   @Endpoint(describeByClass = true)
   public static <T extends TType> ConditionalAccumulator create(Scope scope, DataType<T> dtype, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConditionalAccumulator", scope.makeOpName("ConditionalAccumulator"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     opBuilder.setAttr("shape", shape);
     if (options != null) {

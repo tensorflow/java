@@ -105,7 +105,7 @@ public final class ParseExample extends RawOp {
     opBuilder.addInput(denseKeys.asOutput());
     opBuilder.addInput(raggedKeys.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
     DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
     for (int i = 0; i < sparseTypesArray.length; ++i) {

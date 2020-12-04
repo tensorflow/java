@@ -77,7 +77,7 @@ public final class SparseSplit<T extends TType> extends RawOp {
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_split", numSplit);
     return new SparseSplit<T>(opBuilder.build());
   }

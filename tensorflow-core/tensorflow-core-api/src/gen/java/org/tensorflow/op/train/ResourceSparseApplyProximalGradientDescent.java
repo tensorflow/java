@@ -79,7 +79,7 @@ public final class ResourceSparseApplyProximalGradientDescent extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

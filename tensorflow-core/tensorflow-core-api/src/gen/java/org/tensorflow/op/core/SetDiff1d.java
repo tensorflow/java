@@ -73,7 +73,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ListDiff", scope.makeOpName("SetDiff1d"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_idx", outIdx);
     return new SetDiff1d<T, U>(opBuilder.build());
   }

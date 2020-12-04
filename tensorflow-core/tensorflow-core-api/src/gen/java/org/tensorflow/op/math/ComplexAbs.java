@@ -55,7 +55,7 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
   public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new ComplexAbs<U>(opBuilder.build());
   }

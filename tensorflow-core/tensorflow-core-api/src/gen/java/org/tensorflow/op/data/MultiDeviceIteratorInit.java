@@ -47,7 +47,7 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(maxBufferSize.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new MultiDeviceIteratorInit(opBuilder.build());
   }
   

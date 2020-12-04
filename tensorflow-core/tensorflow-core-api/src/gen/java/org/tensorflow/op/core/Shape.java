@@ -59,7 +59,7 @@ public final class Shape<U extends TNumber> extends RawOp implements Operand<U> 
   public static <U extends TNumber, T extends TType> Shape<U> create(Scope scope, Operand<T> input, DataType<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Shape", scope.makeOpName("Shape"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new Shape<U>(opBuilder.build());
   }

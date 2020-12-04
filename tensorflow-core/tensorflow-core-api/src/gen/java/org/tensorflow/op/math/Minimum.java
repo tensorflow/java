@@ -52,7 +52,7 @@ public final class Minimum<T extends TNumber> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("Minimum", scope.makeOpName("Minimum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Minimum<T>(opBuilder.build());
   }
   

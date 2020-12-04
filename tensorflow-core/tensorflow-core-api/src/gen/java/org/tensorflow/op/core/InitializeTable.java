@@ -47,7 +47,7 @@ public final class InitializeTable extends RawOp {
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InitializeTable(opBuilder.build());
   }
   

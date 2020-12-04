@@ -54,7 +54,7 @@ public final class StatelessRandomUniformFullInt<V extends TNumber> extends RawO
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformFullInt", scope.makeOpName("StatelessRandomUniformFullInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomUniformFullInt<V>(opBuilder.build());
   }

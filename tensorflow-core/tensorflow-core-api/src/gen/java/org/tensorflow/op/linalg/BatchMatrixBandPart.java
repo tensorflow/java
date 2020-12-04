@@ -49,7 +49,7 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BatchMatrixBandPart<T>(opBuilder.build());
   }
   

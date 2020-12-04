@@ -100,7 +100,7 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X extend
     opBuilder.addInput(summand.asOutput());
     opBuilder.addInput(minSummand.asOutput());
     opBuilder.addInput(maxSummand.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

@@ -59,7 +59,7 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
   public static <T extends TNumber> ExtractVolumePatches<T> create(Scope scope, Operand<T> input, List<Long> ksizes, List<Long> strides, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractVolumePatches", scope.makeOpName("ExtractVolumePatches"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizesArray = new long[ksizes.size()];
     for (int i = 0; i < ksizesArray.length; ++i) {
       ksizesArray[i] = ksizes.get(i);

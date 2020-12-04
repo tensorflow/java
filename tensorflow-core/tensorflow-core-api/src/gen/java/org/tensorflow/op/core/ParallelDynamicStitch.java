@@ -104,7 +104,7 @@ public final class ParallelDynamicStitch<T extends TType> extends RawOp implemen
     OperationBuilder opBuilder = scope.env().opBuilder("ParallelDynamicStitch", scope.makeOpName("ParallelDynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ParallelDynamicStitch<T>(opBuilder.build());
   }
   

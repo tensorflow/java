@@ -82,7 +82,7 @@ public final class ResizeBilinear extends RawOp implements Operand<TFloat32> {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinear", scope.makeOpName("ResizeBilinear"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

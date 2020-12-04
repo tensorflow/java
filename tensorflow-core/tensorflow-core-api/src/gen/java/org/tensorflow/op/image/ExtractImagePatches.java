@@ -57,7 +57,7 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
   public static <T extends TType> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
     opBuilder.addInput(images.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizesArray = new long[ksizes.size()];
     for (int i = 0; i < ksizesArray.length; ++i) {
       ksizesArray[i] = ksizes.get(i);

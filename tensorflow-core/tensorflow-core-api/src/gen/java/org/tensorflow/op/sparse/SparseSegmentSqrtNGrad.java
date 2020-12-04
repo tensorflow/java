@@ -57,7 +57,7 @@ public final class SparseSegmentSqrtNGrad<T extends TNumber> extends RawOp imple
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(outputDim0.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentSqrtNGrad<T>(opBuilder.build());
   }
   

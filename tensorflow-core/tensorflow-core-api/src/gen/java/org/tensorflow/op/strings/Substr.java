@@ -150,7 +150,7 @@ public final class Substr extends RawOp implements Operand<TString> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pos.asOutput());
     opBuilder.addInput(len.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.unit != null) {

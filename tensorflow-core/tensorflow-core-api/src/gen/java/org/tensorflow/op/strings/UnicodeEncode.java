@@ -106,7 +106,7 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeEncode", scope.makeOpName("UnicodeEncode"));
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputSplits.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_encoding", outputEncoding);
     if (options != null) {
       for (Options opts : options) {

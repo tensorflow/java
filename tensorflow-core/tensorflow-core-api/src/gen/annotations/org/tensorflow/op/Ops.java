@@ -20,6 +20,7 @@ package org.tensorflow.op;
 import java.nio.charset.Charset;
 import java.util.List;
 import org.tensorflow.DataType;
+import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
@@ -7722,6 +7723,15 @@ public final class Ops {
    */
   public Ops withName(String opName) {
     return new Ops(scope.withName(opName));
+  }
+
+  /**
+   * Returns an API that uses the provided DeviceSpec for an op.
+   *
+   * @see {@link Scope#withDevice(DeviceSpec)}
+   */
+  public Ops withDevice(DeviceSpec deviceSpec) {
+    return new Ops(scope.withDevice(deviceSpec));
   }
 
   /**

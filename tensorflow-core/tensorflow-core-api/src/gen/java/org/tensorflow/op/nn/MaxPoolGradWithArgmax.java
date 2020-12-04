@@ -76,7 +76,7 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implem
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(argmax.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
       ksizeArray[i] = ksize.get(i);

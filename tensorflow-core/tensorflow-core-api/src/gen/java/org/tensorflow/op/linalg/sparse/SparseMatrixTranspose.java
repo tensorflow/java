@@ -68,7 +68,7 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
   public static <T extends TType> SparseMatrixTranspose create(Scope scope, Operand<?> input, DataType<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixTranspose", scope.makeOpName("SparseMatrixTranspose"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", type);
     if (options != null) {
       for (Options opts : options) {

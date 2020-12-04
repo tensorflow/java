@@ -63,7 +63,7 @@ public final class DynamicSlice<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(startIndices.asOutput());
     opBuilder.addInput(sizeIndices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DynamicSlice<T>(opBuilder.build());
   }
   

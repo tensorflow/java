@@ -43,7 +43,7 @@ public final class StatsAggregatorSummary extends RawOp implements Operand<TStri
   public static StatsAggregatorSummary create(Scope scope, Operand<?> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSummary", scope.makeOpName("StatsAggregatorSummary"));
     opBuilder.addInput(iterator.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatsAggregatorSummary(opBuilder.build());
   }
   

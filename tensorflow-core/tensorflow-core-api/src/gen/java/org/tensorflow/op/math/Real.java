@@ -62,7 +62,7 @@ public final class Real<U extends TNumber> extends RawOp implements Operand<U> {
   public static <U extends TNumber, T extends TType> Real<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Real", scope.makeOpName("Real"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Real<U>(opBuilder.build());
   }

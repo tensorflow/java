@@ -83,7 +83,7 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
     opBuilder.addInputList(Operands.asOutputs(paddedShapes));
     opBuilder.addInputList(Operands.asOutputs(paddingValues));
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
       outputShapesArray[i] = outputShapes.get(i);

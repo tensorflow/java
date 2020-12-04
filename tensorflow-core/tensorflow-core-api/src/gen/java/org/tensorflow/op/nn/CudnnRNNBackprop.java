@@ -202,7 +202,7 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     opBuilder.addInput(outputCBackprop.asOutput());
     opBuilder.addInput(reserveSpace.asOutput());
     opBuilder.addInput(hostReserved.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.rnnMode != null) {

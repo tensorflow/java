@@ -97,7 +97,7 @@ public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
   @Endpoint(describeByClass = true)
   public static Unstage create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unstage", scope.makeOpName("Unstage"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);

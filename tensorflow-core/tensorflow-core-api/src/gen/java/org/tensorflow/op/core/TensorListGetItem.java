@@ -51,7 +51,7 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListGetItem<T>(opBuilder.build());
   }

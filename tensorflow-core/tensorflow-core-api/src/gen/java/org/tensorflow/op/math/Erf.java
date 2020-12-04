@@ -47,7 +47,7 @@ public final class Erf<T extends TNumber> extends RawOp implements Operand<T> {
   public static <T extends TNumber> Erf<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erf", scope.makeOpName("Erf"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Erf<T>(opBuilder.build());
   }
   

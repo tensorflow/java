@@ -54,7 +54,7 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesExampleDebugOutputs", scope.makeOpName("BoostedTreesExampleDebugOutputs"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesExampleDebugOutputs(opBuilder.build());
   }

@@ -142,7 +142,7 @@ public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
   public static DecodeJpeg create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJpeg", scope.makeOpName("DecodeJpeg"));
     opBuilder.addInput(contents.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.channels != null) {

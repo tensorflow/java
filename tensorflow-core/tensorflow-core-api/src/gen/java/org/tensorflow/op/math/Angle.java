@@ -66,7 +66,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
   public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Angle<U>(opBuilder.build());
   }

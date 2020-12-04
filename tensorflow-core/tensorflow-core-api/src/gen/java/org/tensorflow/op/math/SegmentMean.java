@@ -74,7 +74,7 @@ public final class SegmentMean<T extends TType> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SegmentMean<T>(opBuilder.build());
   }
   

@@ -163,7 +163,7 @@ public final class CudnnRNNParamsToCanonical<T extends TNumber> extends RawOp {
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());
     opBuilder.addInput(params.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_params_weights", numParamsWeights);
     opBuilder.setAttr("num_params_biases", numParamsBiases);
     if (options != null) {

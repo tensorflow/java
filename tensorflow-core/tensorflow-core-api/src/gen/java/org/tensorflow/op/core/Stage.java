@@ -97,7 +97,7 @@ public final class Stage extends RawOp {
   public static Stage create(Scope scope, Iterable<Operand<?>> values, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Stage", scope.makeOpName("Stage"));
     opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.capacity != null) {

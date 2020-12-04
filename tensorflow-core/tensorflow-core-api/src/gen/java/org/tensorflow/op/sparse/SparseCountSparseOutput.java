@@ -86,7 +86,7 @@ public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {
       for (Options opts : options) {

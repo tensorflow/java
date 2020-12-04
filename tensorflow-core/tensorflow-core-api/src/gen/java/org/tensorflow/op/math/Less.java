@@ -63,7 +63,7 @@ public final class Less extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("Less", scope.makeOpName("Less"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Less(opBuilder.build());
   }
   

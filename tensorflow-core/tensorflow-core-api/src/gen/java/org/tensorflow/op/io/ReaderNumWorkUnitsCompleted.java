@@ -44,7 +44,7 @@ public final class ReaderNumWorkUnitsCompleted extends RawOp implements Operand<
   public static ReaderNumWorkUnitsCompleted create(Scope scope, Operand<?> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumWorkUnitsCompletedV2", scope.makeOpName("ReaderNumWorkUnitsCompleted"));
     opBuilder.addInput(readerHandle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ReaderNumWorkUnitsCompleted(opBuilder.build());
   }
   

@@ -50,7 +50,7 @@ public final class TanhGrad<T extends TType> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("TanhGrad", scope.makeOpName("TanhGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TanhGrad<T>(opBuilder.build());
   }
   

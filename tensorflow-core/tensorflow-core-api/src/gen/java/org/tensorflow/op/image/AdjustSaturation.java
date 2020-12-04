@@ -57,7 +57,7 @@ public final class AdjustSaturation<T extends TNumber> extends RawOp implements 
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustSaturation", scope.makeOpName("AdjustSaturation"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(scale.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AdjustSaturation<T>(opBuilder.build());
   }
   

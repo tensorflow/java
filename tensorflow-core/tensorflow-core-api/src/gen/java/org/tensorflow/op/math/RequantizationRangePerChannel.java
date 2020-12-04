@@ -50,7 +50,7 @@ public final class RequantizationRangePerChannel extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("clip_value_max", clipValueMax);
     return new RequantizationRangePerChannel(opBuilder.build());
   }

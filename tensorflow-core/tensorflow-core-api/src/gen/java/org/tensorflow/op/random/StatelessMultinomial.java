@@ -56,7 +56,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_dtype", outputDtype);
     return new StatelessMultinomial<V>(opBuilder.build());
   }

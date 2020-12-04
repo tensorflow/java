@@ -44,7 +44,7 @@ public final class TensorForestCreateTreeVariable extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestCreateTreeVariable", scope.makeOpName("TensorForestCreateTreeVariable"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(treeConfig.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorForestCreateTreeVariable(opBuilder.build());
   }
   

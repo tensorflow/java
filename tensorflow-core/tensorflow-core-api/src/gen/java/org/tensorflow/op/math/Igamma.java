@@ -62,7 +62,7 @@ public final class Igamma<T extends TNumber> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("Igamma", scope.makeOpName("Igamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Igamma<T>(opBuilder.build());
   }
   

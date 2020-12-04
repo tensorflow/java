@@ -76,7 +76,7 @@ public final class Fill<U extends TType> extends RawOp implements Operand<U> {
     OperationBuilder opBuilder = scope.env().opBuilder("Fill", scope.makeOpName("Fill"));
     opBuilder.addInput(dims.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Fill<U>(opBuilder.build());
   }
   

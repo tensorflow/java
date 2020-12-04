@@ -51,7 +51,7 @@ public final class PrivateThreadPoolDataset extends RawOp implements Operand<TTy
     OperationBuilder opBuilder = scope.env().opBuilder("PrivateThreadPoolDataset", scope.makeOpName("PrivateThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numThreads.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

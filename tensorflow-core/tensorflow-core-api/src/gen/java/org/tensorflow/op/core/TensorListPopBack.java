@@ -58,7 +58,7 @@ public final class TensorListPopBack<T extends TType> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPopBack", scope.makeOpName("TensorListPopBack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListPopBack<T>(opBuilder.build());
   }

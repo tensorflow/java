@@ -49,7 +49,7 @@ public final class Digamma<T extends TNumber> extends RawOp implements Operand<T
   public static <T extends TNumber> Digamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Digamma", scope.makeOpName("Digamma"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Digamma<T>(opBuilder.build());
   }
   

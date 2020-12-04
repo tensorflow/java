@@ -52,7 +52,7 @@ public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> 
   public static StaticRegexFullMatch create(Scope scope, Operand<TString> input, String pattern) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexFullMatch", scope.makeOpName("StaticRegexFullMatch"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("pattern", pattern);
     return new StaticRegexFullMatch(opBuilder.build());
   }

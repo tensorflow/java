@@ -76,7 +76,7 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(constantValues.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Pad<T>(opBuilder.build());
   }
   

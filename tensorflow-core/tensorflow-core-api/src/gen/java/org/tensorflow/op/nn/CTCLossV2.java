@@ -100,7 +100,7 @@ public final class CTCLossV2 extends RawOp {
     opBuilder.addInput(labelsIndices.asOutput());
     opBuilder.addInput(labelsValues.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.preprocessCollapseRepeated != null) {

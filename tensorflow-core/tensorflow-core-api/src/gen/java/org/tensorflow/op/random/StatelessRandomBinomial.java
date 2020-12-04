@@ -61,7 +61,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(counts.asOutput());
     opBuilder.addInput(probs.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomBinomial<W>(opBuilder.build());
   }

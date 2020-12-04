@@ -53,7 +53,7 @@ public final class InplaceSub<T extends TType> extends RawOp implements Operand<
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InplaceSub<T>(opBuilder.build());
   }
   

@@ -81,7 +81,7 @@ public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp i
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(transforms.asOutput());
     opBuilder.addInput(outputShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("interpolation", interpolation);
     if (options != null) {
       for (Options opts : options) {

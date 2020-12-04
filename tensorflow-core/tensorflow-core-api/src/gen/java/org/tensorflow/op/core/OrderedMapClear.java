@@ -89,7 +89,7 @@ public final class OrderedMapClear extends RawOp {
   @Endpoint(describeByClass = true)
   public static OrderedMapClear create(Scope scope, List<DataType<?>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapClear", scope.makeOpName("OrderedMapClear"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);

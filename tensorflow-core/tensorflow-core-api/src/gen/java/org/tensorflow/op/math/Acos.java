@@ -46,7 +46,7 @@ public final class Acos<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Acos<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Acos", scope.makeOpName("Acos"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Acos<T>(opBuilder.build());
   }
   

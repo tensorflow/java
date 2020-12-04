@@ -63,7 +63,7 @@ public final class SamplingDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(rate.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

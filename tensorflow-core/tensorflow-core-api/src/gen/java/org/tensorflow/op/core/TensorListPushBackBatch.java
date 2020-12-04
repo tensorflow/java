@@ -45,7 +45,7 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<TTyp
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
     opBuilder.addInput(inputHandles.asOutput());
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorListPushBackBatch(opBuilder.build());
   }
   

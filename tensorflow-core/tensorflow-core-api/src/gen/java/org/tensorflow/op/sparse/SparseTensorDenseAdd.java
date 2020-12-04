@@ -55,7 +55,7 @@ public final class SparseTensorDenseAdd<U extends TType> extends RawOp implement
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseTensorDenseAdd<U>(opBuilder.build());
   }
   

@@ -51,7 +51,7 @@ public final class L2Loss<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
     OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
     opBuilder.addInput(t.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new L2Loss<T>(opBuilder.build());
   }
   

@@ -71,7 +71,7 @@ public final class Empty<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Empty", scope.makeOpName("Empty"));
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {

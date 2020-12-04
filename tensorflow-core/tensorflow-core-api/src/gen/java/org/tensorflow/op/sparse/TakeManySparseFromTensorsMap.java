@@ -127,7 +127,7 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
   public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, DataType<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
     opBuilder.addInput(sparseHandles.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     if (options != null) {
       for (Options opts : options) {

@@ -69,7 +69,7 @@ public final class QueueClose extends RawOp {
   public static QueueClose create(Scope scope, Operand<?> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueCloseV2", scope.makeOpName("QueueClose"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.cancelPendingEnqueues != null) {

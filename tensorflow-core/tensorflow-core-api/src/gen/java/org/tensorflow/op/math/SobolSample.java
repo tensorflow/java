@@ -59,7 +59,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
     opBuilder.addInput(dim.asOutput());
     opBuilder.addInput(numResults.asOutput());
     opBuilder.addInput(skip.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new SobolSample<T>(opBuilder.build());
   }

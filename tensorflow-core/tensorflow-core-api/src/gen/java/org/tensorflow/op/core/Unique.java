@@ -94,7 +94,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_idx", outIdx);
     return new Unique<T, V>(opBuilder.build());
   }

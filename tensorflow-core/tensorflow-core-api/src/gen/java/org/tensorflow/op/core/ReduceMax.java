@@ -75,7 +75,7 @@ public final class ReduceMax<T extends TType> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("Max", scope.makeOpName("ReduceMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

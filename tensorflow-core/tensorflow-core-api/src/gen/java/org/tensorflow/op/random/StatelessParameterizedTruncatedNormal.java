@@ -55,7 +55,7 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
     opBuilder.addInput(stddevs.asOutput());
     opBuilder.addInput(minvals.asOutput());
     opBuilder.addInput(maxvals.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatelessParameterizedTruncatedNormal<V>(opBuilder.build());
   }
   

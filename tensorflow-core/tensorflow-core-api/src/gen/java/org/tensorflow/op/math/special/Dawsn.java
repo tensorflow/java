@@ -44,7 +44,7 @@ public final class Dawsn<T extends TNumber> extends RawOp implements Operand<T> 
   public static <T extends TNumber> Dawsn<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dawsn", scope.makeOpName("Dawsn"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Dawsn<T>(opBuilder.build());
   }
   

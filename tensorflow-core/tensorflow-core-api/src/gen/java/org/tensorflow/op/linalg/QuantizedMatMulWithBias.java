@@ -106,7 +106,7 @@ public final class QuantizedMatMulWithBias<W extends TType> extends RawOp {
     opBuilder.addInput(maxA.asOutput());
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     if (options != null) {
       for (Options opts : options) {

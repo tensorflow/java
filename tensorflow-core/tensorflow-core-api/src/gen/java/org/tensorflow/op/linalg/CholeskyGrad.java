@@ -56,7 +56,7 @@ public final class CholeskyGrad<T extends TNumber> extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("CholeskyGrad", scope.makeOpName("CholeskyGrad"));
     opBuilder.addInput(l.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new CholeskyGrad<T>(opBuilder.build());
   }
   

@@ -45,7 +45,7 @@ public final class TPUCompilationResult extends RawOp implements Operand<TString
   @Endpoint(describeByClass = true)
   public static TPUCompilationResult create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUCompilationResult", scope.makeOpName("TPUCompilationResult"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TPUCompilationResult(opBuilder.build());
   }
   

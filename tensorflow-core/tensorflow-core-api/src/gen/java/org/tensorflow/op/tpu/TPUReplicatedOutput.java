@@ -59,7 +59,7 @@ public final class TPUReplicatedOutput<T extends TType> extends RawOp implements
   public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_replicas", numReplicas);
     return new TPUReplicatedOutput<T>(opBuilder.build());
   }

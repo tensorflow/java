@@ -69,7 +69,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
     opBuilder.addInput(starts.asOutput());
     opBuilder.addInput(limits.asOutput());
     opBuilder.addInput(deltas.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tsplits", Tsplits);
     return new RaggedRange<U, T>(opBuilder.build());
   }

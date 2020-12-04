@@ -83,7 +83,7 @@ public final class TopK<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKV2", scope.makeOpName("TopK"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.sorted != null) {

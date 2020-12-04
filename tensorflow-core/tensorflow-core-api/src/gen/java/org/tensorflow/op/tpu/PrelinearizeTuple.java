@@ -70,7 +70,7 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
   public static PrelinearizeTuple create(Scope scope, Iterable<Operand<?>> inputs, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrelinearizeTuple", scope.makeOpName("PrelinearizeTuple"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     Shape[] shapesArray = new Shape[shapes.size()];
     for (int i = 0; i < shapesArray.length; ++i) {
       shapesArray[i] = shapes.get(i);

@@ -57,7 +57,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSoftmaxCrossEntropyWithLogits<T>(opBuilder.build());
   }
   

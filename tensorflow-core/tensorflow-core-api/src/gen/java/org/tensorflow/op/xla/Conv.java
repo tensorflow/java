@@ -64,7 +64,7 @@ public final class Conv<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(lhsDilation.asOutput());
     opBuilder.addInput(rhsDilation.asOutput());
     opBuilder.addInput(featureGroupCount.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
     return new Conv<T>(opBuilder.build());

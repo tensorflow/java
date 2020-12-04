@@ -43,7 +43,7 @@ public final class DeleteSessionTensor extends RawOp {
   public static DeleteSessionTensor create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteSessionTensor", scope.makeOpName("DeleteSessionTensor"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DeleteSessionTensor(opBuilder.build());
   }
   

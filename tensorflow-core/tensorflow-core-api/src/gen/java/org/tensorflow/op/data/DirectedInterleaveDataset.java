@@ -53,7 +53,7 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
     OperationBuilder opBuilder = scope.env().opBuilder("DirectedInterleaveDataset", scope.makeOpName("DirectedInterleaveDataset"));
     opBuilder.addInput(selectorInputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(dataInputDatasets));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

@@ -73,7 +73,7 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numShards.asOutput());
     opBuilder.addInput(index.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

@@ -67,7 +67,7 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(treeComplexity.asOutput());
     opBuilder.addInput(minNodeWeight.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     return new BoostedTreesCalculateBestGainsPerFeature(opBuilder.build());
   }

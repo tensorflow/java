@@ -51,7 +51,7 @@ public final class ShardedFilename extends RawOp implements Operand<TString> {
     opBuilder.addInput(basename.asOutput());
     opBuilder.addInput(shard.asOutput());
     opBuilder.addInput(numShards.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ShardedFilename(opBuilder.build());
   }
   

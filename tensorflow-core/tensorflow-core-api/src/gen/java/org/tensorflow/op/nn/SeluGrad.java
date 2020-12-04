@@ -48,7 +48,7 @@ public final class SeluGrad<T extends TNumber> extends RawOp implements Operand<
     OperationBuilder opBuilder = scope.env().opBuilder("SeluGrad", scope.makeOpName("SeluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(outputs.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SeluGrad<T>(opBuilder.build());
   }
   

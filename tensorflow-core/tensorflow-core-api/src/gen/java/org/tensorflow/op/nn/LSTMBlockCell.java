@@ -123,7 +123,7 @@ public final class LSTMBlockCell<T extends TNumber> extends RawOp {
     opBuilder.addInput(wcf.asOutput());
     opBuilder.addInput(wco.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.forgetBias != null) {

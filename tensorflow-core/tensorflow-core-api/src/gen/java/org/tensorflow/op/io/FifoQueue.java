@@ -99,7 +99,7 @@ public final class FifoQueue extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static FifoQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FIFOQueueV2", scope.makeOpName("FifoQueue"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);

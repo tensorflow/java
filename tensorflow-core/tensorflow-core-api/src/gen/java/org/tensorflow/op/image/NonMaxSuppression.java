@@ -108,7 +108,7 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
     opBuilder.addInput(iouThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
     opBuilder.addInput(softNmsSigma.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.padToMaxOutputSize != null) {

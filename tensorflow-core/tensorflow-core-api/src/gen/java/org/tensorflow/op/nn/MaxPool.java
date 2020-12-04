@@ -77,7 +77,7 @@ public final class MaxPool<T extends TType> extends RawOp implements Operand<T> 
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(ksize.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {

@@ -88,7 +88,7 @@ public final class QuantizedConv2DAndRelu<V extends TType> extends RawOp {
     opBuilder.addInput(maxInput.asOutput());
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

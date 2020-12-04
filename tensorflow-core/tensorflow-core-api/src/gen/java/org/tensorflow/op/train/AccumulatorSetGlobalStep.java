@@ -49,7 +49,7 @@ public final class AccumulatorSetGlobalStep extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorSetGlobalStep", scope.makeOpName("AccumulatorSetGlobalStep"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(newGlobalStep.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AccumulatorSetGlobalStep(opBuilder.build());
   }
   

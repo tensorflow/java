@@ -66,7 +66,7 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput());
     opBuilder.addInput(imag.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Complex<U>(opBuilder.build());
   }

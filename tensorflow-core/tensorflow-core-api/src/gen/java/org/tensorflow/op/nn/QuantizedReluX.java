@@ -55,7 +55,7 @@ public final class QuantizedReluX<U extends TType> extends RawOp {
     opBuilder.addInput(maxValue.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new QuantizedReluX<U>(opBuilder.build());
   }

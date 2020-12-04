@@ -49,7 +49,7 @@ public final class Round<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Round<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Round", scope.makeOpName("Round"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Round<T>(opBuilder.build());
   }
   

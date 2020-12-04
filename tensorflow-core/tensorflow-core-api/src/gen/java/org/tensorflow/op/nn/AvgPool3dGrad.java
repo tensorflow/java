@@ -80,7 +80,7 @@ public final class AvgPool3dGrad<T extends TNumber> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPool3DGrad", scope.makeOpName("AvgPool3dGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
       ksizeArray[i] = ksize.get(i);

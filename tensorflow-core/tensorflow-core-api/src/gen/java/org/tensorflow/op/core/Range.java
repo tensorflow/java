@@ -63,7 +63,7 @@ public final class Range<T extends TNumber> extends RawOp implements Operand<T> 
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(limit.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Range<T>(opBuilder.build());
   }
   

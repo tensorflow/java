@@ -59,7 +59,7 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(sizeSplits.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_split", numSplit);
     return new SplitV<T>(opBuilder.build());
   }

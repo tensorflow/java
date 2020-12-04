@@ -79,7 +79,7 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(co.asOutput());
     opBuilder.addInput(csGrad.asOutput());
     opBuilder.addInput(hGrad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
     return new LSTMBlockCellGrad<T>(opBuilder.build());
   }

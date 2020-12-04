@@ -57,7 +57,7 @@ public final class Tan<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Tan<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Tan", scope.makeOpName("Tan"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Tan<T>(opBuilder.build());
   }
   

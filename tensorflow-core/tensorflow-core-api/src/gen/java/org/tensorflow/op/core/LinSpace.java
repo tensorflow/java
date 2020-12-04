@@ -60,7 +60,7 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
     opBuilder.addInput(num.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LinSpace<T>(opBuilder.build());
   }
   

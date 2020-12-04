@@ -119,7 +119,7 @@ public final class UnicodeDecode<T extends TNumber> extends RawOp {
   public static <T extends TNumber> UnicodeDecode<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecode", scope.makeOpName("UnicodeDecode"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
     opBuilder.setAttr("Tsplits", Tsplits);
     if (options != null) {

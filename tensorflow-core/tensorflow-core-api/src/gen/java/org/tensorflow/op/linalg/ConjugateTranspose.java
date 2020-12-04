@@ -53,7 +53,7 @@ public final class ConjugateTranspose<T extends TType> extends RawOp implements 
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ConjugateTranspose<T>(opBuilder.build());
   }
   

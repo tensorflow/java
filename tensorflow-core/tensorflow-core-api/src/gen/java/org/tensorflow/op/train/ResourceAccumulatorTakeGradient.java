@@ -57,7 +57,7 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends RawO
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorTakeGradient", scope.makeOpName("ResourceAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new ResourceAccumulatorTakeGradient<T>(opBuilder.build());
   }

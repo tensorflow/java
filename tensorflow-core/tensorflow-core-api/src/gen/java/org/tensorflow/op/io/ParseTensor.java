@@ -50,7 +50,7 @@ public final class ParseTensor<T extends TType> extends RawOp implements Operand
   public static <T extends TType> ParseTensor<T> create(Scope scope, Operand<TString> serialized, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseTensor", scope.makeOpName("ParseTensor"));
     opBuilder.addInput(serialized.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new ParseTensor<T>(opBuilder.build());
   }

@@ -49,7 +49,7 @@ public final class DebugGradientIdentity<T extends TType> extends RawOp implemen
   public static <T extends TType> DebugGradientIdentity<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientIdentity", scope.makeOpName("DebugGradientIdentity"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DebugGradientIdentity<T>(opBuilder.build());
   }
   

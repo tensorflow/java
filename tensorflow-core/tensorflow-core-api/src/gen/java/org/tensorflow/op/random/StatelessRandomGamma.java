@@ -55,7 +55,7 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(alpha.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatelessRandomGamma<V>(opBuilder.build());
   }
   

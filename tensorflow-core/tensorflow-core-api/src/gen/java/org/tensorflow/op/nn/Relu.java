@@ -51,7 +51,7 @@ public final class Relu<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
     OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
     opBuilder.addInput(features.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Relu<T>(opBuilder.build());
   }
   

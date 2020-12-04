@@ -90,7 +90,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
     opBuilder.addInput(stdevs.asOutput());
     opBuilder.addInput(minvals.asOutput());
     opBuilder.addInput(maxvals.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

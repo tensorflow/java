@@ -48,7 +48,7 @@ public final class DeviceIndex extends RawOp implements Operand<TInt32> {
   @Endpoint(describeByClass = true)
   public static DeviceIndex create(Scope scope, List<String> deviceNames) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeviceIndex", scope.makeOpName("DeviceIndex"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     String[] deviceNamesArray = new String[deviceNames.size()];
     for (int i = 0; i < deviceNamesArray.length; ++i) {
       deviceNamesArray[i] = deviceNames.get(i);

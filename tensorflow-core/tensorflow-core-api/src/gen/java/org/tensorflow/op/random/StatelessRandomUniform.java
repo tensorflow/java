@@ -57,7 +57,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends RawOp imple
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomUniform<V>(opBuilder.build());
   }

@@ -207,6 +207,7 @@ public final class OperatorProcessor extends AbstractProcessor {
       ClassName.get("org.tensorflow", "ExecutionEnvironment");
   private static final TypeName T_EAGER_SESSION = ClassName.get("org.tensorflow", "EagerSession");
   private static final TypeName T_STRING = ClassName.get(String.class);
+  private static final TypeName T_DEVICE_SPEC = ClassName.get("org.tensorflow", "DeviceSpec");
 
   private static final String LICENSE =
       "Copyright 2020 The TensorFlow Authors. All Rights Reserved.\n"
@@ -536,6 +537,18 @@ public final class OperatorProcessor extends AbstractProcessor {
                     + "@see {@link $T#withName(String)}\n",
                 T_SCOPE)
             .build());
+
+    opsBuilder.addMethod(
+            MethodSpec.methodBuilder("withDevice")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addParameter(T_DEVICE_SPEC, "deviceSpec")
+                    .returns(T_OPS)
+                    .addStatement("return new Ops(scope.withDevice(deviceSpec))")
+                    .addJavadoc(
+                            "Returns an API that places the created operations on the device(s) matching the provided spec.\n\n"
+                                    + "@see {@link $T#withDevice(DeviceSpec)}\n",
+                            T_SCOPE)
+                    .build());
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withControlDependencies")

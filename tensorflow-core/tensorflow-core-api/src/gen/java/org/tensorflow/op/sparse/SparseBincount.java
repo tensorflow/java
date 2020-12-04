@@ -86,7 +86,7 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
     opBuilder.addInput(denseShape.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {

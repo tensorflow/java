@@ -58,7 +58,7 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(lengths.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorListSplit(opBuilder.build());
   }
   

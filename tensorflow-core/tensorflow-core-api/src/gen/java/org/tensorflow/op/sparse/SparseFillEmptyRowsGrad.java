@@ -58,7 +58,7 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRowsGrad", scope.makeOpName("SparseFillEmptyRowsGrad"));
     opBuilder.addInput(reverseIndexMap.asOutput());
     opBuilder.addInput(gradValues.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseFillEmptyRowsGrad<T>(opBuilder.build());
   }
   

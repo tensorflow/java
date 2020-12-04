@@ -94,7 +94,7 @@ public final class LoadTPUEmbeddingADAMParametersGradAccumDebug extends RawOp {
     opBuilder.addInput(momenta.asOutput());
     opBuilder.addInput(velocities.asOutput());
     opBuilder.addInput(gradientAccumulators.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

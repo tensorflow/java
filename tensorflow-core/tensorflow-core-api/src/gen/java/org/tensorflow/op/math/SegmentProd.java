@@ -73,7 +73,7 @@ public final class SegmentProd<T extends TType> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentProd", scope.makeOpName("SegmentProd"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SegmentProd<T>(opBuilder.build());
   }
   

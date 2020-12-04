@@ -90,7 +90,7 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static <T extends TType, U extends TType> MutableHashTable create(Scope scope, DataType<T> keyDtype, DataType<U> valueDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_dtype", keyDtype);
     opBuilder.setAttr("value_dtype", valueDtype);
     if (options != null) {

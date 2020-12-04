@@ -110,7 +110,7 @@ public final class SparseToSparseSetOperation<T extends TType> extends RawOp {
     opBuilder.addInput(set2Indices.asOutput());
     opBuilder.addInput(set2Values.asOutput());
     opBuilder.addInput(set2Shape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("set_operation", setOperation);
     if (options != null) {
       for (Options opts : options) {

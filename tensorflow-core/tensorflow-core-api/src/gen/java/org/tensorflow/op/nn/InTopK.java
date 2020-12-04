@@ -66,7 +66,7 @@ public final class InTopK extends RawOp implements Operand<TBool> {
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());
     opBuilder.addInput(k.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InTopK(opBuilder.build());
   }
   

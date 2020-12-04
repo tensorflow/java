@@ -40,7 +40,7 @@ public final class DummyIterationCounter extends RawOp implements Operand<TType>
   @Endpoint(describeByClass = true)
   public static DummyIterationCounter create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("DummyIterationCounter", scope.makeOpName("DummyIterationCounter"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DummyIterationCounter(opBuilder.build());
   }
   

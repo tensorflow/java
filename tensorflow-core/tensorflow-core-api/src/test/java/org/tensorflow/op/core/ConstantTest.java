@@ -18,11 +18,7 @@ package org.tensorflow.op.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
@@ -58,7 +54,7 @@ public class ConstantTest {
     IntNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);

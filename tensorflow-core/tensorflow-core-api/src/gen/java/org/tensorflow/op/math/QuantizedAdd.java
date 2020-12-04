@@ -59,7 +59,7 @@ public final class QuantizedAdd<V extends TType> extends RawOp {
     opBuilder.addInput(maxX.asOutput());
     opBuilder.addInput(minY.asOutput());
     opBuilder.addInput(maxY.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Toutput);
     return new QuantizedAdd<V>(opBuilder.build());
   }

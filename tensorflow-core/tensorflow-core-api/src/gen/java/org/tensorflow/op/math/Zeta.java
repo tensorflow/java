@@ -53,7 +53,7 @@ public final class Zeta<T extends TNumber> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Zeta", scope.makeOpName("Zeta"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(q.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Zeta<T>(opBuilder.build());
   }
   

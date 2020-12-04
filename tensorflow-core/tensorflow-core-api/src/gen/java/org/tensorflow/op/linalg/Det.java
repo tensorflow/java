@@ -50,7 +50,7 @@ public final class Det<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Det<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixDeterminant", scope.makeOpName("Det"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Det<T>(opBuilder.build());
   }
   

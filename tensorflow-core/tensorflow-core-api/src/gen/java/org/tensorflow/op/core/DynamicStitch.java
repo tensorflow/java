@@ -105,7 +105,7 @@ public final class DynamicStitch<T extends TType> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicStitch", scope.makeOpName("DynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DynamicStitch<T>(opBuilder.build());
   }
   

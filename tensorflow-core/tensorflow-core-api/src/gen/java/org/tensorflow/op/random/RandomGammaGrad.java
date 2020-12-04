@@ -48,7 +48,7 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGammaGrad", scope.makeOpName("RandomGammaGrad"));
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(sample.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new RandomGammaGrad<T>(opBuilder.build());
   }
   

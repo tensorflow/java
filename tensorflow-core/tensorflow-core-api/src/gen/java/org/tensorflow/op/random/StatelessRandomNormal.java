@@ -56,7 +56,7 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatelessRandomNormal<V>(opBuilder.build());
   }

@@ -51,7 +51,7 @@ public final class RngSkip extends RawOp {
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new RngSkip(opBuilder.build());
   }
   

@@ -43,7 +43,7 @@ public final class TensorForestTreeIsInitializedOp extends RawOp implements Oper
   public static TensorForestTreeIsInitializedOp create(Scope scope, Operand<?> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeIsInitializedOp", scope.makeOpName("TensorForestTreeIsInitializedOp"));
     opBuilder.addInput(treeHandle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorForestTreeIsInitializedOp(opBuilder.build());
   }
   

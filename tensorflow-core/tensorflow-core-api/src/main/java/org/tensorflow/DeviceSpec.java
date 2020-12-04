@@ -114,7 +114,7 @@ public final class DeviceSpec {
   }
 
   /** A Builder class for building {@link DeviceSpec} class. */
-  static class Builder {
+  public static class Builder {
     private String job = null;
     private Integer replica = null;
     private Integer task = null;
@@ -123,27 +123,27 @@ public final class DeviceSpec {
 
     private Builder() {}
 
-    Builder job(String job) {
+    public Builder job(String job) {
       this.job = job;
       return this;
     }
 
-    Builder replica(Integer replica) {
+    public Builder replica(Integer replica) {
       this.replica = replica;
       return this;
     }
 
-    Builder task(Integer task) {
+    public Builder task(Integer task) {
       this.task = task;
       return this;
     }
 
-    Builder deviceIndex(Integer deviceIndex) {
+    public Builder deviceIndex(Integer deviceIndex) {
       this.deviceIndex = deviceIndex;
       return this;
     }
 
-    Builder deviceType(DeviceSpec.DeviceType deviceType) {
+    public Builder deviceType(DeviceSpec.DeviceType deviceType) {
       this.deviceType = deviceType;
       return this;
     }

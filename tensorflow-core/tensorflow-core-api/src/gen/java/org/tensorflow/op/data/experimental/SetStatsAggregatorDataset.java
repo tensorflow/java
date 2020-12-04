@@ -54,7 +54,7 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(counterPrefix.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

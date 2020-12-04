@@ -92,7 +92,7 @@ public final class LoadTPUEmbeddingRMSPropParameters extends RawOp {
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(ms.asOutput());
     opBuilder.addInput(mom.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

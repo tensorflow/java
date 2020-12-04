@@ -98,7 +98,7 @@ public final class UniqueWithCounts<T extends TType, V extends TNumber> extends 
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueWithCountsV2", scope.makeOpName("UniqueWithCounts"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_idx", outIdx);
     return new UniqueWithCounts<T, V>(opBuilder.build());
   }

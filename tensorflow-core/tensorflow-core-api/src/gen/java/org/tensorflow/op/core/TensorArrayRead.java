@@ -54,7 +54,7 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new TensorArrayRead<T>(opBuilder.build());
   }

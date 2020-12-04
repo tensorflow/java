@@ -85,7 +85,7 @@ public final class RetrieveTPUEmbeddingADAMParameters extends RawOp {
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingADAMParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingADAMParameters", scope.makeOpName("RetrieveTPUEmbeddingADAMParameters"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

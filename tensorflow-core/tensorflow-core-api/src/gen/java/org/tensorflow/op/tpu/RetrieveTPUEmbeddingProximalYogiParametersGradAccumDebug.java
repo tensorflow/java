@@ -79,7 +79,7 @@ public final class RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug exte
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingProximalYogiParametersGradAccumDebug"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

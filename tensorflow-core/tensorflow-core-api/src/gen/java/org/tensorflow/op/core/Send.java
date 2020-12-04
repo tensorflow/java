@@ -69,7 +69,7 @@ public final class Send extends RawOp {
   public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Send", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("tensor_name", tensorName);
     opBuilder.setAttr("send_device", sendDevice);
     opBuilder.setAttr("send_device_incarnation", sendDeviceIncarnation);

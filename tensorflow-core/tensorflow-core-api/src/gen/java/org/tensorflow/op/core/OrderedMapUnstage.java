@@ -103,7 +103,7 @@ public final class OrderedMapUnstage extends RawOp implements Iterable<Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapUnstage", scope.makeOpName("OrderedMapUnstage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);

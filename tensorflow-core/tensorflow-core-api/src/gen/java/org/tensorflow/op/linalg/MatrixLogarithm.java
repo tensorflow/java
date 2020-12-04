@@ -61,7 +61,7 @@ public final class MatrixLogarithm<T extends TType> extends RawOp implements Ope
   public static <T extends TType> MatrixLogarithm<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixLogarithm", scope.makeOpName("MatrixLogarithm"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new MatrixLogarithm<T>(opBuilder.build());
   }
   

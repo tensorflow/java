@@ -57,7 +57,7 @@ public final class Rank extends RawOp implements Operand<TInt32> {
   public static <T extends TType> Rank create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rank", scope.makeOpName("Rank"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Rank(opBuilder.build());
   }
   

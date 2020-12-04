@@ -84,7 +84,7 @@ public final class Unstack<T extends TType> extends RawOp implements Iterable<Op
   public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num", num);
     if (options != null) {
       for (Options opts : options) {

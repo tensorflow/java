@@ -69,7 +69,7 @@ public final class SummaryWriter extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static SummaryWriter create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SummaryWriter", scope.makeOpName("SummaryWriter"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.sharedName != null) {

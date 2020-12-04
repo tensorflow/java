@@ -76,7 +76,7 @@ public final class Tile<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Tile", scope.makeOpName("Tile"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(multiples.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Tile<T>(opBuilder.build());
   }
   

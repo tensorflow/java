@@ -49,7 +49,7 @@ public final class ChooseFastestDataset extends RawOp implements Operand<TType> 
   public static ChooseFastestDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, Long numExperiments, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ChooseFastestDataset", scope.makeOpName("ChooseFastestDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_experiments", numExperiments);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {

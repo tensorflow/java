@@ -98,7 +98,7 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
   @Endpoint(describeByClass = true)
   public static ConfigureDistributedTPU create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureDistributedTPU", scope.makeOpName("ConfigureDistributedTPU"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.embeddingConfig != null) {

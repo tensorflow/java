@@ -100,7 +100,7 @@ public final class Unbatch<T extends TType> extends RawOp implements Operand<T> 
     opBuilder.addInput(batchedTensor.asOutput());
     opBuilder.addInput(batchIndex.asOutput());
     opBuilder.addInput(id.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("timeout_micros", timeoutMicros);
     if (options != null) {
       for (Options opts : options) {

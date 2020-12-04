@@ -80,7 +80,7 @@ public final class NthElement<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("NthElement", scope.makeOpName("NthElement"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(n.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.reverse != null) {

@@ -55,7 +55,7 @@ public final class Log1p<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Log1p<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Log1p", scope.makeOpName("Log1p"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Log1p<T>(opBuilder.build());
   }
   

@@ -62,7 +62,7 @@ public final class Slice<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Slice<T>(opBuilder.build());
   }
   

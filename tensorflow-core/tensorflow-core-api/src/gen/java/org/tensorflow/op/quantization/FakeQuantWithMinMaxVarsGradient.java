@@ -80,7 +80,7 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.numBits != null) {

@@ -61,7 +61,7 @@ public final class Expm1<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Expm1<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Expm1", scope.makeOpName("Expm1"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Expm1<T>(opBuilder.build());
   }
   

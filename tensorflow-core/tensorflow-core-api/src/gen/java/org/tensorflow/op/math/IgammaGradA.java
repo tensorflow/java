@@ -48,7 +48,7 @@ public final class IgammaGradA<T extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new IgammaGradA<T>(opBuilder.build());
   }
   

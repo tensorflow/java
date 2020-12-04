@@ -52,7 +52,7 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
   public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
     opBuilder.addInput(inputHandle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape_type", shapeType);
     return new TensorListElementShape<T>(opBuilder.build());
   }

@@ -50,7 +50,7 @@ public final class WriteScalarSummary extends RawOp {
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new WriteScalarSummary(opBuilder.build());
   }
   

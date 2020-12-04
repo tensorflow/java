@@ -60,7 +60,7 @@ public final class AdjustContrast<T extends TNumber> extends RawOp implements Op
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustContrastv2", scope.makeOpName("AdjustContrast"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(contrastFactor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AdjustContrast<T>(opBuilder.build());
   }
   

@@ -44,7 +44,7 @@ public final class QueueSize extends RawOp implements Operand<TInt32> {
   public static QueueSize create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueSizeV2", scope.makeOpName("QueueSize"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new QueueSize(opBuilder.build());
   }
   

@@ -84,7 +84,7 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());
     opBuilder.addInput(shapeAndSlice.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dt", dt);
     if (options != null) {
       for (Options opts : options) {

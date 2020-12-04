@@ -51,7 +51,7 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalBytesProducedStatsDataset", scope.makeOpName("BytesProducedStatsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(tag.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] outputTypesArray = new DataType[outputTypes.size()];
     for (int i = 0; i < outputTypesArray.length; ++i) {
       outputTypesArray[i] = outputTypes.get(i);

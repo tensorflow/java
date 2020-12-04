@@ -78,7 +78,7 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListStack", scope.makeOpName("TensorListStack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     if (options != null) {
       for (Options opts : options) {

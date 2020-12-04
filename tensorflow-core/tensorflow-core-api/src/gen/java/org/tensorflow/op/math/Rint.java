@@ -57,7 +57,7 @@ public final class Rint<T extends TNumber> extends RawOp implements Operand<T> {
   public static <T extends TNumber> Rint<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rint", scope.makeOpName("Rint"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Rint<T>(opBuilder.build());
   }
   

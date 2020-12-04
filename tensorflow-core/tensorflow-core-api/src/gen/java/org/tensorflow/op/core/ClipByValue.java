@@ -57,7 +57,7 @@ public final class ClipByValue<T extends TType> extends RawOp implements Operand
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(clipValueMin.asOutput());
     opBuilder.addInput(clipValueMax.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ClipByValue<T>(opBuilder.build());
   }
   

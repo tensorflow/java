@@ -70,7 +70,7 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
   public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, DataType<T> Tvalues, DataType<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_ragged_rank", inputRaggedRank);
     opBuilder.setAttr("output_ragged_rank", outputRaggedRank);
     opBuilder.setAttr("Tvalues", Tvalues);

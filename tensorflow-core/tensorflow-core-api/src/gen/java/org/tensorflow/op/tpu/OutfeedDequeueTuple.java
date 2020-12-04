@@ -73,7 +73,7 @@ public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand
   @Endpoint(describeByClass = true)
   public static OutfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeueTuple", scope.makeOpName("OutfeedDequeueTuple"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] dtypesArray = new DataType[dtypes.size()];
     for (int i = 0; i < dtypesArray.length; ++i) {
       dtypesArray[i] = dtypes.get(i);

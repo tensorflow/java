@@ -97,7 +97,7 @@ public final class PriorityQueue extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static PriorityQueue create(Scope scope, List<DataType<?>> componentTypes, List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PriorityQueueV2", scope.makeOpName("PriorityQueue"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] componentTypesArray = new DataType[componentTypes.size()];
     for (int i = 0; i < componentTypesArray.length; ++i) {
       componentTypesArray[i] = componentTypes.get(i);

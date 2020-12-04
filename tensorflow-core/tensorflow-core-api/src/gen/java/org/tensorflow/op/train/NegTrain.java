@@ -55,7 +55,7 @@ public final class NegTrain extends RawOp {
     opBuilder.addInput(examples.asOutput());
     opBuilder.addInput(labels.asOutput());
     opBuilder.addInput(lr.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] vocabCountArray = new long[vocabCount.size()];
     for (int i = 0; i < vocabCountArray.length; ++i) {
       vocabCountArray[i] = vocabCount.get(i);

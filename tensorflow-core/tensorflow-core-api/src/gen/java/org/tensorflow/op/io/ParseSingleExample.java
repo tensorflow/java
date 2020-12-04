@@ -80,7 +80,7 @@ public final class ParseSingleExample extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleExample", scope.makeOpName("ParseSingleExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
     String[] sparseKeysArray = new String[sparseKeys.size()];
     for (int i = 0; i < sparseKeysArray.length; ++i) {

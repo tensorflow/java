@@ -112,7 +112,7 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
     opBuilder.addInputList(Operands.asOutputs(rowPartitionTensors));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     String[] rowPartitionTypesArray = new String[rowPartitionTypes.size()];
     for (int i = 0; i < rowPartitionTypesArray.length; ++i) {
       rowPartitionTypesArray[i] = rowPartitionTypes.get(i);

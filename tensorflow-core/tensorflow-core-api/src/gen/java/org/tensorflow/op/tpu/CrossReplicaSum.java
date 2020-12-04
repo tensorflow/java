@@ -58,7 +58,7 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new CrossReplicaSum<T>(opBuilder.build());
   }
   

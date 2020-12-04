@@ -65,7 +65,7 @@ public final class DrawBoundingBoxes<T extends TNumber> extends RawOp implements
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(colors.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DrawBoundingBoxes<T>(opBuilder.build());
   }
   

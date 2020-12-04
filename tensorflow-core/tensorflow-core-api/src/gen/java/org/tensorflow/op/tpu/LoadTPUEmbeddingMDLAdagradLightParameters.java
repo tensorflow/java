@@ -94,7 +94,7 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends RawOp {
     opBuilder.addInput(accumulators.asOutput());
     opBuilder.addInput(weights.asOutput());
     opBuilder.addInput(benefits.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

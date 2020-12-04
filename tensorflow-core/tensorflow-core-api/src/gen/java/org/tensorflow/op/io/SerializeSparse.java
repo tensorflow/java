@@ -55,7 +55,7 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new SerializeSparse<U>(opBuilder.build());
   }

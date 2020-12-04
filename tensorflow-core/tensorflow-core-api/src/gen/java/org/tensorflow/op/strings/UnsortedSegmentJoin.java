@@ -98,7 +98,7 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.separator != null) {

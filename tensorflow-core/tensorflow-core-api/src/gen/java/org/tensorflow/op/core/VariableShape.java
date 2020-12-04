@@ -59,7 +59,7 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", outType);
     return new VariableShape<T>(opBuilder.build());
   }

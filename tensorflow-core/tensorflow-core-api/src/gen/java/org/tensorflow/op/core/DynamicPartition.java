@@ -87,7 +87,7 @@ public final class DynamicPartition<T extends TType> extends RawOp implements It
     OperationBuilder opBuilder = scope.env().opBuilder("DynamicPartition", scope.makeOpName("DynamicPartition"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(partitions.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_partitions", numPartitions);
     return new DynamicPartition<T>(opBuilder.build());
   }

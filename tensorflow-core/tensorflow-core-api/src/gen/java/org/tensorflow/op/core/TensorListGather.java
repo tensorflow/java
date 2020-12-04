@@ -60,7 +60,7 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListGather<T>(opBuilder.build());
   }

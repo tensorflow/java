@@ -56,7 +56,7 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new StatefulStandardNormal<U>(opBuilder.build());
   }

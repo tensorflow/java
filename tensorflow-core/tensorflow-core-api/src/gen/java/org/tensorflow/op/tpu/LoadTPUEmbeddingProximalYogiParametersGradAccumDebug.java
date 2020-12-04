@@ -87,7 +87,7 @@ public final class LoadTPUEmbeddingProximalYogiParametersGradAccumDebug extends 
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(gradientAccumulators.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

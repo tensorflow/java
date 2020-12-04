@@ -62,7 +62,7 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
   public static <U extends TNumber, T extends TType> Imag<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Imag", scope.makeOpName("Imag"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Tout);
     return new Imag<U>(opBuilder.build());
   }

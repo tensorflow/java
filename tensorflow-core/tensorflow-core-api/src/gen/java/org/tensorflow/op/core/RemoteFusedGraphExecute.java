@@ -60,7 +60,7 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
   public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     DataType[] ToutputsArray = new DataType[Toutputs.size()];
     for (int i = 0; i < ToutputsArray.length; ++i) {
       ToutputsArray[i] = Toutputs.get(i);

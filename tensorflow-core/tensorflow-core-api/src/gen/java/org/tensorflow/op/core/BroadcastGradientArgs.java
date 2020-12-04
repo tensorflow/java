@@ -50,7 +50,7 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BroadcastGradientArgs<T>(opBuilder.build());
   }
   

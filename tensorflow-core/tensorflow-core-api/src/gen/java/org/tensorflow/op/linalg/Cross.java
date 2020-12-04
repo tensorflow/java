@@ -53,7 +53,7 @@ public final class Cross<T extends TNumber> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Cross", scope.makeOpName("Cross"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Cross<T>(opBuilder.build());
   }
   

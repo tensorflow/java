@@ -38,7 +38,7 @@ public final class AnonymousMemoryCache extends RawOp {
   @Endpoint(describeByClass = true)
   public static AnonymousMemoryCache create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousMemoryCache", scope.makeOpName("AnonymousMemoryCache"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AnonymousMemoryCache(opBuilder.build());
   }
   

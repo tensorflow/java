@@ -44,7 +44,7 @@ public final class Spence<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> Spence<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Spence", scope.makeOpName("Spence"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Spence<T>(opBuilder.build());
   }
   

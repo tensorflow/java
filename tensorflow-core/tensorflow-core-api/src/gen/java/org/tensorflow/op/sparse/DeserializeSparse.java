@@ -92,7 +92,7 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
   public static <U extends TType, T extends TType> DeserializeSparse<U> create(Scope scope, Operand<T> serializedSparse, DataType<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
     opBuilder.addInput(serializedSparse.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", dtype);
     return new DeserializeSparse<U>(opBuilder.build());
   }

@@ -58,7 +58,7 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
     opBuilder.addInput(numToSample.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(numRetriesPerSample.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new KmeansPlusPlusInitialization(opBuilder.build());
   }
   

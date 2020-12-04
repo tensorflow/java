@@ -85,7 +85,7 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(h.asOutput());
     opBuilder.addInput(csGrad.asOutput());
     opBuilder.addInput(hGrad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
     return new BlockLSTMGrad<T>(opBuilder.build());
   }

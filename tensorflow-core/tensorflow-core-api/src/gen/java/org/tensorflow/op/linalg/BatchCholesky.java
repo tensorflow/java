@@ -45,7 +45,7 @@ public final class BatchCholesky<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> BatchCholesky<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchCholesky", scope.makeOpName("BatchCholesky"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BatchCholesky<T>(opBuilder.build());
   }
   

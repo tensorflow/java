@@ -67,7 +67,7 @@ public final class TensorListConcat<U extends TType> extends RawOp {
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(leadingDims.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", elementDtype);
     return new TensorListConcat<U>(opBuilder.build());
   }

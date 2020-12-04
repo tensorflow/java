@@ -46,7 +46,7 @@ public final class WriteGraphSummary extends RawOp {
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new WriteGraphSummary(opBuilder.build());
   }
   

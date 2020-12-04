@@ -47,7 +47,7 @@ public final class LoopCond extends RawOp implements Operand<TBool> {
   public static LoopCond create(Scope scope, Operand<TBool> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoopCond", scope.makeOpName("LoopCond"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LoopCond(opBuilder.build());
   }
   
