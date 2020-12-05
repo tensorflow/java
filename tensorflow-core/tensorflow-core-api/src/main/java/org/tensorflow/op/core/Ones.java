@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ import org.tensorflow.types.family.TType;
  * An operator creating a constant initialized with ones of the shape given by `dims`.
  * 
  * <p>For example, the following expression
- * <pre>{@code tf.ones(tf.constant(shape), TFloat32.DTYPE)</pre>
+ * <pre>{@code tf.ones(tf.constant(shape), TFloat32.DTYPE)}</pre>
  * is the equivalent of
- * <pre>{@code tf.fill(tf.constant(shape), tf.constant(1.0f))</pre>
+ * <pre>{@code tf.fill(tf.constant(shape), tf.constant(1.0f))}</pre>
  *
  * @param <T> constant type
  */
