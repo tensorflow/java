@@ -46,17 +46,17 @@ public final class Ones<T extends TType> implements Op, Operand<T> {
    * @param scope is a scope used to add the underlying operation
    * @param dims a 1-D operand that represents the shape of the output tensor
    * @param type the output tensor datatype. Can not be TString.
-   * @return a constant tensor initialized with zeros
+   * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
   @Endpoint
   public static <T extends TType, U extends TNumber> Ones<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
-    Scope zerosScope = scope.withSubScope("Ones");
+    Scope onesScope = scope.withSubScope("Ones");
     if (type == TString.DTYPE) {
       throw new IllegalArgumentException("Can't create Ones of String DataType");
     }
-    Operand<T> one = Cast.create(zerosScope.withName("One"), Constant.scalarOf(zerosScope, 1), type);
-    return new Ones<>(Fill.create(zerosScope.withName("Fill"), dims, one));
+    Operand<T> one = Cast.create(onesScope.withName("One"), Constant.scalarOf(onesScope, 1), type);
+    return new Ones<>(Fill.create(onesScope.withName("Fill"), dims, one));
   }
 
   @Override
