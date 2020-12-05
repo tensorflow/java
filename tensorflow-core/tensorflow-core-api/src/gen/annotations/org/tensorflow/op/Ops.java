@@ -3433,7 +3433,7 @@ public final class Ops {
    * @param scope is a scope used to add the underlying operation
    * @param dims a 1-D operand that represents the shape of the output tensor
    * @param type the output tensor datatype. Can not be TString.
-   * @return a constant tensor initialized with zeros
+   * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
   public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, DataType<T> type) {
