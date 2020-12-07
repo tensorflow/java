@@ -30,7 +30,7 @@ import org.tensorflow.types.TFloat32;
 public class IndexingTest {
 
   // [2, 1:2, :, tf.newaxis, ..., :4, 4::2]
-  private static Index[] slice = new Index[]{
+  private static final Index[] slice = new Index[]{
       Index.point(2),
       Index.point(1, true),
       Index.all(),
