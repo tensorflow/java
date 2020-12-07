@@ -69,7 +69,7 @@ public class IndexingTest {
           Index.slice(Index.all(), 4),
           Index.slice(4, null, 2)
       );
-      try (Tensor<TFloat32> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
+      try (Tensor<TFloat32> result = sess.runner().fetch(output.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
         assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.data().shape(), "Slice index didn't match expected (Python)");
       }
     }
