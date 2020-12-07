@@ -74,7 +74,7 @@
 
   <build>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <!--    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>-->
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -217,42 +217,42 @@
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <proc>none</proc>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-        <executions>
-          <!-- Replacing default-compile as it is treated specially by maven -->
-          <execution>
-            <id>default-compile</id>
-            <phase>none</phase>
-          </execution>
-          <!-- Replacing default-testCompile as it is treated specially by maven -->
-          <execution>
-            <id>default-testCompile</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <id>java-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>java-test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-compiler-plugin</artifactId>-->
+<!--        <version>3.5.1</version>-->
+<!--        <configuration>-->
+<!--          <proc>none</proc>-->
+<!--          <source>1.6</source>-->
+<!--          <target>1.6</target>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          &lt;!&ndash; Replacing default-compile as it is treated specially by maven &ndash;&gt;-->
+<!--          <execution>-->
+<!--            <id>default-compile</id>-->
+<!--            <phase>none</phase>-->
+<!--          </execution>-->
+<!--          &lt;!&ndash; Replacing default-testCompile as it is treated specially by maven &ndash;&gt;-->
+<!--          <execution>-->
+<!--            <id>default-testCompile</id>-->
+<!--            <phase>none</phase>-->
+<!--          </execution>-->
+<!--          <execution>-->
+<!--            <id>java-compile</id>-->
+<!--            <phase>compile</phase>-->
+<!--            <goals>-->
+<!--              <goal>compile</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--          <execution>-->
+<!--            <id>java-test-compile</id>-->
+<!--            <phase>test-compile</phase>-->
+<!--            <goals>-->
+<!--              <goal>testCompile</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
       <!--      <plugin>-->
       <!--        <groupId>org.bytedeco</groupId>-->
       <!--        <artifactId>javacpp</artifactId>-->

@@ -42,7 +42,7 @@ public inline fun <R> Session.kotlinRunner(options: RunOptions? = null, block: K
 }
 
 public fun Session.kotlinRunner(
-    feeds: Map<String, Tensor<*>>,
+    feeds: Map<String, Tensor<*>> = emptyMap(),
     fetches: List<String> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner = kotlinRunner(options).apply {
@@ -52,7 +52,7 @@ public fun Session.kotlinRunner(
 
 @JvmName("kotlinRunnerOutput")
 public fun Session.kotlinRunner(
-    feeds: Map<Output<*>, Tensor<*>>,
+    feeds: Map<Output<*>, Tensor<*>> = emptyMap(),
     fetches: List<Output<*>> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner = kotlinRunner(options).apply {
@@ -62,7 +62,7 @@ public fun Session.kotlinRunner(
 
 @JvmName("kotlinRunnerOperand")
 public fun Session.kotlinRunner(
-    feeds: Map<Operand<*>, Tensor<*>>,
+    feeds: Map<Operand<*>, Tensor<*>> = emptyMap(),
     fetches: List<Operand<*>> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner = kotlinRunner(options).apply {
@@ -71,7 +71,7 @@ public fun Session.kotlinRunner(
 }
 
 public inline fun <R> Session.kotlinRunner(
-    feeds: Map<String, Tensor<*>>,
+    feeds: Map<String, Tensor<*>> = emptyMap(),
     fetches: List<String> = emptyList(),
     options: RunOptions? = null,
     block: KotlinRunner.() -> R
@@ -82,7 +82,7 @@ public inline fun <R> Session.kotlinRunner(
 
 @JvmName("kotlinRunnerOutput")
 public inline fun <R> Session.kotlinRunner(
-    feeds: Map<Output<*>, Tensor<*>>,
+    feeds: Map<Output<*>, Tensor<*>> = emptyMap(),
     fetches: List<Output<*>> = emptyList(),
     options: RunOptions? = null,
     block: KotlinRunner.() -> R
@@ -93,7 +93,7 @@ public inline fun <R> Session.kotlinRunner(
 
 @JvmName("kotlinRunnerOperand")
 public inline fun <R> Session.kotlinRunner(
-    feeds: Map<Operand<*>, Tensor<*>>,
+    feeds: Map<Operand<*>, Tensor<*>> = emptyMap(),
     fetches: List<Operand<*>> = emptyList(),
     options: RunOptions? = null,
     block: KotlinRunner.() -> R
@@ -104,22 +104,22 @@ public inline fun <R> Session.kotlinRunner(
 
 // TODO return Map or KotlinRun?
 public fun Session.run(
-    feeds: Map<String, Tensor<*>>,
-    fetches: List<String>,
+    feeds: Map<String, Tensor<*>> = emptyMap(),
+    fetches: List<String> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
 @JvmName("runOutput")
 public fun Session.run(
-    feeds: Map<Output<*>, Tensor<*>>,
-    fetches: List<Output<*>>,
+    feeds: Map<Output<*>, Tensor<*>> = emptyMap(),
+    fetches: List<Output<*>> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
 @JvmName("runOperand")
 public fun Session.run(
-    feeds: Map<Operand<*>, Tensor<*>>,
-    fetches: List<Operand<*>>,
+    feeds: Map<Operand<*>, Tensor<*>> = emptyMap(),
+    fetches: List<Operand<*>> = emptyList(),
     options: RunOptions? = null
 ): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
