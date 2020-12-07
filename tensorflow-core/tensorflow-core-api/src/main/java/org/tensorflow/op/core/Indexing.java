@@ -148,6 +148,7 @@ public class Indexing {
    * @param input
    * @param indices The indices to slice.  See {@link Index}.
    * @return a new instance of StridedSlice
+   * @see Index
    */
   @Endpoint(name = "stridedSlice")
   public static <T extends TType> StridedSlice<T> stridedSlice(Scope scope, Operand<T> input, Index... indices) {
@@ -182,7 +183,7 @@ public class Indexing {
    * @param value the value to assign.
    * @param indices The indices to slice.  See {@link Index}.
    * @return a new instance of StridedSliceAssign
-   * @see #stridedSlice(Scope, Operand, Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
    */
   @Endpoint(name = "stridedSliceAssign")
   public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Scope scope, Operand<T> ref, Operand<T> value, Index... indices) {
