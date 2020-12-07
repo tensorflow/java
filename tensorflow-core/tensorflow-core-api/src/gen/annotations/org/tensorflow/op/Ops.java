@@ -128,6 +128,7 @@ import org.tensorflow.op.core.MutexLock;
 import org.tensorflow.op.core.NextIteration;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.OneHot;
+import org.tensorflow.op.core.Ones;
 import org.tensorflow.op.core.OnesLike;
 import org.tensorflow.op.core.OrderedMapClear;
 import org.tensorflow.op.core.OrderedMapIncompleteSize;
@@ -3424,6 +3425,19 @@ public final class Ops {
   public <U extends TType, T extends TNumber> OneHot<U> oneHot(Operand<T> indices,
       Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, OneHot.Options... options) {
     return OneHot.create(scope, indices, depth, onValue, offValue, options);
+  }
+
+  /**
+   * Creates a one valued tensor given its type and shape.
+   *
+   * @param scope is a scope used to add the underlying operation
+   * @param dims a 1-D operand that represents the shape of the output tensor
+   * @param type the output tensor datatype. Can not be TString.
+   * @return a constant tensor initialized with ones
+   * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
+   */
+  public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, DataType<T> type) {
+    return Ones.create(scope, dims, type);
   }
 
   /**
@@ -7726,7 +7740,7 @@ public final class Ops {
   }
 
   /**
-   * Returns an API that uses the provided DeviceSpec for an op.
+   * Returns an API that places the created operations on the device(s) matching the provided spec.
    *
    * @see {@link Scope#withDevice(DeviceSpec)}
    */
