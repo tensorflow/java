@@ -16,9 +16,16 @@ package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.ndarray.Shape.of;
 
 import org.junit.Test;
+import org.tensorflow.Graph;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Index;
+import org.tensorflow.op.Scope;
+import org.tensorflow.types.TFloat32;
 
 public class IndexingTest {
 
@@ -30,25 +37,42 @@ public class IndexingTest {
             Index.all(),
             Index.newAxis(),
             Index.ellipses(),
-            Index.slice(Index.all(), 10),
-            Index.slice(10, null, 2)
+            Index.slice(Index.all(), 4),
+            Index.slice(4, null, 2)
         }
     );
 
-    assertArrayEquals(args.begin, new int[]{2, 1, 0, 0, 0, 0, 10});
-    assertArrayEquals(args.end, new int[]{3, 2, 0, 0, 0, 10, 0});
-    assertArrayEquals(args.strides, new int[]{1, 1, 1, 1, 1, 1, 2});
-    assertEquals(args.beginMask, 0b0100100);
-    assertEquals(args.endMask, 0b1000100);
-    assertEquals(args.ellipsisMask, 0b0010000);
-    assertEquals(args.newAxisMask, 0b0001000);
-    assertEquals(args.shrinkAxisMask, 0b0000001);
+    assertArrayEquals(new int[]{2, 1, 0, 0, 0, 0, 10}, args.begin);
+    assertArrayEquals(new int[]{3, 2, 0, 0, 0, 10, 0}, args.end);
+    assertArrayEquals(new int[]{1, 1, 1, 1, 1, 1, 2}, args.strides);
+    assertEquals(0b0100100, args.beginMask);
+    assertEquals(0b1000100, args.endMask);
+    assertEquals(0b0010000, args.ellipsisMask);
+    assertEquals(0b0001000, args.newAxisMask);
+    assertEquals(0b0000001, args.shrinkAxisMask);
 
   }
 
   @Test
   public void testStridedSliceIndex(){
-    //TODO test op
+    try (Graph g = new Graph();
+        Session sess = new Session(g)) {
+      Scope scope = new Scope(g);
+      long[] shape = {10, 10, 10, 10, 10, 10, 10, 10};
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
+      StridedSlice<TFloat32> output = Indexing.stridedSlice(scope, op,
+          Index.point(2),
+          Index.point(1, true),
+          Index.all(),
+          Index.newAxis(),
+          Index.ellipses(),
+          Index.slice(Index.all(), 4),
+          Index.slice(4, null, 2)
+      );
+      try (Tensor<TFloat32> result = sess.runner().fetch(op.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
+        assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.data().shape(), "Slice index didn't match expected (Python)");
+      }
+    }
   }
 
 }
