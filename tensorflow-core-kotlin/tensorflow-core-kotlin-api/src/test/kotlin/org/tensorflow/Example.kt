@@ -38,7 +38,7 @@ public fun KotlinOps.DenseLayer(
 
 public class Example {
     @Test
-    private fun mnistExample() {
+    public fun mnistExample() {
         Graph {
             val input = tf.placeholderWithDefault(
                 tf.math.add(tf.zeros(tf.array(1, 28, 28, 3), TFloat32.DTYPE), tf.constant(1f)),
