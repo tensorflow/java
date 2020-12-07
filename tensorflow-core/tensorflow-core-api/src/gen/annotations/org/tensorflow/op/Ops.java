@@ -93,6 +93,7 @@ import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.ImmutableConst;
+import org.tensorflow.op.core.Indexing;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.InitializeTable;
 import org.tensorflow.op.core.InitializeTableFromTextFile;
@@ -5901,6 +5902,13 @@ public final class Ops {
   }
 
   /**
+   * empty
+   */
+  public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, Index... indices) {
+    return Indexing.stridedSlice(scope, input, indices);
+  }
+
+  /**
    * Return a strided slice from `input`.
    *  <p>
    *  Note, most python users will want to use the Python `Tensor.__getitem__`
@@ -6010,6 +6018,14 @@ public final class Ops {
   public <T extends TType, U extends TNumber> StridedSlice<T> stridedSlice(Operand<T> input,
       Operand<U> begin, Operand<U> end, Operand<U> strides, StridedSlice.Options... options) {
     return StridedSlice.create(scope, input, begin, end, strides, options);
+  }
+
+  /**
+   * empty
+   */
+  public <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Operand<T> ref,
+      Operand<T> value, Index... indices) {
+    return Indexing.stridedSliceAssign(scope, ref, value, indices);
   }
 
   /**
