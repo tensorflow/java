@@ -33,6 +33,7 @@
   <properties>
     <!-- Match version used by TensorFlow, in tensorflow/workspace.bzl -->
     <protobuf.version>3.8.0</protobuf.version>
+    <javacpp.platform.extension></javacpp.platform.extension>
   </properties>
 
   <dependencies>
@@ -49,6 +50,23 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Include native binaries dependencies only for testing -->
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -446,15 +464,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <additionalClasspathElements>
-            <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar
-            </additionalClasspathElement>
-            <!-- Note: the following path is not accessible in deploying profile, so other libraries like
-                       OpenMP must be installed manually when running the tests -->
-            <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
-          </additionalClasspathElements>
-        </configuration>
       </plugin>
       <!--      <plugin>-->
       <!--        <artifactId>maven-source-plugin</artifactId>-->
