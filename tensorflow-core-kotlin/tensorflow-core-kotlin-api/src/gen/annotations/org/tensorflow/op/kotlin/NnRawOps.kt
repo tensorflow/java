@@ -24,23 +24,36 @@ import org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits
 import org.tensorflow.types.family.TNumber
 
 /**
- * An API for building {@code nn.raw} operations as {@link org.tensorflow.op.Op Op}s
+ * An API for building `nn.raw` operations as [Op][org.tensorflow.op.Op]s
  *
- * @see {@link org.tensorflow.op.Ops}
+ * @see org.tensorflow.op.Ops
  */
 public class NnRawOps(
     /**
-     * Get the parent {@link KotlinOps} object.
+     * Get the parent [KotlinOps] object.
      */
     public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.NnRawOps = ops.java.nn.raw
 
     /**
-     * Returns the current {@link Scope scope} of this API
+     * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
 
+    /**
+     * Computes softmax cross entropy cost and gradients to backpropagate.
+     *
+     *  Inputs are the logits, not probabilities.
+     *
+     * @param T data type for ` loss()` output
+     * @param features batch_size x num_classes matrix
+     * @param labels batch_size x num_classes matrix
+     *  The caller must ensure that each batch of labels represents a valid
+     *  probability distribution.
+     * @return a new instance of SoftmaxCrossEntropyWithLogits
+     * @see org.tensorflow.op.NnRawOps.softmaxCrossEntropyWithLogits
+     */
     public fun <T : TNumber> softmaxCrossEntropyWithLogits(
         features: Operand<T>,
         labels: Operand<T>
@@ -50,6 +63,23 @@ public class NnRawOps(
             labels
         )
 
+    /**
+     * Computes softmax cross entropy cost and gradients to backpropagate.
+     *
+     *  Unlike `SoftmaxCrossEntropyWithLogits`, this operation does not accept
+     *  a matrix of label probabilities, but rather a single label per row
+     *  of features.  This label is considered to have probability 1.0 for the
+     *  given row.
+     *
+     *  Inputs are the logits, not probabilities.
+     *
+     * @param T data type for ` loss()` output
+     * @param features batch_size x num_classes matrix
+     * @param labels batch_size vector with values in &#91;0, num_classes).
+     *  This is the label for the given minibatch entry.
+     * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
+     * @see org.tensorflow.op.NnRawOps.sparseSoftmaxCrossEntropyWithLogits
+     */
     public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(
         features: Operand<T>,
         labels: Operand<U>

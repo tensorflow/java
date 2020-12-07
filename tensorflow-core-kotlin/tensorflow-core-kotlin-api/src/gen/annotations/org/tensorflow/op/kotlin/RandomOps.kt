@@ -46,23 +46,51 @@ import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
 
 /**
- * An API for building {@code random} operations as {@link org.tensorflow.op.Op Op}s
+ * An API for building `random` operations as [Op][org.tensorflow.op.Op]s
  *
- * @see {@link org.tensorflow.op.Ops}
+ * @see org.tensorflow.op.Ops
  */
 public class RandomOps(
     /**
-     * Get the parent {@link KotlinOps} object.
+     * Get the parent [KotlinOps] object.
      */
     public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.RandomOps = ops.java.random
 
     /**
-     * Returns the current {@link Scope scope} of this API
+     * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
 
+    /**
+     * Generates labels for candidate sampling with a learned unigram distribution.
+     *
+     *  See explanations of candidate sampling and the data formats at
+     *  go/candidate-sampling.
+     *
+     *  For each batch, this op picks a single set of sampled candidate labels.
+     *
+     *  The advantages of sampling candidates per-batch are simplicity and the
+     *  possibility of efficient dense matrix multiplication. The disadvantage is that
+     *  the sampled candidates must be chosen independently of the context and of the
+     *  true labels.
+     *
+     * @param trueClasses A batch_size * num_true matrix, in which each row contains the
+     *  IDs of the num_true target_classes in the corresponding original label.
+     * @param numTrue Number of true labels per context.
+     * @param numSampled Number of candidates to produce.
+     * @param unique If unique is true, we sample with rejection, so that all sampled
+     *  candidates in a batch are unique. This requires some approximation to
+     *  estimate the post-rejection sampling probabilities.
+     * @param options carries optional attributes values
+     * @return a new instance of AllCandidateSampler
+     * @see org.tensorflow.op.RandomOps.allCandidateSampler
+     * @param seed If either seed or seed2 are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 An second seed to avoid seed collision.
+     */
     public fun allCandidateSampler(
         trueClasses: Operand<TInt64>,
         numTrue: Long,
@@ -81,6 +109,35 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Generates labels for candidate sampling with a log-uniform distribution.
+     *
+     *  See explanations of candidate sampling and the data formats at
+     *  go/candidate-sampling.
+     *
+     *  For each batch, this op picks a single set of sampled candidate labels.
+     *
+     *  The advantages of sampling candidates per-batch are simplicity and the
+     *  possibility of efficient dense matrix multiplication. The disadvantage is that
+     *  the sampled candidates must be chosen independently of the context and of the
+     *  true labels.
+     *
+     * @param trueClasses A batch_size * num_true matrix, in which each row contains the
+     *  IDs of the num_true target_classes in the corresponding original label.
+     * @param numTrue Number of true labels per context.
+     * @param numSampled Number of candidates to randomly sample.
+     * @param unique If unique is true, we sample with rejection, so that all sampled
+     *  candidates in a batch are unique. This requires some approximation to
+     *  estimate the post-rejection sampling probabilities.
+     * @param rangeMax The sampler will sample integers from the interval &#91;0, range_max).
+     * @param options carries optional attributes values
+     * @return a new instance of LogUniformCandidateSampler
+     * @see org.tensorflow.op.RandomOps.logUniformCandidateSampler
+     * @param seed If either seed or seed2 are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 An second seed to avoid seed collision.
+     */
     public fun logUniformCandidateSampler(
         trueClasses: Operand<TInt64>,
         numTrue: Long,
@@ -101,6 +158,21 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Draws samples from a multinomial distribution.
+     *
+     * @param U data type for ` output()` output
+     * @param logits 2-D Tensor with shape `&#91;batch_size, num_classes]`.  Each slice `&#91;i,
+     * :]`
+     *  represents the unnormalized log probabilities for all classes.
+     * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
+     * @param options carries optional attributes values
+     * @return a new instance of Multinomial
+     * @see org.tensorflow.op.RandomOps.multinomial
+     * @param seed If either seed or seed2 is set to be non-zero, the internal random number
+     *  generator is seeded by the given seed.  Otherwise, a random seed is used.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <T : TNumber> multinomial(
         logits: Operand<T>,
         numSamples: Operand<TInt32>,
@@ -115,6 +187,22 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Draws samples from a multinomial distribution.
+     *
+     * @param U data type for ` output()` output
+     * @param logits 2-D Tensor with shape `&#91;batch_size, num_classes]`.  Each slice `&#91;i,
+     * :]`
+     *  represents the unnormalized log probabilities for all classes.
+     * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
+     * @param outputDtype
+     * @param options carries optional attributes values
+     * @return a new instance of Multinomial
+     * @see org.tensorflow.op.RandomOps.multinomial
+     * @param seed If either seed or seed2 is set to be non-zero, the internal random number
+     *  generator is seeded by the given seed.  Otherwise, a random seed is used.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> multinomial(
         logits: Operand<T>,
         numSamples: Operand<TInt32>,
@@ -131,6 +219,27 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from a normal distribution. The parameters may each be a
+     *
+     *  scalar which applies to the entire output, or a vector of length shape&#91;0] which
+     *  stores the parameters for each batch.
+     *
+     * @param U data type for ` output()` output
+     * @param shape The shape of the output tensor. Batches are indexed by the 0th dimension.
+     * @param means The mean parameter of each batch.
+     * @param stdevs The standard deviation parameter of each batch. Must be greater than 0.
+     * @param minvals The minimum cutoff. May be -infinity.
+     * @param maxvals The maximum cutoff. May be +infinity, and must be more than the minval
+     *  for each batch.
+     * @param options carries optional attributes values
+     * @return a new instance of ParameterizedTruncatedNormal
+     * @see org.tensorflow.op.RandomOps.parameterizedTruncatedNormal
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> parameterizedTruncatedNormal(
         shape: Operand<T>,
         means: Operand<U>,
@@ -151,6 +260,26 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from the Gamma distribution(s) described by alpha.
+     *
+     *  This op uses the algorithm by Marsaglia et al. to acquire samples via
+     *  transformation-rejection from pairs of uniform and normal random variables.
+     *  See http://dl.acm.org/citation.cfm?id=358414
+     *
+     * @param U data type for ` output()` output
+     * @param shape 1-D integer tensor. Shape of independent samples to draw from each
+     *  distribution described by the shape parameters given in alpha.
+     * @param alpha A tensor in which each scalar is a "shape" parameter describing the
+     *  associated gamma distribution.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomGamma
+     * @see org.tensorflow.op.RandomOps.randomGamma
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> randomGamma(
         shape: Operand<T>,
         alpha: Operand<U>,
@@ -165,6 +294,32 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from the Poisson distribution(s) described by rate.
+     *
+     *  This op uses two algorithms, depending on rate. If rate >= 10, then
+     *  the algorithm by Hormann is used to acquire samples via
+     *  transformation-rejection.
+     *  See http://www.sciencedirect.com/science/article/pii/0167668793909974.
+     *
+     *  Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
+     *  random variables.
+     *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
+     *  Programming, Volume 2. Addison Wesley
+     *
+     * @param V data type for ` output()` output
+     * @param shape 1-D integer tensor. Shape of independent samples to draw from each
+     *  distribution described by the shape parameters given in rate.
+     * @param rate A tensor in which each scalar is a "rate" parameter describing the
+     *  associated poisson distribution.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomPoisson
+     * @see org.tensorflow.op.RandomOps.randomPoisson
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <T : TNumber, U : TNumber> randomPoisson(
         shape: Operand<T>,
         rate: Operand<U>,
@@ -179,6 +334,33 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from the Poisson distribution(s) described by rate.
+     *
+     *  This op uses two algorithms, depending on rate. If rate >= 10, then
+     *  the algorithm by Hormann is used to acquire samples via
+     *  transformation-rejection.
+     *  See http://www.sciencedirect.com/science/article/pii/0167668793909974.
+     *
+     *  Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
+     *  random variables.
+     *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
+     *  Programming, Volume 2. Addison Wesley
+     *
+     * @param V data type for ` output()` output
+     * @param shape 1-D integer tensor. Shape of independent samples to draw from each
+     *  distribution described by the shape parameters given in rate.
+     * @param rate A tensor in which each scalar is a "rate" parameter describing the
+     *  associated poisson distribution.
+     * @param dtype
+     * @param options carries optional attributes values
+     * @return a new instance of RandomPoisson
+     * @see org.tensorflow.op.RandomOps.randomPoisson
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> randomPoisson(
         shape: Operand<T>,
         rate: Operand<U>,
@@ -195,6 +377,29 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Randomly shuffles a tensor along its first dimension.
+     *
+     *    The tensor is shuffled along dimension 0, such that each `value&#91;j]` is mapped
+     *    to one and only one `output&#91;i]`. For example, a mapping that might occur for a
+     *    3x2 tensor is:
+     *  ```
+     *  [[1, 2],       [[5, 6],
+     *   [3, 4],  ==>   [1, 2],
+     *   [5, 6]]        [3, 4]]
+     *  ```
+     *
+     *
+     * @param T data type for ` output()` output
+     * @param value The tensor to be shuffled.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomShuffle
+     * @see org.tensorflow.op.RandomOps.randomShuffle
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <T : TType> randomShuffle(
         value: Operand<T>,
         seed: Long? = null,
@@ -207,6 +412,22 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from a normal distribution.
+     *
+     *  The generated values will have mean 0 and standard deviation 1.
+     *
+     * @param U data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param dtype The type of the output.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomStandardNormal
+     * @see org.tensorflow.op.RandomOps.randomStandardNormal
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> randomStandardNormal(
         shape: Operand<T>,
         dtype: DataType<U>,
@@ -221,6 +442,23 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random values from a uniform distribution.
+     *
+     *  The generated values follow a uniform distribution in the range `&#91;0, 1)`. The
+     *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
+     *
+     * @param U data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param dtype The type of the output.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomUniform
+     * @see org.tensorflow.op.RandomOps.randomUniform
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> randomUniform(
         shape: Operand<T>,
         dtype: DataType<U>,
@@ -235,6 +473,29 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Outputs random integers from a uniform distribution.
+     *
+     *  The generated values are uniform integers in the range `&#91;minval, maxval)`.
+     *  The lower bound `minval` is included in the range, while the upper bound
+     *  `maxval` is excluded.
+     *
+     *  The random integers are slightly biased unless `maxval - minval` is an exact
+     *  power of two.  The bias is small for values of `maxval - minval` significantly
+     *  smaller than the range of the output (either `2^32` or `2^64`).
+     *
+     * @param U data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param minval 0-D.  Inclusive lower bound on the generated integers.
+     * @param maxval 0-D.  Exclusive upper bound on the generated integers.
+     * @param options carries optional attributes values
+     * @return a new instance of RandomUniformInt
+     * @see org.tensorflow.op.RandomOps.randomUniformInt
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> randomUniformInt(
         shape: Operand<T>,
         minval: Operand<U>,
@@ -251,6 +512,22 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Emits randomized records.
+     *
+     * @param filePattern Glob pattern for the data files.
+     * @param options carries optional attributes values
+     * @return a new instance of RecordInput
+     * @see org.tensorflow.op.RandomOps.recordInput
+     * @param fileRandomSeed Random seeds used to produce randomized records.
+     * @param fileShuffleShiftRatio Shifts the list of files after the list is randomly
+     *  shuffled.
+     * @param fileBufferSize The randomization shuffling buffer.
+     * @param fileParallelism How many sstables are opened and concurrently iterated over.
+     * @param batchSize The batch size.
+     * @param compressionType The type of compression for the file. Currently ZLIB and
+     *  GZIP are supported. Defaults to none.
+     */
     public fun recordInput(
         filePattern: String,
         fileRandomSeed: Long? = null,
@@ -271,6 +548,17 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     *
+     * @param V data type for ` output()` output
+     * @param resource
+     * @param algorithm
+     * @param shape
+     * @param counts
+     * @param probs
+     * @return a new instance of StatefulRandomBinomial
+     * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
+     */
     public fun <T : TNumber, U : TNumber> statefulRandomBinomial(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
@@ -285,6 +573,18 @@ public class RandomOps(
         probs
     )
 
+    /**
+     *
+     * @param V data type for ` output()` output
+     * @param resource
+     * @param algorithm
+     * @param shape
+     * @param counts
+     * @param probs
+     * @param dtype
+     * @return a new instance of StatefulRandomBinomial
+     * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> statefulRandomBinomial(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
@@ -301,6 +601,18 @@ public class RandomOps(
         dtype
     )
 
+    /**
+     * Outputs random values from a normal distribution.
+     *
+     *  The generated values will have mean 0 and standard deviation 1.
+     *
+     * @param U data type for ` output()` output
+     * @param resource The handle of the resource variable that stores the state of the RNG.
+     * @param algorithm The RNG algorithm.
+     * @param shape The shape of the output tensor.
+     * @return a new instance of StatefulStandardNormal
+     * @see org.tensorflow.op.RandomOps.statefulStandardNormal
+     */
     public fun <T : TType> statefulStandardNormal(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
@@ -311,6 +623,19 @@ public class RandomOps(
         shape
     )
 
+    /**
+     * Outputs random values from a normal distribution.
+     *
+     *  The generated values will have mean 0 and standard deviation 1.
+     *
+     * @param U data type for ` output()` output
+     * @param resource The handle of the resource variable that stores the state of the RNG.
+     * @param algorithm The RNG algorithm.
+     * @param shape The shape of the output tensor.
+     * @param dtype The type of the output.
+     * @return a new instance of StatefulStandardNormal
+     * @see org.tensorflow.op.RandomOps.statefulStandardNormal
+     */
     public fun <U : TType, T : TType> statefulStandardNormal(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
@@ -323,6 +648,18 @@ public class RandomOps(
         dtype
     )
 
+    /**
+     * Draws samples from a multinomial distribution.
+     *
+     * @param V data type for ` output()` output
+     * @param logits 2-D Tensor with shape `&#91;batch_size, num_classes]`.  Each slice `&#91;i,
+     * :]`
+     *  represents the unnormalized log probabilities for all classes.
+     * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @return a new instance of StatelessMultinomial
+     * @see org.tensorflow.op.RandomOps.statelessMultinomial
+     */
     public fun <T : TNumber, U : TNumber> statelessMultinomial(
         logits: Operand<T>,
         numSamples: Operand<TInt32>,
@@ -333,6 +670,19 @@ public class RandomOps(
         seed
     )
 
+    /**
+     * Draws samples from a multinomial distribution.
+     *
+     * @param V data type for ` output()` output
+     * @param logits 2-D Tensor with shape `&#91;batch_size, num_classes]`.  Each slice `&#91;i,
+     * :]`
+     *  represents the unnormalized log probabilities for all classes.
+     * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @param outputDtype
+     * @return a new instance of StatelessMultinomial
+     * @see org.tensorflow.op.RandomOps.statelessMultinomial
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> statelessMultinomial(
         logits: Operand<T>,
         numSamples: Operand<TInt32>,
@@ -345,6 +695,19 @@ public class RandomOps(
         outputDtype
     )
 
+    /**
+     * Outputs deterministic pseudorandom values from a normal distribution.
+     *
+     *  The generated values will have mean 0 and standard deviation 1.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @return a new instance of StatelessRandomNormal
+     * @see org.tensorflow.op.RandomOps.statelessRandomNormal
+     */
     public fun <T : TNumber, U : TNumber> statelessRandomNormal(
         shape: Operand<T>,
         seed: Operand<U>
@@ -353,6 +716,20 @@ public class RandomOps(
         seed
     )
 
+    /**
+     * Outputs deterministic pseudorandom values from a normal distribution.
+     *
+     *  The generated values will have mean 0 and standard deviation 1.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @param dtype The type of the output.
+     * @return a new instance of StatelessRandomNormal
+     * @see org.tensorflow.op.RandomOps.statelessRandomNormal
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> statelessRandomNormal(
         shape: Operand<T>,
         seed: Operand<U>,
@@ -363,6 +740,20 @@ public class RandomOps(
         dtype
     )
 
+    /**
+     * Outputs deterministic pseudorandom random values from a uniform distribution.
+     *
+     *  The generated values follow a uniform distribution in the range `&#91;0, 1)`. The
+     *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @return a new instance of StatelessRandomUniform
+     * @see org.tensorflow.op.RandomOps.statelessRandomUniform
+     */
     public fun <T : TNumber, U : TNumber> statelessRandomUniform(
         shape: Operand<T>,
         seed: Operand<U>
@@ -372,6 +763,21 @@ public class RandomOps(
         seed
     )
 
+    /**
+     * Outputs deterministic pseudorandom random values from a uniform distribution.
+     *
+     *  The generated values follow a uniform distribution in the range `&#91;0, 1)`. The
+     *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @param dtype The type of the output.
+     * @return a new instance of StatelessRandomUniform
+     * @see org.tensorflow.op.RandomOps.statelessRandomUniform
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> statelessRandomUniform(
         shape: Operand<T>,
         seed: Operand<U>,
@@ -382,6 +788,21 @@ public class RandomOps(
         dtype
     )
 
+    /**
+     * Outputs deterministic pseudorandom values from a truncated normal distribution.
+     *
+     *  The generated values follow a normal distribution with mean 0 and standard
+     *  deviation 1, except that values whose magnitude is more than 2 standard
+     *  deviations from the mean are dropped and re-picked.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @return a new instance of StatelessTruncatedNormal
+     * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
+     */
     public fun <T : TNumber, U : TNumber> statelessTruncatedNormal(
         shape: Operand<T>,
         seed: Operand<U>
@@ -391,6 +812,22 @@ public class RandomOps(
         seed
     )
 
+    /**
+     * Outputs deterministic pseudorandom values from a truncated normal distribution.
+     *
+     *  The generated values follow a normal distribution with mean 0 and standard
+     *  deviation 1, except that values whose magnitude is more than 2 standard
+     *  deviations from the mean are dropped and re-picked.
+     *
+     *  The outputs are a deterministic function of `shape` and `seed`.
+     *
+     * @param V data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param seed 2 seeds (shape &#91;2]).
+     * @param dtype The type of the output.
+     * @return a new instance of StatelessTruncatedNormal
+     * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
+     */
     public fun <V : TNumber, T : TNumber, U : TNumber> statelessTruncatedNormal(
         shape: Operand<T>,
         seed: Operand<U>,
@@ -401,6 +838,24 @@ public class RandomOps(
         dtype
     )
 
+    /**
+     * Outputs random values from a truncated normal distribution.
+     *
+     *  The generated values follow a normal distribution with mean 0 and standard
+     *  deviation 1, except that values whose magnitude is more than 2 standard
+     *  deviations from the mean are dropped and re-picked.
+     *
+     * @param U data type for ` output()` output
+     * @param shape The shape of the output tensor.
+     * @param dtype The type of the output.
+     * @param options carries optional attributes values
+     * @return a new instance of TruncatedNormal
+     * @see org.tensorflow.op.RandomOps.truncatedNormal
+     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 A second seed to avoid seed collision.
+     */
     public fun <U : TNumber, T : TNumber> truncatedNormal(
         shape: Operand<T>,
         dtype: DataType<U>,
@@ -415,6 +870,35 @@ public class RandomOps(
         ).toTypedArray()
     )
 
+    /**
+     * Generates labels for candidate sampling with a uniform distribution.
+     *
+     *  See explanations of candidate sampling and the data formats at
+     *  go/candidate-sampling.
+     *
+     *  For each batch, this op picks a single set of sampled candidate labels.
+     *
+     *  The advantages of sampling candidates per-batch are simplicity and the
+     *  possibility of efficient dense matrix multiplication. The disadvantage is that
+     *  the sampled candidates must be chosen independently of the context and of the
+     *  true labels.
+     *
+     * @param trueClasses A batch_size * num_true matrix, in which each row contains the
+     *  IDs of the num_true target_classes in the corresponding original label.
+     * @param numTrue Number of true labels per context.
+     * @param numSampled Number of candidates to randomly sample.
+     * @param unique If unique is true, we sample with rejection, so that all sampled
+     *  candidates in a batch are unique. This requires some approximation to
+     *  estimate the post-rejection sampling probabilities.
+     * @param rangeMax The sampler will sample integers from the interval &#91;0, range_max).
+     * @param options carries optional attributes values
+     * @return a new instance of UniformCandidateSampler
+     * @see org.tensorflow.op.RandomOps.uniformCandidateSampler
+     * @param seed If either seed or seed2 are set to be non-zero, the random number
+     *  generator is seeded by the given seed.  Otherwise, it is seeded by a
+     *  random seed.
+     * @param seed2 An second seed to avoid seed collision.
+     */
     public fun uniformCandidateSampler(
         trueClasses: Operand<TInt64>,
         numTrue: Long,

@@ -14,11 +14,8 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow
 
-import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Op
-import org.tensorflow.op.kotlin.tf
 import org.tensorflow.proto.framework.RunOptions
-import org.tensorflow.types.TInt32
 import org.tensorflow.types.family.TType
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -44,52 +41,91 @@ public inline fun <R> Session.kotlinRunner(options: RunOptions? = null, block: K
     return kotlinRunner(options).run(block)
 }
 
-public fun Session.kotlinRunner(feeds: Map<String, Tensor<*>>, fetches: List<String> = emptyList(), options: RunOptions? = null): KotlinRunner = kotlinRunner(options).apply {
+public fun Session.kotlinRunner(
+    feeds: Map<String, Tensor<*>>,
+    fetches: List<String> = emptyList(),
+    options: RunOptions? = null
+): KotlinRunner = kotlinRunner(options).apply {
     feed(feeds)
     fetch(fetches)
 }
 
 @JvmName("kotlinRunnerOutput")
-public fun Session.kotlinRunner(feeds: Map<Output<*>, Tensor<*>>, fetches: List<Output<*>> = emptyList(), options: RunOptions? = null): KotlinRunner = kotlinRunner(options).apply {
+public fun Session.kotlinRunner(
+    feeds: Map<Output<*>, Tensor<*>>,
+    fetches: List<Output<*>> = emptyList(),
+    options: RunOptions? = null
+): KotlinRunner = kotlinRunner(options).apply {
     feed(feeds)
     fetch(fetches)
 }
 
 @JvmName("kotlinRunnerOperand")
-public fun Session.kotlinRunner(feeds: Map<Operand<*>, Tensor<*>>, fetches: List<Operand<*>> = emptyList(), options: RunOptions? = null): KotlinRunner = kotlinRunner(options).apply {
+public fun Session.kotlinRunner(
+    feeds: Map<Operand<*>, Tensor<*>>,
+    fetches: List<Operand<*>> = emptyList(),
+    options: RunOptions? = null
+): KotlinRunner = kotlinRunner(options).apply {
     feed(feeds)
     fetch(fetches)
 }
 
-public inline fun <R> Session.kotlinRunner(feeds: Map<String, Tensor<*>>, fetches: List<String> = emptyList(), options: RunOptions? = null, block: KotlinRunner.() -> R): R {
+public inline fun <R> Session.kotlinRunner(
+    feeds: Map<String, Tensor<*>>,
+    fetches: List<String> = emptyList(),
+    options: RunOptions? = null,
+    block: KotlinRunner.() -> R
+): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return kotlinRunner(feeds, fetches, options).run(block)
 }
 
 @JvmName("kotlinRunnerOutput")
-public inline fun <R> Session.kotlinRunner(feeds: Map<Output<*>, Tensor<*>>, fetches: List<Output<*>> = emptyList(), options: RunOptions? = null, block: KotlinRunner.() -> R): R {
+public inline fun <R> Session.kotlinRunner(
+    feeds: Map<Output<*>, Tensor<*>>,
+    fetches: List<Output<*>> = emptyList(),
+    options: RunOptions? = null,
+    block: KotlinRunner.() -> R
+): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return kotlinRunner(feeds, fetches, options).run(block)
 }
 
 @JvmName("kotlinRunnerOperand")
-public inline fun <R> Session.kotlinRunner(feeds: Map<Operand<*>, Tensor<*>>, fetches: List<Operand<*>> = emptyList(), options: RunOptions? = null, block: KotlinRunner.() -> R): R {
+public inline fun <R> Session.kotlinRunner(
+    feeds: Map<Operand<*>, Tensor<*>>,
+    fetches: List<Operand<*>> = emptyList(),
+    options: RunOptions? = null,
+    block: KotlinRunner.() -> R
+): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return kotlinRunner(feeds, fetches, options).run(block)
 }
 
-//TODO return Map or KotlinRun?
-public fun Session.run(feeds: Map<String, Tensor<*>>, fetches: List<String>, options: RunOptions? = null): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
+// TODO return Map or KotlinRun?
+public fun Session.run(
+    feeds: Map<String, Tensor<*>>,
+    fetches: List<String>,
+    options: RunOptions? = null
+): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
 @JvmName("runOutput")
-public fun Session.run(feeds: Map<Output<*>, Tensor<*>>, fetches: List<Output<*>>, options: RunOptions? = null): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
+public fun Session.run(
+    feeds: Map<Output<*>, Tensor<*>>,
+    fetches: List<Output<*>>,
+    options: RunOptions? = null
+): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
 @JvmName("runOperand")
-public fun Session.run(feeds: Map<Operand<*>, Tensor<*>>, fetches: List<Operand<*>>, options: RunOptions? = null): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
+public fun Session.run(
+    feeds: Map<Operand<*>, Tensor<*>>,
+    fetches: List<Operand<*>>,
+    options: RunOptions? = null
+): KotlinRunner.Run = kotlinRunner(feeds, fetches, options).run()
 
 public class KotlinRunner internal constructor(private val session: Session, options: RunOptions?) {
     private val runner = session.runner().let {
-        if(options != null)
+        if (options != null)
             it.setOptions(options)
         else
             it
@@ -97,19 +133,19 @@ public class KotlinRunner internal constructor(private val session: Session, opt
 
     // feeding
 
-    public fun feed(operation: String, t: Tensor<*>){
+    public fun feed(operation: String, t: Tensor<*>) {
         runner.feed(operation, t)
     }
 
-    public fun feed(operation: String, index: Int, t: Tensor<*>){
+    public fun feed(operation: String, index: Int, t: Tensor<*>) {
         runner.feed(operation, index, t)
     }
 
-    public fun <T: TType> feed(operand: Operand<in T>, t: Tensor<in T>){
+    public fun <T : TType> feed(operand: Operand<in T>, t: Tensor<in T>) {
         runner.feed(operand, t)
     }
 
-    public fun <T: TType> feed(output: Output<in T>, t: Tensor<in T>){
+    public fun <T : TType> feed(output: Output<in T>, t: Tensor<in T>) {
         runner.feed(output, t)
     }
 
@@ -130,30 +166,30 @@ public class KotlinRunner internal constructor(private val session: Session, opt
     public fun feed(operands: Map<Output<*>, Tensor<*>>): Unit = operands.forEach { feed(it.key, it.value) }
 
     @JvmName("operandFeed")
-    public fun <T: TType> Operand<T>.feed(t: Tensor<T>): Unit = feed(this, t)
+    public fun <T : TType> Operand<T>.feed(t: Tensor<T>): Unit = feed(this, t)
 
     @JvmName("outputFeed")
-    public fun <T: TType> Output<T>.feed(t: Tensor<T>): Unit = feed(this, t)
+    public fun <T : TType> Output<T>.feed(t: Tensor<T>): Unit = feed(this, t)
 
     public operator fun set(operation: String, t: Tensor<*>): Unit = feed(operation, t)
 
     public operator fun set(operation: String, index: Int, t: Tensor<*>): Unit = feed(operation, index, t)
 
-    public operator fun <T: TType> set(operand: Operand<T>, t: Tensor<T>): Unit = feed(operand, t)
+    public operator fun <T : TType> set(operand: Operand<T>, t: Tensor<T>): Unit = feed(operand, t)
 
-    public operator fun <T: TType> set(output: Output<T>, t: Tensor<T>): Unit = feed(output, t)
+    public operator fun <T : TType> set(output: Output<T>, t: Tensor<T>): Unit = feed(output, t)
 
     // targeting
 
-    public fun addTarget(operation: String){
+    public fun addTarget(operation: String) {
         runner.addTarget(operation)
     }
 
-    public fun addTarget(operation: Operation){
+    public fun addTarget(operation: Operation) {
         runner.addTarget(operation)
     }
 
-    public fun addTarget(op: Op){
+    public fun addTarget(op: Op) {
         runner.addTarget(op)
     }
 
@@ -165,16 +201,23 @@ public class KotlinRunner internal constructor(private val session: Session, opt
     private val fetchMap = mutableMapOf<FetchSpec, FetchKey<*>>()
 
     private fun <T : TType> newKey(spec: FetchSpec): FetchKey<T> {
-        if(spec in fetchMap)
+        if (spec in fetchMap)
             return fetchMap[spec] as FetchKey<T>
 
         return FetchKey<T>(currentKey++).also { fetchMap[spec] = it }
     }
 
-    public fun findKey(operation: String): FetchKey<*> = fetchMap[FetchSpec(operation)] ?: error("Operation $operation was not fetched")
-    public fun findKey(operation: String, index: Int): FetchKey<*> = fetchMap[FetchSpec(operation, index)] ?: error("Index $index of Operation $operation was not fetched")
-    public fun <T : TType> findKey(operand: Operand<T>): FetchKey<T> = fetchMap[FetchSpec(operand)] as? FetchKey<T>? ?: error("Operand $operand was not fetched")
-    public fun <T : TType> findKey(output: Output<T>): FetchKey<T> = fetchMap[FetchSpec(output)] as? FetchKey<T>? ?: error("Output $output was not fetched")
+    public fun findKey(operation: String): FetchKey<*> =
+        fetchMap[FetchSpec(operation)] ?: error("Operation $operation was not fetched")
+
+    public fun findKey(operation: String, index: Int): FetchKey<*> =
+        fetchMap[FetchSpec(operation, index)] ?: error("Index $index of Operation $operation was not fetched")
+
+    public fun <T : TType> findKey(operand: Operand<T>): FetchKey<T> =
+        fetchMap[FetchSpec(operand)] as? FetchKey<T>? ?: error("Operand $operand was not fetched")
+
+    public fun <T : TType> findKey(output: Output<T>): FetchKey<T> =
+        fetchMap[FetchSpec(output)] as? FetchKey<T>? ?: error("Output $output was not fetched")
 
     public fun fetch(operation: String): FetchKey<*> =
         newKey<TType>(FetchSpec(operation)).also { runner.fetch(operation) }
@@ -205,7 +248,7 @@ public class KotlinRunner internal constructor(private val session: Session, opt
 
     // running
 
-    public inner class Run internal constructor(public val output: List<Tensor<*>>): AutoCloseable {
+    public inner class Run internal constructor(public val output: List<Tensor<*>>) : AutoCloseable {
         public operator fun <T : TType> get(key: FetchKey<T>): Tensor<T> {
             if (key.index < 0 || key.index > output.lastIndex)
                 error("Invalid key: key's index is ${key.index}, but there are only ${output.size} outputs.")
@@ -214,19 +257,20 @@ public class KotlinRunner internal constructor(private val session: Session, opt
 
         public operator fun get(operation: String): Tensor<*> = this[findKey(operation)]
         public operator fun get(operation: String, index: Int): Tensor<*> = this[findKey(operation, index)]
-        public operator fun <T: TType> get(output: Output<T>): Tensor<T> = this[findKey(output)]
-        public operator fun <T: TType> get(operand: Operand<T>): Tensor<T> = this[findKey(operand)]
+        public operator fun <T : TType> get(output: Output<T>): Tensor<T> = this[findKey(output)]
+        public operator fun <T : TType> get(operand: Operand<T>): Tensor<T> = this[findKey(operand)]
 
         @JvmName("keyGet")
-        public fun <T: TType> FetchKey<T>.get(): Tensor<T> = this@Run[this]
+        public fun <T : TType> FetchKey<T>.get(): Tensor<T> = this@Run[this]
 
         @JvmName("operandGet")
-        public fun <T: TType> Operand<T>.get(): Tensor<T> = this@Run[this]
+        public fun <T : TType> Operand<T>.get(): Tensor<T> = this@Run[this]
 
         @JvmName("outputGet")
-        public fun <T: TType> Output<T>.get(): Tensor<T> = this@Run[this]
+        public fun <T : TType> Output<T>.get(): Tensor<T> = this@Run[this]
 
-        public operator fun <T: TType> FetchKey<T>.getValue(thisRef: Any?, property: KProperty<*>): Tensor<T> = this.get()
+        public operator fun <T : TType> FetchKey<T>.getValue(thisRef: Any?, property: KProperty<*>): Tensor<T> =
+            this.get()
 
         override fun close() {
             output.forEach { it.close() }
@@ -241,39 +285,10 @@ public class KotlinRunner internal constructor(private val session: Session, opt
 
     public fun <R> run(freeTensors: Boolean = true, block: Run.() -> R): R {
         contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
-        return if(freeTensors) run().use(block) else run().run(block)
+        return if (freeTensors) run().use(block) else run().run(block)
     }
 
-    //TODO Unsure if the nicer API is worth the weird run call requirements
-    public operator fun  <T: TType> FetchKey<T>.getValue(thisRef: Any?, property: KProperty<*>): Tensor<T> =  latestRun?.get(this) ?: error("Runner has not yet been ran, can not get fetched value.")
-}
-
-
-public fun test() {
-    Graph {
-        with(tf) {
-            val a = placeholder(TInt32.DTYPE, Shape.of(1))
-            val b = constant(2)
-            val c = math.add(a, b)
-
-            withSession {
-                val aIn = Tensor.of(TInt32.DTYPE, Shape.of(1))
-
-                it.kotlinRunner{
-                    this[a] = aIn
-
-                    val cOut by fetch(c)
-
-                    run {
-                        val cOut2 = this[c]
-                        cOut
-                    }
-                }
-
-                val cOut = it.run(mapOf(a to aIn), listOf(c))[c]
-
-            }
-        }
-
-    }
+    // TODO Unsure if the nicer API is worth the weird run call requirements
+    public operator fun <T : TType> FetchKey<T>.getValue(thisRef: Any?, property: KProperty<*>): Tensor<T> =
+        latestRun?.get(this) ?: error("Runner has not yet been ran, can not get fetched value.")
 }

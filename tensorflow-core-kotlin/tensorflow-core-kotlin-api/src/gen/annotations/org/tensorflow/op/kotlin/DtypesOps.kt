@@ -27,23 +27,55 @@ import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
 
 /**
- * An API for building {@code dtypes} operations as {@link org.tensorflow.op.Op Op}s
+ * An API for building `dtypes` operations as [Op][org.tensorflow.op.Op]s
  *
- * @see {@link org.tensorflow.op.Ops}
+ * @see org.tensorflow.op.Ops
  */
 public class DtypesOps(
     /**
-     * Get the parent {@link KotlinOps} object.
+     * Get the parent [KotlinOps] object.
      */
     public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.DtypesOps = ops.java.dtypes
 
     /**
-     * Returns the current {@link Scope scope} of this API
+     * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
 
+    /**
+     * Converts each entry in the given tensor to strings.
+     *
+     *  Supports many numeric types and boolean.
+     *
+     *  For Unicode, see the
+     *  &#91;https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode
+     * text)
+     *  tutorial.
+     *
+     *  Examples:
+     *
+     *  >>> tf.strings.as_string(&#91;3, 2])
+     *  <tf.Tensor: shape=(2,), dtype=string, numpy=array(&#91;b'3', b'2'], dtype=object)>
+     *  >>> tf.strings.as_string(&#91;3.1415926, 2.71828], precision=2).numpy()
+     *  array(&#91;b'3.14', b'2.72'], dtype=object)
+     *
+     * @param input
+     * @param options carries optional attributes values
+     * @return a new instance of AsString
+     * @see org.tensorflow.op.DtypesOps.asString
+     * @param precision The post-decimal precision to use for floating point numbers.
+     *  Only used if precision > -1.
+     * @param scientific Use scientific notation for floating point numbers.
+     * @param shortest Use shortest representation (either scientific or standard) for
+     *  floating point numbers.
+     * @param width Pad pre-decimal numbers to this width.
+     *  Applies to both floating point and integer numbers.
+     *  Only used if width > -1.
+     * @param fill The value to pad if width > -1.  If empty, pads with spaces.
+     *  Another typical value is '0'.  String cannot be longer than 1 character.
+     */
     public fun <T : TType> asString(
         input: Operand<T>,
         precision: Long? = null,
@@ -62,6 +94,17 @@ public class DtypesOps(
         ).toTypedArray()
     )
 
+    /**
+     * Cast x of type SrcT to y of DstT.
+     *
+     * @param U data type for ` y()` output
+     * @param x
+     * @param DstT
+     * @param options carries optional attributes values
+     * @return a new instance of Cast
+     * @see org.tensorflow.op.DtypesOps.cast
+     * @param Truncate @param Truncate
+     */
     public fun <U : TType, T : TType> cast(
         x: Operand<T>,
         DstT: DataType<U>,
@@ -74,6 +117,31 @@ public class DtypesOps(
         ).toTypedArray()
     )
 
+    /**
+     * Converts two real numbers to a complex number.
+     *
+     *  Given a tensor `real` representing the real part of a complex number, and a
+     *  tensor `imag` representing the imaginary part of a complex number, this
+     *  operation returns complex numbers elementwise of the form \\(a + bj\\), where
+     *  <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
+     *
+     *  The input tensors `real` and `imag` must have the same shape.
+     *
+     *  For example:
+     *  ```
+     *  # tensor 'real' is [2.25, 3.25]
+     *  # tensor `imag` is [4.75, 5.75]
+     *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
+     *  ```
+     *
+     *
+     * @param U data type for ` out()` output
+     * @param real
+     * @param imag
+     * @param Tout
+     * @return a new instance of Complex
+     * @see org.tensorflow.op.DtypesOps.complex
+     */
     public fun <U : TType, T : TNumber> complex(
         real: Operand<T>,
         imag: Operand<T>,

@@ -26,23 +26,39 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 
 /**
- * An API for building {@code data.experimental} operations as {@link org.tensorflow.op.Op Op}s
+ * An API for building `data.experimental` operations as [Op][org.tensorflow.op.Op]s
  *
- * @see {@link org.tensorflow.op.Ops}
+ * @see org.tensorflow.op.Ops
  */
 public class DataExperimentalOps(
     /**
-     * Get the parent {@link KotlinOps} object.
+     * Get the parent [KotlinOps] object.
      */
     public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.DataExperimentalOps = ops.java.data.experimental
 
     /**
-     * Returns the current {@link Scope scope} of this API
+     * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
 
+    /**
+     *
+     * @param datasetId
+     * @param processingMode
+     * @param address
+     * @param protocol
+     * @param jobName
+     * @param maxOutstandingRequests
+     * @param iterationCounter
+     * @param outputTypes
+     * @param outputShapes
+     * @param options carries optional attributes values
+     * @return a new instance of DataServiceDataset
+     * @see org.tensorflow.op.DataExperimentalOps.dataServiceDataset
+     * @param taskRefreshIntervalHintMs @param taskRefreshIntervalHintMs
+     */
     public fun dataServiceDataset(
         datasetId: Operand<TInt64>,
         processingMode: Operand<TString>,

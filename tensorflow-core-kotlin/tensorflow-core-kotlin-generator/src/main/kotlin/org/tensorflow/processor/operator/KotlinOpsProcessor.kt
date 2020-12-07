@@ -70,14 +70,16 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
 
     private val OpsSpec.parents: List<OpsSpec> get() = this.parent?.let { listOf(it) + it.parents }.orEmpty()
 
-    fun adjustSingleType(type: TypeName, isVararg: Boolean): TypeName {
+    /**
+     * @see adjustType
+     */
+    private fun adjustSingleType(type: TypeName, isVararg: Boolean): TypeName {
         if (type == T_OPERAND)
             return T_OPERAND.parameterizedBy(STAR)
 
         if (type is ParameterizedTypeName && !isVararg) {
             if (type.rawType == ARRAY) {
-                val elementType = type.typeArguments.single()
-                when (elementType) {
+                when (type.typeArguments.single()) {
                     BOOLEAN -> return BOOLEAN_ARRAY
                     BYTE -> return BYTE_ARRAY
                     SHORT -> return SHORT_ARRAY
@@ -95,7 +97,12 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         return type
     }
 
-    fun adjustType(type: TypeName, isVararg: Boolean = false): TypeName {
+    /**
+     * Adjust types to their Kotlin counterparts.
+     * Currently only changes Operand to Operand<*> and primitive arrays to their Kotlin counterparts.
+     * Changes should be made to [adjustSingleType], this is a helper for parameterized types.
+     */
+    private fun adjustType(type: TypeName, isVararg: Boolean = false): TypeName {
         val adjusted = adjustSingleType(type, isVararg)
         if (adjusted is ParameterizedTypeName) {
             val newArgs = adjusted.typeArguments.map { adjustType(it) }
@@ -104,7 +111,41 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         return adjusted
     }
 
-    private fun OpMethod.toKotlin(): FunSpec {
+    private fun adjustJavadocLine(line: String): String {
+        var line = line
+        if(line.startsWith("@param")){
+            line = line.replace("```", "`") // https://youtrack.jetbrains.com/issue/KT-43787
+
+            val parts = line.split(" ").toMutableList()
+            if(parts[1].startsWith("<") && parts[1].endsWith(">")){
+                parts[1] = parts[1].substring(1, parts[1].length - 1)
+            }
+            line = parts.joinToString(" ")
+        }
+        return line
+    }
+
+    private fun adjustJavadoc(text: String): String {
+        return text
+            .replace("[", "&#91;")
+            .replace("<p>", "")
+            .replace("\\{@link([^@]+)\\}".toRegex()) {
+                "[${it.groupValues[1]}]"
+            }
+            .replace("\\{@code([^@]+)\\}".toRegex()) {
+                val code = it.groupValues[1].replace("&#91;", "[")
+                if ("\n" in code)
+                    "```$code```\n"
+                else
+                    "```$code```"
+            }
+            .replace("<pre>", "")
+            .replace("</pre>", "")
+            .split("\n")
+            .joinToString("\n") { adjustJavadocLine(it) }
+    }
+
+    private fun OpMethod.toKotlin(javaOpsClass: ClassName): FunSpec {
         val builder = FunSpec.builder(name)
             .returns(adjustType(endpointMethod.returnType.asTypeName()))
 
@@ -128,20 +169,14 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
 
         builder.addParameters(
             parameters.filter { it != optionsParameter }.map {
-                it
-                    .run {
-                        if (name in typeParamNames)
-                            this.toBuilder(name + "_").build()
-                        else
-                            this
-                    }.run {
-                        if (endpointMethod.isVarArgs && "Array<" in type.toString())
-                            toBuilder(type = (type as ParameterizedTypeName).typeArguments.single()).addModifiers(KModifier.VARARG).build()
-                        else
-                            this
-                    }.run {
-                        toBuilder(type = adjustType(type, KModifier.VARARG in modifiers)).build()
-                    }
+                var param = it
+                if (param.name in typeParamNames)
+                    param = param.toBuilder(param.name + "_").build()
+
+                if(endpointMethod.isVarArgs && "Array<" in param.type.toString())
+                    param = param.toBuilder(type = (param.type as ParameterizedTypeName).typeArguments.single()).addModifiers(KModifier.VARARG).build()
+
+                param.toBuilder(type = adjustType(param.type, KModifier.VARARG in param.modifiers)).build()
             })
 
         val optionsClass = if (optionsParameter != null) {
@@ -161,6 +196,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         val optionParams = if (optionsClass != null)
             ElementFilter.methodsIn(optionsClass.enclosedElements).map {
                 ParameterSpec.builder(it.simpleName.toString(), it.parameters.single().asType().asTypeName().copy(nullable = true))
+                    .addKdoc("%L", adjustJavadoc(parseJavadoc(it).toText()).trim().removePrefix("@param ${it.simpleName} "))
                     .defaultValue("null").build()
             }.toSet()
         else
@@ -205,7 +241,11 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
             }
         )
 
-        //TODO Javadocs/KDocs
+        val javadoc = buildOpMethodJavadoc(opClass, endpointMethod, describeByClass)
+        javadoc.addBlockTag("see", "${javaOpsClass.canonicalName}.$name")
+
+
+        builder.addKdoc("%L", adjustJavadoc(javadoc.toText()))
 
         return builder.build()
     }
@@ -215,9 +255,9 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         val builder = TypeSpec.classBuilder(spec.className.kotlin)
             .addKdoc(
                 """
-        An API for building {@code %L} operations as {@link %T Op}s
+        An API for building `%L` operations as [Op][%T]s
         
-        @see {@link %T}
+        @see %T
         
         """.trimIndent(),
                 spec.groupName,
@@ -228,7 +268,6 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         builder.primaryConstructor(
             FunSpec.constructorBuilder()
                 .addParameter("ops", T_KOTLIN_OPS)
-//            .addStatement("this.ops = ops")
                 .build()
         )
 
@@ -243,21 +282,20 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         builder.addProperty(
             PropertySpec.builder("ops", T_KOTLIN_OPS)
                 .initializer("ops")
-                .addKdoc("Get the parent {@link " + T_KOTLIN_OPS.simpleName + "} object.")
-//                .setter(FunSpec.setterBuilder().addModifiers(KModifier.PRIVATE).build())
+                .addKdoc("Get the parent [" + T_KOTLIN_OPS.simpleName + "] object.")
                 .build()
         )
 
         builder.addProperty(
             PropertySpec.builder("scope", T_SCOPE.kotlin)
                 .initializer("ops.scope")
-                .addKdoc("Returns the current {@link %T scope} of this API\n", T_SCOPE.kotlin)
+                .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
                 .build()
         )
 
         addGroupFields(builder, spec.subGroups, false)
 
-        builder.addFunctions(spec.methods.map { it.toKotlin() })
+        builder.addFunctions(spec.methods.map { it.toKotlin(spec.className.kotlin) })
 
         return builder.build()
     }
@@ -266,9 +304,9 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         val builder = TypeSpec.classBuilder(T_KOTLIN_OPS)
             .addKdoc(
                 """
-        An API for building operations as {@link %T Op}s
+        An API for building operations as [Op][%T]s
         
-        @see {@link %T}
+        @see %T
         
         """.trimIndent(),
                 T_OP.kotlin,
@@ -283,33 +321,33 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         builder.addProperty(
             PropertySpec.builder("java", T_OPS.kotlin)
                 .initializer("java")
-                .addKdoc("Returns the java counterpart of this API\n", T_SCOPE.kotlin)
+                .addKdoc("Returns the java counterpart of this API\n")
                 .build()
         )
         builder.addProperty(
             PropertySpec.builder("scope", T_SCOPE.kotlin)
                 .initializer("java.scope()")
-                .addKdoc("Returns the current {@link %T scope} of this API\n", T_SCOPE.kotlin)
+                .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
                 .build()
         )
 
         builder.addProperty(
             PropertySpec.builder("ops", T_KOTLIN_OPS)
                 .initializer("this")
-                .addKdoc("Get the {@link " + T_OPS.simpleName() + "} object.")
+                .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
                 .build()
         )
 
         builder.addProperty(
             PropertySpec.builder("tf", T_KOTLIN_OPS)
                 .initializer("this")
-                .addKdoc("Get the {@link " + T_OPS.simpleName() + "} object.")
+                .addKdoc("Get the [ " + T_KOTLIN_OPS.simpleName + "] object.")
                 .build()
         )
 
         addGroupFields(builder, spec.subGroups, true)
 
-        builder.addFunctions(spec.methods.map { it.toKotlin() })
+        builder.addFunctions(spec.methods.map { it.toKotlin(T_OPS.kotlin) })
 
 
         return builder.build()

@@ -374,7 +374,7 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(endpointMethod.getReturnType()))
             .varargs(endpointMethod.isVarArgs())
-            .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass));
+            .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
 
     if (deprecated) {
       builder.addAnnotation(Deprecated.class);
@@ -409,11 +409,11 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     return new OpMethod(methodName, opClass, endpointMethod, describeByClass, deprecated, builder.build());
   }
 
-  protected String buildOpMethodJavadoc(
+  protected Javadoc buildOpMethodJavadoc(
       TypeElement opClass, ExecutableElement endpointMethod, boolean copyClassDescription) {
     Javadoc methodJavadoc = parseJavadoc(endpointMethod);
     if (!copyClassDescription) {
-      return methodJavadoc.toText();
+      return methodJavadoc;
     }
     Javadoc classJavadoc = parseJavadoc(opClass);
     // Copy all endpoint method tags to the description, except for the `scope` parameter which
@@ -423,7 +423,7 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
         classJavadoc.addBlockTag(t);
       }
     });
-    return classJavadoc.toText();
+    return classJavadoc;
   }
 
   protected static Collection<OpsSpec> collectGroupOps(OpsSpec ops, Multimap<String, OpMethod> groupedMethods) {
