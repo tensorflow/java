@@ -125,6 +125,7 @@ import org.tensorflow.op.core.MutexLock
 import org.tensorflow.op.core.NextIteration
 import org.tensorflow.op.core.NoOp
 import org.tensorflow.op.core.OneHot
+import org.tensorflow.op.core.Ones
 import org.tensorflow.op.core.OnesLike
 import org.tensorflow.op.core.OrderedMapClear
 import org.tensorflow.op.core.OrderedMapIncompleteSize
@@ -4283,6 +4284,23 @@ public class KotlinOps(
             axis?.let { org.tensorflow.op.core.OneHot.axis(it) }
         ).toTypedArray()
     )
+
+    /**
+     * Creates a one valued tensor given its type and shape.
+     *
+     * @param scope is a scope used to add the underlying operation
+     * @param dims a 1-D operand that represents the shape of the output tensor
+     * @param type the output tensor datatype. Can not be TString.
+     * @return a constant tensor initialized with ones
+     * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with
+     * ones.
+     * @see org.tensorflow.op.Ops.ones
+     */
+    public fun <T : TType, U : TNumber> ones(dims: Operand<U>, type: DataType<T>): Ones<T> =
+        java.ones<T, U>(
+            dims,
+            type
+        )
 
     /**
      * Returns a tensor of ones with the same shape and type as x.
