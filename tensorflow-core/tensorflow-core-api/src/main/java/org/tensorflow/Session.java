@@ -159,7 +159,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, Tensor t) {
-      return feed(parseOutput(operation), t);
+      return feed(graph.getOutput(operation), t);
     }
 
     /**
@@ -174,11 +174,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, int index, Tensor t) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        inputs.add(op.output(index));
-        inputTensors.add(t);
-      }
+      Operation op = graph.operationOrError(operation);
+      inputs.add(op.output(index));
+      inputTensors.add(t);
       return this;
     }
 
@@ -208,7 +206,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(String operation) {
-      return fetch(parseOutput(operation));
+      return fetch(graph.getOutput(operation));
     }
 
     /**
@@ -221,10 +219,8 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(String operation, int index) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        outputs.add(op.output(index));
-      }
+      Operation op = graph.operationOrError(operation);
+      outputs.add(op.output(index));
       return this;
     }
 
@@ -257,10 +253,8 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner addTarget(String operation) {
-      GraphOperation op = operationByName(operation);
-      if (op != null) {
-        targets.add(op);
-      }
+      GraphOperation op = graph.operationOrError(operation);
+      targets.add(op);
       return this;
     }
 
@@ -427,33 +421,10 @@ public final class Session implements AutoCloseable {
       }
     }
 
-    private GraphOperation operationByName(String opName) {
-      GraphOperation op = graph.operation(opName);
-      if (op == null) {
-        throw new IllegalArgumentException("No Operation named [" + opName + "] in the Graph");
-      }
-      return op;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Output<?> parseOutput(String opName) {
-      int colon = opName.lastIndexOf(':');
-      if (colon == -1 || colon == opName.length() - 1) {
-        return new Output(operationByName(opName), 0);
-      }
-      try {
-        String op = opName.substring(0, colon);
-        int index = Integer.parseInt(opName.substring(colon + 1));
-        return new Output(operationByName(op), index);
-      } catch (NumberFormatException e) {
-        return new Output(operationByName(opName), 0);
-      }
-    }
-
-    private final ArrayList<Output<?>> inputs = new ArrayList<>();
-    private final ArrayList<Tensor> inputTensors = new ArrayList<>();
-    private final ArrayList<Output<?>> outputs = new ArrayList<>();
-    private final ArrayList<GraphOperation> targets = new ArrayList<>();
+    private ArrayList<Output<?>> inputs = new ArrayList<>();
+    private ArrayList<Tensor> inputTensors = new ArrayList<>();
+    private ArrayList<Output<?>> outputs = new ArrayList<>();
+    private ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
   }
 

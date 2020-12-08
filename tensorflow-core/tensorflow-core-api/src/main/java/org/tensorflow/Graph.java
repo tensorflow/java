@@ -126,6 +126,66 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+
+  /**
+   * Returns the operation (node in the Graph) with the provided name.
+   *
+   * <p>Or throws an {@code IllegalArgumentException} if no such operation exists in the Graph.
+   *
+   * @param name name of the operation to look for
+   * @return operation in the graph with this name
+   * @see #operation(String)
+   */
+  public GraphOperation operationOrError(String name) {
+    GraphOperation op = operation(name);
+    if (op == null) {
+      throw new IllegalArgumentException("No Operation named [" + name + "] in the Graph");
+    }
+    return op;
+  }
+
+  /**
+   * Returns the {@code index}-th output of {@code operation}.
+   * Throws {@code IllegalArgumentException} if the operation is not found, or does not have an output at {@code index}.
+   *
+   * @param operation The operation to get the output of.
+   * @param index The index of the output to get.
+   * @return The {@code index}-th output of {@code operation}.
+   */
+  public Output<?> getOutput(String operation, int index){
+    GraphOperation graphOp = operationOrError(operation);
+    if(index < 0 || index >= graphOp.numOutputs()){
+      throw new IllegalArgumentException("Index out of bounds for operation " + operation +
+          ".  Operation has " + graphOp.numOutputs() + " outputs");
+    }
+
+    return graphOp.output(index);
+  }
+
+  /**
+   * Returns the output specified by {@code output}.
+   * Will try to parse the output index from {@code output}.
+   * I.e. {@code "scope/op:2"} will get the 2nd (0-indexed) output of {@code scope/op}.
+   * Otherwise, will return the 0th output.
+   *
+   * @param output The operation to get the output of, with the index optionally specified by colon.
+   * @return The output specified by {@code output}.
+   */
+  @SuppressWarnings("rawtypes")
+  public Output<?> getOutput(String output) {
+    int colon = output.lastIndexOf(':');
+    if (colon == -1 || colon == output.length() - 1) {
+      return new Output(operationOrError(output), 0);
+    }
+    try {
+      String op = output.substring(0, colon);
+      int index = Integer.parseInt(output.substring(colon + 1));
+      return new Output(operationOrError(op), index);
+    } catch (NumberFormatException e) {
+      return new Output(operationOrError(output), 0);
+    }
+  }
+
   /**
    * Iterator over all the {@link Operation}s in the graph.
    *
