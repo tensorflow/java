@@ -212,6 +212,7 @@ public final class Session implements AutoCloseable {
      *     the {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
      * @return this session runner
+     * @see Graph#getOutput(String, int)
      */
     public Runner fetch(String operation) {
       return fetch(graph.getOutput(operation));
@@ -225,6 +226,7 @@ public final class Session implements AutoCloseable {
      *
      * @param operation the string name of the operation
      * @return this session runner
+     * @see Graph#getOutput(String, int)
      */
     public Runner fetch(String operation, int index) {
       Operation op = graph.operationOrError(operation);
@@ -310,12 +312,17 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
+    /**
+     * The result of a run in a session.  Contains the fetched tensors and the outputs that were fetched.
+     * <p>
+     * Closing a {@code Result} object will close all of the tensors contained by it.
+     */
     public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
       private final List<Tensor<?>> results;
       private final List<Output<?>> fetches;
       private final LinkedHashMap<Output<?>, Integer> indexMap;
 
-      public Result(List<Tensor<?>> results, List<Output<?>> fetches) {
+      private Result(List<Tensor<?>> results, List<Output<?>> fetches) {
         this.results = new ArrayList<>(results);
         this.fetches = new ArrayList<>(fetches);
         indexMap = new LinkedHashMap<>();
@@ -377,9 +384,12 @@ public final class Session implements AutoCloseable {
         return get(graph.getOutput(output));
       }
 
+      /**
+       * Close all of the tensors contained by this {@code Result}.
+       */
       @Override
       public void close() throws Exception {
-        for(Tensor<?> t : results){
+        for(Tensor<?> t : this){
           t.close();
         }
       }
