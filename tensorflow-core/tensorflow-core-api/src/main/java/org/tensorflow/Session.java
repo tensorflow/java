@@ -24,8 +24,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -307,7 +310,7 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
-    public final class Result implements AutoCloseable{
+    public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
       private final List<Tensor<?>> results;
       private final List<Output<?>> fetches;
       private final LinkedHashMap<Output<?>, Integer> indexMap;
@@ -379,6 +382,21 @@ public final class Session implements AutoCloseable {
         for(Tensor<?> t : results){
           t.close();
         }
+      }
+
+      @Override
+      public Iterator<Tensor<?>> iterator() {
+        return results.iterator();
+      }
+
+      @Override
+      public void forEach(Consumer<? super Tensor<?>> action) {
+        results.forEach(action);
+      }
+
+      @Override
+      public Spliterator<Tensor<?>> spliterator() {
+        return results.spliterator();
       }
     }
 
