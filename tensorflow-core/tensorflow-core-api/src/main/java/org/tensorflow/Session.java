@@ -15,7 +15,17 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -33,14 +43,9 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
-
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import org.tensorflow.types.family.TType;
 
 /**
  * Driver for {@link Graph} execution.
@@ -302,11 +307,86 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
+    public final class Result implements AutoCloseable{
+      private final List<Tensor<?>> results;
+      private final List<Output<?>> fetches;
+      private final LinkedHashMap<Output<?>, Integer> indexMap;
+
+      public Result(List<Tensor<?>> results, List<Output<?>> fetches) {
+        this.results = new ArrayList<>(results);
+        this.fetches = new ArrayList<>(fetches);
+        indexMap = new LinkedHashMap<>();
+        for(int i = 0 ; i < fetches.size() ; i++){
+          indexMap.put(fetches.get(i), i);
+        }
+      }
+
+      /**
+       * Get the result tensors.
+       */
+      public List<Tensor<?>> getResults() {
+        return results;
+      }
+
+      /**
+       * Get the outputs that were fetched.
+       */
+      public List<Output<?>> getFetches() {
+        return fetches;
+      }
+
+      /**
+       * Get the result at {@code index}.
+       */
+      public Tensor<?> get(int index){
+        return results.get(index);
+      }
+
+      /**
+       * Get the result for {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+       */
+      @SuppressWarnings("unchecked")
+      public <T extends TType> Tensor<T> get(Output<T> output){
+        if(!indexMap.containsKey(output))
+          throw new IllegalArgumentException("Did not fetch an output for " + output);
+        return (Tensor<T>) results.get(indexMap.get(output));
+      }
+
+      /**
+       * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+       */
+      public <T extends TType> Tensor<T> get(Operand<T> operand){
+        return get(operand.asOutput());
+      }
+
+      /**
+       * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+       */
+      public Tensor<?> get(String operation, int index){
+        return get(graph.getOutput(operation, index));
+      }
+
+
+      /**
+       * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+       */
+      public Tensor<?> get(String output){
+        return get(graph.getOutput(output));
+      }
+
+      @Override
+      public void close() throws Exception {
+        for(Tensor<?> t : results){
+          t.close();
+        }
+      }
+    }
+
     /**
      * Execute the graph fragments necessary to compute all requested fetches.
      *
      * <p><b>WARNING:</b> The caller assumes ownership of all returned {@link Tensor Tensors}, i.e.,
-     * the caller must call {@link Tensor#close} on all elements of the returned list to free up
+     * the caller must call {@link Tensor#close} on all returned tensors or {@link Result#close()} to free up
      * resources.
      *
      * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
@@ -317,10 +397,10 @@ public final class Session implements AutoCloseable {
      * <p>TODO(andrewmyers): It would also be good if whatever is returned here made it easier to
      * extract output tensors in a type-safe way.
      *
-     * @return list of resulting tensors fetched by this session runner
+     * @return a {@link Result} containing tensors fetched by this session runner
      */
-    public List<Tensor> run() {
-      return runHelper(false).outputs;
+    public Result run() {
+      return new Result(runHelper(false).outputs, outputs);
     }
 
     /**
