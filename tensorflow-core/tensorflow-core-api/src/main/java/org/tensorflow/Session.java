@@ -417,14 +417,6 @@ public final class Session implements AutoCloseable {
      * the caller must call {@link Tensor#close} on all returned tensors or {@link Result#close()} to free up
      * resources.
      *
-     * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
-     * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in
-     * SessionTest.java), and (b) Evaluate whether the return value should be a list, or maybe a
-     * {@code Map<Output, Tensor>}?
-     *
-     * <p>TODO(andrewmyers): It would also be good if whatever is returned here made it easier to
-     * extract output tensors in a type-safe way.
-     *
      * @return a {@link Result} containing tensors fetched by this session runner
      */
     public Result run() {
