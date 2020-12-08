@@ -144,6 +144,111 @@ public final class Session implements AutoCloseable {
   }
 
   /**
+   * The result of a run in a session.  Contains the fetched tensors and the outputs that were fetched.
+   * <p>
+   * Closing a {@code Result} object will close all of the tensors contained by it.
+   */
+  public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
+    private final List<Tensor<?>> results;
+    private final List<Output<?>> fetches;
+    private final LinkedHashMap<Output<?>, Integer> indexMap;
+
+    private Result(List<Tensor<?>> results, List<Output<?>> fetches) {
+      this.results = new ArrayList<>(results);
+      this.fetches = new ArrayList<>(fetches);
+      indexMap = new LinkedHashMap<>();
+      for(int i = 0 ; i < fetches.size() ; i++){
+        indexMap.put(fetches.get(i), i);
+      }
+    }
+
+    /**
+     * Get the result tensors.
+     */
+    public List<Tensor<?>> getResults() {
+      return results;
+    }
+
+    /**
+     * Get the outputs that were fetched.
+     */
+    public List<Output<?>> getFetches() {
+      return fetches;
+    }
+
+    /**
+     * Get the result at {@code index}.
+     */
+    public Tensor<?> get(int index){
+      return results.get(index);
+    }
+
+    /**
+     * Get the result for {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends TType> Tensor<T> get(Output<T> output){
+      if(!indexMap.containsKey(output))
+        throw new IllegalArgumentException("Did not fetch an output for " + output);
+      return (Tensor<T>) results.get(indexMap.get(output));
+    }
+
+    /**
+     * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public <T extends TType> Tensor<T> get(Operand<T> operand){
+      return get(operand.asOutput());
+    }
+
+    /**
+     * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public Tensor<?> get(String operation, int index){
+      return get(graph.getOutput(operation, index));
+    }
+
+
+    /**
+     * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public Tensor<?> get(String output){
+      return get(graph.getOutput(output));
+    }
+
+    /**
+     * Close all of the tensors contained by this {@code Result}.
+     */
+    @Override
+    public void close() {
+      for(Tensor<?> t : this){
+        t.close();
+      }
+    }
+
+    @Override
+    public Iterator<Tensor<?>> iterator() {
+      return results.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super Tensor<?>> action) {
+      results.forEach(action);
+    }
+
+    @Override
+    public Spliterator<Tensor<?>> spliterator() {
+      return results.spliterator();
+    }
+
+    /**
+     * Return the number of tensors contained by this Result.
+     */
+    public int size() {
+      return getResults().size();
+    }
+  }
+
+  /**
    * Run {@link Operation}s and evaluate {@link Tensor Tensors}.
    *
    * <p>A Runner runs the necessary graph fragments to execute every {@link Operation} required to
@@ -310,104 +415,6 @@ public final class Session implements AutoCloseable {
     public Runner setOptions(RunOptions options) {
       this.runOptions = options;
       return this;
-    }
-
-    /**
-     * The result of a run in a session.  Contains the fetched tensors and the outputs that were fetched.
-     * <p>
-     * Closing a {@code Result} object will close all of the tensors contained by it.
-     */
-    public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
-      private final List<Tensor<?>> results;
-      private final List<Output<?>> fetches;
-      private final LinkedHashMap<Output<?>, Integer> indexMap;
-
-      private Result(List<Tensor<?>> results, List<Output<?>> fetches) {
-        this.results = new ArrayList<>(results);
-        this.fetches = new ArrayList<>(fetches);
-        indexMap = new LinkedHashMap<>();
-        for(int i = 0 ; i < fetches.size() ; i++){
-          indexMap.put(fetches.get(i), i);
-        }
-      }
-
-      /**
-       * Get the result tensors.
-       */
-      public List<Tensor<?>> getResults() {
-        return results;
-      }
-
-      /**
-       * Get the outputs that were fetched.
-       */
-      public List<Output<?>> getFetches() {
-        return fetches;
-      }
-
-      /**
-       * Get the result at {@code index}.
-       */
-      public Tensor<?> get(int index){
-        return results.get(index);
-      }
-
-      /**
-       * Get the result for {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
-       */
-      @SuppressWarnings("unchecked")
-      public <T extends TType> Tensor<T> get(Output<T> output){
-        if(!indexMap.containsKey(output))
-          throw new IllegalArgumentException("Did not fetch an output for " + output);
-        return (Tensor<T>) results.get(indexMap.get(output));
-      }
-
-      /**
-       * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
-       */
-      public <T extends TType> Tensor<T> get(Operand<T> operand){
-        return get(operand.asOutput());
-      }
-
-      /**
-       * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
-       */
-      public Tensor<?> get(String operation, int index){
-        return get(graph.getOutput(operation, index));
-      }
-
-
-      /**
-       * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
-       */
-      public Tensor<?> get(String output){
-        return get(graph.getOutput(output));
-      }
-
-      /**
-       * Close all of the tensors contained by this {@code Result}.
-       */
-      @Override
-      public void close() throws Exception {
-        for(Tensor<?> t : this){
-          t.close();
-        }
-      }
-
-      @Override
-      public Iterator<Tensor<?>> iterator() {
-        return results.iterator();
-      }
-
-      @Override
-      public void forEach(Consumer<? super Tensor<?>> action) {
-        results.forEach(action);
-      }
-
-      @Override
-      public Spliterator<Tensor<?>> spliterator() {
-        return results.spliterator();
-      }
     }
 
     /**
