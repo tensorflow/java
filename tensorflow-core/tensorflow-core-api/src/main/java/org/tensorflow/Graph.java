@@ -129,8 +129,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /**
    * Returns the operation (node in the Graph) with the provided name.
-   *
-   * <p>Or throws an {@code IllegalArgumentException} if no such operation exists in the Graph.
+   * <p>
+   * Or throws an {@code IllegalArgumentException} if no such operation exists in the Graph.
    *
    * @param name name of the operation to look for
    * @return operation in the graph with this name
