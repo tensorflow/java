@@ -32,7 +32,9 @@ import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.Graph}. */
+/**
+ * Unit tests for {@link org.tensorflow.Graph}.
+ */
 public class GraphTest {
 
   @Test
@@ -146,7 +148,7 @@ public class GraphTest {
       Output<TFloat32> y0 = tf.math.square(x1).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
       Output<TFloat32> y2 = tf.math.addN(Arrays.asList(y0, x2)).sum();
-      
+
       Output<?>[] grads0 = g.addGradients(y1, toArray(x1));
       assertNotNull(grads0);
       assertEquals(1, grads0.length);
@@ -157,18 +159,17 @@ public class GraphTest {
       assertEquals(2, grads1.length);
       assertEquals(DataType.DT_FLOAT, grads1[0].dataType());
       assertEquals(DataType.DT_FLOAT, grads1[1].dataType());
-      
-      try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
-          TFloat32 c2 = TFloat32.scalarOf(2.0f);
-          AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(
-              s.runner()
-                  .feed(x1, c1)
-                  .feed(x2, c2)
-                  .fetch(grads0[0])
-                  .fetch(grads1[0])
-                  .fetch(grads1[1])
-                  .run())) {
-     
+
+      try (Tensor<TFloat32> c1 = TFloat32.scalarOf(3.0f);
+          Tensor<TFloat32> c2 = TFloat32.scalarOf(2.0f);
+          Session.Result outputs = s.runner()
+              .feed(x1, c1)
+              .feed(x2, c2)
+              .fetch(grads0[0])
+              .fetch(grads1[0])
+              .fetch(grads1[1])
+              .run()) {
+
         assertEquals(3, outputs.size());
         assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
         assertEquals(6.0f, ((TFloat32)outputs.get(1)).getFloat(), 0.0f);
@@ -212,7 +213,7 @@ public class GraphTest {
       Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
-      
+
       Output<?>[] grad0 = g.addGradients(y1, toArray(y0));
       assertNotNull(grad0);
       assertEquals(1, grad0.length);
@@ -268,18 +269,18 @@ public class GraphTest {
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<?> input = tf.placeholder(TInt32.class).output();
+      Output<TInt32> input = tf.placeholder(TInt32.class).output();
 
       @SuppressWarnings("unchecked")
       Output<?>[] loopOutputs = g.whileLoop(
           toArray(input),
           (condGraph, condInputs, condOutputs) -> {
             Ops tfc = Ops.create(condGraph);
-            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.constant(16)).z();
+            condOutputs[0] = tfc.math.less((Output<TInt32>) condInputs[0], tfc.constant(16)).z();
           },
           (bodyGraph, bodyInputs, bodyOutputs) -> {
             Ops tfb = Ops.create(bodyGraph);
-            bodyOutputs[0] = tfb.math.square((Output<TInt32>)bodyInputs[0]).y();
+            bodyOutputs[0] = tfb.math.square((Output<TInt32>) bodyInputs[0]).y();
           },
           "test_loop");
 
@@ -300,8 +301,8 @@ public class GraphTest {
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<?> input1 = tf.placeholder(TInt32.class).output();
-      Output<?> input2 = tf.placeholder(TInt32.class).output();
+      Output<TInt32> input1 = tf.placeholder(TInt32.class).output();
+      Output<TInt32> input2 = tf.placeholder(TInt32.class).output();
       Output<?>[] inputs = toArray(input1, input2);
 
       @SuppressWarnings("unchecked")
@@ -309,25 +310,23 @@ public class GraphTest {
           inputs,
           (condGraph, condInputs, condOutputs) -> {
             Ops tfc = Ops.create(condGraph);
-            condOutputs[0] = tfc.math.less((Output<TInt32>)condInputs[0], tfc.constant(16)).z();
+            condOutputs[0] = tfc.math.less((Output<TInt32>) condInputs[0], tfc.constant(16)).z();
           },
           (bodyGraph, bodyInputs, bodyOutputs) -> {
             Ops tfb = Ops.create(bodyGraph);
-            bodyOutputs[0] = tfb.math.square((Output<TInt32>)bodyInputs[0]).y();
-            bodyOutputs[1] = tfb.math.square((Output<TInt32>)bodyInputs[1]).y();
+            bodyOutputs[0] = tfb.math.square((Output<TInt32>) bodyInputs[0]).y();
+            bodyOutputs[1] = tfb.math.square((Output<TInt32>) bodyInputs[1]).y();
           },
           "test_loop");
 
       try (TInt32 c1 = TInt32.scalarOf(2);
           TInt32 c2 = TInt32.scalarOf(5);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(
-                  s.runner()
-                      .feed(input1, c1)
-                      .feed(input2, c2)
-                      .fetch(loopOutputs[0])
-                      .fetch(loopOutputs[1])
-                      .run())) {
+          Session.Result outputs = s.runner()
+                  .feed(input1, c1)
+                  .feed(input2, c2)
+                  .fetch(loopOutputs[0])
+                  .fetch(loopOutputs[1])
+                  .run()) {
         assertEquals(2, outputs.size());
         assertEquals(16, ((TInt32)outputs.get(0)).getInt()); // ((2^2)^2)
         assertEquals(625, ((TInt32)outputs.get(1)).getInt()); // ((5^2)^2)

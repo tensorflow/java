@@ -49,8 +49,7 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       transpose_A_times_X(tf, new int[][] {{2}, {3}});
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
+          Session.Result outputs = s.runner().feed("X", x).fetch("Y").run()) {
         assertEquals(1, outputs.size());
         assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
       }
@@ -66,8 +65,7 @@ public class SessionTest {
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
+          Session.Result outputs = s.runner().feed(feed, x).fetch(fetch).run()) {
         assertEquals(1, outputs.size());
         assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
       }
@@ -131,8 +129,7 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       tf.withName("c1").constant(2718);
       tf.withName("c2").constant(31415);
-      AutoCloseableList<Tensor> outputs =
-          new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
+      Session.Result outputs = s.runner().fetch("c2").fetch("c1").run();
       assertEquals(2, outputs.size());
       assertEquals(31415, ((TInt32)outputs.get(0)).getInt());
       assertEquals(2718, ((TInt32)outputs.get(1)).getInt());
