@@ -56,6 +56,9 @@ import org.tensorflow.proto.framework.DataType;
 final class EagerOperationBuilder implements OperationBuilder {
 
   EagerOperationBuilder(EagerSession session, String type, String name) {
+    if(!session.isOpEnabled(type))
+      throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
+
     this.session = session;
     this.type = type;
     this.name = name;

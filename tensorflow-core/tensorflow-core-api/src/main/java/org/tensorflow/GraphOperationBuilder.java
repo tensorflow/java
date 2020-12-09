@@ -58,6 +58,9 @@ import org.tensorflow.proto.framework.DataType;
 public final class GraphOperationBuilder implements OperationBuilder {
 
   GraphOperationBuilder(Graph graph, String type, String name) {
+    if(!graph.isOpEnabled(type))
+      throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
+
     this.graph = graph;
     Graph.Reference r = graph.ref();
     try {
