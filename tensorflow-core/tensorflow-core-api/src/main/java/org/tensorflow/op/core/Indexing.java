@@ -41,7 +41,7 @@ public class Indexing {
     final long newAxisMask;
     final long shrinkAxisMask;
 
-    public StridedSliceArgs(int[] begin, int[] end, int[] strides, long beginMask, long endMask, long ellipsisMask,
+    private StridedSliceArgs(int[] begin, int[] end, int[] strides, long beginMask, long endMask, long ellipsisMask,
         long newAxisMask, long shrinkAxisMask) {
       this.begin = begin;
       this.end = end;
