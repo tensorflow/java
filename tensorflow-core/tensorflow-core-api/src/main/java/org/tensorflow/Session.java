@@ -154,15 +154,25 @@ public final class Session implements AutoCloseable {
     private final List<Output<?>> fetches;
     private final LinkedHashMap<Output<?>, Tensor<?>> outputMap;
 
+    /**
+     * Metadata about the run.
+     *
+     * <p>A <a
+     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
+     * protocol buffer</a>.
+     */
+    private final RunMetadata metadata;
+
     private boolean closed = false;
 
-    private Result(List<Tensor<?>> results, List<Output<?>> fetches) {
+    private Result(List<Tensor<?>> results, List<Output<?>> fetches, RunMetadata metadata) {
 
       if(results.size() != fetches.size()){
         throw new IllegalArgumentException("Expected the same number of fetches and values, got " + fetches.size()
             + " fetches and " + results.size() + " values.");
       }
 
+      this.metadata = metadata;
       this.results = new ArrayList<>(results);
       this.fetches = new ArrayList<>(fetches);
       outputMap = new LinkedHashMap<>();
@@ -197,6 +207,13 @@ public final class Session implements AutoCloseable {
      */
     public Map<Output<?>, Tensor<?>> getOutputMap(){
       return new LinkedHashMap<>(outputMap);
+    }
+
+    /**
+     * Get the run metadata.  May be null if not requested.
+     */
+    public RunMetadata getMetadata() {
+      return metadata;
     }
 
     /**
@@ -502,7 +519,7 @@ public final class Session implements AutoCloseable {
      * @return a {@link Result} containing tensors fetched by this session runner
      */
     public Result run() {
-      return new Result(runHelper(false).outputs, outputs);
+      return runHelper(false);
     }
 
     /**
@@ -515,11 +532,11 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
-    public Run runAndFetchMetadata() {
+    public Result runAndFetchMetadata() {
       return runHelper(true);
     }
 
-    private Run runHelper(boolean wantMetadata) {
+    private Result runHelper(boolean wantMetadata) {
       TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
       TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
@@ -574,10 +591,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      Run ret = new Run();
-      ret.outputs = outputs;
-      ret.metadata = metadata;
-      return ret;
+      return new Result(outputs, this.outputs, metadata);
     }
 
     private class Reference implements AutoCloseable {

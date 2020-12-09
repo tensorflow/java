@@ -106,21 +106,18 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       transpose_A_times_X(tf, new int[][] {{2}, {3}});
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
-        Session.Run result = s.runner()
+        Session.Result result = s.runner()
                 .feed("X", x)
                 .fetch("Y")
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        List<Tensor> outputs = result.outputs;
-        assertEquals(1, outputs.size());
+        assertEquals(1, result.size());
         assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
         // Sanity check on metadata
-        assertNotNull(result.metadata);
-        assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
-        for(Tensor<?> output : outputs) {
-          output.close();
-        }
+        assertNotNull(result.getMetadata());
+        assertTrue(result.getMetadata().hasStepStats(), result.getMetadata().toString());
+        result.close();
       }
     }
   }
