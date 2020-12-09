@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
@@ -111,13 +112,15 @@ public class SessionTest {
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(result.outputs);
+        List<Tensor> outputs = result.outputs;
         assertEquals(1, outputs.size());
         assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
         // Sanity check on metadata
         assertNotNull(result.metadata);
         assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
-        outputs.close();
+        for(Tensor<?> output : outputs) {
+          output.close();
+        }
       }
     }
   }

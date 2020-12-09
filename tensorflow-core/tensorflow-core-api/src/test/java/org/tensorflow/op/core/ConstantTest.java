@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.tensorflow.AutoCloseableList;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
