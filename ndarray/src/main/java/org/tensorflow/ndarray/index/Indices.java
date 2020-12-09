@@ -40,8 +40,8 @@ public final class Indices {
    * @param coord coordinate of the element on the indexed axis
    * @return index
    */
-  public static Index at(long coord) {
-    return new At(coord);
+  public static TensorIndex at(long coord) {
+    return new At(coord, false);
   }
 
   /**
@@ -54,11 +54,50 @@ public final class Indices {
    * @return index
    * @throws IllegalRankException if {@code coord} is not a scalar (rank 0)
    */
-  public static Index at(NdArray<? extends Number> coord) {
+  public static TensorIndex at(NdArray<? extends Number> coord) {
     if (coord.rank() > 0) {
       throw new IllegalRankException("Only scalars are accepted as a value index");
     }
-    return new At(coord.getObject().longValue());
+    return new At(coord.getObject().longValue(), false);
+  }
+
+  /**
+   * A coordinate that selects a specific element on a given dimension.
+   *
+   * <p>When this index is applied to a given dimension, the dimension is resolved as a
+   * single element and therefore, if {@code keepDim} is false, is excluded from the computation of the rank.
+   * If {@code} keepDim is true, the dimension is collapsed down to one element.
+   *
+   * <p>For example, given a 3D matrix on the axis [x, y, z], if
+   * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its
+   * number of elements is {@code x.numElements()}
+   *
+   * @param coord coordinate of the element on the indexed axis
+   * @param keepDim whether to remove the dimension.
+   * @return index
+   */
+  public static TensorIndex at(long coord, boolean keepDim) {
+    return new At(coord, keepDim);
+  }
+
+  /**
+   * A coordinate that selects a specific element on a given dimension.
+   *
+   * <p>This is equivalent to call {@link #at(long, boolean)} but where the value of the coordinate is
+   * provided by an N-dimensional array.
+   * <p>
+   * If {@code} keepDim is true, the dimension is collapsed down to one element instead of being removed.
+   *
+   * @param coord scalar indicating the coordinate of the element on the indexed axis
+   * @return index
+   * @param keepDim whether to remove the dimension.
+   * @throws IllegalRankException if {@code coord} is not a scalar (rank 0)
+   */
+  public static TensorIndex at(NdArray<? extends Number> coord, boolean keepDim) {
+    if (coord.rank() > 0) {
+      throw new IllegalRankException("Only scalars are accepted as a value index");
+    }
+    return new At(coord.getObject().longValue(), keepDim);
   }
 
   /**
@@ -72,7 +111,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static Index all() {
+  public static TensorIndex all() {
     return All.INSTANCE;
   }
 
@@ -215,5 +254,23 @@ public final class Indices {
    */
   public static Index hyperslab(long start, long stride, long count, long block) {
     return new Hyperslab(start, stride, count, block);
+  }
+
+  //TODO comments, tests, remove extra classes in favor of helper methods
+
+  public static TensorIndex newAxis(){
+    return NewAxis.INSTANCE;
+  }
+
+  public static TensorIndex ellipsis(){
+    return Ellipsis.INSTANCE;
+  }
+
+  public static TensorIndex expand(){
+    return ellipsis();
+  }
+
+  public static TensorIndex slice(Long start, Long end, long stride){
+    return new Slice(start, end, stride);
   }
 }

@@ -18,7 +18,7 @@ package org.tensorflow.ndarray.index;
 
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class At implements Index {
+final class At implements TensorIndex {
 
   @Override
   public long numElements(Dimension dim) {
@@ -27,22 +27,45 @@ final class At implements Index {
 
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
+    long coord = this.coord > 0 ? this.coord : dim.numElements() - this.coord;
     return dim.positionOf(coord); // TODO validate coordinate is 0?
   }
 
   @Override
   public Dimension apply(Dimension dim) {
-    throw new IllegalStateException(); // FIXME?
+    if(keepDim){
+      return dim.withIndex(this);
+    }
+    else {
+      throw new IllegalStateException(); // FIXME?
+    }
   }
 
   @Override
   public boolean isPoint() {
-    return true;
+    return !keepDim;
   }
 
-  At(long coord) {
+  At(long coord, boolean keepDim) {
     this.coord = coord;
+    this.keepDim = keepDim;
   }
 
   private final long coord;
+  private final boolean keepDim;
+
+  @Override
+  public long begin() {
+    return coord;
+  }
+
+  @Override
+  public long end() {
+    return coord + 1;
+  }
+
+  @Override
+  public boolean shrinkAxisMask() {
+    return !keepDim;
+  }
 }

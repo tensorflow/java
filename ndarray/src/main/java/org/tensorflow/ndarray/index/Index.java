@@ -74,4 +74,19 @@ public interface Index {
   default boolean isPoint() {
     return false;
   }
+
+  /**
+   * Returns true if this index is a new axis, adding a dimension of size 1
+   */
+  default boolean isNewAxis() {
+    return false;
+  }
+
+  /**
+   * Returns true if this index is an ellipsis, expanding to take as many dimensions as possible
+   * (and applying all() to them)
+   */
+  default boolean isEllipsis() {
+    return false;
+  }
 }
