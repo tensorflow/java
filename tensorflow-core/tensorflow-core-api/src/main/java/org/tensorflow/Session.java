@@ -284,13 +284,15 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Close all of the tensors contained by this {@code Result}.
+     * Close any open tensors contained by this {@code Result}.
      */
     @Override
     public void close() {
       requireOpen();
       for(Tensor<?> t : this){
-        t.close();
+        if(!t.isClosed()) {
+          t.close();
+        }
       }
       closed = true;
     }
