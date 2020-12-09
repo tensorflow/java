@@ -153,7 +153,15 @@ public final class Session implements AutoCloseable {
     private final List<Output<?>> fetches;
     private final LinkedHashMap<Output<?>, Integer> indexMap;
 
+    private boolean closed = false;
+
     private Result(List<Tensor<?>> results, List<Output<?>> fetches) {
+
+      if(results.size() != fetches.size()){
+        throw new IllegalArgumentException("Expected the same number of fetches and values, got " + fetches.size()
+            + " fetches and " + results.size() + " values.");
+      }
+
       this.results = new ArrayList<>(results);
       this.fetches = new ArrayList<>(fetches);
       indexMap = new LinkedHashMap<>();
@@ -162,10 +170,17 @@ public final class Session implements AutoCloseable {
       }
     }
 
+    private void requireOpen(){
+      if(closed) {
+        throw new IllegalStateException("Result has been closed, can not access it.");
+      }
+    }
+
     /**
      * Get the result tensors.
      */
     public List<Tensor<?>> getResults() {
+      requireOpen();
       return results;
     }
 
@@ -177,9 +192,17 @@ public final class Session implements AutoCloseable {
     }
 
     /**
+     * @return Whether the result has been closed.
+     */
+    public boolean isClosed() {
+      return closed;
+    }
+
+    /**
      * Get the result at {@code index}.
      */
     public Tensor<?> get(int index){
+      requireOpen();
       return results.get(index);
     }
 
@@ -188,6 +211,7 @@ public final class Session implements AutoCloseable {
      */
     @SuppressWarnings("unchecked")
     public <T extends TType> Tensor<T> get(Output<T> output){
+      requireOpen();
       if(!indexMap.containsKey(output))
         throw new IllegalArgumentException("Did not fetch an output for " + output);
       return (Tensor<T>) results.get(indexMap.get(output));
@@ -197,6 +221,7 @@ public final class Session implements AutoCloseable {
      * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
     public <T extends TType> Tensor<T> get(Operand<T> operand){
+      requireOpen();
       return get(operand.asOutput());
     }
 
@@ -204,6 +229,7 @@ public final class Session implements AutoCloseable {
      * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
     public Tensor<?> get(String operation, int index){
+      requireOpen();
       return get(graph.getOutput(operation, index));
     }
 
@@ -212,6 +238,7 @@ public final class Session implements AutoCloseable {
      * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
     public Tensor<?> get(String output){
+      requireOpen();
       return get(graph.getOutput(output));
     }
 
@@ -220,23 +247,28 @@ public final class Session implements AutoCloseable {
      */
     @Override
     public void close() {
+      requireOpen();
       for(Tensor<?> t : this){
         t.close();
       }
+      closed = true;
     }
 
     @Override
     public Iterator<Tensor<?>> iterator() {
+      requireOpen();
       return results.iterator();
     }
 
     @Override
     public void forEach(Consumer<? super Tensor<?>> action) {
+      requireOpen();
       results.forEach(action);
     }
 
     @Override
     public Spliterator<Tensor<?>> spliterator() {
+      requireOpen();
       return results.spliterator();
     }
 
