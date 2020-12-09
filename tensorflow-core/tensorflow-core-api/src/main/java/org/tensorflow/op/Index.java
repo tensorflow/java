@@ -184,8 +184,8 @@ public abstract class Index {
           false,
           false);
 
-      if(stride < 1){
-        throw new IllegalArgumentException("Can not have a stride < 1");
+      if(stride != 0){
+        throw new IllegalArgumentException("Can not have a stride of 0");
       }
     }
   }
