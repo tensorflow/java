@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import org.bytedeco.javacpp.BytePointer;
@@ -151,7 +152,7 @@ public final class Session implements AutoCloseable {
   public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
     private final List<Tensor<?>> results;
     private final List<Output<?>> fetches;
-    private final LinkedHashMap<Output<?>, Integer> indexMap;
+    private final LinkedHashMap<Output<?>, Tensor<?>> outputMap;
 
     private boolean closed = false;
 
@@ -164,9 +165,9 @@ public final class Session implements AutoCloseable {
 
       this.results = new ArrayList<>(results);
       this.fetches = new ArrayList<>(fetches);
-      indexMap = new LinkedHashMap<>();
+      outputMap = new LinkedHashMap<>();
       for(int i = 0 ; i < fetches.size() ; i++){
-        indexMap.put(fetches.get(i), i);
+        outputMap.put(fetches.get(i), results.get(i));
       }
     }
 
@@ -181,14 +182,21 @@ public final class Session implements AutoCloseable {
      */
     public List<Tensor<?>> getResults() {
       requireOpen();
-      return results;
+      return new ArrayList<>(results);
     }
 
     /**
      * Get the outputs that were fetched.
      */
     public List<Output<?>> getFetches() {
-      return fetches;
+      return new ArrayList<>(fetches);
+    }
+
+    /**
+     * Get a map of the fetched outputs to their results.
+     */
+    public Map<Output<?>, Tensor<?>> getOutputMap(){
+      return new LinkedHashMap<>(outputMap);
     }
 
     /**
@@ -212,9 +220,9 @@ public final class Session implements AutoCloseable {
     @SuppressWarnings("unchecked")
     public <T extends TType> Tensor<T> get(Output<T> output){
       requireOpen();
-      if(!indexMap.containsKey(output))
+      if(!outputMap.containsKey(output))
         throw new IllegalArgumentException("Did not fetch an output for " + output);
-      return (Tensor<T>) results.get(indexMap.get(output));
+      return (Tensor<T>) outputMap.get(output);
     }
 
     /**
@@ -240,6 +248,39 @@ public final class Session implements AutoCloseable {
     public Tensor<?> get(String output){
       requireOpen();
       return get(graph.getOutput(output));
+    }
+
+    /**
+     * Returns {@code true} if {@code output} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(Output<?> output){
+      requireOpen();
+      return outputMap.containsKey(output);
+    }
+
+    /**
+     * Returns {@code true} if  {@code operand} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(Operand<?> operand){
+      requireOpen();
+      return contains(operand.asOutput());
+    }
+
+    /**
+     * Returns {@code true} if the {@code index}-th output of {@code operation} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(String operation, int index){
+      requireOpen();
+      return contains(graph.getOutput(operation, index));
+    }
+
+
+    /**
+     * Returns {@code true} the output specified by {@code output} was fetched as part of this {@code Result}
+     */
+    public boolean contains(String output){
+      requireOpen();
+      return contains(graph.getOutput(output));
     }
 
     /**
