@@ -24,8 +24,8 @@ import org.tensorflow.ndarray.Shaped
  *
  * Throws [IllegalStateException] on failure.
  */
-public fun <T: Shaped> T.requireShape(shape: Shape): T = apply{
-    check(this.shape().isCompatibleWith(shape)){
+public fun <T : Shaped> T.requireShape(shape: Shape): T = apply {
+    check(this.shape().isCompatibleWith(shape)) {
         "Shape ${this.shape()} is not compatible with the required shape $shape"
     }
 }
@@ -35,8 +35,8 @@ public fun <T: Shaped> T.requireShape(shape: Shape): T = apply{
  *
  * Throws [IllegalStateException] on failure.
  */
-public fun <T: Shaped> T.requireShape(vararg shape: Long): T = apply{
-    check(this.shape().isCompatibleWith(Shape.of(*shape))){
+public fun <T : Shaped> T.requireShape(vararg shape: Long): T = apply {
+    check(this.shape().isCompatibleWith(Shape.of(*shape))) {
         "Shape ${this.shape()} is not compatible with the required shape $shape"
     }
 }
