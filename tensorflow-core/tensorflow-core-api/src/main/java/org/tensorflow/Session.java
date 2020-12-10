@@ -24,6 +24,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -173,8 +174,8 @@ public final class Session implements AutoCloseable {
       }
 
       this.metadata = metadata;
-      this.results = new ArrayList<>(results);
-      this.fetches = new ArrayList<>(fetches);
+      this.results = results;
+      this.fetches = fetches;
       outputMap = new LinkedHashMap<>();
       for(int i = 0 ; i < fetches.size() ; i++){
         outputMap.put(fetches.get(i), results.get(i));
@@ -192,21 +193,21 @@ public final class Session implements AutoCloseable {
      */
     public List<Tensor<?>> getResults() {
       requireOpen();
-      return new ArrayList<>(results);
+      return Collections.unmodifiableList(results);
     }
 
     /**
      * Get the outputs that were fetched.
      */
     public List<Output<?>> getFetches() {
-      return new ArrayList<>(fetches);
+      return Collections.unmodifiableList(fetches);
     }
 
     /**
      * Get a map of the fetched outputs to their results.
      */
     public Map<Output<?>, Tensor<?>> getOutputMap(){
-      return new LinkedHashMap<>(outputMap);
+      return Collections.unmodifiableMap(outputMap);
     }
 
     /**
@@ -591,7 +592,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      return new Result(outputs, this.outputs, metadata);
+      return new Result(outputs, new ArrayList<>(this.outputs), metadata);
     }
 
     private class Reference implements AutoCloseable {
