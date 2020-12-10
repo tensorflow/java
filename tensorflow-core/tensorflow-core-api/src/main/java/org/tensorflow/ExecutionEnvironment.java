@@ -16,10 +16,9 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
-
-/**
- * Defines an environment for creating and executing TensorFlow {@link Operation}s.
- */
+import java.util.Map;
+import org.tensorflow.variable.Variable;
+/** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
 public interface ExecutionEnvironment {
 
   enum Types {
@@ -63,6 +62,15 @@ public interface ExecutionEnvironment {
    * @return An `Environments` value indicating the type of execution environment.
    */
   Types environmentType();
+
+  Map<String, Variable<?>> variables();
+
+  /**
+   * Registers a variable with this execution environment.
+   * @deprecated Done automatically in Variable's constructor, should only be used internally.
+   */
+  @Deprecated
+  void registerVariable(Variable<?> variable);
 
   default boolean isEager() {
     return environmentType() == Types.EAGER;

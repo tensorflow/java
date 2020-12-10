@@ -21,6 +21,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptions
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteContext;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewContext;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -33,6 +36,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.variable.Variable;
 
 /**
  * An environment for executing TensorFlow operations eagerly.
@@ -355,6 +359,18 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     for (Pointer r : resources) {
       nativeResources.detach(r);
     }
+  }
+
+  private final Map<String, Variable<?>> variables = new LinkedHashMap<>();
+
+  @Override
+  public void registerVariable(Variable<?> variable) {
+    variables.put(variable.getName(), variable);
+  }
+
+  @Override
+  public Map<String, Variable<?>> variables() {
+    return Collections.unmodifiableMap(variables);
   }
 
   private static volatile EagerSession defaultSession = null;

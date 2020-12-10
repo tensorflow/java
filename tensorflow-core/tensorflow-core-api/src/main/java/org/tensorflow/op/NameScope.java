@@ -45,7 +45,9 @@ final class NameScope {
   }
 
   NameScope withName(String name) {
-    checkPattern(NAME_REGEX, name);
+    if(name != null) {
+      checkPattern(NAME_REGEX, name);
+    }
     // All context except for the opName is shared with the new scope.
     return new NameScope(opPrefix, name, ids);
   }
