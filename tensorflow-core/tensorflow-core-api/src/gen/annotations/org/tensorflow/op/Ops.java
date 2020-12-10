@@ -395,14 +395,33 @@ public final class Ops {
   }
 
   /**
-   * empty
+   * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
+   *  support for assignment and initialization that works in both eager and graph modes.
+   *  <p>
+   *  Initializes the variable with the provided value, and uses it to determin the variables shape and data type.
+   *  <p>
+   *  The name can be set using {@link org.tensorflow.op.Ops#withName(String)} just like any other op.
+   *
+   * @param scope
+   * @param initialValue the initial value of the variable.
+   * @return a new {@link Variable} instance.
+   * @see Variable
    */
   public <T extends TType> Variable<T> Variable(Operand<T> initialValue) {
     return Variable.create(scope, initialValue);
   }
 
   /**
-   * empty
+   * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
+   *  support for assignment and initialization that works in both eager and graph modes.
+   *  <p>
+   *  The name can be set using {@link org.tensorflow.op.Ops#withName(String)} just like any other op.
+   *
+   * @param scope
+   * @param shape the static shape of the variable.
+   * @param dataType the data type of the variable.
+   * @return a new {@link Variable} instance.
+   * @see Variable
    */
   public <T extends TType> Variable<T> Variable(Shape shape, DataType<T> dataType) {
     return Variable.create(scope, shape, dataType);

@@ -16,6 +16,7 @@
  */
 package org.tensorflow.variable;
 
+import java.util.Collections;
 import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
@@ -27,7 +28,7 @@ import org.tensorflow.types.family.TType;
 class GraphVariable<T extends TType> extends Variable<T> {
 
   private final org.tensorflow.op.core.Variable<T> variable;
-  private Operand<T> get;
+  private Operand<T> get = null;
 
   GraphVariable(Scope scope, Shape shape, DataType<T> dataType) {
     super(scope, shape, dataType);
@@ -51,6 +52,10 @@ class GraphVariable<T extends TType> extends Variable<T> {
 
   @Override
   protected void doAssign(Scope scope, Operand<T> value) {
+    if(get != null){
+      scope = scope.withControlDependencies(Collections.singletonList(get));
+    }
+
     get = Assign.create(scope, variable, value);
   }
 }
