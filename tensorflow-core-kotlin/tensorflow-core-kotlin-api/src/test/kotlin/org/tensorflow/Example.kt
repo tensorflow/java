@@ -52,7 +52,7 @@ public class Example {
                 DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
             }
 
-            withSession {
+            useSession {
                 val outputValue = it.run(fetches = listOf(output))[output]
                 println(outputValue.data())
             }

@@ -38,7 +38,7 @@ public inline fun <R> Graph(block: Graph.() -> R): R {
  * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
  *     protocol buffer.
  */
-public inline fun <R> Graph.withSession(config: ConfigProto? = null, block: (Session) -> R): R {
+public inline fun <R> Graph.useSession(config: ConfigProto? = null, block: (Session) -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return Session(this, config).use(block)
 }
