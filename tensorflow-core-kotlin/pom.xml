@@ -45,6 +45,8 @@
 
   <properties>
     <kotlin.version>1.4.20</kotlin.version>
+    <kotlin.jvmTarget>1.8</kotlin.jvmTarget>
+
     <native.classifier>${javacpp.platform}${javacpp.platform.extension}</native.classifier>
     <javacpp.platform.extension></javacpp.platform.extension>
     <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>

@@ -127,6 +127,7 @@
             <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
             <arg>-Xexplicit-api=strict</arg>
           </args>
+          <jvmTarget>${kotlin.jvmTarget}</jvmTarget>
         </configuration>
 
         <executions>
