@@ -154,7 +154,7 @@ public class ConstantTest {
       assertEquals(c1.asTensor(), t);
 
       // A different endpoint for capturing a tensor as a constant, which supports all data types
-      Constant<TInt32> c2 = tf.capture(t);
+      Constant<TInt32> c2 = tf.constantOf(t);
       assertEquals(c2.asTensor(), t);
       assertEquals(c1.asTensor(), c2.asTensor());
 

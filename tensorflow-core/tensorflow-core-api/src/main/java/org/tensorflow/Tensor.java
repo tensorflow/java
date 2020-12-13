@@ -46,9 +46,8 @@ import org.tensorflow.types.family.TType;
  * try (Tensor t = Tensor.of(...)) {
  *   doSomethingWith(t);
  * }
- *
- * <p>Instances of a Tensor are <b>not</b> thread-safe.
  * }</pre>
+ * <p>Instances of a Tensor are <b>not</b> thread-safe.
  */
 public interface Tensor extends Shaped, AutoCloseable {
 
@@ -88,7 +87,7 @@ public interface Tensor extends Shaped, AutoCloseable {
   static <T extends TType> T of(DataType<T> dtype, Shape shape, long size) {
     RawTensor tensor = RawTensor.allocate(dtype, shape, size);
     try {
-      return dtype.map(tensor);
+      return tensor.asTypedTensor();
     } catch (Exception e) {
       tensor.close();
       throw e;
@@ -130,7 +129,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * size for the tensor is explicitly set instead of being computed from the datatype and shape.
    *
    * <p>This could be useful for tensor types that stores data but also metadata in the tensor memory,
-   * such as lookup table in a tensor of strings.
+   * such as the lookup table in a tensor of strings.
    *
    * @param <T> the tensor element type
    * @param dtype datatype of the tensor
@@ -148,7 +147,7 @@ public interface Tensor extends Shaped, AutoCloseable {
     try {
       dataInitializer.accept(tensor);
       return tensor;
-    } catch (Throwable t) {
+    } catch (Exception t) {
       tensor.close();
       throw t;
     }

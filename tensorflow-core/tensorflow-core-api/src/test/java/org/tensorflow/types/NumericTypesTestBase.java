@@ -46,11 +46,11 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
 
       // Initialize tensor memory with zeros and take a snapshot
       data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(0)));
-      Constant<T> x = tf.capture(tensor);
+      Constant<T> x = tf.constantOf(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
       data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(1)));
-      Constant<T> y = tf.capture(tensor);
+      Constant<T> y = tf.constantOf(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
@@ -94,7 +94,7 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
       try (EagerSession session = EagerSession.create()) {
         Ops tf = Ops.create(session);
 
-        Add<T> add = tf.math.add(tf.capture(tensor), tf.capture(tensor));
+        Add<T> add = tf.math.add(tf.constantOf(tensor), tf.constantOf(tensor));
         NdArray<U> result = (NdArray<U>)add.asTensor();
 
         assertEquals(valueOf(0), result.getObject(0, 0));

@@ -29,7 +29,7 @@ import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.types.family.TType;
 
 /**
- * A tensor which memory has not been mapped.
+ * A tensor which memory has not been mapped to a data space directly accessible from the JVM.
  *
  * <p>A raw tensor is a minimalist representation of a tensor allocated in native memory by the
  * TensorFlow runtime library and it controls its lifetime within the current process. The data
@@ -37,16 +37,9 @@ import org.tensorflow.types.family.TType;
  * n-dimensional typed space by a {@link TType typed tensor}.</p>
  *
  * <p>Instances of a RawTensor are <b>not</b> thread-safe and their resource must be released
- * by calling {@link #close()} explicitly or implicitly (try-with-resources).</p>
+ * by calling {@link #close()} explicitly or implicitly via try-with-resources.</p>
  */
 public final class RawTensor implements Tensor {
-
-  /**
-   * Returns a typed version of this tensor
-   */
-  TType asTypedTensor() {
-    return dtype.map(this);
-  }
 
   @Override
   public DataType<?> dataType() {
@@ -152,11 +145,26 @@ public final class RawTensor implements Tensor {
   }
 
   /**
-   * @return native handle to this tensor
+   * Returns the native handle to this tensor
    * @throws IllegalStateException if tensor has been closed
    */
   TF_Tensor nativeHandle() {
     return requireHandle(tensorHandle);
+  }
+
+  /**
+   * Returns a typed reference to this tensor
+   *
+   * <p>In some cases, it is more useful to keep a typed reference to a tensor rather than its raw
+   * nature to prevent mapping its memory on every access (e.g. when calling {@link Operand#asTensor()}).
+   *
+   * @param <T> type of the tensor (must be compatible with the internal representation of this tensor,
+   *            as indicated by {@link #dataType()})
+   * @return typed reference to this tensor
+   * @throws ClassCastException if {@code T} is not compatible type with {@link #dataType()}
+   */
+  <T extends TType> T asTypedTensor() {
+    return (T)dtype.map(this);
   }
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {

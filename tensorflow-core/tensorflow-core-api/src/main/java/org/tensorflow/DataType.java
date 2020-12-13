@@ -36,6 +36,10 @@ public final class DataType<T extends TType> {
     /**
      * Maps the tensor memory to a n-dimensional typed data space.
      *
+     * <p>This method is designed to be invoked internally by this library only, in order to pass the
+     * native handle of {@code tensor} as {@code nativeHandle} (and since only classes from the
+     * {@code org.tensorflow} package can retrieve such handle).
+     *
      * @param tensor the tensor to map in its raw nature
      * @param nativeHandle native handle of the tensor
      * @return a typed tensor of type {@code T}

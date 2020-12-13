@@ -1278,13 +1278,16 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   }
 
   /**
-   * Capture a {@code tensor} by making a constant copy of it.
+   * Create a constant by making an immutable copy of {@code tensor}.
+   *
+   * <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
+   * other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  @Endpoint(name = "capture") // Cannot be "constant" since it will conflict with other endpoints accepting an NdArray
+  @Endpoint(name = "constantOf")
   public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
     return new Constant<>(
         scope
