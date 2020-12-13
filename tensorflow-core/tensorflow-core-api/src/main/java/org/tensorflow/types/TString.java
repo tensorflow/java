@@ -21,18 +21,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.tensorflow.DataType;
-import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
-import org.tensorflow.internal.buffer.StringTensorBuffer;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TStringInitializer;
+import org.tensorflow.internal.types.TStringMapper;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayout;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -50,7 +45,7 @@ public interface TString extends NdArray<String>, TType {
   static final String NAME = "STRING";
 
   /** Type metadata */
-  DataType<TString> DTYPE = DataType.create(NAME, 7, -1, TStringImpl::mapTensor);
+  DataType<TString> DTYPE = DataType.create(NAME, 7, -1, new TStringMapper());
 
   /**
    * Allocates a new tensor for storing a string scalar.
@@ -114,7 +109,8 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static TString tensorOf(Charset charset, NdArray<String> src) {
-    return TStringImpl.createTensor(src, s -> s.getBytes(charset));
+    TStringInitializer<String> initializer = new TStringInitializer<>(src, s -> s.getBytes(charset));
+    return Tensor.of(TString.DTYPE, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**
@@ -174,7 +170,8 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static TString tensorOfBytes(NdArray<byte[]> src) {
-    return TStringImpl.createTensor(src, Function.identity());
+    TStringInitializer<byte[]> initializer = new TStringInitializer<>(src, Function.identity());
+    return Tensor.of(TString.DTYPE, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**
@@ -217,58 +214,4 @@ public interface TString extends NdArray<String>, TType {
 
   /** @return the tensor data as a n-dimensional array of raw byte sequences. */
   NdArray<byte[]> asBytes();
-}
-
-/** Hidden implementation of a {@code TString} */
-class TStringImpl extends DenseNdArray<String> implements TString {
-
-  @Override
-  public TString using(Charset charset) {
-    return new TStringImpl(rawTensor, tensorBuffer, DataLayouts.ofStrings(charset));
-  }
-
-  @Override
-  public NdArray<byte[]> asBytes() {
-    return NdArrays.wrap(shape(), tensorBuffer);
-  }
-
-  @Override
-  public DataType<?> dataType() {
-    return TString.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static <T> TString createTensor(NdArray<T> src, Function<T, byte[]> getBytes) {
-    long size = StringTensorBuffer.computeSize(src, getBytes);
-    return Tensor.of(
-        TString.DTYPE,
-        src.shape(),
-        size,
-        data -> ((TStringImpl) data).tensorBuffer.init(src, getBytes));
-  }
-
-  static TString mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    StringTensorBuffer buffer = TensorBuffers.toStrings(nativeHandle, tensor.shape().size());
-    return new TStringImpl(tensor, buffer, UTF_8_LAYOUT);
-  }
-
-  private static final DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT =
-      DataLayouts.ofStrings(StandardCharsets.UTF_8);
-
-  private final RawTensor rawTensor;
-  private final StringTensorBuffer tensorBuffer;
-
-  private TStringImpl(
-      RawTensor rawTensor,
-      StringTensorBuffer buffer,
-      DataLayout<DataBuffer<byte[]>, String> layout
-  ) {
-    super(layout.applyTo(buffer), rawTensor.shape());
-    this.rawTensor = rawTensor;
-    tensorBuffer = buffer;
-  }
 }

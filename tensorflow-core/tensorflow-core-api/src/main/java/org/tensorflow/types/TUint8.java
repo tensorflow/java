@@ -24,6 +24,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TUint8Mapper;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
@@ -39,7 +40,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
   static final String NAME = "UINT8";
 
   /** Type metadata */
-  DataType<TUint8> DTYPE = DataType.create(NAME, 4, 1, TUint8Impl::mapTensor);
+  DataType<TUint8> DTYPE = DataType.create(NAME, 4, 1, new TUint8Mapper());
 
   /**
    * Allocates a new tensor for storing a single byte value.
@@ -107,31 +108,5 @@ public interface TUint8 extends ByteNdArray, TNumber {
    */
   static TUint8 tensorOf(Shape shape, Consumer<TUint8> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TUint8} */
-class TUint8Impl extends ByteDenseNdArray implements TUint8 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TUint8.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TUint8 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    ByteDataBuffer buffer = TensorBuffers.toBytes(nativeHandle);
-    return new TUint8Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TUint8Impl(RawTensor rawTensor, ByteDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }

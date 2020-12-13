@@ -24,6 +24,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TInt64Mapper;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
@@ -39,7 +40,7 @@ public interface TInt64 extends LongNdArray, TNumber {
   static final String NAME = "INT64";
 
   /** Type metadata */
-  DataType<TInt64> DTYPE = DataType.create(NAME, 9, 8, TInt64Impl::mapTensor);
+  DataType<TInt64> DTYPE = DataType.create(NAME, 9, 8, new TInt64Mapper());
 
   /**
    * Allocates a new tensor for storing a single long value.
@@ -107,31 +108,5 @@ public interface TInt64 extends LongNdArray, TNumber {
    */
   static TInt64 tensorOf(Shape shape, Consumer<TInt64> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TInt64} */
-class TInt64Impl extends LongDenseNdArray implements TInt64 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TInt64.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TInt64 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    LongDataBuffer buffer = TensorBuffers.toLongs(nativeHandle);
-    return new TInt64Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TInt64Impl(RawTensor rawTensor, LongDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }

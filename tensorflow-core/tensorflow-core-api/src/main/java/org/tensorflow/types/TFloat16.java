@@ -19,18 +19,14 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
-import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TFloat16Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -52,7 +48,7 @@ public interface TFloat16 extends FloatNdArray, TFloating {
   static final String NAME = "FLOAT16";
 
   /** Type metadata */
-  DataType<TFloat16> DTYPE = DataType.create(NAME, 19, 2, TFloat16Impl::mapTensor);
+  DataType<TFloat16> DTYPE = DataType.create(NAME, 19, 2, new TFloat16Mapper());
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -120,31 +116,5 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    */
   static TFloat16 tensorOf(Shape shape, Consumer<TFloat16> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TFloat16} */
-class TFloat16Impl extends FloatDenseNdArray implements TFloat16 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TFloat16.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TFloat16 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    FloatDataBuffer buffer = DataLayouts.FLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle));
-    return new TFloat16Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TFloat16Impl(RawTensor rawTensor, FloatDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }
