@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;
@@ -35,13 +34,17 @@ public final class DataType<T extends TType> {
   public interface TensorMapper<T> {
 
     /**
-     * Maps tensor memory to a data structure for manipulating elements of this type.
+     * Maps the tensor memory to a n-dimensional typed data space.
      *
-     * @param nativeTensor pointer to the native tensor
-     * @param shape the shape of the tensor
-     * @return data structure of elements of this type
+     * <p>This method is designed to be invoked internally by this library only, in order to pass the
+     * native handle of {@code tensor} as {@code nativeHandle} (and since only classes from the
+     * {@code org.tensorflow} package can retrieve such handle).
+     *
+     * @param tensor the tensor to map in its raw nature
+     * @param nativeHandle native handle of the tensor
+     * @return a typed tensor of type {@code T}
      */
-    T apply(TF_Tensor nativeTensor, Shape shape);
+    T apply(RawTensor tensor, TF_Tensor nativeHandle);
   }
 
   /**
@@ -158,13 +161,13 @@ public final class DataType<T extends TType> {
   }
 
   /**
-   * Maps a tensor to a data structure for manipulating elements of this type.
+   * Maps a raw tensor to a typed tensor.
    *
    * @param tensor tensor to map
    * @return data structure of elements of this type
    */
-  T map(Tensor<T> tensor) {
-    return tensorMapper.apply(tensor.nativeHandle(), tensor.shape());
+  T map(RawTensor tensor) {
+    return tensorMapper.apply(tensor, tensor.nativeHandle());
   }
 
   private final int nativeCode;

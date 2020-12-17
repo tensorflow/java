@@ -65,8 +65,7 @@ public class MapDatasetTest extends DatasetTestBase {
       Dataset dataset =
           Dataset.fromTensorSlices(tf, tensors, dataTypes)
               .mapAllComponents(
-                  component ->
-                      tf.math.mul(component.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
+                  component -> tf.math.mul(component.asOutput().expect(TInt32.DTYPE), tf.constant(2)));
 
       DatasetIterator iterator = dataset.makeOneShotIterator();
       List<Operand<?>> components = iterator.getNext();
@@ -79,13 +78,13 @@ public class MapDatasetTest extends DatasetTestBase {
         int batches = 0;
         while (true) {
           try {
-            List<Tensor<?>> outputs = session.runner().fetch(X).fetch(y).run();
+            List<?> outputs = session.runner().fetch(X).fetch(y).run();
 
-            try (Tensor<TInt32> XBatch = outputs.get(0).expect(TInt32.DTYPE);
-                Tensor<TInt32> yBatch = outputs.get(1).expect(TInt32.DTYPE)) {
+            try (TInt32 XBatch = (TInt32)outputs.get(0);
+                TInt32 yBatch = (TInt32)outputs.get(1)) {
 
-              assertEquals(mapped1.get(batches), XBatch.data());
-              assertEquals(mapped2.get(batches), yBatch.data());
+              assertEquals(mapped1.get(batches), XBatch);
+              assertEquals(mapped2.get(batches), yBatch);
 
               batches++;
             }
@@ -114,11 +113,11 @@ public class MapDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (Tensor<TInt32> XBatch = outputs.get(0).asTensor().expect(TInt32.DTYPE);
-          Tensor<TInt32> yBatch = outputs.get(1).asTensor().expect(TInt32.DTYPE); ) {
+      try (TInt32 XBatch = (TInt32)outputs.get(0).asTensor();
+          TInt32 yBatch = (TInt32)outputs.get(1).asTensor(); ) {
 
-        assertEquals(mapped1.get(count), XBatch.data());
-        assertEquals(mapped2.get(count), yBatch.data());
+        assertEquals(mapped1.get(count), XBatch);
+        assertEquals(mapped2.get(count), yBatch);
 
         count++;
       }

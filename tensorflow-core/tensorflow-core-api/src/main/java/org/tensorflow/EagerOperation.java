@@ -91,7 +91,7 @@ class EagerOperation extends AbstractOperation {
   public Shape shape(int outputIndex) {
     // If the tensor of this output has already been resolved, return its shape.
     // Otherwise, retrieve the tensor shape from the native library.
-    Tensor<?> tensor = outputTensors.get(outputIndex);
+    Tensor tensor = outputTensors.get(outputIndex);
     if (tensor != null) {
       return tensor.shape();
     }
@@ -107,7 +107,7 @@ class EagerOperation extends AbstractOperation {
   public DataType<?> dtype(int outputIndex) {
     // If the tensor of this output has already been resolved, return its datatype.
     // Otherwise, retrieve the tensor datatype from the native library.
-    Tensor<?> tensor = outputTensors.get(outputIndex);
+    Tensor tensor = outputTensors.get(outputIndex);
     if (tensor != null) {
       return tensor.dataType();
     }
@@ -116,8 +116,8 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public Tensor<?> tensor(int outputIndex) {
-    Tensor<?> tensor = outputTensors.get(outputIndex);
+  public Tensor tensor(int outputIndex) {
+    Tensor tensor = outputTensors.get(outputIndex);
     if (tensor == null) {
       tensor = resolveTensor(outputIndex);
     }
@@ -127,21 +127,21 @@ class EagerOperation extends AbstractOperation {
   private final EagerSession session;
   private final String type;
   private final String name;
-  private final AtomicReferenceArray<Tensor<?>> outputTensors;
+  private final AtomicReferenceArray<Tensor> outputTensors;
 
-  private Tensor<?> resolveTensor(int outputIndex) {
+  private Tensor resolveTensor(int outputIndex) {
     // Take an optimistic approach, where we attempt to resolve the output tensor without locking.
     // If another thread has resolved it meanwhile, release our copy and reuse the existing one
     // instead.
-    Tensor<?> tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
+    Tensor tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
-      session.detach(tensor.nativeHandle());
+      session.detach(tensor.asRawTensor().nativeHandle());
       tensor = outputTensors.get(outputIndex);
     }
     return tensor;
   }
 
-  private TFE_Op opHandle;
+  private final TFE_Op opHandle;
   private final TFE_TensorHandle[] outputHandles;
 
   private static void requireOp(TFE_Op handle) {
@@ -156,13 +156,13 @@ class EagerOperation extends AbstractOperation {
     }
   }
 
-  private static Tensor<?> resolveTensorHandle(TFE_TensorHandle handle, EagerSession session) {
+  private static Tensor resolveTensorHandle(TFE_TensorHandle handle, EagerSession session) {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      return Tensor.fromHandle(tensor, session);
+      return RawTensor.fromHandle(tensor, session).asTypedTensor();
     }
   }
 

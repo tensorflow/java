@@ -53,9 +53,9 @@ public class DeviceSpecTest {
               .abs(aOps)
               .asOutput();
 
-      try (AutoCloseableList<Tensor<?>> t =
+      try (AutoCloseableList<Tensor> t =
                    new AutoCloseableList<>(session.runner().fetch(absOps).run())) {
-        assertEquals(1, t.get(0).rawData().asInts().getObject(0));
+        assertEquals(1, ((TInt32)t.get(0)).getInt());
       }
     }
   }
@@ -85,9 +85,9 @@ public class DeviceSpecTest {
               .abs(aOps)
               .asOutput();
 
-      try (AutoCloseableList<Tensor<?>> t =
+      try (AutoCloseableList<Tensor> t =
                    new AutoCloseableList<>(session.runner().fetch(absOps).run())) {
-        assertEquals(1, t.get(0).rawData().asInts().getObject(0));
+        assertEquals(1, ((TInt32)t.get(0)).getInt());
       }
     }
   }
@@ -131,9 +131,9 @@ public class DeviceSpecTest {
               .mul(absOps, bOps)
               .asOutput();
 
-      try (AutoCloseableList<Tensor<?>> t =
+      try (AutoCloseableList<Tensor> t =
                    new AutoCloseableList<>(session.runner().fetch(mulOps).run())) {
-        assertEquals(10, t.get(0).rawData().asInts().getObject(0));
+        assertEquals(10, ((TInt32)t.get(0)).getInt());
       }
     }
   }
@@ -179,7 +179,7 @@ public class DeviceSpecTest {
               .mul(absOps, bOps)
               .asOutput();
 
-      try (AutoCloseableList<Tensor<?>> t =
+      try (AutoCloseableList<Tensor> t =
                    new AutoCloseableList<>(session.runner().fetch(mulOps).run())) {
         fail();
       } catch (TFInvalidArgumentException e) {
@@ -212,9 +212,9 @@ public class DeviceSpecTest {
               .abs(aOps)
               .asOutput();
 
-      try (AutoCloseableList<Tensor<?>> t =
+      try (AutoCloseableList<Tensor> t =
                    new AutoCloseableList<>(session.runner().fetch(absOps).run())) {
-        assertEquals(1, t.get(0).rawData().asInts().getObject(0));
+        assertEquals(1, ((TInt32)t.get(0)).getInt());
       }
     }
   }

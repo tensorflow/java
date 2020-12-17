@@ -24,7 +24,6 @@ import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -349,9 +348,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -374,8 +373,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -1709,17 +1708,6 @@ public final class Ops {
   }
 
   /**
-   * Create a constant from a Tensor.
-   *
-   * @param scope is a scope used to add the underlying operation.
-   * @param tensor a Tensor holding the constant value
-   * @return a constant of the same data type as `tensor`
-   */
-  public <T extends TType> Constant<T> constant(Tensor<T> tensor) {
-    return Constant.create(scope, tensor);
-  }
-
-  /**
    * Creates a constant of {@code String} elements, using the given charset.
    *
    * @param scope is a scope used to add the underlying operation.
@@ -1877,6 +1865,20 @@ public final class Ops {
   public <T extends TType> Constant<T> constant(DataType<T> type, Shape shape,
       ByteDataBuffer data) {
     return Constant.tensorOf(scope, type, shape, data);
+  }
+
+  /**
+   * Create a constant by making an immutable copy of {@code tensor}.
+   *
+   *  <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
+   *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
+   *
+   * @param scope is a scope used to add the underlying operation.
+   * @param tensor a Tensor holding the constant value
+   * @return a constant of the same data type as `tensor`
+   */
+  public <T extends TType> Constant<T> constantOf(T tensor) {
+    return Constant.create(scope, tensor);
   }
 
   /**

@@ -54,29 +54,22 @@ public interface Operand<T extends TType> extends Op, Shaped {
   Output<T> asOutput();
 
   /**
-   * Returns this operand as a tensor.
+   * Returns the tensor at this operand.
    *
    * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asOutput().tensor()}
    *
    * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
    */
-  default Tensor<T> asTensor() {
-    return asOutput().tensor();
+  default T asTensor() {
+    return asOutput().asTensor();
   }
 
   /**
-   * Returns the data of this operand.
-   *
-   * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asTensor().data()}
-   *
-   * @return the tensor data
-   * @throws IllegalStateException if this is an operand of a graph
+   * Returns the data type of this operand
    */
-  default T data() {
-    return asOutput().tensor().data();
+  default DataType<T> dataType() {
+    return asOutput().dataType();
   }
 
   /**

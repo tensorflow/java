@@ -152,8 +152,7 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
     types = MakeTypePair(Type::Class("Shape", "org.tensorflow.ndarray"));
 
   } else if (attr_type == "tensor") {
-    types = MakeTypePair(Type::Class("Tensor", "org.tensorflow")
-                             .add_parameter(Type::Wildcard()));
+    types = MakeTypePair(Type::Class("Tensor", "org.tensorflow"));
 
   } else if (attr_type == "type") {
     Type type = *iterable_out ? Type::Wildcard() : NextGeneric();

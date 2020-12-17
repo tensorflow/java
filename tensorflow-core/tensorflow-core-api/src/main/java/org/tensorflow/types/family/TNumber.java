@@ -18,18 +18,19 @@
 package org.tensorflow.types.family;
 
 /**
- * Marker interface for numeric tensor types.
+ * Common interface for all numeric tensors.
  *
  * <p>Operations that only accepts numeric values as some of their operands enforce that the tensor
  * types for these operands to be bound to this interface. For example:
  *
  * <pre>{@code
- * TFloat32 tensor1 = TFloat32.vectorOf(1, 2, 3);
- * TBool tensor2 = TBool.vectorOf(true, false, true);
- *
  * Ops tf = Ops.create();
- * tf.nn.softmax(tf.constant(tensor1));  // OK
- * tf.nn.softmax(tf.constant(tensor2));  // Compilation failure
+ *
+ * Constant<TFloat32> c1 = tf.array(1.0f, 2.0f, 3.0f);
+ * Constant<TFloat32> c2 = tf.array(true, false, true);
+ *
+ * tf.nn.softmax(c1);  // OK
+ * tf.nn.softmax(c2);  // Compilation failure
  * }</pre>
  */
 public interface TNumber extends TType {}

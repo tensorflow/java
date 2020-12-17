@@ -301,7 +301,7 @@ public class SavedModelBundle implements AutoCloseable {
    *
    * <pre>{@code
    * ConcreteFunction myFunction = savedModelBundle.function("mySignatureKey");
-   * Map<String, Tensor<?>> outputTensorMap = myFunction.call(session, inputTensorMap);
+   * Map<String, Tensor> outputTensorMap = myFunction.call(session, inputTensorMap);
    * }</pre>
    *
    * @param signatureKey name of the {@code SignatureDef} in the saved model.
@@ -334,7 +334,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @return list of output tensors, mapped by the signature name
    * @throws IllegalArgumentException if no function can be selected by default
    */
-  public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments) {
+  public Map<String, Tensor> call(Map<String, Tensor> arguments) {
     ConcreteFunction function = null;
     if (functions.size() == 1) {
       function = functions.values().iterator().next();

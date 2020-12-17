@@ -183,7 +183,7 @@ public class GraphOperationTest {
       Ops tf = Ops.create(g);
       Operation split = tf.split(tf.constant(0), tf.array(0, 1, 2), 3L).op();
       try {
-        split.output(0).tensor();
+        split.output(0).asTensor();
         fail();
       } catch (IllegalStateException e) {
       }

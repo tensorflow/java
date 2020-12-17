@@ -31,9 +31,12 @@ import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.types.family.TType;
 
 /**
- * A statically typed multi-dimensional array whose elements are of a type described by T.
+ * A statically typed multi-dimensional array.
  *
- * <p>Instances of a Tensor are <b>not</b> thread-safe.
+ * <p>There are two categories of tensors in TensorFlow Java: {@link TType typed tensors} and
+ * {@link RawTensor raw tensors}. The former maps the tensor native memory to an
+ * n-dimensional typed data space, allowing direct I/O operations from the JVM, while the latter
+ * is only a reference to a native tensor allowing basic operations and flat data access.</p>
  *
  * <p><b>WARNING:</b> Resources consumed by the Tensor object <b>must</b> be explicitly freed by
  * invoking the {@link #close()} method when the object is no longer needed. For example, using a
@@ -44,24 +47,15 @@ import org.tensorflow.types.family.TType;
  *   doSomethingWith(t);
  * }
  * }</pre>
+ * <p>Instances of a Tensor are <b>not</b> thread-safe.
  */
-public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
+public interface Tensor extends Shaped, AutoCloseable {
 
   /**
    * Allocates a tensor of a given datatype and shape.
    *
-   * <p>The amount of memory to allocate is derived from the datatype and the shape of the tensor.
-   * Memory is left uninitialized after this method returns, so it is the responsibility of the
-   * caller to initialize the tensor data before it is used, via the {@link #data()} accessor.
-   * For example:
-   *
-   * <pre>{@code
-   * FloatNdArray data = ...
-   * try (Tensor<TFloat32> t = Tensor.of(TFloat32.DTYPE, Shape.of(2, 2))) {
-   *   data.copyTo(t.data());
-   *   ...
-   * }
-   * }</pre>
+   * <p>The amount of memory to allocate is derived from the datatype and the shape of the tensor,
+   * and is left uninitialized.
    *
    * @param <T> the tensor element type
    * @param dtype datatype of the tensor
@@ -69,7 +63,7 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * @return an allocated but uninitialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape) {
+  static <T extends TType> T of(DataType<T> dtype, Shape shape) {
     return of(dtype, shape, shape.size() * dtype.byteSize());
   }
 
@@ -77,10 +71,8 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * Allocates a tensor of a given datatype, shape and size.
    *
    * <p>This method is identical to {@link #of(DataType, Shape)}, except that the final size of the
-   * tensor is explicitly set instead of computing it from the datatype and shape.
-   *
-   * <p>This could be useful for tensor types that stores data but also metadata in the tensor memory,
-   * like {@link org.tensorflow.types.TString TString}.
+   * tensor is explicitly set instead of computing it from the datatype and shape, which could be
+   * larger than the actual space required to store the data but not smaller.
    *
    * @param <T> the tensor element type
    * @param dtype datatype of the tensor
@@ -92,19 +84,13 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size) {
-    // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
-    // we only validate them for fixed length datatypes
-    if (!dtype.isVariableLength() && shape.size() * dtype.byteSize() > size) {
-      throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
-    }
-    Tensor<T> t = new Tensor<>(dtype, shape);
-    TF_Tensor nativeHandle = allocate(t.dtype.nativeCode(), shape.asArray(), size);
-    try (PointerScope scope = new PointerScope()) {
-        scope.attach(nativeHandle);
-        t.tensorHandle = nativeHandle;
-        t.tensorScope = scope.extend();
-        return t;
+  static <T extends TType> T of(DataType<T> dtype, Shape shape, long size) {
+    RawTensor tensor = RawTensor.allocate(dtype, shape, size);
+    try {
+      return tensor.asTypedTensor();
+    } catch (Exception e) {
+      tensor.close();
+      throw e;
     }
   }
 
@@ -117,7 +103,7 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    *
    * <pre>{@code
    * FloatNdArray data = ...
-   * try (Tensor<TFloat32> t = Tensor.of(TFloat32.DTYPE, Shape.of(2, 2), data::copyTo)) {
+   * try (TFloat32 t = Tensor.of(TFloat32.DTYPE, Shape.of(2, 2), data::copyTo)) {
    *   ...
    * }
    * }</pre>
@@ -132,8 +118,7 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * @return an allocated and initialized tensor
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape,
-      Consumer<T> dataInitializer) {
+  static <T extends TType> T of(DataType<T> dtype, Shape shape, Consumer<T> dataInitializer) {
     return of(dtype, shape, shape.size() * dtype.byteSize(), dataInitializer);
   }
 
@@ -144,7 +129,7 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * size for the tensor is explicitly set instead of being computed from the datatype and shape.
    *
    * <p>This could be useful for tensor types that stores data but also metadata in the tensor memory,
-   * such as {@link org.tensorflow.types.TString TString}.
+   * such as the lookup table in a tensor of strings.
    *
    * @param <T> the tensor element type
    * @param dtype datatype of the tensor
@@ -157,13 +142,12 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    *                                  store the tensor data
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, long size,
-      Consumer<T> dataInitializer) {
-    Tensor<T> tensor = of(dtype, shape, size);
+  static <T extends TType> T of(DataType<T> dtype, Shape shape, long size, Consumer<T> dataInitializer) {
+    T tensor = of(dtype, shape, size);
     try {
-      dataInitializer.accept(tensor.data());
+      dataInitializer.accept(tensor);
       return tensor;
-    } catch (Throwable t) {
+    } catch (Exception t) {
       tensor.close();
       throw t;
     }
@@ -182,30 +166,30 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * @throws IllegalArgumentException if {@code rawData} is not large enough to contain the tensor data
    * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
-  public static <T extends TType> Tensor<T> of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
-    Tensor<T> t = of(dtype, shape, rawData.size());
-    rawData.copyTo(TensorBuffers.toBytes(t.nativeHandle()), rawData.size());
-    return t;
+  static <T extends TType> T of(DataType<T> dtype, Shape shape, ByteDataBuffer rawData) {
+    return of(dtype, shape, rawData.size(), t -> rawData.copyTo(t.asRawTensor().data(), rawData.size()));
   }
 
   /**
-   * Returns this Tensor object with the type {@code Tensor<U>}. This method is useful when given a
-   * value of type {@code Tensor<?>}.
-   *
-   * @param dt any supported tensor data type
-   * @param <U> a tensor type
-   * @return a tensor of the requested data type
-   * @throws IllegalArgumentException if the actual data type of this object does not match the type
-   *     {@code U}.
+   * Returns the {@link DataType} of elements stored in the tensor.
    */
-  @SuppressWarnings("unchecked")
-  public <U extends TType> Tensor<U> expect(DataType<U> dt) {
-    if (!dt.equals(this.dtype)) {
-      throw new IllegalArgumentException(
-          "Cannot cast from tensor of " + dtype + " to tensor of " + dt);
-    }
-    return ((Tensor<U>) this);
-  }
+  DataType<?> dataType();
+
+  /**
+   * Returns the size, in bytes, of the tensor data.
+   */
+  long numBytes();
+
+  /**
+   * Returns the shape of the tensor.
+   */
+  @Override
+  Shape shape();
+
+  /**
+   * Returns a raw (untyped) representation of this tensor
+   */
+  RawTensor asRawTensor();
 
   /**
    * Release resources associated with the Tensor.
@@ -216,169 +200,5 @@ public final class Tensor<T extends TType> implements Shaped, AutoCloseable {
    * <p>The Tensor object is no longer usable after {@code close} returns.
    */
   @Override
-  public void close() {
-    tensorScope.close();
-  }
-
-  /** Returns the {@link DataType} of elements stored in the Tensor. */
-  public DataType<T> dataType() {
-    return dtype;
-  }
-
-  /** Returns the size, in bytes, of the tensor data. */
-  public long numBytes() {
-    if (numBytes == null) {
-      numBytes = TF_TensorByteSize(tensorHandle);
-    }
-    return numBytes;
-  }
-
-  /** Returns the shape of this tensor. */
-  @Override
-  public Shape shape() {
-    return shape;
-  }
-
-  /**
-   * Returns the data of this tensor.
-   *
-   * <p>This method returns an accessor to the tensor data as an instance of {@code T}, which
-   * commonly maps this data to an {@link NdArray NdArray}. Input and
-   * output operations performed on the returned n-dimensional array are applied directly to the
-   * tensor native memory. For example:
-   *
-   * <pre>{@code
-   * Ops tf = Ops.create();
-   * try (Tensor<TFloat32> t = TFloat32.tensorOf(Shape.of(2, 2))) {
-   *   TFloat32 data = t.data();
-   *
-   *   StdArrays.copyTo(data, new float[][] {
-   *     {1.0f, 2.0f},
-   *     {3.0f, 4.0f}
-   *   });
-   *   assertEquals(NdArrays.vectorOf(3.0f, 4.0f), data.getFloat(1));
-   *
-   *   Constant<TFloat32> c = tf.constant(t);
-   *   assertEquals(4.0f, c.data().getFloat(1, 1));
-   * }
-   * }</pre>
-   *
-   * <p>Please refer to the documentation of the {@link NdArray NdArray}
-   * classes for more information on the various techniques to read or write data in an
-   * n-dimensional space using this data structure.
-   *
-   * @return the tensor data mapped to an n-dimensional space
-   * @throws IllegalStateException if the tensor has been closed
-   * @see NdArray
-   */
-  public T data() {
-    if (data == null) {
-      data = dtype.map(this);
-    } else {
-      nativeHandle(); // Checks that the tensor has not been released or will throw
-    }
-    return data;
-  }
-
-  /**
-   * Returns the raw data of this tensor as a buffer of bytes.
-   *
-   * <p>Use this method to obtain a read-only serializable view of the tensor raw data and must be
-   * used with care since there is no guard on the element boundaries. For regular input or output
-   * operations, use {@link #data()}.
-   *
-   * @return the tensor raw data mapped to a read-only byte buffer
-   * @throws IllegalStateException if the tensor has been closed
-   */
-  public ByteDataBuffer rawData() {
-    return TensorBuffers.toBytes(nativeHandle(), true);
-  }
-
-  /** Returns a string describing the type and shape of the Tensor. */
-  @Override
-  public String toString() {
-    return String.format("%s tensor with shape %s", dtype.toString(), shape);
-  }
-
-  /**
-   * Create a Tensor object from a handle to the C TF_Tensor object.
-   *
-   * <p>Takes ownership of the handle.
-   */
-  static Tensor<?> fromHandle(TF_Tensor handle) {
-    Tensor<?> t = new Tensor<>(DataTypes.fromNativeCode(dtype(handle)), Shape.of(shape(handle)));
-    try (PointerScope scope = new PointerScope()) {
-        scope.attach(handle);
-        t.tensorHandle = handle;
-        t.tensorScope = scope.extend();
-    }
-    return t;
-  }
-
-  /**
-   * Create an eager Tensor object from a handle to the C TF_Tensor object.
-   *
-   * <p>Takes ownership of the handle.
-   */
-  static Tensor<?> fromHandle(TF_Tensor handle, EagerSession session) {
-    Tensor<?> t = fromHandle(handle);
-    session.attach(handle);
-    t.tensorScope.detach(handle);
-    return t;
-  }
-
-  /**
-   * @return native handle to this tensor
-   * @throws IllegalStateException if tensor has been closed
-   */
-  TF_Tensor nativeHandle() {
-    return requireHandle(tensorHandle);
-  }
-
-  private PointerScope tensorScope;
-  private TF_Tensor tensorHandle;
-
-  private static TF_Tensor requireHandle(TF_Tensor handle) {
-    if (handle == null || handle.isNull()) {
-      throw new IllegalStateException("close() was called on the Tensor");
-    }
-    return handle;
-  }
-
-  private static TF_Tensor allocate(int dtype, long[] shape, long byteSize) {
-    TF_Tensor t = TF_Tensor.allocateTensor(dtype, shape, byteSize);
-    if (t == null || t.isNull()) {
-      throw new IllegalStateException("unable to allocate memory for the Tensor");
-    }
-    return t;
-  }
-
-  private static int dtype(TF_Tensor handle) {
-    requireHandle(handle);
-    return TF_TensorType(handle);
-  }
-
-  private static long[] shape(TF_Tensor handle) {
-    requireHandle(handle);
-    int numDims = TF_NumDims(handle);
-    long[] dims = new long[numDims];
-    for (int i = 0; i < numDims; ++i) {
-      dims[i] = TF_Dim(handle, i);
-    }
-    return dims;
-  }
-
-  private final DataType<T> dtype;
-  private final Shape shape;
-  private T data = null;
-  private Long numBytes = null;
-
-  private Tensor(DataType<T> dtype, Shape shape) {
-    this.dtype = dtype;
-    this.shape = shape;
-  }
-
-  static {
-    TensorFlow.init();
-  }
+  void close();
 }

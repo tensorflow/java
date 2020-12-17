@@ -140,25 +140,23 @@ public class AdamTest {
           (float) Math.pow(beta1, step + 1), (float) Math.pow(beta2, step + 1)
         };
 
-        try (Tensor<TFloat32> result =
-            session
+        try (TFloat32 result =
+            (TFloat32)session
                 .getGraphSession()
                 .runner()
                 .fetch("beta1_power")
                 .run()
-                .get(0)
-                .expect(TFloat32.DTYPE)) {
-          result.data().scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
+                .get(0)) {
+          result.scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
         }
-        try (Tensor<TFloat32> result =
-            session
+        try (TFloat32 result =
+            (TFloat32)session
                 .getGraphSession()
                 .runner()
                 .fetch("beta2_power")
                 .run()
-                .get(0)
-                .expect(TFloat32.DTYPE)) {
-          result.data().scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
+                .get(0)) {
+          result.scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
         }
         session.run(update);
 

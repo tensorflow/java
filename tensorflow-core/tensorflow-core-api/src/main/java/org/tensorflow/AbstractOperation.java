@@ -86,5 +86,5 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor
    */
-  abstract Tensor<?> tensor(int outputIdx);
+  abstract Tensor tensor(int outputIdx);
 }

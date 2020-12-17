@@ -158,7 +158,7 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, Tensor<?> t) {
+    public Runner feed(String operation, Tensor t) {
       return feed(parseOutput(operation), t);
     }
 
@@ -173,7 +173,7 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(String operation, int index, Tensor<?> t) {
+    public Runner feed(String operation, int index, Tensor t) {
       Operation op = operationByName(operation);
       if (op != null) {
         inputs.add(op.output(index));
@@ -190,7 +190,7 @@ public final class Session implements AutoCloseable {
      * @param t the tensor substituting the operation
      * @return this session runner
      */
-    public Runner feed(Operand<?> operand, Tensor<?> t) {
+    public Runner feed(Operand<?> operand, Tensor t) {
       inputs.add(operand.asOutput());
       inputTensors.add(t);
       return this;
@@ -325,7 +325,7 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner
      */
-    public List<Tensor<?>> run() {
+    public List<Tensor> run() {
       return runHelper(false).outputs;
     }
 
@@ -354,8 +354,8 @@ public final class Session implements AutoCloseable {
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
       int idx = 0;
-      for (Tensor<?> t : inputTensors) {
-        inputTensorHandles[idx++] = t.nativeHandle();
+      for (Tensor t : inputTensors) {
+        inputTensorHandles[idx++] = t.asRawTensor().nativeHandle();
       }
       idx = 0;
       for (Output<?> o : inputs) {
@@ -375,7 +375,7 @@ public final class Session implements AutoCloseable {
       }
       Reference runRef = new Reference();
       RunMetadata metadata = null;
-      List<Tensor<?>> outputs = new ArrayList<>();
+      List<Tensor> outputs = new ArrayList<>();
       try {
         metadata =
             Session.run(
@@ -390,7 +390,7 @@ public final class Session implements AutoCloseable {
                 wantMetadata,
                 outputs);
       } catch (Exception e) {
-        for (Tensor<?> t : outputs) {
+        for (Tensor t : outputs) {
           t.close();
         }
         outputs.clear();
@@ -450,10 +450,10 @@ public final class Session implements AutoCloseable {
       }
     }
 
-    private ArrayList<Output<?>> inputs = new ArrayList<>();
-    private ArrayList<Tensor<?>> inputTensors = new ArrayList<>();
-    private ArrayList<Output<?>> outputs = new ArrayList<>();
-    private ArrayList<GraphOperation> targets = new ArrayList<>();
+    private final ArrayList<Output<?>> inputs = new ArrayList<>();
+    private final ArrayList<Tensor> inputTensors = new ArrayList<>();
+    private final ArrayList<Output<?>> outputs = new ArrayList<>();
+    private final ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
   }
 
@@ -518,7 +518,7 @@ public final class Session implements AutoCloseable {
    */
   public static final class Run {
     /** Tensors from requested fetches. */
-    public List<Tensor<?>> outputs;
+    public List<Tensor> outputs;
 
     /**
      * Metadata about the run.
@@ -627,7 +627,7 @@ public final class Session implements AutoCloseable {
       int[] outputOpIndices,
       TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      List<Tensor<?>> outputTensors) {
+      List<Tensor> outputTensors) {
     requireHandle(handle);
 
     int ninputs = inputTensorHandles.length;
@@ -667,7 +667,7 @@ public final class Session implements AutoCloseable {
 
       for (int i = 0; i < noutputs; ++i) {
         TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputTensors.add(Tensor.fromHandle(h));
+        outputTensors.add(RawTensor.fromHandle(h).asTypedTensor());
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

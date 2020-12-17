@@ -41,11 +41,11 @@ public class TakeDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-      try (Tensor<TInt32> batch1 = components.get(0).asTensor().expect(TInt32.DTYPE);
-          Tensor<TInt32> batch2 = components.get(1).asTensor().expect(TInt32.DTYPE); ) {
+      try (TInt32 batch1 = (TInt32)components.get(0).asTensor();
+          TInt32 batch2 = (TInt32)components.get(1).asTensor(); ) {
 
-        assertEquals(testMatrix1.get(count), batch1.data());
-        assertEquals(testMatrix2.get(count), batch2.data());
+        assertEquals(testMatrix1.get(count), batch1);
+        assertEquals(testMatrix2.get(count), batch2);
         count++;
       }
     }

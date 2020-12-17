@@ -17,21 +17,56 @@
 
 package org.tensorflow.types.family;
 
+import org.tensorflow.Tensor;
+
 /**
- * Marker interface for all tensor types.
+ * Common interface for all typed tensors.
  *
- * <p>Tensor types are carried as a generic parameter of the {@link org.tensorflow.Tensor Tensor}
- * class bound by the {@code TType} interface. This generic parameter ensure type-compatibility
- * between operands of a computation at compile-time. For example:
+ * <p>Typed tensors wrap a {@link org.tensorflow.RawTensor RawTensor} by mapping their native memory
+ * to a n-dimensional data space allowing direct I/O access from the JVM.</p>
+ *
+ * <p>Subinterfaces of {@code TType} are propagated as a generic parameter to various entities of
+ * TensorFlow to identify the type of the tensor they carry. For example, a
+ * {@link org.tensorflow.Operand Operand<TFloat32>} is an operand which outputs a 32-bit floating
+ * point tensor. This parameter ensure type-compatibility between operands of a computation at
+ * compile-time. For example:
  *
  * <pre>{@code
- * Tensor<TFloat32> tensor1 = TFloat32.ofShape(2, 3, 2);
- * Tensor<TFloat32> tensor2 = TFloat32.ofShape(2, 3, 2);
- * Tensor<TInt32> tensor3 = TInt32.ofShape(2, 3, 2);
- *
  * Ops tf = Ops.create();
- * tf.math.add(tf.constant(tensor1), tf.constant(tensor2));  // OK
- * tf.math.add(tf.constant(tensor1), tf.constant(tensor3));  // Compilation failure
+ *
+ * Constant<TFloat32> c1 = tf.array(2.0f, 3.0f, 2.0f);
+ * Constant<TFloat32> c2 = tf.array(1.0f, 2.0f, 3.0f);
+ * Constant<TInt32> c3 = tf.array(2, 3, 2);
+ *
+ * tf.math.add(c1, c2);  // OK
+ * tf.math.add(c1, c3);  // Compilation failure
  * }</pre>
+ *
+ * <p>Even if all typed tensors implements somehow {@link org.tensorflow.ndarray.NdArray NdArray}
+ * to provide access to their data, {@code TType} deliberately does not extend directly from this
+ * interface, for the following reasons:
+ * <ul>
+ *   <li>Implementing {@code NdArray} at this level could only expose boxed-type accessors, which
+ *   are less performant than their primitive equivalent, only exposed by subinterfaces of
+ *   {@code NdArray} (e.g. {@code FloatNdArray}).
+ *   </li>
+ *   <li>{@code TType} would need to carry a new generic parameter for typing the {@code NdArray},
+ *   which will increase the verbosity in the signature of any method accepting or returning
+ *   an instance of this interface, which is very common.
+ *   </li>
+ * </ul>
+ * Therefore, enforcing the user to cast a reference of {@code TType} in a concrete tensor type before
+ * accessing its data guarantees better performance and improves readability.
  */
-public interface TType {}
+public interface TType extends Tensor {
+
+  @Override
+  default long numBytes() {
+    return asRawTensor().numBytes();
+  }
+
+  @Override
+  default void close() {
+    asRawTensor().close();
+  }
+}

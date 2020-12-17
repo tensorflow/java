@@ -361,7 +361,7 @@ public class LossesHelper {
           tf.withSubScope("rangeCheck")
               .withControlDependencies(Collections.singletonList(assertThat));
       return ltf.identity(values);
-    } else if (!cond.asOutput().data().getBoolean())
+    } else if (!cond.asTensor().getBoolean())
       throw new IllegalArgumentException(String.format("%s : values out of range", prefix));
     else return values;
   }
@@ -409,7 +409,7 @@ public class LossesHelper {
             tf.withSubScope("valueCheck")
                 .withControlDependencies(Collections.singletonList(assertThat));
         return ltf.identity(values);
-      } else if (!cond.asOutput().data().getBoolean())
+      } else if (!cond.asTensor().getBoolean())
         throw new IllegalArgumentException(String.format("%s : values not in value set", prefix));
       else return values;
     }

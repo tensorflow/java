@@ -19,16 +19,17 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
+import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
 
@@ -61,7 +62,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @param value float to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TBfloat16> scalarOf(float value) {
+  static TBfloat16 scalarOf(float value) {
     return Tensor.of(DTYPE, Shape.scalar(), data -> data.setFloat(value));
   }
 
@@ -71,7 +72,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @param values floats to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TBfloat16> vectorOf(float... values) {
+  static TBfloat16 vectorOf(float... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
@@ -86,7 +87,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TBfloat16> tensorOf(NdArray<Float> src) {
+  static TBfloat16 tensorOf(NdArray<Float> src) {
     return Tensor.of(DTYPE, src.shape(), src::copyTo);
   }
 
@@ -96,7 +97,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TBfloat16> tensorOf(Shape shape) {
+  static TBfloat16 tensorOf(Shape shape) {
     return Tensor.of(DTYPE, shape);
   }
 
@@ -107,7 +108,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @param data buffer of floats to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TBfloat16> tensorOf(Shape shape, FloatDataBuffer data) {
+  static TBfloat16 tensorOf(Shape shape, FloatDataBuffer data) {
     return Tensor.of(DTYPE, shape, d -> d.write(data));
   }
 
@@ -119,7 +120,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TBfloat16> tensorOf(Shape shape, Consumer<TBfloat16> dataInit) {
+  static TBfloat16 tensorOf(Shape shape, Consumer<TBfloat16> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
   }
 }
@@ -127,12 +128,25 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
 /** Hidden implementation of a {@code TBfloat16} */
 class TBfloat16Impl extends FloatDenseNdArray implements TBfloat16 {
 
-  static TBfloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TBfloat16Impl(
-        DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
+  @Override
+  public DataType<?> dataType() {
+    return TBfloat16.DTYPE;
   }
 
-  private TBfloat16Impl(FloatDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  @Override
+  public RawTensor asRawTensor() {
+    return rawTensor;
+  }
+
+  static TBfloat16 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
+    FloatDataBuffer buffer = DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle));
+    return new TBfloat16Impl(tensor, buffer);
+  }
+
+  private final RawTensor rawTensor;
+
+  private TBfloat16Impl(RawTensor rawTensor, FloatDataBuffer buffer) {
+    super(buffer, rawTensor.shape());
+    this.rawTensor = rawTensor;
   }
 }

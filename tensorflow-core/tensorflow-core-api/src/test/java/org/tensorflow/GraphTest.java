@@ -157,9 +157,9 @@ public class GraphTest {
       assertEquals(TFloat32.DTYPE, grads1[0].dataType());
       assertEquals(TFloat32.DTYPE, grads1[1].dataType());
       
-      try (Tensor<TFloat32> c1 = TFloat32.scalarOf(3.0f);
-          Tensor<TFloat32> c2 = TFloat32.scalarOf(2.0f);
-          AutoCloseableList<Tensor<?>> outputs = new AutoCloseableList<>(
+      try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
+          TFloat32 c2 = TFloat32.scalarOf(2.0f);
+          AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(
               s.runner()
                   .feed(x1, c1)
                   .feed(x2, c2)
@@ -169,9 +169,9 @@ public class GraphTest {
                   .run())) {
      
         assertEquals(3, outputs.size());
-        assertEquals(108.0f, outputs.get(0).expect(TFloat32.DTYPE).data().getFloat(), 0.0f);
-        assertEquals(6.0f, outputs.get(1).expect(TFloat32.DTYPE).data().getFloat(), 0.0f);
-        assertEquals(1.0f, outputs.get(2).expect(TFloat32.DTYPE).data().getFloat(), 0.0f);
+        assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
+        assertEquals(6.0f, ((TFloat32)outputs.get(1)).getFloat(), 0.0f);
+        assertEquals(1.0f, ((TFloat32)outputs.get(2)).getFloat(), 0.0f);
       }
     }
   }
@@ -191,14 +191,13 @@ public class GraphTest {
       assertEquals(1, grad.length);
       assertEquals(TFloat32.DTYPE, grad[0].dataType());
 
-      try (Tensor<TFloat32> c = TFloat32.scalarOf(3.0f);
-          Tensor<TFloat32> output = s.runner()
+      try (TFloat32 c = TFloat32.scalarOf(3.0f);
+          TFloat32 output = (TFloat32)s.runner()
               .feed(x, c)
               .fetch(grad[0])
               .run()
-              .get(0)
-              .expect(TFloat32.DTYPE)) {
-        assertEquals(114.0f, output.data().getFloat(), 0.0f);
+              .get(0)) {
+        assertEquals(114.0f, output.getFloat(), 0.0f);
       }
     }
   }
@@ -223,14 +222,13 @@ public class GraphTest {
       assertEquals(1, grad1.length);
       assertEquals(TFloat32.DTYPE, grad1[0].dataType());
 
-      try (Tensor<TFloat32> c = TFloat32.scalarOf(3.0f);
-          Tensor<TFloat32> output = s.runner()
+      try (TFloat32 c = TFloat32.scalarOf(3.0f);
+          TFloat32 output = (TFloat32)s.runner()
               .feed(x, c)
               .fetch(grad1[0])
               .run()
-              .get(0)
-              .expect(TFloat32.DTYPE)) {
-        assertEquals(108.0f, output.data().getFloat(), 0.0f);
+              .get(0)) {
+        assertEquals(108.0f, output.getFloat(), 0.0f);
       }
     }
   }
@@ -284,14 +282,13 @@ public class GraphTest {
           },
           "test_loop");
 
-      try (Tensor<TInt32> c = TInt32.scalarOf(2);
-          Tensor<TInt32> output = s.runner()
+      try (TInt32 c = TInt32.scalarOf(2);
+          TInt32 output = (TInt32)s.runner()
               .feed(input, c)
               .fetch(loopOutputs[0])
               .run()
-              .get(0)
-              .expect(TInt32.DTYPE)) {
-        assertEquals(16, output.data().getInt()); // ((2^2)^2)
+              .get(0)) {
+        assertEquals(16, output.getInt()); // ((2^2)^2)
       }
     }
   }
@@ -320,9 +317,9 @@ public class GraphTest {
           },
           "test_loop");
 
-      try (Tensor<TInt32> c1 = TInt32.scalarOf(2);
-          Tensor<TInt32> c2 = TInt32.scalarOf(5);
-          AutoCloseableList<Tensor<?>> outputs =
+      try (TInt32 c1 = TInt32.scalarOf(2);
+          TInt32 c2 = TInt32.scalarOf(5);
+          AutoCloseableList<Tensor> outputs =
               new AutoCloseableList<>(
                   s.runner()
                       .feed(input1, c1)
@@ -331,8 +328,8 @@ public class GraphTest {
                       .fetch(loopOutputs[1])
                       .run())) {
         assertEquals(2, outputs.size());
-        assertEquals(16, outputs.get(0).expect(TInt32.DTYPE).data().getInt()); // ((2^2)^2)
-        assertEquals(625, outputs.get(1).expect(TInt32.DTYPE).data().getInt()); // ((5^2)^2)
+        assertEquals(16, ((TInt32)outputs.get(0)).getInt()); // ((2^2)^2)
+        assertEquals(625, ((TInt32)outputs.get(1)).getInt()); // ((5^2)^2)
       }
     }
   }

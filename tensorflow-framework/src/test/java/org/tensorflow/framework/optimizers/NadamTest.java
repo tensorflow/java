@@ -147,15 +147,14 @@ public class NadamTest {
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 
-      try (Tensor<TFloat32> result =
-          session
+      try (TFloat32 result =
+          (TFloat32)session
               .getGraphSession()
               .runner()
               .fetch("momentum")
               .run()
-              .get(0)
-              .expect(TFloat32.DTYPE)) {
-        result.data().scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
+              .get(0)) {
+        result.scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
 
@@ -167,15 +166,14 @@ public class NadamTest {
             Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
         momentum = momentum * mut;
 
-        try (Tensor<TFloat32> result =
-            session
+        try (TFloat32 result =
+            (TFloat32)session
                 .getGraphSession()
                 .runner()
                 .fetch("momentum")
                 .run()
-                .get(0)
-                .expect(TFloat32.DTYPE)) {
-          result.data().scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
+                .get(0)) {
+          result.scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);
         FloatNdArray[] resultsNP = nadamUpdateNdArray(var0Np, grads0Np, step, m0, v0, mcache);

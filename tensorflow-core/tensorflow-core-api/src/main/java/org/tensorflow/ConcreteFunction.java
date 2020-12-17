@@ -34,7 +34,7 @@ import org.tensorflow.proto.framework.TensorInfo;
  *
  * <pre>{@code
  * ConcreteFunction myFunction = savedModelBundle.function("myFunctionSignatureName");
- * Map<String, Tensor<?>> outputTensorMap = myFunction.call(inputTensorMap);
+ * Map<String, Tensor> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
  */
 public class ConcreteFunction implements AutoCloseable {
@@ -61,8 +61,8 @@ public class ConcreteFunction implements AutoCloseable {
    *
    *   public static void main(String args[]) {
    *     try (ConcreteFunction function = ConcreteFunction.create(MyModel::addTwo);
-   *         Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
-   *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *         TFloat32 x = TFloat32.scalarOf(2.0f)) {
+   *       assertEquals(4.0f, ((TFloat32)function.call(x)).getFloat());
    *     }
    *   }
    * }
@@ -97,8 +97,8 @@ public class ConcreteFunction implements AutoCloseable {
    *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
    *
    *   try (ConcreteFunction f = ConcreteFunction.create(signature, g);
-   *       Tensor<TFloat32> x = TFloat32.scalarOf(2.0f)) {
-   *     assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *       TFloat32 x = TFloat32.scalarOf(2.0f)) {
+   *     assertEquals(4.0f, ((TFloat32)function.call(x)).getFloat());
    *   }
    *   // Graph g is still valid at this point
    * }
@@ -129,8 +129,8 @@ public class ConcreteFunction implements AutoCloseable {
    *     // Auto-closing the function just as an example but this is not required since it has
    *     // no effect
    *     try (ConcreteFunction f = ConcreteFunction.create(signature, s);
-   *         Tensor<TFloat32> t = TFloat32.scalarOf(2.0f)) {
-   *       assertEquals(4.0f, function.call(x).expect(TFloat32.DTYPE).data().getFloat());
+   *         TFloat32 t = TFloat32.scalarOf(2.0f)) {
+   *       assertEquals(4.0f, ((TFloat32)function.call(x)).getFloat());
    *     }
    *     // Session s is still valid at this point
    *   }
@@ -163,14 +163,14 @@ public class ConcreteFunction implements AutoCloseable {
    * @return output tensors resulting from the execution of the function,
    *         mapped by their signature name
    */
-  public Map<String, Tensor<?>> call(Map<String, Tensor<?>> arguments)
+  public Map<String, Tensor> call(Map<String, Tensor> arguments)
       throws IllegalArgumentException {
 
     final SignatureDef signatureDef = signature.asSignatureDef();
     final Session.Runner runner = session.runner();
 
     signatureDef.getInputsMap().forEach((argName, t) -> {
-      Tensor<?> tensor = arguments.get(argName);
+      Tensor tensor = arguments.get(argName);
       if (tensor == null) {
         throw new IllegalArgumentException(String.format("Missing argument [%s]", argName));
       }
@@ -180,10 +180,10 @@ public class ConcreteFunction implements AutoCloseable {
     Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
     outputToNode.values().forEach(t -> runner.fetch(t.getName()));
 
-    List<Tensor<?>> resultTensors = runner.run();
+    List<Tensor> resultTensors = runner.run();
     try {
-      ListIterator<Tensor<?>> resultTensorIter = resultTensors.listIterator();
-      Map<String, Tensor<?>> returnMap = new HashMap<String, Tensor<?>>();
+      ListIterator<Tensor> resultTensorIter = resultTensors.listIterator();
+      Map<String, Tensor> returnMap = new HashMap<String, Tensor>();
 
       // Use the output names as present in the signature definition
       for (String nodeName: outputToNode.keySet()) {
@@ -193,7 +193,7 @@ public class ConcreteFunction implements AutoCloseable {
 
     } catch (Exception e) {
       // Release tensors before throwing exception
-      for (Tensor<?> t : resultTensors) {
+      for (Tensor t : resultTensors) {
         t.close();
       }
       throw e;
@@ -210,7 +210,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @throws IllegalArgumentException if there are multiple input or output parameters defined
    *                                  in the function
    */
-  public Tensor<?> call(Tensor<?> tensor) throws IllegalArgumentException {
+  public Tensor call(Tensor tensor) throws IllegalArgumentException {
     final SignatureDef signatureDef = signature.asSignatureDef();
 
     if (signatureDef.getInputsCount() != 1) {

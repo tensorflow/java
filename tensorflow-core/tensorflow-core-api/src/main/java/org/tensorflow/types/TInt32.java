@@ -19,14 +19,15 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
+import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.types.family.TNumber;
 
@@ -45,7 +46,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @param value int to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TInt32> scalarOf(int value) {
+  static TInt32 scalarOf(int value) {
     return Tensor.of(DTYPE, Shape.scalar(), data -> data.setInt(value));
   }
 
@@ -56,7 +57,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @return the new tensor
    * @throws IllegalArgumentException if no values are provided
    */
-  static Tensor<TInt32> vectorOf(int... values) {
+  static TInt32 vectorOf(int... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
@@ -71,7 +72,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TInt32> tensorOf(NdArray<Integer> src) {
+  static TInt32 tensorOf(NdArray<Integer> src) {
     return Tensor.of(DTYPE, src.shape(), src::copyTo);
   }
 
@@ -81,7 +82,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TInt32> tensorOf(Shape shape) {
+  static TInt32 tensorOf(Shape shape) {
     return Tensor.of(DTYPE, shape);
   }
 
@@ -92,7 +93,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @param data buffer of ints to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TInt32> tensorOf(Shape shape, IntDataBuffer data) {
+  static TInt32 tensorOf(Shape shape, IntDataBuffer data) {
     return Tensor.of(DTYPE, shape, d -> d.write(data));
   }
 
@@ -103,7 +104,7 @@ public interface TInt32 extends IntNdArray, TNumber {
    * @param dataInit tensor data initializer
    * @return the new tensor
    */
-  static Tensor<TInt32> tensorOf(Shape shape, Consumer<TInt32> dataInit) {
+  static TInt32 tensorOf(Shape shape, Consumer<TInt32> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
   }
 }
@@ -111,11 +112,25 @@ public interface TInt32 extends IntNdArray, TNumber {
 /** Hidden implementation of a {@code TInt32} */
 class TInt32Impl extends IntDenseNdArray implements TInt32 {
 
-  static TInt32 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TInt32Impl(TensorBuffers.toInts(nativeTensor), shape);
+  @Override
+  public DataType<?> dataType() {
+    return TInt32.DTYPE;
   }
 
-  private TInt32Impl(IntDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  @Override
+  public RawTensor asRawTensor() {
+    return rawTensor;
+  }
+
+  static TInt32 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
+    IntDataBuffer buffer = TensorBuffers.toInts(nativeHandle);
+    return new TInt32Impl(tensor, buffer);
+  }
+
+  private final RawTensor rawTensor;
+
+  private TInt32Impl(RawTensor rawTensor, IntDataBuffer buffer) {
+    super(buffer, rawTensor.shape());
+    this.rawTensor = rawTensor;
   }
 }
