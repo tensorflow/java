@@ -15,16 +15,15 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.proto.framework.OpList;
 
 /** Unit tests for {@link org.tensorflow.TensorFlow}. */
@@ -66,5 +65,15 @@ public class TensorFlowTest {
       // Now graph building should succeed.
       g.opBuilder("MyTest", "MyTest").build();
     }
+  }
+
+  @Test
+  public void getDeviceListTest(){
+    List<DeviceSpec> devices = TensorFlow.listDevices(DeviceSpec.DeviceType.GPU, new TFE_Context());
+    assertFalse(devices.isEmpty());
+    System.out.println(devices.toString());
+    devices = TensorFlow.listDevices(DeviceSpec.DeviceType.CPU, new TFE_Context());
+    assertFalse(devices.isEmpty());
+    System.out.println(devices.toString());
   }
 }

@@ -15,20 +15,18 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
-
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.TF_Buffer;
-import org.tensorflow.internal.c_api.TF_Library;
-import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.*;
 import org.tensorflow.proto.framework.OpList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {
@@ -101,6 +99,21 @@ public final class TensorFlow {
     } catch (InvalidProtocolBufferException e) {
       throw new TensorFlowException("Cannot parse OpList protocol buffer", e);
     }
+  }
+
+  public static List<DeviceSpec> listDevices(DeviceSpec.DeviceType deviceType, TFE_Context ctx) {
+    List<DeviceSpec> deviceList = new ArrayList();
+    TF_Status status = TF_Status.newStatus();
+    TF_DeviceList devices = TFE_ContextListDevices(ctx, status);
+    for(int i = 0; i<TF_DeviceListCount(devices); i++){
+      BytePointer devName = TF_DeviceListName(devices,i, status);
+      BytePointer devType = TF_DeviceListType(devices,i,status);
+      DeviceSpec devSpec = DeviceSpec.newBuilder().deviceIndex(i).deviceType(DeviceSpec.DeviceType.valueOf(devType.getString()))
+              .job(devName.getString()).build();
+      deviceList.add(devSpec);
+    }
+    TF_DeleteDeviceList(devices);
+    return deviceList.stream().filter(d -> d.deviceType().equals(deviceType)).collect(Collectors.toList());
   }
 
   private TensorFlow() {}
