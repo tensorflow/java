@@ -24,6 +24,7 @@ import org.tensorflow.proto.framework.OpList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
@@ -101,7 +102,7 @@ public final class TensorFlow {
     }
   }
 
-  public static List<DeviceSpec> listDevices(DeviceSpec.DeviceType deviceType, TFE_Context ctx) {
+  public static List<DeviceSpec> listDevices(Optional<DeviceSpec.DeviceType> deviceType, TFE_Context ctx) {
     List<DeviceSpec> deviceList = new ArrayList();
     TF_Status status = TF_Status.newStatus();
     TF_DeviceList devices = TFE_ContextListDevices(ctx, status);
@@ -113,7 +114,8 @@ public final class TensorFlow {
       deviceList.add(devSpec);
     }
     TF_DeleteDeviceList(devices);
-    return deviceList.stream().filter(d -> d.deviceType().equals(deviceType)).collect(Collectors.toList());
+    if(deviceType.isPresent()) return deviceList;
+    return deviceList.stream().filter(d -> d.deviceType().equals(deviceType.get())).collect(Collectors.toList());
   }
 
   private TensorFlow() {}

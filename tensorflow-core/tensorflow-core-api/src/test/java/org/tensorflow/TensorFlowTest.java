@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.internal.c_api.TFE_Context;
@@ -69,11 +70,11 @@ public class TensorFlowTest {
 
   @Test
   public void getDeviceListTest(){
-    List<DeviceSpec> devices = TensorFlow.listDevices(DeviceSpec.DeviceType.GPU, new TFE_Context());
+    TFE_Context context = new TFE_Context();
+    List<DeviceSpec> devices = TensorFlow.listDevices(Optional.empty(), context);
     assertFalse(devices.isEmpty());
-    System.out.println(devices.toString());
-    devices = TensorFlow.listDevices(DeviceSpec.DeviceType.CPU, new TFE_Context());
+    devices = TensorFlow.listDevices(Optional.of(DeviceSpec.DeviceType.CPU), context);
     assertFalse(devices.isEmpty());
-    System.out.println(devices.toString());
+
   }
 }
