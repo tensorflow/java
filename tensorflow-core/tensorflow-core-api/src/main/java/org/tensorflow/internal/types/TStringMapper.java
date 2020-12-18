@@ -2,12 +2,11 @@ package org.tensorflow.internal.types;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Function;
 import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
-import org.tensorflow.internal.buffer.ByteSequencer;
+import org.tensorflow.internal.buffer.ByteSequenceProvider;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -40,17 +39,17 @@ public final class TStringMapper extends TensorMapper<TString> {
     /**
      * Initialize the buffer of this string tensor using the provided byte sequencer.
      *
-     * @param byteSequencer produces sequences of bytes to use as the tensor data
+     * @param byteSequenceProvider produces sequences of bytes to use as the tensor data
      * @param <T> source of bytes ({@code byte[]} or {@code String})
      */
-    <T> void init(ByteSequencer<T> byteSequencer);
+    <T> void init(ByteSequenceProvider<T> byteSequenceProvider);
   }
 
   private static final class DenseTString extends DenseNdArray<String> implements TStringInternal {
 
     @Override
-    public <T> void init(ByteSequencer<T> byteSequencer) {
-      buffer.init(byteSequencer);
+    public <T> void init(ByteSequenceProvider<T> byteSequenceProvider) {
+      buffer.init(byteSequenceProvider);
     }
 
     @Override

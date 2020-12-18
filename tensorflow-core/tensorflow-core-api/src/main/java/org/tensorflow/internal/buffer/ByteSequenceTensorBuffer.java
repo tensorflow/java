@@ -55,15 +55,15 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
   /**
    * Computes how many bytes are required to store the given data in a string buffer.
    *
-   * @param byteSequencer produces sequences of bytes
+   * @param byteSequenceProvider produces sequences of bytes
    * @return number of bytes required to store the data.
    */
-  public static <T> long computeSize(ByteSequencer<?> byteSequencer) {
+  public static <T> long computeSize(ByteSequenceProvider<?> byteSequenceProvider) {
     // reserve space to store 64-bit offsets
-    long size = byteSequencer.numSequences() * Long.BYTES;
+    long size = byteSequenceProvider.numSequences() * Long.BYTES;
 
     // reserve space to store length and data of each values
-    for (byte[] elementBytes : byteSequencer) {
+    for (byte[] elementBytes : byteSequenceProvider) {
       size += elementBytes.length + ByteSequenceTensorBuffer.varintLength(elementBytes.length);
     }
     return size;
@@ -77,11 +77,11 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
    * same set of data, calling {@link #computeSize(NdArray, Function)} priory to make sure there is
    * enough space to store it.
    *
-   * @param byteSequencer produces sequences of bytes to use as the tensor data
+   * @param byteSequenceProvider produces sequences of bytes to use as the tensor data
    */
-  public <T> void init(ByteSequencer<T> byteSequencer) {
+  public <T> void init(ByteSequenceProvider<T> byteSequenceProvider) {
     InitDataWriter writer = new InitDataWriter();
-    byteSequencer.forEach(writer::writeNext);
+    byteSequenceProvider.forEach(writer::writeNext);
   }
 
   @Override

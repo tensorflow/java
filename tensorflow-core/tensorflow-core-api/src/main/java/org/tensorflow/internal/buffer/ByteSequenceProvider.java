@@ -10,7 +10,7 @@ import org.tensorflow.ndarray.NdArraySequence;
  *
  * @param <T> source of bytes (byte arrays or strings)
  */
-public class ByteSequencer<T> implements Iterable<byte[]> {
+public class ByteSequenceProvider<T> implements Iterable<byte[]> {
 
   /**
    * Constructor
@@ -18,7 +18,7 @@ public class ByteSequencer<T> implements Iterable<byte[]> {
    * @param source source of data
    * @param byteExtractor method that converts one value of the source into a sequence of bytes
    */
-  public ByteSequencer(NdArray<T> source, Function<T, byte[]> byteExtractor) {
+  public ByteSequenceProvider(NdArray<T> source, Function<T, byte[]> byteExtractor) {
     this.source = source;
     this.byteExtractor = byteExtractor;
   }
