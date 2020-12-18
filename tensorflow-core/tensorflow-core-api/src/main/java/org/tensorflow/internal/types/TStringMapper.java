@@ -21,7 +21,7 @@ import org.tensorflow.types.TString;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_STRING} tensors
  * to a n-dimensional data space.
  */
-public class TStringMapper extends TensorMapper<TString> {
+public final class TStringMapper extends TensorMapper<TString> {
 
   private static final DataLayout<DataBuffer<byte[]>, String> UTF_8_LAYOUT =
       DataLayouts.ofStrings(StandardCharsets.UTF_8);
@@ -46,7 +46,7 @@ public class TStringMapper extends TensorMapper<TString> {
     <T> void init(ByteSequencer<T> byteSequencer);
   }
 
-  private static class DenseTString extends DenseNdArray<String> implements TStringInternal {
+  private static final class DenseTString extends DenseNdArray<String> implements TStringInternal {
 
     @Override
     public <T> void init(ByteSequencer<T> byteSequencer) {

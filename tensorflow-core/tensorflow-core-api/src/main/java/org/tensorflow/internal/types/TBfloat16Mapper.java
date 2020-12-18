@@ -13,15 +13,15 @@ import org.tensorflow.types.TBfloat16;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BFLOAT16} tensors
  * to a n-dimensional data space.
  */
-public class TBfloat16Mapper extends TensorMapper<TBfloat16> {
+public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
 
   @Override
-  public TBfloat16 mapDense(RawTensor tensor) {
+  protected TBfloat16 mapDense(RawTensor tensor) {
     FloatDataBuffer buffer = DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle(tensor)));
     return new DenseTBfloat16(tensor, buffer);
   }
 
-  private static class DenseTBfloat16 extends FloatDenseNdArray implements TBfloat16 {
+  private static final class DenseTBfloat16 extends FloatDenseNdArray implements TBfloat16 {
 
     @Override
     public DataType<TBfloat16> dataType() {

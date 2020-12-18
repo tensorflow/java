@@ -12,7 +12,7 @@ import org.tensorflow.types.TInt64;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT64} tensors
  * to a n-dimensional data space.
  */
-public class TInt64Mapper extends TensorMapper<TInt64> {
+public final class TInt64Mapper extends TensorMapper<TInt64> {
 
   @Override
   protected TInt64 mapDense(RawTensor tensor) {
@@ -20,7 +20,7 @@ public class TInt64Mapper extends TensorMapper<TInt64> {
     return new DenseTInt64(tensor, buffer);
   }
 
-  private static class DenseTInt64 extends LongDenseNdArray implements TInt64 {
+  private static final class DenseTInt64 extends LongDenseNdArray implements TInt64 {
 
     @Override
     public DataType<?> dataType() {

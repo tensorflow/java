@@ -12,7 +12,7 @@ import org.tensorflow.types.TBool;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BOOL} tensors
  * to a n-dimensional data space.
  */
-public class TBoolMapper extends TensorMapper<TBool> {
+public final class TBoolMapper extends TensorMapper<TBool> {
 
   @Override
   protected TBool mapDense(RawTensor tensor) {

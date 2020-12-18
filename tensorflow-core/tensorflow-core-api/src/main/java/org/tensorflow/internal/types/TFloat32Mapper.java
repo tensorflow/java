@@ -12,7 +12,7 @@ import org.tensorflow.types.TFloat32;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_FLOAT} tensors
  * to a n-dimensional data space.
  */
-public class TFloat32Mapper extends TensorMapper<TFloat32> {
+public final class TFloat32Mapper extends TensorMapper<TFloat32> {
 
   @Override
   protected TFloat32 mapDense(RawTensor tensor) {
@@ -20,7 +20,7 @@ public class TFloat32Mapper extends TensorMapper<TFloat32> {
     return new DenseTFloat32(tensor, buffer);
   }
 
-  private static class DenseTFloat32 extends FloatDenseNdArray implements TFloat32 {
+  private static final class DenseTFloat32 extends FloatDenseNdArray implements TFloat32 {
 
     @Override
     public DataType<?> dataType() {

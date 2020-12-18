@@ -12,7 +12,7 @@ import org.tensorflow.types.TUint8;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors
  * to a n-dimensional data space.
  */
-public class TUint8Mapper extends TensorMapper<TUint8> {
+public final class TUint8Mapper extends TensorMapper<TUint8> {
 
   @Override
   protected TUint8 mapDense(RawTensor tensor) {
@@ -20,7 +20,7 @@ public class TUint8Mapper extends TensorMapper<TUint8> {
     return new DenseTUint8(tensor, buffer);
   }
 
-  private static class DenseTUint8 extends ByteDenseNdArray implements TUint8 {
+  private static final class DenseTUint8 extends ByteDenseNdArray implements TUint8 {
 
     @Override
     public DataType<?> dataType() {

@@ -13,7 +13,7 @@ import org.tensorflow.types.TString;
  *
  * @param <T> source of bytes ({@code byte[]} or {@code String})
  */
-public class TStringInitializer<T> implements Consumer<TString> {
+public final class TStringInitializer<T> implements Consumer<TString> {
 
   public TStringInitializer(NdArray<T> source, Function<T, byte[]> byteExtractor) {
     this.byteSequencer = new ByteSequencer<>(source, byteExtractor);

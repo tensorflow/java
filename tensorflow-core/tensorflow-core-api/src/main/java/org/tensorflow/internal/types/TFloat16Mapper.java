@@ -13,7 +13,7 @@ import org.tensorflow.types.TFloat16;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_HALF} tensors
  * to a n-dimensional data space.
  */
-public class TFloat16Mapper extends TensorMapper<TFloat16> {
+public final class TFloat16Mapper extends TensorMapper<TFloat16> {
 
   @Override
   protected TFloat16 mapDense(RawTensor tensor) {
@@ -21,7 +21,7 @@ public class TFloat16Mapper extends TensorMapper<TFloat16> {
     return new DenseTFloat16(tensor, buffer);
   }
 
-  private static class DenseTFloat16 extends FloatDenseNdArray implements TFloat16 {
+  private static final class DenseTFloat16 extends FloatDenseNdArray implements TFloat16 {
 
     @Override
     public DataType<?> dataType() {

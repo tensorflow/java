@@ -12,7 +12,7 @@ import org.tensorflow.types.TFloat64;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_DOUBLE} tensors
  * to a n-dimensional data space.
  */
-public class TFloat64Mapper extends TensorMapper<TFloat64> {
+public final class TFloat64Mapper extends TensorMapper<TFloat64> {
 
   @Override
   protected TFloat64 mapDense(RawTensor tensor) {
@@ -20,7 +20,7 @@ public class TFloat64Mapper extends TensorMapper<TFloat64> {
     return new DenseTFloat64(tensor, buffer);
   }
 
-  private static class DenseTFloat64 extends DoubleDenseNdArray implements TFloat64 {
+  private static final class DenseTFloat64 extends DoubleDenseNdArray implements TFloat64 {
 
     @Override
     public DataType<?> dataType() {

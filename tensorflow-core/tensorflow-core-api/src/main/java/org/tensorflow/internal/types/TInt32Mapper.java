@@ -12,7 +12,7 @@ import org.tensorflow.types.TInt32;
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT32} tensors
  * to a n-dimensional data space.
  */
-public class TInt32Mapper extends TensorMapper<TInt32> {
+public final class TInt32Mapper extends TensorMapper<TInt32> {
 
   @Override
   protected TInt32 mapDense(RawTensor tensor) {
@@ -20,7 +20,7 @@ public class TInt32Mapper extends TensorMapper<TInt32> {
     return new DenseTInt32(tensor, buffer);
   }
 
-  private static class DenseTInt32 extends IntDenseNdArray implements TInt32 {
+  private static final class DenseTInt32 extends IntDenseNdArray implements TInt32 {
 
     @Override
     public DataType<?> dataType() {
