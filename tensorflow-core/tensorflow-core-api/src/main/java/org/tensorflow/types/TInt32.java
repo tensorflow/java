@@ -23,6 +23,7 @@ import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TInt32Mapper;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
@@ -38,7 +39,7 @@ public interface TInt32 extends IntNdArray, TNumber {
   static final String NAME = "INT32";
 
   /** Type metadata */
-  DataType<TInt32> DTYPE = DataType.create(NAME, 3, 4, TInt32Impl::mapTensor);
+  DataType<TInt32> DTYPE = DataType.create(NAME, 3, 4, new TInt32Mapper());
 
   /**
    * Allocates a new tensor for storing a single int value.
@@ -109,28 +110,3 @@ public interface TInt32 extends IntNdArray, TNumber {
   }
 }
 
-/** Hidden implementation of a {@code TInt32} */
-class TInt32Impl extends IntDenseNdArray implements TInt32 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TInt32.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TInt32 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    IntDataBuffer buffer = TensorBuffers.toInts(nativeHandle);
-    return new TInt32Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TInt32Impl(RawTensor rawTensor, IntDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
-  }
-}

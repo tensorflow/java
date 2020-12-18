@@ -24,6 +24,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TBoolMapper;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
@@ -45,7 +46,7 @@ public interface TBool extends BooleanNdArray, TType {
   static final String NAME = "BOOL";
 
   /** Type metadata */
-  DataType<TBool> DTYPE = DataType.create(NAME, 10, 1, TBoolImpl::mapTensor);
+  DataType<TBool> DTYPE = DataType.create(NAME, 10, 1, new TBoolMapper());
 
   /**
    * Allocates a new tensor for storing a single boolean value.
@@ -113,31 +114,5 @@ public interface TBool extends BooleanNdArray, TType {
    */
   static TBool tensorOf(Shape shape, Consumer<TBool> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TBool} */
-class TBoolImpl extends BooleanDenseNdArray implements TBool {
-
-  @Override
-  public DataType<?> dataType() {
-    return TBool.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TBool mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    BooleanDataBuffer buffer = TensorBuffers.toBooleans(nativeHandle);
-    return new TBoolImpl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TBoolImpl(RawTensor rawTensor, BooleanDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }

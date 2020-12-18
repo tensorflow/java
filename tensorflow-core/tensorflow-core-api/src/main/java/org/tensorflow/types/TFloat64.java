@@ -24,6 +24,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TFloat64Mapper;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
@@ -40,7 +41,7 @@ public interface TFloat64 extends DoubleNdArray, TFloating {
   static final String NAME = "DOUBLE";
 
   /** Type metadata */
-  DataType<TFloat64> DTYPE = DataType.create(NAME, 2, 8, TFloat64Impl::mapTensor);
+  DataType<TFloat64> DTYPE = DataType.create(NAME, 2, 8, new TFloat64Mapper());
 
   /**
    * Allocates a new tensor for storing a single double value.
@@ -108,31 +109,5 @@ public interface TFloat64 extends DoubleNdArray, TFloating {
    */
   static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TFloat64} */
-class TFloat64Impl extends DoubleDenseNdArray implements TFloat64 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TFloat64.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TFloat64 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    DoubleDataBuffer buffer = TensorBuffers.toDoubles(nativeHandle);
-    return new TFloat64Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TFloat64Impl(RawTensor rawTensor, DoubleDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }

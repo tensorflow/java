@@ -57,13 +57,13 @@ class TensorRawDataBufferFactory extends RawDataBufferFactory {
     return mapNativeBooleans(tensorMemory.address(), tensorMemory.capacity(), false);
   }
 
-  static StringTensorBuffer mapTensorToStrings(Pointer tensorMemory, long numElements) {
+  static ByteSequenceTensorBuffer mapTensorToStrings(Pointer tensorMemory, long numElements) {
     long offsetByteSize = numElements * Long.BYTES;
     LongDataBuffer offsets = mapNativeLongs(tensorMemory.address(), offsetByteSize, false);
     ByteDataBuffer data = mapNativeBytes(
         tensorMemory.address() + offsetByteSize,
         tensorMemory.capacity() - offsetByteSize,
         false);
-    return new StringTensorBuffer(offsets, data);
+    return new ByteSequenceTensorBuffer(offsets, data);
   }
 }

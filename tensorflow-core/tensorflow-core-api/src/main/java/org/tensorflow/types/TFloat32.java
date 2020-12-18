@@ -19,17 +19,14 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
-import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TFloat32Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
 
 /** IEEE-754 single-precision 32-bit float tensor type. */
@@ -39,7 +36,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
   static final String NAME = "FLOAT";
 
   /** Type metadata */
-  DataType<TFloat32> DTYPE = DataType.create(NAME, 1, 4, TFloat32Impl::mapTensor);
+  DataType<TFloat32> DTYPE = DataType.create(NAME, 1, 4, new TFloat32Mapper());
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -107,31 +104,5 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    */
   static TFloat32 tensorOf(Shape shape, Consumer<TFloat32> dataInit) {
     return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TFloat32} */
-class TFloat32Impl extends FloatDenseNdArray implements TFloat32 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TFloat32.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TFloat32 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    FloatDataBuffer buffer = TensorBuffers.toFloats(nativeHandle);
-    return new TFloat32Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TFloat32Impl(RawTensor rawTensor, FloatDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
   }
 }

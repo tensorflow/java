@@ -19,18 +19,14 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.DataType;
-import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.TBfloat16Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -54,7 +50,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
   static final String NAME = "BFLOAT16";
 
   /** Type metadata */
-  DataType<TBfloat16> DTYPE = DataType.create(NAME, 14, 2, TBfloat16Impl::mapTensor);
+  DataType<TBfloat16> DTYPE = DataType.create(NAME, 14, 2, new TBfloat16Mapper());
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -125,28 +121,3 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
   }
 }
 
-/** Hidden implementation of a {@code TBfloat16} */
-class TBfloat16Impl extends FloatDenseNdArray implements TBfloat16 {
-
-  @Override
-  public DataType<?> dataType() {
-    return TBfloat16.DTYPE;
-  }
-
-  @Override
-  public RawTensor asRawTensor() {
-    return rawTensor;
-  }
-
-  static TBfloat16 mapTensor(RawTensor tensor, TF_Tensor nativeHandle) {
-    FloatDataBuffer buffer = DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle));
-    return new TBfloat16Impl(tensor, buffer);
-  }
-
-  private final RawTensor rawTensor;
-
-  private TBfloat16Impl(RawTensor rawTensor, FloatDataBuffer buffer) {
-    super(buffer, rawTensor.shape());
-    this.rawTensor = rawTensor;
-  }
-}

@@ -50,23 +50,21 @@ import org.tensorflow.ndarray.NdArray;
  * <p>After its data has been initialized, the buffer is read-only as it is not possible to change
  * safely a value without reinitializing the whole data.
  */
-public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
+public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
 
   /**
    * Computes how many bytes are required to store the given data in a string buffer.
    *
-   * @param data data to store eventually by calling {@link #init(NdArray, Function)}
-   * @param getBytes method that converts one value of the data into a sequence of bytes
+   * @param byteSequenceProvider produces sequences of bytes
    * @return number of bytes required to store the data.
    */
-  public static <T> long computeSize(NdArray<T> data, Function<T, byte[]> getBytes) {
+  public static <T> long computeSize(ByteSequenceProvider<?> byteSequenceProvider) {
     // reserve space to store 64-bit offsets
-    long size = data.size() * Long.BYTES;
+    long size = byteSequenceProvider.numSequences() * Long.BYTES;
 
     // reserve space to store length and data of each values
-    for (NdArray<T> scalar : data.scalars()) {
-      byte[] elementBytes = getBytes.apply(scalar.getObject());
-      size += elementBytes.length + StringTensorBuffer.varintLength(elementBytes.length);
+    for (byte[] elementBytes : byteSequenceProvider) {
+      size += elementBytes.length + ByteSequenceTensorBuffer.varintLength(elementBytes.length);
     }
     return size;
   }
@@ -79,14 +77,11 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
    * same set of data, calling {@link #computeSize(NdArray, Function)} priory to make sure there is
    * enough space to store it.
    *
-   * @param data data to store
-   * @param getBytes method that converts one value of the data into a sequence of bytes
+   * @param byteSequenceProvider produces sequences of bytes to use as the tensor data
    */
-  public <T> void init(NdArray<T> data, Function<T, byte[]> getBytes) {
+  public <T> void init(ByteSequenceProvider<T> byteSequenceProvider) {
     InitDataWriter writer = new InitDataWriter();
-    for (NdArray<T> scalar : data.scalars()) {
-      writer.writeNext(getBytes.apply(scalar.getObject()));
-    }
+    byteSequenceProvider.forEach(writer::writeNext);
   }
 
   @Override
@@ -129,8 +124,8 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
 
   @Override
   public DataBuffer<byte[]> copyTo(DataBuffer<byte[]> dst, long size) {
-    if (size == size() && dst instanceof StringTensorBuffer) {
-      StringTensorBuffer tensorDst = (StringTensorBuffer) dst;
+    if (size == size() && dst instanceof ByteSequenceTensorBuffer) {
+      ByteSequenceTensorBuffer tensorDst = (ByteSequenceTensorBuffer) dst;
       if (offsets.size() != size || data.size() != size) {
         throw new IllegalArgumentException(
             "Cannot copy string tensor data to another tensor of a different size");
@@ -145,20 +140,20 @@ public class StringTensorBuffer extends AbstractDataBuffer<byte[]> {
 
   @Override
   public DataBuffer<byte[]> offset(long index) {
-    return new StringTensorBuffer(offsets.offset(index), data);
+    return new ByteSequenceTensorBuffer(offsets.offset(index), data);
   }
 
   @Override
   public DataBuffer<byte[]> narrow(long size) {
-    return new StringTensorBuffer(offsets.narrow(size), data);
+    return new ByteSequenceTensorBuffer(offsets.narrow(size), data);
   }
 
   @Override
   public DataBuffer<byte[]> slice(long index, long size) {
-    return new StringTensorBuffer(offsets.slice(index, size), data);
+    return new ByteSequenceTensorBuffer(offsets.slice(index, size), data);
   }
 
-  StringTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
+  ByteSequenceTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
     this.offsets = offsets;
     this.data = data;
   }
