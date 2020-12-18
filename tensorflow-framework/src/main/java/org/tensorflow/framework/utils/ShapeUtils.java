@@ -75,9 +75,7 @@ public class ShapeUtils {
   /**
    * Converts a TInt32 or TInt64 to a java long array
    *
-   * @param scope the TensorFlow scope
    * @param dims the dimension tensor
-   * @param <T> the type of the dimensions, must either be TInt32 or TInt64 type
    * @return the long array
    * @throws java.lang.IllegalArgumentException if the dims type is not an integer
    */
