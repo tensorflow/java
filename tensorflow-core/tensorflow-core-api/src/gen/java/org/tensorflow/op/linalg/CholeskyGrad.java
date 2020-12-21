@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the reverse mode backpropagated gradient of the Cholesky algorithm.

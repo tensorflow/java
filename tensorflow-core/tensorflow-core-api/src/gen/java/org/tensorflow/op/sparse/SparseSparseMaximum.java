@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise max of two SparseTensors.

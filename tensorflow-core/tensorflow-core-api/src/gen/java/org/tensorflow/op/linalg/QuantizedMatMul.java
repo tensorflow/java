@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -87,7 +88,7 @@ public final class QuantizedMatMul<V extends TType> extends RawOp {
    * @return a new instance of QuantizedMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<V> Toutput, DataType<W> Tactivation, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> create(Scope scope, Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Class<V> Toutput, Class<W> Tactivation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMul", scope.makeOpName("QuantizedMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -96,8 +97,8 @@ public final class QuantizedMatMul<V extends TType> extends RawOp {
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Toutput", Toutput);
-    opBuilder.setAttr("Tactivation", Tactivation);
+    opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
+    opBuilder.setAttr("Tactivation", Operands.toDataType(Tactivation));
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {

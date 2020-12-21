@@ -79,8 +79,8 @@ public class AdaGradTest {
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
-      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
-      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
       Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
       Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));

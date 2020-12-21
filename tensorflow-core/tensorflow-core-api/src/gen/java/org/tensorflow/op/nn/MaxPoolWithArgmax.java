@@ -18,18 +18,18 @@ limitations under the License.
 package org.tensorflow.op.nn;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs max pooling on the input and outputs both max values and indices.
@@ -83,7 +83,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
    * @return a new instance of MaxPoolWithArgmax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, DataType<U> Targmax, String padding, Options... options) {
+  public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolWithArgmax", scope.makeOpName("MaxPoolWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -97,7 +97,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
-    opBuilder.setAttr("Targmax", Targmax);
+    opBuilder.setAttr("Targmax", Operands.toDataType(Targmax));
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {
@@ -123,7 +123,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> MaxPoolWithArgmax<T, TInt64> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
-    return create(scope, input, ksize, strides, TInt64.DTYPE, padding, options);
+    return create(scope, input, ksize, strides, TInt64.class, padding, options);
   }
   
   /**

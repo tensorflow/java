@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -163,12 +164,12 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
    * @return a new instance of SparseMatrixSparseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, DataType<T> type, Options... options) {
+  public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope, Operand<?> a, Operand<?> b, Class<T> type, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseMatMul", scope.makeOpName("SparseMatrixSparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", type);
+    opBuilder.setAttr("type", Operands.toDataType(type));
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {

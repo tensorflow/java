@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data.impl;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
 import org.tensorflow.op.Ops;
@@ -25,6 +24,7 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 
 import java.util.List;
+import org.tensorflow.types.family.TType;
 
 public class BatchDataset extends Dataset {
   public BatchDataset(
@@ -32,7 +32,7 @@ public class BatchDataset extends Dataset {
       Operand<?> variant,
       Constant<TInt64> batchSize,
       Constant<TBool> dropRemainder,
-      List<DataType<?>> outputTypes,
+      List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     super(
         tf,

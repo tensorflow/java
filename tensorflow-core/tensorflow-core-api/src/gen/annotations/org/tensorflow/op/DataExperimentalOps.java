@@ -18,12 +18,12 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.experimental.DataServiceDataset;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code data.experimental} operations as {@link Op Op}s
@@ -57,7 +57,7 @@ public final class DataExperimentalOps {
   public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
       Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       DataServiceDataset.Options... options) {
     return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
   }

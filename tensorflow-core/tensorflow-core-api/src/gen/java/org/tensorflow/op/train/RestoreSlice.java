@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -79,13 +80,13 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
    * @return a new instance of RestoreSlice
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt, Options... options) {
+  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());
     opBuilder.addInput(shapeAndSlice.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dt", dt);
+    opBuilder.setAttr("dt", Operands.toDataType(dt));
     if (options != null) {
       for (Options opts : options) {
         if (opts.preferredShard != null) {

@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,6 +29,7 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -78,16 +78,12 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
    * @return a new instance of MlirPassthroughOp
    */
   @Endpoint(describeByClass = true)
-  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<DataType<?>> Toutputs) {
+  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<Class<? extends TType>> Toutputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MlirPassthroughOp", scope.makeOpName("MlirPassthroughOp"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("mlir_module", mlirModule);
-    DataType[] ToutputsArray = new DataType[Toutputs.size()];
-    for (int i = 0; i < ToutputsArray.length; ++i) {
-      ToutputsArray[i] = Toutputs.get(i);
-    }
-    opBuilder.setAttr("Toutputs", ToutputsArray);
+    opBuilder.setAttr("Toutputs", Operands.toDataTypes(Toutputs));
     return new MlirPassthroughOp(opBuilder.build());
   }
   

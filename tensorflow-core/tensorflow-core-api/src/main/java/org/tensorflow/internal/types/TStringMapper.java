@@ -18,11 +18,10 @@ package org.tensorflow.internal.types;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
-import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.buffer.ByteSequenceProvider;
+import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -79,8 +78,8 @@ public final class TStringMapper extends TensorMapper<TString> {
     }
 
     @Override
-    public DataType<?> dataType() {
-      return TString.DTYPE;
+    public Class<TString> type() {
+      return TString.class;
     }
 
     @Override

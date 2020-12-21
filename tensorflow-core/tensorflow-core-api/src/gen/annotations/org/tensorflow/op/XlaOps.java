@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.xla.BroadcastHelper;
@@ -281,7 +280,7 @@ public final class XlaOps {
    * @param shape The shape of the tensor.
    * @return a new instance of Recv
    */
-  public <T extends TType> Recv<T> recv(DataType<T> dtype, String tensorName, Shape shape) {
+  public <T extends TType> Recv<T> recv(Class<T> dtype, String tensorName, Shape shape) {
     return Recv.create(scope, dtype, tensorName, shape);
   }
 

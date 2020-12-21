@@ -17,18 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the shape of the variable pointed to by `resource`.
@@ -56,11 +56,11 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
    * @return a new instance of VariableShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, DataType<T> outType) {
+  public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, Class<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new VariableShape<T>(opBuilder.build());
   }
   
@@ -73,7 +73,7 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
    */
   @Endpoint(describeByClass = true)
   public static VariableShape<TInt32> create(Scope scope, Operand<?> input) {
-    return create(scope, input, TInt32.DTYPE);
+    return create(scope, input, TInt32.class);
   }
   
   /**

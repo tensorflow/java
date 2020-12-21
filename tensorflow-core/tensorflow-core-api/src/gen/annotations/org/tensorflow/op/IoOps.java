@@ -18,7 +18,6 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.io.DecodeBase64;
@@ -171,7 +170,7 @@ public final class IoOps {
    * @return a new instance of DecodePaddedRaw
    */
   public <T extends TNumber> DecodePaddedRaw<T> decodePaddedRaw(Operand<TString> inputBytes,
-      Operand<TInt32> fixedLength, DataType<T> outType, DecodePaddedRaw.Options... options) {
+      Operand<TInt32> fixedLength, Class<T> outType, DecodePaddedRaw.Options... options) {
     return DecodePaddedRaw.create(scope, inputBytes, fixedLength, outType, options);
   }
 
@@ -184,7 +183,7 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of DecodeRaw
    */
-  public <T extends TType> DecodeRaw<T> decodeRaw(Operand<TString> bytes, DataType<T> outType,
+  public <T extends TType> DecodeRaw<T> decodeRaw(Operand<TString> bytes, Class<T> outType,
       DecodeRaw.Options... options) {
     return DecodeRaw.create(scope, bytes, outType, options);
   }
@@ -241,7 +240,7 @@ public final class IoOps {
    * @return a new instance of DeserializeManySparse
    */
   public <T extends TType> DeserializeManySparse<T> deserializeManySparse(
-      Operand<TString> serializedSparse, DataType<T> dtype) {
+      Operand<TString> serializedSparse, Class<T> dtype) {
     return DeserializeManySparse.create(scope, serializedSparse, dtype);
   }
 
@@ -270,7 +269,8 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of FifoQueue
    */
-  public FifoQueue fifoQueue(List<DataType<?>> componentTypes, FifoQueue.Options... options) {
+  public FifoQueue fifoQueue(List<Class<? extends TType>> componentTypes,
+      FifoQueue.Options... options) {
     return FifoQueue.create(scope, componentTypes, options);
   }
 
@@ -334,7 +334,7 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of PaddingFifoQueue
    */
-  public PaddingFifoQueue paddingFifoQueue(List<DataType<?>> componentTypes,
+  public PaddingFifoQueue paddingFifoQueue(List<Class<? extends TType>> componentTypes,
       PaddingFifoQueue.Options... options) {
     return PaddingFifoQueue.create(scope, componentTypes, options);
   }
@@ -396,9 +396,9 @@ public final class IoOps {
    */
   public ParseExample parseExample(Operand<TString> serialized, Operand<TString> names,
       Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys,
-      Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes,
-      List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes,
-      List<Shape> denseShapes) {
+      Iterable<Operand<?>> denseDefaults, Long numSparse, List<Class<? extends TType>> sparseTypes,
+      List<Class<? extends TType>> raggedValueTypes,
+      List<Class<? extends TNumber>> raggedSplitTypes, List<Shape> denseShapes) {
     return ParseExample.create(scope, serialized, names, sparseKeys, denseKeys, raggedKeys, denseDefaults, numSparse, sparseTypes, raggedValueTypes, raggedSplitTypes, denseShapes);
   }
 
@@ -454,10 +454,13 @@ public final class IoOps {
       Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys,
       Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys,
       Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty,
-      Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes,
-      List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes,
-      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
-      List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes,
+      Iterable<Operand<?>> contextDenseDefaults, List<Class<? extends TType>> contextSparseTypes,
+      List<Class<? extends TType>> contextRaggedValueTypes,
+      List<Class<? extends TNumber>> contextRaggedSplitTypes,
+      List<Class<? extends TType>> featureListDenseTypes,
+      List<Class<? extends TType>> featureListSparseTypes,
+      List<Class<? extends TType>> featureListRaggedValueTypes,
+      List<Class<? extends TNumber>> featureListRaggedSplitTypes,
       ParseSequenceExample.Options... options) {
     return ParseSequenceExample.create(scope, serialized, debugName, contextSparseKeys, contextDenseKeys, contextRaggedKeys, featureListSparseKeys, featureListDenseKeys, featureListRaggedKeys, featureListDenseMissingAssumedEmpty, contextDenseDefaults, contextSparseTypes, contextRaggedValueTypes, contextRaggedSplitTypes, featureListDenseTypes, featureListSparseTypes, featureListRaggedValueTypes, featureListRaggedSplitTypes, options);
   }
@@ -499,7 +502,7 @@ public final class IoOps {
    */
   public ParseSingleExample parseSingleExample(Operand<TString> serialized,
       Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys,
-      List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
+      List<String> denseKeys, List<Class<? extends TType>> sparseTypes, List<Shape> denseShapes) {
     return ParseSingleExample.create(scope, serialized, denseDefaults, numSparse, sparseKeys, denseKeys, sparseTypes, denseShapes);
   }
 
@@ -553,8 +556,9 @@ public final class IoOps {
       Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys,
       Iterable<Operand<TString>> featureListSparseKeys,
       Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults,
-      Operand<TString> debugName, List<DataType<?>> contextSparseTypes,
-      List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes,
+      Operand<TString> debugName, List<Class<? extends TType>> contextSparseTypes,
+      List<Class<? extends TType>> featureListDenseTypes,
+      List<Class<? extends TType>> featureListSparseTypes,
       ParseSingleSequenceExample.Options... options) {
     return ParseSingleSequenceExample.create(scope, serialized, featureListDenseMissingAssumedEmpty, contextSparseKeys, contextDenseKeys, featureListSparseKeys, featureListDenseKeys, contextDenseDefaults, debugName, contextSparseTypes, featureListDenseTypes, featureListSparseTypes, options);
   }
@@ -569,7 +573,7 @@ public final class IoOps {
    * @return a new instance of ParseTensor
    */
   public <T extends TType> ParseTensor<T> parseTensor(Operand<TString> serialized,
-      DataType<T> outType) {
+      Class<T> outType) {
     return ParseTensor.create(scope, serialized, outType);
   }
 
@@ -590,8 +594,8 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of PriorityQueue
    */
-  public PriorityQueue priorityQueue(List<DataType<?>> componentTypes, List<Shape> shapes,
-      PriorityQueue.Options... options) {
+  public PriorityQueue priorityQueue(List<Class<? extends TType>> componentTypes,
+      List<Shape> shapes, PriorityQueue.Options... options) {
     return PriorityQueue.create(scope, componentTypes, shapes, options);
   }
 
@@ -627,7 +631,7 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of QueueDequeue
    */
-  public QueueDequeue queueDequeue(Operand<?> handle, List<DataType<?>> componentTypes,
+  public QueueDequeue queueDequeue(Operand<?> handle, List<Class<? extends TType>> componentTypes,
       QueueDequeue.Options... options) {
     return QueueDequeue.create(scope, handle, componentTypes, options);
   }
@@ -656,7 +660,7 @@ public final class IoOps {
    * @return a new instance of QueueDequeueMany
    */
   public QueueDequeueMany queueDequeueMany(Operand<?> handle, Operand<TInt32> n,
-      List<DataType<?>> componentTypes, QueueDequeueMany.Options... options) {
+      List<Class<? extends TType>> componentTypes, QueueDequeueMany.Options... options) {
     return QueueDequeueMany.create(scope, handle, n, componentTypes, options);
   }
 
@@ -688,7 +692,7 @@ public final class IoOps {
    * @return a new instance of QueueDequeueUpTo
    */
   public QueueDequeueUpTo queueDequeueUpTo(Operand<?> handle, Operand<TInt32> n,
-      List<DataType<?>> componentTypes, QueueDequeueUpTo.Options... options) {
+      List<Class<? extends TType>> componentTypes, QueueDequeueUpTo.Options... options) {
     return QueueDequeueUpTo.create(scope, handle, n, componentTypes, options);
   }
 
@@ -765,7 +769,7 @@ public final class IoOps {
    * @param options carries optional attributes values
    * @return a new instance of RandomShuffleQueue
    */
-  public RandomShuffleQueue randomShuffleQueue(List<DataType<?>> componentTypes,
+  public RandomShuffleQueue randomShuffleQueue(List<Class<? extends TType>> componentTypes,
       RandomShuffleQueue.Options... options) {
     return RandomShuffleQueue.create(scope, componentTypes, options);
   }
@@ -917,7 +921,7 @@ public final class IoOps {
    */
   public <U extends TType, T extends TType> SerializeManySparse<U> serializeManySparse(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
-      DataType<U> outType) {
+      Class<U> outType) {
     return SerializeManySparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
   }
 
@@ -948,7 +952,7 @@ public final class IoOps {
    */
   public <U extends TType, T extends TType> SerializeSparse<U> serializeSparse(
       Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape,
-      DataType<U> outType) {
+      Class<U> outType) {
     return SerializeSparse.create(scope, sparseIndices, sparseValues, sparseShape, outType);
   }
 

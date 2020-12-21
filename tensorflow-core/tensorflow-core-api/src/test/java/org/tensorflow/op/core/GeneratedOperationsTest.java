@@ -70,7 +70,7 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.DTYPE);
+      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.class);
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
       ArrayList<Op> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));

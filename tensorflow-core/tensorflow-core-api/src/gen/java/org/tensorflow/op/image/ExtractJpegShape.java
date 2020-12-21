@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Extract the shape information of a JPEG-encoded image.
@@ -51,11 +51,11 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
    * @return a new instance of ExtractJpegShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, DataType<T> outputType) {
+  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, Class<T> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_type", outputType);
+    opBuilder.setAttr("output_type", Operands.toDataType(outputType));
     return new ExtractJpegShape<T>(opBuilder.build());
   }
   
@@ -68,7 +68,7 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
    */
   @Endpoint(describeByClass = true)
   public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
-    return create(scope, contents, TInt32.DTYPE);
+    return create(scope, contents, TInt32.class);
   }
   
   /**

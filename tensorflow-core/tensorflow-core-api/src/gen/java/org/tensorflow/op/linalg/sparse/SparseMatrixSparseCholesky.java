@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -115,12 +116,12 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
    * @return a new instance of SparseMatrixSparseCholesky
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, DataType<T> type) {
+  public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope, Operand<?> input, Operand<TInt32> permutation, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(permutation.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", type);
+    opBuilder.setAttr("type", Operands.toDataType(type));
     return new SparseMatrixSparseCholesky(opBuilder.build());
   }
   

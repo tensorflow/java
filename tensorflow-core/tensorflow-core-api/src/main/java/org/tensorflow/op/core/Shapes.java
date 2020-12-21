@@ -15,16 +15,12 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.Arrays;
-
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-
-import org.tensorflow.op.math.FloorMod;
-
 import org.tensorflow.op.dtypes.Cast;
+import org.tensorflow.op.math.FloorMod;
 import org.tensorflow.op.math.NotEqual;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TBool;
@@ -51,8 +47,8 @@ import org.tensorflow.types.family.TType;
  * Operand<TInt32> numPred = tf.shape.size(predShape, tf.constant(0));
  * Operand<TFloat32> predFlat = tf.shape.flatten(yPred);
  *
- * Shape<TInt64> predShape64 = tf.shape(yPred, TInt64.DTYPE);
- * Operand<TInt64> predSqueezed = tf.shape.squeeze(predShape64, TInt64.DTYPE);
+ * Shape<TInt64> predShape64 = tf.shape(yPred, TInt64.class);
+ * Operand<TInt64> predSqueezed = tf.shape.squeeze(predShape64, TInt64.class);
  * }</pre>
  */
 @Operator(group = "shape")
@@ -68,7 +64,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "flatten")
   public static <T extends TType> Operand<T> flatten(Scope scope, Operand<T> operand) {
-    return flatten(scope, operand, TInt32.DTYPE);
+    return flatten(scope, operand, TInt32.class);
   }
 
   /**
@@ -83,7 +79,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "flatten")
   public static <T extends TType, U extends TNumber> Operand<T> flatten(
-      Scope scope, Operand<T> operand, DataType<U> dType) {
+      Scope scope, Operand<T> operand, Class<U> dType) {
     Operand<U> flatShape = flatten(scope, Shape.create(scope, operand, dType), dType);
     return Reshape.create(scope, operand, flatShape);
   }
@@ -97,7 +93,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "flatten")
   public static Operand<TInt32> flatten(Scope scope, Shape<TInt32> shape) {
-    return flatten(scope, shape, TInt32.DTYPE);
+    return flatten(scope, shape, TInt32.class);
   }
 
   /**
@@ -111,11 +107,11 @@ public abstract class Shapes {
    */
   @Endpoint(name = "flatten")
   public static <U extends TNumber> Operand<U> flatten(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     return ExpandDims.create(
         scope,
         size(scope, shape, dType),
-        Cast.create(scope, Constant.scalarOf(scope, -1), TInt32.DTYPE));
+        Cast.create(scope, Constant.scalarOf(scope, -1), TInt32.class));
   }
 
   /**
@@ -127,7 +123,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "size")
   public static Operand<TInt32> size(Scope scope, Shape<TInt32> shape) {
-    return size(scope, shape, TInt32.DTYPE);
+    return size(scope, shape, TInt32.class);
   }
 
   /**
@@ -141,7 +137,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "size")
   public static <U extends TNumber> Operand<U> size(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     Slice<U> dims =
         Slice.create(
             scope,
@@ -164,7 +160,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "size")
   public static Operand<TInt32> size(Scope scope, Shape<TInt32> shape, Operand<TInt32> dim) {
-    return size(scope, shape, dim, TInt32.DTYPE);
+    return size(scope, shape, dim, TInt32.class);
   }
 
   /**
@@ -179,7 +175,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "size")
   public static <U extends TNumber> Operand<U> size(
-      Scope scope, Shape<U> shape, Operand<U> dim, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> dim, Class<U> dType) {
     return Slice.create(
         scope,
         shape,
@@ -201,7 +197,7 @@ public abstract class Shapes {
   @Endpoint(name = "size")
   public static <T extends TType> Operand<TInt32> size(
       Scope scope, Operand<T> input, Operand<TInt32> dim) {
-    return size(scope, input, dim, TInt32.DTYPE);
+    return size(scope, input, dim, TInt32.class);
   }
 
   /**
@@ -216,7 +212,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "size")
   public static <T extends TType, U extends TNumber> Operand<U> size(
-      Scope scope, Operand<T> input, Operand<U> dim, DataType<U> dType) {
+      Scope scope, Operand<T> input, Operand<U> dim, Class<U> dType) {
     return size(scope, Shape.create(scope, input, dType), dim, dType);
   }
 
@@ -229,7 +225,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "numDimensions")
   public static Operand<TInt32> numDimensions(Scope scope, Shape<TInt32> shape) {
-    return Size.create(scope, shape, TInt32.DTYPE);
+    return Size.create(scope, shape, TInt32.class);
   }
 
   /**
@@ -243,7 +239,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "numDimensions")
   public static <U extends TNumber> Operand<U> numDimensions(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     return Size.create(scope, shape, dType);
   }
 
@@ -259,7 +255,7 @@ public abstract class Shapes {
   @Endpoint(name = "reduceDims")
   public static <T extends TType> Operand<T> reduceDims(
       Scope scope, Operand<T> operand, Operand<TInt32> axis) {
-    return reduceDims(scope, operand, axis, TInt32.DTYPE);
+    return reduceDims(scope, operand, axis, TInt32.class);
   }
 
   /**
@@ -275,7 +271,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "reduceDims")
   public static <T extends TType, U extends TNumber> Operand<T> reduceDims(
-      Scope scope, Operand<T> operand, Operand<U> axis, DataType<U> dType) {
+      Scope scope, Operand<T> operand, Operand<U> axis, Class<U> dType) {
     Shape<U> newShape = Shape.create(scope, operand, dType);
     return Reshape.create(scope, operand, reduceDims(scope, newShape, axis, dType));
   }
@@ -290,7 +286,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "reduceDims")
   public static Operand<TInt32> reduceDims(Scope scope, Shape<TInt32> shape, Operand<TInt32> axis) {
-    return reduceDims(scope, shape, axis, TInt32.DTYPE);
+    return reduceDims(scope, shape, axis, TInt32.class);
   }
 
   /**
@@ -305,7 +301,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "reduceDims")
   public static <U extends TNumber> Operand<U> reduceDims(
-      Scope scope, Shape<U> shape, Operand<U> axis, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> axis, Class<U> dType) {
     Size<U> rank = Size.create(scope, shape, dType);
     axis = FloorMod.create(scope, axis, rank);
     Sub<U> remainder = Sub.create(scope, rank, axis);
@@ -343,7 +339,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "squeeze")
   public static Operand<TInt32> squeeze(Scope scope, Shape<TInt32> shape) {
-    return squeeze(scope, shape, TInt32.DTYPE);
+    return squeeze(scope, shape, TInt32.class);
   }
 
   /**
@@ -357,7 +353,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "squeeze")
   public static <U extends TNumber> Operand<U> squeeze(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     Operand<TBool> mask =
         NotEqual.create(scope, shape, Cast.create(scope, OnesLike.create(scope, shape), dType));
 
@@ -373,7 +369,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "head")
   public static Operand<TInt32> head(Scope scope, Shape<TInt32> shape) {
-    return head(scope, shape, TInt32.DTYPE);
+    return head(scope, shape, TInt32.class);
   }
 
   /**
@@ -387,7 +383,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "head")
   public static <U extends TNumber> Operand<U> head(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     return take(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), dType), dType);
   }
 
@@ -403,7 +399,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "take")
   public static Operand<TInt32> take(Scope scope, Shape<TInt32> shape, Operand<TInt32> n) {
-    return take(scope, shape, n, TInt32.DTYPE);
+    return take(scope, shape, n, TInt32.class);
   }
 
   /**
@@ -420,7 +416,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "take")
   public static <U extends TNumber> Operand<U> take(
-      Scope scope, Shape<U> shape, Operand<U> n, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> n, Class<U> dType) {
     return Slice.create(
         scope,
         shape,
@@ -439,7 +435,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "tail")
   public static Operand<TInt32> tail(Scope scope, Shape<TInt32> shape) {
-    return tail(scope, shape, TInt32.DTYPE);
+    return tail(scope, shape, TInt32.class);
   }
 
   /**
@@ -455,7 +451,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "tail")
   public static <U extends TNumber> Operand<U> tail(
-      Scope scope, Shape<U> shape, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> dType) {
     return takeLast(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), dType), dType);
   }
 
@@ -472,7 +468,7 @@ public abstract class Shapes {
   @Endpoint(name = "takeLast")
   public static <U extends TNumber> Operand<TInt32> takeLast(
       Scope scope, Shape<TInt32> shape, Operand<TInt32> n) {
-    return takeLast(scope, shape, n, TInt32.DTYPE);
+    return takeLast(scope, shape, n, TInt32.class);
   }
 
   /**
@@ -489,7 +485,7 @@ public abstract class Shapes {
    */
   @Endpoint(name = "takeLast")
   public static <U extends TNumber> Operand<U> takeLast(
-      Scope scope, Shape<U> shape, Operand<U> n, DataType<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> n, Class<U> dType) {
 
     Size<U> rank = Size.create(scope, shape, dType);
     Sub<U> start = Sub.create(scope, rank, n);

@@ -125,15 +125,13 @@ public class SquaredHinge extends Loss {
   public <T extends TNumber, U extends TNumber> Operand<T> call(
       Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     @SuppressWarnings("unchecked")
-    Operand<T> tLabels = predictions.asOutput().dataType() == labels.asOutput().dataType() ?
-            (Operand<T>)labels :
-            cast(tf,  labels, predictions.asOutput().dataType());
+    Operand<T> tLabels = predictions.type() == labels.type() ?
+            (Operand<T>)labels : cast(tf,  labels, predictions.type());
     tLabels = LossesHelper.valueCheck(
             getTF(),
             "labels value check [-1, 0, 1]",
             tLabels,
-            cast(getTF(), getTF().constant(new int[] { -1, 0, 1}),
-                    predictions.asOutput().dataType()));
+            cast(getTF(), getTF().constant(new int[] { -1, 0, 1}), predictions.type()));
     Operand<T> losses = Losses.squaredHinge(getTF(), tLabels, predictions);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }

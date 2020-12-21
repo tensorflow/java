@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generates points from the Sobol sequence.
@@ -54,13 +54,13 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
    * @return a new instance of SobolSample
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, DataType<T> dtype) {
+  public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SobolSample", scope.makeOpName("SobolSample"));
     opBuilder.addInput(dim.asOutput());
     opBuilder.addInput(numResults.asOutput());
     opBuilder.addInput(skip.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new SobolSample<T>(opBuilder.build());
   }
   
@@ -77,7 +77,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
    */
   @Endpoint(describeByClass = true)
   public static SobolSample<TFloat32> create(Scope scope, Operand<TInt32> dim, Operand<TInt32> numResults, Operand<TInt32> skip) {
-    return create(scope, dim, numResults, skip, TFloat32.DTYPE);
+    return create(scope, dim, numResults, skip, TFloat32.class);
   }
   
   /**

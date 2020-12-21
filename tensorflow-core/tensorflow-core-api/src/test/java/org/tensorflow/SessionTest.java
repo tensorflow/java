@@ -165,7 +165,7 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.DTYPE);
+      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
       tf.initAdd(tf.assign(var1, tf.constant(10)));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
@@ -185,7 +185,7 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.DTYPE);
+      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
       tf.initAdd(tf.assign(var1, tf.constant(10)));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
@@ -212,8 +212,8 @@ public class SessionTest {
     Path testFolder = Files.createTempDirectory("tf-session-save-test");
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
-      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.DTYPE));
+      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
 
       try (Session s = new Session(g)) {
@@ -241,7 +241,7 @@ public class SessionTest {
   private static void transpose_A_times_X(Ops tf, int[][] a) {
     tf.withName("Y").linalg.matMul(
         tf.withName("A").constant(a),
-        tf.withName("X").placeholder(TInt32.DTYPE),
+        tf.withName("X").placeholder(TInt32.class),
         MatMul.transposeA(true).transposeB(false)
     );
   }

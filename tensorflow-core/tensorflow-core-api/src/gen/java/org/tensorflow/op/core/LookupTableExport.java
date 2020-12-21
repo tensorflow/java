@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -47,12 +48,12 @@ public final class LookupTableExport<T extends TType, U extends TType> extends R
    * @return a new instance of LookupTableExport
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
+  public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope, Operand<?> tableHandle, Class<T> Tkeys, Class<U> Tvalues) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tkeys", Tkeys);
-    opBuilder.setAttr("Tvalues", Tvalues);
+    opBuilder.setAttr("Tkeys", Operands.toDataType(Tkeys));
+    opBuilder.setAttr("Tvalues", Operands.toDataType(Tvalues));
     return new LookupTableExport<T, U>(opBuilder.build());
   }
   

@@ -52,6 +52,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
@@ -224,7 +225,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, DataType value) {
     Graph.Reference r = graph.ref();
     try {
-      setAttrType(unsafeNativeHandle, name, value.nativeCode());
+      setAttrType(unsafeNativeHandle, name, value.getNumber());
     } finally {
       r.close();
     }
@@ -235,7 +236,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder setAttr(String name, DataType[] value) {
     int[] ctypes = new int[value.length];
     for (int i = 0; i < value.length; ++i) {
-      ctypes[i] = value[i].nativeCode();
+      ctypes[i] = value[i].getNumber();
     }
     Graph.Reference r = graph.ref();
     try {

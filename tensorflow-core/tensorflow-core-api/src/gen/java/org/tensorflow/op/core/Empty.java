@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -68,11 +69,11 @@ public final class Empty<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Empty
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape, DataType<T> dtype, Options... options) {
+  public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Empty", scope.makeOpName("Empty"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {
         if (opts.init != null) {

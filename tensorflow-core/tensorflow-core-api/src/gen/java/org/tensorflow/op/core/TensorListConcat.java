@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -62,13 +63,13 @@ public final class TensorListConcat<U extends TType> extends RawOp {
    * @return a new instance of TensorListConcat
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, DataType<U> elementDtype) {
+  public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(leadingDims.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("element_dtype", elementDtype);
+    opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListConcat<U>(opBuilder.build());
   }
   

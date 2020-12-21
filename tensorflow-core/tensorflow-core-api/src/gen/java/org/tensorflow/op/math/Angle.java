@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -63,11 +64,11 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Angle
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tout", Tout);
+    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     return new Angle<U>(opBuilder.build());
   }
   
@@ -80,7 +81,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TFloat32.DTYPE);
+    return create(scope, input, TFloat32.class);
   }
   
   /**

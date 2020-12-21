@@ -16,10 +16,16 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.Tensor;
+import org.tensorflow.internal.types.registry.TensorTypeRegistry;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.family.TType;
 
 /** Utilities for manipulating operand related types and lists. */
 public final class Operands {
@@ -39,6 +45,31 @@ public final class Operands {
       outputList.add(input.asOutput());
     }
     return outputList.toArray(new Output<?>[outputList.size()]);
+  }
+
+  /**
+   * Converts a tensor type class to a {@link DataType} attribute.
+   *
+   * @param type tensor type class
+   * @return data type
+   */
+  public static <T extends TType> DataType toDataType(Class<? extends T> type) {
+    return TensorTypeRegistry.find(type).dataType();
+  }
+
+  /**
+   * Converts a list of tensor type classes to an array of {@link DataType} attributes.
+   *
+   * @param types tensor type classes
+   * @return an array of data types
+   */
+  public static <T extends TType> DataType[] toDataTypes(Collection<Class<? extends T>> types) {
+    DataType[] dataTypes = new DataType[types.size()];
+    int i = 0;
+    for (Class<? extends TType> type : types) {
+      dataTypes[i++] = toDataType(type);
+    }
+    return dataTypes;
   }
 
   // Disabled constructor

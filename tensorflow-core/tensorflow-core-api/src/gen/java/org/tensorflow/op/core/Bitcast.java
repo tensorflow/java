@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -96,11 +97,11 @@ public final class Bitcast<U extends TType> extends RawOp implements Operand<U> 
    * @return a new instance of Bitcast
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Bitcast<U> create(Scope scope, Operand<T> input, DataType<U> type) {
+  public static <U extends TType, T extends TType> Bitcast<U> create(Scope scope, Operand<T> input, Class<U> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", type);
+    opBuilder.setAttr("type", Operands.toDataType(type));
     return new Bitcast<U>(opBuilder.build());
   }
   

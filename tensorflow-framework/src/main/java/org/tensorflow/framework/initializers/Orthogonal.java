@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.framework.utils.ShapeUtils;
@@ -22,6 +21,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.Qr;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -44,13 +44,12 @@ import org.tensorflow.types.family.TType;
  *      Orthogonal&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Orthogonal&lt;&gt;(tf);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  */
-public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitializer<T> {
+public class Orthogonal<T extends TFloating> extends BaseInitializer<T> {
 
   public static final double GAIN_DEFAULT = 1.0;
 
@@ -84,10 +83,7 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!dtype.isFloating()) {
-      throw new IllegalArgumentException("Expected floating point type, got " + dtype.name());
-    }
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     Shape dimsShape = ShapeUtils.toShape(tf.scope(), dims);
     if (dimsShape.numDimensions() < 2) {
       throw new IllegalArgumentException(
@@ -100,22 +96,17 @@ public class Orthogonal<T extends TType, U extends TNumber> extends BaseInitiali
     long numCols = dimsShape.size(i);
     Shape flatShape = Shape.of(Math.max(numRows, numCols), Math.min(numRows, numCols));
     long[] seeds = {seed, 0};
-    @SuppressWarnings("unchecked")
-    DataType<U> numdType = (DataType<U>) dtype;
-    @SuppressWarnings("unchecked")
     Operand<T> op =
-        (Operand<T>)
-            tf.random.statelessRandomNormal(tf.constant(flatShape), tf.constant(seeds), numdType);
-
+        tf.random.statelessRandomNormal(tf.constant(flatShape), tf.constant(seeds), type);
     Qr.Options qrOptions = Qr.fullMatrices(false);
     Qr<T> qrOp = tf.linalg.qr(op, qrOptions);
     Output<T> qo = qrOp.q();
     Output<T> ro = qrOp.r();
     Operand<T> diagOp =
-        tf.linalg.matrixDiagPart(ro, tf.constant(0), tf.dtypes.cast(tf.constant(0), dtype));
+        tf.linalg.matrixDiagPart(ro, tf.constant(0), tf.dtypes.cast(tf.constant(0), type));
     Operand<T> qop = tf.math.mul(qo, tf.math.sign(diagOp));
     if (numRows < numCols) qop = tf.linalg.transpose(qop, null);
 
-    return tf.math.mul(qop, tf.dtypes.cast(tf.constant(this.gain), dtype));
+    return tf.math.mul(qop, tf.dtypes.cast(tf.constant(this.gain), type));
   }
 }

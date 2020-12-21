@@ -81,13 +81,19 @@ class TypeResolver {
   std::pair<Type, Type> MakeTypePair(const Type& type) {
     return std::make_pair(type, type);
   }
-  Type NextGeneric() {
+  Type NextGeneric(const OpDef_AttrDef& attr_def) {
     char generic_letter = next_generic_letter_++;
     if (next_generic_letter_ > 'Z') {
       next_generic_letter_ = 'A';
     }
-    return Type::Generic(string(1, generic_letter))
-        .add_supertype(Type::Class("TType", "org.tensorflow.types.family"));
+    return Type::Generic(string(1, generic_letter));
+  }
+  Type TypeFamilyOf(const OpDef_AttrDef& attr_def) {
+    // TODO(karllessard) support more type families
+    if (IsRealNumbers(attr_def.allowed_values())) {
+      return Type::Interface("TNumber", "org.tensorflow.types.family");
+    }
+    return Type::Interface("TType", "org.tensorflow.types.family");
   }
 };
 
@@ -155,11 +161,9 @@ std::pair<Type, Type> TypeResolver::TypesOf(const OpDef_AttrDef& attr_def,
     types = MakeTypePair(Type::Class("Tensor", "org.tensorflow"));
 
   } else if (attr_type == "type") {
-    Type type = *iterable_out ? Type::Wildcard() : NextGeneric();
-    if (IsRealNumbers(attr_def.allowed_values())) {
-      type.add_supertype(Type::Class("TNumber", "org.tensorflow.types.family"));
-    }
-    types = MakeTypePair(type, Type::Enum("DataType", "org.tensorflow"));
+    Type type = *iterable_out ? Type::Wildcard() : NextGeneric(attr_def);
+    type.add_supertype(TypeFamilyOf(attr_def));
+    types = MakeTypePair(type, Type::Enum("DataType", "org.tensorflow.proto.framework"));
 
   } else {
     LOG(FATAL) << "Cannot resolve data type for attribute \"" << attr_type
@@ -305,7 +309,7 @@ AttributeSpec CreateAttribute(const OpDef_AttrDef& attr_def,
   bool iterable = false;
   std::pair<Type, Type> types = type_resolver->TypesOf(attr_def, &iterable);
   Type var_type = types.first.kind() == Type::GENERIC
-                      ? Type::DataTypeOf(types.first)
+                      ? Type::ClassOf(types.first)
                       : types.first;
   if (iterable) {
     var_type = Type::ListOf(var_type);

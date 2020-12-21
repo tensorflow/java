@@ -41,7 +41,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.DTYPE);
+      Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.class);
       try (TInt32 result = (TInt32)sess.runner().fetch(op).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(0, s.getInt()));
       }
@@ -54,7 +54,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
       try (TFloat32 result = (TFloat32)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(0.0f, s.getFloat(), 0));
       }
@@ -67,7 +67,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.DTYPE);
+      Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.class);
       try (TFloat64 result = (TFloat64)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(0.0f, s.getDouble(), 0));
       }
@@ -80,7 +80,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.DTYPE);
+      Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.class);
       try (TInt64 result = (TInt64)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(0L, s.getLong()));
       }
@@ -93,7 +93,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.DTYPE);
+      Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.class);
       try (TBool result = (TBool)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertFalse(s.getBoolean()));
       }
@@ -106,7 +106,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.DTYPE);
+      Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.class);
       try (TUint8 result = (TUint8)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(0, s.getByte()));
       }
@@ -119,7 +119,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.DTYPE);
+      Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.class);
       try (TString result = (TString)sess.runner().fetch(op.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertTrue(s.getObject().isEmpty()));
       }
@@ -132,7 +132,7 @@ public class ZerosTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {2, 2};
-      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.DTYPE);
+      Zeros<TFloat32> zeros = Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.class);
       List<?> results = sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }

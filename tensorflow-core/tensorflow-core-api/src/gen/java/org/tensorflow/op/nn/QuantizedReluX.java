@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -49,14 +50,14 @@ public final class QuantizedReluX<U extends TType> extends RawOp {
    * @return a new instance of QuantizedReluX
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizedReluX<U> create(Scope scope, Operand<T> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReluX", scope.makeOpName("QuantizedReluX"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(maxValue.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new QuantizedReluX<U>(opBuilder.build());
   }
   

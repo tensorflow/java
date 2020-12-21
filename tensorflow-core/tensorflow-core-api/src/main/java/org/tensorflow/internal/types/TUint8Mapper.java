@@ -16,7 +16,6 @@
  */
 package org.tensorflow.internal.types;
 
-import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -39,8 +38,8 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
   private static final class DenseTUint8 extends ByteDenseNdArray implements TUint8 {
 
     @Override
-    public DataType<?> dataType() {
-      return TUint8.DTYPE;
+    public Class<TUint8> type() {
+      return TUint8.class;
     }
 
     @Override

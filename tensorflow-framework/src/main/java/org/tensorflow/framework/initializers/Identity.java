@@ -14,12 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -33,12 +33,12 @@ import org.tensorflow.types.family.TType;
  *     Identity&lt;TFloat32&gt; initializer =
  *             new org.tensorflow.framework.initializers.Identity&lt;&gt;(tf);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
  */
-public class Identity<T extends TType> extends BaseInitializer<T> {
+public class Identity<T extends TFloating> extends BaseInitializer<T> {
   public static final double GAIN_DEFAULT = 1.0;
 
   private final double gain;
@@ -66,10 +66,7 @@ public class Identity<T extends TType> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!dtype.isFloating()) {
-      throw new IllegalArgumentException("DataType must be a float type: " + dtype.name());
-    }
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
@@ -79,9 +76,9 @@ public class Identity<T extends TType> extends BaseInitializer<T> {
     Shape diagShape = Shape.of(diagSize);
 
     Operand<T> op;
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), dtype);
+    Operand<T> zero = tf.dtypes.cast(tf.constant(0), type);
     Operand<T> diagOnes =
-        tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), dtype));
+        tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), type));
     if (isSquare) {
       op =
           tf.linalg.matrixDiag(
@@ -91,10 +88,10 @@ public class Identity<T extends TType> extends BaseInitializer<T> {
               tf.constant((int) shape.size(1)),
               zero);
     } else {
-      Operand<T> zeroMatrix = tf.zeros(dims, dtype);
+      Operand<T> zeroMatrix = tf.zeros(dims, type);
       op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 
-    return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), dtype));
+    return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), type));
   }
 }

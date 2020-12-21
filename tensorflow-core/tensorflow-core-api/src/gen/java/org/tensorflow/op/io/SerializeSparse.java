@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -50,13 +51,13 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
    * @return a new instance of SerializeSparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
+  public static <U extends TType, T extends TType> SerializeSparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeSparse", scope.makeOpName("SerializeSparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new SerializeSparse<U>(opBuilder.build());
   }
   
@@ -71,7 +72,7 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> SerializeSparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
+    return create(scope, sparseIndices, sparseValues, sparseShape, TString.class);
   }
   
   /**

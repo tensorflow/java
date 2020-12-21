@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -51,13 +52,13 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
    * @return a new instance of StatefulStandardNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, DataType<U> dtype) {
+  public static <U extends TType, T extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatefulStandardNormal<U>(opBuilder.build());
   }
   
@@ -72,7 +73,7 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
-    return create(scope, resource, algorithm, shape, TFloat32.DTYPE);
+    return create(scope, resource, algorithm, shape, TFloat32.class);
   }
   
   /**

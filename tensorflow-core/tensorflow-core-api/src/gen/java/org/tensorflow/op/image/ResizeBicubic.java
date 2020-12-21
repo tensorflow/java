@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Resize `images` to `size` using bicubic interpolation.

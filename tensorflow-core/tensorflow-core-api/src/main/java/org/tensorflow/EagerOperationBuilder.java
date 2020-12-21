@@ -48,6 +48,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * An {@link OperationBuilder} for building {@link Operation Operations} that are executed eagerly.
@@ -159,16 +160,16 @@ final class EagerOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, DataType<?> value) {
-    setAttrType(opHandle, name, value.nativeCode());
+  public EagerOperationBuilder setAttr(String name, DataType value) {
+    setAttrType(opHandle, name, value.getNumber());
     return this;
   }
 
   @Override
-  public EagerOperationBuilder setAttr(String name, DataType<?>[] values) {
+  public EagerOperationBuilder setAttr(String name, DataType[] values) {
     int[] c = new int[values.length];
     for (int i = 0; i < values.length; ++i) {
-      c[i] = values[i].nativeCode();
+      c[i] = values[i].getNumber();
     }
     setAttrTypeList(opHandle, name, c);
     return this;

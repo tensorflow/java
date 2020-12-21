@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -58,7 +59,7 @@ public final class Requantize<U extends TType> extends RawOp {
    * @return a new instance of Requantize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Requantize", scope.makeOpName("Requantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -66,7 +67,7 @@ public final class Requantize<U extends TType> extends RawOp {
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new Requantize<U>(opBuilder.build());
   }
   

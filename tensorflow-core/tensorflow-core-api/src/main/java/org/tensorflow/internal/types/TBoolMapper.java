@@ -16,7 +16,6 @@
  */
 package org.tensorflow.internal.types;
 
-import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -39,8 +38,8 @@ public final class TBoolMapper extends TensorMapper<TBool> {
   private static final class DenseTBool extends BooleanDenseNdArray implements TBool {
 
     @Override
-    public DataType<TBool> dataType() {
-      return TBool.DTYPE;
+    public Class<TBool> type() {
+      return TBool.class;
     }
 
     @Override

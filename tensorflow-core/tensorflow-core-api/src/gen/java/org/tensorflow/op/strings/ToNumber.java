@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts each string in the input Tensor to the specified numeric type.
@@ -58,11 +58,11 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of ToNumber
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, DataType<T> outType) {
+  public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor, Class<T> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToNumber", scope.makeOpName("ToNumber"));
     opBuilder.addInput(stringTensor.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new ToNumber<T>(opBuilder.build());
   }
   
@@ -75,7 +75,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    */
   @Endpoint(describeByClass = true)
   public static ToNumber<TFloat32> create(Scope scope, Operand<TString> stringTensor) {
-    return create(scope, stringTensor, TFloat32.DTYPE);
+    return create(scope, stringTensor, TFloat32.class);
   }
   
   /**

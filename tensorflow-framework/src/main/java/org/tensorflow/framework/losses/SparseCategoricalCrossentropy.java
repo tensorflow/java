@@ -205,8 +205,8 @@ public class SparseCategoricalCrossentropy extends Loss {
                       getTF(),
                       "predictions range check [0-1]",
                       predictions,
-                      cast(getTF(), getTF().constant(0), predictions.asOutput().dataType()),
-                      cast(getTF(), getTF().constant(1), predictions.asOutput().dataType()));
+                      cast(getTF(), getTF().constant(0), predictions.type()),
+                      cast(getTF(), getTF().constant(1), predictions.type()));
 
     } else {
       lPredictions = predictions;

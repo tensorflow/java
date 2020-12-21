@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,6 +29,7 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -57,15 +57,11 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
    * @return a new instance of RemoteFusedGraphExecute
    */
   @Endpoint(describeByClass = true)
-  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
+  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
-    DataType[] ToutputsArray = new DataType[Toutputs.size()];
-    for (int i = 0; i < ToutputsArray.length; ++i) {
-      ToutputsArray[i] = Toutputs.get(i);
-    }
-    opBuilder.setAttr("Toutputs", ToutputsArray);
+    opBuilder.setAttr("Toutputs", Operands.toDataTypes(Toutputs));
     opBuilder.setAttr("serialized_remote_fused_graph_execute_info", serializedRemoteFusedGraphExecuteInfo);
     return new RemoteFusedGraphExecute(opBuilder.build());
   }

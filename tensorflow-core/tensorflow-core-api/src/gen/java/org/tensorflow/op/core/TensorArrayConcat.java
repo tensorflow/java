@@ -17,16 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -83,12 +84,12 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
    * @return a new instance of TensorArrayConcat
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, DataType<T> dtype, Options... options) {
+  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {
         if (opts.elementShapeExcept0 != null) {

@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
@@ -29,7 +28,7 @@ import org.tensorflow.types.family.TType;
  *      Zeros&lt;TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Zeros&lt;&gt;(tf);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -46,7 +45,7 @@ public class Zeros<T extends TType> extends BaseInitializer<T> {
   }
 
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
+  public Operand<T> call(Operand<TInt64> dims, Class<T> dtype) {
     return tf.zeros(dims, dtype);
   }
 }

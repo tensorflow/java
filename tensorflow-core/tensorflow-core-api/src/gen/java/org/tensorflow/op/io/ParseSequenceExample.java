@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,10 +29,12 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a vector of tf.io.SequenceExample protos (as strings) into
@@ -153,7 +154,7 @@ public final class ParseSequenceExample extends RawOp {
    * @return a new instance of ParseSequenceExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Operand<TString> contextSparseKeys, Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys, Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys, Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty, Iterable<Operand<?>> contextDenseDefaults, List<DataType<?>> contextSparseTypes, List<DataType<?>> contextRaggedValueTypes, List<DataType<?>> contextRaggedSplitTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, List<DataType<?>> featureListRaggedValueTypes, List<DataType<?>> featureListRaggedSplitTypes, Options... options) {
+  public static ParseSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> debugName, Operand<TString> contextSparseKeys, Operand<TString> contextDenseKeys, Operand<TString> contextRaggedKeys, Operand<TString> featureListSparseKeys, Operand<TString> featureListDenseKeys, Operand<TString> featureListRaggedKeys, Operand<TBool> featureListDenseMissingAssumedEmpty, Iterable<Operand<?>> contextDenseDefaults, List<Class<? extends TType>> contextSparseTypes, List<Class<? extends TType>> contextRaggedValueTypes, List<Class<? extends TNumber>> contextRaggedSplitTypes, List<Class<? extends TType>> featureListDenseTypes, List<Class<? extends TType>> featureListSparseTypes, List<Class<? extends TType>> featureListRaggedValueTypes, List<Class<? extends TNumber>> featureListRaggedSplitTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExampleV2", scope.makeOpName("ParseSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(debugName.asOutput());
@@ -166,41 +167,13 @@ public final class ParseSequenceExample extends RawOp {
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
     opBuilder = scope.apply(opBuilder);
-    DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
-    for (int i = 0; i < contextSparseTypesArray.length; ++i) {
-      contextSparseTypesArray[i] = contextSparseTypes.get(i);
-    }
-    opBuilder.setAttr("context_sparse_types", contextSparseTypesArray);
-    DataType[] contextRaggedValueTypesArray = new DataType[contextRaggedValueTypes.size()];
-    for (int i = 0; i < contextRaggedValueTypesArray.length; ++i) {
-      contextRaggedValueTypesArray[i] = contextRaggedValueTypes.get(i);
-    }
-    opBuilder.setAttr("context_ragged_value_types", contextRaggedValueTypesArray);
-    DataType[] contextRaggedSplitTypesArray = new DataType[contextRaggedSplitTypes.size()];
-    for (int i = 0; i < contextRaggedSplitTypesArray.length; ++i) {
-      contextRaggedSplitTypesArray[i] = contextRaggedSplitTypes.get(i);
-    }
-    opBuilder.setAttr("context_ragged_split_types", contextRaggedSplitTypesArray);
-    DataType[] featureListDenseTypesArray = new DataType[featureListDenseTypes.size()];
-    for (int i = 0; i < featureListDenseTypesArray.length; ++i) {
-      featureListDenseTypesArray[i] = featureListDenseTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_dense_types", featureListDenseTypesArray);
-    DataType[] featureListSparseTypesArray = new DataType[featureListSparseTypes.size()];
-    for (int i = 0; i < featureListSparseTypesArray.length; ++i) {
-      featureListSparseTypesArray[i] = featureListSparseTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_sparse_types", featureListSparseTypesArray);
-    DataType[] featureListRaggedValueTypesArray = new DataType[featureListRaggedValueTypes.size()];
-    for (int i = 0; i < featureListRaggedValueTypesArray.length; ++i) {
-      featureListRaggedValueTypesArray[i] = featureListRaggedValueTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_ragged_value_types", featureListRaggedValueTypesArray);
-    DataType[] featureListRaggedSplitTypesArray = new DataType[featureListRaggedSplitTypes.size()];
-    for (int i = 0; i < featureListRaggedSplitTypesArray.length; ++i) {
-      featureListRaggedSplitTypesArray[i] = featureListRaggedSplitTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_ragged_split_types", featureListRaggedSplitTypesArray);
+    opBuilder.setAttr("context_sparse_types", Operands.toDataTypes(contextSparseTypes));
+    opBuilder.setAttr("context_ragged_value_types", Operands.toDataTypes(contextRaggedValueTypes));
+    opBuilder.setAttr("context_ragged_split_types", Operands.toDataTypes(contextRaggedSplitTypes));
+    opBuilder.setAttr("feature_list_dense_types", Operands.toDataTypes(featureListDenseTypes));
+    opBuilder.setAttr("feature_list_sparse_types", Operands.toDataTypes(featureListSparseTypes));
+    opBuilder.setAttr("feature_list_ragged_value_types", Operands.toDataTypes(featureListRaggedValueTypes));
+    opBuilder.setAttr("feature_list_ragged_split_types", Operands.toDataTypes(featureListRaggedSplitTypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.NcontextSparse != null) {

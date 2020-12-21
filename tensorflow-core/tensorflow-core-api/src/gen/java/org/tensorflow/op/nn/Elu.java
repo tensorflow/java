@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes exponential linear: `exp(features) - 1` if < 0, `features` otherwise.

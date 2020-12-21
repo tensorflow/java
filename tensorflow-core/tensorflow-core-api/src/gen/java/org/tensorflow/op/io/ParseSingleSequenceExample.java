@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,8 +29,10 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a scalar brain.SequenceExample proto (as strings) into typed tensors.
@@ -122,7 +123,7 @@ public final class ParseSingleSequenceExample extends RawOp {
    * @return a new instance of ParseSingleSequenceExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> featureListDenseMissingAssumedEmpty, Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys, Iterable<Operand<TString>> featureListSparseKeys, Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults, Operand<TString> debugName, List<DataType<?>> contextSparseTypes, List<DataType<?>> featureListDenseTypes, List<DataType<?>> featureListSparseTypes, Options... options) {
+  public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> featureListDenseMissingAssumedEmpty, Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys, Iterable<Operand<TString>> featureListSparseKeys, Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults, Operand<TString> debugName, List<Class<? extends TType>> contextSparseTypes, List<Class<? extends TType>> featureListDenseTypes, List<Class<? extends TType>> featureListSparseTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleSequenceExample", scope.makeOpName("ParseSingleSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
@@ -133,21 +134,9 @@ public final class ParseSingleSequenceExample extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
     opBuilder.addInput(debugName.asOutput());
     opBuilder = scope.apply(opBuilder);
-    DataType[] contextSparseTypesArray = new DataType[contextSparseTypes.size()];
-    for (int i = 0; i < contextSparseTypesArray.length; ++i) {
-      contextSparseTypesArray[i] = contextSparseTypes.get(i);
-    }
-    opBuilder.setAttr("context_sparse_types", contextSparseTypesArray);
-    DataType[] featureListDenseTypesArray = new DataType[featureListDenseTypes.size()];
-    for (int i = 0; i < featureListDenseTypesArray.length; ++i) {
-      featureListDenseTypesArray[i] = featureListDenseTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_dense_types", featureListDenseTypesArray);
-    DataType[] featureListSparseTypesArray = new DataType[featureListSparseTypes.size()];
-    for (int i = 0; i < featureListSparseTypesArray.length; ++i) {
-      featureListSparseTypesArray[i] = featureListSparseTypes.get(i);
-    }
-    opBuilder.setAttr("feature_list_sparse_types", featureListSparseTypesArray);
+    opBuilder.setAttr("context_sparse_types", Operands.toDataTypes(contextSparseTypes));
+    opBuilder.setAttr("feature_list_dense_types", Operands.toDataTypes(featureListDenseTypes));
+    opBuilder.setAttr("feature_list_sparse_types", Operands.toDataTypes(featureListSparseTypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.contextDenseShapes != null) {

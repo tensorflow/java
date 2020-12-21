@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs fractional max pooling on the input.

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generate a single randomly distorted bounding box for an image.

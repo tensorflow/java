@@ -23,9 +23,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.internal.types.registry.TensorTypeInfo;
+import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -42,8 +44,8 @@ import org.tensorflow.types.family.TType;
 public final class RawTensor implements Tensor {
 
   @Override
-  public DataType<?> dataType() {
-    return dtype;
+  public DataType dataType() {
+    return typeInfo.dataType();
   }
 
   @Override
@@ -84,33 +86,37 @@ public final class RawTensor implements Tensor {
    */
   @Override
   public String toString() {
-    return String.format("%s tensor with shape %s", dtype.toString(), shape);
+    return String.format("%s tensor with shape %s", typeInfo.dataType(), shape);
   }
 
   /**
    * Allocates a new tensor in native memory of the given type, shape and size.
    *
    * <p>The size of the tensor must be at least large enough to contain all scalars for the
-   * given type and shape, i.e. <code>size >= dtype.byteSize() * shape.size()</code>. More memory
+   * given type and shape, i.e. <code>size >= type.byteSize() * shape.size()</code>. More memory
    * can be allocated to store also metadata within the tensor itself, e.g. a lookup table
    * in a string tensor.
    *
-   * @param dtype data type
+   * @param type tensor type class
    * @param shape shape of the tensor
-   * @param size size of the tensor
+   * @param size size in bytes of the tensor, or -1 to compute the size from the shape
    * @return allocated tensor
    */
-  static RawTensor allocate(DataType<?> dtype, Shape shape, long size) {
-    // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
-    // we only validate them for fixed length datatypes
-    if (!dtype.isVariableLength() && shape.size() * dtype.byteSize() > size) {
+  static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
+    TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(type);
+    long effectiveSize = size;
+    if (effectiveSize < 0) {
+      effectiveSize = shape.size() * typeInfo.byteSize();
+
+    } else if (!typeInfo.isVariableLength() && shape.size() * typeInfo.byteSize() > effectiveSize) {
+      // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
+      // we only validate them for fixed length datatypes
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
-    TF_Tensor nativeHandle = allocate(dtype.nativeCode(), shape.asArray(), size);
+    TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), effectiveSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
-
-      RawTensor t = new RawTensor(dtype, shape);
+      RawTensor t = new RawTensor(typeInfo, shape);
       t.tensorHandle = nativeHandle;
       t.tensorScope = scope.extend();
       return t;
@@ -123,7 +129,8 @@ public final class RawTensor implements Tensor {
    * <p>Takes ownership of the handle.
    */
   static RawTensor fromHandle(TF_Tensor handle) {
-    RawTensor t = new RawTensor(DataTypes.fromNativeCode(dtype(handle)), Shape.of(shape(handle)));
+    TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(DataType.forNumber(dtype(handle)));
+    RawTensor t = new RawTensor(typeInfo, Shape.of(shape(handle)));
     try (PointerScope scope = new PointerScope()) {
         scope.attach(handle);
         t.tensorHandle = handle;
@@ -164,7 +171,7 @@ public final class RawTensor implements Tensor {
    * @throws ClassCastException if {@code T} is not compatible type with {@link #dataType()}
    */
   <T extends TType> T asTypedTensor() {
-    return (T)dtype.map(this);
+    return (T)typeInfo.mapper().mapDense(this);
   }
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {
@@ -197,14 +204,14 @@ public final class RawTensor implements Tensor {
     return dims;
   }
 
-  RawTensor(DataType<?> dtype, Shape shape) {
-    this.dtype = dtype;
+  RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
+    this.typeInfo = typeInfo;
     this.shape = shape;
   }
 
   private PointerScope tensorScope;
   private TF_Tensor tensorHandle;
-  private final DataType<?> dtype;
+  private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;
   private ByteDataBuffer buffer = null;
 

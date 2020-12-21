@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.math.Abs;
@@ -292,7 +291,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Angle
    */
-  public <U extends TNumber, T extends TType> Angle<U> angle(Operand<T> input, DataType<U> Tout) {
+  public <U extends TNumber, T extends TType> Angle<U> angle(Operand<T> input, Class<U> Tout) {
     return Angle.create(scope, input, Tout);
   }
 
@@ -360,7 +359,7 @@ public final class MathOps {
    * @return a new instance of ArgMax
    */
   public <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
+      Operand<U> dimension, Class<V> outputType) {
     return ArgMax.create(scope, input, dimension, outputType);
   }
 
@@ -415,7 +414,7 @@ public final class MathOps {
    * @return a new instance of ArgMin
    */
   public <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> argMin(Operand<T> input,
-      Operand<U> dimension, DataType<V> outputType) {
+      Operand<U> dimension, Class<V> outputType) {
     return ArgMin.create(scope, input, dimension, outputType);
   }
 
@@ -654,7 +653,7 @@ public final class MathOps {
    * @return a new instance of ComplexAbs
    */
   public <U extends TNumber, T extends TType> ComplexAbs<U> complexAbs(Operand<T> x,
-      DataType<U> Tout) {
+      Class<U> Tout) {
     return ComplexAbs.create(scope, x, Tout);
   }
 
@@ -1181,7 +1180,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Imag
    */
-  public <U extends TNumber, T extends TType> Imag<U> imag(Operand<T> input, DataType<U> Tout) {
+  public <U extends TNumber, T extends TType> Imag<U> imag(Operand<T> input, Class<U> Tout) {
     return Imag.create(scope, input, Tout);
   }
 
@@ -1638,7 +1637,7 @@ public final class MathOps {
    */
   public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
       Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
-      Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+      Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
 
@@ -1657,7 +1656,7 @@ public final class MathOps {
    */
   public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
       Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
-      Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+      Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
 
@@ -1702,7 +1701,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Real
    */
-  public <U extends TNumber, T extends TType> Real<U> real(Operand<T> input, DataType<U> Tout) {
+  public <U extends TNumber, T extends TType> Real<U> real(Operand<T> input, Class<U> Tout) {
     return Real.create(scope, input, Tout);
   }
 

@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,9 +29,11 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a vector of tf.Example protos (as strings) into typed tensors.
@@ -97,7 +98,7 @@ public final class ParseExample extends RawOp {
    * @return a new instance of ParseExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<DataType<?>> sparseTypes, List<DataType<?>> raggedValueTypes, List<DataType<?>> raggedSplitTypes, List<Shape> denseShapes) {
+  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<Class<? extends TType>> sparseTypes, List<Class<? extends TType>> raggedValueTypes, List<Class<? extends TNumber>> raggedSplitTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(names.asOutput());
@@ -107,21 +108,9 @@ public final class ParseExample extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
-    DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
-    for (int i = 0; i < sparseTypesArray.length; ++i) {
-      sparseTypesArray[i] = sparseTypes.get(i);
-    }
-    opBuilder.setAttr("sparse_types", sparseTypesArray);
-    DataType[] raggedValueTypesArray = new DataType[raggedValueTypes.size()];
-    for (int i = 0; i < raggedValueTypesArray.length; ++i) {
-      raggedValueTypesArray[i] = raggedValueTypes.get(i);
-    }
-    opBuilder.setAttr("ragged_value_types", raggedValueTypesArray);
-    DataType[] raggedSplitTypesArray = new DataType[raggedSplitTypes.size()];
-    for (int i = 0; i < raggedSplitTypesArray.length; ++i) {
-      raggedSplitTypesArray[i] = raggedSplitTypes.get(i);
-    }
-    opBuilder.setAttr("ragged_split_types", raggedSplitTypesArray);
+    opBuilder.setAttr("sparse_types", Operands.toDataTypes(sparseTypes));
+    opBuilder.setAttr("ragged_value_types", Operands.toDataTypes(raggedValueTypes));
+    opBuilder.setAttr("ragged_split_types", Operands.toDataTypes(raggedSplitTypes));
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
     for (int i = 0; i < denseShapesArray.length; ++i) {
       denseShapesArray[i] = denseShapes.get(i);

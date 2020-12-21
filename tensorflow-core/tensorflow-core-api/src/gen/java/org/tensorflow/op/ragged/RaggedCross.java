@@ -17,7 +17,6 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,6 +26,7 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -62,7 +62,7 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
    * @return a new instance of RaggedCross
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> RaggedCross<T, U> create(Scope scope, Iterable<Operand<?>> raggedValues, Iterable<Operand<?>> raggedRowSplits, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<?>> sparseValues, Iterable<Operand<TInt64>> sparseShape, Iterable<Operand<?>> denseInputs, String inputOrder, Boolean hashedOutput, Long numBuckets, Long hashKey, DataType<T> outValuesType, DataType<U> outRowSplitsType) {
+  public static <T extends TType, U extends TNumber> RaggedCross<T, U> create(Scope scope, Iterable<Operand<?>> raggedValues, Iterable<Operand<?>> raggedRowSplits, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<?>> sparseValues, Iterable<Operand<TInt64>> sparseShape, Iterable<Operand<?>> denseInputs, String inputOrder, Boolean hashedOutput, Long numBuckets, Long hashKey, Class<T> outValuesType, Class<U> outRowSplitsType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedCross", scope.makeOpName("RaggedCross"));
     opBuilder.addInputList(Operands.asOutputs(raggedValues));
     opBuilder.addInputList(Operands.asOutputs(raggedRowSplits));
@@ -75,8 +75,8 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     opBuilder.setAttr("hashed_output", hashedOutput);
     opBuilder.setAttr("num_buckets", numBuckets);
     opBuilder.setAttr("hash_key", hashKey);
-    opBuilder.setAttr("out_values_type", outValuesType);
-    opBuilder.setAttr("out_row_splits_type", outRowSplitsType);
+    opBuilder.setAttr("out_values_type", Operands.toDataType(outValuesType));
+    opBuilder.setAttr("out_row_splits_type", Operands.toDataType(outRowSplitsType));
     return new RaggedCross<T, U>(opBuilder.build());
   }
   

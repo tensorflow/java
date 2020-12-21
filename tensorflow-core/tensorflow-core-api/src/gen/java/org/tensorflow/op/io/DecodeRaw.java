@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -68,11 +69,11 @@ public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of DecodeRaw
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, DataType<T> outType, Options... options) {
+  public static <T extends TType> DecodeRaw<T> create(Scope scope, Operand<TString> bytes, Class<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeRaw", scope.makeOpName("DecodeRaw"));
     opBuilder.addInput(bytes.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     if (options != null) {
       for (Options opts : options) {
         if (opts.littleEndian != null) {

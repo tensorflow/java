@@ -17,7 +17,6 @@ package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
@@ -40,16 +39,14 @@ public class BatchDatasetTest extends DatasetTestBase {
             Arrays.asList(
                 tf.constant(testMatrix1),
                 tf.constant(testMatrix2)),
-            Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
+            Arrays.asList(TInt32.class, TInt32.class))
         .batch(2);
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
       try (TInt32 batch1 =
                (TInt32)components.get(0).asTensor();
-           TInt32 batch2 =
-               (TInt32)components.get(1).asTensor();) {
-
+           TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
         assertEquals(testMatrix1.slice(range(count, count + 2)), batch1);
         assertEquals(testMatrix2.slice(range(count, count + 2)), batch2);
 
@@ -66,7 +63,7 @@ public class BatchDatasetTest extends DatasetTestBase {
             Arrays.asList(
                 tf.constant(testMatrix1),
                 tf.constant(testMatrix2)),
-            Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
+            Arrays.asList(TInt32.class, TInt32.class))
         .batch(3, true);
 
     int count = 0;
@@ -74,9 +71,7 @@ public class BatchDatasetTest extends DatasetTestBase {
 
       try (TInt32 batch1 =
                (TInt32)components.get(0).asTensor();
-           TInt32 batch2 =
-               (TInt32)components.get(1).asTensor();) {
-
+          TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
         assertEquals(testMatrix1.slice(range(count, count + 3)), batch1);
         assertEquals(testMatrix2.slice(range(count, count + 3)), batch2);
 
@@ -93,7 +88,7 @@ public class BatchDatasetTest extends DatasetTestBase {
             Arrays.asList(
                 tf.constant(testMatrix1),
                 tf.constant(testMatrix2)),
-            Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
+            Arrays.asList(TInt32.class, TInt32.class))
         .batch(3, false);
 
     int count = 0;

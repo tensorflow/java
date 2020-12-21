@@ -17,16 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -50,10 +51,10 @@ public final class Recv<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Recv
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Recv<T> create(Scope scope, DataType<T> dtype, String tensorName, Shape shape) {
+  public static <T extends TType> Recv<T> create(Scope scope, Class<T> dtype, String tensorName, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaRecv", scope.makeOpName("Recv"));
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("tensor_name", tensorName);
     opBuilder.setAttr("shape", shape);
     return new Recv<T>(opBuilder.build());

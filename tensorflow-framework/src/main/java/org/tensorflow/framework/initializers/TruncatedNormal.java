@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
@@ -31,13 +30,12 @@ import org.tensorflow.types.family.TType;
  *     TruncatedNormal&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.TruncatedNormal&lt;&gt;(tf, seed);
  *     Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  */
-public class TruncatedNormal<T extends TType, U extends TNumber> extends BaseInitializer<T> {
+public class TruncatedNormal<T extends TNumber> extends BaseInitializer<T> {
 
   public static final double MEAN_DEFAULT = 0.0;
   public static final double STDDEV_DEFAULT = 0.05;
@@ -76,17 +74,11 @@ public class TruncatedNormal<T extends TType, U extends TNumber> extends BaseIni
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!dtype.isNumeric())
-      throw new IllegalArgumentException("The data type must be numeric. Found : " + dtype.name());
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     long[] seeds = {seed,0};
-    @SuppressWarnings("unchecked")
-    DataType<U> numdType = (DataType<U>) dtype;
-    Operand<U> distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), numdType);
-    @SuppressWarnings("unchecked")
-    Operand<T> distOpT = (Operand<T>) distOp;
+    Operand<T> distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
     return tf.math.add(
-        tf.math.mul(distOpT, tf.dtypes.cast(tf.constant(stddev), dtype)),
-        tf.dtypes.cast(tf.constant(mean), dtype));
+        tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type)),
+        tf.dtypes.cast(tf.constant(mean), type));
   }
 }

@@ -23,6 +23,7 @@ import org.tensorflow.exceptions.TFFailedPreconditionException;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -49,10 +50,10 @@ public class EagerOperationTest {
          TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
-              .setAttr("dtype", TInt32.DTYPE)
+              .setAttr("dtype", t.dataType())
               .setAttr("value", t)
               .build();
-      assertEquals(TInt32.DTYPE, op.dtype(0));
+      assertEquals(DataType.DT_INT32, op.dtype(0));
       assertEquals(2, op.shape(0).size(0));
       assertEquals(3, op.shape(0).size(1));
     }
@@ -72,7 +73,7 @@ public class EagerOperationTest {
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved
       assertEquals(0, add.shape(0).numDimensions());
-      assertEquals(TInt32.DTYPE, add.dtype(0));
+      assertEquals(DataType.DT_INT32, add.dtype(0));
     }
   }
 
@@ -123,7 +124,7 @@ public class EagerOperationTest {
           opBuilder(session, "UniqueWithCountsV2", "unq")
               .addInput(tf.constant(new int[]{1, 2, 1}).asOutput())
               .addInput(tf.constant(new int[]{0}).asOutput())
-              .setAttr("out_idx", TInt32.DTYPE)
+              .setAttr("out_idx", DataType.DT_INT32)
               .build();
       assertEquals(3, op.numOutputs());
     }

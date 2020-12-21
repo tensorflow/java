@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * A builder for {@link Operation}s.
@@ -177,7 +178,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, DataType<?> value);
+   OperationBuilder setAttr(String name, DataType value);
 
   /**
    * Set the type values of an attribute of the operation being built.
@@ -186,7 +187,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, DataType<?>[] value);
+   OperationBuilder setAttr(String name, DataType[] value);
 
   /**
    * Set the tensor value of an attribute of the operation being built.

@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input image tensor.
@@ -84,14 +84,14 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
    * @return a new instance of CropAndResizeGradImage
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, DataType<T> T, Options... options) {
+  public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, Class<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradImage", scope.makeOpName("CropAndResizeGradImage"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
     opBuilder.addInput(imageSize.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("T", T);
+    opBuilder.setAttr("T", Operands.toDataType(T));
     if (options != null) {
       for (Options opts : options) {
         if (opts.method != null) {

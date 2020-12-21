@@ -17,20 +17,20 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Decodes each string in `input` into a sequence of Unicode code points.
@@ -122,12 +122,12 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
    * @return a new instance of UnicodeDecodeWithOffsets
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, DataType<T> Tsplits, Options... options) {
+  public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope, Operand<TString> input, String inputEncoding, Class<T> Tsplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeDecodeWithOffsets", scope.makeOpName("UnicodeDecodeWithOffsets"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
-    opBuilder.setAttr("Tsplits", Tsplits);
+    opBuilder.setAttr("Tsplits", Operands.toDataType(Tsplits));
     if (options != null) {
       for (Options opts : options) {
         if (opts.errors != null) {
@@ -157,7 +157,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
    */
   @Endpoint(describeByClass = true)
   public static UnicodeDecodeWithOffsets<TInt64> create(Scope scope, Operand<TString> input, String inputEncoding, Options... options) {
-    return create(scope, input, inputEncoding, TInt64.DTYPE, options);
+    return create(scope, input, inputEncoding, TInt64.class, options);
   }
   
   /**

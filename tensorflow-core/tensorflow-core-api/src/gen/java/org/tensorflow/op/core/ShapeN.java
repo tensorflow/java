@@ -20,7 +20,6 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,6 +29,7 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -53,11 +53,11 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
    * @return a new instance of ShapeN
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, DataType<U> outType) {
+  public static <U extends TNumber, T extends TType> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new ShapeN<U>(opBuilder.build());
   }
   
@@ -70,7 +70,7 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
-    return create(scope, input, TInt32.DTYPE);
+    return create(scope, input, TInt32.class);
   }
   
   /**

@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -43,12 +44,12 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
    * @return a new instance of TensorListConcatLists
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, DataType<T> elementDtype) {
+  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("element_dtype", elementDtype);
+    opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListConcatLists(opBuilder.build());
   }
   

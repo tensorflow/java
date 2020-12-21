@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.dtypes;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -65,11 +66,11 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
    * @return a new instance of Cast
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, DataType<U> DstT, Options... options) {
+  public static <U extends TType, T extends TType> Cast<U> create(Scope scope, Operand<T> x, Class<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("DstT", DstT);
+    opBuilder.setAttr("DstT", Operands.toDataType(DstT));
     if (options != null) {
       for (Options opts : options) {
         if (opts.Truncate != null) {

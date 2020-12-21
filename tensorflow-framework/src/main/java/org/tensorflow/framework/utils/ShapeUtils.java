@@ -17,10 +17,14 @@ package org.tensorflow.framework.utils;
 import org.tensorflow.*;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.ndarray.buffer.DataBuffers;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
+import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ public class ShapeUtils {
    * @param dims the Operand containing the shape values
    * @return a new Shape based on an Operand that contains dimensions
    */
-  public static <T extends TNumber> Shape toShape(Scope scope, Operand<T> dims) {
+  public static <T extends TIntegral> Shape toShape(Scope scope, Operand<T> dims) {
     long[] longDims = getLongArray(scope, dims);
     return Shape.of(longDims);
   }
@@ -62,12 +66,12 @@ public class ShapeUtils {
    * @return the long array
    * @throws java.lang.IllegalArgumentException if the dims type is not an integer
    */
-  public static <T extends TNumber> long[] getLongArray(Scope scope, Operand<T> dims) {
+  public static <T extends TIntegral> long[] getLongArray(Scope scope, Operand<T> dims) {
     if (scope.env().isEager()) {
       return getLongArray(dims.asTensor());
     }
     try (Session session = new Session((Graph)scope.env());
-        Tensor tensor = session.runner().fetch(dims).run().get(0)) {
+        TIntegral tensor = (TIntegral)session.runner().fetch(dims).run().get(0)) {
       return getLongArray(tensor);
     }
   }
@@ -79,7 +83,7 @@ public class ShapeUtils {
    * @return the long array
    * @throws java.lang.IllegalArgumentException if the dims type is not an integer
    */
-  public static long[] getLongArray(Tensor dims) {
+  public static <T extends TIntegral> long[] getLongArray(T dims) {
     List<Long> result = new ArrayList<>();
     if (dims instanceof TInt32) {
       ((TInt32)dims).scalars().forEach(s -> result.add((long) s.getInt()));

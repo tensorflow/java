@@ -17,17 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a Poisson distribution.
@@ -52,13 +52,13 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
    * @return a new instance of StatelessRandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, DataType<W> dtype) {
+  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomPoisson", scope.makeOpName("StatelessRandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(lam.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomPoisson<W>(opBuilder.build());
   }
   

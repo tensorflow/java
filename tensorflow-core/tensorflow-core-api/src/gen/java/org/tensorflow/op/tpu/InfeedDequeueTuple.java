@@ -20,16 +20,17 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -46,14 +47,10 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
    * @return a new instance of InfeedDequeueTuple
    */
   @Endpoint(describeByClass = true)
-  public static InfeedDequeueTuple create(Scope scope, List<DataType<?>> dtypes, List<Shape> shapes) {
+  public static InfeedDequeueTuple create(Scope scope, List<Class<? extends TType>> dtypes, List<Shape> shapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeueTuple", scope.makeOpName("InfeedDequeueTuple"));
     opBuilder = scope.apply(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
-    for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = dtypes.get(i);
-    }
-    opBuilder.setAttr("dtypes", dtypesArray);
+    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     Shape[] shapesArray = new Shape[shapes.size()];
     for (int i = 0; i < shapesArray.length; ++i) {
       shapesArray[i] = shapes.get(i);

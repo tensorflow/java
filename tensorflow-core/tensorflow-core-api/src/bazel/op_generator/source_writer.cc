@@ -85,6 +85,7 @@ SourceWriter& SourceWriter::Append(const StringPiece& str) {
 SourceWriter& SourceWriter::AppendType(const Type& type) {
   if (type.wildcard()) {
     Append("?");
+    WriteTypeBounds(type.supertypes());
   } else {
     Append(type.name());
     if (!type.parameters().empty()) {
@@ -321,12 +322,25 @@ SourceWriter& SourceWriter::WriteGenerics(
       Append(", ");
     }
     Append(pt->name());
-    if (!pt->supertypes().empty()) {
-      Append(" extends ").AppendType(pt->supertypes().front());
-    }
+    WriteTypeBounds(pt->supertypes());
     first = false;
   }
   return Append(">");
+}
+
+SourceWriter& SourceWriter::WriteTypeBounds(
+    const std::list<Type>& bounds) {
+  bool first = true;
+  for (const Type& bound : bounds) {
+    if (first) {
+      Append(" extends ");
+      first = false;
+    } else {
+      Append(" & ");
+    }
+    AppendType(bound);
+  }
+  return *this;
 }
 
 SourceWriter::GenericNamespace* SourceWriter::PushGenericNamespace(

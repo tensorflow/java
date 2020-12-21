@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Decode a PNG-encoded image to a uint8 or uint16 tensor.
@@ -92,11 +92,11 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
    * @return a new instance of DecodePng
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, DataType<T> dtype, Options... options) {
+  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {
         if (opts.channels != null) {
@@ -117,7 +117,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
    */
   @Endpoint(describeByClass = true)
   public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
-    return create(scope, contents, TUint8.DTYPE, options);
+    return create(scope, contents, TUint8.class, options);
   }
   
   /**

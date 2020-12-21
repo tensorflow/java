@@ -18,7 +18,6 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
@@ -49,6 +48,7 @@ import org.tensorflow.op.data.ZipDataset;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code data} operations as {@link Op Op}s
@@ -75,7 +75,7 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of AnonymousIterator
    */
-  public AnonymousIterator anonymousIterator(List<DataType<?>> outputTypes,
+  public AnonymousIterator anonymousIterator(List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     return AnonymousIterator.create(scope, outputTypes, outputShapes);
   }
@@ -93,8 +93,8 @@ public final class DataOps {
    * @return a new instance of BatchDataset
    */
   public BatchDataset batchDataset(Operand<?> inputDataset, Operand<TInt64> batchSize,
-      Operand<TBool> dropRemainder, List<DataType<?>> outputTypes, List<Shape> outputShapes,
-      BatchDataset.Options... options) {
+      Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, BatchDataset.Options... options) {
     return BatchDataset.create(scope, inputDataset, batchSize, dropRemainder, outputTypes, outputShapes, options);
   }
 
@@ -129,7 +129,7 @@ public final class DataOps {
    * @return a new instance of ConcatenateDataset
    */
   public ConcatenateDataset concatenateDataset(Operand<?> inputDataset, Operand<?> anotherDataset,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return ConcatenateDataset.create(scope, inputDataset, anotherDataset, outputTypes, outputShapes);
   }
 
@@ -164,8 +164,8 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of Iterator
    */
-  public Iterator iterator(String sharedName, String container, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
+  public Iterator iterator(String sharedName, String container,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return Iterator.create(scope, sharedName, container, outputTypes, outputShapes);
   }
 
@@ -177,8 +177,8 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of IteratorGetNext
    */
-  public IteratorGetNext iteratorGetNext(Operand<?> iterator, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
+  public IteratorGetNext iteratorGetNext(Operand<?> iterator,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return IteratorGetNext.create(scope, iterator, outputTypes, outputShapes);
   }
 
@@ -191,7 +191,7 @@ public final class DataOps {
    * @return a new instance of IteratorGetNextAsOptional
    */
   public IteratorGetNextAsOptional iteratorGetNextAsOptional(Operand<?> iterator,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return IteratorGetNextAsOptional.create(scope, iterator, outputTypes, outputShapes);
   }
 
@@ -208,8 +208,8 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of IteratorGetNextSync
    */
-  public IteratorGetNextSync iteratorGetNextSync(Operand<?> iterator, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
+  public IteratorGetNextSync iteratorGetNextSync(Operand<?> iterator,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return IteratorGetNextSync.create(scope, iterator, outputTypes, outputShapes);
   }
 
@@ -255,8 +255,8 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of OptionalGetValue
    */
-  public OptionalGetValue optionalGetValue(Operand<?> optional, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
+  public OptionalGetValue optionalGetValue(Operand<?> optional,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return OptionalGetValue.create(scope, optional, outputTypes, outputShapes);
   }
 
@@ -290,7 +290,7 @@ public final class DataOps {
    * @return a new instance of RangeDataset
    */
   public RangeDataset rangeDataset(Operand<TInt64> start, Operand<TInt64> stop,
-      Operand<TInt64> step, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return RangeDataset.create(scope, start, stop, step, outputTypes, outputShapes);
   }
 
@@ -305,7 +305,7 @@ public final class DataOps {
    * @return a new instance of RepeatDataset
    */
   public RepeatDataset repeatDataset(Operand<?> inputDataset, Operand<TInt64> count,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return RepeatDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
   }
 
@@ -332,7 +332,7 @@ public final class DataOps {
    * @return a new instance of SkipDataset
    */
   public SkipDataset skipDataset(Operand<?> inputDataset, Operand<TInt64> count,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return SkipDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
   }
 
@@ -348,7 +348,7 @@ public final class DataOps {
    * @return a new instance of TakeDataset
    */
   public TakeDataset takeDataset(Operand<?> inputDataset, Operand<TInt64> count,
-      List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return TakeDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
   }
 
@@ -409,8 +409,8 @@ public final class DataOps {
    * @param outputShapes
    * @return a new instance of ZipDataset
    */
-  public ZipDataset zipDataset(Iterable<Operand<?>> inputDatasets, List<DataType<?>> outputTypes,
-      List<Shape> outputShapes) {
+  public ZipDataset zipDataset(Iterable<Operand<?>> inputDatasets,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return ZipDataset.create(scope, inputDatasets, outputTypes, outputShapes);
   }
 

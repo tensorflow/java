@@ -17,17 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * The shape of the elements of the given list, as a tensor.
@@ -49,11 +49,11 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
    * @return a new instance of TensorListElementShape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, DataType<T> shapeType) {
+  public static <T extends TNumber> TensorListElementShape<T> create(Scope scope, Operand<?> inputHandle, Class<T> shapeType) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListElementShape", scope.makeOpName("TensorListElementShape"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("shape_type", shapeType);
+    opBuilder.setAttr("shape_type", Operands.toDataType(shapeType));
     return new TensorListElementShape<T>(opBuilder.build());
   }
   

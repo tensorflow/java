@@ -17,6 +17,7 @@ package org.tensorflow;
 
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -76,7 +77,7 @@ abstract class AbstractOperation implements Operation {
    * @param outputIdx index of the output of this operation
    * @return output tensor datatype
    */
-  abstract DataType<?> dtype(int outputIdx);
+  abstract DataType dtype(int outputIdx);
 
   /**
    * Returns the tensor of the {@code outputIdx}th output of this operation.

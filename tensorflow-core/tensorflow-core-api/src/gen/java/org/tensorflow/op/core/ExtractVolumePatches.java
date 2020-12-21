@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Extract `patches` from `input` and put them in the "depth" output dimension. 3D extension of `extract_image_patches`.

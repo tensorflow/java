@@ -126,8 +126,8 @@ public class GraphTestSession extends TestSession {
    */
   @Override
   public <T extends TNumber> void evaluate(double expected, Operand<T> input) {
-    DataType<T> dtype = input.asOutput().dataType();
-    if (dtype == TFloat32.DTYPE) {
+    Class<T> inputType = input.type();
+    if (inputType == TFloat32.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TFloat32 result =
@@ -142,7 +142,7 @@ public class GraphTestSession extends TestSession {
           (TFloat32)this.getGraphSession().runner().fetch(input).run().get(0)) {
         result.scalars().forEach(f -> assertEquals((float) expected, f.getFloat(), epsilon));
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TFloat64 result =
@@ -157,7 +157,7 @@ public class GraphTestSession extends TestSession {
           (TFloat64)this.getGraphSession().runner().fetch(input).run().get(0)) {
         result.scalars().forEach(f -> assertEquals(expected, f.getDouble(), epsilon));
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt32 result =
@@ -172,7 +172,7 @@ public class GraphTestSession extends TestSession {
           (TInt32)this.getGraphSession().runner().fetch(input).run().get(0)) {
         result.scalars().forEach(f -> assertEquals((int) expected, f.getInt()));
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt64 result =
@@ -187,7 +187,7 @@ public class GraphTestSession extends TestSession {
           (TInt64)this.getGraphSession().runner().fetch(input).run().get(0)) {
         result.scalars().forEach(f -> assertEquals((long) expected, f.getLong()));
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TUint8 result =
@@ -203,7 +203,7 @@ public class GraphTestSession extends TestSession {
         result.scalars().forEach(f -> assertEquals((long) expected, f.getByte()));
       }
     } else {
-      fail("Unexpected DataType: " + dtype);
+      fail("Unexpected type class: " + inputType);
     }
   }
 
@@ -217,8 +217,8 @@ public class GraphTestSession extends TestSession {
         expected.length,
         size,
         () -> String.format("expected length (%d) != to input length (%d)", expected.length, size));
-    DataType<T> dtype = input.asOutput().dataType();
-    if (dtype == TFloat32.DTYPE) {
+    Class<T> inputType = input.type();
+    if (inputType == TFloat32.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TFloat32 result =
@@ -238,7 +238,7 @@ public class GraphTestSession extends TestSession {
                     assertEquals(
                         expected[index.getAndIncrement()].floatValue(), f.getFloat(), epsilon));
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TFloat64 result =
@@ -258,7 +258,7 @@ public class GraphTestSession extends TestSession {
                     assertEquals(
                         expected[index.getAndIncrement()].doubleValue(), f.getDouble(), epsilon));
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt32 result =
@@ -275,7 +275,7 @@ public class GraphTestSession extends TestSession {
             .scalars()
             .forEach(f -> assertEquals(expected[index.getAndIncrement()].intValue(), f.getInt()));
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt64 result =
@@ -292,7 +292,7 @@ public class GraphTestSession extends TestSession {
             .scalars()
             .forEach(f -> assertEquals(expected[index.getAndIncrement()].longValue(), f.getLong()));
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TUint8 result =
@@ -310,7 +310,7 @@ public class GraphTestSession extends TestSession {
             .forEach(f -> assertEquals(expected[index.getAndIncrement()].longValue(), f.getByte()));
       }
     } else {
-      fail("Unexpected DataType: " + dtype);
+      fail("Unexpected type class: " + inputType);
     }
   }
 
@@ -319,8 +319,8 @@ public class GraphTestSession extends TestSession {
    */
   @Override
   public <T extends TType> void evaluate(FloatNdArray expected, Output<T> input) {
-    DataType<T> dtype = input.asOutput().dataType();
-    if (dtype == TFloat32.DTYPE) {
+    Class<T> inputType = input.type();
+    if (inputType == TFloat32.class) {
       AtomicLong index = new AtomicLong();
       if (debug) {
         try (TFloat32 result =
@@ -340,7 +340,7 @@ public class GraphTestSession extends TestSession {
                     assertEquals(
                         expected.getFloat(index.getAndIncrement()), f.getFloat(), epsilon));
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TFloat64 result =
@@ -360,7 +360,7 @@ public class GraphTestSession extends TestSession {
                     assertEquals(
                         expected.getFloat(index.getAndIncrement()), f.getDouble(), epsilon));
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt32 result =
@@ -378,7 +378,7 @@ public class GraphTestSession extends TestSession {
             .forEach(
                 f -> assertEquals((int) expected.getFloat(index.getAndIncrement()), f.getInt()));
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TInt64 result =
@@ -396,7 +396,7 @@ public class GraphTestSession extends TestSession {
             .forEach(
                 f -> assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getLong()));
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         try (TUint8 result =
@@ -415,7 +415,7 @@ public class GraphTestSession extends TestSession {
                 f -> assertEquals((long) expected.getFloat(index.getAndIncrement()), f.getByte()));
       }
     } else {
-      fail("Unexpected DataType: " + dtype);
+      fail("Unexpected type class: " + inputType);
     }
   }
 
@@ -485,15 +485,15 @@ public class GraphTestSession extends TestSession {
         "expected shape (%s) != to input shape (%s)",
         expected.shape().toString(), input.shape().toString());
     AtomicInteger index = new AtomicInteger();
-    DataType<T> dtype = input.asOutput().dataType();
-    if (!dtype.equals(expected.dataType())) {
+    Class<T> inputType = input.type();
+    if (!inputType.equals(expected.type())) {
       throw new IllegalArgumentException(
           String.format(
               "Both data type must be equal, inout = %s, expected = %s",
-              dtype, expected.dataType()));
+              inputType, expected.dataType()));
     }
     boolean isScalar = input.shape().equals(Shape.scalar());
-    if (dtype == TFloat32.DTYPE) {
+    if (inputType == TFloat32.class) {
       final Output<TFloat32> finalExpected = (Output<TFloat32>) expected;
       if (debug) {
         try (TFloat32 result =
@@ -531,7 +531,7 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getFloat(idx), f.getFloat(), epsilon));
         }
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       final Output<TFloat64> finalExpected = (Output<TFloat64>) expected;
       if (debug) {
         try (TFloat64 result =
@@ -569,7 +569,7 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getDouble(idx), f.getDouble(), epsilon));
         }
       }
-    } else if (dtype == TFloat16.DTYPE) {
+    } else if (inputType == TFloat16.class) {
       final Output<TFloat16> finalExpected = (Output<TFloat16>) expected;
       if (debug) {
         try (TFloat16 result =
@@ -607,7 +607,7 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getFloat(idx), f.getFloat(), epsilon));
         }
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       final Output<TInt32> finalExpected = (Output<TInt32>) expected;
       if (debug) {
         try (TInt32 result =
@@ -642,7 +642,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> assertEquals(expectedResult.getInt(idx), f.getInt(), epsilon));
         }
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       final Output<TInt64> finalExpected = (Output<TInt64>) expected;
       if (debug) {
         try (TInt64 result =
@@ -680,7 +680,7 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getLong(idx), f.getLong(), epsilon));
         }
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       final Output<TUint8> finalExpected = (Output<TUint8>) expected;
       if (debug) {
         try (TUint8 result =
@@ -718,7 +718,7 @@ public class GraphTestSession extends TestSession {
                       assertEquals(expectedResult.getByte(idx), f.getByte(), epsilon));
         }
       }
-    } else if (dtype == TBool.DTYPE) {
+    } else if (inputType == TBool.class) {
       final Output<TBool> finalExpected = (Output<TBool>) expected;
       if (debug) {
         try (TBool result =
@@ -755,7 +755,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> assertEquals(expectedResult.getBoolean(idx), f.getBoolean()));
         }
       }
-    } else if (dtype == TString.DTYPE) {
+    } else if (inputType == TString.class) {
       final Output<TString> finalExpected = (Output<TString>) expected;
       if (debug) {
         try (TString result =
@@ -793,7 +793,7 @@ public class GraphTestSession extends TestSession {
         }
       }
     } else {
-      fail("Unexpected DataType: " + dtype);
+      fail("Unexpected type class: " + inputType);
     }
   }
 
@@ -841,9 +841,9 @@ public class GraphTestSession extends TestSession {
   @Override
   public <T extends TType> void evaluate(Output<T> input, Predicate<Number> predicate) {
     AtomicInteger index = new AtomicInteger();
-    DataType<T> dtype = input.asOutput().dataType();
+    Class<T> inputType = input.type();
     boolean isScalar = input.shape().equals(Shape.scalar());
-    if (dtype == TFloat32.DTYPE) {
+    if (inputType == TFloat32.class) {
       if (debug) {
         try (TFloat32 result =
             (TFloat32)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -873,7 +873,7 @@ public class GraphTestSession extends TestSession {
               .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.getFloat())));
         }
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       if (debug) {
         try (TFloat64 result =
             (TFloat64)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -903,7 +903,7 @@ public class GraphTestSession extends TestSession {
               .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.getDouble())));
         }
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       if (debug) {
         try (TInt32 result =
             (TInt32)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -932,7 +932,7 @@ public class GraphTestSession extends TestSession {
               .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.getInt())));
         }
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       if (debug) {
         try (TInt64 result =
             (TInt64)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -962,7 +962,7 @@ public class GraphTestSession extends TestSession {
               .forEachIndexed((idx, f) -> assertTrue(predicate.test(result.getLong())));
         }
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       if (debug) {
         try (TUint8 result =
             (TUint8)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -993,7 +993,7 @@ public class GraphTestSession extends TestSession {
         }
       }
     } else {
-      fail("Unexpected DataType: " + dtype);
+      fail("Unexpected type class: " + inputType);
     }
   }
 
@@ -1004,8 +1004,8 @@ public class GraphTestSession extends TestSession {
   public <T extends TType> void print(PrintWriter writer, Output<T> input) {
     boolean isScalar = input.shape().size() == 1;
 
-    DataType<T> dtype = input.dataType();
-    if (dtype == TFloat32.DTYPE) {
+    Class<T> inputType = input.type();
+    if (inputType == TFloat32.class) {
       AtomicInteger index = new AtomicInteger();
       try (TFloat32 result =
           (TFloat32)this.getGraphSession().runner().fetch(input).run().get(0)) {
@@ -1018,7 +1018,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %f\n", index.getAndIncrement(), f.getFloat()));
         }
       }
-    } else if (dtype == TFloat64.DTYPE) {
+    } else if (inputType == TFloat64.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TFloat64 result =
@@ -1033,7 +1033,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %f\n", index.getAndIncrement(), f.getDouble()));
         }
       }
-    } else if (dtype == TInt32.DTYPE) {
+    } else if (inputType == TInt32.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TInt32 result =
@@ -1048,7 +1048,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %d\n", index.getAndIncrement(), f.getInt()));
         }
       }
-    } else if (dtype == TInt64.DTYPE) {
+    } else if (inputType == TInt64.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TInt64 result =
@@ -1063,7 +1063,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %d\n", index.getAndIncrement(), f.getLong()));
         }
       }
-    } else if (dtype == TUint8.DTYPE) {
+    } else if (inputType == TUint8.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TUint8 result =
@@ -1078,7 +1078,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %x\n", index.getAndIncrement(), f.getByte()));
         }
       }
-    } else if (dtype == TBool.DTYPE) {
+    } else if (inputType == TBool.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TBool result =
@@ -1093,7 +1093,7 @@ public class GraphTestSession extends TestSession {
                   (idx, f) -> writer.printf("%d). %b\n", index.getAndIncrement(), f.getBoolean()));
         }
       }
-    } else if (dtype == TString.DTYPE) {
+    } else if (inputType == TString.class) {
       AtomicInteger index = new AtomicInteger();
 
       try (TString result =
@@ -1109,7 +1109,7 @@ public class GraphTestSession extends TestSession {
         }
       }
     } else {
-      writer.println("Unexpected DataType: " + dtype);
+      writer.println("Unexpected type class: " + inputType);
     }
     writer.flush();
   }

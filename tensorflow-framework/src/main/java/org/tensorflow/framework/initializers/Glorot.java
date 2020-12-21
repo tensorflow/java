@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -44,7 +45,7 @@ import org.tensorflow.types.family.TType;
  *             new org.tensorflow.framework.initializers.Glorot&lt;&gt;(tf,
  *             Distribution.TRUNCATED_NORMAL, seed);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>Glorot Uniform:
@@ -55,7 +56,7 @@ import org.tensorflow.types.family.TType;
  *             new org.tensorflow.framework.initializers.Glorot&lt;&gt;(tf,
  *             Distribution.UNIFORM, seed);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p><b>NOTE:</b>
@@ -66,11 +67,10 @@ import org.tensorflow.types.family.TType;
  * <p></p>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  * @see VarianceScaling.Distribution
  * @see <a href="http://proceedings.mlr.press/v9/glorot10a.html">Glorot et al., 2010</a>
  */
-public class Glorot<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class Glorot<T extends TFloating> extends VarianceScaling<T> {
 
   public static final double SCALE = 1.0;
 

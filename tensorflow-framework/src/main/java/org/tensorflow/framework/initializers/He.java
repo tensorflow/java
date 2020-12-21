@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TType;
  *             new org.tensorflow.framework.initializers.He&lt;&gt;(tf,
  *             Distribution.TRUNCATED_NORMAL, seed););
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>He Uniform:
@@ -50,7 +51,7 @@ import org.tensorflow.types.family.TType;
  *             new org.tensorflow.framework.initializers.He&lt;&gt;(tf,
  *             Distribution.UNIFORM, seed););
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p><b>NOTE:</b>
@@ -61,12 +62,11 @@ import org.tensorflow.types.family.TType;
  * <p></p>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  * @see <a
  *     href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html">He
  *     et al., 2015</a>
  */
-public class He<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class He<T extends TFloating> extends VarianceScaling<T> {
 
   public static final double SCALE = 2.0;
 

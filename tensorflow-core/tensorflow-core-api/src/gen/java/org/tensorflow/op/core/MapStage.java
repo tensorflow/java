@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,8 +26,10 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Stage (key, values) in the underlying container which behaves like a hashtable.
@@ -97,17 +98,13 @@ public final class MapStage extends RawOp {
    * @return a new instance of MapStage
    */
   @Endpoint(describeByClass = true)
-  public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<DataType<?>> dtypes, Options... options) {
+  public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.apply(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
-    for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = dtypes.get(i);
-    }
-    opBuilder.setAttr("dtypes", dtypesArray);
+    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.capacity != null) {

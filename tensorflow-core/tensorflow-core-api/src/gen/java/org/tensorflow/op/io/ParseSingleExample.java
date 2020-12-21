@@ -19,7 +19,6 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -30,8 +29,10 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a tf.Example proto (as a string) into typed tensors.
@@ -76,7 +77,7 @@ public final class ParseSingleExample extends RawOp {
    * @return a new instance of ParseSingleExample
    */
   @Endpoint(describeByClass = true)
-  public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<DataType<?>> sparseTypes, List<Shape> denseShapes) {
+  public static ParseSingleExample create(Scope scope, Operand<TString> serialized, Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys, List<String> denseKeys, List<Class<? extends TType>> sparseTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleExample", scope.makeOpName("ParseSingleExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
@@ -92,11 +93,7 @@ public final class ParseSingleExample extends RawOp {
       denseKeysArray[i] = denseKeys.get(i);
     }
     opBuilder.setAttr("dense_keys", denseKeysArray);
-    DataType[] sparseTypesArray = new DataType[sparseTypes.size()];
-    for (int i = 0; i < sparseTypesArray.length; ++i) {
-      sparseTypesArray[i] = sparseTypes.get(i);
-    }
-    opBuilder.setAttr("sparse_types", sparseTypesArray);
+    opBuilder.setAttr("sparse_types", Operands.toDataTypes(sparseTypes));
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
     for (int i = 0; i < denseShapesArray.length; ++i) {
       denseShapesArray[i] = denseShapes.get(i);

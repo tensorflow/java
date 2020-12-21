@@ -14,19 +14,17 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
  * Initializer capable of adapting its scale to the shape of weights tensors.
- *
- * <p>
  *
  * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from
  * a truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
@@ -50,15 +48,14 @@ import org.tensorflow.types.family.TType;
  *          new org.tensorflow.framework.initializers.VarianceScaling&lt;&gt;(
  *              tf, scale, Mode.FAN_IN, Distribution.UNIFORM, seed);
  *      Operand&lt;TFloat32&gt; values =
- *          initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *          initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  * @see VarianceScaling.Mode
  * @see VarianceScaling.Distribution
  */
-public class VarianceScaling<T extends TType, U extends TNumber> extends BaseInitializer<T> {
+public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
 
   public static final double SCALE_DEFAULT = 1.0;
   public static final Mode MODE_DEFAULT = Mode.FAN_IN;
@@ -102,10 +99,7 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!dtype.isFloating()) {
-      throw new IllegalArgumentException("Expected floating point type, got " + dtype.name());
-    }
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     Shape shape = ShapeUtils.toShape(this.tf.scope(), dims);
     double lscale = this.scale;
     double[] fans /* fanIn, fanOut */ = computeFans(shape);
@@ -120,32 +114,28 @@ public class VarianceScaling<T extends TType, U extends TNumber> extends BaseIni
         lscale /= Math.max(1., (fans[0] + fans[1]) / 2.);
         break;
     }
-    Operand<U> distOp;
-    Operand<U> mulOp = null;
-    @SuppressWarnings("unchecked")
-    DataType<U> numdType = (DataType<U>) dtype;
+    Operand<T> distOp;
+    Operand<T> mulOp = null;
     double stddev;
     long[] seeds = {seed, 0};
     switch (distribution) {
       case TRUNCATED_NORMAL:
-        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), numdType);
+        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(lscale) / .87962566103423978;
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), numdType));
+        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
         break;
       case NORMAL:
-        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), numdType);
+        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), numdType));
+        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
         break;
       case UNIFORM:
-        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), numdType);
+        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(3.0 * lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), numdType));
+        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
         break;
     }
-
-    // Need to cast TNumber <U> to TType <T>
-    return (Operand<T>) mulOp;
+    return mulOp;
   }
 
   /**

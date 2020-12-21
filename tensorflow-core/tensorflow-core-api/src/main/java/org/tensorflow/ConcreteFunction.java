@@ -54,7 +54,7 @@ public class ConcreteFunction implements AutoCloseable {
    * public class MyModel {
    *
    *   public static Signature addTwo(Ops tf) {
-   *     Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *     Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
    *     Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
    *     return Signature.builder("addTwo").input("x", input).output("y", output).build();
    *   }
@@ -92,7 +92,7 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
-   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
    *   Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
    *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
    *
@@ -121,7 +121,7 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
-   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.DTYPE);
+   *   Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
    *   Add<TFloat32> output = tf.math.add(input, tf.constant(2.0f));
    *   Signature signature = Signature.builder().input("x", input).output("y", output).build();
    *

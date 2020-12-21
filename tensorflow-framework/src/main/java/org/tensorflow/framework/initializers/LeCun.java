@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -42,7 +43,7 @@ import org.tensorflow.types.family.TType;
  *              new org.tensorflow.framework.initializers.LeCunNormal&lt;&gt;(tf,
  *               Distribution.TRUNCATED_NORMAL, seed);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>LeCun Uniform:
@@ -53,7 +54,7 @@ import org.tensorflow.types.family.TType;
  *              new org.tensorflow.framework.initializers.LeCunNormal&lt;&gt;(tf,
  *               Distribution.UNIFORM, seed);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * *
@@ -68,7 +69,6 @@ import org.tensorflow.types.family.TType;
  * <p>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  * @see <a
  *     href="https://papers.nips.cc/paper/6698-self-normalizing-neural-networks">Self-Normalizing
  *     Neural Networks, Klambauer et al., 2017</a>
@@ -76,7 +76,7 @@ import org.tensorflow.types.family.TType;
  *     al., 1998</a>
  * @see VarianceScaling.Distribution
  */
-public class LeCun<T extends TType, U extends TNumber> extends VarianceScaling<T, U> {
+public class LeCun<T extends TFloating> extends VarianceScaling<T> {
 
   /**
    * Creates a LeCunNormal Initializer

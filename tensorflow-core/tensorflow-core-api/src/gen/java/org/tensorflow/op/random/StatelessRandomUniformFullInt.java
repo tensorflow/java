@@ -17,17 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
@@ -50,12 +50,12 @@ public final class StatelessRandomUniformFullInt<V extends TNumber> extends RawO
    * @return a new instance of StatelessRandomUniformFullInt
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformFullInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, DataType<V> dtype) {
+  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformFullInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformFullInt", scope.makeOpName("StatelessRandomUniformFullInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomUniformFullInt<V>(opBuilder.build());
   }
   

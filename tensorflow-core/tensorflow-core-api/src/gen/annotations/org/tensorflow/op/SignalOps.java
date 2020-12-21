@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.signal.BatchFft;
 import org.tensorflow.op.signal.BatchFft2d;
@@ -245,7 +244,7 @@ public final class SignalOps {
    * @return a new instance of Irfft
    */
   public <U extends TNumber, T extends TType> Irfft<U> irfft(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Treal) {
+      Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft.create(scope, input, fftLength, Treal);
   }
 
@@ -301,7 +300,7 @@ public final class SignalOps {
    * @return a new instance of Irfft2d
    */
   public <U extends TNumber, T extends TType> Irfft2d<U> irfft2d(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Treal) {
+      Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft2d.create(scope, input, fftLength, Treal);
   }
 
@@ -357,7 +356,7 @@ public final class SignalOps {
    * @return a new instance of Irfft3d
    */
   public <U extends TNumber, T extends TType> Irfft3d<U> irfft3d(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Treal) {
+      Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft3d.create(scope, input, fftLength, Treal);
   }
 
@@ -382,7 +381,7 @@ public final class SignalOps {
    * @return a new instance of Rfft
    */
   public <U extends TType, T extends TNumber> Rfft<U> rfft(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Tcomplex) {
+      Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft.create(scope, input, fftLength, Tcomplex);
   }
 
@@ -408,7 +407,7 @@ public final class SignalOps {
    * @return a new instance of Rfft2d
    */
   public <U extends TType, T extends TNumber> Rfft2d<U> rfft2d(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Tcomplex) {
+      Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft2d.create(scope, input, fftLength, Tcomplex);
   }
 
@@ -434,7 +433,7 @@ public final class SignalOps {
    * @return a new instance of Rfft3d
    */
   public <U extends TType, T extends TNumber> Rfft3d<U> rfft3d(Operand<T> input,
-      Operand<TInt32> fftLength, DataType<U> Tcomplex) {
+      Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft3d.create(scope, input, fftLength, Tcomplex);
   }
 

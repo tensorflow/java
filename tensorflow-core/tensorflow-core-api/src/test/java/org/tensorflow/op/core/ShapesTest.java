@@ -40,11 +40,11 @@ public class ShapesTest {
         Session session = new Session(g)) {
       Scope scope = new Scope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.DTYPE);
+      Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> reshaped =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Operand<TFloat32> actual = Shapes.flatten(scope, reshaped);
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
       try (TInt64 result1 = (TInt64)session.runner().fetch(tfshape.asOutput()).run().get(0);
@@ -63,11 +63,11 @@ public class ShapesTest {
     try (EagerSession session = EagerSession.create()) {
       Scope scope = new Scope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.DTYPE);
+      Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> flattened = Shapes.flatten(scope, tfshape, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
+      Operand<TInt64> flattened = Shapes.flatten(scope, tfshape, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
       flattened
@@ -89,8 +89,8 @@ public class ShapesTest {
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
-      Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
+      Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
       try (TInt64 result1 = (TInt64)session.runner().fetch(size.asOutput()).run().get(0)) {
@@ -405,7 +405,7 @@ public class ShapesTest {
       Scope scope = new Scope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape, 1L);
       AtomicInteger index = new AtomicInteger();
@@ -462,8 +462,8 @@ public class ShapesTest {
       Operand<TFloat32> operand2 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual2 =
           Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[] {2, 4}));
-      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
-      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.class);
+      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.class);
 
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
@@ -487,7 +487,7 @@ public class ShapesTest {
       Scope scope = new Scope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
-      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.DTYPE);
+      Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> append = Shapes.append(scope, tfshape, 2L);
       AtomicInteger index = new AtomicInteger();
@@ -568,8 +568,8 @@ public class ShapesTest {
       Operand<TFloat32> operand2 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual2 =
           Reshape.create(scope, operand2, Constant.vectorOf(scope, new long[] {2, 4}));
-      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.DTYPE);
-      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.DTYPE);
+      Shape<TInt64> tfshape1 = Shape.create(scope, actual1, TInt64.class);
+      Shape<TInt64> tfshape2 = Shape.create(scope, actual2, TInt64.class);
 
       Operand<TInt64> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();

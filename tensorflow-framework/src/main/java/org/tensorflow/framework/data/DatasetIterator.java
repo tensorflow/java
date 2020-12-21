@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Op;
@@ -25,6 +24,7 @@ import org.tensorflow.ndarray.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.types.family.TType;
 
 /**
  * Represents the state of an iteration through a tf.data Datset. DatasetIterator is not a
@@ -106,7 +106,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
   private Operand<?> iteratorResource;
   private Op initializer;
 
-  protected List<DataType<?>> outputTypes;
+  protected List<Class<? extends TType>> outputTypes;
   protected List<Shape> outputShapes;
 
   /**
@@ -115,7 +115,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param iteratorResource An Operand representing the iterator (e.g. constructed from
    *     `tf.data.iterator` or `tf.data.anonymousIterator`)
    * @param initializer An `Op` that should be run to initialize this iterator
-   * @param outputTypes A list of `DataType` objects corresponding to the types of each component of
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of
    *     a dataset element.
    * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
    *     a dataset element.
@@ -124,7 +124,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
       Ops tf,
       Operand<?> iteratorResource,
       Op initializer,
-      List<DataType<?>> outputTypes,
+      List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
 
     this.tf = tf;
@@ -137,7 +137,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
   public DatasetIterator(
       Ops tf,
       Operand<?> iteratorResource,
-      List<DataType<?>> outputTypes,
+      List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     this.tf = tf;
     this.iteratorResource = iteratorResource;
@@ -229,14 +229,14 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * Creates a new iterator from a "structure" defined by `outputShapes` and `outputTypes`.
    *
    * @param tf Ops accessor
-   * @param outputTypes A list of `DataType` objects repesenting the types of each component of a
+   * @param outputTypes A list of classes repesenting the tensor type of each component of a
    *     dataset element.
    * @param outputShapes A list of Shape objects representing the shape of each component of a
    *     dataset element.
    * @return A new DatasetIterator
    */
   public static DatasetIterator fromStructure(
-      Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      Ops tf, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     Operand<?> iteratorResource =
         tf.scope().env() instanceof Graph
             ? tf.data.iterator(EMPTY_SHARED_NAME, "", outputTypes, outputShapes)

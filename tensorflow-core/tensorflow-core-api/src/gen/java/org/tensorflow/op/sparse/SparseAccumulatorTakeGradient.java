@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -57,12 +58,12 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp 
    * @return a new instance of SparseAccumulatorTakeGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+  public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new SparseAccumulatorTakeGradient<T>(opBuilder.build());
   }
   

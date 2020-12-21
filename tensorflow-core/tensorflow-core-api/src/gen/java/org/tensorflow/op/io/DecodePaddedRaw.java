@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
@@ -71,12 +71,12 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
    * @return a new instance of DecodePaddedRaw
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, DataType<T> outType, Options... options) {
+  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, Class<T> outType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());
     opBuilder.addInput(fixedLength.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     if (options != null) {
       for (Options opts : options) {
         if (opts.littleEndian != null) {

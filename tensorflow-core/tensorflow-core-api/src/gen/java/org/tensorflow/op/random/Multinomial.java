@@ -17,19 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Draws samples from a multinomial distribution.
@@ -80,12 +80,12 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
    * @return a new instance of Multinomial
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, DataType<U> outputDtype, Options... options) {
+  public static <U extends TNumber, T extends TNumber> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Class<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_dtype", outputDtype);
+    opBuilder.setAttr("output_dtype", Operands.toDataType(outputDtype));
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {
@@ -111,7 +111,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> Multinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Options... options) {
-    return create(scope, logits, numSamples, TInt64.DTYPE, options);
+    return create(scope, logits, numSamples, TInt64.class, options);
   }
   
   /**

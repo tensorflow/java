@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -45,7 +46,7 @@ public class EagerOperationBuilderTest {
       opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
     }
     try {
-      opBuilder.setAttr("dtype", TFloat32.DTYPE);
+      opBuilder.setAttr("dtype", DataType.DT_FLOAT);
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -90,7 +91,7 @@ public class EagerOperationBuilderTest {
       // dtype, tensor attributes.
       try (TInt32 t = TInt32.scalarOf(1)) {
         opBuilder(session, "Const", "DataTypeAndTensor")
-            .setAttr("dtype", TInt32.DTYPE)
+            .setAttr("dtype", t.dataType())
             .setAttr("value", t)
             .build();
       }
@@ -98,7 +99,7 @@ public class EagerOperationBuilderTest {
       opBuilder(session, "RandomUniform", "DataTypeAndInt")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat32.DTYPE)
+          .setAttr("dtype", DataType.DT_FLOAT)
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")
@@ -119,7 +120,7 @@ public class EagerOperationBuilderTest {
           .build();
       // list(shape)
       opBuilder(session, "FIFOQueue", "queue")
-          .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
+          .setAttr("component_types", new DataType[] {DataType.DT_INT32, DataType.DT_INT32})
           .setAttr("shapes", new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)})
           .build();
       // bool

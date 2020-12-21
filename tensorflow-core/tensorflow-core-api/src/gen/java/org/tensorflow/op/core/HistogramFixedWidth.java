@@ -17,18 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return histogram of values.
@@ -67,13 +67,13 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
    * @return a new instance of HistogramFixedWidth
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
+  public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramFixedWidth", scope.makeOpName("HistogramFixedWidth"));
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(valueRange.asOutput());
     opBuilder.addInput(nbins.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new HistogramFixedWidth<U>(opBuilder.build());
   }
   
@@ -90,7 +90,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber> HistogramFixedWidth<TInt32> create(Scope scope, Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins) {
-    return create(scope, values, valueRange, nbins, TInt32.DTYPE);
+    return create(scope, values, valueRange, nbins, TInt32.class);
   }
   
   /**

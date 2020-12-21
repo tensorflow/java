@@ -19,7 +19,6 @@ package org.tensorflow.op;
 
 import java.nio.charset.Charset;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
@@ -648,7 +647,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Barrier
    */
-  public Barrier barrier(List<DataType<?>> componentTypes, Barrier.Options... options) {
+  public Barrier barrier(List<Class<? extends TType>> componentTypes, Barrier.Options... options) {
     return Barrier.create(scope, componentTypes, options);
   }
 
@@ -729,7 +728,7 @@ public final class Ops {
    * @return a new instance of BarrierTakeMany
    */
   public BarrierTakeMany barrierTakeMany(Operand<TString> handle, Operand<TInt32> numElements,
-      List<DataType<?>> componentTypes, BarrierTakeMany.Options... options) {
+      List<Class<? extends TType>> componentTypes, BarrierTakeMany.Options... options) {
     return BarrierTakeMany.create(scope, handle, numElements, componentTypes, options);
   }
 
@@ -989,7 +988,7 @@ public final class Ops {
    * @param type
    * @return a new instance of Bitcast
    */
-  public <U extends TType, T extends TType> Bitcast<U> bitcast(Operand<T> input, DataType<U> type) {
+  public <U extends TType, T extends TType> Bitcast<U> bitcast(Operand<T> input, Class<U> type) {
     return Bitcast.create(scope, input, type);
   }
 
@@ -1854,16 +1853,16 @@ public final class Ops {
   /**
    * Create a constant with data from the given buffer.
    *
+   * @param <T> the tensor type
    * @param scope is a scope used to add the underlying operation.
-   * @param type the tensor datatype.
+   * @param type the tensor type class
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a constant of type `type`
    * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
    *      buffer
    */
-  public <T extends TType> Constant<T> constant(DataType<T> type, Shape shape,
-      ByteDataBuffer data) {
+  public <T extends TType> Constant<T> constant(Class<T> type, Shape shape, ByteDataBuffer data) {
     return Constant.tensorOf(scope, type, shape, data);
   }
 
@@ -2138,7 +2137,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Empty
    */
-  public <T extends TType> Empty<T> empty(Operand<TInt32> shape, DataType<T> dtype,
+  public <T extends TType> Empty<T> empty(Operand<TInt32> shape, Class<T> dtype,
       Empty.Options... options) {
     return Empty.create(scope, shape, dtype, options);
   }
@@ -2159,7 +2158,7 @@ public final class Ops {
    * @return a new instance of EmptyTensorList
    */
   public <T extends TNumber, U extends TType> EmptyTensorList emptyTensorList(
-      Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
+      Operand<T> elementShape, Operand<TInt32> maxNumElements, Class<U> elementDtype) {
     return EmptyTensorList.create(scope, elementShape, maxNumElements, elementDtype);
   }
 
@@ -2491,7 +2490,7 @@ public final class Ops {
    * @return a new instance of GetSessionTensor
    */
   public <T extends TType> GetSessionTensor<T> getSessionTensor(Operand<TString> handle,
-      DataType<T> dtype) {
+      Class<T> dtype) {
     return GetSessionTensor.create(scope, handle, dtype);
   }
 
@@ -2571,8 +2570,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of HashTable
    */
-  public <T extends TType, U extends TType> HashTable hashTable(DataType<T> keyDtype,
-      DataType<U> valueDtype, HashTable.Options... options) {
+  public <T extends TType, U extends TType> HashTable hashTable(Class<T> keyDtype,
+      Class<U> valueDtype, HashTable.Options... options) {
     return HashTable.create(scope, keyDtype, valueDtype, options);
   }
 
@@ -2635,7 +2634,7 @@ public final class Ops {
    * @return a new instance of HistogramFixedWidth
    */
   public <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> histogramFixedWidth(
-      Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, DataType<U> dtype) {
+      Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
     return HistogramFixedWidth.create(scope, values, valueRange, nbins, dtype);
   }
 
@@ -2685,7 +2684,7 @@ public final class Ops {
    *  NewReadOnlyMemoryRegionFromFile in tensorflow::Env.
    * @return a new instance of ImmutableConst
    */
-  public <T extends TType> ImmutableConst<T> immutableConst(DataType<T> dtype, Shape shape,
+  public <T extends TType> ImmutableConst<T> immutableConst(Class<T> dtype, Shape shape,
       String memoryRegionName) {
     return ImmutableConst.create(scope, dtype, shape, memoryRegionName);
   }
@@ -2710,7 +2709,7 @@ public final class Ops {
    *    try (Session s = new Session(g)) {
    *      s.run(tf.init());  // initialize all variables
    *
-   *      try (Tensor<TInt32> t = s.runner().fetch(z).run().get(0).expect(TInt32.DTYPE)) {
+   *      try (TInt32 t = (TInt32)s.runner().fetch(z).run().get(0)) {
    *        assertEquals(30, t.data().getInt());
    *      }
    *    }
@@ -2737,7 +2736,7 @@ public final class Ops {
    *  try (SavedModelBundle model = SavedModelBundle.load("/path/to/model", "train")) {
    *    model.session().run(Init.DEFAULT_NAME);
    *
-   *    try (Tensor<TInt32> t = s.runner().fetch("z").run().get(0).expect(TInt32.DTYPE)) {
+   *    try (TInt32 t = (TInt32)s.runner().fetch("z").run().get(0)) {
    *      assertEquals(30, t.data().getInt());
    *    }
    *  }
@@ -2880,7 +2879,7 @@ public final class Ops {
    * @return a new instance of LookupTableExport
    */
   public <T extends TType, U extends TType> LookupTableExport<T, U> lookupTableExport(
-      Operand<?> tableHandle, DataType<T> Tkeys, DataType<U> Tvalues) {
+      Operand<?> tableHandle, Class<T> Tkeys, Class<U> Tvalues) {
     return LookupTableExport.create(scope, tableHandle, Tkeys, Tvalues);
   }
 
@@ -2966,7 +2965,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MapClear
    */
-  public MapClear mapClear(List<DataType<?>> dtypes, MapClear.Options... options) {
+  public MapClear mapClear(List<Class<? extends TType>> dtypes, MapClear.Options... options) {
     return MapClear.create(scope, dtypes, options);
   }
 
@@ -2977,7 +2976,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MapIncompleteSize
    */
-  public MapIncompleteSize mapIncompleteSize(List<DataType<?>> dtypes,
+  public MapIncompleteSize mapIncompleteSize(List<Class<? extends TType>> dtypes,
       MapIncompleteSize.Options... options) {
     return MapIncompleteSize.create(scope, dtypes, options);
   }
@@ -2994,8 +2993,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MapPeek
    */
-  public MapPeek mapPeek(Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes,
-      MapPeek.Options... options) {
+  public MapPeek mapPeek(Operand<TInt64> key, Operand<TInt32> indices,
+      List<Class<? extends TType>> dtypes, MapPeek.Options... options) {
     return MapPeek.create(scope, key, indices, dtypes, options);
   }
 
@@ -3006,7 +3005,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MapSize
    */
-  public MapSize mapSize(List<DataType<?>> dtypes, MapSize.Options... options) {
+  public MapSize mapSize(List<Class<? extends TType>> dtypes, MapSize.Options... options) {
     return MapSize.create(scope, dtypes, options);
   }
 
@@ -3022,7 +3021,8 @@ public final class Ops {
    * @return a new instance of MapStage
    */
   public MapStage mapStage(Operand<TInt64> key, Operand<TInt32> indices,
-      Iterable<Operand<?>> values, List<DataType<?>> dtypes, MapStage.Options... options) {
+      Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes,
+      MapStage.Options... options) {
     return MapStage.create(scope, key, indices, values, dtypes, options);
   }
 
@@ -3039,7 +3039,7 @@ public final class Ops {
    * @return a new instance of MapUnstage
    */
   public MapUnstage mapUnstage(Operand<TInt64> key, Operand<TInt32> indices,
-      List<DataType<?>> dtypes, MapUnstage.Options... options) {
+      List<Class<? extends TType>> dtypes, MapUnstage.Options... options) {
     return MapUnstage.create(scope, key, indices, dtypes, options);
   }
 
@@ -3054,8 +3054,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MapUnstageNoKey
    */
-  public MapUnstageNoKey mapUnstageNoKey(Operand<TInt32> indices, List<DataType<?>> dtypes,
-      MapUnstageNoKey.Options... options) {
+  public MapUnstageNoKey mapUnstageNoKey(Operand<TInt32> indices,
+      List<Class<? extends TType>> dtypes, MapUnstageNoKey.Options... options) {
     return MapUnstageNoKey.create(scope, indices, dtypes, options);
   }
 
@@ -3196,7 +3196,7 @@ public final class Ops {
    * @return a new instance of MlirPassthroughOp
    */
   public MlirPassthroughOp mlirPassthroughOp(Iterable<Operand<?>> inputs, String mlirModule,
-      List<DataType<?>> Toutputs) {
+      List<Class<? extends TType>> Toutputs) {
     return MlirPassthroughOp.create(scope, inputs, mlirModule, Toutputs);
   }
 
@@ -3218,7 +3218,7 @@ public final class Ops {
    * @return a new instance of MutableDenseHashTable
    */
   public <T extends TType, U extends TType> MutableDenseHashTable mutableDenseHashTable(
-      Operand<T> emptyKey, Operand<T> deletedKey, DataType<U> valueDtype,
+      Operand<T> emptyKey, Operand<T> deletedKey, Class<U> valueDtype,
       MutableDenseHashTable.Options... options) {
     return MutableDenseHashTable.create(scope, emptyKey, deletedKey, valueDtype, options);
   }
@@ -3235,8 +3235,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of MutableHashTable
    */
-  public <T extends TType, U extends TType> MutableHashTable mutableHashTable(DataType<T> keyDtype,
-      DataType<U> valueDtype, MutableHashTable.Options... options) {
+  public <T extends TType, U extends TType> MutableHashTable mutableHashTable(Class<T> keyDtype,
+      Class<U> valueDtype, MutableHashTable.Options... options) {
     return MutableHashTable.create(scope, keyDtype, valueDtype, options);
   }
 
@@ -3253,7 +3253,7 @@ public final class Ops {
    * @return a new instance of MutableHashTableOfTensors
    */
   public <T extends TType, U extends TType> MutableHashTableOfTensors mutableHashTableOfTensors(
-      DataType<T> keyDtype, DataType<U> valueDtype, MutableHashTableOfTensors.Options... options) {
+      Class<T> keyDtype, Class<U> valueDtype, MutableHashTableOfTensors.Options... options) {
     return MutableHashTableOfTensors.create(scope, keyDtype, valueDtype, options);
   }
 
@@ -3434,11 +3434,11 @@ public final class Ops {
    *
    * @param scope is a scope used to add the underlying operation
    * @param dims a 1-D operand that represents the shape of the output tensor
-   * @param type the output tensor datatype. Can not be TString.
+   * @param type the output tensor type class. Can not be TString.
    * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
-  public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, DataType<T> type) {
+  public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, Class<T> type) {
     return Ones.create(scope, dims, type);
   }
 
@@ -3460,7 +3460,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapClear
    */
-  public OrderedMapClear orderedMapClear(List<DataType<?>> dtypes,
+  public OrderedMapClear orderedMapClear(List<Class<? extends TType>> dtypes,
       OrderedMapClear.Options... options) {
     return OrderedMapClear.create(scope, dtypes, options);
   }
@@ -3472,7 +3472,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapIncompleteSize
    */
-  public OrderedMapIncompleteSize orderedMapIncompleteSize(List<DataType<?>> dtypes,
+  public OrderedMapIncompleteSize orderedMapIncompleteSize(List<Class<? extends TType>> dtypes,
       OrderedMapIncompleteSize.Options... options) {
     return OrderedMapIncompleteSize.create(scope, dtypes, options);
   }
@@ -3491,7 +3491,7 @@ public final class Ops {
    * @return a new instance of OrderedMapPeek
    */
   public OrderedMapPeek orderedMapPeek(Operand<TInt64> key, Operand<TInt32> indices,
-      List<DataType<?>> dtypes, OrderedMapPeek.Options... options) {
+      List<Class<? extends TType>> dtypes, OrderedMapPeek.Options... options) {
     return OrderedMapPeek.create(scope, key, indices, dtypes, options);
   }
 
@@ -3502,7 +3502,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of OrderedMapSize
    */
-  public OrderedMapSize orderedMapSize(List<DataType<?>> dtypes,
+  public OrderedMapSize orderedMapSize(List<Class<? extends TType>> dtypes,
       OrderedMapSize.Options... options) {
     return OrderedMapSize.create(scope, dtypes, options);
   }
@@ -3521,7 +3521,8 @@ public final class Ops {
    * @return a new instance of OrderedMapStage
    */
   public OrderedMapStage orderedMapStage(Operand<TInt64> key, Operand<TInt32> indices,
-      Iterable<Operand<?>> values, List<DataType<?>> dtypes, OrderedMapStage.Options... options) {
+      Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes,
+      OrderedMapStage.Options... options) {
     return OrderedMapStage.create(scope, key, indices, values, dtypes, options);
   }
 
@@ -3538,7 +3539,7 @@ public final class Ops {
    * @return a new instance of OrderedMapUnstage
    */
   public OrderedMapUnstage orderedMapUnstage(Operand<TInt64> key, Operand<TInt32> indices,
-      List<DataType<?>> dtypes, OrderedMapUnstage.Options... options) {
+      List<Class<? extends TType>> dtypes, OrderedMapUnstage.Options... options) {
     return OrderedMapUnstage.create(scope, key, indices, dtypes, options);
   }
 
@@ -3554,7 +3555,7 @@ public final class Ops {
    * @return a new instance of OrderedMapUnstageNoKey
    */
   public OrderedMapUnstageNoKey orderedMapUnstageNoKey(Operand<TInt32> indices,
-      List<DataType<?>> dtypes, OrderedMapUnstageNoKey.Options... options) {
+      List<Class<? extends TType>> dtypes, OrderedMapUnstageNoKey.Options... options) {
     return OrderedMapUnstageNoKey.create(scope, indices, dtypes, options);
   }
 
@@ -3705,7 +3706,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Placeholder
    */
-  public <T extends TType> Placeholder<T> placeholder(DataType<T> dtype,
+  public <T extends TType> Placeholder<T> placeholder(Class<T> dtype,
       Placeholder.Options... options) {
     return Placeholder.create(scope, dtype, options);
   }
@@ -3834,8 +3835,7 @@ public final class Ops {
    * @param dtype the dtype of the value.
    * @return a new instance of ReadVariableOp
    */
-  public <T extends TType> ReadVariableOp<T> readVariableOp(Operand<?> resource,
-      DataType<T> dtype) {
+  public <T extends TType> ReadVariableOp<T> readVariableOp(Operand<?> resource, Class<T> dtype) {
     return ReadVariableOp.create(scope, resource, dtype);
   }
 
@@ -4016,7 +4016,7 @@ public final class Ops {
    * @return a new instance of RemoteFusedGraphExecute
    */
   public RemoteFusedGraphExecute remoteFusedGraphExecute(Iterable<Operand<?>> inputs,
-      List<DataType<?>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
+      List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     return RemoteFusedGraphExecute.create(scope, inputs, Toutputs, serializedRemoteFusedGraphExecuteInfo);
   }
 
@@ -4103,7 +4103,7 @@ public final class Ops {
    * @return a new instance of ResourceCountUpTo
    */
   public <T extends TNumber> ResourceCountUpTo<T> resourceCountUpTo(Operand<?> resource, Long limit,
-      DataType<T> T) {
+      Class<T> T) {
     return ResourceCountUpTo.create(scope, resource, limit, T);
   }
 
@@ -4131,7 +4131,7 @@ public final class Ops {
    * @return a new instance of ResourceGather
    */
   public <U extends TType, T extends TNumber> ResourceGather<U> resourceGather(Operand<?> resource,
-      Operand<T> indices, DataType<U> dtype, ResourceGather.Options... options) {
+      Operand<T> indices, Class<U> dtype, ResourceGather.Options... options) {
     return ResourceGather.create(scope, resource, indices, dtype, options);
   }
 
@@ -4144,7 +4144,7 @@ public final class Ops {
    * @return a new instance of ResourceGatherNd
    */
   public <U extends TType, T extends TNumber> ResourceGatherNd<U> resourceGatherNd(
-      Operand<?> resource, Operand<T> indices, DataType<U> dtype) {
+      Operand<?> resource, Operand<T> indices, Class<U> dtype) {
     return ResourceGatherNd.create(scope, resource, indices, dtype);
   }
 
@@ -5423,7 +5423,7 @@ public final class Ops {
    * @return a new instance of SetDiff1d
    */
   public <T extends TType, U extends TNumber> SetDiff1d<T, U> setDiff1d(Operand<T> x, Operand<T> y,
-      DataType<U> outIdx) {
+      Class<U> outIdx) {
     return SetDiff1d.create(scope, x, y, outIdx);
   }
 
@@ -5484,7 +5484,7 @@ public final class Ops {
    * @return a new instance of Shape
    */
   public <U extends TNumber, T extends TType> org.tensorflow.op.core.Shape<U> shape(
-      Operand<T> input, DataType<U> outType) {
+      Operand<T> input, Class<U> outType) {
     return org.tensorflow.op.core.Shape.create(scope, input, outType);
   }
 
@@ -5512,7 +5512,7 @@ public final class Ops {
    * @return a new instance of ShapeN
    */
   public <U extends TNumber, T extends TType> ShapeN<U> shapeN(Iterable<Operand<T>> input,
-      DataType<U> outType) {
+      Class<U> outType) {
     return ShapeN.create(scope, input, outType);
   }
 
@@ -5553,7 +5553,7 @@ public final class Ops {
    * @param outType
    * @return a new instance of Size
    */
-  public <U extends TNumber, T extends TType> Size<U> size(Operand<T> input, DataType<U> outType) {
+  public <U extends TNumber, T extends TType> Size<U> size(Operand<T> input, Class<U> outType) {
     return Size.create(scope, input, outType);
   }
 
@@ -5833,7 +5833,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of StageClear
    */
-  public StageClear stageClear(List<DataType<?>> dtypes, StageClear.Options... options) {
+  public StageClear stageClear(List<Class<? extends TType>> dtypes, StageClear.Options... options) {
     return StageClear.create(scope, dtypes, options);
   }
 
@@ -5849,7 +5849,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of StagePeek
    */
-  public StagePeek stagePeek(Operand<TInt32> index, List<DataType<?>> dtypes,
+  public StagePeek stagePeek(Operand<TInt32> index, List<Class<? extends TType>> dtypes,
       StagePeek.Options... options) {
     return StagePeek.create(scope, index, dtypes, options);
   }
@@ -5861,7 +5861,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of StageSize
    */
-  public StageSize stageSize(List<DataType<?>> dtypes, StageSize.Options... options) {
+  public StageSize stageSize(List<Class<? extends TType>> dtypes, StageSize.Options... options) {
     return StageSize.create(scope, dtypes, options);
   }
 
@@ -6126,7 +6126,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of TemporaryVariable
    */
-  public <T extends TType> TemporaryVariable<T> temporaryVariable(Shape shape, DataType<T> dtype,
+  public <T extends TType> TemporaryVariable<T> temporaryVariable(Shape shape, Class<T> dtype,
       TemporaryVariable.Options... options) {
     return TemporaryVariable.create(scope, shape, dtype, options);
   }
@@ -6141,7 +6141,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of TensorArray
    */
-  public <T extends TType> TensorArray tensorArray(Operand<TInt32> size, DataType<T> dtype,
+  public <T extends TType> TensorArray tensorArray(Operand<TInt32> size, Class<T> dtype,
       TensorArray.Options... options) {
     return TensorArray.create(scope, size, dtype, options);
   }
@@ -6181,7 +6181,7 @@ public final class Ops {
    * @return a new instance of TensorArrayConcat
    */
   public <T extends TType> TensorArrayConcat<T> tensorArrayConcat(Operand<?> handle,
-      Operand<TFloat32> flowIn, DataType<T> dtype, TensorArrayConcat.Options... options) {
+      Operand<TFloat32> flowIn, Class<T> dtype, TensorArrayConcat.Options... options) {
     return TensorArrayConcat.create(scope, handle, flowIn, dtype, options);
   }
 
@@ -6199,7 +6199,7 @@ public final class Ops {
    * @return a new instance of TensorArrayGather
    */
   public <T extends TType> TensorArrayGather<T> tensorArrayGather(Operand<?> handle,
-      Operand<TInt32> indices, Operand<TFloat32> flowIn, DataType<T> dtype,
+      Operand<TInt32> indices, Operand<TFloat32> flowIn, Class<T> dtype,
       TensorArrayGather.Options... options) {
     return TensorArrayGather.create(scope, handle, indices, flowIn, dtype, options);
   }
@@ -6287,7 +6287,7 @@ public final class Ops {
    * @return a new instance of TensorArrayPack
    */
   public <T extends TType> TensorArrayPack<T> tensorArrayPack(Operand<TString> handle,
-      Operand<TFloat32> flowIn, DataType<T> dtype, TensorArrayPack.Options... options) {
+      Operand<TFloat32> flowIn, Class<T> dtype, TensorArrayPack.Options... options) {
     return TensorArrayPack.create(scope, handle, flowIn, dtype, options);
   }
 
@@ -6302,7 +6302,7 @@ public final class Ops {
    * @return a new instance of TensorArrayRead
    */
   public <T extends TType> TensorArrayRead<T> tensorArrayRead(Operand<?> handle,
-      Operand<TInt32> index, Operand<TFloat32> flowIn, DataType<T> dtype) {
+      Operand<TInt32> index, Operand<TFloat32> flowIn, Class<T> dtype) {
     return TensorArrayRead.create(scope, handle, index, flowIn, dtype);
   }
 
@@ -6419,7 +6419,7 @@ public final class Ops {
    */
   public <U extends TType, T extends TNumber> TensorListConcat<U> tensorListConcat(
       Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims,
-      DataType<U> elementDtype) {
+      Class<U> elementDtype) {
     return TensorListConcat.create(scope, inputHandle, elementShape, leadingDims, elementDtype);
   }
 
@@ -6431,7 +6431,7 @@ public final class Ops {
    * @return a new instance of TensorListConcatLists
    */
   public <T extends TType> TensorListConcatLists tensorListConcatLists(Operand<?> inputA,
-      Operand<?> inputB, DataType<T> elementDtype) {
+      Operand<?> inputB, Class<T> elementDtype) {
     return TensorListConcatLists.create(scope, inputA, inputB, elementDtype);
   }
 
@@ -6447,7 +6447,7 @@ public final class Ops {
    * @return a new instance of TensorListElementShape
    */
   public <T extends TNumber> TensorListElementShape<T> tensorListElementShape(
-      Operand<?> inputHandle, DataType<T> shapeType) {
+      Operand<?> inputHandle, Class<T> shapeType) {
     return TensorListElementShape.create(scope, inputHandle, shapeType);
   }
 
@@ -6486,7 +6486,7 @@ public final class Ops {
    * @return a new instance of TensorListGather
    */
   public <T extends TType> TensorListGather<T> tensorListGather(Operand<?> inputHandle,
-      Operand<TInt32> indices, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+      Operand<TInt32> indices, Operand<TInt32> elementShape, Class<T> elementDtype) {
     return TensorListGather.create(scope, inputHandle, indices, elementShape, elementDtype);
   }
 
@@ -6500,7 +6500,7 @@ public final class Ops {
    * @return a new instance of TensorListGetItem
    */
   public <T extends TType> TensorListGetItem<T> tensorListGetItem(Operand<?> inputHandle,
-      Operand<TInt32> index, Operand<TInt32> elementShape, DataType<T> elementDtype) {
+      Operand<TInt32> index, Operand<TInt32> elementShape, Class<T> elementDtype) {
     return TensorListGetItem.create(scope, inputHandle, index, elementShape, elementDtype);
   }
 
@@ -6534,7 +6534,7 @@ public final class Ops {
    * @return a new instance of TensorListPopBack
    */
   public <T extends TType> TensorListPopBack<T> tensorListPopBack(Operand<?> inputHandle,
-      Operand<TInt32> elementShape, DataType<T> elementDtype) {
+      Operand<TInt32> elementShape, Class<T> elementDtype) {
     return TensorListPopBack.create(scope, inputHandle, elementShape, elementDtype);
   }
 
@@ -6581,7 +6581,7 @@ public final class Ops {
    * @return a new instance of TensorListReserve
    */
   public <T extends TNumber, U extends TType> TensorListReserve tensorListReserve(
-      Operand<T> elementShape, Operand<TInt32> numElements, DataType<U> elementDtype) {
+      Operand<T> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
     return TensorListReserve.create(scope, elementShape, numElements, elementDtype);
   }
 
@@ -6697,7 +6697,7 @@ public final class Ops {
    * @return a new instance of TensorListStack
    */
   public <T extends TType> TensorListStack<T> tensorListStack(Operand<?> inputHandle,
-      Operand<TInt32> elementShape, DataType<T> elementDtype, TensorListStack.Options... options) {
+      Operand<TInt32> elementShape, Class<T> elementDtype, TensorListStack.Options... options) {
     return TensorListStack.create(scope, inputHandle, elementShape, elementDtype, options);
   }
 
@@ -7304,7 +7304,7 @@ public final class Ops {
    * @return a new instance of Unique
    */
   public <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> unique(Operand<T> x,
-      Operand<U> axis, DataType<V> outIdx) {
+      Operand<U> axis, Class<V> outIdx) {
     return Unique.create(scope, x, axis, outIdx);
   }
 
@@ -7421,7 +7421,7 @@ public final class Ops {
    * @return a new instance of UniqueWithCounts
    */
   public <T extends TType, V extends TNumber, U extends TNumber> UniqueWithCounts<T, V> uniqueWithCounts(
-      Operand<T> x, Operand<U> axis, DataType<V> outIdx) {
+      Operand<T> x, Operand<U> axis, Class<V> outIdx) {
     return UniqueWithCounts.create(scope, x, axis, outIdx);
   }
 
@@ -7494,7 +7494,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Unstage
    */
-  public Unstage unstage(List<DataType<?>> dtypes, Unstage.Options... options) {
+  public Unstage unstage(List<Class<? extends TType>> dtypes, Unstage.Options... options) {
     return Unstage.create(scope, dtypes, options);
   }
 
@@ -7507,7 +7507,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of VarHandleOp
    */
-  public <T extends TType> VarHandleOp varHandleOp(DataType<T> dtype, Shape shape,
+  public <T extends TType> VarHandleOp varHandleOp(Class<T> dtype, Shape shape,
       VarHandleOp.Options... options) {
     return VarHandleOp.create(scope, dtype, shape, options);
   }
@@ -7550,7 +7550,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Variable
    */
-  public <T extends TType> Variable<T> variable(Shape shape, DataType<T> dtype,
+  public <T extends TType> Variable<T> variable(Shape shape, Class<T> dtype,
       Variable.Options... options) {
     return Variable.create(scope, shape, dtype, options);
   }
@@ -7590,7 +7590,7 @@ public final class Ops {
    * @param outType
    * @return a new instance of VariableShape
    */
-  public <T extends TNumber> VariableShape<T> variableShape(Operand<?> input, DataType<T> outType) {
+  public <T extends TNumber> VariableShape<T> variableShape(Operand<?> input, Class<T> outType) {
     return VariableShape.create(scope, input, outType);
   }
 
@@ -7708,7 +7708,7 @@ public final class Ops {
    * @return a constant tensor initialized with zeros
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with zeros.
    */
-  public <T extends TType, U extends TNumber> Zeros<T> zeros(Operand<U> dims, DataType<T> type) {
+  public <T extends TType, U extends TNumber> Zeros<T> zeros(Operand<U> dims, Class<T> type) {
     return Zeros.create(scope, dims, type);
   }
 

@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -51,7 +52,7 @@ public final class QuantizedAdd<V extends TType> extends RawOp {
    * @return a new instance of QuantizedAdd
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, DataType<V> Toutput) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAdd", scope.makeOpName("QuantizedAdd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -60,7 +61,7 @@ public final class QuantizedAdd<V extends TType> extends RawOp {
     opBuilder.addInput(minY.asOutput());
     opBuilder.addInput(maxY.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Toutput", Toutput);
+    opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
     return new QuantizedAdd<V>(opBuilder.build());
   }
   

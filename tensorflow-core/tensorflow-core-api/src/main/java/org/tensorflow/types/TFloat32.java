@@ -18,7 +18,6 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TFloat32Mapper;
@@ -27,16 +26,13 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TFloating;
 
 /** IEEE-754 single-precision 32-bit float tensor type. */
+@TensorType(dataType = DataType.DT_FLOAT, byteSize = 4, mapperClass = TFloat32Mapper.class)
 public interface TFloat32 extends FloatNdArray, TFloating {
-
-  /** readable-name for the data type */
-  static final String NAME = "FLOAT";
-
-  /** Type metadata */
-  DataType<TFloat32> DTYPE = DataType.create(NAME, 1, 4, new TFloat32Mapper());
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -45,7 +41,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat32 scalarOf(float value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setFloat(value));
+    return Tensor.of(TFloat32.class, Shape.scalar(), data -> data.setFloat(value));
   }
 
   /**
@@ -58,7 +54,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TFloat32.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -70,7 +66,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat32 tensorOf(NdArray<Float> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+    return Tensor.of(TFloat32.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -80,7 +76,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat32 tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+    return Tensor.of(TFloat32.class, shape);
   }
 
   /**
@@ -91,7 +87,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat32 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+    return Tensor.of(TFloat32.class, shape, d -> d.write(data));
   }
 
   /**
@@ -103,6 +99,6 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TFloat32 tensorOf(Shape shape, Consumer<TFloat32> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
+    return Tensor.of(TFloat32.class, shape, dataInit);
   }
 }

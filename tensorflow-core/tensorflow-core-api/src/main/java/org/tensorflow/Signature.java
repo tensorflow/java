@@ -113,7 +113,7 @@ public class Signature  {
         tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.size(i)));
       }
       return TensorInfo.newBuilder()
-          .setDtype(DataType.forNumber(operand.dataType().nativeCode()))
+          .setDtype(operand.dataType())
           .setTensorShape(tensorShapeBuilder)
           .setName(operand.op().name() + ":" + operand.index())
           .build();

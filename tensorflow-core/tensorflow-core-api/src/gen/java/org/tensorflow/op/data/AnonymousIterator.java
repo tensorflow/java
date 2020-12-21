@@ -18,15 +18,17 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
@@ -43,14 +45,10 @@ public final class AnonymousIterator extends RawOp {
    * @return a new instance of AnonymousIterator
    */
   @Endpoint(describeByClass = true)
-  public static AnonymousIterator create(Scope scope, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static AnonymousIterator create(Scope scope, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
     opBuilder = scope.apply(opBuilder);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
-    for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = outputTypes.get(i);
-    }
-    opBuilder.setAttr("output_types", outputTypesArray);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
       outputShapesArray[i] = outputShapes.get(i);

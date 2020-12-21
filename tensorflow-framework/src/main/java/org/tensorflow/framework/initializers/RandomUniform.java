@@ -14,11 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.random.RandomUniformInt;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -32,13 +32,12 @@ import org.tensorflow.types.family.TType;
  *     RandomUniform&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.RandomUniform&lt;&gt;(tf, seed);
  *     Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.DTYPE);
+ *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
- * @param <U> The TNumber for the call operation
  */
-public class RandomUniform<T extends TType, U extends TNumber> extends BaseInitializer<T> {
+public class RandomUniform<T extends TNumber> extends BaseInitializer<T> {
 
   public static final double MINVAL_DEFAULT = -0.05;
   public static final double MAXVAL_DEFAULT = 0.05;
@@ -77,39 +76,28 @@ public class RandomUniform<T extends TType, U extends TNumber> extends BaseIniti
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, DataType<T> dtype) {
-    if (!dtype.isNumeric())
-      throw new IllegalArgumentException("The data type must be numeric. Found : " + dtype.name());
-    @SuppressWarnings("unchecked")
-    DataType<U> numdType = (DataType<U>) dtype;
-    Operand<U> distOp;
-
-    if (dtype.isInteger()) {
+  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+    Operand<T> distOp;
+    if (TIntegral.class.isAssignableFrom(type)) {
       RandomUniformInt.Options options = RandomUniformInt.seed(this.seed);
       distOp =
           tf.random.randomUniformInt(
               dims,
-              tf.dtypes.cast(tf.constant(this.minval), numdType),
-              tf.dtypes.cast(tf.constant(this.maxval), numdType),
+              tf.dtypes.cast(tf.constant(this.minval), type),
+              tf.dtypes.cast(tf.constant(this.maxval), type),
               options);
-      @SuppressWarnings("unchecked")
-      Operand<T> distOpT = (Operand<T>) distOp;
-      return distOpT;
     } else {
       long[] seeds = {seed, 0};
-      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), numdType);
-      @SuppressWarnings("unchecked")
-      Operand<T> distOpT = (Operand<T>) distOp;
+      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
       if (this.minval == 0) {
         if (this.maxval != 1.0) {
-          distOpT = tf.math.mul(distOpT, tf.dtypes.cast(tf.constant(this.maxval), dtype));
+          distOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.maxval), type));
         }
       } else {
-        distOpT =
-            tf.math.mul(distOpT, tf.dtypes.cast(tf.constant(this.maxval - this.minval), dtype));
-        distOpT = tf.math.add(distOpT, tf.dtypes.cast(tf.constant(this.minval), dtype));
+        distOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.maxval - this.minval), type));
+        distOp = tf.math.add(distOp, tf.dtypes.cast(tf.constant(this.minval), type));
       }
-      return distOpT;
     }
+    return distOp;
   }
 }

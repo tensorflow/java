@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -49,12 +50,12 @@ public final class CSRSparseMatrixComponents<T extends TType> extends RawOp {
    * @return a new instance of CSRSparseMatrixComponents
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope, Operand<?> csrSparseMatrix, Operand<TInt32> index, DataType<T> type) {
+  public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope, Operand<?> csrSparseMatrix, Operand<TInt32> index, Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixComponents", scope.makeOpName("CSRSparseMatrixComponents"));
     opBuilder.addInput(csrSparseMatrix.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", type);
+    opBuilder.setAttr("type", Operands.toDataType(type));
     return new CSRSparseMatrixComponents<T>(opBuilder.build());
   }
   

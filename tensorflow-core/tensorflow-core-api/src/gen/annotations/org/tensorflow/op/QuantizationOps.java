@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.quantization.Dequantize;
 import org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs;
@@ -176,7 +175,7 @@ public final class QuantizationOps {
    * @return a new instance of Dequantize
    */
   public <U extends TNumber, T extends TType> Dequantize<U> dequantize(Operand<T> input,
-      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<U> dtype,
+      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<U> dtype,
       Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, dtype, options);
   }
@@ -507,7 +506,7 @@ public final class QuantizationOps {
    * @return a new instance of Quantize
    */
   public <T extends TType> Quantize<T> quantize(Operand<TFloat32> input, Operand<TFloat32> minRange,
-      Operand<TFloat32> maxRange, DataType<T> T, Quantize.Options... options) {
+      Operand<TFloat32> maxRange, Class<T> T, Quantize.Options... options) {
     return Quantize.create(scope, input, minRange, maxRange, T, options);
   }
 
@@ -565,8 +564,7 @@ public final class QuantizationOps {
    * @return a new instance of QuantizeDownAndShrinkRange
    */
   public <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> quantizeDownAndShrinkRange(
-      Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
-      DataType<U> outType) {
+      Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Class<U> outType) {
     return QuantizeDownAndShrinkRange.create(scope, input, inputMin, inputMax, outType);
   }
 
@@ -628,7 +626,7 @@ public final class QuantizationOps {
    */
   public <U extends TType, T extends TType> Requantize<U> requantize(Operand<T> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin,
-      Operand<TFloat32> requestedOutputMax, DataType<U> outType) {
+      Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     return Requantize.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);
   }
 

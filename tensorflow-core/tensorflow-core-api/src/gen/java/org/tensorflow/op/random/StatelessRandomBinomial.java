@@ -17,18 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a binomial distribution.
@@ -55,14 +55,14 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    * @return a new instance of StatelessRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs, DataType<W> dtype) {
+  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomBinomial", scope.makeOpName("StatelessRandomBinomial"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(counts.asOutput());
     opBuilder.addInput(probs.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomBinomial<W>(opBuilder.build());
   }
   
@@ -80,7 +80,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    */
   @Endpoint(describeByClass = true)
   public static <T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<TInt64> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs) {
-    return create(scope, shape, seed, counts, probs, TInt64.DTYPE);
+    return create(scope, shape, seed, counts, probs, TInt64.class);
   }
   
   /**

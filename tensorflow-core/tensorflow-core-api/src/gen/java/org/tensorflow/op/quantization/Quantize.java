@@ -17,15 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -220,13 +221,13 @@ public final class Quantize<T extends TType> extends RawOp {
    * @return a new instance of Quantize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, DataType<T> T, Options... options) {
+  public static <T extends TType> Quantize<T> create(Scope scope, Operand<TFloat32> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("T", T);
+    opBuilder.setAttr("T", Operands.toDataType(T));
     if (options != null) {
       for (Options opts : options) {
         if (opts.mode != null) {
