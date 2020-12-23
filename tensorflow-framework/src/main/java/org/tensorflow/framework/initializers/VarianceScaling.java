@@ -20,8 +20,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Initializer capable of adapting its scale to the shape of weights tensors.

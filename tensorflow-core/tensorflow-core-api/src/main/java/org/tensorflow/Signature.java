@@ -18,7 +18,6 @@ package org.tensorflow;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;

@@ -21,12 +21,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */

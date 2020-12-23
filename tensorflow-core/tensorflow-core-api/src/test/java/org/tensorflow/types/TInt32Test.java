@@ -17,8 +17,6 @@
 
 package org.tensorflow.types;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;

@@ -17,15 +17,11 @@ package org.tensorflow.framework.utils;
 import org.tensorflow.*;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.DataBuffers;
-import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TIntegral;
-import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
 import java.util.Arrays;

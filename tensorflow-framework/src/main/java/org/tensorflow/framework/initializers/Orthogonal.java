@@ -22,8 +22,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.Qr;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates an orthogonal matrix.

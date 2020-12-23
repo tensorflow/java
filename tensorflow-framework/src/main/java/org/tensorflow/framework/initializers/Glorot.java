@@ -17,8 +17,6 @@ package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * The Glorot initializer, also called Xavier initializer.

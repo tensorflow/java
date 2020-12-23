@@ -22,10 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt32;
 
 public final class GeneratedOperationsTest {

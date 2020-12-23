@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;

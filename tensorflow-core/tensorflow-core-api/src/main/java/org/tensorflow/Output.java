@@ -19,7 +19,6 @@ import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 

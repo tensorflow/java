@@ -20,7 +20,6 @@ import org.tensorflow.op.random.RandomUniformInt;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates tensors with a uniform distribution.

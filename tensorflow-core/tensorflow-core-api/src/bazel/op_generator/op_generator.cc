@@ -103,9 +103,10 @@ void CollectOpDependencies(const OpSpec& op, RenderMode mode,
   }
   for (const AttributeSpec& attribute : op.attributes()) {
     out->push_back(attribute.var().type());
-    out->push_back(attribute.jni_type());
     if (attribute.jni_type().name() == "DataType") {
       out->push_back(Type::Class("Operands", "org.tensorflow.op"));
+    } else {
+      out->push_back(attribute.jni_type());
     }
     if (attribute.has_default_value() &&
         attribute.type().kind() == Type::GENERIC) {
@@ -115,6 +116,8 @@ void CollectOpDependencies(const OpSpec& op, RenderMode mode,
   for (const AttributeSpec& optional_attribute : op.optional_attributes()) {
     if (optional_attribute.jni_type().name() == "DataType") {
       out->push_back(Type::Class("Operands", "org.tensorflow.op"));
+    } else {
+      out->push_back(optional_attribute.jni_type());
     }
     out->push_back(optional_attribute.var().type());
   }

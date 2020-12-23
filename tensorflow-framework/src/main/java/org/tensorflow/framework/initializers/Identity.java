@@ -20,7 +20,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates the identity matrix.

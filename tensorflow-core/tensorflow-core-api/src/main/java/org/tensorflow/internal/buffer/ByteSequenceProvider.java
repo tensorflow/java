@@ -19,7 +19,6 @@ package org.tensorflow.internal.buffer;
 import java.util.Iterator;
 import java.util.function.Function;
 import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.NdArraySequence;
 
 /**
  * Produces sequence of bytes to be stored in a {@link ByteSequenceTensorBuffer}.

@@ -14,18 +14,14 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow.op.core;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.TestTemplate;
-import org.tensorflow.Graph;
 import org.tensorflow.EagerSession;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;

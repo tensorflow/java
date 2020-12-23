@@ -85,10 +85,6 @@ public final class TensorTypeRegistry {
     }
     TensorTypeInfo<T> typeInfo = new TensorTypeInfo<>(type, typeAnnot.dataType(), typeAnnot.byteSize(), mapper);
     TYPES_BY_CLASS.put(type, typeInfo);
-
-    // If more than one tensor type is mapped to a given native code, the last registered will
-    // have priority. This way, we can allow user to register their own classes to map tensors
-    // of a given data type.
     TYPES_BY_CODE.put(typeInfo.dataType().getNumber(), typeInfo);
     TYPES_BY_CODE.put(typeInfo.dataType().getNumber() + 100, typeInfo);
   }

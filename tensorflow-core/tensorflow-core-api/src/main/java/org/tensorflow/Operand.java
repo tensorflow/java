@@ -18,7 +18,6 @@ package org.tensorflow;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.op.Op;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**

@@ -16,7 +16,6 @@
 package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;

@@ -93,9 +93,8 @@ public final class RawTensor implements Tensor {
    * Allocates a new tensor in native memory of the given type, shape and size.
    *
    * <p>The size of the tensor must be at least large enough to contain all scalars for the
-   * given type and shape, i.e. <code>size >= type.byteSize() * shape.size()</code>. More memory
-   * can be allocated to store also metadata within the tensor itself, e.g. a lookup table
-   * in a string tensor.
+   * given type and shape. More memory can also be allocated to store also metadata within the
+   * tensor itself, e.g. a lookup table in a string tensor.
    *
    * @param type tensor type class
    * @param shape shape of the tensor
@@ -104,16 +103,19 @@ public final class RawTensor implements Tensor {
    */
   static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
     TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(type);
-    long effectiveSize = size;
-    if (effectiveSize < 0) {
-      effectiveSize = shape.size() * typeInfo.byteSize();
+    long allocatedSize = size;
+    if (allocatedSize < 0) {
+      if (typeInfo.isVariableLength()) {
+        throw new IllegalArgumentException("Explicit size is required for variable-length tensor types");
+      }
+      allocatedSize = shape.size() * typeInfo.byteSize();
 
-    } else if (!typeInfo.isVariableLength() && shape.size() * typeInfo.byteSize() > effectiveSize) {
+    } else if (!typeInfo.isVariableLength() && shape.size() * typeInfo.byteSize() > allocatedSize) {
       // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
       // we only validate them for fixed length datatypes
       throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
     }
-    TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), effectiveSize);
+    TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), allocatedSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
       RawTensor t = new RawTensor(typeInfo, shape);

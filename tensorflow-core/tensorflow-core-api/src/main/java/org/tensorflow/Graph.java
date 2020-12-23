@@ -51,7 +51,6 @@ import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.train.Restore;
 import org.tensorflow.op.train.Save;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
