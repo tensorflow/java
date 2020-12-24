@@ -17,7 +17,7 @@ package org.tensorflow.framework.initializers;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Initializer that generates tensors with a normal distribution.
@@ -34,7 +34,8 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The TType for the call operation
  */
-public class RandomNormal<T extends TNumber> extends BaseInitializer<T> {
+public class RandomNormal<T extends TFloating> extends BaseInitializer<T> {
+
   public static final double MEAN_DEFAULT = 0.0;
   public static final double STDDEV_DEFAULT = 1.0;
 
