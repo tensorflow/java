@@ -61,11 +61,11 @@ public class IndexingTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       long[] shape = {10, 10, 10, 10, 10, 10, 10, 10};
-      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
+      Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
       StridedSlice<TFloat32> output = StridedSliceHelper.stridedSlice(scope, op, slice);
-      try (Tensor<TFloat32> result = sess.runner().fetch(output.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
+      try (TFloat32 result = (TFloat32) sess.runner().fetch(output.asOutput()).run().get(0)) {
         // expected shape from Python tensorflow
-        assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.data().shape(), "Slice index didn't match expected (Python)");
+        assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.shape(), "Slice index didn't match expected (Python)");
       }
     }
   }
