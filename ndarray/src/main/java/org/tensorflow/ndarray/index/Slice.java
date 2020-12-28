@@ -57,7 +57,7 @@ final class Slice implements TensorIndex {
     this.end = end;
     this.stride = stride;
 
-    if(stride != 0){
+    if(stride == 0){
       throw new IllegalArgumentException("Can not have a stride of 0");
     }
   }
