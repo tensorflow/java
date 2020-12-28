@@ -410,7 +410,7 @@ public final class Session implements AutoCloseable {
      *     the {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
      * @return this session runner
-     * @see Graph#getOutput(String, int)
+     * @see Graph#getOutput(String)
      */
     public Runner fetch(String operation) {
       return fetch(graph.getOutput(operation));
@@ -459,6 +459,7 @@ public final class Session implements AutoCloseable {
      *
      * @param operation the string name of the operation to execute
      * @return this session runner
+     * @see Graph#operationOrError(String)
      */
     public Runner addTarget(String operation) {
       GraphOperation op = graph.operationOrError(operation);
