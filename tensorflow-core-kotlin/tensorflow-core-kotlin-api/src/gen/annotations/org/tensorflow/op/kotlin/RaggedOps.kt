@@ -43,15 +43,15 @@ public class RaggedOps(
 
     /**
      * Counts the number of occurrences of each value in an integer array.
-     *
+     *  
      *  Outputs a vector with length `size` and the same dtype as `weights`. If
      *  `weights` are empty, then index `i` stores the number of times the value `i` is
      *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
      *  the value in `weights` at each index where the corresponding value in `arr` is
      *  `i`.
-     *
+     *  
      *  Values in `arr` outside of the range &#91;0, size) are ignored.
-     *
+     * 
      * @param U data type for ` output()` output
      * @param splits 1D int64 `Tensor`.
      * @param values 2D int `Tensor`.
@@ -71,13 +71,13 @@ public class RaggedOps(
         size: Operand<T>,
         weights: Operand<U>,
         binaryOutput: Boolean? = null
-    ): RaggedBincount<U> = java.raggedBincount<U, T>(
+    ): RaggedBincount<U> = java.raggedBincount<U, T>(    
         splits,
         values,
         size,
         weights,
         *listOfNotNull(
-            binaryOutput?.let { org.tensorflow.op.ragged.RaggedBincount.binaryOutput(it) }
+            binaryOutput?.let{ org.tensorflow.op.ragged.RaggedBincount.binaryOutput(it) }
         ).toTypedArray()
-    )
+        )
 }

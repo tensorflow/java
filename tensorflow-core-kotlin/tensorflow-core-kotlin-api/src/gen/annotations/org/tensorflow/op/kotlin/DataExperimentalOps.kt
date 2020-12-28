@@ -17,13 +17,13 @@
 //
 package org.tensorflow.op.kotlin
 
-import org.tensorflow.DataType
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
 import org.tensorflow.op.`data`.experimental.DataServiceDataset
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
+import org.tensorflow.types.family.TType
 
 /**
  * An API for building `data.experimental` operations as [Op][org.tensorflow.op.Op]s
@@ -44,7 +44,7 @@ public class DataExperimentalOps(
     public val scope: Scope = ops.scope
 
     /**
-     *
+     * 
      * @param datasetId
      * @param processingMode
      * @param address
@@ -67,10 +67,10 @@ public class DataExperimentalOps(
         jobName: Operand<TString>,
         maxOutstandingRequests: Operand<TInt64>,
         iterationCounter: Operand<*>,
-        outputTypes: List<DataType<*>>,
+        outputTypes: List<Class<out TType>>,
         outputShapes: List<Shape>,
         taskRefreshIntervalHintMs: Long? = null
-    ): DataServiceDataset = java.dataServiceDataset(
+    ): DataServiceDataset = java.dataServiceDataset(    
         datasetId,
         processingMode,
         address,
@@ -81,9 +81,8 @@ public class DataExperimentalOps(
         outputTypes,
         outputShapes,
         *listOfNotNull(
-            taskRefreshIntervalHintMs?.let {
-                org.tensorflow.op.data.experimental.DataServiceDataset.taskRefreshIntervalHintMs(it)
-            }
+            taskRefreshIntervalHintMs?.let{
+            org.tensorflow.op.data.experimental.DataServiceDataset.taskRefreshIntervalHintMs(it) }
         ).toTypedArray()
-    )
+        )
 }

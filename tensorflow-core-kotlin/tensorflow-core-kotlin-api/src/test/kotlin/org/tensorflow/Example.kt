@@ -31,8 +31,8 @@ public fun KotlinOps.DenseLayer(
     activation: KotlinOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) }
 ): Operand<TFloat32> = tf.withSubScope(name) {
     val inputDims = x.shape()[1]
-    val W = tf.variable(tf.math.add(tf.zeros(tf.array(inputDims.toInt(), n), TFloat32.DTYPE), constant(1f)))
-    val b = tf.variable(tf.math.add(tf.zeros(tf.array(n), TFloat32.DTYPE), constant(1f)))
+    val W = tf.variable(tf.math.add(tf.zeros(tf.array(inputDims.toInt(), n), TFloat32::class.java), constant(1f)))
+    val b = tf.variable(tf.math.add(tf.zeros(tf.array(n), TFloat32::class.java), constant(1f)))
     activation(tf.math.add(tf.linalg.matMul(x, W), b))
 }
 
@@ -41,21 +41,22 @@ public class Example {
     public fun mnistExample() {
         Graph {
             val input = tf.placeholderWithDefault(
-                tf.math.add(tf.zeros(tf.array(1, 28, 28, 3), TFloat32.DTYPE), tf.constant(1f)),
+                tf.math.add(tf.zeros(tf.array(1, 28, 28, 3)), tf.constant(1f)),
                 Shape.of(-1, 28, 28, 3)
             )
 
             val output = with(tf) {
                 var x: Operand<TFloat32> = tf.reshape(input, tf.array(-1))
+//                tf.dtypes.cast<TInt32>(x)
                 x = DenseLayer("Layer1", x, 256)
                 x = DenseLayer("Layer2", x, 64)
                 DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
             }
 
-            useSession {
-                val outputValue = it.run(fetches = listOf(output))[output]
-                println(outputValue.data())
-            }
+//            useSession {
+//                val outputValue = it.run(fetches = listOf(output))[output]
+//                println(outputValue.data())
+//            }
         }
     }
 }

@@ -17,7 +17,7 @@
 //
 package org.tensorflow.op.kotlin
 
-import org.tensorflow.DataType
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.dtypes.AsString
@@ -46,21 +46,21 @@ public class DtypesOps(
 
     /**
      * Converts each entry in the given tensor to strings.
-     *
+     *  
      *  Supports many numeric types and boolean.
-     *
+     *  
      *  For Unicode, see the
      *  &#91;https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode
      * text)
      *  tutorial.
-     *
+     *  
      *  Examples:
-     *
+     *  
      *  >>> tf.strings.as_string(&#91;3, 2])
      *  <tf.Tensor: shape=(2,), dtype=string, numpy=array(&#91;b'3', b'2'], dtype=object)>
      *  >>> tf.strings.as_string(&#91;3.1415926, 2.71828], precision=2).numpy()
      *  array(&#91;b'3.14', b'2.72'], dtype=object)
-     *
+     * 
      * @param input
      * @param options carries optional attributes values
      * @return a new instance of AsString
@@ -83,20 +83,20 @@ public class DtypesOps(
         shortest: Boolean? = null,
         width: Long? = null,
         fill: String? = null
-    ): AsString = java.asString<T>(
+    ): AsString = java.asString<T>(    
         input,
         *listOfNotNull(
-            precision?.let { org.tensorflow.op.dtypes.AsString.precision(it) },
-            scientific?.let { org.tensorflow.op.dtypes.AsString.scientific(it) },
-            shortest?.let { org.tensorflow.op.dtypes.AsString.shortest(it) },
-            width?.let { org.tensorflow.op.dtypes.AsString.width(it) },
-            fill?.let { org.tensorflow.op.dtypes.AsString.fill(it) }
+            precision?.let{ org.tensorflow.op.dtypes.AsString.precision(it) },
+            scientific?.let{ org.tensorflow.op.dtypes.AsString.scientific(it) },
+            shortest?.let{ org.tensorflow.op.dtypes.AsString.shortest(it) },
+            width?.let{ org.tensorflow.op.dtypes.AsString.width(it) },
+            fill?.let{ org.tensorflow.op.dtypes.AsString.fill(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Cast x of type SrcT to y of DstT.
-     *
+     * 
      * @param U data type for ` y()` output
      * @param x
      * @param DstT
@@ -107,34 +107,34 @@ public class DtypesOps(
      */
     public fun <U : TType, T : TType> cast(
         x: Operand<T>,
-        DstT: DataType<U>,
+        DstT: Class<U>,
         Truncate: Boolean? = null
-    ): Cast<U> = java.cast<U, T>(
+    ): Cast<U> = java.cast<U, T>(    
         x,
         DstT,
         *listOfNotNull(
-            Truncate?.let { org.tensorflow.op.dtypes.Cast.Truncate(it) }
+            Truncate?.let{ org.tensorflow.op.dtypes.Cast.Truncate(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Converts two real numbers to a complex number.
-     *
+     *  
      *  Given a tensor `real` representing the real part of a complex number, and a
      *  tensor `imag` representing the imaginary part of a complex number, this
      *  operation returns complex numbers elementwise of the form \\(a + bj\\), where
      *  <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
-     *
+     *  
      *  The input tensors `real` and `imag` must have the same shape.
-     *
+     *  
      *  For example:
      *  ```
      *  # tensor 'real' is [2.25, 3.25]
      *  # tensor `imag` is [4.75, 5.75]
      *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
      *  ```
-     *
-     *
+     * 
+     * 
      * @param U data type for ` out()` output
      * @param real
      * @param imag
@@ -145,10 +145,54 @@ public class DtypesOps(
     public fun <U : TType, T : TNumber> complex(
         real: Operand<T>,
         imag: Operand<T>,
-        Tout: DataType<U>
-    ): Complex<U> = java.complex<U, T>(
+        Tout: Class<U>
+    ): Complex<U> = java.complex<U, T>(    
         real,
         imag,
         Tout
-    )
+        )
+
+    /**
+     * Cast x of type SrcT to y of DstT.
+     * 
+     * @param U data type for ` y()` output
+     * @param x
+     * @param DstT
+     * @param options carries optional attributes values
+     * @return a new instance of Cast
+     * @see org.tensorflow.op.DtypesOps.cast
+     * @param Truncate @param Truncate
+     */
+    @JvmName("castReified")
+    public inline fun <reified U : TType, T : TType> cast(x: Operand<T>, Truncate: Boolean? = null):
+            Cast<U> = cast<U, T>(x, U::class.java, Truncate)
+
+    /**
+     * Converts two real numbers to a complex number.
+     *  
+     *  Given a tensor `real` representing the real part of a complex number, and a
+     *  tensor `imag` representing the imaginary part of a complex number, this
+     *  operation returns complex numbers elementwise of the form \\(a + bj\\), where
+     *  <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
+     *  
+     *  The input tensors `real` and `imag` must have the same shape.
+     *  
+     *  For example:
+     *  ```
+     *  # tensor 'real' is [2.25, 3.25]
+     *  # tensor `imag` is [4.75, 5.75]
+     *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
+     *  ```
+     * 
+     * 
+     * @param U data type for ` out()` output
+     * @param real
+     * @param imag
+     * @param Tout
+     * @return a new instance of Complex
+     * @see org.tensorflow.op.DtypesOps.complex
+     */
+    @JvmName("complexReified")
+    public inline fun <reified U : TType, T : TNumber> complex(real: Operand<T>, imag: Operand<T>):
+            Complex<U> = complex<U, T>(real, imag, U::class.java)
 }
