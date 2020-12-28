@@ -113,7 +113,7 @@ public class SessionTest {
                 .runAndFetchMetadata();
         // Sanity check on outputs.
         assertEquals(1, result.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
+        assertEquals(31, ((TInt32)result.get(0)).getInt(0, 0));
         // Sanity check on metadata
         assertNotNull(result.getMetadata());
         assertTrue(result.getMetadata().hasStepStats(), result.getMetadata().toString());

@@ -160,8 +160,8 @@ public class GraphTest {
       assertEquals(DataType.DT_FLOAT, grads1[0].dataType());
       assertEquals(DataType.DT_FLOAT, grads1[1].dataType());
 
-      try (Tensor<TFloat32> c1 = TFloat32.scalarOf(3.0f);
-          Tensor<TFloat32> c2 = TFloat32.scalarOf(2.0f);
+      try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
+          TFloat32 c2 = TFloat32.scalarOf(2.0f);
           Session.Result outputs = s.runner()
               .feed(x1, c1)
               .feed(x2, c2)

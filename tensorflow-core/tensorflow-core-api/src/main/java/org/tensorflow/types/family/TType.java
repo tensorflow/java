@@ -80,4 +80,9 @@ public interface TType extends Tensor {
   default void close() {
     asRawTensor().close();
   }
+
+  @Override
+  default boolean isClosed(){
+    return asRawTensor().isClosed();
+  }
 }

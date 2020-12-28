@@ -150,10 +150,10 @@ public final class Session implements AutoCloseable {
    * <p>
    * Closing a {@code Result} object will close all of the tensors contained by it.
    */
-  public final class Result implements AutoCloseable, Iterable<Tensor<?>>{
-    private final List<Tensor<?>> results;
+  public final class Result implements AutoCloseable, Iterable<Tensor>{
+    private final List<Tensor> results;
     private final List<Output<?>> fetches;
-    private final LinkedHashMap<Output<?>, Tensor<?>> outputMap;
+    private final LinkedHashMap<Output<?>, Tensor> outputMap;
 
     /**
      * Metadata about the run.
@@ -166,7 +166,7 @@ public final class Session implements AutoCloseable {
 
     private boolean closed = false;
 
-    private Result(List<Tensor<?>> results, List<Output<?>> fetches, RunMetadata metadata) {
+    private Result(List<Tensor> results, List<Output<?>> fetches, RunMetadata metadata) {
 
       if(results.size() != fetches.size()){
         throw new IllegalArgumentException("Expected the same number of fetches and values, got " + fetches.size()
@@ -191,7 +191,7 @@ public final class Session implements AutoCloseable {
     /**
      * Get the result tensors.
      */
-    public List<Tensor<?>> getResults() {
+    public List<Tensor> getResults() {
       requireOpen();
       return Collections.unmodifiableList(results);
     }
@@ -206,7 +206,7 @@ public final class Session implements AutoCloseable {
     /**
      * Get a map of the fetched outputs to their results.
      */
-    public Map<Output<?>, Tensor<?>> getOutputMap(){
+    public Map<Output<?>, Tensor> getOutputMap(){
       return Collections.unmodifiableMap(outputMap);
     }
 
@@ -227,7 +227,7 @@ public final class Session implements AutoCloseable {
     /**
      * Get the result at {@code index}.
      */
-    public Tensor<?> get(int index){
+    public Tensor get(int index){
       requireOpen();
       return results.get(index);
     }
@@ -236,17 +236,17 @@ public final class Session implements AutoCloseable {
      * Get the result for {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
     @SuppressWarnings("unchecked")
-    public <T extends TType> Tensor<T> get(Output<T> output){
+    public <T extends TType> T get(Output<T> output){
       requireOpen();
       if(!outputMap.containsKey(output))
         throw new IllegalArgumentException("Did not fetch an output for " + output);
-      return (Tensor<T>) outputMap.get(output);
+      return (T) outputMap.get(output);
     }
 
     /**
      * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
-    public <T extends TType> Tensor<T> get(Operand<T> operand){
+    public <T extends TType> T get(Operand<T> operand){
       requireOpen();
       return get(operand.asOutput());
     }
@@ -254,7 +254,7 @@ public final class Session implements AutoCloseable {
     /**
      * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
-    public Tensor<?> get(String operation, int index){
+    public Tensor get(String operation, int index){
       requireOpen();
       return get(graph.getOutput(operation, index));
     }
@@ -263,7 +263,7 @@ public final class Session implements AutoCloseable {
     /**
      * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
      */
-    public Tensor<?> get(String output){
+    public Tensor get(String output){
       requireOpen();
       return get(graph.getOutput(output));
     }
@@ -307,7 +307,7 @@ public final class Session implements AutoCloseable {
     @Override
     public void close() {
       requireOpen();
-      for(Tensor<?> t : this){
+      for(Tensor t : this){
         if(!t.isClosed()) {
           t.close();
         }
@@ -316,19 +316,19 @@ public final class Session implements AutoCloseable {
     }
 
     @Override
-    public Iterator<Tensor<?>> iterator() {
+    public Iterator<Tensor> iterator() {
       requireOpen();
       return results.iterator();
     }
 
     @Override
-    public void forEach(Consumer<? super Tensor<?>> action) {
+    public void forEach(Consumer<? super Tensor> action) {
       requireOpen();
       results.forEach(action);
     }
 
     @Override
-    public Spliterator<Tensor<?>> spliterator() {
+    public Spliterator<Tensor> spliterator() {
       requireOpen();
       return results.spliterator();
     }

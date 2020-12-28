@@ -65,7 +65,18 @@ public final class RawTensor implements Tensor {
 
   @Override
   public void close() {
+    if(closed) {
+      throw new IllegalStateException("Tensor has already been closed");
+    }
     tensorScope.close();
+    closed = true;
+  }
+
+  /**
+   * @return {@code true} if this tensor has been closed;
+   */
+  public boolean isClosed() {
+    return closed;
   }
 
   /**
@@ -222,6 +233,7 @@ public final class RawTensor implements Tensor {
   }
 
   private PointerScope tensorScope;
+  private boolean closed = false;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;
