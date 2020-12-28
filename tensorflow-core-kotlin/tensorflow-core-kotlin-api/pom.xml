@@ -176,12 +176,14 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
-          <!--<execution>
+          <!--
+          Disabled because of https://github.com/pinterest/ktlint/issues/1039
+          <execution>
             <id>ktlint-format-generated</id>
             <phase>process-sources</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="false" failonerror="true"
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
                   classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="-F"/>
                   <arg value="src/gen/**/*.kt"/>
@@ -196,7 +198,7 @@
             <id>ktlint-format</id>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="false" failonerror="true"
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
                   classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="-F"/>
                   <arg value="src/**/*.kt"/>
@@ -208,29 +210,29 @@
               <goal>run</goal>
             </goals>
           </execution>
-          <!--<execution>
+          <execution>
             <id>ktlint</id>
             <phase>process-sources</phase>
             <configuration>
               <target name="ktlint">
-                <java taskname="ktlint" dir="${basedir}" fork="false" failonerror="true"
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
                   classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="src/**/*.kt"/>
                   <arg value="!src/gen/**/*.kt"/>
-                  <arg value="&#45;&#45;reporter=plain?group_by_file"/>
+                  <arg value="--reporter=plain?group_by_file"/>
                 </java>
               </target>
             </configuration>
             <goals>
               <goal>run</goal>
             </goals>
-          </execution>-->
+          </execution>
         </executions>
         <dependencies>
           <dependency>
             <groupId>com.pinterest</groupId>
             <artifactId>ktlint</artifactId>
-            <version>0.40.0</version>
+            <version>0.39.0</version>
           </dependency>
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>
