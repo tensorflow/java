@@ -17,27 +17,27 @@ package org.tensorflow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
-import org.tensorflow.op.Index;
+import org.tensorflow.ndarray.index.Indices;
 
 public class IndexTest {
   @Test
   public void testNullConversions(){
-    assertTrue(Index.slice(null, 0).isBeginMask(),
+    assertTrue(Indices.slice(null, 0).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
-    assertTrue(Index.slice(null, Index.point(0)).isBeginMask(),
+    assertTrue(Indices.slice(null, 0).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
-    assertTrue(Index.slice(null, null).isBeginMask(),
+    assertTrue(Indices.slice(null, null).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
-    assertTrue(Index.slice(0, null).isEndMask(),
+    assertTrue(Indices.slice(0, null).endMask(),
         "Passed null for slice end but didn't set end mask");
 
-    assertTrue(Index.slice(Index.point(0), null).isEndMask(),
+    assertTrue(Indices.slice(0, null).endMask(),
         "Passed null for slice end but didn't set end mask");
 
-    assertTrue(Index.slice(null, null).isEndMask(),
+    assertTrue(Indices.slice(null, null).endMask(),
         "Passed null for slice end but didn't set end mask");
   }
 }

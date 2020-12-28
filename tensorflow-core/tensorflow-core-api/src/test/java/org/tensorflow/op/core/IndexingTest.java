@@ -16,33 +16,33 @@ package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.ndarray.Shape.of;
 
 import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.Index;
+import org.tensorflow.ndarray.index.Indices;
+import org.tensorflow.ndarray.index.TensorIndex;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 
 public class IndexingTest {
 
   // [2, 1:2, :, tf.newaxis, ..., :4, 4::2]
-  private static final Index[] slice = new Index[]{
-      Index.point(2),
-      Index.point(1, true),
-      Index.all(),
-      Index.newAxis(),
-      Index.ellipses(),
-      Index.slice(Index.all(), 4),
-      Index.slice(4, null, 2)
+  private static final TensorIndex[] slice = new TensorIndex[]{
+      Indices.at(2),
+      Indices.at(1, true),
+      Indices.all(),
+      Indices.newAxis(),
+      Indices.ellipsis(),
+      Indices.slice(null, 4),
+      Indices.slice(4, null, 2)
   };
 
   @Test
   public void testIndexMerge() {
-    Indexing.StridedSliceArgs args = Indexing.mergeIndexes(slice);
+    StridedSliceHelper.StridedSliceArgs args = StridedSliceHelper.mergeIndexes(slice);
 
     assertArrayEquals(new int[]{2, 1, 0, 0, 0, 0, 4}, args.begin);
     assertArrayEquals(new int[]{3, 2, 0, 0, 0, 4, 0}, args.end);
@@ -62,7 +62,7 @@ public class IndexingTest {
       Scope scope = new Scope(g);
       long[] shape = {10, 10, 10, 10, 10, 10, 10, 10};
       Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.DTYPE);
-      StridedSlice<TFloat32> output = Indexing.stridedSlice(scope, op, slice);
+      StridedSlice<TFloat32> output = StridedSliceHelper.stridedSlice(scope, op, slice);
       try (Tensor<TFloat32> result = sess.runner().fetch(output.asOutput()).run().get(0).expect(TFloat32.DTYPE)) {
         // expected shape from Python tensorflow
         assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.data().shape(), "Slice index didn't match expected (Python)");

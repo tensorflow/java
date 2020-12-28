@@ -258,6 +258,10 @@ public final class Indices {
 
   //TODO comments, tests, remove extra classes in favor of helper methods
 
+  /**
+   *
+   * @return
+   */
   public static TensorIndex newAxis(){
     return NewAxis.INSTANCE;
   }
@@ -270,7 +274,31 @@ public final class Indices {
     return ellipsis();
   }
 
+  public static TensorIndex slice(Long start, Long end){
+    return slice(start, end, 1);
+  }
+
   public static TensorIndex slice(Long start, Long end, long stride){
     return new Slice(start, end, stride);
+  }
+
+  public static TensorIndex slice(Integer start, int end){
+    return intSlice(start, end, 1);
+  }
+
+  public static TensorIndex slice(int start, Integer end){
+    return intSlice(start, end, 1);
+  }
+
+  public static TensorIndex slice(Integer start, int end, long stride){
+    return intSlice(start, end, stride);
+  }
+
+  public static TensorIndex slice(int start, Integer end, long stride){
+    return intSlice(start, end, stride);
+  }
+
+  private static TensorIndex intSlice(Integer start, Integer end, long stride){
+    return new Slice(start == null ? null : start.longValue(), end == null ? null : end.longValue(), stride);
   }
 }

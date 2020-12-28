@@ -38,6 +38,7 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.index.TensorIndex;
 import org.tensorflow.op.core.Abort;
 import org.tensorflow.op.core.All;
 import org.tensorflow.op.core.Any;
@@ -93,7 +94,6 @@ import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.ImmutableConst;
-import org.tensorflow.op.core.Indexing;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.InitializeTable;
 import org.tensorflow.op.core.InitializeTableFromTextFile;
@@ -211,6 +211,7 @@ import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
 import org.tensorflow.op.core.StridedSliceAssign;
 import org.tensorflow.op.core.StridedSliceGrad;
+import org.tensorflow.op.core.StridedSliceHelper;
 import org.tensorflow.op.core.Sum;
 import org.tensorflow.op.core.SwitchCond;
 import org.tensorflow.op.core.TemporaryVariable;
@@ -5911,15 +5912,15 @@ public final class Ops {
    *   `m` could be equal to `n`, but this need not be the case. Each
    *   range specification entry can be one of the following:
    *   <p>
-   *   - An ellipsis (...) using {@link Index#ellipses()}. Ellipses are used to imply zero or more
+   *   - An ellipsis (...) using {@link Indices#ellipsis()}. Ellipses are used to imply zero or more
    *     dimensions of full-dimension selection and are produced using
    *     `ellipsis_mask`. For example, `foo[...]` is the identity slice.
    *   <p>
-   *   - A new axis using {@link Index#newAxis()}. This is used to insert a new shape=1 dimension and is
+   *   - A new axis using {@link Indices#newAxis()}. This is used to insert a new shape=1 dimension and is
    *     produced using `new_axis_mask`. For example, `foo[:, ...]` where
    *     `foo` is shape `(3, 4)` produces a `(1, 3, 4)` tensor.
    *   <p>
-   *   - A range `begin:end:stride` using {@link Index#slice(Singular, Singular, int) Index.slice()} or {@link Index#all()}. This is used to specify how much to choose from
+   *   - A range `begin:end:stride` using {@link Indices#slice(Long, Long, long)}  Index.slice()}. This is used to specify how much to choose from
    *     a given dimension. `stride` can be any integer but 0.  `begin` is an integer
    *     which represents the index of the first value to select while `end` represents
    *     the index of the last value to select. The number of values selected in each
@@ -5935,7 +5936,7 @@ public final class Ops {
    *     first dimension of a tensor while dropping the last two (in the original
    *     order elements). For example `foo = [1,2,3,4]; foo[-2::-1]` is `[4,3]`.
    *   <p>
-   *   - A single index using {@link Index#point(int)}. This is used to keep only elements that have a given
+   *   - A single index using {@link Indices#at(long)}. This is used to keep only elements that have a given
    *     index. For example (`foo[2, :]` on a shape `(5,6)` tensor produces a
    *     shape `(6,)` tensor. This is encoded in `begin` and `end` and
    *     `shrink_axis_mask`.
@@ -5948,12 +5949,12 @@ public final class Ops {
    * @param scope current scope
    * @param <T> data type for {@code output()} output
    * @param input
-   * @param indices The indices to slice.  See {@link Index}.
+   * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSlice
-   * @see Index
+   * @see Indices
    */
-  public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, Index... indices) {
-    return Indexing.stridedSlice(scope, input, indices);
+  public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, TensorIndex... indices) {
+    return StridedSliceHelper.stridedSlice(scope, input, indices);
   }
 
   /**
@@ -6082,13 +6083,13 @@ public final class Ops {
    * @param scope current scope
    * @param ref the tensor to assign to.
    * @param value the value to assign.
-   * @param indices The indices to slice.  See {@link Index}.
+   * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(Operand, TensorIndex...)
    */
   public <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Operand<T> ref,
-      Operand<T> value, Index... indices) {
-    return Indexing.stridedSliceAssign(scope, ref, value, indices);
+      Operand<T> value, TensorIndex... indices) {
+    return StridedSliceHelper.stridedSliceAssign(scope, ref, value, indices);
   }
 
   /**

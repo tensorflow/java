@@ -15,8 +15,8 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
-import org.tensorflow.op.Index;
-import org.tensorflow.op.Index.Singular;
+import org.tensorflow.ndarray.index.Indices;
+import org.tensorflow.ndarray.index.TensorIndex;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -25,10 +25,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Helper endpoint methods for Python like indexing.
  *
- * @see Index
+ * @see org.tensorflow.ndarray.index.Indices
  */
 @Operator
-public class Indexing {
+public class StridedSliceHelper {
 
   static class StridedSliceArgs {
 
@@ -54,7 +54,7 @@ public class Indexing {
     }
   }
 
-  static StridedSliceArgs mergeIndexes(Index[] indices) {
+  static StridedSliceArgs mergeIndexes(TensorIndex[] indices) {
     int[] begin = new int[indices.length];
     int[] end = new int[indices.length];
     int[] strides = new int[indices.length];
@@ -65,34 +65,35 @@ public class Indexing {
     long shrinkAxisMask = 0;
 
     for (int i = 0; i < indices.length; i++) {
-      Index idx = indices[i];
+      TensorIndex idx = indices[i];
       if (idx == null) {
-        idx = Index.all();
+        idx = Indices.all();
       }
 
-      begin[i] = idx.getBegin();
-      end[i] = idx.getEnd();
-      strides[i] = idx.getStride();
+      //TODO warnings for out of bounds?
+      begin[i] = (int) idx.begin();
+      end[i] = (int) idx.end();
+      strides[i] = (int) idx.stride();
 
-      if (idx.isBeginMask()) {
+      if (idx.beginMask()) {
         beginMask |= 1L << i;
       }
 
-      if (idx.isEndMask()) {
+      if (idx.endMask()) {
         endMask |= 1L << i;
       }
 
-      if (idx.isEllipsisMask()) {
+      if (idx.ellipsisMask()) {
         if(ellipsisMask != 0)
           throw new IllegalArgumentException("Can not have two ellipsis in a slice");
         ellipsisMask |= 1L << i;
       }
 
-      if (idx.isNewAxisMask()) {
+      if (idx.newAxisMask()) {
         newAxisMask |= 1L << i;
       }
 
-      if (idx.isShrinkAxisMask()) {
+      if (idx.shrinkAxisMask()) {
         shrinkAxisMask |= 1L << i;
       }
     }
@@ -109,15 +110,15 @@ public class Indexing {
    *  `m` could be equal to `n`, but this need not be the case. Each
    *  range specification entry can be one of the following:
    *  <p>
-   *  - An ellipsis (...) using {@link Index#ellipses()}. Ellipses are used to imply zero or more
+   *  - An ellipsis (...) using {@link Indices#ellipsis()}. Ellipses are used to imply zero or more
    *    dimensions of full-dimension selection and are produced using
    *    `ellipsis_mask`. For example, `foo[...]` is the identity slice.
    *  <p>
-   *  - A new axis using {@link Index#newAxis()}. This is used to insert a new shape=1 dimension and is
+   *  - A new axis using {@link Indices#newAxis()}. This is used to insert a new shape=1 dimension and is
    *    produced using `new_axis_mask`. For example, `foo[:, ...]` where
    *    `foo` is shape `(3, 4)` produces a `(1, 3, 4)` tensor.
    *  <p>
-   *  - A range `begin:end:stride` using {@link Index#slice(Singular, Singular, int) Index.slice()} or {@link Index#all()}. This is used to specify how much to choose from
+   *  - A range `begin:end:stride` using {@link Indices#slice(Long, Long, long)}  Index.slice()}. This is used to specify how much to choose from
    *    a given dimension. `stride` can be any integer but 0.  `begin` is an integer
    *    which represents the index of the first value to select while `end` represents
    *    the index of the last value to select. The number of values selected in each
@@ -133,7 +134,7 @@ public class Indexing {
    *    first dimension of a tensor while dropping the last two (in the original
    *    order elements). For example `foo = [1,2,3,4]; foo[-2::-1]` is `[4,3]`.
    *  <p>
-   *  - A single index using {@link Index#point(int)}. This is used to keep only elements that have a given
+   *  - A single index using {@link Indices#at(long)}. This is used to keep only elements that have a given
    *    index. For example (`foo[2, :]` on a shape `(5,6)` tensor produces a
    *    shape `(6,)` tensor. This is encoded in `begin` and `end` and
    *    `shrink_axis_mask`.
@@ -146,12 +147,12 @@ public class Indexing {
    * @param scope current scope
    * @param <T> data type for {@code output()} output
    * @param input
-   * @param indices The indices to slice.  See {@link Index}.
+   * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSlice
-   * @see Index
+   * @see Indices
    */
   @Endpoint(name = "stridedSlice")
-  public static <T extends TType> StridedSlice<T> stridedSlice(Scope scope, Operand<T> input, Index... indices) {
+  public static <T extends TType> StridedSlice<T> stridedSlice(Scope scope, Operand<T> input, TensorIndex... indices) {
     StridedSliceArgs args = mergeIndexes(indices);
     return StridedSlice.create(
         scope,
@@ -181,12 +182,12 @@ public class Indexing {
    * @param scope current scope
    * @param ref the tensor to assign to.
    * @param value the value to assign.
-   * @param indices The indices to slice.  See {@link Index}.
+   * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(Operand, TensorIndex...)
    */
   @Endpoint(name = "stridedSliceAssign")
-  public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Scope scope, Operand<T> ref, Operand<T> value, Index... indices) {
+  public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Scope scope, Operand<T> ref, Operand<T> value, TensorIndex... indices) {
     StridedSliceArgs args = mergeIndexes(indices);
     return StridedSliceAssign.create(
         scope,
