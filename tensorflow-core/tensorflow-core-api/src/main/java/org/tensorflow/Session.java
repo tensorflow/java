@@ -294,6 +294,16 @@ public final class Session implements AutoCloseable {
     }
 
     /**
+     * Make {@link #run} execute the graph's initializers.
+     *
+     * @return this session runner
+     */
+    public Runner doInitialization(){
+      graph.initializers().forEach(this::addTarget);
+      return this;
+    }
+
+    /**
      * Set options (typically for debugging) for this run.
      *
      * <p>The options are presented as a <a
