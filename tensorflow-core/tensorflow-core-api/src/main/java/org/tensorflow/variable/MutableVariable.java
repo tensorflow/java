@@ -45,6 +45,8 @@ public abstract class MutableVariable<T extends TType> implements Variable<T> {
 
   protected boolean hasInitialized = false;
 
+  //TODO use the new resource API.
+
   protected MutableVariable(Scope scope, Shape shape, DataType<T> dataType){
     this.initialScope = scope.withName(null);
 
