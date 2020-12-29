@@ -25,7 +25,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.types.family.TType;
 
-class GraphVariable<T extends TType> extends Variable<T> {
+class GraphVariable<T extends TType> extends MutableVariable<T> {
 
   private final org.tensorflow.op.core.Variable<T> variable;
   private Operand<T> get = null;

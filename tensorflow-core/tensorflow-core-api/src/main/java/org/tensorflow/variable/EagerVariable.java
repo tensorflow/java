@@ -22,7 +22,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TType;
 
-class EagerVariable<T extends TType> extends Variable<T> {
+class EagerVariable<T extends TType> extends MutableVariable<T> {
 
   private Operand<T> value = null;
 
