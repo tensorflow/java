@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.nio.charset.Charset;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
@@ -1013,8 +1012,9 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   /**
    * Create a constant with data from the given buffer.
    *
+   * @param <T> the tensor type
    * @param scope is a scope used to add the underlying operation.
-   * @param type the tensor datatype.
+   * @param type the tensor type class
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a constant of type `type`
@@ -1022,7 +1022,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *     buffer
    */
   @Endpoint
-  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+  public static <T extends TType> Constant<T> tensorOf(Scope scope, Class<T> type, Shape shape,
       ByteDataBuffer data) {
     try (T value = Tensor.of(type, shape, data)) {
       return create(scope, value);

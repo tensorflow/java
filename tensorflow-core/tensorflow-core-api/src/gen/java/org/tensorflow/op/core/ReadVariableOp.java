@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -52,11 +52,11 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
    * @return a new instance of ReadVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, DataType<T> dtype) {
+  public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new ReadVariableOp<T>(opBuilder.build());
   }
   

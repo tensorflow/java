@@ -16,7 +16,6 @@
  */
 package org.tensorflow.internal.types;
 
-import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -39,8 +38,8 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
   private static final class DenseTInt32 extends IntDenseNdArray implements TInt32 {
 
     @Override
-    public DataType<?> dataType() {
-      return TInt32.DTYPE;
+    public Class<TInt32> type() {
+      return TInt32.class;
     }
 
     @Override

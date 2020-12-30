@@ -18,7 +18,6 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.image.AdjustContrast;
 import org.tensorflow.op.image.AdjustHue;
@@ -272,7 +271,7 @@ public final class ImageOps {
    */
   public <T extends TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(
       Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
-      Operand<TInt32> imageSize, DataType<T> T, CropAndResizeGradImage.Options... options) {
+      Operand<TInt32> imageSize, Class<T> T, CropAndResizeGradImage.Options... options) {
     return CropAndResizeGradImage.create(scope, grads, boxes, boxInd, imageSize, T, options);
   }
 
@@ -463,7 +462,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of DecodePng
    */
-  public <T extends TNumber> DecodePng<T> decodePng(Operand<TString> contents, DataType<T> dtype,
+  public <T extends TNumber> DecodePng<T> decodePng(Operand<TString> contents, Class<T> dtype,
       DecodePng.Options... options) {
     return DecodePng.create(scope, contents, dtype, options);
   }
@@ -625,7 +624,7 @@ public final class ImageOps {
    * @return a new instance of ExtractJpegShape
    */
   public <T extends TNumber> ExtractJpegShape<T> extractJpegShape(Operand<TString> contents,
-      DataType<T> outputType) {
+      Class<T> outputType) {
     return ExtractJpegShape.create(scope, contents, outputType);
   }
 

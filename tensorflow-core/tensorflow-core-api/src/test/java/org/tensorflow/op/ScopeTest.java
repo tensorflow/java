@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 

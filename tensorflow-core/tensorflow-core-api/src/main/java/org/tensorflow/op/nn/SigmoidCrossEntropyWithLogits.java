@@ -72,7 +72,7 @@ public class SigmoidCrossEntropyWithLogits {
     scope = scope.withSubScope("SigmoidCrossEntropyWithLogits");
 
     Operand<T> zeros =
-        Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().dataType());
+        Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().type());
     Operand<TBool> cond = GreaterEqual.create(scope, logits, zeros);
 
     Operand<T> reluLogits = Select.create(scope, cond, logits, zeros);

@@ -14,17 +14,11 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Init;
-import org.tensorflow.op.core.Placeholder;
-import org.tensorflow.op.math.Add;
-import org.tensorflow.op.math.Sub;
-import org.tensorflow.types.TFloat32;
 
 public class SignatureTest {
 

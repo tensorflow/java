@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.math.Greater;
@@ -98,8 +97,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
   /** {@inheritDoc} */
   @Override
   public Operand<T> call(Operand<T> input) {
-
-    DataType<T> dataType = input.asOutput().dataType();
+    Class<T> inputType = input.type();
 
     boolean clipMax = !Float.isNaN(maxValue);
     Operand<T> negativePart = null;
@@ -110,7 +108,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
       if (threshold != 0) {
         negativePart =
             tf.nn.relu(
-                tf.math.add(tf.math.neg(input), tf.dtypes.cast(tf.constant(threshold), dataType)));
+                tf.math.add(tf.math.neg(input), tf.dtypes.cast(tf.constant(threshold), inputType)));
       } else {
         negativePart = tf.nn.relu(tf.math.neg(input));
       }
@@ -119,8 +117,8 @@ public class ReLU<T extends TNumber> extends Activation<T> {
     Operand<T> lInput;
     if (threshold != 0) {
       // computes input for input > threshold else 0
-      Greater greater = tf.math.greater(input, tf.dtypes.cast(tf.constant(threshold), dataType));
-      lInput = tf.math.mul(input, tf.dtypes.cast(greater, dataType));
+      Greater greater = tf.math.greater(input, tf.dtypes.cast(tf.constant(threshold), inputType));
+      lInput = tf.math.mul(input, tf.dtypes.cast(greater, inputType));
     } else if (maxValue == 6) {
       // if no threshold, then can use nn.relu6 native TF op for performance
       lInput = tf.nn.relu6(input);
@@ -129,15 +127,15 @@ public class ReLU<T extends TNumber> extends Activation<T> {
       lInput = tf.nn.relu(input);
     }
     if (clipMax) {
-      Operand<T> lmaxValue = tf.dtypes.cast(tf.constant(maxValue), dataType);
-      Operand<T> zero = tf.dtypes.cast(tf.constant(0), dataType);
+      Operand<T> lmaxValue = tf.dtypes.cast(tf.constant(maxValue), inputType);
+      Operand<T> zero = tf.dtypes.cast(tf.constant(0), inputType);
       lInput = tf.clipByValue(lInput, zero, lmaxValue);
     }
 
     if (alpha != 0.) {
       lInput =
           tf.math.sub(
-              lInput, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), dataType), negativePart));
+              lInput, tf.math.mul(tf.dtypes.cast(tf.constant(alpha), inputType), negativePart));
     }
     return lInput;
   }

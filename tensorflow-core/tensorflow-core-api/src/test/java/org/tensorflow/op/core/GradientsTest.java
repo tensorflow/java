@@ -37,7 +37,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -64,7 +64,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -89,7 +89,7 @@ public class GradientsTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y0 = tf.math.square(x).y();
       Output<TFloat32> y1 = tf.math.square(y0).y();
 
@@ -115,7 +115,7 @@ public class GradientsTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g).withSubScope("sub");
 
-      Output<TFloat32> x = tf.placeholder(TFloat32.DTYPE).output();
+      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
       Output<TFloat32> y = tf.math.square(x).y();
 
       Gradients grad0 = Gradients.create(tf.scope(), y, Arrays.asList(x));

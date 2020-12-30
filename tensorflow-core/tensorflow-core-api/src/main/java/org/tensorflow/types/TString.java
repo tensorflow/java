@@ -20,7 +20,6 @@ package org.tensorflow.types;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.types.TStringInitializer;
 import org.tensorflow.internal.types.TStringMapper;
@@ -28,6 +27,8 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -39,13 +40,8 @@ import org.tensorflow.types.family.TType;
  * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
  * data in the tensor is initialized once and cannot be modified afterwards.
  */
+@TensorType(dataType = DataType.DT_STRING, byteSize = -1, mapperClass = TStringMapper.class)
 public interface TString extends NdArray<String>, TType {
-
-  /** readable-name for the data type */
-  static final String NAME = "STRING";
-
-  /** Type metadata */
-  DataType<TString> DTYPE = DataType.create(NAME, 7, -1, new TStringMapper());
 
   /**
    * Allocates a new tensor for storing a string scalar.
@@ -110,7 +106,7 @@ public interface TString extends NdArray<String>, TType {
    */
   static TString tensorOf(Charset charset, NdArray<String> src) {
     TStringInitializer<String> initializer = new TStringInitializer<>(src, s -> s.getBytes(charset));
-    return Tensor.of(TString.DTYPE, src.shape(), initializer.computeRequiredSize(), initializer);
+    return Tensor.of(TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**
@@ -171,7 +167,7 @@ public interface TString extends NdArray<String>, TType {
    */
   static TString tensorOfBytes(NdArray<byte[]> src) {
     TStringInitializer<byte[]> initializer = new TStringInitializer<>(src, Function.identity());
-    return Tensor.of(TString.DTYPE, src.shape(), initializer.computeRequiredSize(), initializer);
+    return Tensor.of(TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**

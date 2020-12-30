@@ -18,12 +18,8 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
-import org.tensorflow.RawTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.internal.types.TBoolMapper;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -31,7 +27,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
-import org.tensorflow.ndarray.impl.dense.BooleanDenseNdArray;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -41,12 +38,8 @@ import org.tensorflow.types.family.TType;
  * explicit mapping between Java boolean values and byte buffers using the {@link DataLayouts#BOOL
  * BOOL} layout, which may impact I/O performances.
  */
+@TensorType(dataType = DataType.DT_BOOL, byteSize = 1, mapperClass = TBoolMapper.class)
 public interface TBool extends BooleanNdArray, TType {
-  /** readable-name for the data type */
-  static final String NAME = "BOOL";
-
-  /** Type metadata */
-  DataType<TBool> DTYPE = DataType.create(NAME, 10, 1, new TBoolMapper());
 
   /**
    * Allocates a new tensor for storing a single boolean value.
@@ -55,7 +48,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static TBool scalarOf(boolean value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setBoolean(value));
+    return Tensor.of(TBool.class, Shape.scalar(), data -> data.setBoolean(value));
   }
 
   /**
@@ -68,7 +61,7 @@ public interface TBool extends BooleanNdArray, TType {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TBool.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -80,7 +73,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static TBool tensorOf(NdArray<Boolean> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+    return Tensor.of(TBool.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -90,7 +83,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static TBool tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+    return Tensor.of(TBool.class, shape);
   }
 
   /**
@@ -101,7 +94,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static TBool tensorOf(Shape shape, BooleanDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+    return Tensor.of(TBool.class, shape, d -> d.write(data));
   }
 
   /**
@@ -113,6 +106,6 @@ public interface TBool extends BooleanNdArray, TType {
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
   static TBool tensorOf(Shape shape, Consumer<TBool> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
+    return Tensor.of(TBool.class, shape, dataInit);
   }
 }

@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.impl.BatchDataset;
 import org.tensorflow.framework.data.impl.MapDataset;
@@ -33,6 +32,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
+import org.tensorflow.types.family.TType;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and
@@ -41,11 +41,11 @@ import java.util.function.Function;
 public abstract class Dataset implements Iterable<List<Operand<?>>> {
   protected Ops tf;
   private Operand<?> variant;
-  private List<DataType<?>> outputTypes;
+  private List<Class<? extends TType>> outputTypes;
   private List<Shape> outputShapes;
 
   public Dataset(
-      Ops tf, Operand<?> variant, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+      Ops tf, Operand<?> variant, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     if (tf == null) {
       throw new IllegalArgumentException("Ops accessor cannot be null.");
     }
@@ -261,12 +261,12 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * @param tf Ops Accessor
    * @param tensors A list of {@code Operand<?>} representing components of this dataset (e.g.
    *     features, labels)
-   * @param outputTypes A list of `DataType` objects representing the data type of each component of
+   * @param outputTypes A list of tensor type classes representing the data type of each component of
    *     this dataset.
    * @return A new `Dataset`
    */
   public static Dataset fromTensorSlices(
-      Ops tf, List<Operand<?>> tensors, List<DataType<?>> outputTypes) {
+      Ops tf, List<Operand<?>> tensors, List<Class<? extends TType>> outputTypes) {
     return new TensorSliceDataset(tf, tensors, outputTypes);
   }
 
@@ -288,7 +288,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   }
 
   /** Get a list of output types for each component of this dataset. */
-  public List<DataType<?>> getOutputTypes() {
+  public List<Class<? extends TType>> getOutputTypes() {
     return this.outputTypes;
   }
 
@@ -305,7 +305,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   public String toString() {
     return "Dataset{"
         + "outputTypes="
-        + Arrays.toString(getOutputTypes().stream().map(DataType::name).toArray())
+        + Arrays.toString(getOutputTypes().stream().map(Class::getSimpleName).toArray())
         + ", outputShapes="
         + Arrays.toString(getOutputShapes().stream().map(Shape::toString).toArray())
         + "}";

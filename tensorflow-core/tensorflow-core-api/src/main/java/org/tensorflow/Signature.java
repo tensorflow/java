@@ -18,7 +18,6 @@ package org.tensorflow;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;
@@ -113,7 +112,7 @@ public class Signature  {
         tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.size(i)));
       }
       return TensorInfo.newBuilder()
-          .setDtype(DataType.forNumber(operand.dataType().nativeCode()))
+          .setDtype(operand.dataType())
           .setTensorShape(tensorShapeBuilder)
           .setName(operand.op().name() + ":" + operand.index())
           .build();

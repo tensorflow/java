@@ -305,16 +305,16 @@ public class SavedModelBundleTest {
   }
 
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
-    Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE, Placeholder.shape(xShape));
+    Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
     Variable<TFloat32> y = tf
-        .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.DTYPE));
+        .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     Init init = tf.init();
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }
 
   private static Signature buildIdentityGraph(Ops tf, String signatureKey) {
-    Placeholder<TFloat32> x = tf.placeholder(TFloat32.DTYPE, Placeholder.shape(Shape.scalar()));
+    Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(Shape.scalar()));
     Identity<TFloat32> xprime = tf.identity(x);
     return Signature.builder().key(signatureKey).input("x", x).output("x", xprime).build();
   }

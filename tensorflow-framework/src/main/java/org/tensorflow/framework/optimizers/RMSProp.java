@@ -175,14 +175,14 @@ public class RMSProp extends Optimizer {
    */
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
     Operand<T> rmsInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.type()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
     Operand<T> momentumInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
       Operand<T> mgInitializer =
-          tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+          tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }
@@ -199,20 +199,20 @@ public class RMSProp extends Optimizer {
           mgSlot,
           rmsSlot,
           momentumSlot,
-          tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
-          tf.dtypes.cast(tf.constant(decay), gradient.dataType()),
-          tf.dtypes.cast(tf.constant(momentum), gradient.dataType()),
-          tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
+          tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
+          tf.dtypes.cast(tf.constant(decay), gradient.type()),
+          tf.dtypes.cast(tf.constant(momentum), gradient.type()),
+          tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
           gradient);
     }
     return tf.train.applyRmsProp(
         variable,
         rmsSlot,
         momentumSlot,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
-        tf.dtypes.cast(tf.constant(decay), gradient.dataType()),
-        tf.dtypes.cast(tf.constant(momentum), gradient.dataType()),
-        tf.dtypes.cast(tf.constant(epsilon), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
+        tf.dtypes.cast(tf.constant(decay), gradient.type()),
+        tf.dtypes.cast(tf.constant(momentum), gradient.type()),
+        tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
         gradient);
   }
 

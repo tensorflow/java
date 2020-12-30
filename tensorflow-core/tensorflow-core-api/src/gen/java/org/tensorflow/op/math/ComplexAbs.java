@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -52,11 +52,11 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of ComplexAbs
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, DataType<U> Tout) {
+  public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tout", Tout);
+    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     return new ComplexAbs<U>(opBuilder.build());
   }
   
@@ -69,7 +69,7 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> ComplexAbs<TFloat32> create(Scope scope, Operand<T> x) {
-    return create(scope, x, TFloat32.DTYPE);
+    return create(scope, x, TFloat32.class);
   }
   
   /**

@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
@@ -63,12 +62,12 @@ public class HardSigmoid<T extends TFloating> extends Activation<T> {
    */
   @Override
   public Operand<T> call(Operand<T> input) {
-    DataType<T> dataType = input.asOutput().dataType();
-    Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), dataType);
-    Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), dataType);
+    Class<T> inputType = input.type();
+    Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), inputType);
+    Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), inputType);
 
     Operand<T> x = tf.math.add(tf.math.mul(input, point2), point5);
     return tf.clipByValue(
-        x, tf.dtypes.cast(tf.constant(0), dataType), tf.dtypes.cast(tf.constant(1), dataType));
+        x, tf.dtypes.cast(tf.constant(0), inputType), tf.dtypes.cast(tf.constant(1), inputType));
   }
 }

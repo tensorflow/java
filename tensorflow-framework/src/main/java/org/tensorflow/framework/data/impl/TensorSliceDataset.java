@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data.impl;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
 import org.tensorflow.op.Ops;
@@ -23,10 +22,11 @@ import org.tensorflow.ndarray.Shape;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.tensorflow.types.family.TType;
 
 public class TensorSliceDataset extends Dataset {
 
-  public TensorSliceDataset(Ops tf, List<Operand<?>> components, List<DataType<?>> outputTypes) {
+  public TensorSliceDataset(Ops tf, List<Operand<?>> components, List<Class<? extends TType>> outputTypes) {
     super(tf, makeVariant(tf, components, outputTypes), outputTypes, outputShapes(components));
   }
 
@@ -35,7 +35,7 @@ public class TensorSliceDataset extends Dataset {
   }
 
   private static Operand<?> makeVariant(
-      Ops tf, List<Operand<?>> components, List<DataType<?>> outputTypes) {
+      Ops tf, List<Operand<?>> components, List<Class<? extends TType>> outputTypes) {
     if (!(components.size() == outputTypes.size())) {
       throw new IllegalArgumentException(
           "Lists `tensors` and `dtypes` must have the same number of elements.");

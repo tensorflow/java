@@ -52,9 +52,9 @@ public class TruncatedNormalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        TruncatedNormal<TFloat32, TFloat32> instance =
+        TruncatedNormal<TFloat32> instance =
             new TruncatedNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
-        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.DTYPE);
+        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
   }
@@ -68,9 +68,9 @@ public class TruncatedNormalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        TruncatedNormal<TFloat64, TFloat64> instance =
+        TruncatedNormal<TFloat64> instance =
             new TruncatedNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
-        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
   }
@@ -82,10 +82,10 @@ public class TruncatedNormalTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        TruncatedNormal<TFloat64, TFloat64> instance =
+        TruncatedNormal<TFloat64> instance =
             new TruncatedNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
-        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.DTYPE);
-        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.DTYPE);
+        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
+        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
   }

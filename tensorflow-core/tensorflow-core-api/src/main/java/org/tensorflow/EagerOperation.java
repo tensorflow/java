@@ -29,6 +29,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
@@ -83,12 +84,12 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public TFE_TensorHandle getUnsafeNativeHandle(int outputIndex) {
+  TFE_TensorHandle getUnsafeNativeHandle(int outputIndex) {
     return outputHandles[outputIndex];
   }
 
   @Override
-  public Shape shape(int outputIndex) {
+  Shape shape(int outputIndex) {
     // If the tensor of this output has already been resolved, return its shape.
     // Otherwise, retrieve the tensor shape from the native library.
     Tensor tensor = outputTensors.get(outputIndex);
@@ -104,7 +105,7 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  public DataType<?> dtype(int outputIndex) {
+  DataType dtype(int outputIndex) {
     // If the tensor of this output has already been resolved, return its datatype.
     // Otherwise, retrieve the tensor datatype from the native library.
     Tensor tensor = outputTensors.get(outputIndex);
@@ -112,11 +113,11 @@ class EagerOperation extends AbstractOperation {
       return tensor.dataType();
     }
     TFE_TensorHandle outputNativeHandle = getUnsafeNativeHandle(outputIndex);
-    return DataTypes.fromNativeCode(dataType(outputNativeHandle));
+    return DataType.forNumber(dataType(outputNativeHandle));
   }
 
   @Override
-  public Tensor tensor(int outputIndex) {
+  Tensor tensor(int outputIndex) {
     Tensor tensor = outputTensors.get(outputIndex);
     if (tensor == null) {
       tensor = resolveTensor(outputIndex);

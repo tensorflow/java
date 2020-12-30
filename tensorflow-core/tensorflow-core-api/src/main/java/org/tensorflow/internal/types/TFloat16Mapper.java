@@ -16,7 +16,6 @@
  */
 package org.tensorflow.internal.types;
 
-import org.tensorflow.DataType;
 import org.tensorflow.RawTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
@@ -40,8 +39,8 @@ public final class TFloat16Mapper extends TensorMapper<TFloat16> {
   private static final class DenseTFloat16 extends FloatDenseNdArray implements TFloat16 {
 
     @Override
-    public DataType<?> dataType() {
-      return TFloat16.DTYPE;
+    public Class<TFloat16> type() {
+      return TFloat16.class;
     }
 
     @Override

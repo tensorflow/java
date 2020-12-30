@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses.impl;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
@@ -249,17 +248,17 @@ public class LossesHelper {
    */
   public static <T extends TNumber> Operand<T> computeWeightedLoss(
       Ops tf, Operand<T> loss, Reduction reduction, Operand<T> sampleWeight) {
-    DataType<T> dataType = loss.asOutput().dataType();
+    Class<T> inputType = loss.type();
     if (sampleWeight == null) {
-      sampleWeight = cast(tf, tf.constant(1), dataType);
+      sampleWeight = cast(tf, tf.constant(1), inputType);
     }
     LossTuple<T> result = squeezeOrExpandDimensions(tf, null, loss, sampleWeight);
     loss = result.getTarget();
     sampleWeight = result.getSampleWeights();
 
-    Operand<T> weightedLosses = tf.math.mul(loss, cast(tf, sampleWeight, dataType));
+    Operand<T> weightedLosses = tf.math.mul(loss, cast(tf, sampleWeight, inputType));
     loss = reduceWeightedLoss(tf, weightedLosses, reduction);
-    return cast(tf, loss, dataType);
+    return cast(tf, loss, inputType);
   }
 
   /**
@@ -300,7 +299,7 @@ public class LossesHelper {
       Ops tf, Operand<T> losses, long numElements) {
     Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
     return tf.math.divNoNan(
-        totalLoss, cast(tf, tf.constant(numElements), losses.asOutput().dataType()));
+        totalLoss, cast(tf, tf.constant(numElements), losses.type()));
   }
 
   /**
@@ -386,7 +385,7 @@ public class LossesHelper {
       Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
     Operand<T> flatValues =
         tf.reshape(values, tf.constant(Shape.of(values.shape().size())));
-    SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.DTYPE);
+    SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.class);
     long diffSize = diff.out().shape().size();
 
     if (diffSize != Shape.UNKNOWN_SIZE) {

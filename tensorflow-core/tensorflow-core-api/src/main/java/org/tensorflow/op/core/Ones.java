@@ -14,7 +14,6 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
@@ -31,7 +30,7 @@ import org.tensorflow.types.family.TType;
  * An operator creating a constant initialized with ones of the shape given by `dims`.
  * 
  * <p>For example, the following expression
- * <pre>{@code tf.ones(tf.constant(shape), TFloat32.DTYPE)}</pre>
+ * <pre>{@code tf.ones(tf.constant(shape), TFloat32.class)}</pre>
  * is the equivalent of
  * <pre>{@code tf.fill(tf.constant(shape), tf.constant(1.0f))}</pre>
  *
@@ -45,14 +44,14 @@ public final class Ones<T extends TType> implements Op, Operand<T> {
    *
    * @param scope is a scope used to add the underlying operation
    * @param dims a 1-D operand that represents the shape of the output tensor
-   * @param type the output tensor datatype. Can not be TString.
+   * @param type the output tensor type class. Can not be TString.
    * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
   @Endpoint
-  public static <T extends TType, U extends TNumber> Ones<T> create(Scope scope, Operand<U> dims, DataType<T> type) {
+  public static <T extends TType, U extends TNumber> Ones<T> create(Scope scope, Operand<U> dims, Class<T> type) {
     Scope onesScope = scope.withSubScope("Ones");
-    if (type == TString.DTYPE) {
+    if (type == TString.class) {
       throw new IllegalArgumentException("Can't create Ones of String DataType");
     }
     Operand<T> one = Cast.create(onesScope.withName("One"), Constant.scalarOf(onesScope, 1), type);

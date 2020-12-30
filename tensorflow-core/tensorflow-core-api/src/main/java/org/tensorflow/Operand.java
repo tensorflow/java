@@ -30,11 +30,11 @@ import org.tensorflow.types.family.TType;
  *
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
  * Operand<TUint8> decodeJpeg = tf.image.decodeJpeg(...);
- * tf.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
+ * tf.dtypes.cast(decodeJpeg, TFloat32.class);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation
  * Output<TInt32> y = tf.unique(...).y();
- * tf.dtypes.cast(y, TFloat32.DTYPE);
+ * tf.dtypes.cast(y, TFloat32.class);
  *
  * // The "split" operation can be used as operand list to the "concat" operation
  * Iterable<? extends Operand<TFloat32>> split = tf.split(...);
@@ -66,10 +66,10 @@ public interface Operand<T extends TType> extends Op, Shaped {
   }
 
   /**
-   * Returns the data type of this operand
+   * Returns the tensor type of this operand
    */
-  default DataType<T> dataType() {
-    return asOutput().dataType();
+  default Class<T> type() {
+    return asOutput().type();
   }
 
   /**

@@ -18,11 +18,8 @@ import org.junit.jupiter.api.*;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.ReduceMax;
-import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

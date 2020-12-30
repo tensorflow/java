@@ -31,6 +31,7 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.
@@ -148,10 +149,10 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   @Override
-  DataType<?> dtype(int outputIdx) {
+  DataType dtype(int outputIdx) {
     Graph.Reference r = graph.ref();
     try {
-      return DataTypes.fromNativeCode(dtype(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx));
+      return DataType.forNumber(dtype(r.nativeHandle(), getUnsafeNativeHandle(), outputIdx));
     } finally {
       r.close();
     }

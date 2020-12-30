@@ -74,11 +74,8 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     scope = scope.withSubScope("SparseSoftmaxCrossEntropyWithLogits");
     /** cannot use generics on preciseLogits as it may be recast later */
     Operand preciseLogits = logits;
-    boolean convertToFloat32 =
-        logits.asOutput().dataType() == TFloat16.DTYPE
-            || logits.asOutput().dataType() == TBfloat16.DTYPE;
-    if (convertToFloat32) {
-      preciseLogits = Cast.create(scope, logits, TFloat32.DTYPE);
+    if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
+      preciseLogits = Cast.create(scope, logits, TFloat32.class);
     }
     Shape labelsStaticShape = labels.shape();
     org.tensorflow.op.core.Shape<TInt32> labelsShape =
@@ -115,8 +112,8 @@ public class SparseSoftmaxCrossEntropyWithLogits {
           org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits.create(
               scope, preciseLogits, labels);
       Operand loss = smax.loss();
-      if (logits.asOutput().dataType() == TFloat16.DTYPE) {
-        loss = Cast.create(scope, loss, TFloat16.DTYPE);
+      if (logits.asOutput().type() == TFloat16.class) {
+        loss = Cast.create(scope, loss, TFloat16.class);
       }
       return loss;
     }
@@ -153,8 +150,8 @@ public class SparseSoftmaxCrossEntropyWithLogits {
             scope, preciseLogits, labels);
     Operand cost = smax.loss();
     cost = Reshape.create(scope, cost, labelsShape);
-    if (logits.asOutput().dataType() == TFloat16.DTYPE) {
-      cost = Cast.create(scope, cost, TFloat16.DTYPE);
+    if (logits.asOutput().type() == TFloat16.class) {
+      cost = Cast.create(scope, cost, TFloat16.class);
     }
     return cost;
   }
