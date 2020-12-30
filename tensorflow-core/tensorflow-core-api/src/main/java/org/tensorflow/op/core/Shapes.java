@@ -74,13 +74,13 @@ public abstract class Shapes {
    * @param <U> the shape datatype
    * @param scope current scope
    * @param operand the operand to flatten
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reshaped operand
    */
   @Endpoint(name = "flatten")
   public static <T extends TType, U extends TNumber> Operand<T> flatten(
-      Scope scope, Operand<T> operand, Class<U> dType) {
-    Operand<U> flatShape = flatten(scope, Shape.create(scope, operand, dType), dType);
+      Scope scope, Operand<T> operand, Class<U> type) {
+    Operand<U> flatShape = flatten(scope, Shape.create(scope, operand, type), type);
     return Reshape.create(scope, operand, flatShape);
   }
 
@@ -102,15 +102,15 @@ public abstract class Shapes {
    * @param <U> the shape datatype
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the flattened shape
    */
   @Endpoint(name = "flatten")
   public static <U extends TNumber> Operand<U> flatten(
-      Scope scope, Shape<U> shape, Class<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> type) {
     return ExpandDims.create(
         scope,
-        size(scope, shape, dType),
+        size(scope, shape, type),
         Cast.create(scope, Constant.scalarOf(scope, -1), TInt32.class));
   }
 
@@ -132,20 +132,20 @@ public abstract class Shapes {
    * @param <U> the type of the shape
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the size
    */
   @Endpoint(name = "size")
   public static <U extends TNumber> Operand<U> size(
-      Scope scope, Shape<U> shape, Class<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> type) {
     Slice<U> dims =
         Slice.create(
             scope,
             shape,
-            Cast.create(scope, Constant.arrayOf(scope, 0), dType),
+            Cast.create(scope, Constant.arrayOf(scope, 0), type),
             ExpandDims.create(
                 scope,
-                Cast.create(scope, Constant.scalarOf(scope, -1), dType),
+                Cast.create(scope, Constant.scalarOf(scope, -1), type),
                 Constant.scalarOf(scope, -1)));
     return ReduceProd.create(scope, dims, Constant.scalarOf(scope, 0));
   }
@@ -170,20 +170,20 @@ public abstract class Shapes {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param dim the dimension
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the size of the specified dimension
    */
   @Endpoint(name = "size")
   public static <U extends TNumber> Operand<U> size(
-      Scope scope, Shape<U> shape, Operand<U> dim, Class<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> dim, Class<U> type) {
     return Slice.create(
         scope,
         shape,
-        ExpandDims.create(scope, dim, Cast.create(scope, Constant.scalarOf(scope, -1), dType)),
+        ExpandDims.create(scope, dim, Cast.create(scope, Constant.scalarOf(scope, -1), type)),
         ExpandDims.create(
             scope,
-            Cast.create(scope, Constant.scalarOf(scope, 1), dType),
-            Cast.create(scope, Constant.scalarOf(scope, -1), dType)));
+            Cast.create(scope, Constant.scalarOf(scope, 1), type),
+            Cast.create(scope, Constant.scalarOf(scope, -1), type)));
   }
 
   /**
@@ -207,13 +207,13 @@ public abstract class Shapes {
    * @param scope current scope
    * @param input the operand
    * @param dim the dimension
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the size of the specified dimension
    */
   @Endpoint(name = "size")
   public static <T extends TType, U extends TNumber> Operand<U> size(
-      Scope scope, Operand<T> input, Operand<U> dim, Class<U> dType) {
-    return size(scope, Shape.create(scope, input, dType), dim, dType);
+      Scope scope, Operand<T> input, Operand<U> dim, Class<U> type) {
+    return size(scope, Shape.create(scope, input, type), dim, type);
   }
 
   /**
@@ -234,13 +234,13 @@ public abstract class Shapes {
    * @param <U> the shape datatype
    * @param scope the curren scope
    * @param shape the shape
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the number of dimensions
    */
   @Endpoint(name = "numDimensions")
   public static <U extends TNumber> Operand<U> numDimensions(
-      Scope scope, Shape<U> shape, Class<U> dType) {
-    return Size.create(scope, shape, dType);
+      Scope scope, Shape<U> shape, Class<U> type) {
+    return Size.create(scope, shape, type);
   }
 
   /**
@@ -266,14 +266,14 @@ public abstract class Shapes {
    * @param scope current scope
    * @param operand the operand
    * @param axis the axis
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reshaped operand
    */
   @Endpoint(name = "reduceDims")
   public static <T extends TType, U extends TNumber> Operand<T> reduceDims(
-      Scope scope, Operand<T> operand, Operand<U> axis, Class<U> dType) {
-    Shape<U> newShape = Shape.create(scope, operand, dType);
-    return Reshape.create(scope, operand, reduceDims(scope, newShape, axis, dType));
+      Scope scope, Operand<T> operand, Operand<U> axis, Class<U> type) {
+    Shape<U> newShape = Shape.create(scope, operand, type);
+    return Reshape.create(scope, operand, reduceDims(scope, newShape, axis, type));
   }
 
   /**
@@ -296,13 +296,13 @@ public abstract class Shapes {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param axis the axis
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reduced shape
    */
   @Endpoint(name = "reduceDims")
   public static <U extends TNumber> Operand<U> reduceDims(
-      Scope scope, Shape<U> shape, Operand<U> axis, Class<U> dType) {
-    Size<U> rank = Size.create(scope, shape, dType);
+      Scope scope, Shape<U> shape, Operand<U> axis, Class<U> type) {
+    Size<U> rank = Size.create(scope, shape, type);
     axis = FloorMod.create(scope, axis, rank);
     Sub<U> remainder = Sub.create(scope, rank, axis);
 
@@ -310,7 +310,7 @@ public abstract class Shapes {
         Slice.create(
             scope,
             shape,
-            Cast.create(scope, Constant.arrayOf(scope, 0), dType),
+            Cast.create(scope, Constant.arrayOf(scope, 0), type),
             ExpandDims.create(scope, axis, Constant.scalarOf(scope, -1)));
 
     Operand<U> dims2 =
@@ -320,7 +320,7 @@ public abstract class Shapes {
             ExpandDims.create(scope, axis, Constant.scalarOf(scope, -1)),
             ExpandDims.create(
                 scope,
-                Cast.create(scope, Constant.scalarOf(scope, -1), dType),
+                Cast.create(scope, Constant.scalarOf(scope, -1), type),
                 Constant.scalarOf(scope, -1)));
 
     Operand<U> prod =
@@ -348,14 +348,14 @@ public abstract class Shapes {
    * @param <U> the shape datatype.
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @return the squeezed shape
    */
   @Endpoint(name = "squeeze")
   public static <U extends TNumber> Operand<U> squeeze(
-      Scope scope, Shape<U> shape, Class<U> dType) {
+      Scope scope, Shape<U> shape, Class<U> type) {
     Operand<TBool> mask =
-        NotEqual.create(scope, shape, Cast.create(scope, OnesLike.create(scope, shape), dType));
+        NotEqual.create(scope, shape, Cast.create(scope, OnesLike.create(scope, shape), type));
 
     return Gather.create(scope, shape, Where.create(scope, mask), Constant.scalarOf(scope, 0));
   }
@@ -377,14 +377,14 @@ public abstract class Shapes {
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
   @Endpoint(name = "head")
   public static <U extends TNumber> Operand<U> head(
-      Scope scope, Shape<U> shape, Class<U> dType) {
-    return take(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), dType), dType);
+      Scope scope, Shape<U> shape, Class<U> type) {
+    return take(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), type), type);
   }
 
   /**
@@ -409,18 +409,18 @@ public abstract class Shapes {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand with the dimensions matching * the first n dimensions of the
    *     shape
    */
   @Endpoint(name = "take")
   public static <U extends TNumber> Operand<U> take(
-      Scope scope, Shape<U> shape, Operand<U> n, Class<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> n, Class<U> type) {
     return Slice.create(
         scope,
         shape,
-        Cast.create(scope, Constant.arrayOf(scope, 0), dType),
+        Cast.create(scope, Constant.arrayOf(scope, 0), type),
         ExpandDims.create(scope, n, Constant.scalarOf(scope, -1)));
   }
 
@@ -444,15 +444,15 @@ public abstract class Shapes {
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional Operand that contains the dimension matching the last dimension of the
    *     Shape
    */
   @Endpoint(name = "tail")
   public static <U extends TNumber> Operand<U> tail(
-      Scope scope, Shape<U> shape, Class<U> dType) {
-    return takeLast(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), dType), dType);
+      Scope scope, Shape<U> shape, Class<U> type) {
+    return takeLast(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), type), type);
   }
 
   /**
@@ -478,16 +478,16 @@ public abstract class Shapes {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the
    *     shape
    */
   @Endpoint(name = "takeLast")
   public static <U extends TNumber> Operand<U> takeLast(
-      Scope scope, Shape<U> shape, Operand<U> n, Class<U> dType) {
+      Scope scope, Shape<U> shape, Operand<U> n, Class<U> type) {
 
-    Size<U> rank = Size.create(scope, shape, dType);
+    Size<U> rank = Size.create(scope, shape, type);
     Sub<U> start = Sub.create(scope, rank, n);
     return Slice.create(
         scope,
@@ -495,7 +495,7 @@ public abstract class Shapes {
         ExpandDims.create(scope, start, Constant.scalarOf(scope, -1)),
         ExpandDims.create(
             scope,
-            Cast.create(scope, Constant.scalarOf(scope, -1), dType),
+            Cast.create(scope, Constant.scalarOf(scope, -1), type),
             Constant.scalarOf(scope, -1)));
   }
 

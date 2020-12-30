@@ -61,6 +61,9 @@ import org.tensorflow.proto.framework.DataType;
  */
 public interface TType extends Tensor {
 
+  /**
+   * Returns the type of this tensor as a registered subclass of {@code TType}
+   */
   Class<? extends TType> type();
 
   @Override

@@ -83,7 +83,9 @@ public class SoftmaxCrossEntropyWithLogits {
               Cast.create(scope, logits, TFloat32.class),
               axis);
       return Cast.create(scope, result, logits.asOutput().type());
-    } else if(!logits.asOutput().type().equals(labels.asOutput().type())) {
+    }
+
+    if (logits.asOutput().type() != labels.asOutput().type()) {
       return softmaxCrossEntropyWithLogits(scope,
               Cast.create(scope, labels, logits.asOutput().type()),
               logits,
@@ -192,15 +194,15 @@ public class SoftmaxCrossEntropyWithLogits {
    */
   private static <T extends TNumber, U extends TNumber> Operand<T> moveDimToEnd(
       Scope scope, Operand<T> input, int dimIndex, Operand<U> rank) {
-    Class<U> rankDType = rank.asOutput().type();
-    Operand<U> one = Cast.create(scope, Constant.scalarOf(scope, 1), rankDType);
+    Class<U> rankType = rank.asOutput().type();
+    Operand<U> one = Cast.create(scope, Constant.scalarOf(scope, 1), rankType);
     List<Operand<U>> concatList =
         Arrays.asList(
             Range.create(
-                scope, Cast.create(scope, Constant.scalarOf(scope, dimIndex), rankDType), one, one),
+                scope, Cast.create(scope, Constant.scalarOf(scope, dimIndex), rankType), one, one),
             Range.create(
                 scope,
-                Cast.create(scope, Constant.scalarOf(scope, dimIndex + 1), rankDType),
+                Cast.create(scope, Constant.scalarOf(scope, dimIndex + 1), rankType),
                 one,
                 one));
     return Transpose.create(

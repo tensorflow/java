@@ -100,20 +100,33 @@ public final class RawTensor implements Tensor {
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor, or -1 to compute the size from the shape
    * @return allocated tensor
+   * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
+   *                                  store the tensor data
+   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given
+   *                                  {@code type} are of variable length (e.g. strings)
+   * @throws IllegalArgumentException if {@code shape} is totally or partially
+   *                                  {@link Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException if tensor failed to be allocated
    */
   static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
+    if (shape.hasUnknownDimension()) {
+      throw new IllegalArgumentException(
+          "Cannot allocate a tensor from a totally or partially unknown shape");
+    }
     TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(type);
     long allocatedSize = size;
     if (allocatedSize < 0) {
       if (typeInfo.isVariableLength()) {
-        throw new IllegalArgumentException("Explicit size is required for variable-length tensor types");
+        throw new IllegalArgumentException(
+            "Explicit size is required for variable-length tensor types");
       }
       allocatedSize = shape.size() * typeInfo.byteSize();
 
     } else if (!typeInfo.isVariableLength() && shape.size() * typeInfo.byteSize() > allocatedSize) {
       // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
       // we only validate them for fixed length datatypes
-      throw new IllegalArgumentException("Tensor size is not large enough to contain all scalar values");
+      throw new IllegalArgumentException(
+          "Tensor size is not large enough to contain all scalar values");
     }
     TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), allocatedSize);
     try (PointerScope scope = new PointerScope()) {
@@ -167,13 +180,10 @@ public final class RawTensor implements Tensor {
    * <p>In some cases, it is more useful to keep a typed reference to a tensor rather than its raw
    * nature to prevent mapping its memory on every access (e.g. when calling {@link Operand#asTensor()}).
    *
-   * @param <T> type of the tensor (must be compatible with the internal representation of this tensor,
-   *            as indicated by {@link #dataType()})
    * @return typed reference to this tensor
-   * @throws ClassCastException if {@code T} is not compatible type with {@link #dataType()}
    */
-  <T extends TType> T asTypedTensor() {
-    return (T)typeInfo.mapper().mapDense(this);
+  TType asTypedTensor() {
+    return typeInfo.mapper().mapDense(this);
   }
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {

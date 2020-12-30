@@ -30,8 +30,8 @@ public final class TensorTypeInfo<T extends TType> {
   /**
    * Returns the class of this tensor type
    */
-  public Class<T> typeClass() {
-    return typeClass;
+  public Class<T> type() {
+    return type;
   }
 
   /**
@@ -62,14 +62,14 @@ public final class TensorTypeInfo<T extends TType> {
     return mapper;
   }
 
-  TensorTypeInfo(Class<T> typeClass, DataType dataType, int byteSize, TensorMapper<T> mapper) {
-    this.typeClass = typeClass;
+  TensorTypeInfo(Class<T> type, DataType dataType, int byteSize, TensorMapper<T> mapper) {
+    this.type = type;
     this.dataType = dataType;
     this.byteSize = byteSize;
     this.mapper = mapper;
   }
 
-  private final Class<T> typeClass;
+  private final Class<T> type;
   private final DataType dataType;
   private final int byteSize;
   private final TensorMapper<T> mapper;

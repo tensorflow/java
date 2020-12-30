@@ -48,7 +48,7 @@ public final class Output<T extends TType> implements Operand<T> {
   @SuppressWarnings("unchecked")
   @Override
   public Class<T> type() {
-    return (Class<T>)TensorTypeRegistry.find(dataType()).typeClass();
+    return (Class<T>)TensorTypeRegistry.find(dataType()).type();
   }
 
   /**
