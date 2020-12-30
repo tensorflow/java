@@ -102,7 +102,7 @@ public final class Init extends RawOp {
       return;
     }
     if (!(exEnv instanceof Graph)) {
-      throw new IllegalArgumentException("initAdd is only supported on Graph sessions.");
+      throw new IllegalArgumentException("initAdd is only supported on Graph or eager sessions.");
     }
     Graph graph = (Graph) exEnv;
     graph.addInitializer(initializer);
