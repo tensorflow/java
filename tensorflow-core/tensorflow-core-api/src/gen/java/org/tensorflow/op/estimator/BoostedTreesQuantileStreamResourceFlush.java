@@ -71,7 +71,7 @@ public final class BoostedTreesQuantileStreamResourceFlush extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceFlush", scope.makeOpName("BoostedTreesQuantileStreamResourceFlush"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInput(numBuckets.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.generateQuantiles != null) {

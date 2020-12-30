@@ -102,7 +102,7 @@ public final class ResourceSparseApplyFtrl extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(l2Shrinkage.asOutput());
     opBuilder.addInput(lrPower.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

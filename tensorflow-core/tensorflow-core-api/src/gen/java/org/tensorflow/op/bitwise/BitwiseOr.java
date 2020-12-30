@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Elementwise computes the bitwise OR of `x` and `y`.
@@ -69,7 +68,7 @@ public final class BitwiseOr<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseOr", scope.makeOpName("BitwiseOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BitwiseOr<T>(opBuilder.build());
   }
   

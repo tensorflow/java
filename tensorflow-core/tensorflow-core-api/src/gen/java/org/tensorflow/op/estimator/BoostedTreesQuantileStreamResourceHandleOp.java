@@ -70,7 +70,7 @@ public final class BoostedTreesQuantileStreamResourceHandleOp extends RawOp impl
   @Endpoint(describeByClass = true)
   public static BoostedTreesQuantileStreamResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceHandleOp", scope.makeOpName("BoostedTreesQuantileStreamResourceHandleOp"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An op that enqueues TPUEmbedding input indices from a SparseTensor.
@@ -105,7 +104,7 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.deviceOrdinal != null) {

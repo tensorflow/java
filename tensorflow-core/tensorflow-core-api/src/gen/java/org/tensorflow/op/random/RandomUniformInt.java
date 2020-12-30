@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random integers from a uniform distribution.
@@ -90,7 +89,7 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

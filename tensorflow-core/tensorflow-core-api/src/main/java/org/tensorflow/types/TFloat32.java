@@ -18,27 +18,21 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.internal.types.TFloat32Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TFloating;
 
 /** IEEE-754 single-precision 32-bit float tensor type. */
+@TensorType(dataType = DataType.DT_FLOAT, byteSize = 4, mapperClass = TFloat32Mapper.class)
 public interface TFloat32 extends FloatNdArray, TFloating {
-
-  /** readable-name for the data type */
-  static final String NAME = "FLOAT";
-
-  /** Type metadata */
-  DataType<TFloat32> DTYPE = DataType.create(NAME, 1, 4, TFloat32Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -46,8 +40,8 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @param value float to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat32> scalarOf(float value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setFloat(value));
+  static TFloat32 scalarOf(float value) {
+    return Tensor.of(TFloat32.class, Shape.scalar(), data -> data.setFloat(value));
   }
 
   /**
@@ -56,11 +50,11 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @param values floats to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat32> vectorOf(float... values) {
+  static TFloat32 vectorOf(float... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TFloat32.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -71,8 +65,8 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat32> tensorOf(NdArray<Float> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  static TFloat32 tensorOf(NdArray<Float> src) {
+    return Tensor.of(TFloat32.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -81,8 +75,8 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TFloat32> tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+  static TFloat32 tensorOf(Shape shape) {
+    return Tensor.of(TFloat32.class, shape);
   }
 
   /**
@@ -92,8 +86,8 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @param data buffer of floats to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TFloat32> tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  static TFloat32 tensorOf(Shape shape, FloatDataBuffer data) {
+    return Tensor.of(TFloat32.class, shape, d -> d.write(data));
   }
 
   /**
@@ -104,19 +98,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TFloat32> tensorOf(Shape shape, Consumer<TFloat32> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TFloat32} */
-class TFloat32Impl extends FloatDenseNdArray implements TFloat32 {
-
-  static TFloat32 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TFloat32Impl(TensorBuffers.toFloats(nativeTensor), shape);
-  }
-
-  private TFloat32Impl(FloatDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  static TFloat32 tensorOf(Shape shape, Consumer<TFloat32> dataInit) {
+    return Tensor.of(TFloat32.class, shape, dataInit);
   }
 }

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Randomly crop `image`.
@@ -88,7 +87,7 @@ public final class RandomCrop<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

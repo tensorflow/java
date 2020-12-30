@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes a 2-D convolution given 4-D `input` and `filter` tensors.
@@ -136,7 +135,7 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2D", scope.makeOpName("Conv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradient of the FractionalMaxPool function.
@@ -86,7 +85,7 @@ public final class FractionalMaxPoolGrad<T extends TNumber> extends RawOp implem
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder.addInput(rowPoolingSequence.asOutput());
     opBuilder.addInput(colPoolingSequence.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.overlapping != null) {

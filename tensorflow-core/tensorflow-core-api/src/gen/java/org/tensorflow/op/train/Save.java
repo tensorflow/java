@@ -56,7 +56,7 @@ public final class Save extends RawOp {
     opBuilder.addInput(tensorNames.asOutput());
     opBuilder.addInput(shapeAndSlices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(tensors));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Save(opBuilder.build());
   }
   

@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.linalg.BandPart;
 import org.tensorflow.op.linalg.BatchCholesky;
@@ -78,8 +77,11 @@ import org.tensorflow.types.family.TType;
 public final class LinalgOps {
   private final Scope scope;
 
-  LinalgOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  LinalgOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -396,7 +398,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Eig
    */
-  public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, DataType<U> Tout,
+  public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, Class<U> Tout,
       Eig.Options... options) {
     return Eig.create(scope, input, Tout, options);
   }
@@ -682,7 +684,7 @@ public final class LinalgOps {
    * @return a new instance of Lu
    */
   public <T extends TType, U extends TNumber> Lu<T, U> lu(Operand<T> input,
-      DataType<U> outputIdxType) {
+      Class<U> outputIdxType) {
     return Lu.create(scope, input, outputIdxType);
   }
 
@@ -1373,7 +1375,7 @@ public final class LinalgOps {
    */
   public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
       Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA,
-      Operand<TFloat32> minB, Operand<TFloat32> maxB, DataType<V> Toutput, DataType<W> Tactivation,
+      Operand<TFloat32> minB, Operand<TFloat32> maxB, Class<V> Toutput, Class<W> Tactivation,
       QuantizedMatMul.Options... options) {
     return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
   }
@@ -1605,5 +1607,12 @@ public final class LinalgOps {
   public <T extends TType> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
       TriangularSolve.Options... options) {
     return TriangularSolve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

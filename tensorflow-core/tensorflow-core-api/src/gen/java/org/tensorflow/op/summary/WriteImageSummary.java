@@ -28,7 +28,6 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  */
@@ -73,7 +72,7 @@ public final class WriteImageSummary extends RawOp {
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(badColor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.maxImages != null) {

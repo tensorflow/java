@@ -90,8 +90,8 @@ public class ReLUTest {
         Ops tf = session.getTF();
         ReLU<TFloat16> instance = new ReLU<>(tf);
         Operand<TFloat16> result =
-            instance.call(tf.dtypes.cast(tf.constant(input), TFloat16.DTYPE));
-        session.evaluate(tf.dtypes.cast(tf.constant(expected), TFloat16.DTYPE), result);
+            instance.call(tf.dtypes.cast(tf.constant(input), TFloat16.class));
+        session.evaluate(tf.dtypes.cast(tf.constant(expected), TFloat16.class), result);
       }
   }
 

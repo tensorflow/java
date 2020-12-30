@@ -18,7 +18,6 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.strings.Join;
 import org.tensorflow.op.strings.Lower;
@@ -52,8 +51,11 @@ import org.tensorflow.types.family.TNumber;
 public final class StringsOps {
   private final Scope scope;
 
-  StringsOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  StringsOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -483,8 +485,7 @@ public final class StringsOps {
    * @param outType The numeric type to interpret each string in `string_tensor` as.
    * @return a new instance of ToNumber
    */
-  public <T extends TNumber> ToNumber<T> toNumber(Operand<TString> stringTensor,
-      DataType<T> outType) {
+  public <T extends TNumber> ToNumber<T> toNumber(Operand<TString> stringTensor, Class<T> outType) {
     return ToNumber.create(scope, stringTensor, outType);
   }
 
@@ -616,5 +617,12 @@ public final class StringsOps {
    */
   public Upper upper(Operand<TString> input, Upper.Options... options) {
     return Upper.create(scope, input, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

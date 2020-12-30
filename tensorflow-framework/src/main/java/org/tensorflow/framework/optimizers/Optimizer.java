@@ -220,7 +220,7 @@ public abstract class Optimizer {
   protected <T extends TType> void createSlot(
       Output<T> variable, String slotName, Operand<T> initializer) {
     Variable<T> slot =
-        tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.dataType());
+        tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.type());
     Assign<T> slotInit = tf.assign(slot, initializer);
     graph.addInitializer(slotInit);
     String varName = variable.op().name();

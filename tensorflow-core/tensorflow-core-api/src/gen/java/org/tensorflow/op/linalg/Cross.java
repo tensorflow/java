@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Compute the pairwise cross product.
@@ -53,7 +52,7 @@ public final class Cross<T extends TNumber> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Cross", scope.makeOpName("Cross"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Cross<T>(opBuilder.build());
   }
   

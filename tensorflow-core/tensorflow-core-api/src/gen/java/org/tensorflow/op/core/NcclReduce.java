@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Reduces `input` from `num_devices` using `reduction` to a single device.
@@ -57,7 +56,7 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
   public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input, String reduction) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("reduction", reduction);
     return new NcclReduce<T>(opBuilder.build());
   }

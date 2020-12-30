@@ -40,7 +40,7 @@ public final class ConfigureTPUEmbedding extends RawOp {
   @Endpoint(describeByClass = true)
   public static ConfigureTPUEmbedding create(Scope scope, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureTPUEmbedding", scope.makeOpName("ConfigureTPUEmbedding"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("config", config);
     return new ConfigureTPUEmbedding(opBuilder.build());
   }

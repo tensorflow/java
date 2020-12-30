@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the GRU cell forward propagation for 1 time step.
@@ -101,7 +100,7 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
     opBuilder.addInput(wC.asOutput());
     opBuilder.addInput(bRu.asOutput());
     opBuilder.addInput(bC.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new GRUBlockCell<T>(opBuilder.build());
   }
   

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Resize `images` to `size` using area interpolation.
@@ -83,7 +82,7 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeArea", scope.makeOpName("ResizeArea"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

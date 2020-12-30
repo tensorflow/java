@@ -50,7 +50,7 @@ public final class LookupTableInsert extends RawOp {
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LookupTableInsert(opBuilder.build());
   }
   

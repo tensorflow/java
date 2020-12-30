@@ -44,30 +44,30 @@ public final class QueueSize extends RawOp implements Operand<TInt32> {
   public static QueueSize create(Scope scope, Operand<?> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueSizeV2", scope.makeOpName("QueueSize"));
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new QueueSize(opBuilder.build());
   }
   
   /**
    * The number of elements in the given queue.
    */
-  public Output<TInt32> size() {
-    return size;
+  public Output<TInt32> output() {
+    return output;
   }
   
   @Override
   public Output<TInt32> asOutput() {
-    return size;
+    return output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "QueueSizeV2";
   
-  private Output<TInt32> size;
+  private Output<TInt32> output;
   
   private QueueSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    size = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

@@ -75,7 +75,7 @@ public final class PreventGradient<T extends TType> extends RawOp implements Ope
   public static <T extends TType> PreventGradient<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PreventGradient", scope.makeOpName("PreventGradient"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.message != null) {

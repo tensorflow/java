@@ -90,7 +90,7 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
     opBuilder.addInput(truthIndices.asOutput());
     opBuilder.addInput(truthValues.asOutput());
     opBuilder.addInput(truthShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.normalize != null) {

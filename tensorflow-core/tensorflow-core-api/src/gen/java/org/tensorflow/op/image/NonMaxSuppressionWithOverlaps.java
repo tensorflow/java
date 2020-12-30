@@ -73,7 +73,7 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
     opBuilder.addInput(maxOutputSize.asOutput());
     opBuilder.addInput(overlapThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new NonMaxSuppressionWithOverlaps(opBuilder.build());
   }
   

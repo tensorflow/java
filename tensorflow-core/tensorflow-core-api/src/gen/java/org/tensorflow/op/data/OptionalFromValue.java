@@ -45,7 +45,7 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
   public static OptionalFromValue create(Scope scope, Iterable<Operand<?>> components) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalFromValue", scope.makeOpName("OptionalFromValue"));
     opBuilder.addInputList(Operands.asOutputs(components));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new OptionalFromValue(opBuilder.build());
   }
   

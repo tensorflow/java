@@ -18,7 +18,6 @@
 package org.tensorflow.op;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.train.AccumulatorApplyGradient;
@@ -98,8 +97,11 @@ import org.tensorflow.types.family.TType;
 public final class TrainOps {
   private final Scope scope;
 
-  TrainOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  TrainOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -159,7 +161,7 @@ public final class TrainOps {
    * @return a new instance of AccumulatorTakeGradient
    */
   public <T extends TType> AccumulatorTakeGradient<T> accumulatorTakeGradient(
-      Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+      Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     return AccumulatorTakeGradient.create(scope, handle, numRequired, dtype);
   }
 
@@ -542,7 +544,7 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ConditionalAccumulator
    */
-  public <T extends TType> ConditionalAccumulator conditionalAccumulator(DataType<T> dtype,
+  public <T extends TType> ConditionalAccumulator conditionalAccumulator(Class<T> dtype,
       Shape shape, ConditionalAccumulator.Options... options) {
     return ConditionalAccumulator.create(scope, dtype, shape, options);
   }
@@ -1295,7 +1297,7 @@ public final class TrainOps {
    * @return a new instance of Restore
    */
   public Restore restore(Operand<TString> prefix, Operand<TString> tensorNames,
-      Operand<TString> shapeAndSlices, List<DataType<?>> dtypes) {
+      Operand<TString> shapeAndSlices, List<Class<? extends TType>> dtypes) {
     return Restore.create(scope, prefix, tensorNames, shapeAndSlices, dtypes);
   }
 
@@ -1321,7 +1323,7 @@ public final class TrainOps {
    * @return a new instance of RestoreSlice
    */
   public <T extends TType> RestoreSlice<T> restoreSlice(Operand<TString> filePattern,
-      Operand<TString> tensorName, Operand<TString> shapeAndSlice, DataType<T> dt,
+      Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt,
       RestoreSlice.Options... options) {
     return RestoreSlice.create(scope, filePattern, tensorName, shapeAndSlice, dt, options);
   }
@@ -1657,5 +1659,12 @@ public final class TrainOps {
    */
   public <T extends TType> TileGrad<T> tileGrad(Operand<T> input, Operand<TInt32> multiples) {
     return TileGrad.create(scope, input, multiples);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

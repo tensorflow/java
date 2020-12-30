@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradients for SparseSegmentMean.
@@ -57,7 +56,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(outputDim0.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentMeanGrad<T>(opBuilder.build());
   }
   

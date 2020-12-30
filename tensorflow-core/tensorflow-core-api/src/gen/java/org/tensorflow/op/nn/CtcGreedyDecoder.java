@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs greedy decoding on the logits given in inputs.
@@ -81,7 +80,7 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.mergeRepeated != null) {

@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the Gauss error function of `x` element-wise.
@@ -47,7 +46,7 @@ public final class Erf<T extends TNumber> extends RawOp implements Operand<T> {
   public static <T extends TNumber> Erf<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erf", scope.makeOpName("Erf"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Erf<T>(opBuilder.build());
   }
   

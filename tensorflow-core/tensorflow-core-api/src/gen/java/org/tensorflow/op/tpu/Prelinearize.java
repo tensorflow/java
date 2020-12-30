@@ -76,7 +76,7 @@ public final class Prelinearize extends RawOp implements Operand<TType> {
   public static <T extends TType> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prelinearize", scope.makeOpName("Prelinearize"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.shape != null) {

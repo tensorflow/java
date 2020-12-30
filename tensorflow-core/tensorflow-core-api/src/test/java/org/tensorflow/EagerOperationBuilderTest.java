@@ -18,9 +18,9 @@ package org.tensorflow;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
-import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.types.TFloat32;
+import org.tensorflow.op.Ops;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link EagerOperationBuilder} class. */
@@ -45,7 +45,7 @@ public class EagerOperationBuilderTest {
       opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
     }
     try {
-      opBuilder.setAttr("dtype", TFloat32.DTYPE);
+      opBuilder.setAttr("dtype", DataType.DT_FLOAT);
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -61,12 +61,7 @@ public class EagerOperationBuilderTest {
               .addInput(tf.constant(true).asOutput())
               .addInputList(new Output<?>[] {tf.constant(-1).asOutput()})
               .build();
-      try {
-        opBuilder(session, "Const", "var").addControlInput(asrt);
-        fail();
-      } catch (UnsupportedOperationException e) {
-        // expected
-      }
+      opBuilder(session, "Const", "var").addControlInput(asrt);
     }
   }
 
@@ -93,9 +88,9 @@ public class EagerOperationBuilderTest {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
       // dtype, tensor attributes.
-      try (Tensor<TInt32> t = TInt32.scalarOf(1)) {
+      try (TInt32 t = TInt32.scalarOf(1)) {
         opBuilder(session, "Const", "DataTypeAndTensor")
-            .setAttr("dtype", TInt32.DTYPE)
+            .setAttr("dtype", t.dataType())
             .setAttr("value", t)
             .build();
       }
@@ -103,7 +98,7 @@ public class EagerOperationBuilderTest {
       opBuilder(session, "RandomUniform", "DataTypeAndInt")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat32.DTYPE)
+          .setAttr("dtype", DataType.DT_FLOAT)
           .build();
       // list(int), string
       opBuilder(session, "MaxPool", "IntListAndString")
@@ -124,7 +119,7 @@ public class EagerOperationBuilderTest {
           .build();
       // list(shape)
       opBuilder(session, "FIFOQueue", "queue")
-          .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
+          .setAttr("component_types", new DataType[] {DataType.DT_INT32, DataType.DT_INT32})
           .setAttr("shapes", new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)})
           .build();
       // bool

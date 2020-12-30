@@ -144,7 +144,7 @@ public final class TryRpc extends RawOp {
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(method.asOutput());
     opBuilder.addInput(request.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.protocol != null) {

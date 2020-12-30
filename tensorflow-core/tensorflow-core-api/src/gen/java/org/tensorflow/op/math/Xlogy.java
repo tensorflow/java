@@ -48,7 +48,7 @@ public final class Xlogy<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Xlogy", scope.makeOpName("Xlogy"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Xlogy<T>(opBuilder.build());
   }
   

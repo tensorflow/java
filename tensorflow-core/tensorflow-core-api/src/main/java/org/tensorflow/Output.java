@@ -17,7 +17,9 @@ package org.tensorflow;
 
 import java.util.Objects;
 import org.bytedeco.javacpp.Pointer;
+import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,34 +38,35 @@ public final class Output<T extends TType> implements Operand<T> {
     return index;
   }
 
-  /** Returns the (possibly partially known) shape of the tensor referred to by this Output. */
-  public Shape shape() {
-    return operation.shape(index);
-  }
-
   /** Returns the DataType of the tensor referred to by this Output. */
   @SuppressWarnings("unchecked")
-  public DataType<T> dataType() {
-    return (DataType<T>)operation.dtype(index);
+  public DataType dataType() {
+    return operation.dtype(index);
+  }
+
+  /** Returns the type of the tensor referred to by this Output. */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Class<T> type() {
+    return (Class<T>)TensorTypeRegistry.find(dataType()).type();
   }
 
   /**
    * Returns this Output object with the type {@code Output<U>}. This method is useful when given a
    * value of type {@code Output<?>}.
    *
-   * @param dt any supported tensor data type
+   * @param type any supported tensor type
    * @throws IllegalArgumentException if the actual data type of this object does not match the type
    *     {@code U}.
    */
   @SuppressWarnings("unchecked")
-  public <U extends TType> Output<U> expect(DataType<U> dt) {
-    if (!dt.equals(this.dataType())) {
+  public <U extends TType> Output<U> expect(Class<U> type) {
+    if (type != type()) {
       throw new IllegalArgumentException(
-          "Cannot cast from output of " + this.dataType() + " to output of " + dt);
+          "Cannot cast from output of " + this.type().getSimpleName() + " to output of " + type.getSimpleName());
     }
     return ((Output<U>) this);
   }
-
 
   /**
    * Returns the tensor at this output.
@@ -77,11 +80,20 @@ public final class Output<T extends TType> implements Operand<T> {
    *
    * @return tensor
    * @throws IllegalStateException if this output results from a graph
+   * @throws ClassCastException if the type of the tensor and this output are unexpectedly incompatible
    * @see EagerSession
    */
   @SuppressWarnings("unchecked")
-  public Tensor<T> tensor() {
-    return (Tensor<T>) operation.tensor(index);
+  public T asTensor() {
+    return (T)operation.tensor(index);
+  }
+
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by this output.
+   */
+  @Override
+  public Shape shape() {
+    return operation.shape(index);
   }
 
   @Override

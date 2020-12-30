@@ -54,7 +54,7 @@ public final class BoostedTreesMakeQuantileSummaries extends RawOp implements It
     opBuilder.addInputList(Operands.asOutputs(floatValues));
     opBuilder.addInput(exampleWeights.asOutput());
     opBuilder.addInput(epsilon.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BoostedTreesMakeQuantileSummaries(opBuilder.build());
   }
   

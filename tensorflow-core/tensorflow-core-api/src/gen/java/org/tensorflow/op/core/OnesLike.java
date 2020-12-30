@@ -46,7 +46,7 @@ public final class OnesLike<T extends TType> extends RawOp implements Operand<T>
   public static <T extends TType> OnesLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("OnesLike", scope.makeOpName("OnesLike"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new OnesLike<T>(opBuilder.build());
   }
   

@@ -85,7 +85,7 @@ public final class RetrieveTPUEmbeddingAdagradParametersGradAccumDebug extends R
   @Endpoint(describeByClass = true)
   public static RetrieveTPUEmbeddingAdagradParametersGradAccumDebug create(Scope scope, Long numShards, Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingAdagradParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingAdagradParametersGradAccumDebug"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

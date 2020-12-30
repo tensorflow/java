@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the complementary error function of `x` element-wise.
@@ -47,7 +46,7 @@ public final class Erfc<T extends TNumber> extends RawOp implements Operand<T> {
   public static <T extends TNumber> Erfc<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Erfc", scope.makeOpName("Erfc"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Erfc<T>(opBuilder.build());
   }
   

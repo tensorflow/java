@@ -30,7 +30,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs beam search decoding on the logits given in input.
@@ -81,7 +80,7 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("beam_width", beamWidth);
     opBuilder.setAttr("top_paths", topPaths);
     if (options != null) {

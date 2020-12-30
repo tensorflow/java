@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Invert (flip) each bit of supported types; for example, type `uint8` value 01010101 becomes 10101010.
@@ -88,7 +87,7 @@ public final class Invert<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> Invert<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Invert", scope.makeOpName("Invert"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Invert<T>(opBuilder.build());
   }
   

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Says whether the targets are in the top `K` predictions.
@@ -66,7 +65,7 @@ public final class InTopK extends RawOp implements Operand<TBool> {
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());
     opBuilder.addInput(k.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InTopK(opBuilder.build());
   }
   

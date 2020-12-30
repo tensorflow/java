@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Draw bounding boxes on a batch of images.
@@ -65,7 +64,7 @@ public final class DrawBoundingBoxes<T extends TNumber> extends RawOp implements
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(colors.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DrawBoundingBoxes<T>(opBuilder.build());
   }
   

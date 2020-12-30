@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes rectified linear 6 gradients for a Relu6 operation.
@@ -49,7 +48,7 @@ public final class Relu6Grad<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("Relu6Grad", scope.makeOpName("Relu6Grad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Relu6Grad<T>(opBuilder.build());
   }
   

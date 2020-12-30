@@ -17,7 +17,6 @@ package org.tensorflow.framework.data;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
@@ -36,16 +35,15 @@ public class TakeDatasetTest extends DatasetTestBase {
         Dataset.fromTensorSlices(
                 tf,
                 Arrays.asList(tf.constant(testMatrix1), tf.constant(testMatrix2)),
-                Arrays.asList(TInt32.DTYPE, TInt32.DTYPE))
+                Arrays.asList(TInt32.class, TInt32.class))
             .take(4);
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-      try (Tensor<TInt32> batch1 = components.get(0).asTensor().expect(TInt32.DTYPE);
-          Tensor<TInt32> batch2 = components.get(1).asTensor().expect(TInt32.DTYPE); ) {
-
-        assertEquals(testMatrix1.get(count), batch1.data());
-        assertEquals(testMatrix2.get(count), batch2.data());
+      try (TInt32 batch1 = (TInt32)components.get(0).asTensor();
+          TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
+        assertEquals(testMatrix1.get(count), batch1);
+        assertEquals(testMatrix2.get(count), batch2);
         count++;
       }
     }

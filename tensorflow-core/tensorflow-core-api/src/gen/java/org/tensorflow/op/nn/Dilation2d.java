@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the grayscale dilation of 4-D `input` and 3-D `filter` tensors.
@@ -79,7 +78,7 @@ public final class Dilation2d<T extends TNumber> extends RawOp implements Operan
     OperationBuilder opBuilder = scope.env().opBuilder("Dilation2D", scope.makeOpName("Dilation2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

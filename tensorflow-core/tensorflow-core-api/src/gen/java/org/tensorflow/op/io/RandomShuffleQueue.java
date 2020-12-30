@@ -18,12 +18,12 @@ limitations under the License.
 package org.tensorflow.op.io;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -127,14 +127,10 @@ public final class RandomShuffleQueue extends RawOp implements Operand<TType> {
    * @return a new instance of RandomShuffleQueue
    */
   @Endpoint(describeByClass = true)
-  public static RandomShuffleQueue create(Scope scope, List<DataType<?>> componentTypes, Options... options) {
+  public static RandomShuffleQueue create(Scope scope, List<Class<? extends TType>> componentTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffleQueueV2", scope.makeOpName("RandomShuffleQueue"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] componentTypesArray = new DataType[componentTypes.size()];
-    for (int i = 0; i < componentTypesArray.length; ++i) {
-      componentTypesArray[i] = componentTypes.get(i);
-    }
-    opBuilder.setAttr("component_types", componentTypesArray);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.shapes != null) {

@@ -46,7 +46,7 @@ public final class DeleteMultiDeviceIterator extends RawOp {
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInputList(Operands.asOutputs(iterators));
     opBuilder.addInput(deleter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DeleteMultiDeviceIterator(opBuilder.build());
   }
   

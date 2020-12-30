@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
@@ -53,7 +52,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
     OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SoftmaxCrossEntropyWithLogits<T>(opBuilder.build());
   }
   

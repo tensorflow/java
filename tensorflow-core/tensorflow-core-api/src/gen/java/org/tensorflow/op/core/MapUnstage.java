@@ -20,11 +20,11 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -99,16 +99,12 @@ public final class MapUnstage extends RawOp implements Iterable<Operand<TType>> 
    * @return a new instance of MapUnstage
    */
   @Endpoint(describeByClass = true)
-  public static MapUnstage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<DataType<?>> dtypes, Options... options) {
+  public static MapUnstage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstage", scope.makeOpName("MapUnstage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
-    for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = dtypes.get(i);
-    }
-    opBuilder.setAttr("dtypes", dtypesArray);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.capacity != null) {

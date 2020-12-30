@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -67,11 +67,11 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
    * @return a new instance of Lu
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Lu<T, U> create(Scope scope, Operand<T> input, DataType<U> outputIdxType) {
+  public static <T extends TType, U extends TNumber> Lu<T, U> create(Scope scope, Operand<T> input, Class<U> outputIdxType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Lu", scope.makeOpName("Lu"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_idx_type", outputIdxType);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_idx_type", Operands.toDataType(outputIdxType));
     return new Lu<T, U>(opBuilder.build());
   }
   
@@ -85,7 +85,7 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> Lu<T, TInt32> create(Scope scope, Operand<T> input) {
-    return create(scope, input, TInt32.DTYPE);
+    return create(scope, input, TInt32.class);
   }
   
   /**

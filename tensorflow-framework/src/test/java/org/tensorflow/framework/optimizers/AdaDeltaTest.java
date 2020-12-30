@@ -89,8 +89,8 @@ public class AdaDeltaTest {
           float[] var1Init = {3.0F, 4.0F};
           float[] fgrads = {grad, grad};
           Shape shape = Shape.of(var0Init.length);
-          Variable<TFloat32> var0 = tf.withName("var0").variable(shape, TFloat32.DTYPE);
-          Variable<TFloat32> var1 = tf.withName("var1").variable(shape, TFloat32.DTYPE);
+          Variable<TFloat32> var0 = tf.withName("var0").variable(shape, TFloat32.class);
+          Variable<TFloat32> var1 = tf.withName("var1").variable(shape, TFloat32.class);
 
           Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
           Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
@@ -118,16 +118,16 @@ public class AdaDeltaTest {
           Variable<TFloat32>[] slotUpdates = new Variable[2];
 
           slots[0] = adaDelta.getSlot(var0.asOutput(), ACCUMULATOR).get();
-          assertEquals(slots[0].asOutput().shape(), var0.asOutput().shape());
+          assertEquals(slots[0].shape(), var0.shape());
 
           slotUpdates[0] = adaDelta.getSlot(var0.asOutput(), ACCUMULATOR_UPDATE).get();
-          assertEquals(slotUpdates[0].asOutput().shape(), var0.asOutput().shape());
+          assertEquals(slotUpdates[0].shape(), var0.shape());
 
           slots[1] = adaDelta.getSlot(var1.asOutput(), ACCUMULATOR).get();
-          assertEquals(slots[1].asOutput().shape(), var1.asOutput().shape());
+          assertEquals(slots[1].shape(), var1.shape());
 
           slotUpdates[1] = adaDelta.getSlot(var1.asOutput(), ACCUMULATOR_UPDATE).get();
-          assertEquals(slotUpdates[1].asOutput().shape(), var1.asOutput().shape());
+          assertEquals(slotUpdates[1].shape(), var1.shape());
 
           /* initialize the local variables */
           session.run(var0Initializer);

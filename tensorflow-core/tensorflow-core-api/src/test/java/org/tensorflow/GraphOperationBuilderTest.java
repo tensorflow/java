@@ -21,11 +21,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
@@ -50,7 +50,7 @@ public class GraphOperationBuilderTest {
   @Test
   public void failOnUseAfterBuild() {
     try (Graph g = new Graph();
-        Tensor<TInt32> t = TInt32.scalarOf(1)) {
+        TInt32 t = TInt32.scalarOf(1)) {
       OperationBuilder b =
           g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
       b.build();
@@ -66,7 +66,7 @@ public class GraphOperationBuilderTest {
   public void failOnUseAfterGraphClose() {
     OperationBuilder b = null;
     try (Graph g = new Graph();
-        Tensor<TInt32> t = TInt32.scalarOf(1)) {
+        TInt32 t = TInt32.scalarOf(1)) {
       b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
     }
     try {
@@ -88,9 +88,9 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
       // dtype, tensor attributes.
-      try (Tensor<TInt32> t = TInt32.scalarOf(1)) {
+      try (TInt32 t = TInt32.scalarOf(1)) {
         g.opBuilder("Const", "DataTypeAndTensor")
-            .setAttr("dtype", TInt32.DTYPE)
+            .setAttr("dtype", t.dataType())
             .setAttr("value", t)
             .build()
             .output(0);
@@ -106,7 +106,7 @@ public class GraphOperationBuilderTest {
       g.opBuilder("RandomUniform", "Int")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
-          .setAttr("dtype", TFloat32.DTYPE)
+          .setAttr("dtype", DataType.DT_FLOAT)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
@@ -132,23 +132,23 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph()) {
       Output<?> n =
           g.opBuilder("Placeholder", "unknown")
-              .setAttr("dtype", TFloat32.DTYPE)
+              .setAttr("dtype", DataType.DT_FLOAT)
               .setAttr("shape", Shape.unknown())
               .build()
               .output(0);
       assertEquals(-1, n.shape().numDimensions());
-      assertEquals(TFloat32.DTYPE, n.dataType());
+      assertEquals(DataType.DT_FLOAT, n.dataType());
 
       n =
           g.opBuilder("Placeholder", "batch_of_vectors")
-              .setAttr("dtype", TFloat32.DTYPE)
+              .setAttr("dtype", DataType.DT_FLOAT)
               .setAttr("shape", Shape.of(-1, 784))
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
       assertEquals(-1, n.shape().size(0));
       assertEquals(784, n.shape().size(1));
-      assertEquals(TFloat32.DTYPE, n.dataType());
+      assertEquals(DataType.DT_FLOAT, n.dataType());
     }
   }
 
@@ -169,10 +169,10 @@ public class GraphOperationBuilderTest {
   public void addControlInput() {
     try (Graph g = new Graph();
         Session s = new Session(g);
-        Tensor<TBool> yes = TBool.scalarOf(true);
-        Tensor<TBool> no = TBool.scalarOf(false)) {
+        TBool yes = TBool.scalarOf(true);
+        TBool no = TBool.scalarOf(false)) {
       Ops tf = Ops.create(g);
-      Output<TBool> placeholder = tf.placeholder(TBool.DTYPE).asOutput();
+      Output<TBool> placeholder = tf.placeholder(TBool.class).asOutput();
       GraphOperation check =
           g.opBuilder("Assert", "assert")
               .addInput(placeholder)
@@ -200,7 +200,7 @@ public class GraphOperationBuilderTest {
       int[][] matrix = new int[][] {{0, 0}, {0, 0}};
       Output<?> queue =
           g.opBuilder("FIFOQueue", "queue")
-              .setAttr("component_types", new DataType[] {TInt32.DTYPE, TInt32.DTYPE})
+              .setAttr("component_types", new DataType[] {DataType.DT_INT32, DataType.DT_INT32})
               .setAttr("shapes", shapes)
               .build()
               .output(0);

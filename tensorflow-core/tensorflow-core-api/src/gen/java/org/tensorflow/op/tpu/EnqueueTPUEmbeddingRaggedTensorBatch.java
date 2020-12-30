@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Eases the porting of code that uses tf.nn.embedding_lookup().
@@ -120,7 +119,7 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0; i < tableIdsArray.length; ++i) {
       tableIdsArray[i] = tableIds.get(i);

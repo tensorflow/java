@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise max of two SparseTensors.
@@ -61,7 +60,7 @@ public final class SparseSparseMaximum<T extends TNumber> extends RawOp {
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSparseMaximum<T>(opBuilder.build());
   }
   

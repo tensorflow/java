@@ -41,7 +41,7 @@ public final class ControlTrigger extends RawOp {
   @Endpoint(describeByClass = true)
   public static ControlTrigger create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ControlTrigger", scope.makeOpName("ControlTrigger"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ControlTrigger(opBuilder.build());
   }
   

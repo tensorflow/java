@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Adjust the saturation of one or more images.
@@ -57,7 +56,7 @@ public final class AdjustSaturation<T extends TNumber> extends RawOp implements 
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustSaturation", scope.makeOpName("AdjustSaturation"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(scale.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AdjustSaturation<T>(opBuilder.build());
   }
   

@@ -51,7 +51,7 @@ public final class EnsureShape<T extends TType> extends RawOp implements Operand
   public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new EnsureShape<T>(opBuilder.build());
   }

@@ -17,12 +17,12 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -45,10 +45,10 @@ public final class InfeedDequeue<T extends TType> extends RawOp implements Opera
    * @return a new instance of InfeedDequeue
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> InfeedDequeue<T> create(Scope scope, DataType<T> dtype, Shape shape) {
+  public static <T extends TType> InfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("dtype", dtype);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);
     return new InfeedDequeue<T>(opBuilder.build());
   }

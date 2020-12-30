@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the derivative of a Gamma random sample w.r.t. `alpha`.
@@ -48,7 +47,7 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGammaGrad", scope.makeOpName("RandomGammaGrad"));
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(sample.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new RandomGammaGrad<T>(opBuilder.build());
   }
   

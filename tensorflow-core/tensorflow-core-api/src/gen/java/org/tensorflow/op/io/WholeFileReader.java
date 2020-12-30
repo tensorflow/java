@@ -76,7 +76,7 @@ public final class WholeFileReader extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static WholeFileReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WholeFileReaderV2", scope.makeOpName("WholeFileReader"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

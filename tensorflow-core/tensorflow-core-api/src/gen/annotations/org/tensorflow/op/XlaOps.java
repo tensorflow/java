@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.xla.BroadcastHelper;
@@ -49,8 +48,11 @@ import org.tensorflow.types.family.TType;
 public final class XlaOps {
   private final Scope scope;
 
-  XlaOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  XlaOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -278,7 +280,7 @@ public final class XlaOps {
    * @param shape The shape of the tensor.
    * @return a new instance of Recv
    */
-  public <T extends TType> Recv<T> recv(DataType<T> dtype, String tensorName, Shape shape) {
+  public <T extends TType> Recv<T> recv(Class<T> dtype, String tensorName, Shape shape) {
     return Recv.create(scope, dtype, tensorName, shape);
   }
 
@@ -378,5 +380,12 @@ public final class XlaOps {
   public <T extends TType> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
       String precisionConfig) {
     return Svd.create(scope, a, maxIter, epsilon, precisionConfig);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

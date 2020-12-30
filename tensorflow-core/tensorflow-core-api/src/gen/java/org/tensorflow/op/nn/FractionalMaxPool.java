@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs fractional max pooling on the input.
@@ -155,7 +154,7 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
   public static <T extends TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalMaxPool", scope.makeOpName("FractionalMaxPool"));
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     float[] poolingRatioArray = new float[poolingRatio.size()];
     for (int i = 0; i < poolingRatioArray.length; ++i) {
       poolingRatioArray[i] = poolingRatio.get(i);

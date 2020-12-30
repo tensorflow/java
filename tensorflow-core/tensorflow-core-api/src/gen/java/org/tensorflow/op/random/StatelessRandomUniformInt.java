@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
@@ -56,7 +55,7 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatelessRandomUniformInt<V>(opBuilder.build());
   }
   

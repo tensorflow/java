@@ -100,7 +100,7 @@ public final class GenerateVocabRemapping extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("GenerateVocabRemapping", scope.makeOpName("GenerateVocabRemapping"));
     opBuilder.addInput(newVocabFile.asOutput());
     opBuilder.addInput(oldVocabFile.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("new_vocab_offset", newVocabOffset);
     opBuilder.setAttr("num_new_vocab", numNewVocab);
     if (options != null) {

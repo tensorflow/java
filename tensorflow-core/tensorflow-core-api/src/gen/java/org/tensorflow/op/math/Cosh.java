@@ -56,7 +56,7 @@ public final class Cosh<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Cosh<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cosh", scope.makeOpName("Cosh"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Cosh<T>(opBuilder.build());
   }
   

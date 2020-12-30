@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
@@ -62,7 +61,7 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
     opBuilder.addInput(arr.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Bincount<T>(opBuilder.build());
   }
   

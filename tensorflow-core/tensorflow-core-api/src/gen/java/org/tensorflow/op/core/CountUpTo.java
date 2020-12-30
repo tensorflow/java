@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Increments 'ref' until it reaches 'limit'.
@@ -49,7 +48,7 @@ public final class CountUpTo<T extends TNumber> extends RawOp implements Operand
   public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
     opBuilder.addInput(ref.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
     return new CountUpTo<T>(opBuilder.build());
   }

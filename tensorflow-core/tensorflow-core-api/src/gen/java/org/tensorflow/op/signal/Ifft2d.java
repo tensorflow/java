@@ -49,7 +49,7 @@ public final class Ifft2d<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Ifft2d<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("IFFT2D", scope.makeOpName("Ifft2d"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Ifft2d<T>(opBuilder.build());
   }
   

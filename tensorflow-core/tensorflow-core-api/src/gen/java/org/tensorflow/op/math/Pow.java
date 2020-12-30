@@ -57,7 +57,7 @@ public final class Pow<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Pow", scope.makeOpName("Pow"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Pow<T>(opBuilder.build());
   }
   

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs a `Summary` protocol buffer with images.
@@ -99,13 +98,13 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     /**
      * @param badColor Color to use for pixels with non-finite values.
      */
-    public Options badColor(Tensor<?> badColor) {
+    public Options badColor(Tensor badColor) {
       this.badColor = badColor;
       return this;
     }
     
     private Long maxImages;
-    private Tensor<?> badColor;
+    private Tensor badColor;
     
     private Options() {
     }
@@ -126,7 +125,7 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("ImageSummary", scope.makeOpName("ImageSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.maxImages != null) {
@@ -150,7 +149,7 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
   /**
    * @param badColor Color to use for pixels with non-finite values.
    */
-  public static Options badColor(Tensor<?> badColor) {
+  public static Options badColor(Tensor badColor) {
     return new Options().badColor(badColor);
   }
   

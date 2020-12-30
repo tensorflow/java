@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradients for the exponential linear (Elu) operation.
@@ -48,7 +47,7 @@ public final class EluGrad<T extends TNumber> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("EluGrad", scope.makeOpName("EluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(outputs.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new EluGrad<T>(opBuilder.build());
   }
   

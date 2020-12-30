@@ -207,6 +207,7 @@ public final class OperatorProcessor extends AbstractProcessor {
       ClassName.get("org.tensorflow", "ExecutionEnvironment");
   private static final TypeName T_EAGER_SESSION = ClassName.get("org.tensorflow", "EagerSession");
   private static final TypeName T_STRING = ClassName.get(String.class);
+  private static final TypeName T_DEVICE_SPEC = ClassName.get("org.tensorflow", "DeviceSpec");
 
   private static final String LICENSE =
       "Copyright 2020 The TensorFlow Authors. All Rights Reserved.\n"
@@ -428,8 +429,9 @@ public final class OperatorProcessor extends AbstractProcessor {
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
-            .addParameter(T_SCOPE, "scope")
-            .addStatement("this.scope = scope");
+            .addParameter(T_OPS, "ops")
+            .addStatement("this.scope = ops.scope()")
+            .addStatement("this.ops = ops");
 
     TypeSpec.Builder builder =
         TypeSpec.classBuilder(spec.className)
@@ -442,12 +444,23 @@ public final class OperatorProcessor extends AbstractProcessor {
                 T_OPS)
             .addMethods(spec.methods);
 
-    addGroupFields(builder, ctorBuilder, spec.subGroups);
+    MethodSpec.Builder opsBuilder = MethodSpec.methodBuilder("ops")
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .returns(T_OPS)
+            .addJavadoc("Get the parent {@link " + T_OPS.simpleName() + "} object.")
+            .addStatement("return ops");
+
+    builder.addMethod(opsBuilder.build());
+
+    addGroupFields(builder, ctorBuilder, spec.subGroups, false);
 
     builder.addMethod(ctorBuilder.build());
 
     builder.addField(
         FieldSpec.builder(T_SCOPE, "scope").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build());
+
+    builder.addField(
+            FieldSpec.builder(T_OPS, "ops").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build());
 
     return builder.build();
   }
@@ -497,7 +510,7 @@ public final class OperatorProcessor extends AbstractProcessor {
                 T_OPERATOR)
             .addMethods(spec.methods);
 
-    addGroupFields(opsBuilder, ctorBuilder, spec.subGroups);
+    addGroupFields(opsBuilder, ctorBuilder, spec.subGroups, true);
 
     opsBuilder.addMethod(ctorBuilder.build());
 
@@ -524,6 +537,18 @@ public final class OperatorProcessor extends AbstractProcessor {
                     + "@see {@link $T#withName(String)}\n",
                 T_SCOPE)
             .build());
+
+    opsBuilder.addMethod(
+            MethodSpec.methodBuilder("withDevice")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addParameter(T_DEVICE_SPEC, "deviceSpec")
+                    .returns(T_OPS)
+                    .addStatement("return new Ops(scope.withDevice(deviceSpec))")
+                    .addJavadoc(
+                            "Returns an API that places the created operations on the device(s) matching the provided spec.\n\n"
+                                    + "@see {@link $T#withDevice(DeviceSpec)}\n",
+                            T_SCOPE)
+                    .build());
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withControlDependencies")
@@ -571,14 +596,14 @@ public final class OperatorProcessor extends AbstractProcessor {
     return opsBuilder.build();
   }
 
-  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder, List<OpsSpec> groups) {
+  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder, List<OpsSpec> groups, boolean isTopClass) {
     groups.forEach(group -> {
       classBuilder.addField(
           FieldSpec.builder(group.className, group.fieldName)
               .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
               .build()
       );
-      ctorBuilder.addStatement("$L = new $T(scope)", group.fieldName, group.className).build();
+      ctorBuilder.addStatement("$L = new $T(" + (isTopClass ? "this" : "ops") + ")", group.fieldName, group.className).build();
     });
   }
 

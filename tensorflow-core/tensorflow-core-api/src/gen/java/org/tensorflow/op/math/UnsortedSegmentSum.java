@@ -78,7 +78,7 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new UnsortedSegmentSum<T>(opBuilder.build());
   }
   

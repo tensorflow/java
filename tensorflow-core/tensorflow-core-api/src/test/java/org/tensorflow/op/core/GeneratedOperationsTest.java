@@ -22,10 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt32;
 
 public final class GeneratedOperationsTest {
@@ -36,8 +35,8 @@ public final class GeneratedOperationsTest {
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
       Operand<TInt32> x = ops.math.add(ops.constant(1), ops.constant(2));
-      try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(3, result.data().getInt());
+      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+        assertEquals(3, result.getInt());
       }
     }
   }
@@ -52,8 +51,8 @@ public final class GeneratedOperationsTest {
       inputs.add(ops.constant(2));
       inputs.add(ops.constant(3));
       Operand<TInt32> x = ops.math.addN(inputs);
-      try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(6, result.data().getInt());
+      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+        assertEquals(6, result.getInt());
       }
     }
   }
@@ -70,15 +69,15 @@ public final class GeneratedOperationsTest {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
-      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.DTYPE);
+      Operand<TInt32> variable = ops.variable(Shape.scalar(), TInt32.class);
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
       ArrayList<Op> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
       Operand<TInt32> x =
           ops.withControlDependencies(controls).math.add(variable, ops.constant(0));
       sess.runner().addTarget(initVariable).run();
-      try (Tensor<TInt32> result = sess.runner().fetch(x).run().get(0).expect(TInt32.DTYPE)) {
-        assertEquals(3, result.data().getInt());
+      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+        assertEquals(3, result.getInt());
       }
     }
   }

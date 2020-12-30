@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -58,13 +58,13 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
    * @return a new instance of SerializeManySparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, DataType<U> outType) {
+  public static <U extends TType, T extends TType> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeManySparse", scope.makeOpName("SerializeManySparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new SerializeManySparse<U>(opBuilder.build());
   }
   
@@ -79,7 +79,7 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
-    return create(scope, sparseIndices, sparseValues, sparseShape, TString.DTYPE);
+    return create(scope, sparseIndices, sparseValues, sparseShape, TString.class);
   }
   
   /**

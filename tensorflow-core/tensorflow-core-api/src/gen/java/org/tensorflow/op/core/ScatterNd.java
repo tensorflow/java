@@ -128,7 +128,7 @@ public final class ScatterNd<U extends TType> extends RawOp implements Operand<U
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ScatterNd<U>(opBuilder.build());
   }
   

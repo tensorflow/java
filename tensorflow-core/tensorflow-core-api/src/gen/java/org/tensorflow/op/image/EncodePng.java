@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * PNG-encode an image.
@@ -86,7 +85,7 @@ public final class EncodePng extends RawOp implements Operand<TString> {
   public static <T extends TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
     opBuilder.addInput(image.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.compression != null) {

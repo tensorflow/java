@@ -46,7 +46,7 @@ public final class ZerosLike<T extends TType> extends RawOp implements Operand<T
   public static <T extends TType> ZerosLike<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZerosLike", scope.makeOpName("ZerosLike"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ZerosLike<T>(opBuilder.build());
   }
   

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the "logical and" of elements across dimensions of a tensor.
@@ -74,7 +73,7 @@ public final class All extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("All"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

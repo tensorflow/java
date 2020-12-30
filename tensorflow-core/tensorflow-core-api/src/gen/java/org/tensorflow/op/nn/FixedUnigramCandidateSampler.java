@@ -170,7 +170,7 @@ public final class FixedUnigramCandidateSampler extends RawOp {
   public static FixedUnigramCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedUnigramCandidateSampler", scope.makeOpName("FixedUnigramCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);
     opBuilder.setAttr("num_sampled", numSampled);
     opBuilder.setAttr("unique", unique);

@@ -18,27 +18,21 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.internal.types.TUint8Mapper;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.family.TIntegral;
 
 /** 8-bit unsigned integer tensor type. */
-public interface TUint8 extends ByteNdArray, TNumber {
-
-  /** readable-name for the data type */
-  static final String NAME = "UINT8";
-
-  /** Type metadata */
-  DataType<TUint8> DTYPE = DataType.create(NAME, 4, 1, TUint8Impl::mapTensor);
+@TensorType(dataType = DataType.DT_UINT8, byteSize = 1, mapperClass = TUint8Mapper.class)
+public interface TUint8 extends ByteNdArray, TIntegral {
 
   /**
    * Allocates a new tensor for storing a single byte value.
@@ -46,8 +40,8 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param value byte to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TUint8> scalarOf(byte value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setByte(value));
+  static TUint8 scalarOf(byte value) {
+    return Tensor.of(TUint8.class, Shape.scalar(), data -> data.setByte(value));
   }
 
   /**
@@ -56,11 +50,11 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param values bytes to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TUint8> vectorOf(byte... values) {
+  static TUint8 vectorOf(byte... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TUint8.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -71,8 +65,8 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TUint8> tensorOf(NdArray<Byte> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  static TUint8 tensorOf(NdArray<Byte> src) {
+    return Tensor.of(TUint8.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -81,8 +75,8 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TUint8> tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+  static TUint8 tensorOf(Shape shape) {
+    return Tensor.of(TUint8.class, shape);
   }
 
   /**
@@ -92,8 +86,8 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @param data buffer of bytes to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TUint8> tensorOf(Shape shape, ByteDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  static TUint8 tensorOf(Shape shape, ByteDataBuffer data) {
+    return Tensor.of(TUint8.class, shape, d -> d.write(data));
   }
 
   /**
@@ -104,19 +98,7 @@ public interface TUint8 extends ByteNdArray, TNumber {
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TUint8> tensorOf(Shape shape, Consumer<TUint8> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TUint8} */
-class TUint8Impl extends ByteDenseNdArray implements TUint8 {
-
-  static TUint8 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TUint8Impl(TensorBuffers.toBytes(nativeTensor), shape);
-  }
-
-  private TUint8Impl(ByteDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  static TUint8 tensorOf(Shape shape, Consumer<TUint8> dataInit) {
+    return Tensor.of(TUint8.class, shape, dataInit);
   }
 }

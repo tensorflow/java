@@ -103,13 +103,22 @@ void CollectOpDependencies(const OpSpec& op, RenderMode mode,
   }
   for (const AttributeSpec& attribute : op.attributes()) {
     out->push_back(attribute.var().type());
-    out->push_back(attribute.jni_type());
+    if (attribute.jni_type().name() == "DataType") {
+      out->push_back(Type::Class("Operands", "org.tensorflow.op"));
+    } else {
+      out->push_back(attribute.jni_type());
+    }
     if (attribute.has_default_value() &&
         attribute.type().kind() == Type::GENERIC) {
       out->push_back(Type::ForDataType(attribute.default_value()->type()));
     }
   }
   for (const AttributeSpec& optional_attribute : op.optional_attributes()) {
+    if (optional_attribute.jni_type().name() == "DataType") {
+      out->push_back(Type::Class("Operands", "org.tensorflow.op"));
+    } else {
+      out->push_back(optional_attribute.jni_type());
+    }
     out->push_back(optional_attribute.var().type());
   }
 }
@@ -117,25 +126,32 @@ void CollectOpDependencies(const OpSpec& op, RenderMode mode,
 void WriteSetAttrDirective(const AttributeSpec& attr, bool optional,
                            SourceWriter* writer) {
   string var_name = optional ? "opts." + attr.var().name() : attr.var().name();
-  if (attr.iterable()) {
-    string array_name = attr.var().name() + "Array";
-    writer->AppendType(attr.jni_type())
-        .Append("[] " + array_name + " = new ")
-        .AppendType(attr.jni_type())
-        .Append("[" + var_name + ".size()];")
-        .EndLine()
-        .BeginBlock("for (int i = 0; i < " + array_name + ".length; ++i)")
-        .Append(array_name + "[i] = ");
-    writer->Append(var_name + ".get(i);");
-    writer->EndLine()
-        .EndBlock()
-        .Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
-        .Append(array_name + ");")
-        .EndLine();
-  } else {
+  if (attr.jni_type().name() == "DataType") {
     writer->Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
-        .Append(var_name + ");")
-        .EndLine();
+          .Append(attr.iterable() ? "Operands.toDataTypes(" : "Operands.toDataType(")
+          .Append(attr.var().name() + "));")
+          .EndLine();
+  } else {
+    if (attr.iterable()) {
+      string array_name = attr.var().name() + "Array";
+      writer->AppendType(attr.jni_type())
+          .Append("[] " + array_name + " = new ")
+          .AppendType(attr.jni_type())
+          .Append("[" + var_name + ".size()];")
+          .EndLine()
+          .BeginBlock("for (int i = 0; i < " + array_name + ".length; ++i)")
+          .Append(array_name + "[i] = ");
+      writer->Append(var_name + ".get(i);");
+      writer->EndLine()
+          .EndBlock()
+          .Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
+          .Append(array_name + ");")
+          .EndLine();
+    } else {
+      writer->Append("opBuilder.setAttr(\"" + attr.op_def_name() + "\", ")
+          .Append(var_name + ");")
+          .EndLine();
+    }
   }
 }
 
@@ -177,7 +193,7 @@ void RenderSecondaryFactoryMethod(const OpSpec& op, const Type& op_class,
     if (attr.type().kind() == Type::GENERIC &&
         default_types.find(attr.type().name()) != default_types.end()) {
       factory_statement << default_types.at(attr.type().name()).name()
-                        << ".DTYPE";
+                        << ".class";
     } else {
       AddArgument(attr.var(), attr.description(), &factory, &factory_doc);
       factory_statement << attr.var().name();
@@ -246,8 +262,9 @@ void RenderFactoryMethods(const OpSpec& op, const Type& op_class,
       writer->EndLine();
     }
   }
+
   // Add control dependencies, if any.
-  writer->Append("opBuilder = scope.applyControlDependencies(opBuilder);");
+  writer->Append("opBuilder = scope.apply(opBuilder);");
   writer->EndLine();
 
   for (const AttributeSpec& attribute : op.attributes()) {

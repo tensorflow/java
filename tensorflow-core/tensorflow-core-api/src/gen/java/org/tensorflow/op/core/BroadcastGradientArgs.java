@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
@@ -50,7 +49,7 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BroadcastGradientArgs<T>(opBuilder.build());
   }
   

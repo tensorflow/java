@@ -179,7 +179,7 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.align != null) {

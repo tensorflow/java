@@ -57,7 +57,7 @@ public final class QuantizedAvgPool<T extends TType> extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
     opBuilder.addInput(maxInput.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
       ksizeArray[i] = ksize.get(i);

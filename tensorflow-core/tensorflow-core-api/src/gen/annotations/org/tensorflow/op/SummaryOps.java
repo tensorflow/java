@@ -37,8 +37,11 @@ import org.tensorflow.types.family.TType;
 public final class SummaryOps {
   private final Scope scope;
 
-  SummaryOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  SummaryOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -194,5 +197,12 @@ public final class SummaryOps {
   public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
       Operand<TString> serializedSummaryMetadata) {
     return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

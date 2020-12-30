@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs fractional average pooling on the input.
@@ -131,7 +130,7 @@ public final class FractionalAvgPool<T extends TNumber> extends RawOp {
   public static <T extends TNumber> FractionalAvgPool<T> create(Scope scope, Operand<T> value, List<Float> poolingRatio, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPool", scope.makeOpName("FractionalAvgPool"));
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     float[] poolingRatioArray = new float[poolingRatio.size()];
     for (int i = 0; i < poolingRatioArray.length; ++i) {
       poolingRatioArray[i] = poolingRatio.get(i);

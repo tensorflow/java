@@ -119,7 +119,7 @@ public final class AsString extends RawOp implements Operand<TString> {
   public static <T extends TType> AsString create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AsString", scope.makeOpName("AsString"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.precision != null) {

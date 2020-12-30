@@ -54,7 +54,7 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
   @Endpoint(describeByClass = true)
   public static RecvTPUEmbeddingActivations create(Scope scope, Long numOutputs, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecvTPUEmbeddingActivations", scope.makeOpName("RecvTPUEmbeddingActivations"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_outputs", numOutputs);
     opBuilder.setAttr("config", config);
     return new RecvTPUEmbeddingActivations(opBuilder.build());

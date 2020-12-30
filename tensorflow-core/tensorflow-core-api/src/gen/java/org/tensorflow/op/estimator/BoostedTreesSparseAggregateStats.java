@@ -64,7 +64,7 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
     opBuilder.addInput(featureIndices.asOutput());
     opBuilder.addInput(featureValues.asOutput());
     opBuilder.addInput(featureShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     opBuilder.setAttr("num_buckets", numBuckets);
     return new BoostedTreesSparseAggregateStats(opBuilder.build());

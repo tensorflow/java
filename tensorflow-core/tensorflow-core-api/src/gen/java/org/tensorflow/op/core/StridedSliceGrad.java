@@ -120,7 +120,7 @@ public final class StridedSliceGrad<U extends TType> extends RawOp implements Op
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.beginMask != null) {

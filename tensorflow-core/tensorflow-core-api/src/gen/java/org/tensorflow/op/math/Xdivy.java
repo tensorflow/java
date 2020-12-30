@@ -48,7 +48,7 @@ public final class Xdivy<T extends TType> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Xdivy", scope.makeOpName("Xdivy"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Xdivy<T>(opBuilder.build());
   }
   

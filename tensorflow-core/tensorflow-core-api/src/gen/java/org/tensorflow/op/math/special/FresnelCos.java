@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code y()} output
@@ -44,7 +43,7 @@ public final class FresnelCos<T extends TNumber> extends RawOp implements Operan
   public static <T extends TNumber> FresnelCos<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("FresnelCos", scope.makeOpName("FresnelCos"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new FresnelCos<T>(opBuilder.build());
   }
   

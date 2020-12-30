@@ -15,6 +15,8 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.op.Op;
 import org.tensorflow.types.family.TType;
 
@@ -28,18 +30,18 @@ import org.tensorflow.types.family.TType;
  *
  * // The "decodeJpeg" operation can be used as an operand to the "cast" operation
  * Operand<TUint8> decodeJpeg = tf.image.decodeJpeg(...);
- * tf.dtypes.cast(decodeJpeg, TFloat32.DTYPE);
+ * tf.dtypes.cast(decodeJpeg, TFloat32.class);
  *
  * // The output "y" of the "unique" operation can be used as an operand to the "cast" operation
  * Output<TInt32> y = tf.unique(...).y();
- * tf.dtypes.cast(y, TFloat32.DTYPE);
+ * tf.dtypes.cast(y, TFloat32.class);
  *
  * // The "split" operation can be used as operand list to the "concat" operation
  * Iterable<? extends Operand<TFloat32>> split = tf.split(...);
  * tf.concat(split, tf.constant(0));
  * }</pre>
  */
-public interface Operand<T extends TType> extends Op {
+public interface Operand<T extends TType> extends Op, Shaped {
 
   /**
    * Returns the symbolic handle of the tensor.
@@ -52,28 +54,29 @@ public interface Operand<T extends TType> extends Op {
   Output<T> asOutput();
 
   /**
-   * Returns this operand as a tensor.
+   * Returns the tensor at this operand.
    *
    * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asOutput().tensor()}
    *
    * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
    */
-  default Tensor<T> asTensor() {
-    return asOutput().tensor();
+  default T asTensor() {
+    return asOutput().asTensor();
   }
 
   /**
-   * Returns the data of this operand.
-   *
-   * <i>Only works when running in an eager execution</i>
-   * <p>This helper method is equivalent to {@code asTensor().data()}
-   *
-   * @return the tensor data
-   * @throws IllegalStateException if this is an operand of a graph
+   * Returns the tensor type of this operand
    */
-  default T data() {
-    return asOutput().tensor().data();
+  default Class<T> type() {
+    return asOutput().type();
+  }
+
+  /**
+   * Returns the (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+   */
+  @Override
+  default Shape shape() {
+    return asOutput().shape();
   }
 }

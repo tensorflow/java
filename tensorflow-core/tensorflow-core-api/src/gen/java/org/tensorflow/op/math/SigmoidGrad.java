@@ -50,7 +50,7 @@ public final class SigmoidGrad<T extends TType> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("SigmoidGrad", scope.makeOpName("SigmoidGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SigmoidGrad<T>(opBuilder.build());
   }
   

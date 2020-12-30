@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Checks a tensor for NaN, -Inf and +Inf values.
@@ -52,7 +51,7 @@ public final class CheckNumerics<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
     OperationBuilder opBuilder = scope.env().opBuilder("CheckNumericsV2", scope.makeOpName("CheckNumerics"));
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("message", message);
     return new CheckNumerics<T>(opBuilder.build());
   }

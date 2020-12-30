@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * An Op to sum inputs across replicated TPU instances.
@@ -58,7 +57,7 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
     OperationBuilder opBuilder = scope.env().opBuilder("CrossReplicaSum", scope.makeOpName("CrossReplicaSum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new CrossReplicaSum<T>(opBuilder.build());
   }
   

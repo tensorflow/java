@@ -50,7 +50,7 @@ public final class InvGrad<T extends TType> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("InvGrad", scope.makeOpName("InvGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InvGrad<T>(opBuilder.build());
   }
   

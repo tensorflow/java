@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Batch normalization.
@@ -109,7 +108,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     opBuilder.addInput(offset.asOutput());
     opBuilder.addInput(mean.asOutput());
     opBuilder.addInput(variance.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.epsilon != null) {

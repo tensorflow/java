@@ -87,7 +87,7 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ScatterNdNonAliasingAdd<T>(opBuilder.build());
   }
   

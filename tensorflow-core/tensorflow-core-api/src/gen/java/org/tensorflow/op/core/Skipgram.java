@@ -85,7 +85,7 @@ public final class Skipgram extends RawOp {
   @Endpoint(describeByClass = true)
   public static Skipgram create(Scope scope, String filename, Long batchSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Skipgram", scope.makeOpName("Skipgram"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("filename", filename);
     opBuilder.setAttr("batch_size", batchSize);
     if (options != null) {

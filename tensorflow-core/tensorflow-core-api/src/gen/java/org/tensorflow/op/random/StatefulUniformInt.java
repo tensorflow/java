@@ -62,7 +62,7 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatefulUniformInt<U>(opBuilder.build());
   }
   

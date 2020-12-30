@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -53,12 +53,12 @@ public final class EmptyTensorList extends RawOp implements Operand<TType> {
    * @return a new instance of EmptyTensorList
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, DataType<U> elementDtype) {
+  public static <T extends TNumber, U extends TType> EmptyTensorList create(Scope scope, Operand<T> elementShape, Operand<TInt32> maxNumElements, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("element_dtype", elementDtype);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new EmptyTensorList(opBuilder.build());
   }
   

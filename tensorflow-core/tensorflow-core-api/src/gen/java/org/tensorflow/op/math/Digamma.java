@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes Psi, the derivative of Lgamma (the log of the absolute value of
@@ -49,7 +48,7 @@ public final class Digamma<T extends TNumber> extends RawOp implements Operand<T
   public static <T extends TNumber> Digamma<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Digamma", scope.makeOpName("Digamma"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Digamma<T>(opBuilder.build());
   }
   

@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes arctangent of `y/x` element-wise, respecting signs of the arguments.
@@ -55,7 +54,7 @@ public final class Atan2<T extends TNumber> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Atan2<T>(opBuilder.build());
   }
   

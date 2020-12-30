@@ -75,7 +75,7 @@ public final class SparseAdd<T extends TType> extends RawOp {
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
     opBuilder.addInput(thresh.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseAdd<T>(opBuilder.build());
   }
   

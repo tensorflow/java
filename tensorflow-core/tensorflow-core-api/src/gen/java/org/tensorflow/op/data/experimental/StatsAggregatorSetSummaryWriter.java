@@ -43,7 +43,7 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSetSummaryWriter", scope.makeOpName("StatsAggregatorSetSummaryWriter"));
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(summary.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatsAggregatorSetSummaryWriter(opBuilder.build());
   }
   

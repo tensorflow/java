@@ -59,7 +59,7 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
   public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower, Long maxIter, Float epsilon) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSelfAdjointEig", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(a.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("lower", lower);
     opBuilder.setAttr("max_iter", maxIter);
     opBuilder.setAttr("epsilon", epsilon);

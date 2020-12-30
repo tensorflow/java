@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the inverse permutation of a tensor.
@@ -63,7 +62,7 @@ public final class InvertPermutation<T extends TNumber> extends RawOp implements
   public static <T extends TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("InvertPermutation", scope.makeOpName("InvertPermutation"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InvertPermutation<T>(opBuilder.build());
   }
   

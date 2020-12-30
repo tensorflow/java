@@ -18,18 +18,16 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.layout.DataLayouts;
+import org.tensorflow.internal.types.TFloat16Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -45,13 +43,8 @@ import org.tensorflow.types.family.TFloating;
  * most CPUs do not support this format natively. For CPU computation on 16-bit floats, the {@link
  * TBfloat16} tensor type might be a better option.
  */
+@TensorType(dataType = DataType.DT_HALF, byteSize = 2, mapperClass = TFloat16Mapper.class)
 public interface TFloat16 extends FloatNdArray, TFloating {
-
-  /** readable-name for the data type */
-  static final String NAME = "FLOAT16";
-
-  /** Type metadata */
-  DataType<TFloat16> DTYPE = DataType.create(NAME, 19, 2, TFloat16Impl::mapTensor);
 
   /**
    * Allocates a new tensor for storing a single float value.
@@ -59,8 +52,8 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @param value float to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat16> scalarOf(float value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setFloat(value));
+  static TFloat16 scalarOf(float value) {
+    return Tensor.of(TFloat16.class, Shape.scalar(), data -> data.setFloat(value));
   }
 
   /**
@@ -69,11 +62,11 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @param values floats to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat16> vectorOf(float... values) {
+  static TFloat16 vectorOf(float... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TFloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -84,8 +77,8 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TFloat16> tensorOf(NdArray<Float> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  static TFloat16 tensorOf(NdArray<Float> src) {
+    return Tensor.of(TFloat16.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -94,8 +87,8 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TFloat16> tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+  static TFloat16 tensorOf(Shape shape) {
+    return Tensor.of(TFloat16.class, shape);
   }
 
   /**
@@ -105,8 +98,8 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @param data buffer of floats to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TFloat16> tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  static TFloat16 tensorOf(Shape shape, FloatDataBuffer data) {
+    return Tensor.of(TFloat16.class, shape, d -> d.write(data));
   }
 
   /**
@@ -117,20 +110,7 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TFloat16> tensorOf(Shape shape, Consumer<TFloat16> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TFloat16} */
-class TFloat16Impl extends FloatDenseNdArray implements TFloat16 {
-
-  static TFloat16 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TFloat16Impl(
-        DataLayouts.FLOAT16.applyTo(TensorBuffers.toShorts(nativeTensor)), shape);
-  }
-
-  private TFloat16Impl(FloatDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  static TFloat16 tensorOf(Shape shape, Consumer<TFloat16> dataInit) {
+    return Tensor.of(TFloat16.class, shape, dataInit);
   }
 }

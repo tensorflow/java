@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Convert one or more images from HSV to RGB.
@@ -53,7 +52,7 @@ public final class HsvToRgb<T extends TNumber> extends RawOp implements Operand<
   public static <T extends TNumber> HsvToRgb<T> create(Scope scope, Operand<T> images) {
     OperationBuilder opBuilder = scope.env().opBuilder("HSVToRGB", scope.makeOpName("HsvToRgb"));
     opBuilder.addInput(images.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new HsvToRgb<T>(opBuilder.build());
   }
   

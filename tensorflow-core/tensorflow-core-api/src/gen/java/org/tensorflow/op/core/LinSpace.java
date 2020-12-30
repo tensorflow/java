@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Generates values in an interval.
@@ -60,7 +59,7 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
     opBuilder.addInput(num.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LinSpace<T>(opBuilder.build());
   }
   

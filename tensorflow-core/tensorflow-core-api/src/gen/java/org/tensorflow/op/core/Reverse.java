@@ -97,7 +97,7 @@ public final class Reverse<T extends TType> extends RawOp implements Operand<T> 
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseV2", scope.makeOpName("Reverse"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Reverse<T>(opBuilder.build());
   }
   

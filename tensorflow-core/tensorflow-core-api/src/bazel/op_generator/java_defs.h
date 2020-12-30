@@ -97,9 +97,6 @@ class Type {
   static Type IterableOf(const Type& type) {
     return Interface("Iterable").add_parameter(type);
   }
-  static Type DataTypeOf(const Type& type) {
-    return Class("DataType", "org.tensorflow").add_parameter(type);
-  }
   static Type ForDataType(DataType data_type) {
     switch (data_type) {
       case DataType::DT_BOOL:

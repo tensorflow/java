@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a normal distribution. The parameters may each be a
@@ -90,7 +89,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
     opBuilder.addInput(stdevs.asOutput());
     opBuilder.addInput(minvals.asOutput());
     opBuilder.addInput(maxvals.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

@@ -230,10 +230,10 @@ public class Ftrl extends Optimizer {
    */
   private <T extends TType> void createFtrlSlot(Output<T> v) {
     Operand<T> initializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> linearInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), LINEAR_ACCUMULATOR, linearInitializer);
   }
 
@@ -248,12 +248,12 @@ public class Ftrl extends Optimizer {
         accumSlot, // accum
         linearSlot, // linear
         gradient, // gradient
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()), // lr
-        tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.dataType()), // l1
-        tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.dataType()), // l2
+        tf.dtypes.cast(tf.constant(learningRate), gradient.type()), // lr
+        tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.type()), // l1
+        tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.type()), // l2
         tf.dtypes.cast(
-            tf.constant(l2ShrinkageRegularizationStrength), gradient.dataType()), // l2Shrinkage
-        tf.dtypes.cast(tf.constant(learningRatePower), gradient.dataType()), // lrPower
+            tf.constant(l2ShrinkageRegularizationStrength), gradient.type()), // l2Shrinkage
+        tf.dtypes.cast(tf.constant(learningRatePower), gradient.type()), // lrPower
         options);
   }
 

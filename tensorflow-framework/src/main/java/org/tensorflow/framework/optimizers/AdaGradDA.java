@@ -187,7 +187,7 @@ public class AdaGradDA extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdaGradDASlot(v);
     }
-    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.DTYPE);
+    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
     Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
     graph.addInitializer(globalStepInitializer);
   }
@@ -199,10 +199,10 @@ public class AdaGradDA extends Optimizer {
    * @param <T> the datatype of the variable.
    */
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.dataType()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> sqInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.dataType()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 
@@ -216,9 +216,9 @@ public class AdaGradDA extends Optimizer {
         gradSlot,
         gradSquaredSlot,
         gradient,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.dataType()),
-        tf.dtypes.cast(tf.constant(l1Strength), gradient.dataType()),
-        tf.dtypes.cast(tf.constant(l2Strength), gradient.dataType()),
+        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
+        tf.dtypes.cast(tf.constant(l1Strength), gradient.type()),
+        tf.dtypes.cast(tf.constant(l2Strength), gradient.type()),
         globalStep);
   }
 

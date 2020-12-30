@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes log softmax activations.
@@ -51,7 +50,7 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
   public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
     opBuilder.addInput(logits.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LogSoftmax<T>(opBuilder.build());
   }
   

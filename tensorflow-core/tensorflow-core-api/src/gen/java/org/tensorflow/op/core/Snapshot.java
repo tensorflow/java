@@ -46,7 +46,7 @@ public final class Snapshot<T extends TType> extends RawOp implements Operand<T>
   public static <T extends TType> Snapshot<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Snapshot", scope.makeOpName("Snapshot"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Snapshot<T>(opBuilder.build());
   }
   

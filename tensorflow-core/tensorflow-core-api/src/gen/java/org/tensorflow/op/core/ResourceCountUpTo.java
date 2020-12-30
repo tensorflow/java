@@ -17,17 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Increments variable pointed to by 'resource' until it reaches 'limit'.
@@ -48,12 +47,12 @@ public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements
    * @return a new instance of ResourceCountUpTo
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, DataType<T> T) {
+  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, Class<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
     opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
-    opBuilder.setAttr("T", T);
+    opBuilder.setAttr("T", Operands.toDataType(T));
     return new ResourceCountUpTo<T>(opBuilder.build());
   }
   

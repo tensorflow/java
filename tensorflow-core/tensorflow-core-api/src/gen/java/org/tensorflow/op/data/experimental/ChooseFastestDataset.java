@@ -18,7 +18,6 @@ limitations under the License.
 package org.tensorflow.op.data.experimental;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -46,16 +45,12 @@ public final class ChooseFastestDataset extends RawOp implements Operand<TType> 
    * @return a new instance of ChooseFastestDataset
    */
   @Endpoint(describeByClass = true)
-  public static ChooseFastestDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, Long numExperiments, List<DataType<?>> outputTypes, List<Shape> outputShapes) {
+  public static ChooseFastestDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, Long numExperiments, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalChooseFastestDataset", scope.makeOpName("ChooseFastestDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_experiments", numExperiments);
-    DataType[] outputTypesArray = new DataType[outputTypes.size()];
-    for (int i = 0; i < outputTypesArray.length; ++i) {
-      outputTypesArray[i] = outputTypes.get(i);
-    }
-    opBuilder.setAttr("output_types", outputTypesArray);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
       outputShapesArray[i] = outputShapes.get(i);

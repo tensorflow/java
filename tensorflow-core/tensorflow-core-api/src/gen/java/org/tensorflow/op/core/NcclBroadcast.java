@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Sends `input` to all devices that are connected to the output.
@@ -58,7 +57,7 @@ public final class NcclBroadcast<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new NcclBroadcast<T>(opBuilder.build());
   }

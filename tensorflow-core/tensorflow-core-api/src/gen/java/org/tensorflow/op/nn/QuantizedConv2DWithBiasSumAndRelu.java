@@ -18,11 +18,11 @@ limitations under the License.
 package org.tensorflow.op.nn;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -82,7 +82,7 @@ public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends Ra
    * @return a new instance of QuantizedConv2DWithBiasSumAndRelu
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DWithBiasSumAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> summand, DataType<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DWithBiasSumAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> summand, Class<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndRelu", scope.makeOpName("QuantizedConv2DWithBiasSumAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -92,8 +92,8 @@ public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends Ra
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder.addInput(summand.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

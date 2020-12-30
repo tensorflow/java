@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Return the shape of s0 op s1 with broadcast.
@@ -52,7 +51,7 @@ public final class BroadcastDynamicShape<T extends TNumber> extends RawOp implem
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastArgs", scope.makeOpName("BroadcastDynamicShape"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BroadcastDynamicShape<T>(opBuilder.build());
   }
   

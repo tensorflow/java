@@ -39,8 +39,7 @@ FloatNdArray labels = NdArrays.vectorOf(0, 1, 1, 0);
 ```
 
 A dataset can be constructed from a list of the constant `Operand`s generated
-from this dataset, and a list of `DataType` objects corresponding
-to the type of each component:
+from this dataset, and a list of classes corresponding to the tensor type of each component:
 
 Note: Each of the input components must share the same first "batch" dimension.
 
@@ -48,7 +47,7 @@ Note: Each of the input components must share the same first "batch" dimension.
 Ops tf = // ... TensorFlow Ops accessor (either graph or eager)
 Dataset dataset = Dataset.fromTensorSlices(
     Arrays.asList(tf.constant(features), tf.constant(labels)),
-    Arrays.asList(TInt32.DTYPE, TInt32.DTYPE)
+    Arrays.asList(TInt32.class, TInt32.class)
 );
 ```
 
@@ -79,9 +78,6 @@ The primary use of a dataset is for iteration over its elements.
 Each row (or batch) element is represented as a list of tensor components, with
 type `List<Operand<?>>`. The tensor components of this element can be accessed using `List.get(int index)`.
 
-It is recommended to use `Tensor.expect(DataType<?> dtype)` to restore types
-to the retrieved tensors.
-
 #### Using DatastetIterator
 The `DatasetIterator` class provides abstractions for creating and using
 iterators in graph and eager mode. These will be explained here; however
@@ -89,7 +85,7 @@ end-users should only interact with `DatasetIterator` objects through the method
 provided in the `Dataset` class (examples to follow).
 
 To construct an iterator for a dataset of a specific structure, use
-the static method `DatasetIterator.fromStructure(Ops tf, List<DataType<?>> outputTypes, List<Shape> outputShapes)`. This creates a `DatasetIterator` object
+the static method `DatasetIterator.fromStructure(Ops tf, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes)`. This creates a `DatasetIterator` object
 which can be used with any dataset of a matching structure.
 
 Once a `DatasetIterator` is created, it can be initialized on a `Dataset` intsance using `DatasetIterator.makeInitializer(Dataset dataset)`. This will initialize (or re-initialize) the iterator to start at the beginning

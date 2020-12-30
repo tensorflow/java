@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes a 2-D depthwise convolution given 4-D `input` and `filter` tensors.
@@ -116,7 +115,7 @@ public final class DepthwiseConv2dNative<T extends TNumber> extends RawOp implem
     OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

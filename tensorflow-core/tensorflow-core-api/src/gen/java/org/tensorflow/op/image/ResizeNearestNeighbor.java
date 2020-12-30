@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Resize `images` to `size` using nearest neighbor interpolation.
@@ -81,7 +80,7 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighbor", scope.makeOpName("ResizeNearestNeighbor"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

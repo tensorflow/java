@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Encode a tensor of ints into unicode strings.
@@ -106,7 +105,7 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeEncode", scope.makeOpName("UnicodeEncode"));
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputSplits.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_encoding", outputEncoding);
     if (options != null) {
       for (Options opts : options) {

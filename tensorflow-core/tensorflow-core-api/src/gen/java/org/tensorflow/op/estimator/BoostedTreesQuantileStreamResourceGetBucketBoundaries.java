@@ -50,7 +50,7 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
   public static BoostedTreesQuantileStreamResourceGetBucketBoundaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceGetBucketBoundaries", scope.makeOpName("BoostedTreesQuantileStreamResourceGetBucketBoundaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_features", numFeatures);
     return new BoostedTreesQuantileStreamResourceGetBucketBoundaries(opBuilder.build());
   }

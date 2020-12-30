@@ -18,27 +18,21 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
-import org.tensorflow.DataType;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.internal.c_api.TF_Tensor;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.internal.types.TInt64Mapper;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.impl.dense.LongDenseNdArray;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.annotation.TensorType;
+import org.tensorflow.types.family.TIntegral;
 
 /** 64-bit signed integer tensor type. */
-public interface TInt64 extends LongNdArray, TNumber {
-
-  /** readable-name for the data type */
-  static final String NAME = "INT64";
-
-  /** Type metadata */
-  DataType<TInt64> DTYPE = DataType.create(NAME, 9, 8, TInt64Impl::mapTensor);
+@TensorType(dataType = DataType.DT_INT64, byteSize = 8, mapperClass = TInt64Mapper.class)
+public interface TInt64 extends LongNdArray, TIntegral {
 
   /**
    * Allocates a new tensor for storing a single long value.
@@ -46,8 +40,8 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @param value long to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TInt64> scalarOf(long value) {
-    return Tensor.of(DTYPE, Shape.scalar(), data -> data.setLong(value));
+  static TInt64 scalarOf(long value) {
+    return Tensor.of(TInt64.class, Shape.scalar(), data -> data.setLong(value));
   }
 
   /**
@@ -56,11 +50,11 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @param values longs to store in the new tensor
    * @return the new tensor
    */
-  static Tensor<TInt64> vectorOf(long... values) {
+  static TInt64 vectorOf(long... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(DTYPE, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(TInt64.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -71,8 +65,8 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static Tensor<TInt64> tensorOf(NdArray<Long> src) {
-    return Tensor.of(DTYPE, src.shape(), src::copyTo);
+  static TInt64 tensorOf(NdArray<Long> src) {
+    return Tensor.of(TInt64.class, src.shape(), src::copyTo);
   }
 
   /**
@@ -81,8 +75,8 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static Tensor<TInt64> tensorOf(Shape shape) {
-    return Tensor.of(DTYPE, shape);
+  static TInt64 tensorOf(Shape shape) {
+    return Tensor.of(TInt64.class, shape);
   }
 
   /**
@@ -92,8 +86,8 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @param data buffer of longs to initialize the tensor with
    * @return the new tensor
    */
-  static Tensor<TInt64> tensorOf(Shape shape, LongDataBuffer data) {
-    return Tensor.of(DTYPE, shape, d -> d.write(data));
+  static TInt64 tensorOf(Shape shape, LongDataBuffer data) {
+    return Tensor.of(TInt64.class, shape, d -> d.write(data));
   }
 
   /**
@@ -104,19 +98,7 @@ public interface TInt64 extends LongNdArray, TNumber {
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static Tensor<TInt64> tensorOf(Shape shape, Consumer<TInt64> dataInit) {
-    return Tensor.of(DTYPE, shape, dataInit);
-  }
-}
-
-/** Hidden implementation of a {@code TInt64} */
-class TInt64Impl extends LongDenseNdArray implements TInt64 {
-
-  static TInt64 mapTensor(TF_Tensor nativeTensor, Shape shape) {
-    return new TInt64Impl(TensorBuffers.toLongs(nativeTensor), shape);
-  }
-
-  private TInt64Impl(LongDataBuffer buffer, Shape shape) {
-    super(buffer, shape);
+  static TInt64 tensorOf(Shape shape, Consumer<TInt64> dataInit) {
+    return Tensor.of(TInt64.class, shape, dataInit);
   }
 }

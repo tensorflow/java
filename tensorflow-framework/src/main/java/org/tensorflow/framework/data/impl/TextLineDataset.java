@@ -34,7 +34,7 @@ public class TextLineDataset extends Dataset {
     super(
         tf,
         tf.data.textLineDataset(filenames, compressionType, bufferSize),
-        Collections.singletonList(TString.DTYPE),
+        Collections.singletonList(TString.class),
         Collections.singletonList(Shape.scalar()));
   }
 }

@@ -107,7 +107,7 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.fieldDelim != null) {

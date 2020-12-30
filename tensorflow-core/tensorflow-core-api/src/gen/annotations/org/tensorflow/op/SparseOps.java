@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.sparse.AddManySparseToTensorsMap;
@@ -80,8 +79,11 @@ import org.tensorflow.types.family.TType;
 public final class SparseOps {
   private final Scope scope;
 
-  SparseOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  SparseOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -269,7 +271,7 @@ public final class SparseOps {
    * @return a new instance of DeserializeSparse
    */
   public <U extends TType, T extends TType> DeserializeSparse<U> deserializeSparse(
-      Operand<T> serializedSparse, DataType<U> dtype) {
+      Operand<T> serializedSparse, Class<U> dtype) {
     return DeserializeSparse.create(scope, serializedSparse, dtype);
   }
 
@@ -315,7 +317,7 @@ public final class SparseOps {
    * @return a new instance of SparseAccumulatorTakeGradient
    */
   public <T extends TType> SparseAccumulatorTakeGradient<T> sparseAccumulatorTakeGradient(
-      Operand<TString> handle, Operand<TInt32> numRequired, DataType<T> dtype) {
+      Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     return SparseAccumulatorTakeGradient.create(scope, handle, numRequired, dtype);
   }
 
@@ -476,8 +478,8 @@ public final class SparseOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseConditionalAccumulator
    */
-  public <T extends TType> SparseConditionalAccumulator sparseConditionalAccumulator(
-      DataType<T> dtype, Shape shape, SparseConditionalAccumulator.Options... options) {
+  public <T extends TType> SparseConditionalAccumulator sparseConditionalAccumulator(Class<T> dtype,
+      Shape shape, SparseConditionalAccumulator.Options... options) {
     return SparseConditionalAccumulator.create(scope, dtype, shape, options);
   }
 
@@ -1493,8 +1495,15 @@ public final class SparseOps {
    * @return a new instance of TakeManySparseFromTensorsMap
    */
   public <T extends TType> TakeManySparseFromTensorsMap<T> takeManySparseFromTensorsMap(
-      Operand<TInt64> sparseHandles, DataType<T> dtype,
+      Operand<TInt64> sparseHandles, Class<T> dtype,
       TakeManySparseFromTensorsMap.Options... options) {
     return TakeManySparseFromTensorsMap.create(scope, sparseHandles, dtype, options);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

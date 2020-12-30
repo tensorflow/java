@@ -58,7 +58,7 @@ public final class ToHashBucketFast extends RawOp implements Operand<TInt64> {
   public static ToHashBucketFast create(Scope scope, Operand<TString> input, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketFast", scope.makeOpName("ToHashBucketFast"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_buckets", numBuckets);
     return new ToHashBucketFast(opBuilder.build());
   }

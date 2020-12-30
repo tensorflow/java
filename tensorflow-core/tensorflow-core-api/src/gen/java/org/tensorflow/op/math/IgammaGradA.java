@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of `igamma(a, x)` wrt `a`.
@@ -48,7 +47,7 @@ public final class IgammaGradA<T extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new IgammaGradA<T>(opBuilder.build());
   }
   

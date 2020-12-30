@@ -25,17 +25,14 @@
  * bound to one of the marker interface found in {@link org.tensorflow.types.family}, according
  * to the nature of the data.
  *
- * <p>Each tensor type must provide a static instance of {@link org.tensorflow.DataType}
- * carrying type metadata that should be used for allocating a tensor of this type or to pass
- * this type as an operation argument. For example, metadata about TensorFlow int32 type is
- * found in {@link org.tensorflow.types.TInt32#DTYPE TInt32.DTYPE}.
+ * <p>Each tensor type must be annotated with {@link org.tensorflow.types.annotation.TensorType} to
+ * provide type metadata that should be used for allocating or mapping tensors of this type.
  *
  * <p>Instances of tensor types must also implement the {@link org.tensorflow.ndarray.NdArray NdArray}
- * interface so a user can access directly the tensor data in a n-dimensional space by invoking
- * {@link org.tensorflow.Tensor#data() Tensor.data()}.
+ * interface so a user can access directly the tensor data in a n-dimensional space.
  *
  * <p>Note that while it is always possible to allocate a tensor using the
- * {@link org.tensorflow.Tensor#of(org.tensorflow.DataType, Shape) Tensor.of(...)}
+ * {@link org.tensorflow.Tensor#of(Class, Shape) Tensor.of(...)}
  * method, most tensor types expose factory methods that simplify the creation process, like
  * {@code scalarOf(...)}, {@code vectorOf(...)}, {@code tensorOf(...)}, etc.
  */

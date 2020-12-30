@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Applies softmax to a batched N-D `SparseTensor`.
@@ -69,7 +68,7 @@ public final class SparseSoftmax<T extends TNumber> extends RawOp implements Ope
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSoftmax<T>(opBuilder.build());
   }
   

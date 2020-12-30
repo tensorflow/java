@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradients of 3-D convolution with respect to the filter.
@@ -97,7 +96,7 @@ public final class Conv3dBackpropFilter<T extends TNumber> extends RawOp impleme
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filterSizes.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {
       stridesArray[i] = strides.get(i);

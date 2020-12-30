@@ -18,16 +18,17 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.util.List;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Op returns the number of incomplete elements in the underlying container.
@@ -90,14 +91,10 @@ public final class OrderedMapIncompleteSize extends RawOp implements Operand<TIn
    * @return a new instance of OrderedMapIncompleteSize
    */
   @Endpoint(describeByClass = true)
-  public static OrderedMapIncompleteSize create(Scope scope, List<DataType<?>> dtypes, Options... options) {
+  public static OrderedMapIncompleteSize create(Scope scope, List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapIncompleteSize", scope.makeOpName("OrderedMapIncompleteSize"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    DataType[] dtypesArray = new DataType[dtypes.size()];
-    for (int i = 0; i < dtypesArray.length; ++i) {
-      dtypesArray[i] = dtypes.get(i);
-    }
-    opBuilder.setAttr("dtypes", dtypesArray);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {
       for (Options opts : options) {
         if (opts.capacity != null) {
@@ -147,23 +144,23 @@ public final class OrderedMapIncompleteSize extends RawOp implements Operand<TIn
   
   /**
    */
-  public Output<TInt32> size() {
-    return size;
+  public Output<TInt32> output() {
+    return output;
   }
   
   @Override
   public Output<TInt32> asOutput() {
-    return size;
+    return output;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "OrderedMapIncompleteSize";
   
-  private Output<TInt32> size;
+  private Output<TInt32> output;
   
   private OrderedMapIncompleteSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    size = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 }

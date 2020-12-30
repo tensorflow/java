@@ -16,7 +16,6 @@ package org.tensorflow.framework.optimizers;
 
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
-import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.ND;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -102,8 +101,8 @@ public class NadamTest {
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
-      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
-      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
       Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
       Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
@@ -124,16 +123,16 @@ public class NadamTest {
       Variable<TFloat32>[] secondMomentSlots = new Variable[2];
 
       firstMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.FIRST_MOMENT).get();
-      assertEquals(firstMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(firstMomentSlots[0].shape(), var0.shape());
 
       secondMomentSlots[0] = instance.getSlot(var0.asOutput(), Nadam.SECOND_MOMENT).get();
-      assertEquals(secondMomentSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(secondMomentSlots[0].shape(), var0.shape());
 
       firstMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.FIRST_MOMENT).get();
-      assertEquals(firstMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(firstMomentSlots[1].shape(), var1.shape());
 
       secondMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.SECOND_MOMENT).get();
-      assertEquals(secondMomentSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(secondMomentSlots[1].shape(), var1.shape());
 
       /* initialize the local variables */
       session.run(var0Initializer);
@@ -147,15 +146,14 @@ public class NadamTest {
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 
-      try (Tensor<TFloat32> result =
-          session
+      try (TFloat32 result =
+          (TFloat32)session
               .getGraphSession()
               .runner()
               .fetch("momentum")
               .run()
-              .get(0)
-              .expect(TFloat32.DTYPE)) {
-        result.data().scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
+              .get(0)) {
+        result.scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
 
@@ -167,15 +165,14 @@ public class NadamTest {
             Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
         momentum = momentum * mut;
 
-        try (Tensor<TFloat32> result =
-            session
+        try (TFloat32 result =
+            (TFloat32)session
                 .getGraphSession()
                 .runner()
                 .fetch("momentum")
                 .run()
-                .get(0)
-                .expect(TFloat32.DTYPE)) {
-          result.data().scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
+                .get(0)) {
+          result.scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);
         FloatNdArray[] resultsNP = nadamUpdateNdArray(var0Np, grads0Np, step, m0, v0, mcache);

@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes gradients of the average pooling function.
@@ -78,7 +77,7 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
     OperationBuilder opBuilder = scope.env().opBuilder("AvgPoolGrad", scope.makeOpName("AvgPoolGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
       ksizeArray[i] = ksize.get(i);

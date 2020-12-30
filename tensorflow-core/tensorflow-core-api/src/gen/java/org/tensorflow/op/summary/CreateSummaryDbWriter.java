@@ -49,7 +49,7 @@ public final class CreateSummaryDbWriter extends RawOp {
     opBuilder.addInput(experimentName.asOutput());
     opBuilder.addInput(runName.asOutput());
     opBuilder.addInput(userName.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new CreateSummaryDbWriter(opBuilder.build());
   }
   

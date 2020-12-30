@@ -213,6 +213,7 @@ class SourceWriter {
   SourceWriter& WriteJavadoc(const Javadoc& javadoc);
   SourceWriter& WriteAnnotations(const std::list<Annotation>& annotations);
   SourceWriter& WriteGenerics(const std::list<const Type*>& generics);
+  SourceWriter& WriteTypeBounds(const std::list<Type>& bounds);
   GenericNamespace* PushGenericNamespace(int modifiers);
   void PopGenericNamespace();
 };

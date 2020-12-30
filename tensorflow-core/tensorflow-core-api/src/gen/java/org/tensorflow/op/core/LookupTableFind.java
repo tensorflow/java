@@ -56,7 +56,7 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LookupTableFind<U>(opBuilder.build());
   }
   

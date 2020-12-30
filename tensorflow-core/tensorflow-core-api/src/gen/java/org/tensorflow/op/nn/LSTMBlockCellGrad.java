@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the LSTM cell backward propagation for 1 timestep.
@@ -79,7 +78,7 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(co.asOutput());
     opBuilder.addInput(csGrad.asOutput());
     opBuilder.addInput(hGrad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
     return new LSTMBlockCellGrad<T>(opBuilder.build());
   }

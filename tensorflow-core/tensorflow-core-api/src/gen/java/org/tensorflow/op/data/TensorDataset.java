@@ -47,7 +47,7 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
   public static TensorDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorDataset", scope.makeOpName("TensorDataset"));
     opBuilder.addInputList(Operands.asOutputs(components));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0; i < outputShapesArray.length; ++i) {
       outputShapesArray[i] = outputShapes.get(i);

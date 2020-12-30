@@ -42,7 +42,7 @@ public final class InitializeTableFromDataset extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromDataset", scope.makeOpName("InitializeTableFromDataset"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(dataset.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new InitializeTableFromDataset(opBuilder.build());
   }
   

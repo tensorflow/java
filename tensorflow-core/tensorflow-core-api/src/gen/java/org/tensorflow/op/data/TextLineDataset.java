@@ -52,7 +52,7 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TextLineDataset(opBuilder.build());
   }
   

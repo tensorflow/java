@@ -44,7 +44,7 @@ public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements
   public static <T extends TType> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiagPart", scope.makeOpName("BatchMatrixDiagPart"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BatchMatrixDiagPart<T>(opBuilder.build());
   }
   

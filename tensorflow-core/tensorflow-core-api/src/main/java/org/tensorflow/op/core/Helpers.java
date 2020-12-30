@@ -16,7 +16,6 @@
 package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
-import org.tensorflow.Output;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -46,8 +45,7 @@ public abstract class Helpers {
      */
     @Endpoint(name = "variable")
     public static <T extends TType> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
-        Output<T> initOutput = init.asOutput();
-        Variable<T> newVar = Variable.create(scope,initOutput.shape(), initOutput.dataType(), options);
+        Variable<T> newVar = Variable.create(scope, init.shape(), init.type(), options);
         Assign<T> assignOp = Assign.create(scope, newVar, init);
         Init.add(scope, assignOp);
         return newVar;

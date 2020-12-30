@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.core.Shape;
 import org.tensorflow.op.core.Shapes;
@@ -34,8 +33,11 @@ import org.tensorflow.types.family.TType;
 public final class ShapeOps {
   private final Scope scope;
 
-  ShapeOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  ShapeOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -112,12 +114,12 @@ public final class ShapeOps {
    * @param <U> the shape datatype
    * @param scope current scope
    * @param operand the operand to flatten
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reshaped operand
    */
   public <T extends TType, U extends TNumber> Operand<T> flatten(Operand<T> operand,
-      DataType<U> dType) {
-    return Shapes.flatten(scope, operand, dType);
+      Class<U> type) {
+    return Shapes.flatten(scope, operand, type);
   }
 
   /**
@@ -126,11 +128,11 @@ public final class ShapeOps {
    * @param <U> the shape datatype
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the flattened shape
    */
-  public <U extends TNumber> Operand<U> flatten(Shape<U> shape, DataType<U> dType) {
-    return Shapes.flatten(scope, shape, dType);
+  public <U extends TNumber> Operand<U> flatten(Shape<U> shape, Class<U> type) {
+    return Shapes.flatten(scope, shape, type);
   }
 
   /**
@@ -149,12 +151,12 @@ public final class ShapeOps {
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
-  public <U extends TNumber> Operand<U> head(Shape<U> shape, DataType<U> dType) {
-    return Shapes.head(scope, shape, dType);
+  public <U extends TNumber> Operand<U> head(Shape<U> shape, Class<U> type) {
+    return Shapes.head(scope, shape, type);
   }
 
   /**
@@ -174,11 +176,11 @@ public final class ShapeOps {
    * @param <U> the shape datatype
    * @param scope the curren scope
    * @param shape the shape
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the number of dimensions
    */
-  public <U extends TNumber> Operand<U> numDimensions(Shape<U> shape, DataType<U> dType) {
-    return Shapes.numDimensions(scope, shape, dType);
+  public <U extends TNumber> Operand<U> numDimensions(Shape<U> shape, Class<U> type) {
+    return Shapes.numDimensions(scope, shape, type);
   }
 
   /**
@@ -258,12 +260,12 @@ public final class ShapeOps {
    * @param scope current scope
    * @param operand the operand
    * @param axis the axis
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reshaped operand
    */
   public <T extends TType, U extends TNumber> Operand<T> reduceDims(Operand<T> operand,
-      Operand<U> axis, DataType<U> dType) {
-    return Shapes.reduceDims(scope, operand, axis, dType);
+      Operand<U> axis, Class<U> type) {
+    return Shapes.reduceDims(scope, operand, axis, type);
   }
 
   /**
@@ -273,12 +275,11 @@ public final class ShapeOps {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param axis the axis
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the reduced shape
    */
-  public <U extends TNumber> Operand<U> reduceDims(Shape<U> shape, Operand<U> axis,
-      DataType<U> dType) {
-    return Shapes.reduceDims(scope, shape, axis, dType);
+  public <U extends TNumber> Operand<U> reduceDims(Shape<U> shape, Operand<U> axis, Class<U> type) {
+    return Shapes.reduceDims(scope, shape, axis, type);
   }
 
   /**
@@ -305,19 +306,6 @@ public final class ShapeOps {
   }
 
   /**
-   * Get the size represented by the TensorFlow shape.
-   *
-   * @param <U> the type of the shape
-   * @param scope current scope
-   * @param shape the TensorFlow shape
-   * @param dType the shape datatype
-   * @return the size
-   */
-  public <U extends TNumber> Operand<U> size(Shape<U> shape, DataType<U> dType) {
-    return Shapes.size(scope, shape, dType);
-  }
-
-  /**
    * Get the size of the specified dimension in the shape.
    *
    * @param scope current scope
@@ -330,18 +318,31 @@ public final class ShapeOps {
   }
 
   /**
+   * Get the size represented by the TensorFlow shape.
+   *
+   * @param <U> the type of the shape
+   * @param scope current scope
+   * @param shape the TensorFlow shape
+   * @param type the shape datatype
+   * @return the size
+   */
+  public <U extends TNumber> Operand<U> size(Shape<U> shape, Class<U> type) {
+    return Shapes.size(scope, shape, type);
+  }
+
+  /**
    * Get the size of the specified dimension for the shape of the tensor.
    *
    * @param <U> the shape datatype
    * @param scope current scope
    * @param input the operand
    * @param dim the dimension
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the size of the specified dimension
    */
   public <T extends TType, U extends TNumber> Operand<U> size(Operand<T> input, Operand<U> dim,
-      DataType<U> dType) {
-    return Shapes.size(scope, input, dim, dType);
+      Class<U> type) {
+    return Shapes.size(scope, input, dim, type);
   }
 
   /**
@@ -351,11 +352,11 @@ public final class ShapeOps {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param dim the dimension
-   * @param dType the shape datatype
+   * @param type the shape datatype
    * @return the size of the specified dimension
    */
-  public <U extends TNumber> Operand<U> size(Shape<U> shape, Operand<U> dim, DataType<U> dType) {
-    return Shapes.size(scope, shape, dim, dType);
+  public <U extends TNumber> Operand<U> size(Shape<U> shape, Operand<U> dim, Class<U> type) {
+    return Shapes.size(scope, shape, dim, type);
   }
 
   /**
@@ -375,11 +376,11 @@ public final class ShapeOps {
    * @param <U> the shape datatype.
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @return the squeezed shape
    */
-  public <U extends TNumber> Operand<U> squeeze(Shape<U> shape, DataType<U> dType) {
-    return Shapes.squeeze(scope, shape, dType);
+  public <U extends TNumber> Operand<U> squeeze(Shape<U> shape, Class<U> type) {
+    return Shapes.squeeze(scope, shape, type);
   }
 
   /**
@@ -401,13 +402,13 @@ public final class ShapeOps {
    *
    * @param scope current scope
    * @param shape the TensorFlow shape
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional Operand that contains the dimension matching the last dimension of the
    *      Shape
    */
-  public <U extends TNumber> Operand<U> tail(Shape<U> shape, DataType<U> dType) {
-    return Shapes.tail(scope, shape, dType);
+  public <U extends TNumber> Operand<U> tail(Shape<U> shape, Class<U> type) {
+    return Shapes.tail(scope, shape, type);
   }
 
   /**
@@ -431,13 +432,13 @@ public final class ShapeOps {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand with the dimensions matching * the first n dimensions of the
    *      shape
    */
-  public <U extends TNumber> Operand<U> take(Shape<U> shape, Operand<U> n, DataType<U> dType) {
-    return Shapes.take(scope, shape, n, dType);
+  public <U extends TNumber> Operand<U> take(Shape<U> shape, Operand<U> n, Class<U> type) {
+    return Shapes.take(scope, shape, n, type);
   }
 
   /**
@@ -461,12 +462,19 @@ public final class ShapeOps {
    * @param scope current scope
    * @param shape the TensorFlow shape
    * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
-   * @param dType the shape datatype.
+   * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the
    *      shape
    */
-  public <U extends TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n, DataType<U> dType) {
-    return Shapes.takeLast(scope, shape, n, dType);
+  public <U extends TNumber> Operand<U> takeLast(Shape<U> shape, Operand<U> n, Class<U> type) {
+    return Shapes.takeLast(scope, shape, n, type);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }

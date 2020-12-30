@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Greedily selects a subset of bounding boxes in descending order of score,
@@ -108,7 +107,7 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
     opBuilder.addInput(iouThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
     opBuilder.addInput(softNmsSigma.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.padToMaxOutputSize != null) {

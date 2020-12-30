@@ -63,16 +63,16 @@ public class SigmoidCrossEntropyWithLogits {
   @Endpoint(name = "sigmoidCrossEntropyWithLogits")
   public static <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<T> logits) {
-    if (!isCompatible(labels.asOutput().shape(), logits.asOutput().shape())) {
+    if (!isCompatible(labels.shape(), logits.shape())) {
       throw new IllegalArgumentException(
           String.format(
               "logits and labels must have the same shape (%s vs %s)",
-              labels.asOutput().shape().toString(), logits.asOutput().shape()));
+              labels.shape(), logits.shape()));
     }
     scope = scope.withSubScope("SigmoidCrossEntropyWithLogits");
 
     Operand<T> zeros =
-        Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().dataType());
+        Cast.create(scope, ZerosLike.create(scope, logits), logits.asOutput().type());
     Operand<TBool> cond = GreaterEqual.create(scope, logits, zeros);
 
     Operand<T> reluLogits = Select.create(scope, cond, logits, zeros);

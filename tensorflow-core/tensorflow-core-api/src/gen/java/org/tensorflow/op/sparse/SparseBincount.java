@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
@@ -86,7 +85,7 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
     opBuilder.addInput(denseShape.asOutput());
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {

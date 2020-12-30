@@ -110,7 +110,7 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(l2Regularizer.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.fast != null) {

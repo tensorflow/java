@@ -49,7 +49,7 @@ public final class ResourceAccumulatorApplyGradient extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradient.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ResourceAccumulatorApplyGradient(opBuilder.build());
   }
   

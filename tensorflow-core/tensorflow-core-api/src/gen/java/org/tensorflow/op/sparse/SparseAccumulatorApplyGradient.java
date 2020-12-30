@@ -61,7 +61,7 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
     opBuilder.addInput(gradientIndices.asOutput());
     opBuilder.addInput(gradientValues.asOutput());
     opBuilder.addInput(gradientShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("has_known_shape", hasKnownShape);
     return new SparseAccumulatorApplyGradient(opBuilder.build());
   }

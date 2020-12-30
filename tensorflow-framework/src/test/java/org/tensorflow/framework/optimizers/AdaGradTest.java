@@ -79,8 +79,8 @@ public class AdaGradTest {
 
       Shape shape0 = Shape.of(var0Init.length);
       Shape shape1 = Shape.of(var1Init.length);
-      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.DTYPE);
-      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.DTYPE);
+      Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
+      Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
       Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
       Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
@@ -99,10 +99,10 @@ public class AdaGradTest {
 
       Variable<TFloat32>[] accumulatorSlots = new Variable[2];
       accumulatorSlots[0] = instance.getSlot(var0.asOutput(), ACCUMULATOR).get();
-      assertEquals(accumulatorSlots[0].asOutput().shape(), var0.asOutput().shape());
+      assertEquals(accumulatorSlots[0].shape(), var0.shape());
 
       accumulatorSlots[1] = instance.getSlot(var1.asOutput(), ACCUMULATOR).get();
-      assertEquals(accumulatorSlots[1].asOutput().shape(), var1.asOutput().shape());
+      assertEquals(accumulatorSlots[1].shape(), var1.shape());
 
       /* initialize the local variables */
       session.run(var0Initializer);

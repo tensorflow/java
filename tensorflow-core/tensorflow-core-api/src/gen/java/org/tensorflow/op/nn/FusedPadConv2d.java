@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Performs a padding as a preprocess during a convolution.
@@ -71,7 +70,7 @@ public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Op
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("mode", mode);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0; i < stridesArray.length; ++i) {

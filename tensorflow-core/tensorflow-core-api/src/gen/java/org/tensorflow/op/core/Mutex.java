@@ -73,7 +73,7 @@ public final class Mutex extends RawOp implements Operand<TType> {
   @Endpoint(describeByClass = true)
   public static Mutex create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutexV2", scope.makeOpName("Mutex"));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

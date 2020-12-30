@@ -43,7 +43,7 @@ public final class BatchIfft3d extends RawOp implements Operand<TType> {
   public static BatchIfft3d create(Scope scope, Operand<?> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchIFFT3D", scope.makeOpName("BatchIfft3d"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new BatchIfft3d(opBuilder.build());
   }
   

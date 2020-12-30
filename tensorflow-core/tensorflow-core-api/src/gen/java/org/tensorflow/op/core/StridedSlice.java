@@ -220,7 +220,7 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.beginMask != null) {

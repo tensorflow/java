@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns the max of x and y (i.e. x > y ? x : y) element-wise.
@@ -52,7 +51,7 @@ public final class Maximum<T extends TNumber> extends RawOp implements Operand<T
     OperationBuilder opBuilder = scope.env().opBuilder("Maximum", scope.makeOpName("Maximum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Maximum<T>(opBuilder.build());
   }
   

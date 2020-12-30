@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Applies the given transform to each of the images.
@@ -81,7 +80,7 @@ public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp i
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(transforms.asOutput());
     opBuilder.addInput(outputShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("interpolation", interpolation);
     if (options != null) {
       for (Options opts : options) {

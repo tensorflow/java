@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Compute the polygamma function \\(\psi^{(n)}(x)\\).
@@ -56,7 +55,7 @@ public final class Polygamma<T extends TNumber> extends RawOp implements Operand
     OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Polygamma<T>(opBuilder.build());
   }
   

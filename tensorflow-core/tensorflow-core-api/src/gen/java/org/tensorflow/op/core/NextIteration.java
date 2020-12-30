@@ -46,7 +46,7 @@ public final class NextIteration<T extends TType> extends RawOp implements Opera
   public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
     opBuilder.addInput(data.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new NextIteration<T>(opBuilder.build());
   }
   

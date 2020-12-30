@@ -48,7 +48,7 @@ public final class Square<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType> Square<T> create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Square", scope.makeOpName("Square"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Square<T>(opBuilder.build());
   }
   

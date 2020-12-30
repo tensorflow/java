@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
@@ -35,8 +34,8 @@ public class CastHelper {
    */
   @SuppressWarnings("unchecked")
   public static <T extends TType, U extends TType> Operand<T> cast(
-          Ops tf, Operand<U> value, DataType<T> requiredType) {
-    return (value.asOutput().dataType() == requiredType)
+          Ops tf, Operand<U> value, Class<T> requiredType) {
+    return (value.type() == requiredType)
         ? (Operand<T>) value
         : tf.dtypes.cast(value, requiredType);
   }

@@ -62,7 +62,7 @@ public final class InfeedEnqueuePrelinearizedBuffer extends RawOp {
   public static InfeedEnqueuePrelinearizedBuffer create(Scope scope, Operand<?> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueuePrelinearizedBuffer", scope.makeOpName("InfeedEnqueuePrelinearizedBuffer"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.deviceOrdinal != null) {

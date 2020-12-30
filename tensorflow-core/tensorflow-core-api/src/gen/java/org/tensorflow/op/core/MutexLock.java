@@ -80,7 +80,7 @@ public final class MutexLock extends RawOp implements Operand<TType> {
   public static MutexLock create(Scope scope, Operand<?> mutex) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutexLock", scope.makeOpName("MutexLock"));
     opBuilder.addInput(mutex.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new MutexLock(opBuilder.build());
   }
   

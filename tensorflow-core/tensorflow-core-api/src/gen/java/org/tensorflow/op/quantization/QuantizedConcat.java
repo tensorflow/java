@@ -57,7 +57,7 @@ public final class QuantizedConcat<T extends TType> extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(inputMins));
     opBuilder.addInputList(Operands.asOutputs(inputMaxes));
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new QuantizedConcat<T>(opBuilder.build());
   }
   

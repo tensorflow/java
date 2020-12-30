@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Creates a sequence of numbers.
@@ -63,7 +62,7 @@ public final class Range<T extends TNumber> extends RawOp implements Operand<T> 
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(limit.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Range<T>(opBuilder.build());
   }
   

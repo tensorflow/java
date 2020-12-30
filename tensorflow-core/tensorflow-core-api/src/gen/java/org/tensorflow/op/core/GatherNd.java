@@ -142,7 +142,7 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new GatherNd<T>(opBuilder.build());
   }
   

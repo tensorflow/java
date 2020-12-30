@@ -28,7 +28,6 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input boxes tensor.
@@ -85,7 +84,7 @@ public final class CropAndResizeGradBoxes extends RawOp implements Operand<TFloa
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.method != null) {

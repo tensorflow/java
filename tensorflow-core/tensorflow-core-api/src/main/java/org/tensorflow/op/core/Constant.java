@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import java.nio.charset.Charset;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
@@ -77,7 +76,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> scalarOf(Scope scope, int data) {
-    try (Tensor<TInt32> value = TInt32.scalarOf(data)) {
+    try (TInt32 value = TInt32.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -92,7 +91,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> vectorOf(Scope scope, int[] data) {
-    try (Tensor<TInt32> value = TInt32.vectorOf(data)) {
+    try (TInt32 value = TInt32.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -122,7 +121,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][] data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -138,7 +137,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][] data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -154,7 +153,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][] data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -170,7 +169,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][][] data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -186,7 +185,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][][][] data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -201,7 +200,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, IntNdArray data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(data)) {
+    if (data instanceof TInt32) {
+      return create(scope, (TInt32) data);
+    }
+    try (TInt32 value = TInt32.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -217,7 +219,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, Shape shape, IntDataBuffer data) {
-    try (Tensor<TInt32> value = TInt32.tensorOf(shape, data)) {
+    try (TInt32 value = TInt32.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -231,7 +233,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> scalarOf(Scope scope, float data) {
-    try (Tensor<TFloat32> value = TFloat32.scalarOf(data)) {
+    try (TFloat32 value = TFloat32.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -246,7 +248,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> vectorOf(Scope scope, float[] data) {
-    try (Tensor<TFloat32> value = TFloat32.vectorOf(data)) {
+    try (TFloat32 value = TFloat32.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -276,7 +278,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][] data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -292,7 +294,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][] data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -308,7 +310,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][] data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -324,7 +326,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][] data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -340,7 +342,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][][] data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -355,7 +357,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, FloatNdArray data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(data)) {
+    if (data instanceof TFloat32) {
+      return create(scope, (TFloat32) data);
+    }
+    try (TFloat32 value = TFloat32.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -371,7 +376,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, Shape shape, FloatDataBuffer data) {
-    try (Tensor<TFloat32> value = TFloat32.tensorOf(shape, data)) {
+    try (TFloat32 value = TFloat32.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -385,7 +390,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> scalarOf(Scope scope, double data) {
-    try (Tensor<TFloat64> value = TFloat64.scalarOf(data)) {
+    try (TFloat64 value = TFloat64.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -400,7 +405,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> vectorOf(Scope scope, double[] data) {
-    try (Tensor<TFloat64> value = TFloat64.vectorOf(data)) {
+    try (TFloat64 value = TFloat64.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -430,7 +435,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][] data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -446,7 +451,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][] data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -462,7 +467,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][] data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -478,7 +483,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][] data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -494,7 +499,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][][] data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
         data, t))) {
       return create(scope, value);
     }
@@ -509,7 +514,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, DoubleNdArray data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(data)) {
+    if (data instanceof TFloat64) {
+      return create(scope, (TFloat64) data);
+    }
+    try (TFloat64 value = TFloat64.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -525,7 +533,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, Shape shape, DoubleDataBuffer data) {
-    try (Tensor<TFloat64> value = TFloat64.tensorOf(shape, data)) {
+    try (TFloat64 value = TFloat64.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -539,7 +547,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> scalarOf(Scope scope, long data) {
-    try (Tensor<TInt64> value = TInt64.scalarOf(data)) {
+    try (TInt64 value = TInt64.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -554,7 +562,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> vectorOf(Scope scope, long[] data) {
-    try (Tensor<TInt64> value = TInt64.vectorOf(data)) {
+    try (TInt64 value = TInt64.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -569,7 +577,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][] data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -600,7 +608,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][] data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -616,7 +624,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][] data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -632,7 +640,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][][] data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -648,7 +656,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][][][] data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -663,7 +671,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, LongNdArray data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(data)) {
+    if (data instanceof TInt64) {
+      return create(scope, (TInt64) data);
+    }
+    try (TInt64 value = TInt64.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -679,7 +690,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, Shape shape, LongDataBuffer data) {
-    try (Tensor<TInt64> value = TInt64.tensorOf(shape, data)) {
+    try (TInt64 value = TInt64.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -693,7 +704,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> scalarOf(Scope scope, boolean data) {
-    try (Tensor<TBool> value = TBool.scalarOf(data)) {
+    try (TBool value = TBool.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -708,7 +719,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> vectorOf(Scope scope, boolean[] data) {
-    try (Tensor<TBool> value = TBool.vectorOf(data)) {
+    try (TBool value = TBool.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -738,7 +749,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][] data) {
-    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -754,7 +765,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][] data) {
-    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -770,7 +781,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][] data) {
-    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -786,7 +797,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][] data) {
-    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -802,7 +813,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][][] data) {
-    try (Tensor<TBool> value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
         t))) {
       return create(scope, value);
     }
@@ -817,7 +828,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, BooleanNdArray data) {
-    try (Tensor<TBool> value = TBool.tensorOf(data)) {
+    if (data instanceof TBool) {
+      return create(scope, (TBool) data);
+    }
+    try (TBool value = TBool.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -833,7 +847,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, Shape shape, BooleanDataBuffer data) {
-    try (Tensor<TBool> value = TBool.tensorOf(shape, data)) {
+    try (TBool value = TBool.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -847,7 +861,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> scalarOf(Scope scope, byte data) {
-    try (Tensor<TUint8> value = TUint8.scalarOf(data)) {
+    try (TUint8 value = TUint8.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -862,7 +876,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> vectorOf(Scope scope, byte[] data) {
-    try (Tensor<TUint8> value = TUint8.vectorOf(data)) {
+    try (TUint8 value = TUint8.vectorOf(data)) {
       return create(scope, value);
     }
   }
@@ -892,7 +906,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][] data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
         d))) {
       return create(scope, value);
     }
@@ -908,7 +922,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][] data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
         d))) {
       return create(scope, value);
     }
@@ -924,7 +938,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][] data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
         d))) {
       return create(scope, value);
     }
@@ -940,7 +954,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][] data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
         d))) {
       return create(scope, value);
     }
@@ -956,7 +970,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][][] data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
         d))) {
       return create(scope, value);
     }
@@ -971,7 +985,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, ByteNdArray data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(data)) {
+    if (data instanceof TUint8) {
+      return create(scope, (TUint8) data);
+    }
+    try (TUint8 value = TUint8.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -987,7 +1004,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, Shape shape, ByteDataBuffer data) {
-    try (Tensor<TUint8> value = TUint8.tensorOf(shape, data)) {
+    try (TUint8 value = TUint8.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -995,8 +1012,9 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   /**
    * Create a constant with data from the given buffer.
    *
+   * @param <T> the tensor type
    * @param scope is a scope used to add the underlying operation.
-   * @param type the tensor datatype.
+   * @param type the tensor type class
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a constant of type `type`
@@ -1004,9 +1022,9 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *     buffer
    */
   @Endpoint
-  public static <T extends TType> Constant<T> tensorOf(Scope scope, DataType<T> type, Shape shape,
+  public static <T extends TType> Constant<T> tensorOf(Scope scope, Class<T> type, Shape shape,
       ByteDataBuffer data) {
-    try (Tensor<T> value = Tensor.of(type, shape, data)) {
+    try (T value = Tensor.of(type, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1020,7 +1038,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> scalarOf(Scope scope, String data) {
-    try (Tensor<TString> value = TString.scalarOf(data)) {
+    try (TString value = TString.scalarOf(data)) {
       return create(scope, value);
     }
   }
@@ -1035,7 +1053,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> scalarOf(Scope scope, Charset charset, String data) {
-    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
+    try (TString value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
       return create(scope, value);
     }
   }
@@ -1049,7 +1067,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   public static Constant<TString> vectorOf(Scope scope, String[] data) {
     NdArray<String> src = NdArrays.vectorOfObjects(data);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1065,7 +1083,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> vectorOf(Scope scope, Charset charset, String[] data) {
-    try (Tensor<TString> value = TString.tensorOf(charset, NdArrays.vectorOfObjects(data))) {
+    try (TString value = TString.tensorOf(charset, NdArrays.vectorOfObjects(data))) {
       return Constant.create(scope, value);
     }
   }
@@ -1112,7 +1130,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1127,7 +1145,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1142,7 +1160,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1157,7 +1175,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1172,7 +1190,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (Tensor<TString> value = TString.tensorOf(src)) {
+    try (TString value = TString.tensorOf(src)) {
       return create(scope, value);
     }
   }
@@ -1187,7 +1205,10 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, NdArray<String> data) {
-    try (Tensor<TString> value = TString.tensorOf(data)) {
+    if (data instanceof TString) {
+      return create(scope, (TString) data);
+    }
+    try (TString value = TString.tensorOf(data)) {
       return create(scope, value);
     }
   }
@@ -1203,7 +1224,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Charset charset, NdArray<String> data) {
-    try (Tensor<TString> value = TString.tensorOf(charset, data)) {
+    try (TString value = TString.tensorOf(charset, data)) {
       return create(scope, value);
     }
   }
@@ -1220,7 +1241,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Shape shape, DataBuffer<String> data) {
-    try (Tensor<TString> value = TString.tensorOf(shape, data)) {
+    try (TString value = TString.tensorOf(shape, data)) {
       return create(scope, value);
     }
   }
@@ -1238,7 +1259,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Charset charset, Shape shape,
       DataBuffer<String> data) {
-    try (Tensor<TString> value = TString.tensorOf(charset, shape, data)) {
+    try (TString value = TString.tensorOf(charset, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1257,14 +1278,17 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   }
 
   /**
-   * Create a constant from a Tensor.
+   * Create a constant by making an immutable copy of {@code tensor}.
+   *
+   * <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
+   * other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
    */
-  @Endpoint
-  public static <T extends TType> Constant<T> create(Scope scope, Tensor<T> tensor) {
+  @Endpoint(name = "constantOf")
+  public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
     return new Constant<>(
         scope
             .env()

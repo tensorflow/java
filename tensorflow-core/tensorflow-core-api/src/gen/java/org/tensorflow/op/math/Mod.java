@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns element-wise remainder of division. This emulates C semantics in that
@@ -55,7 +54,7 @@ public final class Mod<T extends TNumber> extends RawOp implements Operand<T> {
     OperationBuilder opBuilder = scope.env().opBuilder("Mod", scope.makeOpName("Mod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Mod<T>(opBuilder.build());
   }
   

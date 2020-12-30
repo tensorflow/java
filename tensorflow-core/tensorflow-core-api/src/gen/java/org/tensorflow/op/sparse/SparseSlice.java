@@ -73,7 +73,7 @@ public final class SparseSlice<T extends TType> extends RawOp {
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(size.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseSlice<T>(opBuilder.build());
   }
   

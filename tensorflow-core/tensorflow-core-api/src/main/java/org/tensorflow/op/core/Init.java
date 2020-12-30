@@ -35,7 +35,7 @@ public final class Init extends RawOp {
    *   try (Session s = new Session(g)) {
    *     s.run(tf.init());  // initialize all variables
    *
-   *     try (Tensor<TInt32> t = s.runner().fetch(z).run().get(0).expect(TInt32.DTYPE)) {
+   *     try (TInt32 t = (TInt32)s.runner().fetch(z).run().get(0)) {
    *       assertEquals(30, t.data().getInt());
    *     }
    *   }
@@ -62,7 +62,7 @@ public final class Init extends RawOp {
    * try (SavedModelBundle model = SavedModelBundle.load("/path/to/model", "train")) {
    *   model.session().run(Init.DEFAULT_NAME);
    *
-   *   try (Tensor<TInt32> t = s.runner().fetch("z").run().get(0).expect(TInt32.DTYPE)) {
+   *   try (TInt32 t = (TInt32)s.runner().fetch("z").run().get(0)) {
    *     assertEquals(30, t.data().getInt());
    *   }
    * }

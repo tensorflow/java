@@ -80,7 +80,7 @@ public final class RefEnter<T extends TType> extends RawOp implements Operand<T>
   public static <T extends TType> RefEnter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RefEnter", scope.makeOpName("RefEnter"));
     opBuilder.addInput(data.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("frame_name", frameName);
     if (options != null) {
       for (Options opts : options) {

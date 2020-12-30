@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Gradients for Local Response Normalization.
@@ -97,7 +96,7 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
     opBuilder.addInput(inputGrads.asOutput());
     opBuilder.addInput(inputImage.asOutput());
     opBuilder.addInput(outputImage.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.depthRadius != null) {

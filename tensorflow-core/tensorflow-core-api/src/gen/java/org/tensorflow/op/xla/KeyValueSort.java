@@ -55,7 +55,7 @@ public final class KeyValueSort<T extends TNumber, U extends TType> extends RawO
     OperationBuilder opBuilder = scope.env().opBuilder("XlaKeyValueSort", scope.makeOpName("KeyValueSort"));
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new KeyValueSort<T, U>(opBuilder.build());
   }
   

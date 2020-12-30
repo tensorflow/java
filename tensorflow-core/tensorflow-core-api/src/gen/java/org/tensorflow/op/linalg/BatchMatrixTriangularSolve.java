@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * @param <T> data type for {@code output()} output
@@ -76,7 +75,7 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp i
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixTriangularSolve", scope.makeOpName("BatchMatrixTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.lower != null) {

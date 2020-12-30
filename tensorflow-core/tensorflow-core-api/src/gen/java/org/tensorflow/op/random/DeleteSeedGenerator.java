@@ -42,7 +42,7 @@ public final class DeleteSeedGenerator extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteSeedGenerator", scope.makeOpName("DeleteSeedGenerator"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new DeleteSeedGenerator(opBuilder.build());
   }
   

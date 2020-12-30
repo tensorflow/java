@@ -64,7 +64,7 @@ public final class TensorListScatter extends RawOp implements Operand<TType> {
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(numElements.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorListScatter(opBuilder.build());
   }
   

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes the LSTM cell forward propagation for all the time steps.
@@ -115,7 +114,7 @@ public final class BlockLSTM<T extends TNumber> extends RawOp {
     opBuilder.addInput(wcf.asOutput());
     opBuilder.addInput(wco.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.cellClip != null) {

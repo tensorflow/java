@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns element-wise remainder of division. When `x < 0` xor `y < 0` is
@@ -55,7 +54,7 @@ public final class FloorMod<T extends TNumber> extends RawOp implements Operand<
     OperationBuilder opBuilder = scope.env().opBuilder("FloorMod", scope.makeOpName("FloorMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new FloorMod<T>(opBuilder.build());
   }
   

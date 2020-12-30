@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a gamma distribution.
@@ -55,7 +54,7 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(alpha.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new StatelessRandomGamma<V>(opBuilder.build());
   }
   

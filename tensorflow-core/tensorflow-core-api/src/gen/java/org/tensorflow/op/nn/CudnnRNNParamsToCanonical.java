@@ -29,7 +29,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Retrieves CudnnRNN params in canonical form. It supports the projection in LSTM.
@@ -163,7 +162,7 @@ public final class CudnnRNNParamsToCanonical<T extends TNumber> extends RawOp {
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());
     opBuilder.addInput(params.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_params_weights", numParamsWeights);
     opBuilder.setAttr("num_params_biases", numParamsBiases);
     if (options != null) {

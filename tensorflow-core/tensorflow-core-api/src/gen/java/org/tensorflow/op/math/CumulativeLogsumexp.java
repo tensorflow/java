@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Compute the cumulative product of the tensor `x` along `axis`.
@@ -96,7 +95,7 @@ public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implemen
     OperationBuilder opBuilder = scope.env().opBuilder("CumulativeLogsumexp", scope.makeOpName("CumulativeLogsumexp"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.exclusive != null) {

@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Compute the lower regularized incomplete Gamma function `P(a, x)`.
@@ -62,7 +61,7 @@ public final class Igamma<T extends TNumber> extends RawOp implements Operand<T>
     OperationBuilder opBuilder = scope.env().opBuilder("Igamma", scope.makeOpName("Igamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new Igamma<T>(opBuilder.build());
   }
   

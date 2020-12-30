@@ -43,7 +43,7 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
   public static IsBoostedTreesEnsembleInitialized create(Scope scope, Operand<?> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesEnsembleInitialized", scope.makeOpName("IsBoostedTreesEnsembleInitialized"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new IsBoostedTreesEnsembleInitialized(opBuilder.build());
   }
   

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes second-order gradients of the maxpooling function.
@@ -82,7 +81,7 @@ public final class MaxPoolGradGrad<T extends TNumber> extends RawOp implements O
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(ksize.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {

@@ -49,7 +49,7 @@ public final class LogicalAnd extends RawOp implements Operand<TBool> {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalAnd", scope.makeOpName("LogicalAnd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new LogicalAnd(opBuilder.build());
   }
   

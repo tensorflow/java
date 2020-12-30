@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -71,13 +71,13 @@ public final class QuantizeDownAndShrinkRange<U extends TType> extends RawOp {
    * @return a new instance of QuantizeDownAndShrinkRange
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, DataType<U> outType) {
+  public static <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("out_type", outType);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new QuantizeDownAndShrinkRange<U>(opBuilder.build());
   }
   

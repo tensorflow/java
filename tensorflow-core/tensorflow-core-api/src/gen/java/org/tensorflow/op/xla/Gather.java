@@ -55,7 +55,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(startIndices.asOutput());
     opBuilder.addInput(sliceSizes.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("indices_are_sorted", indicesAreSorted);
     return new Gather<T>(opBuilder.build());

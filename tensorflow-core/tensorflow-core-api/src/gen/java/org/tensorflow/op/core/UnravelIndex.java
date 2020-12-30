@@ -26,7 +26,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Converts an array of flat indices into a tuple of coordinate arrays.
@@ -70,7 +69,7 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
     OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(dims.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new UnravelIndex<T>(opBuilder.build());
   }
   

@@ -15,7 +15,6 @@
  */
 package org.tensorflow.framework.data.impl;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
 import org.tensorflow.op.Ops;
@@ -24,6 +23,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt64;
 
 import java.util.List;
+import org.tensorflow.types.family.TType;
 
 public class SkipDataset extends Dataset {
 
@@ -31,7 +31,7 @@ public class SkipDataset extends Dataset {
       Ops tf,
       Operand<?> variant,
       Constant<TInt64> count,
-      List<DataType<?>> outputTypes,
+      List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     super(
         tf,

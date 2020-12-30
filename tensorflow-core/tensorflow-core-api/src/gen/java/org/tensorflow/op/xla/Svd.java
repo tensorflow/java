@@ -57,7 +57,7 @@ public final class Svd<T extends TType> extends RawOp {
   public static <T extends TType> Svd<T> create(Scope scope, Operand<T> a, Long maxIter, Float epsilon, String precisionConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSvd", scope.makeOpName("Svd"));
     opBuilder.addInput(a.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("max_iter", maxIter);
     opBuilder.setAttr("epsilon", epsilon);
     opBuilder.setAttr("precision_config", precisionConfig);

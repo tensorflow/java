@@ -164,7 +164,7 @@ public final class EncodeJpeg extends RawOp implements Operand<TString> {
   public static EncodeJpeg create(Scope scope, Operand<TUint8> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeJpeg", scope.makeOpName("EncodeJpeg"));
     opBuilder.addInput(image.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.format != null) {

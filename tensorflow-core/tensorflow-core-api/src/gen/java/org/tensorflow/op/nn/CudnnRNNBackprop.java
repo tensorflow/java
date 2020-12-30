@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Backprop step of CudnnRNNV3.
@@ -202,7 +201,7 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     opBuilder.addInput(outputCBackprop.asOutput());
     opBuilder.addInput(reserveSpace.asOutput());
     opBuilder.addInput(hostReserved.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.rnnMode != null) {

@@ -87,7 +87,7 @@ public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
     opBuilder.addInput(size.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

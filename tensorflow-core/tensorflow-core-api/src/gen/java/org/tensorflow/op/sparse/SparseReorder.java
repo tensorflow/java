@@ -61,7 +61,7 @@ public final class SparseReorder<T extends TType> extends RawOp {
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputShape.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new SparseReorder<T>(opBuilder.build());
   }
   

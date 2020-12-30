@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
@@ -89,9 +88,9 @@ public class ELU<T extends TFloating> extends Activation<T> {
     Operand<T> result = tf.nn.elu(input);
     if (alpha == 1.0) return result;
     else {
-      DataType<T> dataType = input.asOutput().dataType();
-      Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), dataType));
-      Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), dataType));
+      Class<T> inputType = input.type();
+      Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
+      Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), inputType));
       return tf.select(cond, result, y);
     }
   }

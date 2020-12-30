@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Returns which elements of x are finite.
@@ -57,7 +56,7 @@ public final class IsFinite extends RawOp implements Operand<TBool> {
   public static <T extends TNumber> IsFinite create(Scope scope, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsFinite", scope.makeOpName("IsFinite"));
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new IsFinite(opBuilder.build());
   }
   

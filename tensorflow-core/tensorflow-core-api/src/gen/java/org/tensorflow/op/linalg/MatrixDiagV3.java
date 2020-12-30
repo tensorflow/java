@@ -203,7 +203,7 @@ public final class MatrixDiagV3<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(numRows.asOutput());
     opBuilder.addInput(numCols.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.align != null) {

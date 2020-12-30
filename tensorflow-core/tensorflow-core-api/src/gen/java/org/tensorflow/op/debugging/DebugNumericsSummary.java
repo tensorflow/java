@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.debugging;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -132,11 +132,11 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    * @return a new instance of DebugNumericsSummary
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, DataType<U> outputDtype, Options... options) {
+  public static <U extends TNumber, T extends TType> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, Class<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummaryV2", scope.makeOpName("DebugNumericsSummary"));
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("output_dtype", outputDtype);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_dtype", Operands.toDataType(outputDtype));
     if (options != null) {
       for (Options opts : options) {
         if (opts.tensorDebugMode != null) {
@@ -160,7 +160,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    */
   @Endpoint(describeByClass = true)
   public static <T extends TType> DebugNumericsSummary<TFloat32> create(Scope scope, Operand<T> input, Options... options) {
-    return create(scope, input, TFloat32.DTYPE, options);
+    return create(scope, input, TFloat32.class, options);
   }
   
   /**

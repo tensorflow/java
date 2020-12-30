@@ -75,7 +75,7 @@ public final class MergeV2Checkpoints extends RawOp {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeV2Checkpoints", scope.makeOpName("MergeV2Checkpoints"));
     opBuilder.addInput(checkpointPrefixes.asOutput());
     opBuilder.addInput(destinationPrefix.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.deleteOldDirs != null) {

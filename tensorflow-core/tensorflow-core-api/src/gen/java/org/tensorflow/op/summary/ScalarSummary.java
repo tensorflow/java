@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Outputs a `Summary` protocol buffer with scalar values.
@@ -51,7 +50,7 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
     OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
     opBuilder.addInput(tags.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new ScalarSummary(opBuilder.build());
   }
   

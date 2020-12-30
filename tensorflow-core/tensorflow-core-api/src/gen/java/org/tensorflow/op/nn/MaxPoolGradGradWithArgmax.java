@@ -27,7 +27,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Computes second-order gradients of the maxpooling function.
@@ -77,7 +76,7 @@ public final class MaxPoolGradGradWithArgmax<T extends TNumber> extends RawOp im
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(argmax.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0; i < ksizeArray.length; ++i) {
       ksizeArray[i] = ksize.get(i);

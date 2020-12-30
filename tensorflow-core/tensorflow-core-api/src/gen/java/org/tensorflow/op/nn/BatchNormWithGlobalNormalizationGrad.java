@@ -65,7 +65,7 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(gamma.asOutput());
     opBuilder.addInput(backprop.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);
     return new BatchNormWithGlobalNormalizationGrad<T>(opBuilder.build());

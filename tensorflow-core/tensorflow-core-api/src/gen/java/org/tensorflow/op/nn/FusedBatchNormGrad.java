@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Gradient for batch normalization.
@@ -111,7 +110,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     opBuilder.addInput(reserveSpace1.asOutput());
     opBuilder.addInput(reserveSpace2.asOutput());
     opBuilder.addInput(reserveSpace3.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.epsilon != null) {

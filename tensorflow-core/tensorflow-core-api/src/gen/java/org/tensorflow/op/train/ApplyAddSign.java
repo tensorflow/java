@@ -84,7 +84,7 @@ public final class ApplyAddSign<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(signDecay.asOutput());
     opBuilder.addInput(beta.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

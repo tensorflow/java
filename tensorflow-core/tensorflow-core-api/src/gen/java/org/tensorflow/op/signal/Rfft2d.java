@@ -17,11 +17,11 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -60,12 +60,12 @@ public final class Rfft2d<U extends TType> extends RawOp implements Operand<U> {
    * @return a new instance of Rfft2d
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> Rfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, DataType<U> Tcomplex) {
+  public static <U extends TType, T extends TNumber> Rfft2d<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, Class<U> Tcomplex) {
     OperationBuilder opBuilder = scope.env().opBuilder("RFFT2D", scope.makeOpName("Rfft2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
-    opBuilder.setAttr("Tcomplex", Tcomplex);
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("Tcomplex", Operands.toDataType(Tcomplex));
     return new Rfft2d<U>(opBuilder.build());
   }
   

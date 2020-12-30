@@ -110,7 +110,7 @@ public final class TensorScatterNdSub<T extends TType> extends RawOp implements 
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new TensorScatterNdSub<T>(opBuilder.build());
   }
   

@@ -27,7 +27,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Adjust the contrast of one or more images.
@@ -60,7 +59,7 @@ public final class AdjustContrast<T extends TNumber> extends RawOp implements Op
     OperationBuilder opBuilder = scope.env().opBuilder("AdjustContrastv2", scope.makeOpName("AdjustContrast"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(contrastFactor.asOutput());
-    opBuilder = scope.applyControlDependencies(opBuilder);
+    opBuilder = scope.apply(opBuilder);
     return new AdjustContrast<T>(opBuilder.build());
   }
   

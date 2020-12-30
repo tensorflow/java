@@ -17,7 +17,6 @@
 //
 package org.tensorflow.op;
 
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.op.dtypes.AsString;
 import org.tensorflow.op.dtypes.Cast;
@@ -33,8 +32,11 @@ import org.tensorflow.types.family.TType;
 public final class DtypesOps {
   private final Scope scope;
 
-  DtypesOps(Scope scope) {
-    this.scope = scope;
+  private final Ops ops;
+
+  DtypesOps(Ops ops) {
+    this.scope = ops.scope();
+    this.ops = ops;
   }
 
   /**
@@ -70,7 +72,7 @@ public final class DtypesOps {
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, DataType<U> DstT,
+  public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, Class<U> DstT,
       Cast.Options... options) {
     return Cast.create(scope, x, DstT, options);
   }
@@ -99,7 +101,14 @@ public final class DtypesOps {
    * @return a new instance of Complex
    */
   public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
-      DataType<U> Tout) {
+      Class<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
+  }
+
+  /**
+   * Get the parent {@link Ops} object.
+   */
+  public final Ops ops() {
+    return ops;
   }
 }
