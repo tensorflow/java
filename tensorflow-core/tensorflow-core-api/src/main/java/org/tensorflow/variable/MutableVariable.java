@@ -18,17 +18,18 @@ package org.tensorflow.variable;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-import org.tensorflow.DataType;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -41,13 +42,13 @@ public abstract class MutableVariable<T extends TType> implements Variable<T> {
   private final String name;
 
   protected final Shape shape;
-  protected final DataType<T> dataType;
+  protected final DataType dataType;
 
   protected boolean hasInitialized = false;
 
   //TODO use the new resource API.
 
-  protected MutableVariable(Scope scope, Shape shape, DataType<T> dataType){
+  protected MutableVariable(Scope scope, Shape shape, DataType dataType){
     this.initialScope = scope.withName(null);
 
     this.shape = shape;
@@ -67,7 +68,7 @@ public abstract class MutableVariable<T extends TType> implements Variable<T> {
   /**
    * Get the variable's constant data type.
    */
-  public DataType<T> getDataType() {
+  public DataType getDataType() {
     return dataType;
   }
 

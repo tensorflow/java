@@ -17,15 +17,17 @@
 package org.tensorflow.variable;
 
 import java.util.function.Supplier;
-import org.tensorflow.DataType;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
+import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -55,7 +57,7 @@ public interface Variable<T extends TType> extends Operand<T> {
   /**
    * Get the variable's constant data type.
    */
-  DataType<T> getDataType();
+  DataType getDataType();
 
   /**
    * Get whether the variable has had a value assigned to it.
@@ -130,11 +132,11 @@ public interface Variable<T extends TType> extends Operand<T> {
    * @see Variable
    */
   @Endpoint(name = "Variable")
-  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, DataType<T> dataType){
+  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dataType){
     if(scope.env().isEager()) {
-      return new EagerVariable<>(scope, shape, dataType);
+      return new EagerVariable<>(scope, shape, Operands.toDataType(dataType));
     } else {
-      return new GraphVariable<>(scope, shape, dataType);
+      return new GraphVariable<>(scope, shape, Operands.toDataType(dataType));
     }
   }
 
@@ -152,7 +154,7 @@ public interface Variable<T extends TType> extends Operand<T> {
    */
   @Endpoint(name = "Variable")
   public static <T extends TType> Variable<T> create(Scope scope, Operand<T> initialValue){
-    Variable<T> variable = create(scope, initialValue.shape(), initialValue.asOutput().dataType());
+    Variable<T> variable = create(scope, initialValue.shape(), initialValue.type());
     variable.initialize(variable);
     return variable;
   }

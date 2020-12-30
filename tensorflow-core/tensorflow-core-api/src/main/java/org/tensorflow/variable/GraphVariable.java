@@ -17,22 +17,22 @@
 package org.tensorflow.variable;
 
 import java.util.Collections;
-import org.tensorflow.DataType;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Init;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 class GraphVariable<T extends TType> extends MutableVariable<T> {
 
-  private final org.tensorflow.op.core.Variable<T> variable;
+  private org.tensorflow.op.core.Variable<T> variable;
   private Operand<T> get = null;
 
-  GraphVariable(Scope scope, Shape shape, DataType<T> dataType) {
+  GraphVariable(Scope scope, Shape shape, DataType dataType) {
     super(scope, shape, dataType);
-    variable = org.tensorflow.op.core.Variable.create(scope, shape, dataType);
+//    variable = org.tensorflow.op.core.Variable.create(scope, shape, dataType.);
   }
 
   @Override
