@@ -125,8 +125,8 @@ public class MutableVariable<T extends TType> implements Variable<T> {
       throw new IllegalArgumentException("Shape of new value (" + value.shape() +
           ") is not compatible with the variable's shape (" + this.shape + ").");
     }
-    //TODO better checking w/ new types after refactor
-    if (value.asOutput().dataType() != dataType) {
+
+    if (!tType.isAssignableFrom(value.asOutput().type())) {
       throw new IllegalArgumentException("Data type of new value (" + value.asOutput().dataType() +
           ") is not compatible with the variable's data type (" + dataType + ").");
     }
