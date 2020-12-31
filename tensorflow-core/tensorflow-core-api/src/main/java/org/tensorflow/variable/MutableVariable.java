@@ -17,19 +17,23 @@
 package org.tensorflow.variable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Supplier;
-import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
-import org.tensorflow.Operation;
-import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Operands;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.op.core.AssignAddVariableOp;
+import org.tensorflow.op.core.AssignSubVariableOp;
+import org.tensorflow.op.core.AssignVariableOp;
+import org.tensorflow.op.core.Init;
+import org.tensorflow.op.core.IsVariableInitialized;
+import org.tensorflow.op.core.ReadVariableOp;
+import org.tensorflow.op.core.VarHandleOp;
+import org.tensorflow.op.core.VarHandleOp.Options;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -37,122 +41,206 @@ import org.tensorflow.types.family.TType;
  *
  * @see Variable
  */
-public abstract class MutableVariable<T extends TType> implements Variable<T> {
+public class MutableVariable<T extends TType> implements Variable<T> {
+
   private final Scope initialScope;
   private final String name;
 
-  protected final Shape shape;
-  protected final DataType dataType;
+  private final Shape shape;
+  private final DataType dataType;
+  private final Class<T> tType;
+  private final VarHandleOp handle;
 
-  protected boolean hasInitialized = false;
+  private IsVariableInitialized isInitializedOp = null;
+  private Op initializationOp = null;
+  private ReadVariableOp<T> cachedRead = null;
+  private Op lastAssign = null;
 
-  //TODO use the new resource API.
+  private boolean hasInitialized = false;
 
-  protected MutableVariable(Scope scope, Shape shape, DataType dataType){
-    this.initialScope = scope.withName(null);
-
+  protected MutableVariable(Scope scope, Shape shape, Class<T> dataType) {
     this.shape = shape;
-    this.dataType = dataType;
+    this.dataType = Operands.toDataType(dataType);
+    this.tType = dataType;
+
     this.name = scope.makeOpName("Variable");
+
+    scope = scope.withName(null);
+    this.initialScope = scope.withSubScope(this.name);
+
+    VarHandleOp.Options[] options;
+
+    if (scope.env().isGraph()) {
+      options = new Options[]{VarHandleOp.sharedName(this.name)};
+    } else {
+      options = new Options[0];
+    }
+
+    this.handle = VarHandleOp.create(initialScope.withName(name), dataType, shape, options);
+
     scope.env().registerVariable(this);
   }
 
-  /**
-   * Get the variable's constant shape.
-   * This may have unknown dimensions, which do not impose a requirement on the value's dimensions.
-   */
+  @Override
   public Shape getShape() {
     return shape;
   }
 
-  /**
-   * Get the variable's constant data type.
-   */
+  @Override
   public DataType getDataType() {
     return dataType;
   }
 
-  /**
-   * Get whether the variable has had a value assigned to it.
-   */
+  @Override
   public boolean isInitialized() {
     return hasInitialized;
   }
 
-  /**
-   * Get the name of the variable, set using {@link org.tensorflow.op.Ops#withName(String)} the same as any other op.
-   */
+  @Override
   public String getName() {
     return name;
   }
 
-  /**
-   * Get the current value of this variable.
-   */
-  public Operand<T> value(){
-    if(!hasInitialized){
+  @Override
+  public Operand<T> value(Scope scope) {
+    if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not get.");
     }
-    return getValue();
+    if (cachedRead == null) {
+      if (lastAssign != null) {
+        scope = scope.withControlDependencies(Collections.singletonList(lastAssign));
+      }
+      cachedRead = ReadVariableOp.create(scope, handle, tType);
+    }
+    return cachedRead;
   }
 
-  private void checkInput(Operand<T> value){
-    if(value.shape().isCompatibleWith(this.shape)){
+  @Override
+  public Operand<T> value() {
+    return value(initialScope);
+  }
+
+  private void checkInput(Operand<T> value) {
+    if (value.shape().isCompatibleWith(this.shape)) {
       throw new IllegalArgumentException("Shape of new value (" + value.shape() +
           ") is not compatible with the variable's shape (" + this.shape + ").");
     }
     //TODO better checking w/ new types after refactor
-    if(value.asOutput().dataType() != dataType){
+    if (value.asOutput().dataType() != dataType) {
       throw new IllegalArgumentException("Data type of new value (" + value.asOutput().dataType() +
           ") is not compatible with the variable's data type (" + dataType + ").");
     }
   }
 
-  /**
-   * Initialize this variable with a value, if it hasn't already been assigned a value.  No-op if it has.
-   * @param value the value to initialize this variable with.
-   * @return the new value (or current if it was already initialized).
-   */
-  public Operand<T> initialize(Operand<T> value){
-    if(hasInitialized){
-      return value();
+  @Override
+  public Op initialize(Operand<T> value) {
+    if (hasInitialized) {
+      return initializationOp;
     }
     checkInput(value);
-    doInitialize(initialScope, value);
+    initializationOp = AssignVariableOp.create(initialScope, handle, value);
+    lastAssign = initializationOp;
+    Init.add(initialScope, lastAssign);
     hasInitialized = true;
-    return value();
+    cachedRead = null;
+    return initializationOp;
   }
 
-
-  /**
-   * Initialize this variable with a value, if it hasn't already been assigned a value.  No-op if it has.
-   * <p>
-   * The provided function will not be invoked if this function no-ops.
-   * @param value a function returning the value to initialize this variable with.
-   * Will only be called if initialization is done.
-   * @return the new value (or current if it was already initialized).
-   */
-  public Operand<T> initialize(Supplier<Operand<T>> value){
-    if(hasInitialized){
-      return value();
+  @Override
+  public Op initialize(Supplier<Operand<T>> value) {
+    if (hasInitialized) {
+      return initializationOp;
     }
     return initialize(value.get());
   }
 
-  /**
-   * Assign a new value to this variable.
-   * @param value the value to assign.
-   * @param controlDependencies any control dependencies of the assignment.
-   * @return the new value
-   */
-  public Operand<T> assign(Operand<T> value, Op... controlDependencies){
-    checkInput(value);
-    doAssign(initialScope.withControlDependencies(Arrays.asList(controlDependencies)), value);
-    hasInitialized = true;
-    return value();
+  @Override
+  public Operand<TBool> isValueInitialized() {
+    if (isInitializedOp == null) {
+      isInitializedOp = IsVariableInitialized.create(initialScope, handle);
+    }
+
+    return isInitializedOp;
   }
 
-  protected abstract Operand<T> getValue();
-  protected abstract void doInitialize(Scope scope, Operand<T> value);
-  protected abstract void doAssign(Scope scope, Operand<T> value);
+  /**
+   * Assign a new value to this variable using the given scope.
+   *
+   * @param value the value to assign.
+   * @see AssignVariableOp#create
+   */
+  public Op assign(Scope scope, Operand<T> value) {
+    checkInput(value);
+    lastAssign = AssignVariableOp.create(scope, handle, value);
+    hasInitialized = true;
+    cachedRead = null;
+    return lastAssign;
+  }
+
+  /**
+   * Assign a new value to this variable using the variable's scope.
+   *
+   * @param value the value to assign.
+   * @param controlDependencies any control dependencies of the assignment.
+   * @see AssignVariableOp#create
+   */
+  public Op assign(Operand<T> value, Op... controlDependencies) {
+    return assign(initialScope.withControlDependencies(Arrays.asList(controlDependencies)), value);
+  }
+
+  /**
+   * Decrement the variable's value by the given value, using the given scope.
+   *
+   * @param value amount to decrease the variable's value by.
+   * @see AssignSubVariableOp#create
+   */
+  public Op assignSub(Scope scope, Operand<T> value) {
+    if (!hasInitialized) {
+      throw new IllegalStateException("Variable has not been initialized, can not decrement.");
+    }
+    checkInput(value);
+    lastAssign = AssignSubVariableOp.create(scope, handle, value);
+    hasInitialized = true;
+    cachedRead = null;
+    return lastAssign;
+  }
+
+  /**
+   * Decrement the variable's value by the given value, using the variable's scope.
+   *
+   * @param value amount to decrease the variable's value by.
+   * @param controlDependencies any control dependencies of the assignment.
+   * @see AssignSubVariableOp#create
+   */
+  public Op assignSub(Operand<T> value, Op... controlDependencies) {
+    return assignSub(initialScope.withControlDependencies(Arrays.asList(controlDependencies)), value);
+  }
+
+  /**
+   * Increment the variable's value by the given value, using the given scope.
+   *
+   * @param value amount to decrease the variable's value by.
+   * @see AssignAddVariableOp#create
+   */
+  public Op assignAdd(Scope scope, Operand<T> value) {
+    if (!hasInitialized) {
+      throw new IllegalStateException("Variable has not been initialized, can not increment.");
+    }
+    checkInput(value);
+    lastAssign = AssignAddVariableOp.create(scope, handle, value);
+    hasInitialized = true;
+    cachedRead = null;
+    return lastAssign;
+  }
+
+  /**
+   * Increment the variable's value by the given value, using the variable's scope.
+   *
+   * @param value amount to decrease the variable's value by.
+   * @param controlDependencies any control dependencies of the assignment.
+   * @see AssignAddVariableOp#create
+   */
+  public Op assignAdd(Operand<T> value, Op... controlDependencies) {
+    return assignAdd(initialScope.withControlDependencies(Arrays.asList(controlDependencies)), value);
+  }
 }

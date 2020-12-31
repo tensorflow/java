@@ -423,7 +423,7 @@ public final class Ops {
    * @return a new {@link Variable} instance.
    * @see Variable
    */
-  public <T extends TType> Variable<T> Variable(Shape shape, DataType<T> dataType) {
+  public <T extends TType> Variable<T> Variable(Shape shape, Class<T> dataType) {
     return Variable.create(scope, shape, dataType);
   }
 
@@ -8003,8 +8003,8 @@ public final class Ops {
    * @deprecated Use {@link org.tensorflow.op.Ops#Variable(Shape, DataType)} instead for a tf.Variable like API.
    */
   @Deprecated
-  public <T extends TType> org.tensorflow.op.core.Variable<T> variable(Shape shape,
-      Class<T> dtype, org.tensorflow.op.core.Variable.Options... options) {
+  public <T extends TType> org.tensorflow.op.core.Variable<T> variable(Shape shape, Class<T> dtype,
+      org.tensorflow.op.core.Variable.Options... options) {
     return org.tensorflow.op.core.Variable.create(scope, shape, dtype, options);
   }
 

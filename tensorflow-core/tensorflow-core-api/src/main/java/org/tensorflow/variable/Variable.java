@@ -23,11 +23,13 @@ import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -41,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * The exposed value will not usually be a {@link org.tensorflow.op.core.Variable}.
  * <p>
  * Variables will be registered in their execution environment's {@link ExecutionEnvironment#variables()}.
- * <p>
- * Implemented by {@link MutableVariable}, which provides mutability.
  *
  * @see MutableVariable
  */
@@ -60,9 +60,18 @@ public interface Variable<T extends TType> extends Operand<T> {
   DataType getDataType();
 
   /**
-   * Get whether the variable has had a value assigned to it.
+   * Get whether the variable has had a value assigned to it.  This method relates to the Java object, not the graph variable.
+   * <p>
+   * This operation returns true if {@code initialize} or {@code assign} methods have been used on
+   * the variable object, it does not provide any information about the state of the graph variable.
+   * For that, use {@link #isValueInitialized()}
    */
   boolean isInitialized();
+
+  /**
+   * Get whether the graph value is initialized.  In eager mode, this will be the same as {@link #isInitialized()}.
+   */
+  Operand<TBool> isValueInitialized();
 
   /**
    * Get the name of the variable, set using {@link org.tensorflow.op.Ops#withName(String)} the same as any other op.
@@ -70,16 +79,20 @@ public interface Variable<T extends TType> extends Operand<T> {
   String getName();
 
   /**
-   * Get the current value of this variable.
+   * Get the current value of this variable, using the variable's scope.
    */
   Operand<T> value();
 
   /**
+   * Get the current value of this variable, using the given scope.
+   */
+  Operand<T> value(Scope scope);
+
+  /**
    * Initialize this variable with a value, if it hasn't already been assigned a value.  No-op if it has.
    * @param value the value to initialize this variable with.
-   * @return the new value (or current if it was already initialized).
    */
-  Operand<T> initialize(Operand<T> value);
+  Op initialize(Operand<T> value);
 
   /**
    * Initialize this variable with a value, if it hasn't already been assigned a value.  No-op if it has.
@@ -87,9 +100,8 @@ public interface Variable<T extends TType> extends Operand<T> {
    * The provided function will not be invoked if this function no-ops.
    * @param value a function returning the value to initialize this variable with.
    * Will only be called if initialization is done.
-   * @return the new value (or current if it was already initialized).
    */
-  Operand<T> initialize(Supplier<Operand<T>> value);
+  Op initialize(Supplier<Operand<T>> value);
 
   /**
    * Get the current value as an Output.
@@ -121,6 +133,13 @@ public interface Variable<T extends TType> extends Operand<T> {
   }
 
   /**
+   * Get the underlying mutable variable.
+   */
+  default MutableVariable<T> asMutableVariable(){
+    return (MutableVariable<T>) this;
+  }
+
+  /**
    * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
    * support for assignment and initialization that works in both eager and graph modes.
    * <p>
@@ -133,11 +152,7 @@ public interface Variable<T extends TType> extends Operand<T> {
    */
   @Endpoint(name = "Variable")
   public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dataType){
-    if(scope.env().isEager()) {
-      return new EagerVariable<>(scope, shape, Operands.toDataType(dataType));
-    } else {
-      return new GraphVariable<>(scope, shape, Operands.toDataType(dataType));
-    }
+    return new MutableVariable<>(scope, shape, dataType);
   }
 
   /**
