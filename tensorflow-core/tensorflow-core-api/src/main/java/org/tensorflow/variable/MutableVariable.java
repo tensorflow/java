@@ -139,8 +139,11 @@ public class MutableVariable<T extends TType> implements Variable<T> {
     }
     checkInput(value);
     initializationOp = AssignVariableOp.create(initialScope, handle, value);
-    lastAssign = initializationOp;
-    Init.add(initialScope, lastAssign);
+
+    //TODO this if will be unnecessary after the init PR
+    if(initialScope.env().isGraph())
+      Init.add(initialScope, initializationOp);
+
     hasInitialized = true;
     cachedRead = null;
     return initializationOp;
