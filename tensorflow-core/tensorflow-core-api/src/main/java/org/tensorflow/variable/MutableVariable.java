@@ -121,7 +121,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   }
 
   private void checkInput(Operand<T> value) {
-    if (value.shape().isCompatibleWith(this.shape)) {
+    if (!value.shape().isCompatibleWith(this.shape)) {
       throw new IllegalArgumentException("Shape of new value (" + value.shape() +
           ") is not compatible with the variable's shape (" + this.shape + ").");
     }
