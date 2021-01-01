@@ -274,6 +274,9 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   @Override
   public OperationBuilder opBuilder(String type, String name) {
     checkSession();
+    if (!isOpEnabled(type)) {
+      throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
+    }
     return new EagerOperationBuilder(this, type, name);
   }
 
