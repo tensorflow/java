@@ -45,9 +45,9 @@ class BinaryCrossentropyTest {
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
       Operand<TFloat64> result = instance.result();
-      session.evaluate(7.666619F, total);
+      session.evaluate(7.71247434F, total);
       session.evaluate(2, count);
-      session.evaluate(3.833309F, result);
+      session.evaluate(3.85623717F, result);
     }
   }
 
