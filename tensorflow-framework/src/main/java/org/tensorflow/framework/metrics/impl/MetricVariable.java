@@ -45,8 +45,8 @@ public class MetricVariable<U extends TNumber> {
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    */
-  public MetricVariable(Ops tf, Variable<U> variable, long seed) {
-    this(tf, variable, null, seed);
+  public MetricVariable(Ops tf, Variable<U> variable, long seed, Class<U> type) {
+    this(tf, variable, null, seed, type);
   }
   /**
    * Creates a Metric Variable
@@ -61,13 +61,14 @@ public class MetricVariable<U extends TNumber> {
    *     will always produce the same random tensor for a given shape and data type.
    */
   @SuppressWarnings("unchecked")
-  public MetricVariable(Ops tf, Variable<U> variable, Initializer<U> initializer, long seed) {
+  public MetricVariable(
+      Ops tf, Variable<U> variable, Initializer<U> initializer, long seed, Class<U> type) {
     this.tf = tf;
     this.variable = variable;
 
-    Class<U> type = variable.type();
     if (initializer == null) {
       if (TFloating.class.isAssignableFrom(type)) {
+        //noinspection RedundantCast
         this.initializer =
             (Initializer<U>) new Glorot<>(tf, VarianceScaling.Distribution.UNIFORM, seed);
       } else if (TIntegral.class.isAssignableFrom(type)) {
@@ -76,7 +77,7 @@ public class MetricVariable<U extends TNumber> {
         throw new IllegalArgumentException(
             String.format(
                 "An initializer for variable %s of type %s is required",
-                variable.toString(), type));
+                variable.toString(), type.getSimpleName()));
       }
     } else {
       this.initializer = initializer;
@@ -90,7 +91,7 @@ public class MetricVariable<U extends TNumber> {
    */
   public Operand<U> initialize() {
     initialized = true;
-    return initializer.call(tf.constant(variable.asOutput().shape()), variable.type());
+    return initializer.call(tf.constant(variable.shape()), variable.type());
   }
 
   /**

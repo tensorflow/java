@@ -69,7 +69,7 @@ class KLDivergenceTest {
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
 
-      Operand<TFloat64> sampleWeight = tf.constant(new double[] {1.2, 3.4});
+      Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{1.2}, {3.4}});
       Op op = instance.updateState(labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
