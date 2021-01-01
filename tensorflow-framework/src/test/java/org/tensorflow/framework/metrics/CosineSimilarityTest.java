@@ -79,7 +79,7 @@ class CosineSimilarityTest {
   public void test_axis() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      int axis = 1;
+      int[] axis = new int[] {1};
       CosineSimilarity<TFloat32, TFloat32> instance =
           new CosineSimilarity<>(tf, "CS_testWeighted", axis, 1001L, TFloat32.class);
       session.run(instance.resetStates());

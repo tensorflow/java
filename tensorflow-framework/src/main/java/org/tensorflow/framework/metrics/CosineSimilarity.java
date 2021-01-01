@@ -15,49 +15,35 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.metrics.impl.LossMetric;
+import org.tensorflow.framework.metrics.impl.LossInterface;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * A metric that computes the cosine similarity metric between labels and predictions.
- *
- * @param <U> the data type for the predictions.
- * @param <T> The data type for the metric result.
- */
-public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
-    implements LossMetric<T> {
-  public static final int DEFAULT_AXIS = -1;
+/** Computes the cosine similarity metric between labels and predictions. */
+// TODO: this is weird, the metric is called CosineSimilarity in Keras,
+//  but it calls Metrics.cosineProximity instead of Losses.cosineSimilarity.
+//  The metric is calculating the Euclidean distance using L2 norms, while the loss
+//  is using the dot product proportional to the product of their magnitudes.
+//  While the 2 concepts are similar, they are different.
+//  Should we rename this metric to CosineProximity?
+public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U,T>
+    implements LossInterface<T> {
+  public static final int[] DEFAULT_AXIS = {-1};
   private final int[] axis;
 
   /**
-   * Creates a metric that computes the cosine similarity metric between labels and predictions with
-   * a default axis, {@link #DEFAULT_AXIS}
+   * Creates a CosineSimilarity metric with a default axis, {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
    */
   public CosineSimilarity(Ops tf, String name, long seed, Class<T> type) {
     this(tf, name, DEFAULT_AXIS, seed, type);
   }
 
-  /**
-   * Creates a metric that computes the cosine similarity metric between labels and predictions.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param axis The dimension along which the cosine similarity is computed.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CosineSimilarity(Ops tf, String name, int axis, long seed, Class<T> type) {
-    this(tf, name, new int[] {axis}, seed, type);
-  }
   /**
    * Creates a CosineSimilarity metric
    *
@@ -66,7 +52,6 @@ public class CosineSimilarity<U extends TNumber, T extends TNumber> extends Mean
    * @param axis The dimension along which the cosine similarity is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
    */
   public CosineSimilarity(Ops tf, String name, int[] axis, long seed, Class<T> type) {
     super(tf, name, seed, type);

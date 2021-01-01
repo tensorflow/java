@@ -25,20 +25,19 @@ import org.tensorflow.types.family.TNumber;
 import java.util.List;
 
 /**
- * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of
- * {@link MetricReduction#WEIGHTED_MEAN}.
+ * Bridges a stateless loss function with the {@link Mean} metric using a reduction of {@link
+ * MetricReduction#WEIGHTED_MEAN}.
  *
  * <p>The loss function calculates the loss between the <code>labels</code> and <code>predictions
  * </code> then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
  * loss over many iterations or epochs
  *
- * @param <U> the data type for the predictions.
- * @param <T> The data type for the metric result
+ * @param <U> the data type for the loss.
  */
 public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mean<U, T> {
 
   /** The loss function interface */
-  protected LossMetric<T> loss;
+  protected LossInterface<T> loss;
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
@@ -47,7 +46,6 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
    */
   protected MeanMetricWrapper(Ops tf, String name, long seed, Class<T> type) {
     super(tf, name, seed, type);
@@ -58,7 +56,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *
    * @return the loss function.
    */
-  public LossMetric<T> getLoss() {
+  public LossInterface<T> getLoss() {
     return loss;
   }
 
@@ -67,7 +65,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *
    * @param loss the loss function.
    */
-  protected void setLoss(LossMetric<T> loss) {
+  public void setLoss(LossInterface<T> loss) {
     this.loss = loss;
   }
 
@@ -85,22 +83,43 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
    *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
-   * @param <V> the datatype of the labels
-   * @param <S> the data type for sampleWeights
+   * @param <V> the datatype of the predictions
    * @return a List of control operations that updates the Mean state variables.
    */
-  public <V extends TNumber, S extends TNumber> List<Op> updateStateList(
-      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
-    if (labels == null || predictions == null) {
+  public <V extends TNumber> List<Op> updateLossStateList(
+      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
+    if (labels == null || predictions == null)
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
-    }
 
-    Operand<T> tLabels = CastHelper.cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getResultType());
+    Class<U> type = predictions.type();
+    Operand<T> tPredicitons = CastHelper.cast(getTF(), predictions, getType());
 
-    Operand<T> losses = loss.call(tLabels, tPredictions);
+    Operand<T> losses = loss.call(labels, tPredicitons);
+    Operand<U> uLossess = CastHelper.cast(getTF(), losses, type);
 
-    return super.updateStateList(
-        CastHelper.cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(uLossess, sampleWeights);
+  }
+
+  /**
+   * Creates a Control Operation that updates the state of the mean metric by calculating the loss
+   * between the <code>labels</code> and <code>predictions</code> and then applying a weighted mean
+   * metric across the multiple iterations.
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions
+   * @param sampleWeights Optional sampleWeights acts as a coefficient for the loss. If a scalar is
+   *     provided, then the loss is simply scaled by the given value. If sampleWeights is a tensor
+   *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
+   *     corresponding element in the sampleWeights vector. If the shape of sampleWeights is
+   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
+   *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
+   *     functions reduce by 1 dimension, usually axis=-1.)
+   * @param <V> the datatype of the labels
+   * @return a NoOp with control dependencies that update the state of the mean metric.
+   */
+  public final <V extends TNumber> Op updateLossState(
+      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
+    List<Op> controlOps = updateLossStateList(labels, predictions, sampleWeights);
+    return getTF().withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
 }

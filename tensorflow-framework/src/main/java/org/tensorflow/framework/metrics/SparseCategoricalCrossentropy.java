@@ -16,46 +16,39 @@ package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
-import org.tensorflow.framework.metrics.impl.LossMetric;
+import org.tensorflow.framework.metrics.impl.LossInterface;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * A metric that computes the sparse categorical cross-entropy loss between true labels and
- * predicted labels.
- *
- * @param <U> the data type for the predictions.
- * @param <T> The data type for the metric result.
- */
+/** Computes the sparse categorical cross-entropy loss between true labels and predicted labels. */
 public class SparseCategoricalCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
+    extends MeanMetricWrapper<U, T> implements LossInterface<T> {
 
   private final boolean fromLogits;
-  private final int axis;
+  private final int axes;
 
   /**
    * Creates a SparseCategoricalCrossentropy metric
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
-   * @param axis The dimension along which the entropy is computed.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values or not.
+   * @param axes The dimension along which the entropy is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
    */
   public SparseCategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, int axis, long seed, Class<T> type) {
+      Ops tf, String name, boolean fromLogits, int axes, long seed, Class<T> type) {
     super(tf, name, seed, type);
     setLoss(this);
     this.fromLogits = fromLogits;
-    this.axis = axis;
+    this.axes = axes;
   }
 
   /** {@inheritDoc} */
   @Override
   public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
-    return Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axis);
+    return Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axes);
   }
 }

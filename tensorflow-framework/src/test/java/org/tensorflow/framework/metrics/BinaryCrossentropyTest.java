@@ -23,7 +23,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
 
 class BinaryCrossentropyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -45,9 +44,9 @@ class BinaryCrossentropyTest {
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
       Operand<TFloat64> result = instance.result();
-      session.evaluate(7.71247434F, total);
+      session.evaluate(7.666619F, total);
       session.evaluate(2, count);
-      session.evaluate(3.85623717F, result);
+      session.evaluate(3.833309F, result);
     }
   }
 
@@ -58,9 +57,9 @@ class BinaryCrossentropyTest {
       BinaryCrossentropy<TFloat64, TFloat64> instance =
           new BinaryCrossentropy<>(tf, "BCE_testUnweightedLogits", true, 0, 1001L, TFloat64.class);
       session.run(instance.resetStates());
-      float[] trueArray = {1, 0, 1, 0, 1, 1};
+      double[] trueArray = {1, 0, 1, 0, 1, 1};
       double[] logitsArray = {100.0, -100.0, 100.0, 100.0, 100.0, -100.0};
-      Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat64> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
       Operand<TFloat64> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
       Op op = instance.updateState(labels, logits, null);
       session.run(op);
@@ -80,9 +79,9 @@ class BinaryCrossentropyTest {
       BinaryCrossentropy<TFloat32, TFloat32> instance =
           new BinaryCrossentropy<>(tf, "BCE_testWeighted", false, 0, 1001L, TFloat32.class);
       session.run(instance.resetStates());
-      int[] trueArray = {1, 0, 1, 0};
+      float[] trueArray = {1, 0, 1, 0};
       float[] predictionArray = {1, 1, 1, 0};
-      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 2)));
+      Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 2)));
       Operand<TFloat32> yPrediction =
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(2, 2)));
       Operand<TFloat32> sampleWeight = tf.constant(new float[] {1.5f, 2.f});
@@ -105,9 +104,9 @@ class BinaryCrossentropyTest {
       BinaryCrossentropy<TFloat64, TFloat64> instance =
           new BinaryCrossentropy<>(tf, "BCE_testWeightedLogits", true, 0, 1001L, TFloat64.class);
       session.run(instance.resetStates());
-      float[] trueArray = {1, 0, 1, 0, 1, 1};
+      double[] trueArray = {1, 0, 1, 0, 1, 1};
       double[] logitsArray = {100.0, -100.0, 100.0, 100.0, 100.0, -100.0};
-      Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat64> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
       Operand<TFloat64> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {2, 2.5});
 
@@ -132,9 +131,9 @@ class BinaryCrossentropyTest {
           new BinaryCrossentropy<>(
               tf, "BCE_testWeightedLabS", true, labelSmoothing, 1001L, TFloat64.class);
       session.run(instance.resetStates());
-      float[] trueArray = {1, 0, 1};
+      double[] trueArray = {1, 0, 1};
       double[] logitsArray = {100., -100., -100.};
-      Operand<TFloat32> labels = tf.constant(trueArray);
+      Operand<TFloat64> labels = tf.constant(trueArray);
       Operand<TFloat64> logits = tf.constant(logitsArray);
 
       Op op = instance.updateState(labels, logits, null);

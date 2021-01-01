@@ -16,20 +16,17 @@ package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
-import org.tensorflow.framework.metrics.impl.LossMetric;
+import org.tensorflow.framework.metrics.impl.LossInterface;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * A metric that computes the logarithm of the hyperbolic cosine of the prediction error metric
- * between labels and predictions.
- *
- * @param <U> the data type for the predictions.
- * @param <T> The data type for the metric result.
+ * Computes the logarithm of the hyperbolic cosine of the prediction error metric between labels and
+ * predictions.
  */
 public class LogCoshError<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
-    implements LossMetric<T> {
+    implements LossInterface<T> {
 
   /**
    * Creates a LogCoshError metric
@@ -38,7 +35,6 @@ public class LogCoshError<U extends TNumber, T extends TNumber> extends MeanMetr
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
    */
   public LogCoshError(Ops tf, String name, long seed, Class<T> type) {
     super(tf, name, seed, type);

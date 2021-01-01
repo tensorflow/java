@@ -16,22 +16,19 @@ package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
-import org.tensorflow.framework.metrics.impl.LossMetric;
+import org.tensorflow.framework.metrics.impl.LossInterface;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
- *
- * <p>This is the crossentropy metric class to be used when there are only two label classes (0 and
- * 1).
+ * Computes the binary cross-entropy loss between true labels and predicted labels.
  *
  * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
 public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
+    extends MeanMetricWrapper<U,T> implements LossInterface<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -39,16 +36,19 @@ public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
   /**
    * Creates a BinaryCrossentropy metric
    *
+   * <p>This is the crossentropy metric class to be used when there are only two label classes (0
+   * and 1).
+   *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values or not.
    * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
    *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
    *     correspond to heavier smoothing.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
+   * @param type the data type for the variables
    */
   public BinaryCrossentropy(
       Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
