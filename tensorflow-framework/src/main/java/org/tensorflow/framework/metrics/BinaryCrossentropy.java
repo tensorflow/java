@@ -28,7 +28,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result
  */
 public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U,T> implements LossInterface<T> {
+    extends MeanMetricWrapper<U, T> implements LossInterface<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;

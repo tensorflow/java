@@ -34,7 +34,7 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
 
   private final boolean fromLogits;
   private final float labelSmoothing;
-  private int axis;
+  private final int axis;
 
   /**
    * Creates a CategoricalCrossentropy metric that Computes the crossentropy metric between the

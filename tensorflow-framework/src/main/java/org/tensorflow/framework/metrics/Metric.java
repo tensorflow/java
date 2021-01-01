@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.tensorflow.framework.metrics;
-
 /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
+package org.tensorflow.framework.metrics;
 
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
@@ -74,17 +58,15 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
   private final String name;
 
-  private final Class<T> type;
-
   /**
-   * Creates a Metric with a name of {@link Class#getSimpleName()} }
+   * Creates a Metric with a name of {@link Class#getSimpleName()}
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    */
-  protected Metric(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  protected Metric(Ops tf, long seed) {
+    this(tf, null, seed);
   }
 
   /**
@@ -95,13 +77,12 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    */
-  protected Metric(Ops tf, String name, long seed, Class<T> type) {
+  protected Metric(Ops tf, String name, long seed) {
     if (!tf.scope().env().isGraph())
       throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
     this.seed = seed;
     this.name = name != null ? name : this.getClass().getSimpleName();
     this.tf = tf.withSubScope(this.name);
-    this.type = type;
   }
 
   /**
@@ -113,8 +94,8 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return a List of Operations to update the metric state
    */
-  @SuppressWarnings({"unchecked", "unused"})
-  public <V extends TNumber> List<Op> updateStateList(Operand<V> values, Operand<T> sampleWeights) {
+  @SuppressWarnings({"unchecked","unused"})
+  public List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -142,7 +123,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return the Operation to update the metric state
    */
-  public final <V extends TNumber> Op updateState(Operand<V> values, Operand<T> sampleWeights) {
+  public final Op updateState(Operand<U> values, Operand<T> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
@@ -153,6 +134,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
+   * @param <V> the data type for the sample weights
    * @return the Operation to update the metric state
    */
   public final <V extends TNumber> Op updateState(
@@ -206,7 +188,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
     // TODO option 2 would be to keep track of tf.scope().env() and if it changes, clear to old Map.
     Map<String, MetricVariable<? extends TNumber>> variables =
         variableMap.computeIfAbsent(tf.scope().env(), k -> new HashMap<>());
-    variables.put(varName, new MetricVariable<>(tf, variable, initializer, seed));
+    variables.put(varName, new MetricVariable<>(tf, variable, initializer, seed, variable.type()));
   }
 
   /**
@@ -312,9 +294,5 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   public String getName() {
     return name;
-  }
-
-  public Class<T> getType() {
-    return type;
   }
 }
