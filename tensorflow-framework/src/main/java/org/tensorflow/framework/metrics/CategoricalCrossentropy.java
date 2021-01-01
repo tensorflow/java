@@ -22,12 +22,16 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the categorical cross-entropy loss between true labels and predicted labels.
+ * A Metric that computes the categorical cross-entropy loss between true labels and predicted
+ * labels.
  *
  * <p>This is the crossentropy metric class to be used when there are multiple label classes (2 or
- * more). Here we assume that labels are given as a one_hot representation. eg., When labels values
- * are <code>[2, 0, 1]</code>, the labels Operand contains = <code>[[0, 0, 1], [1, 0, 0], [0, 1, 0]]
+ * more). The labels should be given as a one_hot representation. eg., When labels values are <code>
+ * [2, 0, 1]</code>, the labels Operand contains = <code>[[0, 0, 1], [1, 0, 0], [0, 1, 0]]
  * </code>.
+ *
+ * @param <U> the data type for the predictions.
+ * @param <T> The data type for the metric result
  */
 public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
     extends MeanMetricWrapper<U, T> implements LossInterface<T> {
@@ -51,6 +55,7 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
    *     </code> for label <code>1</code>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CategoricalCrossentropy(
       Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {

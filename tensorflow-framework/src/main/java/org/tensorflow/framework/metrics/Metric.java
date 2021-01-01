@@ -42,19 +42,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   /** The random number generator seed value */
   private final long seed;
 
-  // TODO: how to handle variables across new ExecutionEnvironments.
-  //  Metrics may be instantiated multiple times using the same variables,
-  //  These variables become stale when a new ExecutionEnvironment is created
-  //  (most commonly seen in Unit Tests), so the question is how to best handle this.
-  //  Option 1, which is used here is to map the variables against an instance of
-  //    an ExecutionEnvironment in a WeakHashMap, when a new ExecutionEnvironment is presented, the
-  // new
-  //    variables are mapped to it. A WeakHashMap is used to throw away the old ExecutionEnvironment
-  //    mappings, when the old ExecutionEnvironment is finalized.
-  //  Option 2, keep an instance of the newly presented ExecutionEnvironment and if it changes,
-  //    clear the variable maps.
-  //  My guess is that in a non-unit test environment, only one ExecutionEnvironment will be used,
-  //  I welcome thoughts on this.
   /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
   private final String name;
 
@@ -185,7 +172,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   protected <V extends TNumber> void addVariable(
       String varName, Variable<V> variable, Initializer<V> initializer) {
-    // TODO option 2 would be to keep track of tf.scope().env() and if it changes, clear to old Map.
     Map<String, MetricVariable<? extends TNumber>> variables =
         variableMap.computeIfAbsent(tf.scope().env(), k -> new HashMap<>());
     variables.put(varName, new MetricVariable<>(tf, variable, initializer, seed, variable.type()));

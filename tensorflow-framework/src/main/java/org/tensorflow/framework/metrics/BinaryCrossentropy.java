@@ -22,7 +22,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the binary cross-entropy loss between true labels and predicted labels.
+ * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
  *
  * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
@@ -48,7 +48,7 @@ public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
    *     correspond to heavier smoothing.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
+   * @param type the type for the variables and result
    */
   public BinaryCrossentropy(
       Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {

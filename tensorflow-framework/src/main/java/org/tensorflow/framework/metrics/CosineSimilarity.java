@@ -20,32 +20,33 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/** Computes the cosine similarity metric between labels and predictions. */
-// TODO: this is weird, the metric is called CosineSimilarity in Keras,
-//  but it calls Metrics.cosineProximity instead of Losses.cosineSimilarity.
-//  The metric is calculating the Euclidean distance using L2 norms, while the loss
-//  is using the dot product proportional to the product of their magnitudes.
-//  While the 2 concepts are similar, they are different.
-//  Should we rename this metric to CosineProximity?
+/**
+ * A metric that computes the cosine similarity metric between labels and predictions.
+ *
+ * @param <U> the data type for the predictions.
+ * @param <T> The data type for the metric result.
+ */
 public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
     implements LossInterface<T> {
   public static final int DEFAULT_AXIS = -1;
   private final int[] axis;
 
   /**
-   * Creates a CosineSimilarity metric with a default axis, {@link #DEFAULT_AXIS}
+   * Creates a metric that computes the cosine similarity metric between labels and predictions with
+   * a default axis, {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CosineSimilarity(Ops tf, String name, long seed, Class<T> type) {
     this(tf, name, DEFAULT_AXIS, seed, type);
   }
 
   /**
-   * Creates a CosineSimilarity metric
+   * Creates a metric that computes the cosine similarity metric between labels and predictions.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
