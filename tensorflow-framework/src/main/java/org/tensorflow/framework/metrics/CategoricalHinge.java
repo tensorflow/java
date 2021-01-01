@@ -21,7 +21,12 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/** Computes the categorical hinge loss metric between labels and predictions. */
+/**
+ * A Metric that computes the categorical hinge loss metric between labels and predictions.
+ *
+ * @param <U> the data type for the predictions.
+ * @param <T> The data type for the metric result
+ */
 public class CategoricalHinge<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
     implements LossInterface<T> {
 
@@ -32,6 +37,7 @@ public class CategoricalHinge<U extends TNumber, T extends TNumber> extends Mean
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CategoricalHinge(Ops tf, String name, long seed, Class<T> type) {
     super(tf, name, seed, type);

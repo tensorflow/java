@@ -25,8 +25,8 @@ import org.tensorflow.types.family.TNumber;
 import java.util.List;
 
 /**
- * Bridges a stateless loss function with the {@link Mean} metric using a reduction of {@link
- * MetricReduction#WEIGHTED_MEAN}.
+ * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of
+ * {@link MetricReduction#WEIGHTED_MEAN}.
  *
  * <p>The loss function calculates the loss between the <code>labels</code> and <code>predictions
  * </code> then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
@@ -47,6 +47,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   protected MeanMetricWrapper(Ops tf, String name, long seed, Class<T> type) {
     super(tf, name, seed, type);
@@ -95,9 +96,9 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
     Operand<T> tLabels = CastHelper.cast(getTF(), labels, getType());
     Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getType());
 
-
     Operand<T> losses = loss.call(tLabels, tPredictions);
 
-    return super.updateStateList(CastHelper.cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(
+        CastHelper.cast(getTF(), losses, predictions.type()), sampleWeights);
   }
 }

@@ -30,7 +30,6 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> the data type of the variable
  */
-// TODO handle distributed variables with VariableAggregation and VariableSynchronization
 public class MetricVariable<U extends TNumber> {
   private final Variable<U> variable;
   private final Initializer<U> initializer;
@@ -44,10 +43,12 @@ public class MetricVariable<U extends TNumber> {
    * @param variable the variable
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variable
    */
   public MetricVariable(Ops tf, Variable<U> variable, long seed, Class<U> type) {
     this(tf, variable, null, seed, type);
   }
+
   /**
    * Creates a Metric Variable
    *
@@ -59,6 +60,7 @@ public class MetricVariable<U extends TNumber> {
    *     other types the default initializer is {@link org.tensorflow.framework.initializers.Zeros}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variable
    */
   @SuppressWarnings("unchecked")
   public MetricVariable(
