@@ -40,7 +40,7 @@ public class Metrics {
    *                                    {{0.1f, 0.9f, 0.8f}, {0.05f, 0.95f, 0f}});
    *     Operand&lt;TFloat32&gt; m = Metrics.topKCategoricalAccuracy(
    *                                    labels, predictions, 3)
-   *     //m.asOutput().shape().toString == "[2]"
+   *     //m.shape().toString == "[2]"
    * </pre>
    *
    * @param tf the TensorFlow Ops.
@@ -71,7 +71,7 @@ public class Metrics {
    *                            {{0.1f, 0.9f, 0.f8}, {0.05f, 0.95f, 0f}});
    *     Operand&lt;TFloat32&gt; m = Metrics.topKCategoricalAccuracy(
    *                                    labels, predictions, 3)
-   *     //m.asOutput().shape().toString == "[2]"
+   *     //m.shape().toString == "[2]"
    * </pre>
    *
    * @param tf the TensorFlow Ops.
@@ -90,8 +90,8 @@ public class Metrics {
       tLabels = CastHelper.cast(tf, labels, predictions.type());
     else tLabels = (Operand<T>) labels;
 
-    int predictionsRank = predictions.asOutput().shape().numDimensions();
-    int labelsRank = tLabels.asOutput().shape().numDimensions();
+    int predictionsRank = predictions.shape().numDimensions();
+    int labelsRank = tLabels.shape().numDimensions();
 
     Operand<TFloat32> castPredictions = CastHelper.cast(tf, predictions, TFloat32.class);
     if (predictionsRank != Shape.UNKNOWN_SIZE && labelsRank != Shape.UNKNOWN_SIZE) {
@@ -152,9 +152,10 @@ public class Metrics {
    * @param <U> The data type for x.
    * @return the normalized values of x.
    */
-  // TODO this was tf.math.l2_normalize in TF Python
+  // TODO this was tf.math.l2_normalize in TF Python, does it belong here?
 
-  public static <U extends TNumber> Operand<U> l2Normalize(Ops tf, Operand<U> x, int[] axes) {
+  public static <U extends TNumber> Operand<U> l2Normalize(
+      Ops tf, Operand<U> x, int[] axes) {
     return l2Normalize(tf, x, axes, L2_NORM_EPSILON);
   }
 
@@ -178,15 +179,15 @@ public class Metrics {
    * @param <U> The data type for the values.
    * @return the normalized values of x.
    */
-  // TODO this was tf.math.l2_normalize in TF Python
+  // TODO this was tf.math.l2_normalize in TF Python, does it belong here?
   public static <U extends TNumber> Operand<U> l2Normalize(
       Ops tf, Operand<U> x, int[] axes, float epsilon) {
     Operand<U> squareSum =
         tf.reduceSum(tf.math.square(x), tf.constant(axes), ReduceSum.keepDims(Boolean.TRUE));
     Operand<U> y =
         tf.math.rsqrt(
-            tf.math.maximum(
-                squareSum, CastHelper.cast(tf, tf.constant(epsilon), x.type())));
+            tf.math.maximum(squareSum, CastHelper.cast(tf, tf.constant(epsilon), x.type())));
     return tf.math.mul(x, y);
   }
+
 }

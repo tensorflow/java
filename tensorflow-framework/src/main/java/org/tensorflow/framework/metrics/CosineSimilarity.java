@@ -27,9 +27,9 @@ import org.tensorflow.types.family.TNumber;
 //  is using the dot product proportional to the product of their magnitudes.
 //  While the 2 concepts are similar, they are different.
 //  Should we rename this metric to CosineProximity?
-public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U,T>
+public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
     implements LossInterface<T> {
-  public static final int[] DEFAULT_AXIS = {-1};
+  public static final int DEFAULT_AXIS = -1;
   private final int[] axis;
 
   /**
@@ -44,6 +44,18 @@ public class CosineSimilarity<U extends TNumber, T extends TNumber> extends Mean
     this(tf, name, DEFAULT_AXIS, seed, type);
   }
 
+  /**
+   * Creates a CosineSimilarity metric
+   *
+   * @param tf the TensorFlow Ops
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param axis The dimension along which the cosine similarity is computed.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   */
+  public CosineSimilarity(Ops tf, String name, int axis, long seed, Class<T> type) {
+    this(tf, name, new int[] {axis}, seed, type);
+  }
   /**
    * Creates a CosineSimilarity metric
    *
