@@ -49,6 +49,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   private final Shape shape;
   private final DataType dataType;
   private final Class<T> tType;
+
   private final VarHandleOp handle;
 
   private IsVariableInitialized isInitializedOp = null;
@@ -82,6 +83,11 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   }
 
   @Override
+  public VarHandleOp getHandle() {
+    return handle;
+  }
+
+  @Override
   public Shape getShape() {
     return shape;
   }
@@ -102,17 +108,19 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   }
 
   @Override
-  public Operand<T> value(Scope scope) {
+  public synchronized Operand<T> value(Scope scope) {
     if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not get.");
     }
-    if (cachedRead == null) {
+    ReadVariableOp<T> ret = cachedRead;
+    if (ret == null) {
       if (lastAssign != null) {
         scope = scope.withControlDependencies(Collections.singletonList(lastAssign));
       }
-      cachedRead = ReadVariableOp.create(scope, handle, tType);
+      ret = ReadVariableOp.create(scope, handle, tType);
     }
-    return cachedRead;
+    cachedRead = ret;
+    return ret;
   }
 
   @Override
@@ -133,7 +141,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   }
 
   @Override
-  public Op initialize(Operand<T> value) {
+  public synchronized Op initialize(Operand<T> value) {
     if (hasInitialized) {
       return initializationOp;
     }
@@ -150,7 +158,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
   }
 
   @Override
-  public Op initialize(Supplier<Operand<T>> value) {
+  public synchronized Op initialize(Supplier<Operand<T>> value) {
     if (hasInitialized) {
       return initializationOp;
     }
@@ -172,7 +180,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
    * @param value the value to assign.
    * @see AssignVariableOp#create
    */
-  public Op assign(Scope scope, Operand<T> value) {
+  public synchronized Op assign(Scope scope, Operand<T> value) {
     checkInput(value);
     lastAssign = AssignVariableOp.create(scope, handle, value);
     hasInitialized = true;
@@ -197,7 +205,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
    * @param value amount to decrease the variable's value by.
    * @see AssignSubVariableOp#create
    */
-  public Op assignSub(Scope scope, Operand<T> value) {
+  public synchronized Op assignSub(Scope scope, Operand<T> value) {
     if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not decrement.");
     }
@@ -225,7 +233,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
    * @param value amount to decrease the variable's value by.
    * @see AssignAddVariableOp#create
    */
-  public Op assignAdd(Scope scope, Operand<T> value) {
+  public synchronized Op assignAdd(Scope scope, Operand<T> value) {
     if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not increment.");
     }

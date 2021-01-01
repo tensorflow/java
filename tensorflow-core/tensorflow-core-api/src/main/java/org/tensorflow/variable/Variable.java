@@ -28,6 +28,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.op.core.VarHandleOp;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
@@ -48,6 +49,12 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public interface Variable<T extends TType> extends Operand<T> {
+
+  /**
+   * Get the variable handle operation.
+   */
+  VarHandleOp getHandle();
+
   /**
    * Get the variable's constant shape.
    * This may have unknown dimensions, which do not impose a requirement on the value's dimensions.
