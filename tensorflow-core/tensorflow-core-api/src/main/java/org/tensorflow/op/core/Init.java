@@ -98,14 +98,10 @@ public final class Init extends RawOp {
   @Endpoint(name = "initAdd")
   public static void add(Scope scope, Op initializer) {
     ExecutionEnvironment exEnv = scope.env();
-    if(exEnv.isEager()){
-      return;
+
+    if(exEnv.isGraph()) {
+      ((Graph) exEnv).addInitializer(initializer);
     }
-    if (!(exEnv instanceof Graph)) {
-      throw new IllegalArgumentException("initAdd is only supported on Graph or eager sessions.");
-    }
-    Graph graph = (Graph) exEnv;
-    graph.addInitializer(initializer);
   }
 
   private Init(Operation operation) {
