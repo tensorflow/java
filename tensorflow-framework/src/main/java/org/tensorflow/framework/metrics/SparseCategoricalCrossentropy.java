@@ -21,7 +21,13 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/** Computes the sparse categorical cross-entropy loss between true labels and predicted labels. */
+/**
+ * A metric that computes the sparse categorical cross-entropy loss between true labels and
+ * predicted labels.
+ *
+ * @param <U> the data type for the predictions.
+ * @param <T> The data type for the metric result.
+ */
 public class SparseCategoricalCrossentropy<U extends TNumber, T extends TNumber>
     extends MeanMetricWrapper<U, T> implements LossInterface<T> {
 
@@ -37,6 +43,7 @@ public class SparseCategoricalCrossentropy<U extends TNumber, T extends TNumber>
    * @param axes The dimension along which the entropy is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public SparseCategoricalCrossentropy(
       Ops tf, String name, boolean fromLogits, int axes, long seed, Class<T> type) {
